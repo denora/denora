@@ -307,7 +307,6 @@ CREATE TABLE `ustats` (
   `chan` varchar(32) NOT NULL default '',
   `type` tinyint(3) unsigned NOT NULL default '0',
   `letters` int(10) unsigned default '0',
-  `timeadded` int(10) unsigned default '0',
   `words` int(10) unsigned default '0',
   `line` int(10) unsigned default '0',
   `actions` int(10) unsigned default '0',

@@ -63,9 +63,6 @@ void denora_cmd_422(char *source)
  */
 void denora_cmd_351(char *source)
 {
-    User *u;
-    u = user_find(source);
-
     SET_SEGV_LOCATION();
 
     if (ircd->numerics) {

@@ -135,8 +135,8 @@ void IRCDModeInit(void)
     CreateChanMode(CMODE_s, NULL, NULL);
     CreateChanMode(CMODE_t, NULL, NULL);
 
-    ModuleSetChanUMode('+', 'v', STATUS_VOICE);
-    ModuleSetChanUMode('@', 'o', STATUS_OP);
+    ModuleSetChanUMode('v', 'v', STATUS_VOICE);
+    ModuleSetChanUMode('o', 'o', STATUS_OP);
 
     ModuleUpdateSQLChanMode();
 }

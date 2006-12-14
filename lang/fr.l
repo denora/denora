@@ -1,4 +1,4 @@
-# United States English language file.
+# French language file.
 #
 # Denora (c) 2004-2006 Denora Team
 # Contact us at dev@nomadirc.net
@@ -14,8 +14,8 @@
 # French tracution by XaF
 # Traduction Française par XaF
 #			(root@sbird.org - irc.sbird.org)
-# Revision by illu (01/21/05)
-# Revu par illu (21/01/05)
+# Revision by illu (11/07/06)
+# Revu par illu (07/11/06)
 #                       (illu@icedslash.org - irc.icedslash.org)
 #
 # When translating this file to another language, keep in mind that the
@@ -298,9 +298,9 @@ STAT_HELP_RELOAD
 
 STAT_HELP_ADMIN_CMD
 	Commandes réservées aux Administrateurs des Stats:
-	    ADMIN       Add/Delete Stats Admins
+	    ADMIN       Ajoute/Supprime des administrateurs
 	    CHANSTATS   Ajoute un salon à monitorer
-	    ENVINFO     Show enviroment information
+	    ENVINFO     Voir les informations sur l'environement
 	    EXCLUDE     Exclus des utilisateurs/salons des stats
 	    EXPORT      Exporte les données dans un fichier XML
 	    HTML        Force la création du fichier HTML
@@ -310,7 +310,7 @@ STAT_HELP_ADMIN_CMD
 	    MODINFO     Informations sur un module chargé
 	    RESTART     Relance Denora
 	    RELOAD      Recharger le fichier de configuration
-	    SET         Set various run time options.
+	    SET         Configure les options
 	    SHUTDOWN    Arrêtes Denora en sauvegardant les bdd
 
 STAT_HELP_MODLOAD
@@ -345,7 +345,7 @@ STAT_HELP_MODLIST
 	Limité aux Administrateurs des Stats.
 
 STAT_HELP_EXCLUDE
-	Synthaxe: EXCLUDE {ADD|DEL} cible
+	Synthaxe: EXCLUDE {ADD|DEL|LIST} cible
 	
 	Exclus la cible des statistiques.
 	
@@ -431,19 +431,16 @@ STAT_RELOAD
 
 STAT_STATS_SERVER_COUNT
 	Statistiques des serveurs pour %s:
-	
 	Serveurs actuellement reliés:  %d
 	Maximum de serveurs reliés: %d
 
 STAT_STATS_CHAN_COUNT
 	Statistiques des salons pour %s:
-	
 	Salons actuellement utilisés:  %d
 	Maximum de salons créés: %d
 
 STAT_STATS_USER_COUNT
 	Statistiques des utilisateurs pour %s:
-	
 	Utilisateurs actuellement connectés:  %d
 	Maximum d'utilisateurs connectés: %d
 
@@ -451,7 +448,7 @@ STAT_STATS_SYNTAX
 	STATS [SERVERS|CHANNELS|USERS]
 
 STAT_STATS_PAGE
-	For more stats visit %s
+	Pour plus de stats, visitez %s
 
 # SET responses
 STAT_SET_SYNTAX
@@ -517,10 +514,10 @@ STAT_HELP_CHANSTATS
 	La commande CHANSTATS SUMUSER permet de transferer toutes les stats
 	de l'utilisateur2 vers l'utilisateur1 et supprime l'utilisateur2.
 	
-	The CHANSTATS RENAME command renames user1 into user2.
+	La commande CHANSTATS RENAME renome l'utilisateur1 en utilisateur2.
 
 STAT_CHANSTATS_SYNTAX
-	CHANSTATS {ADD|DEL|LIST|SUMUSER|SET} [CHAN|USER|OPTION]
+	CHANSTATS {ADD|DEL|LIST|SET|SUMUSER|RENAME} [CHAN|USER|OPTION]
 
 STAT_CHANSTATS_CHAN_ADDED
 	%s est maintenant paramêtré pour être monitoré par les stats salons.
@@ -575,10 +572,10 @@ STATS_CHANSTATS_RENAMEUSER_SYNTAX
 	CHANSTATS RENAME utilisateur1 utilisateur2
 
 STATS_CHANSTATS_SUMUSER_DONE
-	The data from %s has been transferred to %s
+	Les données de %s ont étés transferés vers %s
 
 STATS_CHANSTATS_RENAMEUSER_DONE
-	User %s has been renamed to %s
+	L'utilisateur %s à été renomé en %s
 
 # EXCLUDE responses
 STAT_EXCLUDE_SYNTAX
@@ -616,7 +613,7 @@ STATS_EXPORT_STATS
 	Export des stats sur %s
 
 STATS_EXPORT_ALL
-	Exported de toutes les informations sur %s
+	Export de toutes les informations sur %s
 
 STATS_EXPORT_SYNTAX
 	EXPORT {CHANNELS|USERS|TLD|SERVERS|STATS|ALL}
@@ -625,10 +622,10 @@ STATS_SUMUSER_NOTFOUND
 	%s n'existe pas dans la base de données des statistiques.
 
 STATS_RENAMEUSER_EXISTING
-	User %s already exists in the stats db.
+	L'utilisateur %s existe déja dans le base de données des stats.
 
 STATS_HELP_CHANNEL_1
-	Ces commandes fantaisistres sont accéssibles
+	Ces commandes fantaisistes sont accéssibles
 
 STATS_HELP_CHANNEL_2
 	%stop10  :   Top 10 des utilisateurs du canal courant
@@ -676,7 +673,7 @@ STATS_MESSAGE_ONE
 	lettres: %s, mots: %s, lignes: %s, smileys: %s, actions: %s
 
 STATS_CHANNEL_PEAK
-	Nombre max d'utilisateur sur le canal: %d 
+	Nombre max d'utilisateurs sur le canal: %d 
 
 # ENVINFO responses
 STAT_ENVINFO_HEADER
@@ -1318,7 +1315,7 @@ ALOG_SIGPIPE_WARNING
 	Denora exécutera un backtrace, et continue dessus, toutefois Denora peut devenir instable
 
 ALOG_NO_STATS_BIN
-	Restart attempt failed--STATS_BIN not defined (rerun configure)
+	Tentative de Restart échoué --STATS_BIN n'est pas défini (reexecuter configure)
 
 ALOG_ERR_REHASH_NO_MEM
 	Erreur durant le rechargement du fichier de configuration, mémoire insuffisante!
@@ -1366,13 +1363,13 @@ ALOG_DEL_SERVER_FOR
 	debug: delete_server() appelé pour %s
 
 ALOG_DEL_SERVER_NOQUIT
-	debug: delete_server() cleared all users for NOQUIT
+	debug: delete_server() retrait de tout les utilisateurs pour NOQUIT
 
 ALOG_DEL_SERVER_DONE
 	debug: delete_server() terminé
 
 ALOG_DEBUG_UNKNOWN_VERSION_REPLY
-	debug: sql_do_server_version a recu un format de version inconnu
+	debug: sql_do_server_version a reçu un format de version inconnu
 
 ALOG_MOD_TRY_LOAD
 	Essaye de charger [%s]
@@ -1384,7 +1381,7 @@ ALOG_MOD_ERROR
 	Erreur module: %s
 
 ALOG_MOD_BE_ONLY_ONE
-	You cannot have 2 protocol modules loaded.
+	Vous ne pouvez avoir 2 modules pour le protocole de chargé.
 
 ALOG_MOD_UNLOAD_SELF
 	debug: %s demandé pour etre déchargé...
@@ -1411,54 +1408,56 @@ ALOG_MOD_CALLBACK_DISPLAY
 	debug: Added module CallBack: [%s] due to execute at %ld
 
 ALOG_VHOST_NONEXISTANT_USER
-	user: SETHOST/CHGHOST for nonexistent user %s
+	user: SETHOST/CHGHOST pour l'utilisateur inéxistant %s
 
 ALOG_CHGNAME_NONEXISTANT_USER
-	user: SETNAME/CHGNAME for nonexistent user %s
+	user: SETNAME/CHGNAME pour l'utilisateur inéxistant %s
 
 ALOG_CHGIDENT_NONEXISTANT_USER
-	user: SETNAME/CHGNAME for nonexistent user %s
+	user: SETNAME/CHGNAME pour l'utilisateur inéxistant %s
 
 STAT_ADMIN_ALREADY
-	%s is already a stats admin
+	%s est déjà administrateur des stats
 
 STAT_ADMIN_CREATED
-	%s is now a Stats Admin
+	%s est maintenant administrateur des stats
 
 STAT_ADMIN_DELETED
-	%s has been removed from Stats Admin
+	%s n'est plus administrateur des stats
 
 STAT_ADMIN_NOTADMIN
-	%s is not a Stats Admin
+	%s n'est pas un administrateur des stats
 
 STAT_HELP_ADMIN
-	Syntax: ADMIN [add|del] user pass [host] [langnum]
+	Syntaxe: ADMIN [add|del] utilisateur mot_de_passe [host] [langnum]
 	
-	Add or Remove a Stats Admin does not affect admins whom
-	Are added in the config file.	
+	Ajoute ou retire un admin des stats, cela n'affecte pas
+	les admins ajoutés dans le fichier de configuration.
 
-	Limited to Stats Admin
+	Réservé aux Administrateurs des stats
 
 STAT_ADMIN_SYNTAX
-	ADMIN {ADD|DEL} USER [PASS|HOST|langnum]
+	ADMIN {ADD|DEL} UTILISATEUR [PASS|HOST|langnum]
 
 STAT_ADMIN_DELETE_CONFIG
-	Can not delete %s as they are stored in the config file
+	Impossible de supprimer %s tant qu'il est enregistré
+	dans le fichier de configuration.
 
 STAT_CHGPASS_OK
-	Password has been changed for %s
+	Le mot de passe de %s à été changé
 
 STAT_CHGPASS_CONFIG
-	Can not change config file admin passwords
+	Impossible de changer le mot de passe des admins
+	stockés dans le fichier de configuration.
 
 STAT_CHGPASS_SYNTAX
-	CHGPASS ADMINNAME NEWPASS
+	CHGPASS PSEUDO NOUVEAU-MOT-DE-PASSE
 
 STAT_HELP_CHGPASS
-	Syntax: CHGPASS user pass
+	Syntaxe: CHGPASS utilisateur mot-de-passe
 	
-	Change Stats Admin passwords on the fly
+	Change le mot de passe d'un admin à la volée
 
-	Limited to Stats Admin
+	Réservé aux Administrateurs des stats
 
 

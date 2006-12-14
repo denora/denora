@@ -1,5 +1,5 @@
 
-/* InspIRCd 1.0 Beta 6 functions
+/* InspIRCd 1.1 Beta 5 functions
  *
  * (C) 2005-2006 Craig Edwards <brain@inspircd.org>
  * (C) 2004-2006 Denora Team
@@ -10,7 +10,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id$
+ * $Id: inspircd11.c 729 2006-11-23 13:16:48Z Hal9000 $
  *
  * Following modules loaded during testing
  * <module name="m_chanprotect.so">
@@ -45,7 +45,7 @@
 
 /* ***** WARNING ******
  *
- * While InspIRCd beta 6 is relatively stable, it is very picky
+ * While InspIRCd 1.1 beta 5 is relatively stable, it is very picky
  * about the sources commands come from. If i've made commands
  * come from nicks or servers here, where it looks odd to you,
  * this is NORMAL and the way it should be done.
@@ -56,10 +56,10 @@
  */
 
 #include "denora.h"
-#include "inspircd.h"
+#include "inspircd11.h"
 
 IRCDVar myIrcd[] = {
-    {"InspIRCd 1.0 Beta 6",     /* ircd name                    */
+    {"InspIRCd 1.1 Beta 5",     /* ircd name                    */
      "+io",                     /* StatServ mode                */
      IRCD_ENABLE,               /* Vhost                        */
      IRCD_ENABLE,               /* Supports SGlines             */
@@ -244,7 +244,7 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("FNAME",     denora_event_fname); addCoreMessage(IRCD,m);
     m = createMessage("PONG",      denora_event_pong); addCoreMessage(IRCD,m);
     m = createMessage("METADATA",  denora_event_null); addCoreMessage(IRCD,m);
-    m = createMessage("FMODE",     denora_event_mode); addCoreMessage(IRCD,m);
+    m = createMessage("FMODE",     denora_event_fmode); addCoreMessage(IRCD,m);
     m = createMessage("FTOPIC",    denora_event_ftopic); addCoreMessage(IRCD,m);
     m = createMessage("VERSION",   denora_event_version); addCoreMessage(IRCD,m);
     m = createMessage("OPERTYPE",  denora_event_opertype); addCoreMessage(IRCD,m);
@@ -678,10 +678,9 @@ int denora_event_quit(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
-/* Both FMODE (which can only come from a server)
- * and MODE (which can only come from a user) are
- * both routed to this handler as denora can handle
- * them both as the same thing.
+/* 
+ * :irc.mynet.org MODE #opers +bb *!user@spy.com *!person@watching.us
+ * :<source server or nickname> MODE <target> <modes and parameters>
  */
 
 int denora_event_mode(char *source, int ac, char **av)
@@ -689,14 +688,47 @@ int denora_event_mode(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
+
     if (ac < 2)
         return MOD_CONT;
-
     if (*av[0] == '#' || *av[0] == '&') {
         do_cmode(source, ac, av);
     } else {
         do_umode(source, ac, av);
     }
+
+    return MOD_CONT;
+}
+
+/*
+ * :irc.mynet.org FMODE #opers 115432135 +bb *!user@spy.com *!person@watching.us
+ * :<source server or nickname> FMODE <target> <timestamp> <modes and parameters>
+ */
+int denora_event_fmode(char *source, int ac, char **av)
+{
+    char *newav[127];
+    int i = 0;
+
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
+    }
+
+    if (ac < 3)
+        return MOD_CONT;
+
+    /* We need to remove the timestamp, which is av[1] */
+    newav[0] = av[0];
+    newav[1] = av[2];
+    for (i = 2; i < (ac - 1); i++) {
+        newav[i] = av[i + 1];
+    }
+
+    if (*newav[0] == '#' || *newav[0] == '&') {
+        do_cmode(source, (ac - 1), newav);
+    } else {
+        do_umode(source, (ac - 1), newav);
+    }
+
     return MOD_CONT;
 }
 
@@ -792,10 +824,13 @@ int denora_event_fhost(char *source, int ac, char **av)
  */
 int denora_event_fjoin(char *source, int ac, char **av)
 {
-
     char *newav[127];
     char people[1024];
     int i = 0;
+    char *userv[256];
+    int userc = 0;
+    int nlen = 0;
+    char prefixandnick[51];
 
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
@@ -804,18 +839,51 @@ int denora_event_fjoin(char *source, int ac, char **av)
     if (ac < 3)
         return MOD_CONT;
 
-    newav[0] = av[1];
-    newav[1] = av[0];
-    newav[2] = (char *) "+";
-    newav[3] = people;
+    newav[0] = av[1];           // Timestamp
+    newav[1] = av[0];           // Channel
+    newav[2] = (char *) "+";    // Modes
+    newav[3] = people;          // Nickname
 
     *people = '\0';
 
-    for (i = 2; i < ac; i++) {
-        if (i > 2)
-            strncat(people, " ", 1024);
-        strncat(people, av[i], 1024);
+    /* 
+     * We need to remove the comma and ignore unknown modes.
+     * This code is based on work by w00t for atheme.
+     */
+    userc = sjtoken(av[ac - 1], ' ', userv);
+
+    /* loop over all the users in this fjoin */
+    for (i = 0; i < userc; i++) {
+        nlen = 0;
+
+        alog(LOG_DEBUG, "denora_event_fjoin(): processing user: %s",
+             userv[i]);
+
+        for (; *userv[i]; userv[i]++) {
+            /* does this char match a known prefix? */
+            if (csmodes[*userv[i]]) {
+                prefixandnick[nlen++] = *userv[i];
+                continue;
+            }
+
+            /* have we reached the end of the prefixes? */
+            if (*userv[i] == ',') {
+                /* yup, skip over the comma */
+                userv[i]++;
+
+                /* create nick with prefixes */
+                strlcpy(prefixandnick + nlen, userv[i],
+                        sizeof(prefixandnick) - nlen);
+                /* add the user */
+                strncat(people, prefixandnick, 1024);
+                strncat(people, " ", 1024);
+
+                /* break out of this loop, which will move us to the next user */
+                break;
+            }
+        }
     }
+
     do_sjoin(source, 4, newav);
 
     return MOD_CONT;
@@ -956,7 +1024,7 @@ int denora_event_notice(char *source, int ac, char **av)
 void inspircd_cmd_mode(char *source, char *dest, char *buf)
 {
     if (!stricmp(source, ServerName)) {
-        send_cmd(source, "FMODE %s %s", dest, buf);
+        send_cmd(source, "FMODE %s %i %s", dest, time(NULL), buf);
     } else {
         send_cmd(source, "MODE %s %s", dest, buf);
     }
@@ -965,6 +1033,62 @@ void inspircd_cmd_mode(char *source, char *dest, char *buf)
 void inspircd_cmd_eob(void)
 {
     send_cmd(NULL, "ENDBURST");
+}
+
+int sjtoken(char *message, char delimiter, char **parv)
+{
+    char *next;
+    uint16_t count;
+
+    if (!message)
+        return 0;
+
+    /* now we take the beginning of the message and find all the spaces...
+     * set them to \0 and use 'next' to go through the string
+     */
+    next = message;
+
+    /* eat any additional delimiters */
+    while (*next == delimiter)
+        next++;
+
+    parv[0] = next;
+    count = 1;
+
+    while (*next) {
+        /* this is fine here, since we don't have a :delimited
+         * parameter like tokenize
+         */
+
+        if (count == 256) {
+            /* we've reached our limit */
+            alog(LOG_DEBUG, "sjtokenize(): reached param limit");
+            return count;
+        }
+
+        if (*next == delimiter) {
+            *next = '\0';
+            next++;
+            /* eat any additional delimiters */
+            while (*next == delimiter)
+                next++;
+            /* if it's the end of the string, it's simply
+             ** an extra space at the end.  here we break.
+             */
+            if (*next == '\0')
+                break;
+
+            /* if it happens to be a stray \r, break too */
+            if (*next == '\r')
+                break;
+
+            parv[count] = next;
+            count++;
+        } else
+            next++;
+    }
+
+    return count;
 }
 
 void moduleAddIRCDCmds()
@@ -997,14 +1121,15 @@ int DenoraInit(int argc, char **argv)
         protocol_debug(NULL, argc, argv);
     }
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id$");
+    moduleAddVersion
+        ("$Id: inspircd11.c 729 2006-11-23 13:16:48Z Hal9000 $");
     moduleSetType(PROTOCOL);
 
-    pmodule_ircd_version("InspIRCd 1.0 Beta 6+");
+    pmodule_ircd_version("InspIRCd 1.1 Beta 5+");
     pmodule_ircd_cap(myIrcdcap);
     pmodule_ircd_var(myIrcd);
     pmodule_ircd_useTSMode(0);
-    pmodule_irc_var(IRC_INSPIRCD);
+    pmodule_irc_var(IRC_INSPIRCD11);
     IRCDModeInit();
     pmodule_oper_umode(UMODE_o);
 

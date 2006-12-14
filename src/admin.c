@@ -143,7 +143,7 @@ void save_admin_db(void)
     Dadmin *a;
     int i;
 
-    fill_db_ptr(dbptr, 0, CHAN_VERSION, s_StatServ, AdminDB);
+    fill_db_ptr(dbptr, 0, ADMIN_VERSION, s_StatServ, AdminDB);
     SET_SEGV_LOCATION();
 
     /* time to backup the old db */

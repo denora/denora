@@ -337,7 +337,7 @@ STAT_HELP_MODLIST
 	Limited to Stats Admins.
 
 STAT_HELP_EXCLUDE
-	Syntax: EXCLUDE {ADD|DEL} target
+	Syntax: EXCLUDE {ADD|DEL|LIST} target
 	
 	Exclude the given target from Stats
 	
@@ -421,20 +421,17 @@ STAT_RELOAD
 ###########################################################################
 
 STAT_STATS_SERVER_COUNT
-	Statistics of servers for %s:
-	
+	Statistics of servers for %s:	
 	Servers actually linked:  %d
 	Maximum of servers connected: %d
 
 STAT_STATS_CHAN_COUNT
-	Statistics of channels for %s:
-	
+	Statistics of channels for %s:	
 	Channels actually used:  %d
 	Maximum of channels created: %d
 
 STAT_STATS_USER_COUNT
-	Statistics of users for %s
-	
+	Statistics of users for %s	
 	Users actually connected:  %d
 	Maximum of users connected: %d
 
@@ -510,7 +507,7 @@ STAT_HELP_CHANSTATS
 	The CHANSTATS RENAME command renames user1 into user2.
 
 STAT_CHANSTATS_SYNTAX
-	CHANSTATS {ADD|DEL|LIST|SUMUSER|SET} [CHAN|USER|OPTION]
+	CHANSTATS {ADD|DEL|LIST|SET|SUMUSER|RENAME} [CHAN|USER|OPTION]
 
 STAT_CHANSTATS_CHAN_ADDED
 	%s is now set to be monitored for channel stats.

@@ -661,21 +661,22 @@ int denora_event_svsmode(char *source, int ac, char **av)
                     break;
                 } else {
                     if (tbuf) {
-                        snprintf(buf, sizeof(buf), "%s%c", tbuf, *modes);
+                        ircsnprintf(buf, sizeof(buf), "%s%c", tbuf,
+                                    *modes);
                         free(tbuf);
                         tbuf = sstrdup(buf);
                     } else {
-                        snprintf(buf, sizeof(buf), "%c", *modes);
+                        ircsnprintf(buf, sizeof(buf), "%c", *modes);
                         tbuf = sstrdup(buf);
                     }
                 }
             default:
                 if (tbuf) {
-                    snprintf(buf, sizeof(buf), "%s%c", tbuf, *modes);
+                    ircsnprintf(buf, sizeof(buf), "%s%c", tbuf, *modes);
                     free(tbuf);
                     tbuf = sstrdup(buf);
                 } else {
-                    snprintf(buf, sizeof(buf), "%c", *modes);
+                    ircsnprintf(buf, sizeof(buf), "%c", *modes);
                     tbuf = sstrdup(buf);
                 }
                 break;
@@ -683,8 +684,8 @@ int denora_event_svsmode(char *source, int ac, char **av)
             (void) *modes++;
         }
         if (tbuf) {
-            snprintf(modebuf, sizeof(modebuf), "%s%s", (add ? "+" : "-"),
-                     tbuf);
+            ircsnprintf(modebuf, sizeof(modebuf), "%s%s",
+                        (add ? "+" : "-"), tbuf);
             free(tbuf);
             newav[0] = av[0];
             newav[1] = sstrdup(modebuf);

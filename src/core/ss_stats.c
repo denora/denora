@@ -73,6 +73,7 @@ static int do_stats(User * u, int ac, char **av)
         notice_lang(s_StatServ, u, STAT_STATS_USER_COUNT, NetworkName,
                     stats->users, stats->users_max);
         if (StatsPage) {
+            notice_user(s_StatServ, u, " ");
             notice_lang(s_StatServ, u, STAT_STATS_PAGE, StatsPage);
         }
     } else if (!stricmp(what, "SERVERS")) {

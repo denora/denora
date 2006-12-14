@@ -123,6 +123,7 @@ int DisableMySQLOPT = 0;
 
 char *Numeric;
 int LargeNet;
+int NickTracking = 1;
 
 int UserCacheTime;
 int UserCleanFreq;
@@ -500,6 +501,9 @@ int confadd_netinfo(cVar * vars[], int lnum)
         } else if (tmp->type && (tmp->type->flag & SCONFF_LARGENET)) {
             tmp->type = NULL;
             LargeNet = 1;
+        } else if (tmp->type && (tmp->type->flag & SCONFF_NICKTRACKING)) {
+            tmp->type = NULL;
+            NickTracking = 0;
         } else if (tmp->type && (tmp->type->flag & SCONFF_SP_HTML)) {
             tmp->type = NULL;
             SP_HTML = 1;

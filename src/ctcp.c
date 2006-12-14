@@ -82,8 +82,7 @@ void load_ctcp_db(void)
     CTCPVerStats *ct = NULL;
     char *key, *value;
     int retval = 0;
-    int x = 1;
-    char *version;
+    char *version = NULL;
     int tempoverall = 0;
 
     fill_db_ptr(dbptr, 0, CTCP_VERSION, s_StatServ, ctcpDB);

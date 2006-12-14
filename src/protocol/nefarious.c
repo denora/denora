@@ -34,7 +34,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* +j                        */
      IRCD_DISABLE,              /* +L                        */
      IRCD_DISABLE,              /* +f Mode                   */
-     IRCD_DISABLE,              /* +j                        */
+     IRCD_DISABLE,              /* +j Mode                   */
      IRCD_DISABLE,              /* +L Mode                   */
      NULL,                      /* CAPAB Chan Modes          */
      IRCD_DISABLE,              /* We support TOKENS         */
@@ -47,7 +47,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* umode for vhost           */
      IRCD_DISABLE,              /* owner                     */
      IRCD_DISABLE,              /* protect                   */
-     IRCD_DISABLE,              /* halfop                    */
+     IRCD_ENABLE,               /* halfop                    */
      NULL,                      /* User modes                */
      NULL,                      /* Channel modes             */
      IRCD_DISABLE,              /* flood                     */
@@ -58,7 +58,7 @@ IRCDVar myIrcd[] = {
      IRCD_ENABLE,               /* p10                       */
      IRCD_DISABLE,              /* TS6                       */
      IRCD_ENABLE,               /* numeric ie.. 350 etc      */
-     IRCD_ENABLE,               /* channel mode gagged       */
+     IRCD_DISABLE,              /* channel mode gagged       */
      IRCD_DISABLE,              /* spamfilter                */
      'b',                       /* ban char                  */
      IRCD_DISABLE,              /* except char               */
@@ -113,27 +113,80 @@ IRCDCAPAB myIrcdcap[] = {
 
 void IRCDModeInit(void)
 {
-    ModuleSetUserMode(UMODE_B, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_I, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_O, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_R, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_X, IRCD_ENABLE);
+    /* User Modes
+     * a - admin
+     * h - set host
+     * f - fake host
+     * n - no chan
+     * i - marks a users as invisible;
+     * s - marks a user for receipt of server notices;
+     * w - user receives wallops;
+     * o - operator flag.
+     * d - Deaf & Dumb.  This user will not get any channel traffic. Used for bots.
+     * k - This user cannot be kicked, deop'd or /kill'd.  This usermode may only
+     *     be set by a server, it may not be set by a user.  This is used by
+     *     undernet service bots (X/W/UWorld etc)
+     * g - List channel HACK:'s
+     * O - local op
+     * R - account only
+     * B - bot
+     * X - xtra op
+     * I - no idle
+     * W - whois
+     */
+
+    ModuleSetUserMode(UMODE_a, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_d, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_f, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_g, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_h, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_i, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_k, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_n, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_o, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_r, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_s, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_x, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_w, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_B, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_I, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_O, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_R, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_W, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_X, IRCD_ENABLE);
     ModuleUpdateSQLUserMode();
+
+    /* Channel Modes
+     * o - give/take channel operator privileges;
+     * h - halfop
+     * p - private channel flag;
+     * s - secret channel flag;
+     * i - invite-only channel flag;
+     * t - topic settable by channel operator only flag;
+     * n - no messages to channel from clients on the outside;
+     * m - moderated channel;
+     * l - set the user limit to channel;
+     * b - set a ban mask to keep users out;
+     * v - give/take the ability to speak on a moderated channel;
+     * k - set a channel key (password).
+     * r - registered
+     * e - ban excepts
+     * c - no colour
+     * S - strip colour
+     * C - no ctcp
+     * M - acconly
+     * N - no notice
+     * O - oper only
+     * a - admin only
+     * Q - no quit parts
+     * Z - ssl only
+     * T - no amsg
+     * L - no list modes
+     * z - persist
+     */
     CreateChanBanMode(CMODE_b, add_ban, del_ban);
-
-
-    /* Channel Modes */
-    CreateChanMode(CMODE_C, NULL, NULL);
-    CreateChanMode(CMODE_N, NULL, NULL);
+    CreateChanBanMode(CMODE_e, add_exception, del_exception);
+    CreateChanMode(CMODE_a, NULL, NULL);
     CreateChanMode(CMODE_c, NULL, NULL);
     CreateChanMode(CMODE_i, NULL, NULL);
     CreateChanMode(CMODE_k, set_key, get_key);
@@ -144,12 +197,20 @@ void IRCDModeInit(void)
     CreateChanMode(CMODE_r, NULL, NULL);
     CreateChanMode(CMODE_s, NULL, NULL);
     CreateChanMode(CMODE_t, NULL, NULL);
-
-    ModuleSetChanUMode('+', 'v', STATUS_VOICE);
-    ModuleSetChanUMode('@', 'o', STATUS_OP);
-
+    CreateChanMode(CMODE_z, NULL, NULL);
+    CreateChanMode(CMODE_C, NULL, NULL);
+    CreateChanMode(CMODE_L, NULL, NULL);
+    CreateChanMode(CMODE_M, NULL, NULL);
+    CreateChanMode(CMODE_N, NULL, NULL);
+    CreateChanMode(CMODE_O, NULL, NULL);
+    CreateChanMode(CMODE_Q, NULL, NULL);
+    CreateChanMode(CMODE_S, NULL, NULL);
+    CreateChanMode(CMODE_T, NULL, NULL);
+    CreateChanMode(CMODE_Z, NULL, NULL);
+    ModuleSetChanUMode('v', 'v', STATUS_VOICE);
+    ModuleSetChanUMode('h', 'h', STATUS_HALFOP);
+    ModuleSetChanUMode('o', 'o', STATUS_OP);
     ModuleUpdateSQLChanMode();
-
 }
 
 
@@ -365,6 +426,8 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("TR",       denora_event_null); addCoreMessage(IRCD,m);
     /* RPING */
     m = createMessage("RI",       denora_event_null); addCoreMessage(IRCD,m);
+    /* SILENCE */
+    m = createMessage("U",        denora_event_null); addCoreMessage(IRCD,m);    
     /* End of Burst Acknowledge */
     m = createMessage("EA",       denora_event_null); addCoreMessage(IRCD,m);
 }
@@ -396,10 +459,12 @@ void nefarious_cmd_stats(char *sender, const char *letter, char *server)
 /* PART */
 void nefarious_cmd_part(char *nick, char *chan, char *buf)
 {
+    Uid *ud;
+    ud = find_uid(nick);
     if (buf) {
-        send_cmd(nick, "L %s :%s", chan, buf);
+        send_cmd((ud ? ud->uid : nick), "L %s :%s", chan, buf);
     } else {
-        send_cmd(nick, "L %s", chan);
+        send_cmd((ud ? ud->uid : nick), "L %s", chan);
     }
 }
 
@@ -492,12 +557,20 @@ int denora_event_away(char *source, int ac, char **av)
 
 int denora_event_topic(char *source, int ac, char **av)
 {
+    char *newav[4];
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    if (ac != 4)
+    if (ac < 4)
         return MOD_CONT;
-    do_topic(ac, av);
+
+    newav[0] = av[0];
+    newav[1] = av[1];
+    newav[2] = av[ac - 2];
+    newav[3] = av[ac - 1];
+
+    do_topic(4, newav);
     return MOD_CONT;
 }
 
@@ -619,6 +692,7 @@ int denora_event_sjoin(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
+    alog(LOG_DEBUG, "Calling do_p10_burst");
     do_p10_burst(ac, av);
     return MOD_CONT;
 }

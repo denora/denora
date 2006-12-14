@@ -170,7 +170,6 @@ void save_chan_db(void)
 void InitStatsChanList(void)
 {
     StatsChannel *cs;
-    lnode_t *csn;
     SET_SEGV_LOCATION();
 
     StatsChanhead = list_create(-1);
@@ -183,18 +182,19 @@ void InitStatsChanList(void)
 /* PART */
 void sql_do_part(char *chan, User * u)
 {
+    char *sqlchan;
     int chanid, nickid, users;
 
     SET_SEGV_LOCATION();
-    chan = rdb_escape(chan);
-    chanid = db_getchannel(chan);
+    sqlchan = rdb_escape(chan);
+    chanid = db_getchannel(sqlchan);
     nickid = db_getnick(u->sqlnick);
 
     if (chanid || nickid) {
         rdb_query(QUERY_LOW,
                   "DELETE FROM %s WHERE nickid=%d AND chanid=%d",
                   IsOnTable, nickid, chanid);
-        users = db_getchannel_users(chan);
+        users = db_getchannel_users(sqlchan);
         if (users) {
             users--;
             rdb_query(QUERY_LOW,
@@ -204,7 +204,7 @@ void sql_do_part(char *chan, User * u)
         db_checkemptychan(chanid);
     }
     SET_SEGV_LOCATION();
-    free(chan);
+    free(sqlchan);
 }
 
 /*************************************************************************/
@@ -219,11 +219,13 @@ void sql_do_part(char *chan, User * u)
  */
 void sql_do_partall(char *nick)
 {
-    if (nick) {
-        nick = rdb_escape(nick);
+    char *sqlnick;
+
+    if (!BadPtr(nick)) {
+        sqlnick = rdb_escape(nick);
         SET_SEGV_LOCATION();
-        db_removefromchans(db_getnick(nick));
-        free(nick);
+        db_removefromchans(db_getnick(sqlnick));
+        free(sqlnick);
     }
 }
 
@@ -598,6 +600,35 @@ void do_bmask(char **av)
     }
 }
 
+char *p10_mode_parse(char *mode, int *nomode)
+{
+    char *s;
+    char modebuf[15];
+    char *temp = NULL;
+
+    /* We make all the users join */
+    s = mode;
+    while (*s) {
+        while (csmodes[(int) *s] != 0) {
+            nomode++;
+            if (temp) {
+                ircsnprintf(modebuf, sizeof(modebuf), "%s%c", temp, *s);
+                if (temp) {
+                    free(temp);
+                }
+                temp = sstrdup(modebuf);
+            } else {
+                ircsnprintf(modebuf, sizeof(modebuf), "+%c", *s);
+                temp = sstrdup(modebuf);
+            }
+            break;
+        }
+        (void) *s++;
+    }
+    return temp;
+}
+
+
 /*************************************************************************/
 
 /**
@@ -630,26 +661,15 @@ void do_p10_burst(int ac, char **av)
                 alog(LOG_NONEXISTANT,
                      langstr(ALOG_DEBUG_SJOIN_NONEXISTANT), t, av[0]);
                 i++;
+                DenoraFree(t);
+                DenoraFree(m);
                 continue;
             }
             v[0] = av[0];
             do_join(user->nick, 1, v);
             if (m) {
                 x[0] = av[0];
-                if (!stricmp(m, "o")) {
-                    x[1] = sstrdup("+o");
-                } else if (!stricmp(m, "v")) {
-                    x[1] = sstrdup("+v");
-                } else if (!stricmp(m, "h") && ircd->halfop) {
-                    x[1] = sstrdup("+h");
-                } else if (!stricmp(m, "ov")) {
-                    x[1] = sstrdup("+ov");
-                } else {
-                    nomode = 1;
-                    alog(LOG_DEBUG,
-                         "P10 mode is unknown, please report %s as a known channel user mode",
-                         m);
-                }
+                x[1] = p10_mode_parse(m, &nomode);
                 if (!nomode) {
                     x[2] = user->nick;
                     do_cmode(user->nick, 3, x);
@@ -694,26 +714,15 @@ void do_p10_burst(int ac, char **av)
                 alog(LOG_NONEXISTANT,
                      langstr(ALOG_DEBUG_SJOIN_NONEXISTANT), t, av[0]);
                 i++;
+                DenoraFree(t);
+                DenoraFree(m);
                 continue;
             }
             v[0] = av[0];
             do_join(user->nick, 1, v);
             if (m) {
                 x[0] = av[0];
-                if (!stricmp(m, "o")) {
-                    x[1] = sstrdup("+o");
-                } else if (!stricmp(m, "v")) {
-                    x[1] = sstrdup("+v");
-                } else if (!stricmp(m, "h") && ircd->halfop) {
-                    x[1] = sstrdup("+h");
-                } else if (!stricmp(m, "ov")) {
-                    x[1] = sstrdup("+ov");
-                } else {
-                    nomode = 1;
-                    alog(LOG_DEBUG,
-                         "P10 mode is unknown, please report %s as a known channel user mode",
-                         m);
-                }
+                x[1] = p10_mode_parse(m, &nomode);
                 if (!nomode) {
                     x[2] = user->nick;
                     do_cmode(user->nick, 3, x);
@@ -721,8 +730,8 @@ void do_p10_burst(int ac, char **av)
                 }
                 free(m);
             }
-            free(t);
-            free(s);
+            DenoraFree(t);
+            DenoraFree(s);
             i++;
         }
     } else if (ac == 4) {
@@ -737,26 +746,15 @@ void do_p10_burst(int ac, char **av)
                     alog(LOG_NONEXISTANT,
                          langstr(ALOG_DEBUG_SJOIN_NONEXISTANT), t, av[0]);
                     i++;
+                    DenoraFree(t);
+                    DenoraFree(m);
                     continue;
                 }
                 v[0] = av[0];
                 do_join(user->nick, 1, v);
                 if (m) {
                     x[0] = av[0];
-                    if (!stricmp(m, "o")) {
-                        x[1] = sstrdup("+o");
-                    } else if (!stricmp(m, "v")) {
-                        x[1] = sstrdup("+v");
-                    } else if (!stricmp(m, "h") && ircd->halfop) {
-                        x[1] = sstrdup("+h");
-                    } else if (!stricmp(m, "ov")) {
-                        x[1] = sstrdup("+ov");
-                    } else {
-                        nomode = 1;
-                        alog(LOG_DEBUG,
-                             "P10 mode is unknown, please report %s as a known channel user mode",
-                             m);
-                    }
+                    x[1] = p10_mode_parse(m, &nomode);
                     if (!nomode) {
                         x[2] = user->nick;
                         do_cmode(user->nick, 3, x);
@@ -782,26 +780,15 @@ void do_p10_burst(int ac, char **av)
                     alog(LOG_NONEXISTANT,
                          langstr(ALOG_DEBUG_SJOIN_NONEXISTANT), t, av[0]);
                     i++;
+                    DenoraFree(t);
+                    DenoraFree(m);
                     continue;
                 }
                 v[0] = av[0];
                 do_join(user->nick, 1, v);
                 if (m) {
                     x[0] = av[0];
-                    if (!stricmp(m, "o")) {
-                        x[1] = sstrdup("+o");
-                    } else if (!stricmp(m, "v")) {
-                        x[1] = sstrdup("+v");
-                    } else if (!stricmp(m, "h") && ircd->halfop) {
-                        x[1] = sstrdup("+h");
-                    } else if (!stricmp(m, "ov")) {
-                        x[1] = sstrdup("+ov");
-                    } else {
-                        nomode = 1;
-                        alog(LOG_DEBUG,
-                             "P10 mode is unknown, please report %s as a known channel user mode",
-                             m);
-                    }
+                    x[1] = p10_mode_parse(m, &nomode);
                     if (!nomode) {
                         x[2] = user->nick;
                         do_cmode(user->nick, 3, x);
@@ -1108,7 +1095,6 @@ void do_sjoin(const char *source, int ac, char **av)
     char *s, *end, cubuf[7], *end2, *sumodes[6];
     char *sqlusers = NULL;
     char *mask;
-
     int ts = 0;
 
     SET_SEGV_LOCATION();

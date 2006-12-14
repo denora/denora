@@ -259,6 +259,22 @@ if test "$?" = "1" ; then
 	echo "ALTER TABLE cstats ADD timeadded INT( 10 ) AFTER letters;" >> $USQLDB
 fi
 
+# ustats columns
+
+if [ "$DBFILE" = "charybdis" ]; then
+	$MYSQL -Bs -e "describe ustats timeadded" 2> /dev/null | grep -q timeadded
+	if test "$?" != "1" ; then
+		echo "ALTER TABLE ustats DROP timeadded;" >> $USQLDB
+	fi
+fi
+
+if [ "$DBFILE" = "beware" ]; then
+	$MYSQL -Bs -e "describe ustats timeadded" 2> /dev/null | grep -q timeadded
+	if test "$?" != "1" ; then
+		echo "ALTER TABLE ustats DROP timeadded;" >> $USQLDB
+	fi
+fi
+
 # user columns
 
 if [ "$DBFILE" = "unreal32" ]; then

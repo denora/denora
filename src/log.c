@@ -183,20 +183,15 @@ void alog(int type, const char *fmt, ...)
     va_start(args, fmt);
     ircvsnprintf(str, sizeof(str), fmt, args);
     va_end(args);
-/*
-	fprintf(stderr, "denora->debug = %d type = %d LOG_EXTRADEBUG %d LOG_DEBUG %d\n", denora->debug, type, LOG_EXTRADEBUG, LOG_DEBUG);
-	fprintf(stderr, "%s\n", str);
-	sleep(2);
-*/
 
     buf = log_gettimestamp();
 
     if (!NoLogs && logfile) {
-        fprintf(logfile, "%s%s\n", buf, str);
+        fprintf(logfile, "%s %s\n", buf, str);
     }
 
     if (denora->nofork) {
-        fprintf(stderr, "%s%s\n", buf, str);
+        fprintf(stderr, "%s %s\n", buf, str);
     }
 
     if (!BadPtr(LogChannel) && !denora->debug && findchan(LogChannel)) {

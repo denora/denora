@@ -348,7 +348,7 @@ STAT_HELP_MODLIST
 	Dit commando is gelimiteerd tot Stats beheerders.
 
 STAT_HELP_EXCLUDE
-	Gebruik: EXCLUDE {ADD|DEL} doel
+	Gebruik: EXCLUDE {ADD|DEL|LIST} doel
 	
 	Sluit het gegeven doel uit van de statistieken.
 	
@@ -441,19 +441,16 @@ STAT_RELOAD
 
 STAT_STATS_SERVER_COUNT
 	Statistieken van servers voor %s:
-	
 	Servers momenteel verbonden: %d
 	Record aantal verbonden servers: %d
 
 STAT_STATS_CHAN_COUNT
 	Statistieken van kanalen voor %s:
-	
 	Kanalen momenteel in gebruik: %d
 	Record aantal gemaakte kanalen: %d
 
 STAT_STATS_USER_COUNT
 	Statistieken van gebruikers voor %s:
-	
 	Gebruikers momenteel verbonden: %d
 	Record aantal verbonden gebruikers: %d
 
@@ -529,7 +526,7 @@ STAT_HELP_CHANSTATS
 	The CHANSTATS RENAME command renames user1 into user2.
 
 STAT_CHANSTATS_SYNTAX
-	CHANSTATS {ADD|DEL|LIST|SUMUSER|SET} [KANAAL|GEBRUIKER|OPTIE]
+	CHANSTATS {ADD|DEL|LIST|SET|SUMUSER|RENAME} [KANAAL|GEBRUIKER|OPTIE]
 
 STAT_CHANSTATS_CHAN_ADDED
 	%s wordt nu in de gaten gehouden voor kanaalstatistieken.

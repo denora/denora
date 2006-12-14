@@ -336,7 +336,7 @@ STAT_HELP_MODLIST
 	Limitado a Stats Admins.
 
 STAT_HELP_EXCLUDE
-	Sintaxis: EXCLUDE {ADD|DEL} blanco
+	Sintaxis: EXCLUDE {ADD|DEL|LIST} blanco
 	
 	Excluye al blanco dado de las Estadisticas
 	
@@ -421,19 +421,16 @@ STAT_RELOAD
 
 STAT_STATS_SERVER_COUNT
 	Estadistica de servidores para %s:
-	
 	Servidores actualmente conectados:  %d
 	Maximo de servidores conectados:    %d
 
 STAT_STATS_CHAN_COUNT
 	Estadisticas de canales para %s:
-	
 	Canales actualmente usuados:  %d
 	Maximo de canales usuados:    %d
 
 STAT_STATS_USER_COUNT
 	Estadisticas de usuarios para %s
-	
 	Usuarios actualmente conectados:  %d
 	Maximo de usuarios conectados:    %d
 
@@ -509,7 +506,7 @@ STAT_HELP_CHANSTATS
 	The CHANSTATS RENAME command renames user1 into user2.
 
 STAT_CHANSTATS_SYNTAX
-	CHANSTATS {ADD|DEL|LIST|SUMUSER|SET} [CHAN|USER|OPTION]
+	CHANSTATS {ADD|DEL|LIST|SET|SUMUSER|RENAME} [CHAN|USER|OPTION]
 
 STAT_CHANSTATS_CHAN_ADDED
 	%s ahora sera monitoreado por estadisticas de canales.

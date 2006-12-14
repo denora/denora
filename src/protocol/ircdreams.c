@@ -160,9 +160,9 @@ void IRCDModeInit(void)
     CreateChanMode(CMODE_t, NULL, NULL);
 
 
-    ModuleSetChanUMode('%', 'h', STATUS_HALFOP);
-    ModuleSetChanUMode('+', 'v', STATUS_VOICE);
-    ModuleSetChanUMode('@', 'o', STATUS_OP);
+    ModuleSetChanUMode('h', 'h', STATUS_HALFOP);
+    ModuleSetChanUMode('v', 'v', STATUS_VOICE);
+    ModuleSetChanUMode('o', 'o', STATUS_OP);
 
     ModuleUpdateSQLChanMode();
 

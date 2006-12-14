@@ -339,7 +339,7 @@ STAT_HELP_MODLIST
 	Limitato a Stats Admins.
 
 STAT_HELP_EXCLUDE
-	Sintassi: EXCLUDE {ADD|DEL} oggetto
+	Sintassi: EXCLUDE {ADD|DEL|LIST} oggetto
 	
 	Escludi l'oggetto specificato (nickname o canale) da Stats
 	
@@ -424,19 +424,16 @@ STAT_RELOAD
 
 STAT_STATS_SERVER_COUNT
 	Statistiche di server per %s:
-	
 	Server attualmente linkati:  %d
 	Picco dei server connessi: %d
 
 STAT_STATS_CHAN_COUNT
 	Statistiche di canali per %s:
-	
 	Canali attualmente utilizzati:  %d
 	Picco dei canali creati: %d
 
 STAT_STATS_USER_COUNT
 	Statistiche di utenti per %s
-	
 	Utenti attualmente connessi:  %d
 	Picco di utenti connessi: %d
 
@@ -511,7 +508,7 @@ STAT_HELP_CHANSTATS
 	Il comando CHANSTATS RENAME rinomina l'utente1 in utente2.
 
 STAT_CHANSTATS_SYNTAX
-	CHANSTATS [ADD|DEL|LIST|SUMUSER|SET] [CHAN|USER|OPTION]
+	CHANSTATS [ADD|DEL|LIST|SET|SUMUSER|RENAME] [CHAN|USER|OPTION]
 
 STAT_CHANSTATS_CHAN_ADDED
 	%s è ora monitorato per le statistiche di canale.

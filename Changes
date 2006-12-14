@@ -265,7 +265,17 @@ Provided by Nomad Dev. <dev@nomadirc.net> - 2005
 08/06 F Fixed EXCLUDE ADD not checking the nick lenghts.          [ #00]
 08/05 F Fixed maxvalues setting on clean installs.                [#122]
 
-Provided by Hal9000 <hal9000@musichat.net>
+Provided by Hal9000 <hal9000@pimpmylinux.org>
+11/30 F Fixed ustats table for Charybdis and Beware               [ #00]
+11/29 F Fixed not decreasing user count on server kills           [#350]
+11/26 F Fixed user modes not being reset on user reconnect        [#359]
+11/23 F Fixed FMODE parser in InspIRCd 1.1 protocol module        [ #00]
+11/22 F Fixed uplink server not being set with InspIRCd 1.0/1.1   [#357]
+11/22 F Fixed maxvalues table not getting updated in some cases   [#356]
+11/22 A Added InspIRCd 1.1 support                                [#353]
+11/14 F Help now advertises the CHANSTATS EXCLUDE LIST command    [ #00]
+11/11 F Don't care about Unreal's +H mode for oper counting       [#338]
+09/22 A Added configuration option to disable nick tracking       [ #00]
 09/16 U Updated mydbgen                                           [#341]
 09/11 F Fixed do_nick not assigning uid correctly                 [ #00]
 09/11 F Fixed wrong parameter sent in m_privmsg                   [#335]
@@ -307,6 +317,7 @@ Provided by Alvaro <alvaro@xateros.com>
 01/10 U Updated es.l                                              [ #00]
 
 Provided by illu <illu@icedslash.org>
+11/09 U Updated fr.l                                              [ #00]
 01/24 U Updated fr.l                                              [ #00]
 
 Provided by BarkerJr <BarkerJr@GMail.com>
@@ -418,7 +429,7 @@ Provided by Nomad Dev. <dev@nomadirc.net> - 2005
 Provided by Izlots <Christian.Schroer@gmail.com> - 2005
 06/12 F !peak was case sensetive                                  [ #80]
 
-Provided by Hal9000 <hal9000@musichat.net> - 2005
+Provided by Hal9000 <hal9000@pimpmylinux.org> - 2005
 07/05 U Updated it.l and example.it.conf                          [ #00]
 07/02 U Update it.l and convertor to v0.7.0                       [ #00]
 06/11 A Added exapmle.it.conf                                     [ #00]
@@ -585,7 +596,7 @@ Provided by Xaf <root@sbird.org> - 2005
 Provided by GeniusDex <geniusdex@anope.org>
 05/16 A Dutch Translation.                                        [ #00]
 
-Provided by Hal9000 <hal9000@musichat.net> - 2005
+Provided by Hal9000 <hal9000@pimpmylinux.org> - 2005
 05/17 A Italian Translation.                                      [ #00]
 
 Provided by Alvaro <agonzal@gmail.com> - 2005

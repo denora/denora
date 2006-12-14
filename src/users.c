@@ -105,6 +105,45 @@ void sql_do_usermodes(User * u, char *modes)
 /*************************************************************************/
 
 /**
+ * Reset all user modes to N for the given nick ID
+ */
+
+void sql_reset_usermodes(int nickid, char *nickname)
+{
+    char *modes = "qwertzuiopasdfghjklyxcvbnmQWERTZUIOPASDFGHJKLYXCVBNM";
+    char db[MAX_SQL_BUF];
+    char tmp[14] = "mode_XX=\'X\', ";
+    char buf[1000];
+
+    *db = '\0';
+    *buf = '\0';
+
+    ircsnprintf(buf, sizeof(buf), "UPDATE %s SET ", UserTable);
+    strlcpy(db, buf, sizeof(db));
+    while (*modes) {
+        tmp[9] = 'N';
+        if (strchr(ircd->usermodes, *modes)) {
+            tmp[5] = ((*modes >= 'a') ? 'l' : 'u');
+            tmp[6] = tolower(*modes);
+            strlcat(db, tmp, sizeof(db));
+        }
+        modes++;
+    }
+    SET_SEGV_LOCATION();
+
+    if (nickid == 0) {
+        ircsnprintf(&db[strlen(db) - 2], sizeof(db), " WHERE nick='%s'",
+                    nickname);
+    } else {
+        ircsnprintf(&db[strlen(db) - 2], sizeof(db), " WHERE nickid=%d",
+                    nickid);
+    }
+    rdb_query(QUERY_LOW, db);
+}
+
+/*************************************************************************/
+
+/**
  * Store the SWHOIS message
  *
  * @param user is the nick of the user changing SWHOIS for
@@ -195,7 +234,9 @@ void sql_do_nick(User * u)
 
     SET_SEGV_LOCATION();
 
-    if (LargeNet || !UplinkSynced) {
+    if (NickTracking == 0) {
+        nickid = db_checknick(u->sqlnick);
+    } else if (LargeNet || !UplinkSynced) {
         nickid = db_checknick(u->sqlnick);
     } else {
         nickid = db_checknick_nt(u->sqlnick);
@@ -218,6 +259,7 @@ void sql_do_nick(User * u)
                  countryname, realname, host, username, u->timestamp,
                  servid, server, nickid);
         }
+        sql_reset_usermodes(nickid, NULL);
         add = 0;
     }
     if (add) {
@@ -242,6 +284,7 @@ void sql_do_nick(User * u)
                      u->ip, realname, host, username, u->timestamp, servid,
                      server, countrycode, countryname);
             }
+            sql_reset_usermodes(0, u->sqlnick);
         } else {
             if (ircd->vhost) {
                 rdb_query
@@ -616,11 +659,7 @@ void delete_user(User * user)
 
     alog(LOG_EXTRADEBUG, "debug: delete_user() called for %s", user->nick);
     if (is_oper(user)) {
-        if (!ircd->hideoper) {
-            del_oper_count(user);
-        } else if (!UserHasMode(user->nick, UMODE_H)) {
-            del_oper_count(user);
-        }
+        del_oper_count(user);
     }
 
     if (user->isservice) {
@@ -1278,7 +1317,10 @@ void do_quit(const char *source, int ac, char **av)
          (!BadPtr(av[0]) ? av[0] : "Quit"));
 
     if (denora->do_sql) {
-        if (LargeNet || !UplinkSynced) {
+        if (NickTracking == 0) {
+            db_removenick(user->sqlnick,
+                          (!BadPtr(av[0]) ? av[0] : (char *) "Quit"));
+        } else if (LargeNet || !UplinkSynced) {
             db_removenick(user->sqlnick,
                           (!BadPtr(av[0]) ? av[0] : (char *) "Quit"));
         } else {
@@ -1309,7 +1351,7 @@ void do_kill(char *nick, char *msg)
 {
     User *user;
 
-    if (nick || !*nick || !msg || !*msg) {
+    if (!nick || !*nick || !msg || !*msg) {
         return;
     }
 
@@ -1322,12 +1364,6 @@ void do_kill(char *nick, char *msg)
         return;
     }
     alog(LOG_DEBUG, "debug: %s killed: %s", nick, msg);
-    if (denora->do_sql) {
-        db_removenick(user->sqlnick, msg);
-        if (UserCacheTime) {
-            db_cleanuser();
-        }
-    }
     send_event(EVENT_USER_LOGOFF, 2, user->nick, msg);
     delete_user(user);
 }

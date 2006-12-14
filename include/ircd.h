@@ -17,7 +17,7 @@
 #define IRC_HYBRID     4   /* Hybrid IRCd 7                              */
 #define IRC_IRCU       5   /* IRCu                                       */
 #define IRC_NEFARIOUS  6   /* Nefarious IRCu                             */
-#define IRC_INSPIRCD   7   /* Inspircd                                   */
+#define IRC_INSPIRCD   7   /* Inspircd 1.0.x                             */
 #define IRC_PLEXUS     8   /* Plexus IRCd                                */
 #define IRC_PTLINK     9   /* PTLink 6.19.x                              */
 #define IRC_QUAKEIRCD  10  /* QuakeIRCD 2.0                              */
@@ -43,5 +43,5 @@
 #define IRC_CHARYBDIS  30  /* Charybdis IRCD                             */
 #define IRC_PLEXUS3    31  /* Plexus IRCd v3                             */
 #define IRC_MUSIRCD    32  /* MusIRCD v2.x                               */
-
+#define IRC_INSPIRCD11 33  /* Inspircd 1.1.x                             */
 

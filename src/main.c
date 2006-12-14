@@ -1220,6 +1220,30 @@ int init(int ac, char **av)
     denora_cmd_eob();
     send_event(EVENT_CONNECT, 1, EVENT_STOP);
 
+    /* Dumping stats.db maxvalues to sql */
+    if (denora->do_sql) {
+        rdb_query
+            (QUERY_LOW,
+             "UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='channels'",
+             MaxValueTable, stats->chans_max,
+             (long int) stats->chans_max_time);
+        rdb_query
+            (QUERY_LOW,
+             "UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='users'",
+             MaxValueTable, stats->users_max,
+             (long int) stats->users_max_time);
+        rdb_query
+            (QUERY_LOW,
+             "UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='servers'",
+             MaxValueTable, stats->servers_max,
+             (long int) stats->servers_max_time);
+        rdb_query
+            (QUERY_LOW,
+             "UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='opers'",
+             MaxValueTable, stats->opers_max,
+             (long int) stats->opers_max_time);
+    }
+
     /**
       * Load our delayed modules - modules that are planing on making clients need to wait till now
       * where as modules wanting to modify our ircd connection messages need to load earlier :|
