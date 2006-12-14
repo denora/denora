@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: ss_chanstats.c 710 2006-09-15 19:16:19Z trystan $
+ * $Id$
  *
  */
 /*************************************************************************/
@@ -34,7 +34,7 @@ int DenoraInit(int argc, char **argv)
     }
     moduleAddAuthor("Denora");
     moduleAddVersion
-        ("$Id: ss_chanstats.c 710 2006-09-15 19:16:19Z trystan $");
+        ("$Id$");
     moduleSetType(CORE);
 
     c = createCommand("CHANSTATS", do_chanstats, is_stats_admin, -1, -1,

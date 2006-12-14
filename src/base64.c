@@ -10,7 +10,7 @@
  * Based on the original code of Unreal IRCD
  * Based on the original code of NeoStats
  * 
- * $Id: base64.c 686 2006-08-31 09:08:24Z trystan $
+ * $Id$
  *
  */
 

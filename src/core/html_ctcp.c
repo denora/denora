@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: html_ctcp.c 683 2006-08-29 03:45:07Z trystan $
+ * $Id$
  *
  */
 /*************************************************************************/
@@ -37,7 +37,7 @@ int DenoraInit(int argc, char **argv)
     }
     moduleAddAuthor("Denora");
     moduleAddVersion
-        ("$Id: html_ctcp.c 683 2006-08-29 03:45:07Z trystan $");
+        ("$Id$");
     moduleSetType(CORE);
 
     h = createHTMLtag("!CLIENTSTATS!", html_ctcp_table);

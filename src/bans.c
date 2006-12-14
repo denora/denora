@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: bans.c 696 2006-09-09 15:09:17Z trystan $
+ * $Id$
  *
  */
 

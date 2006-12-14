@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: ircd.c 710 2006-09-15 19:16:19Z trystan $
+ * $Id$
  *
  */
 

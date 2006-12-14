@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: inspircd.h 691 2006-09-04 16:48:13Z trystan $
+ * $Id$
  *
  */
 

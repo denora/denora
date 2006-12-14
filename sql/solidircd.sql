@@ -6,7 +6,7 @@
 -- Generation Time: Jan 16, 2005 at 05:33 PM
 -- Server version: 4.0.20
 -- PHP Version: 5.0.3
--- $Id: solidircd.sql 712 2006-09-16 11:24:27Z trystan $
+-- $Id$
 -- 
 -- Database: `denora-solid`
 -- 

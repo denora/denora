@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: ctcp.c 714 2006-09-16 13:15:45Z trystan $
+ * $Id$
  *
  */
 

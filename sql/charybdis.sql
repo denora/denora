@@ -6,7 +6,7 @@
 -- Generation Time: May 08, 2005 at 11:57 PM
 -- Server version: 4.0.20
 -- PHP Version: 5.0.3
--- $Id: charybdis.sql 712 2006-09-16 11:24:27Z trystan $
+-- $Id$
 -- 
 -- Database: `denora_shadowircd`
 -- 

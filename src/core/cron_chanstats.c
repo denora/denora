@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: cron_chanstats.c 632 2006-07-29 10:22:43Z crazy $
+ * $Id$
  *
  */
 /*************************************************************************/
@@ -36,7 +36,7 @@ int DenoraInit(int argc, char **argv)
     }
     moduleAddAuthor("Denora");
     moduleAddVersion
-        ("$Id: cron_chanstats.c 632 2006-07-29 10:22:43Z crazy $");
+        ("$Id$");
     moduleSetType(CORE);
 
     evt = createCronEvent(CRON_MIDNIGHT, chanstats_daily);

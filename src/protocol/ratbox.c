@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: ratbox.c 691 2006-09-04 16:48:13Z trystan $
+ * $Id$
  *
  * last tested with ircd-ratbox-2.1.7(20051026_3-21016)
  * and ircd-ratbox-2.2.0beta(20051223_0-21526)
@@ -996,7 +996,7 @@ int DenoraInit(int argc, char **argv)
     }
 
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id: ratbox.c 691 2006-09-04 16:48:13Z trystan $");
+    moduleAddVersion("$Id$");
     moduleSetType(PROTOCOL);
     pmodule_ircd_version("Ratbox IRCD 2.0+");
     pmodule_ircd_cap(myIrcdcap);

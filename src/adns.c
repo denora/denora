@@ -12,7 +12,7 @@
  *  Finch, and Copyright (C) 1991 Massachusetts Institute of Technology.
  *
  * 
- * $Id: cron.c 582 2006-03-24 19:26:41Z trystan $
+ * $Id$
  *
  */
 

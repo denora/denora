@@ -676,7 +676,7 @@ int DenoraInit(int argc, char **argv)
     }
 
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id: ngircd.c 691 2006-09-04 16:48:13Z trystan $");
+    moduleAddVersion("$Id$");
     moduleSetType(PROTOCOL);
     pmodule_ircd_version("Next Generation IRC Server");
     pmodule_ircd_cap(myIrcdcap);

@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: event_uline.c 632 2006-07-29 10:22:43Z crazy $
+ * $Id$
  *
  */
 /*************************************************************************/
@@ -36,7 +36,7 @@ int DenoraInit(int argc, char **argv)
     }
     moduleAddAuthor("Denora");
     moduleAddVersion
-        ("$Id: event_uline.c 632 2006-07-29 10:22:43Z crazy $");
+        ("$Id$");
     moduleSetType(CORE);
 
     /* 246 is SolidIRC's U:line */

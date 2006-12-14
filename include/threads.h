@@ -8,7 +8,7 @@
  * Based on the original code of Epona by Lara.
  * Based on the original code of Services by Andy Church. 
  * 
- * $Id: threads.h 632 2006-07-29 10:22:43Z crazy $
+ * $Id$
  *
  */
 

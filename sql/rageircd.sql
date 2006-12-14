@@ -6,7 +6,7 @@
 -- Generation Time: Apr 09, 2005 at 12:44 PM
 -- Server version: 4.0.20
 -- PHP Version: 5.0.3
--- $Id: rageircd.sql 712 2006-09-16 11:24:27Z trystan $
+-- $Id$
 -- 
 -- Database: `denora_rage`
 -- 

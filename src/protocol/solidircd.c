@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: solidircd.c 691 2006-09-04 16:48:13Z trystan $
+ * $Id$
  *
  * last tested with solid-ircd-3.4(07)dev.
  *
@@ -832,7 +832,7 @@ int DenoraInit(int argc, char **argv)
 
     moduleAddAuthor("Denora");
     moduleAddVersion
-        ("$Id: solidircd.c 691 2006-09-04 16:48:13Z trystan $");
+        ("$Id$");
     moduleSetType(PROTOCOL);
 
     pmodule_ircd_version("Solid-IRCd 3.4.*");

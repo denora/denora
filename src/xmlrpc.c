@@ -9,7 +9,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: xmlrpc.c 645 2006-08-05 07:13:19Z trystan $
+ * $Id$
  *
  */
 #include "denora.h"

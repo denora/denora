@@ -8,6 +8,6 @@ rem
 rem Based on the original code of Anope by Anope Team.
 rem Based on the original code of Thales by Lucas.
 rem
-rem $Id: Config.bat 596 2006-04-08 14:49:17Z trystan $
+rem $Id$
 del include\sysconf.h
 cscript /nologo install.vbs

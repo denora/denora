@@ -9,7 +9,7 @@
 /* Based on the original code of Anope by Anope Team.                    */
 /* Based on the original code of Thales by Lucas.                        */
 /*                                                                       */
-/* $Id: events.h 708 2006-09-15 18:30:20Z trystan $                      */
+/* $Id$                      */
 /*                                                                       */
 /*************************************************************************/
 

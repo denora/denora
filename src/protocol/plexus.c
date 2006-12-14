@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: plexus.c 691 2006-09-04 16:48:13Z trystan $
+ * $Id$
  *
  * last tested with PleXusIRCd-2.0.7(20050423_1)
  *
@@ -797,7 +797,7 @@ int DenoraInit(int argc, char **argv)
         protocol_debug(NULL, argc, argv);
     }
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id: plexus.c 691 2006-09-04 16:48:13Z trystan $");
+    moduleAddVersion("$Id$");
     moduleSetType(PROTOCOL);
 
     pmodule_ircd_version("PleXusIRCd 2.0+");

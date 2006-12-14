@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: messages.c 704 2006-09-11 02:45:04Z Hal9000 $
+ * $Id$
  *
  */
 

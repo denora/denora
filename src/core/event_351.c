@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: event_351.c 631 2006-07-28 14:51:38Z crazy $
+ * $Id$
  *
  */
 /*************************************************************************/
@@ -34,7 +34,7 @@ int DenoraInit(int argc, char **argv)
         protocol_debug(NULL, argc, argv);
     }
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id: event_351.c 631 2006-07-28 14:51:38Z crazy $");
+    moduleAddVersion("$Id$");
     moduleSetType(CORE);
 
     m = createMessage("351", denora_event_351);

@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: log.c 694 2006-09-07 07:29:58Z trystan $
+ * $Id$
  *
  */
 

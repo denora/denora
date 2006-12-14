@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: html_map.c 708 2006-09-15 18:30:20Z trystan $
+ * $Id$
  *
  */
 /*************************************************************************/
@@ -36,7 +36,7 @@ int DenoraInit(int argc, char **argv)
         protocol_debug(NULL, argc, argv);
     }
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id: html_map.c 708 2006-09-15 18:30:20Z trystan $");
+    moduleAddVersion("$Id$");
     moduleSetType(CORE);
 
     h = createHTMLtag("!MAP!", html_map);

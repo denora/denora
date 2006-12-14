@@ -11,7 +11,7 @@
  * adns is Copyright 1997-2000 Ian Jackson, Copyright 1999-2000 Tony
  *  Finch, and Copyright (C) 1991 Massachusetts Institute of Technology.
  *
- * $Id: adns.h 632 2006-07-29 10:22:43Z crazy $
+ * $Id$
  *
  */
 

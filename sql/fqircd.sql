@@ -6,7 +6,7 @@
 -- Generation Time: Jan 08, 2005 at 07:09 PM
 -- Server version: 4.0.20
 -- PHP Version: 5.0.3
--- $Id: fqircd.sql 712 2006-09-16 11:24:27Z trystan $
+-- $Id$
 -- 
 -- --------------------------------------------------------
 

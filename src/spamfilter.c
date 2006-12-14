@@ -9,7 +9,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: tld.c 621 2006-07-08 12:16:02Z trystan $
+ * $Id$
  *
  */
 

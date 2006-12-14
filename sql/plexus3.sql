@@ -6,7 +6,7 @@
 -- Generation Time: Jan 09, 2005 at 05:23 PM
 -- Server version: 4.0.20
 -- PHP Version: 5.0.3
--- $Id: hybrid.sql 583 2006-03-24 22:08:57Z trystan $
+-- $Id$
 -- 
 -- Database: `denora_hybrid`
 -- 

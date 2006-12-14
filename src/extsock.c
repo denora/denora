@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: extsock.c 606 2006-05-13 11:10:09Z trystan $
+ * $Id$
  *
  */
 #include "denora.h"

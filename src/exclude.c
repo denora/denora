@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: exclude.c 649 2006-08-06 10:35:52Z trystan $
+ * $Id$
  *
  */
 

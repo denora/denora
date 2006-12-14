@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: markup.c 707 2006-09-12 19:23:43Z trystan $
+ * $Id$
  *
  */
 

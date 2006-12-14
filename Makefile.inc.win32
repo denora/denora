@@ -7,7 +7,7 @@
 # Based on the original code of Anope by Anope Team.
 # Based on the original code of Thales by Lucas.
 #
-# $Id: Makefile.inc.win32 600 2006-04-24 10:40:22Z trystan $
+# $Id$
 #
 
 # Please read and edit the configurations options below.

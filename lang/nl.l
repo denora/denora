@@ -14,7 +14,7 @@
 # Based on the original code of Anope by Anope Team.
 # Based on the original code of Thales by Lucas.
 #
-# $Id: nl.l 699 2006-09-10 05:10:51Z Hal9000 $
+# $Id$
 #
 # When translating this file to another language, keep in mind that the
 # order of parameters for sprintf() is fixed in the source code, so your

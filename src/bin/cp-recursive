@@ -9,7 +9,7 @@
 # Based on the original code of Anope by Anope Team.
 # Based on the original code of Thales by Lucas.
 #
-# $Id: cp-recursive 531 2006-01-07 06:16:45Z crazy $
+# $Id$
 
 if [ $1 = "-t" ] ; then
 	shift

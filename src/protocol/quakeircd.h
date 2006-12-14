@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: quakeircd.h 706 2006-09-12 18:15:42Z trystan $
+ * $Id$
  *
  */
 

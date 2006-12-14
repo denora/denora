@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: viagra.c 691 2006-09-04 16:48:13Z trystan $
+ * $Id$
  *
  * last tested with VIAGRA_IRCd_1.3.3_RELEASE.
  *
@@ -733,7 +733,7 @@ int DenoraInit(int argc, char **argv)
         protocol_debug(NULL, argc, argv);
     }
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id: viagra.c 691 2006-09-04 16:48:13Z trystan $");
+    moduleAddVersion("$Id$");
     moduleSetType(PROTOCOL);
 
     pmodule_ircd_version("ViagraIRCd 1.3.x");

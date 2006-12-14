@@ -11,7 +11,7 @@
 # Based on the original code of Anope by Anope Team.
 # Based on the original code of Thales by Lucas.
 #
-# $Id: mydbgen 713 2006-09-16 11:41:55Z Hal9000 $
+# $Id$
 
 
 msg ()

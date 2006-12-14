@@ -8,7 +8,7 @@
 # Based on the original code of Anope by Anope Team.
 # Based on the original code of Thales by Lucas.
 #
-# $Id: Makefile 581 2006-03-21 09:29:03Z trystan $
+# $Id$
 #
 
 all: denora.h extern.h version.h

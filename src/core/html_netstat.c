@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: html_netstat.c 632 2006-07-29 10:22:43Z crazy $
+ * $Id$
  *
  */
 /*************************************************************************/
@@ -36,7 +36,7 @@ int DenoraInit(int argc, char **argv)
     }
     moduleAddAuthor("Denora");
     moduleAddVersion
-        ("$Id: html_netstat.c 632 2006-07-29 10:22:43Z crazy $");
+        ("$Id$");
     moduleSetType(CORE);
 
     h = createHTMLtag("!NETSTATS!", html_netstats);

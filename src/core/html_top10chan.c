@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: html_top10chan.c 682 2006-08-28 19:50:32Z trystan $
+ * $Id$
  *
  */
 /*************************************************************************/
@@ -38,7 +38,7 @@ int DenoraInit(int argc, char **argv)
     }
     moduleAddAuthor("Denora");
     moduleAddVersion
-        ("$Id: html_top10chan.c 682 2006-08-28 19:50:32Z trystan $");
+        ("$Id$");
     moduleSetType(CORE);
 
     h = createHTMLtag("!TOP10CHAN!", html_top10chan);

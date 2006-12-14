@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: extern.h 715 2006-09-16 15:04:59Z trystan $
+ * $Id$
  *
  */
 

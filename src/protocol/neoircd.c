@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: neoircd.c 691 2006-09-04 16:48:13Z trystan $
+ * $Id$
  *
  */
 
@@ -759,7 +759,7 @@ int DenoraInit(int argc, char **argv)
     }
 
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id: neoircd.c 691 2006-09-04 16:48:13Z trystan $");
+    moduleAddVersion("$Id$");
     moduleSetType(PROTOCOL);
 
     pmodule_ircd_version("NeoIRCD 0.95");

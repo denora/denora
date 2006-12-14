@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: unreal32.c 707 2006-09-12 19:23:43Z trystan $
+ * $Id$
  *
  * last tested with Unreal3.2.3
  *
@@ -1438,7 +1438,7 @@ int DenoraInit(int argc, char **argv)
         protocol_debug(NULL, argc, argv);
     }
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id: unreal32.c 707 2006-09-12 19:23:43Z trystan $");
+    moduleAddVersion("$Id$");
     moduleSetType(PROTOCOL);
 
     pmodule_ircd_version("UnrealIRCd 3.2+");

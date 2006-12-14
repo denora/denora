@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: ss_core.c 608 2006-05-23 07:35:24Z trystan $
+ * $Id$
  *
  */
 /*************************************************************************/
@@ -35,7 +35,7 @@ int DenoraInit(int argc, char **argv)
         protocol_debug(NULL, argc, argv);
     }
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id: ss_core.c 608 2006-05-23 07:35:24Z trystan $");
+    moduleAddVersion("$Id$");
     moduleSetType(CORE);
 
     c = createCommand("SHUTDOWN", do_shutdown, is_stats_admin, -1, -1, -1,

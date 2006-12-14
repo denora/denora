@@ -10,7 +10,7 @@
  * Based on the original code of Thales by Lucas.
  * Based on code from Thilo Schulz.
  *
- * $Id: datafiles.c 663 2006-08-17 19:38:00Z trystan $
+ * $Id$
  *
  */
 

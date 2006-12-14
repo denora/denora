@@ -11,7 +11,7 @@
  *     E-mail: <achurch@achurch.org>
  * Parts written by Andrew Kempe and others.
  *
- * $Id: sockets.h 595 2006-04-08 14:48:22Z trystan $
+ * $Id$
  *
  */
 

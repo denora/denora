@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: cron.c 675 2006-08-24 04:16:33Z Hal9000 $
+ * $Id$
  *
  */
 #include "denora.h"

@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: html_misc.c 631 2006-07-28 14:51:38Z crazy $
+ * $Id$
  *
  */
 /*************************************************************************/
@@ -38,7 +38,7 @@ int DenoraInit(int argc, char **argv)
         protocol_debug(NULL, argc, argv);
     }
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id: html_misc.c 631 2006-07-28 14:51:38Z crazy $");
+    moduleAddVersion("$Id$");
     moduleSetType(CORE);
 
     h = createHTMLtag("!VERSION!", html_version);

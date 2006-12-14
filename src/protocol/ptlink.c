@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: ptlink.c 691 2006-09-04 16:48:13Z trystan $
+ * $Id$
  *
  * last tested against Hybrid6/PTlink6.19.4 (20050827_0)
  *
@@ -795,7 +795,7 @@ int DenoraInit(int argc, char **argv)
     }
 
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id: ptlink.c 691 2006-09-04 16:48:13Z trystan $");
+    moduleAddVersion("$Id$");
     moduleSetType(PROTOCOL);
 
 

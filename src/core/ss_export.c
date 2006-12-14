@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: ss_export.c 682 2006-08-28 19:50:32Z trystan $
+ * $Id$
  *
  */
 /*************************************************************************/
@@ -42,7 +42,7 @@ int DenoraInit(int argc, char **argv)
     }
     moduleAddAuthor("Denora");
     moduleAddVersion
-        ("$Id: ss_export.c 682 2006-08-28 19:50:32Z trystan $");
+        ("$Id$");
     moduleSetType(CORE);
 
     c = createCommand("EXPORT", do_export, is_stats_admin, -1, -1, -1,

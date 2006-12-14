@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: version.sh.c 603 2006-05-03 09:05:25Z trystan $
+ * $Id$
  *
  */
 

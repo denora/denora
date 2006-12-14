@@ -9,7 +9,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: signals.c 653 2006-08-06 18:54:29Z trystan $
+ * $Id$
  *
  */
 

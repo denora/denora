@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: win32.h 588 2006-03-29 21:00:02Z trystan $
+ * $Id$
  *
  */
 

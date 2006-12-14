@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: ss_fantasy_help.c 584 2006-03-27 15:02:13Z trystan $
+ * $Id$
  *
  */
 
@@ -36,7 +36,7 @@ int DenoraInit(int argc, char **argv)
 
     moduleAddAuthor("Denora");
     moduleAddVersion
-        ("$Id: ss_fantasy_help.c 584 2006-03-27 15:02:13Z trystan $");
+        ("$Id$");
     moduleSetType(CORE);
 
     hook = createEventHook(EVENT_FANTASY, do_fantasy);

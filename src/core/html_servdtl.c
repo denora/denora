@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: html_servdtl.c 709 2006-09-15 18:42:00Z trystan $
+ * $Id$
  *
  */
 /*************************************************************************/
@@ -36,7 +36,7 @@ int DenoraInit(int argc, char **argv)
     }
     moduleAddAuthor("Denora");
     moduleAddVersion
-        ("$Id: html_servdtl.c 709 2006-09-15 18:42:00Z trystan $");
+        ("$Id$");
     moduleSetType(CORE);
 
     h = createHTMLtag("!SRVLISTDET!", html_server_details);

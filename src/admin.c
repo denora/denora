@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: admin.c 633 2006-07-29 11:09:46Z crazy $
+ * $Id$
  *
  */
 

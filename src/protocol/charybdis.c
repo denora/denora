@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: charybdis.c 691 2006-09-04 16:48:13Z trystan $
+ * $Id$
  *
  */
 
@@ -956,7 +956,7 @@ int DenoraInit(int argc, char **argv)
 
     moduleAddAuthor("Denora");
     moduleAddVersion
-        ("$Id: charybdis.c 691 2006-09-04 16:48:13Z trystan $");
+        ("$Id$");
     moduleSetType(PROTOCOL);
     pmodule_ircd_version("Charybdis 1.0+");
     pmodule_ircd_cap(myIrcdcap);

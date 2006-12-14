@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: ss_modules.c 555 2006-01-27 05:17:35Z trystan $
+ * $Id$
  *
  */
 /*************************************************************************/
@@ -45,7 +45,7 @@ int DenoraInit(int argc, char **argv)
     }
     moduleAddAuthor("Denora");
     moduleAddVersion
-        ("$Id: ss_modules.c 555 2006-01-27 05:17:35Z trystan $");
+        ("$Id$");
     moduleSetType(CORE);
 
 #ifdef USE_MODULES

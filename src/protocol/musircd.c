@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: musircd.c 691 2006-09-04 16:48:13Z trystan $
+ * $Id$
  *
  * last tested with MusIRCd-2.0.2-beta1
  *
@@ -745,7 +745,7 @@ int DenoraInit(int argc, char **argv)
     }
 
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id: musircd.c 691 2006-09-04 16:48:13Z trystan $");
+    moduleAddVersion("$Id$");
     moduleSetType(PROTOCOL);
 
     pmodule_ircd_version("MusIRCD 2.0x");

@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: fqircd.c 691 2006-09-04 16:48:13Z trystan $
+ * $Id$
  *
  * last tested against fqircd-2.1(134902769)
  *
@@ -770,7 +770,7 @@ int DenoraInit(int argc, char **argv)
     }
 
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id: fqircd.c 691 2006-09-04 16:48:13Z trystan $");
+    moduleAddVersion("$Id$");
     moduleSetType(PROTOCOL);
     pmodule_ircd_version("FreeQuest IRCd 2.1.3*");
     pmodule_ircd_cap(myIrcdcap);

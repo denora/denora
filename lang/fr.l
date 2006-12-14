@@ -9,7 +9,7 @@
 # Based on the original code of Anope by Anope Team.
 # Based on the original code of Thales by Lucas.
 #
-# $Id: fr.l 699 2006-09-10 05:10:51Z Hal9000 $
+# $Id$
 #
 # French tracution by XaF
 # Traduction Française par XaF

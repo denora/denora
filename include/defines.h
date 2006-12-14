@@ -7,7 +7,7 @@
 /* Based on the original code of Anope by Anope Team.                    */
 /* Based on the original code of Thales by Lucas.                        */
 /*                                                                       */
-/* $Id: defines.h 716 2006-09-20 17:06:11Z trystan $                     */
+/* $Id$                     */
 /*                                                                       */
 /*************************************************************************/
 

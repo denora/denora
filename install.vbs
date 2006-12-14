@@ -10,7 +10,7 @@
 ' Based on the original code of Thales by Lucas.
 ' 
 '
-' $Id: install.vbs 716 2006-09-20 17:06:11Z trystan $
+' $Id$
 '
 
 ' Declare global variables

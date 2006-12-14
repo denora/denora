@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: modules.c 682 2006-08-28 19:50:32Z trystan $
+ * $Id$
  *
  */
 

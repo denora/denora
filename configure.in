@@ -11,7 +11,7 @@ dnl Based heavily on the Anope configure.in script.
 AC_INIT(denora, 1.2.0, info@nomadirc.net)
 
 dnl Sneaky way to get an id into the configure script.
-AC_COPYRIGHT([$Id: configure.in 691 2006-09-04 16:48:13Z trystan $])
+AC_COPYRIGHT([$Id$])
 
 if test $# = 0; then
 	echo "You might want to run ./Config or provide some parameters to this script."

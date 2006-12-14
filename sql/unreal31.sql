@@ -2,7 +2,7 @@
 -- version 2.6.1-rc1
 -- http://www.phpmyadmin.net
 --
--- $Id: unreal31.sql 712 2006-09-16 11:24:27Z trystan $
+-- $Id$
 --
 -- Database: `denora_unreal31`
 --

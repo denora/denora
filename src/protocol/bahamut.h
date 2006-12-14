@@ -8,7 +8,7 @@
 /* Based on the original code of Anope by Anope Team.                    */
 /* Based on the original code of Thales by Lucas.                        */
 /*                                                                       */
-/* $Id: bahamut.h 628 2006-07-24 09:29:02Z trystan $                      */
+/* $Id$                      */
 /*                                                                       */
 /*************************************************************************/
 

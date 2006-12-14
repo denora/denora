@@ -1,5 +1,5 @@
 # Configure paths for mysql-client, GPLv2
-#$Id: mysql.m4 234 2005-05-15 16:23:59Z drstein $
+#$Id$
 #ken restivo modified 2001/08/04 to remove NULLs and use 0, in case NULL undefined.
 # Markus Fischer <[EMAIL PROTECTED]>,  23.9.1999
 # URL : http://josefine.ben.tuwien.ac.at/~mfischer/m4/mysql-client.m4

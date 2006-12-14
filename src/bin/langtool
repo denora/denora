@@ -7,7 +7,7 @@
 # 4) Checks for errors in lines
 # 5) Checks for long lines (>60 characters)
 #
-#  $Id: langtool 229 2005-05-14 05:02:06Z trystan $
+#  $Id$
 #
 
 # Check to see if we have received arguments

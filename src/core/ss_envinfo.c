@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: ss_envinfo.c 580 2006-03-17 19:39:34Z trystan $
+ * $Id$
  *
  */
 /*************************************************************************/
@@ -34,7 +34,7 @@ int DenoraInit(int argc, char **argv)
     }
     moduleAddAuthor("Denora");
     moduleAddVersion
-        ("$Id: ss_envinfo.c 580 2006-03-17 19:39:34Z trystan $");
+        ("$Id$");
     moduleSetType(CORE);
 
     c = createCommand("ENVINFO", do_envinfo, is_stats_admin, -1, -1, -1,

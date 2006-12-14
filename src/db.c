@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: db.c 693 2006-09-05 01:39:49Z Hal9000 $
+ * $Id$
  *
  */
 

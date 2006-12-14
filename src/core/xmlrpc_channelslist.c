@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: xmlrpc_channelslist.c 628 2006-07-24 09:29:02Z trystan $
+ * $Id$
  *
  */
 /*************************************************************************/
@@ -28,7 +28,7 @@ int DenoraInit(int argc, char **argv)
     }
     moduleAddAuthor("Denora");
     moduleAddVersion
-        ("$Id: xmlrpc_channelslist.c 628 2006-07-24 09:29:02Z trystan $");
+        ("$Id$");
     moduleSetType(CORE);
 
     if (!XMLRPC_Enable) {

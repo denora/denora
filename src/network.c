@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: network.c 688 2006-08-31 19:30:49Z trystan $
+ * $Id$
  *
  */
 

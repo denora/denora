@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: charybdis.h 627 2006-07-23 14:05:55Z trystan $
+ * $Id$
  *
  * comments on modes taken from http://www.charybdis.be/oper-guide/book1.html
  *
