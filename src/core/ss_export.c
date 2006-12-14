@@ -41,8 +41,7 @@ int DenoraInit(int argc, char **argv)
         protocol_debug(NULL, argc, argv);
     }
     moduleAddAuthor("Denora");
-    moduleAddVersion
-        ("$Id$");
+    moduleAddVersion("$Id$");
     moduleSetType(CORE);
 
     c = createCommand("EXPORT", do_export, is_stats_admin, -1, -1, -1,

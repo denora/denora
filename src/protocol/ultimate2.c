@@ -830,8 +830,7 @@ int DenoraInit(int argc, char **argv)
     }
 
     moduleAddAuthor("Denora");
-    moduleAddVersion
-        ("$Id$");
+    moduleAddVersion("$Id$");
     moduleSetType(PROTOCOL);
     pmodule_ircd_version("UltimateIRCd 2.8.2+");
     pmodule_ircd_cap(myIrcdcap);
