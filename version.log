@@ -3,15 +3,80 @@
 #
 # Please read COPYING and README for furhter details.
 #
-# $Id: version.log 717 2006-09-20 18:52:16Z trystan $
+# $Id: version.log 733 2006-11-30 12:16:28Z Hal9000 $
 
 VERSION_MAJOR="1"
 VERSION_MINOR="2"
 VERSION_PATCH="0"
 VERSION_EXTRA="-RC4"
-VERSION_BUILD="717"
+VERSION_BUILD="733"
 
 # $Log$
+#
+# BUILD : 1.2.0 (733)
+# BUGS  : N/A
+# NOTES : Updated GeoIP data
+#
+# BUILD : 1.2.0 (732)
+# BUGS  : N/A
+# NOTES : Removed unnecessary field from ustats table on Charybdis and Beware, which was causing fantasy commands to report weird things. Run ./mydbgen 
+# to fix existing installations.
+#
+# BUILD : 1.2.0 (731)
+# BUGS  : 350
+# NOTES : Fixed not decreasing user count on server kills
+#
+# BUILD : 1.2.0 (730)
+# BUGS  : 359
+# NOTES : Fixed user modes not being reset on user reconnect. Also removed two compiler warnings caused by debug stuff I forgot to remove.
+#
+# BUILD : 1.2.0 (729)
+# BUGS  : N/A
+# NOTES : Fixed FMODE parser in InspIRCd 1.1 protocol module
+#
+# BUILD : 1.2.0 (728)
+# BUGS  : 357,349,342
+# NOTES : Fixed uplink server not being set with InspIRCd 1.0/1.1. Fixed a parsing issue with InspIRCd 1.1.
+#
+# BUILD : 1.2.0 (727)
+# BUGS  : 356
+# NOTES : Fixed maxvalues table not getting updated in some cases
+#
+# BUILD : 1.2.0 (726)
+# BUGS  : 353
+# NOTES : Added InspIRCd 1.1 support. Please test :)
+#
+# BUILD : 1.2.0 (725)
+# BUGS  : N/A
+# NOTES : More backporting from 2.x
+#
+# BUILD : 1.2.0 (724)
+# BUGS  : N/A
+# NOTES : Help now advertises the CHANSTATS EXCLUDE LIST command
+#
+# BUILD : 1.2.0 (723)
+# BUGS  : N/A
+# NOTES : Backported some minor fixes for the 2.x branch 
+#
+# BUILD : 1.2.0 (722)
+# BUGS  : 338
+# NOTES : Don't care about Unreal's +H mode for oper counting
+#
+# BUILD : 1.2.0 (721)
+# BUGS  : N/A
+# NOTES : Updated French language file (provided by illu)
+#
+# BUILD : 1.2.0 (720)
+# BUGS  : N/A
+# NOTES : improved do_p10_burst()
+#
+# BUILD : 1.2.0 (719)
+# BUGS  : N/A
+# NOTES : The nonicktracking option added in last build was bogus. Fixed now ;)
+#
+# BUILD : 1.2.0 (718)
+# BUGS  : N/A
+# NOTES : Added configuration option to disable nick tracking (reduces SQL load on large nets with many chans and small machines)
 #
 # BUILD : 1.2.0 (717)
 # BUGS  : N/A
