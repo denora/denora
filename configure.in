@@ -1,0 +1,971 @@
+dnl autoconf.in for Stats.
+dnl
+dnl Denora (c) 2004-2006 Denora team
+dnl Contact us at info@nomadirc.net
+
+dnl This program is free but copyrighted software; see the file COPYING for
+dnl details.
+ 
+dnl Based heavily on the Anope configure.in script.
+
+AC_INIT(denora, 1.2.0, info@nomadirc.net)
+
+dnl Sneaky way to get an id into the configure script.
+AC_COPYRIGHT([$Id: configure.in 691 2006-09-04 16:48:13Z trystan $])
+
+if test $# = 0; then
+	echo "You might want to run ./Config or provide some parameters to this script."
+	echo "./configure --help for information about this script"
+	exit 0
+fi
+
+touch install-sh
+
+AC_CANONICAL_BUILD
+AC_CANONICAL_HOST
+AC_CONFIG_HEADER(include/sysconf.h)
+AC_PREFIX_DEFAULT(~/stats)
+
+AC_PROG_CC
+CFLAGS=-g
+if test "$ac_cv_prog_gcc" = "yes"; then
+#    CFLAGS="$CFLAGS -funsigned-char"
+    AC_CACHE_CHECK(if gcc has a working -pipe, ac_cv_pipe, [
+    save_cflags="$CFLAGS"
+    CFLAGS="$CFLAGS -pipe"
+    AC_TRY_COMPILE(,, ac_cv_pipe="yes", ac_cv_pipe="no")
+    CFLAGS="$save_cflags"
+    ])
+    if test "$ac_cv_pipe" = "yes"; then
+        CFLAGS="-pipe $CFLAGS"
+    fi
+fi
+
+DENORA_CFLAGS_GCC_TRY_FLAGS(-ggdb, denora_ggdb)
+DENORA_CPU_GCC_TRY_FLAGS(-O3, ac_cv_denora_O3)
+
+if test "$ac_cv_denora_O3" = "yes"; then
+ echo "Setting optimization level to -O3"
+else
+ DENORA_CPU_GCC_TRY_FLAGS(-O2, ac_cv_denora_O2)
+ if test "$ac_cv_denora_O2" = "yes"; then
+  echo "Setting optimization level to -O2"
+ else
+  DENORA_CPU_GCC_TRY_FLAGS(-O1, ac_cv_denora_O1)
+ fi
+ if test "$ac_cv_denora_O1" = "yes"; then
+  echo "Setting optimization level to -O1"
+ else
+  DENORA_CPU_GCC_TRY_FLAGS(-O0, ac_cv_denora_O0)
+ fi
+ if test "$ac_cv_denora_O0" = "yes"; then
+  echo "Setting optimization level to -O0"
+ else
+  echo "No compiler optimization"
+ fi
+fi
+
+AC_C_VAR_PRETTY_FUNC
+
+if test "$ac_cv_c_var_prettyfunc" = "no"; then
+ AC_C_VAR_FUNCTION
+ if test "$ac_cv_c_var_function" = "no"; then
+  AC_C_VAR_FUNC
+  if test "$ac_cv_c_var_func" = "no"; then
+   echo "Compiler does not have a define macro to get functions names"
+  fi
+ fi
+fi
+
+AC_PATH_PROG(RM,rm)
+AC_PATH_PROG(CP,cp)
+AC_PATH_PROG(TOUCH,touch)
+AC_PATH_PROG(PERL,perl)
+AC_PATH_PROG(INSTALL,install)
+AC_CHECK_LIB(nsl,inet_ntoa,DENORALIBS="$DENORALIBS-lnsl ")
+AC_CHECK_LIB(socket, socket,DENORALIBS="$DENORALIBS-lsocket ")
+AC_CHECK_LIB(resolv, res_query,DENORALIBS="$DENORALIBS-lresolv ")
+AC_CHECK_LIB(bsd, revoke,DENORALIBS="$DENORALIBS-lbsd ")
+AC_CHECK_LIB(z, inflateEnd,DENORALIBS="$DENORALIBS-lz ")
+
+AC_CHECK_HEADER(sys/types.h,AC_DEFINE(HAS_SYS_TYPES_H,1,"Has sys/types.h"))
+DENORA_CHECK_TYPE_SIZES
+AC_CHECK_HEADER(strings.h,AC_DEFINE(HAVE_STRINGS_H,1,""))
+AC_CHECK_HEADER(string.h,AC_DEFINE(HAVE_STRING_H,1,""))
+AC_CHECK_HEADER(stdint.h,AC_DEFINE(HAVE_STDINT_H,1,""))
+AC_CHECK_HEADER(stdlib.h,AC_DEFINE(HAVE_STDLIB_H,1,""))
+AC_CHECK_HEADER(sys/select.h,AC_DEFINE(HAVE_SYS_SELECT_H,1,""))
+AC_CHECK_HEADER(execinfo.h,AC_DEFINE(HAVE_BACKTRACE,1,""))
+AC_CHECK_HEADER(unistd.h,AC_DEFINE(HAVE_UNISTD_H,1,""))
+AC_CHECK_HEADER(zlib.h,AC_DEFINE(HAVE_LIBZ,1,""))
+AC_CHECK_HEADER(netinet/in.h,AC_DEFINE(HAVE_NETINETIN,1,""))
+AC_CHECK_HEADER(netdb.h,AC_DEFINE(HAVE_NETDBH,1,""))
+AC_CHECK_HEADER(malloc.h,AC_DEFINE(HAVE_MALLOC_H,1,""))
+AC_CHECK_HEADER(signal.h,AC_DEFINE(HAVE_SIGNAL_H,1,""))
+AC_CHECK_HEADER(poll.h,AC_DEFINE(HAVE_POLL_H,1,""))
+AC_CHECK_HEADER(perl.h,AC_DEFINE(HAVE_PERL_H,1,""))
+
+AC_C_INLINE
+
+CHECK_SSL
+
+AC_ARG_ENABLE(crypt,
+    [  --enable-crypt        Enable Admin encrypted passwords],
+    [ac_cv_crypt="$enableval"],
+    [ac_cv_crypt="no"])
+
+if test "$ac_cv_crypt" = "yes"; then
+   AC_CHECK_HEADER(crypt.h,AC_DEFINE(HAVE_CRYPT,1,""))
+   AC_CHECK_LIB(crypt, crypt,DENORALIBS="$DENORALIBS-lcrypt ")
+   DIS_ENCRYPT="Crypted Passwords: Yes"
+else
+  DIS_ENCRYPT=""
+fi
+
+x="0";
+DIS_MYSQL="  MySql: No"
+AC_ARG_WITH(mysql, [ --without-mysql     Do not use MySQL even if we find it],,[ 
+AM_PATH_MYSQLCLIENT(,[
+	AC_DEFINE_UNQUOTED(USE_MYSQL,1,"Use Mysql")
+	AC_DEFINE_UNQUOTED(USE_RDB,1,"Use RDB")
+	AC_CHECK_HEADER(mysql/mysql.h,AC_DEFINE(MYSQL_HEADER_PREFIX,1,"Has mysql/mysql.h"))
+	MYSQL=" mysql.c "
+	AC_SUBST(MYSQL)
+	x="1";
+],)
+
+if test "$x" = "1"; then
+	DENORALIBS="$DENORALIBS$MYSQLCLIENT_LIBS "
+	CFLAGS="$CFLAGS $MYSQLCLIENT_CFLAGS "
+	LDFLAGS="$LDFLAGS $MYSQLCLIENT_LDFLAGS "
+    DIS_MYSQL="  MySql: Yes"
+	AC_CHECK_FUNCS(mysql_set_charset_name,AC_DEFINE([HAVE_MYSQL_SET_CHARSET], [1], [MySQL supports charset]))
+fi
+])
+
+AC_ARG_ENABLE(threading,
+    [  --enable-threading        Enable support for the threading library],
+    [ac_cv_pthread="$enableval"],
+    [ac_cv_pthread="no"])
+
+if test "$ac_cv_pthread" = "yes"; then
+ ACX_PTHREAD([
+    CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+    DENORALIBS="$DENORALIBS$PTHREAD_LIBS "
+    AC_DEFINE_UNQUOTED(USE_THREADS,1,"Use threads")    
+ ])
+   DIS_THREADING="THREADING: Yes"
+else
+  DIS_THREADING=""
+fi
+
+AC_ARG_ENABLE(dmalloc,
+    [  --enable-dmalloc        Enable support for the dmalloc debugging library],
+    [ac_cv_dmalloc="$enableval"],
+    [ac_cv_dmalloc="no"])
+
+if test "$ac_cv_dmalloc" = "yes"; then
+   AC_CHECK_HEADER(dmalloc.h,AC_DEFINE(HAVE_DMALLOC,1,""))
+   if test "$acx_pthread_ok" = "yes"; then
+     AC_CHECK_LIB(dmalloc, dmalloc_shutdown,DENORALIBS="$DENORALIBS-ldmallocth ")
+   else
+	 AC_CHECK_LIB(dmalloc, dmalloc_shutdown,DENORALIBS="$DENORALIBS-ldmalloc ")
+   fi
+   DIS_DMALLOC="DMALLOC: Yes"
+else
+  DIS_DMALLOC=""
+fi
+
+
+AC_ARG_ENABLE(perl,
+	[  --enable-perl          build the perl plugin],
+	        perl=$enableval, perl=no)
+
+	if test "$perl" = yes; then
+		echo "Configuring for Perl Modules Now"
+		AC_PATH_PROG(sedpath, sed)
+		if test "_$sedpath" = _; then
+			AC_MSG_ERROR("Cannot find sed: I need it\!")
+		fi
+
+		AC_PATH_PROG(perlpath, perl)
+
+		AC_MSG_CHECKING(for Perl compile flags)
+		PERL_CFLAGS=`$perlpath -MExtUtils::Embed -e ccopts 2>/dev/null`
+		if test "_$PERL_CFLAGS" = _ ; then
+			AC_MSG_RESULT([not found, building without perl.])
+			perl=no
+		else
+			PERL_LDFLAGS=`$perlpath -MExtUtils::Embed -e ldopts |$sedpath 's/-lgdbm //'`
+			PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-ldb //'`
+			PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lndbm //'`
+			if test "$system" = "Linux"; then
+				PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lnsl //'`
+				PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lposix //'`
+			fi
+			PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lc //'`
+			AC_MSG_RESULT(ok)
+
+			AC_MSG_CHECKING(for $perlpath >= 5.8.0)
+			PERL_VER=`$perlpath -e 'print $]>= 5.008?"yes":"no"'`
+
+			if test "$PERL_VER" = "yes"; then
+				AC_MSG_RESULT(yes)
+				AC_MSG_CHECKING([Checking for perl compiler, linker, libraries and headers])
+	    			PERL_CC=`$perlpath -MConfig -e 'print $Config{cc},"\n";'`
+			    	PERL_LD=`$perlpath -MConfig -e 'print $Config{ld},"\n";'`
+
+				rm -f testperl$ac_exeext testperl.$ac_objext testperl.c testperl.err
+	    			cat > testperl.c <<EOF
+#include "EXTERN.h"
+#include "perl.h"
+#include "XSUB.h"
+int main () { (void)&perl_construct; return 0; }
+EOF
+				$PERL_CC $PERL_CFLAGS -c testperl.c >testperl.err 2>&1 &&
+	   	 		$PERL_LD -o testperl testperl.o $PERL_LDFLAGS >testperl.err 2>&1 &&
+	    			test -x testperl &&
+	    			have_perl=yes
+				if test "$have_perl" = "yes"; then
+					AC_MSG_RESULT(ok)
+					AC_DEFINE_UNQUOTED(USE_PERL, 1, 'Enable Perl Support')
+				else
+					PERL_LDFLAGS=""
+					PERL_CFLAGS=""
+					AC_MSG_RESULT([Failed. Perl Support Disabled.])
+				fi
+			else
+				AC_MSG_RESULT(no)
+				PERL_LDFLAGS=""
+				PERL_CFLAGS=""
+				perl=no
+			fi
+		fi
+	rm testperl testperl.*
+fi
+
+
+AC_SUBST(PERL_CFLAGS)
+AC_SUBST(PERL_LDFLAGS)
+
+POSTGRESQL="Postgre: No"
+POSTGRE=""
+
+AC_ARG_WITH(postgreheader, [ --with-postgreheader=path     Specify the path to your Postgre installation], [ 
+    echo "Checking for PostgreSQL header"
+    AC_DEFINE_UNQUOTED(POSTGRE_PATH,"$withval","path to the header")
+    AC_CHECK_HEADER($withval/libpq-fe.h, [
+		PGINC="-I$withval"])    
+    
+
+])
+
+AC_ARG_WITH(postgrelib, [ --with-postgrelib=path     Specify the path to your Postgre library], [ 
+    echo "Checking for PostgreSQL library"
+    if test -d $withval ; then
+	AC_CHECK_LIB(pq, PQconnectdb, PQLIB="-lpq")
+	POSTGRE="postgre.c"
+	DENORALIBS="$DENORALIBS $PQLIB"
+	CFLAGS="$CFLAGS $PGINC "
+	LDFLAGS="$LDFLAGS -L$withval -lpq "
+	AC_DEFINE(USE_POSTGRE,1,"Has libpq-fe.h")
+	POSTGRESQL="Postgre: Yes"
+    else 
+    	POSTGRESQL="Postgre: No"
+    fi
+])
+
+AC_SUBST(POSTGRE)
+TYPE_SOCKLEN_T
+
+
+dnl ----------------------------------------------------------
+dnl
+dnl IPv4/IPv6 related checks
+dnl
+
+AC_CHECK_FUNCS(freeaddrinfo gai_strerror getaddrinfo getnameinfo)
+
+
+
+AC_CACHE_CHECK([for struct sockaddr_storage], ac_cv_have_struct_sockaddr_storage, [
+	AC_TRY_COMPILE(
+		[
+#include <sys/types.h>
+#include <sys/socket.h>
+		],
+		[ struct sockaddr_storage s; ],
+		[ ac_cv_have_struct_sockaddr_storage="yes" ],
+		[ ac_cv_have_struct_sockaddr_storage="no" ]
+	)
+])
+if test "x$ac_cv_have_struct_sockaddr_storage" = "xyes" ; then
+	AC_DEFINE([HAVE_STRUCT_SOCKADDR_STORAGE], [1], [System supports sockaddr_storage])
+fi
+
+AC_CACHE_CHECK([for struct sockaddr_in6], ac_cv_have_struct_sockaddr_in6, [
+	AC_TRY_COMPILE(
+		[
+#include <unistd.h>
+#include <netinet/in.h>
+		],
+		[ struct sockaddr_in6 s; s.sin6_family = 0; ],
+		[ ac_cv_have_struct_sockaddr_in6="yes" ],
+		[ ac_cv_have_struct_sockaddr_in6="no" ]
+	)
+])
+if test "x$ac_cv_have_struct_sockaddr_in6" = "xyes" ; then
+	AC_DEFINE([HAVE_STRUCT_SOCKADDR_IN6], [1], [System supports sockaddr_in6])
+fi
+
+AC_CACHE_CHECK([for struct in6_addr], ac_cv_have_struct_in6_addr, [
+	AC_TRY_COMPILE(
+		[
+#include <unistd.h>
+#include <netinet/in.h>
+		],
+		[ struct in6_addr s; s.s6_addr[0] = 0; ],
+		[ ac_cv_have_struct_in6_addr="yes" ],
+		[ ac_cv_have_struct_in6_addr="no" ]
+	)
+])
+if test "x$ac_cv_have_struct_in6_addr" = "xyes" ; then
+	AC_DEFINE([HAVE_STRUCT_IN6_ADDR], [1], [System supports struct in6_addr])
+fi
+
+AC_CACHE_CHECK([for struct addrinfo], ac_cv_have_struct_addrinfo, [
+	AC_TRY_COMPILE(
+		[
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+		],
+		[ struct addrinfo s; s.ai_flags = AI_PASSIVE; ],
+		[ ac_cv_have_struct_addrinfo="yes" ],
+		[ ac_cv_have_struct_addrinfo="no" ]
+	)
+])
+if test "x$ac_cv_have_struct_addrinfo" = "xyes" ; then
+	AC_DEFINE([HAVE_STRUCT_ADDRINFO], [1], [System supports struct addrinfo])
+fi
+
+AC_CACHE_CHECK([for getaddrinfo() rfc2553bis compatibility], ac_cv_have_getaddrinfo_bis, [
+	AC_TRY_RUN(
+		[
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+
+int main()
+{
+	struct addrinfo s, *r;
+	memset(&s, 0, sizeof(s));
+	s.ai_family = AF_UNSPEC;
+	s.ai_socktype = SOCK_STREAM;
+	s.ai_flags = AI_ALL|AI_V4MAPPED|AI_ADDRCONFIG|AI_PASSIVE;
+	if (getaddrinfo(NULL, "0", &s, &r))
+		return 1; /* bad */
+	return 0; /* good */
+}
+		],
+		[ ac_cv_have_getaddrinfo_bis="yes" ],
+		[ ac_cv_have_getaddrinfo_bis="no" ],
+		[ ac_cv_have_getaddrinfo_bis="no" ]
+	)
+])
+if test "x$ac_cv_have_getaddrinfo_bis" = "xyes" ; then
+	AC_DEFINE([RFC2553BIS], [1], [System supports RFC2553BIS])
+fi
+
+
+AC_CACHE_CHECK([for ss_family field in struct sockaddr_storage],
+		ac_cv_have_ss_family_in_struct_ss, [
+	AC_TRY_COMPILE(
+		[
+#include <sys/types.h>
+#include <sys/socket.h>
+		],
+		[ struct sockaddr_storage s; s.ss_family = 1; ],
+		[ ac_cv_have_ss_family_in_struct_ss="yes" ],
+		[ ac_cv_have_ss_family_in_struct_ss="no" ],
+	)
+])
+if test "x$ac_cv_have_ss_family_in_struct_ss" = "xyes" ; then
+	AC_DEFINE([HAVE_SS_FAMILY_IN_SS], [1], [System supports s.ss_family])
+fi
+
+
+AC_CACHE_CHECK([for __ss_family field in struct sockaddr_storage],
+		ac_cv_have___ss_family_in_struct_ss, [
+	AC_TRY_COMPILE(
+		[
+#include <sys/types.h>
+#include <sys/socket.h>
+		],
+		[ struct sockaddr_storage s; s.__ss_family = 1; ],
+		[ ac_cv_have___ss_family_in_struct_ss="yes" ],
+		[ ac_cv_have___ss_family_in_struct_ss="no" ]
+	)
+])
+if test "x$ac_cv_have___ss_family_in_struct_ss" = "xyes" ; then
+	AC_DEFINE([HAVE___SS_FAMILY_IN_SS], [1], [System supports s.__ss_family])
+fi
+
+
+DIS_MODULES="Modules: Yes"
+
+dnl module checking based on Unreal's module checking code
+AC_DEFUN(AC_ENABLE_DYN,
+[
+AC_CHECK_FUNC(dlopen,, AC_CHECK_LIB(dl,dlopen,[
+  DENORALIBS="$DENORALIBS -ldl"
+  AC_DEFINE(USE_MODULES,1,"Modules are available")
+  USE_MODULES="yes"
+  DIS_MODULES="Modules: Yes"
+],
+[
+AC_MSG_WARN(Dynamic linking is not enabled because dlopen was not found)
+AC_DEFINE(STATIC_LINKING,"NO_MODULES","modules not available")
+  DIS_MODULES="Modules: No"
+]))
+
+hold_cflags=$CFLAGS
+CFLAGS="$CFLAGS -export-dynamic"
+AC_CACHE_CHECK(if we need the -export-dynamic flag, ac_cv_export_dynamic, [
+AC_TRY_LINK(, [int i];, ac_cv_export_dynamic=yes, ac_cv_export_dynamic=no)])
+if test "$ac_cv_export_dynamic" = "no"; then
+CFLAGS=$hold_cflags
+fi
+
+AC_CACHE_CHECK(for compiler option to produce PIC,ac_cv_pic,[
+if test "$ac_cv_prog_gcc" = "yes"; then
+        ac_cv_pic="-fPIC -DPIC -shared"
+	case `uname -s` in
+		Darwin*[)]
+		ac_cv_pic="-bundle -flat_namespace -undefined suppress"
+		;;
+		HP-UX*[)]
+		ac_cv_pic="-fPIC"
+		;;
+		CYGWIN*[)]
+		ac_cv_pic="-DPIC --shared"
+		;;
+	esac
+else
+case `uname -s` in
+    SunOS*[)]
+       ac_cv_pic="-KPIC -DPIC -G"
+    ;;
+esac
+
+fi
+
+])
+
+AC_CACHE_CHECK([for RTLD_LOCAL], ac_cv_have_rtld_local, [
+	AC_TRY_COMPILE(
+		[
+#include <dlfcn.h>
+		],
+		[ int main(void) { return RTLD_LOCAL; } ],
+		[ ac_cv_have_rtld_local="yes" ],
+		[ ac_cv_have_rtld_local="no" ]
+	)
+])
+if test "x$ac_cv_have_rtld_local" = "xyes" ; then
+	AC_DEFINE([HAS_RTLD_LOCAL], [], [System supports RTLD_LOCAL])
+fi
+
+if test "$ac_cv_prog_gcc" = "yes"; then
+	case `uname -s` in
+		Darwin*[)]
+		SHARED="-bundle -flat_namespace -undefined suppress"
+		AC_SUBST(SHARED)
+		;;
+		CYGWIN*[)]
+		SHARED="--shared"
+		AC_SUBST(SHARED)
+		;;
+		*[)]
+		SHARED="-shared"
+		AC_SUBST(SHARED)
+		;;
+	esac
+fi
+
+AC_CACHE_CHECK(if your system prepends an underscore on symbols,ac_cv_underscore,[
+cat >uscore.c << __EOF__
+int main() {
+return 0;
+}
+__EOF__
+$CC -o uscore $CFLAGS uscore.c 1>&5
+if test -z "`strings -a uscore |grep '^_main$'`"; then
+    ac_cv_underscore=no
+else
+    ac_cv_underscore=yes
+fi
+
+rm -f uscore uscore.c
+])
+if test "$ac_cv_underscore" = "yes"; then
+AC_DEFINE(DL_PREFIX,"_","Underscore needed for dlopen")
+else
+AC_DEFINE(DL_PREFIX,"","No prefix needed for dlopen")
+fi
+
+MODULEFLAGS=$ac_cv_pic
+AC_SUBST(MODULEFLAGS)
+AC_DEFINE(USE_MODULES,1,"Modules available")
+])
+
+AC_ENABLE_DYN
+
+AC_CHECK_FUNCS(strerror,AC_DEFINE(HAVE_STRERROR,1))
+AC_CHECK_FUNCS(sys_errlist,AC_DEFINE(HAVE_SYS_ERRLIST,1))
+AC_CHECK_FUNCS(stricmp,AC_DEFINE(HAVE_STRICMP,1))
+AC_CHECK_FUNCS(strnicmp,AC_DEFINE(HAVE_STRNICMP,1))
+AC_CHECK_FUNCS(strcasecmp,AC_DEFINE(HAVE_STRCASECMP,1))
+AC_CHECK_FUNCS(strspn,AC_DEFINE(HAVE_STRSPN,1))
+AC_CHECK_FUNCS(strlcat,AC_DEFINE(HAVE_STRLCAT,1))
+AC_CHECK_FUNCS(strlcpy,AC_DEFINE(HAVE_STRLCPY,1))
+AC_CHECK_FUNCS(strsignal,AC_DEFINE(HAVE_STRSIGNAL,1))
+AC_CHECK_FUNCS(gettimeofday,AC_DEFINE(HAVE_GETTIMEOFDAY,1))
+AC_CHECK_FUNCS(setgrent,AC_DEFINE(HAVE_SETGRENT,1))
+AC_CHECK_FUNCS(umask,AC_DEFINE(HAVE_UMASK,1))
+AC_CHECK_FUNCS(fork,AC_DEFINE(HAVE_FORK,1))
+AC_CHECK_FUNCS(gethostbyname,AC_DEFINE(HAVE_GETHOSTBYNAME,1))
+AC_CHECK_FUNCS(gethostbyname_r,AC_DEFINE(HAVE_GETHOSTBYNAME_R,1))
+AC_CHECK_FUNCS(ntohl,AC_DEFINE(HAVE_NTOHL,1))
+AC_CHECK_FUNCS(inet_aton,AC_DEFINE([HAVE_INETATON], [1], [System supports inet_aton]))
+AC_CHECK_FUNCS(setrlimit,AC_DEFINE([HAVE_GETSETRLIMIT], [1], [System supports set/get/rlimit]))
+AC_CHECK_FUNCS(getrlimit,AC_DEFINE([HAVE_GETSETRLIMIT], [1], [System supports set/get/rlimit]))
+
+AC_ARG_WITH(rungroup, [ --with-rungroup=group     Specify the rungroup for Denora], [ 
+    AC_DEFINE_UNQUOTED(RUNGROUP,"$withval","Run group")
+    RUNGROUP=$withval
+])
+AC_SUBST(RUNGROUP)
+
+dnl AC_DEFINE_UNQUOTED(MYOSNAME,"`uname -a`","uname")
+
+AC_ARG_WITH(permissions, [ --with-permissions=permissions     Specify the default permissions for Denora], AC_DEFINE_UNQUOTED(DEFUMASK,$withval,"Default umask permissions"), AC_DEFINE(DEFUMASK, 007,"Default umask Permissions"))
+
+AC_ARG_WITH(bindir, [ --with-bindir=bindir     Specify the default binary dir for Denora], [ 
+    AC_DEFINE_UNQUOTED(STATS_BIN,"${withval}/stats","Binary Dir")
+    BINDEST=$withval
+    DATDEST=$withval
+    MODULE_PATH=${withval}/modules/
+])
+
+AC_SUBST(BINDEST)
+
+AC_ARG_WITH(datadir, [ --with-datadir=datadir     Specify the location of the stats data folder], [
+ AC_DEFINE_UNQUOTED(STATS_DIR,"$withval","stats bin dir")
+ AC_DEFINE_UNQUOTED(MODULE_PATH,"${withval}/modules/","Module dir")
+ DATDEST=$withval
+ MODULE_PATH=${withval}/modules/
+])
+
+AC_SUBST(DATDEST)
+AC_SUBST(MODULE_PATH)
+
+AC_DEFINE_UNQUOTED(STATS_BUILD,"$build","stats build")
+AC_DEFINE_UNQUOTED(STATS_OS,"$build_os","stats os")
+AC_DEFINE_UNQUOTED(STATS_CPU,"$build_cpu","stats cpu")
+
+if test "$ac_cv_prog_gcc" = "yes"; then
+	case `uname -s` in
+		CYGWIN*[)]
+		RDYNAMNIC=""
+		AC_SUBST(RDYNAMNIC)
+		;;
+		SUN*[)]
+		RDYNAMNIC=""
+		AC_SUBST(RDYNAMNIC)
+		;;
+		*[)]
+		RDYNAMNIC=" -rdynamic"
+		AC_SUBST(RDYNAMNIC)
+		;;
+	esac
+fi
+
+dnl Does this platform require array notation to assign to a va_list?
+dnl If cross-compiling, we assume va_list is "normal".  If this breaks
+dnl you, set ac_cv_valistisarray=true and maybe define HAVE_VA_LIST_AS_ARRAY
+dnl also just to be sure.
+AC_MSG_CHECKING(whether va_list assignments need array notation)
+AC_CACHE_VAL(ac_cv_valistisarray,
+        [AC_TRY_RUN([#include <stdlib.h>
+		     #include <stdarg.h>
+		     void foo(int i, ...) {
+			va_list ap1, ap2;
+			va_start(ap1, i);
+			ap2 = ap1;
+			if (va_arg(ap2, int) != 123 || va_arg(ap1, int) != 123) { exit(1); }
+			va_end(ap1); va_end(ap2);
+		     }
+		     int main()
+		     { foo(0, 123); return(0); }],
+		    [ac_cv_valistisarray=false],
+		    [ac_cv_valistisarray=true],
+		    [ac_cv_valistisarray=false])])
+					     
+if test "$ac_cv_valistisarray" = true ; then
+	AC_DEFINE([HAVE_VA_LIST_AS_ARRAY], 1, "System has VA_LIST as an array")
+	AC_MSG_RESULT(yes)
+else
+	AC_MSG_RESULT(no)
+fi
+
+AC_CACHE_CHECK(what type of signals you have, ac_cv_sigtype, [
+AC_TRY_RUN([
+#include <signal.h>
+int main() {
+sigaction(SIGTERM, (struct sigaction *)0L, (struct sigaction *)0L);
+}
+], ac_cv_sigtype=POSIX, [
+AC_TRY_RUN([
+#include <signal.h>
+int	calls = 0;
+void	handler()
+{
+if (calls)
+return;
+calls++;
+kill(getpid(), SIGTERM);
+sleep(1);
+}
+
+int main() {
+signal(SIGTERM, handler);
+kill(getpid(), SIGTERM);
+exit(0);
+}
+], ac_cv_sigtype=BSD,ac_cv_sigtype=SYSV)])])
+
+if test "$ac_cv_sigtype" = "POSIX"; then
+AC_DEFINE([POSIX_SIGNALS], [], [Setting to POSIX style signals])
+elif test "$ac_cv_sigtype" = "BSD"; then
+AC_DEFINE([BSD_RELIABLE_SIGNALS], [], [Setting to BSD style signals])
+else
+AC_DEFINE([SYSV_UNRELIABLE_SIGNALS], [], [Setting to SYSV style signals])
+fi
+
+echo "Checking best optimization compiler flags"
+echo "Host CPU : $host_cpu"
+case $host in
+
+  alpha*-*-*)
+    case $host_cpu in
+      alpha)        DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev4], denora_cpu) ;;
+      alphaev5)     DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev5], denora_cpu) ;;
+      alphaev56)    DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev56], denora_cpu) ;;
+      alphapca56 | alphapca57)
+			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pca56], denora_cpu)
+			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev6], denora_cpu) ;;
+      alphaev6)     DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev6], denora_cpu) ;;
+      alphaev67 | alphaev68)
+                    DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev67], denora_cpu)
+		    DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev6], denora_cpu) ;;
+    esac
+  ;;
+
+  hppa*-*-*)
+    DENORA_CPU_GCC_TRY_FLAGS([-mpa-risc-1-1], denora_cpu)
+  ;;
+
+  m68*-*-*)
+    case $host in
+    m68020-*-*)  DENORA_CPU_GCC_TRY_FLAGS([-m68020], denora_cpu) ;;
+    m68030-*-*)  DENORA_CPU_GCC_TRY_FLAGS([-m68030], denora_cpu) ;;
+    m68040-*-*)  DENORA_CPU_GCC_TRY_FLAGS([-m68040], denora_cpu) ;;
+    m68060-*-*)  
+          	  DENORA_CPU_GCC_TRY_FLAGS([-m68060], denora_cpu)
+		  DENORA_CPU_GCC_TRY_FLAGS([-m68000], denora_cpu)
+		;;
+    m68360-*-*)  
+		  DENORA_CPU_GCC_TRY_FLAGS([-mcpu32], denora_cpu)
+   		  DENORA_CPU_GCC_TRY_FLAGS([-m68000], denora_cpu) 
+		  ;;
+    *)    DENORA_CPU_GCC_TRY_FLAGS([-m68000], denora_cpu) ;;
+    esac
+  ;;
+
+  m88110*-*-*)
+    DENORA_CPU_GCC_TRY_FLAGS([-m88110], denora_cpu)
+  ;;
+
+  powerpc*-*-*)
+    case $host_cpu in
+      powerpc401)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=401], denora_cpu) ;;
+      powerpc403)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=403], denora_cpu) ;;
+      powerpc405)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=405], denora_cpu) ;;
+      powerpc505)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=505], denora_cpu) ;;
+      powerpc602)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=602], denora_cpu) ;;
+      powerpc603)   
+			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=603], denora_cpu)
+			DENORA_CPU_GCC_TRY_FLAGS([-mtune=603], denora_mtune)
+	  ;;
+      powerpc603e)  
+			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=603e], denora_cpu) 
+			DENORA_CPU_GCC_TRY_FLAGS([-mtune=603e], denora_mtune) 
+	  ;;
+      powerpc604)   
+			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=604], denora_cpu) 
+			DENORA_CPU_GCC_TRY_FLAGS([-mtune=604], denora_cpu) 
+	  ;;
+      powerpc604e)  DENORA_CPU_GCC_TRY_FLAGS([-mcpu=604e], denora_cpu) ;;
+      powerpc620)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=620], denora_cpu) ;;
+      powerpc630)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=630], denora_cpu) ;;
+      powerpc740)   
+			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=740], denora_cpu) 
+			DENORA_CPU_GCC_TRY_FLAGS([-mtune=740], denora_mtune) 
+	  ;;
+      powerpc7400)  
+			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=7400], denora_cpu)
+			DENORA_CPU_GCC_TRY_FLAGS([-mtune=7400], denora_mtune) 
+	  ;;
+      powerpc7450)  
+			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=7450], denora_cpu) 
+			DENORA_CPU_GCC_TRY_FLAGS([-mtune=7450], denora_mtune) 
+	  ;;
+      powerpc750)   
+			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=750], denora_cpu) 
+			DENORA_CPU_GCC_TRY_FLAGS([-mtune=750], denora_mtune) 
+      ;;
+      powerpc801)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=801], denora_cpu) ;;
+      powerpc821)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=821], denora_cpu) ;;
+      powerpc823)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=823], denora_cpu) ;;
+      powerpc860)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=860], denora_cpu) ;;
+    esac
+  ;;
+
+  # POWER
+  [power-*-* | power[12]-*-* | power2sc-*-*])
+    case $host in
+      power-*-*)    DENORA_CPU_GCC_TRY_FLAGS([-mcpu=power], denora_cpu) ;;
+      power1-*-*)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=rios1], denora_cpu) ;;
+      power2-*-*)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=rios2], denora_cpu) ;;
+      power2sc-*-*) DENORA_CPU_GCC_TRY_FLAGS([-mcpu=rsc], denora_cpu) ;;
+    esac
+    	DENORA_CPU_GCC_TRY_FLAGS([-mpower], denora_power)
+   ;;
+
+  *sparc*-*-*)
+    gcc_cflags_cpu=
+
+   	case $host in
+      sparcv8*-*-* | supersparc*-*-* | microsparc*-*-*)
+        	DENORA_CPU_GCC_TRY_FLAGS([-mcpu=v8], denora_cpu)
+		DENORA_CPU_GCC_TRY_FLAGS([-mv8], denora_mv8)
+	  ;;
+      sparcv9*-*-* | ultrasparc*-*-* | sparc64-*-*)
+        	DENORA_CPU_GCC_TRY_FLAGS([-mcpu=v8], denora_cpu)
+		DENORA_CPU_GCC_TRY_FLAGS([-mv8], denora_mv8)
+        	DENORA_CPU_GCC_TRY_FLAGS([-mcpu=v9], denora_cpu)
+        	DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ultrasparc], denora_cpu)
+      ;;
+     esac
+  ;;
+
+
+  X86_PATTERN | x86_64-*-*)
+    case $host in
+      i386*-*-*)
+       		DENORA_CPU_GCC_TRY_FLAGS([-mtune=i386], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=i386], denora_cpu)	  
+		DENORA_CPU_GCC_TRY_FLAGS([-march=i386], denora_march)
+        ;;
+      i586*-*-*)
+       		DENORA_CPU_GCC_TRY_FLAGS([-mtune=i586], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=i586], denora_cpu)	  
+		DENORA_CPU_GCC_TRY_FLAGS([-march=i586], denora_march)
+        ;;
+      pentium-*-*)
+       		DENORA_CPU_GCC_TRY_FLAGS([-mtune=pentium], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pentium], denora_cpu)	  
+		DENORA_CPU_GCC_TRY_FLAGS([-march=i586], denora_march)
+		;;
+      pentiummmx-*-*)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=pentiummmx], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pentiummmx], denora_cpu)
+        ;;
+      pentiumpro-*-*)
+       		DENORA_CPU_GCC_TRY_FLAGS([-mtune=pentiumpro], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pentiumpro], denora_cpu)	  
+		DENORA_CPU_GCC_TRY_FLAGS([-march=i686], denora_march)
+        ;;
+	i686*-*-*)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=i686], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=i686], denora_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=i686], denora_cpu)
+        ;;
+       pentium3-*-*)
+       		DENORA_CPU_GCC_TRY_FLAGS([-mtune=i686], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=i686], denora_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pentium3], denora_cpu)	  
+        ;;
+      pentium2-*-*)
+       		DENORA_CPU_GCC_TRY_FLAGS([-mtune=pentium2], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pentium2], denora_cpu)	  
+		DENORA_CPU_GCC_TRY_FLAGS([-march=i686], denora_march)
+        ;;
+      k6-3-*)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=k6-3], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=k6-3], denora_march)
+        ;;
+      k6-2-*)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=k6-2], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=k6-2], denora_march)
+        ;;
+      k6-*)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=k6], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=k6], denora_march)
+        ;;
+      athlon-4-*)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon-4], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon-4], denora_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=athlon-4], denora_cpu)	  
+        ;;
+      athlon-xp-*)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon-xp], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon-xp], denora_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=athlon-xp], denora_cpu)	  
+        ;;
+      athlon-mp-*)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon-mp], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon-mp], denora_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=athlon-mp], denora_cpu)	  
+        ;;
+      athlon-tbird-*)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon-tbird], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon-tbird], denora_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=athlon-tbird], denora_cpu)	  
+        ;;
+      k7-* | athlon-*)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon], denora_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=athlon], denora_cpu)	  
+        ;;
+      pentium4-*-* | i786-*-*)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=pentium4], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=pentium4], denora_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pentium4], denora_cpu)	  
+        ;;
+      viac32-*-*)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=c3-2], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=c3-2], denora_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=c3-2], denora_cpu)	  
+        ;;
+      viac3*-*-*)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=c3], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=c3], denora_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=c3], denora_cpu)	  
+        ;;
+      x86_64-*-*)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=k8], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon64], denora_mtune)		
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon-fx], denora_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m64], denora_m64)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=k8], denora_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon64], denora_march)		
+		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon-fx], denora_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=k8], denora_cpu)	  
+        ;;
+    esac
+
+  ;;
+
+  none-*-*)
+    ;;
+
+esac
+
+echo "Checking compiler flags for make strict"
+DENORA_GCC_TRY_FLAGS([-Wextra], denora_gcc_w_extra)
+DENORA_GCC_TRY_FLAGS([-Wall], denora_gcc_w_all)
+DENORA_GCC_TRY_FLAGS([-pedantic], denora_gcc_pedantic)
+DENORA_GCC_TRY_FLAGS([-Wshadow], denora_gcc_wshadow)
+DENORA_GCC_TRY_FLAGS([-Wmissing-declarations], denora_gcc_missing_dec)
+DENORA_GCC_TRY_FLAGS([-Wpointer-arith], denora_gcc_pointer_arith)
+DENORA_GCC_TRY_FLAGS([-Wcast-align], denora_gcc_cast_align)
+dnl DENORA_GCC_TRY_FLAGS([-Wcast-qual], denora_gcc_cast_qual)
+DENORA_GCC_TRY_FLAGS([-Wfloat-equal], denora_gcc_float_equal)
+DENORA_GCC_TRY_FLAGS([-Wstrict-prototypes], denora_gcc_strict_prototypes)
+DENORA_GCC_TRY_FLAGS([-Wmissing-prototypes], denora_gcc_missing_prototype)
+DENORA_GCC_TRY_FLAGS([-Wredundant-decls], denora_gcc_redundant_decls)
+DENORA_GCC_TRY_FLAGS([-Wunused-variable], denora_gcc_unused_vars)
+DENORA_GCC_TRY_FLAGS([-Wunused-parameter], denora_gcc_unused_params)
+DENORA_GCC_TRY_FLAGS([-Wuninitialized], denora_gcc_uninit)
+DENORA_GCC_TRY_FLAGS([-Wparentheses], denora_gcc_parenthese)
+DENORA_GCC_TRY_FLAGS([-Wno-long-long], denora_gcc_no_long_long)
+DENORA_GCC_TRY_FLAGS([-Wunused-macros], denora_gcc_unused_macro)
+DENORA_GCC_TRY_FLAGS([-Wwrite-strings], denora_gcc_write_strings)
+DENORA_GCC_TRY_FLAGS([-Wimplicit], denora_gcc_implicit)
+DENORA_GCC_TRY_FLAGS([-Wnested-externs], denora_gcc_nested)
+DENORA_GCC_TRY_FLAGS([-Wno-unused], denora_gcc_no_unused)
+DENORA_GCC_TRY_FLAGS([-Wundef], denora_gcc_undef)
+DENORA_GCC_TRY_FLAGS([-Wpacked], denora_gcc_packed)
+DENORA_GCC_TRY_FLAGS([-Wbad-function-cast], denora_gcc_bad_func_cast)
+DENORA_GCC_TRY_FLAGS([-Wunused-function], denora_gcc_unused_func)
+DENORA_GCC_TRY_FLAGS([-Wunused-label], denora_gcc_unused_label)
+DENORA_GCC_TRY_FLAGS([-Wunused-value], denora_gcc_unused_value)
+DENORA_GCC_TRY_FLAGS([-Wfloat-equal], denora_gcc_float_equal)
+DENORA_GCC_TRY_FLAGS([-Wchar-subscripts], denora_gcc_char_sub)
+DENORA_GCC_TRY_FLAGS([-Wswitch], denora_gcc_switch)
+DENORA_GCC_TRY_FLAGS([-Wmissing-braces], denora_gcc_missing_braces)
+DENORA_GCC_TRY_FLAGS([-Wsequence-point], denora_gcc_sequence_point)
+DENORA_GCC_TRY_FLAGS([-Wunknown-pragmas], denora_gcc_unknown_pragmas)
+DENORA_GCC_TRY_FLAGS([-Wdeclaration-after-statement], denora_gcc_declaration_after_statement)
+DENORA_GCC_TRY_FLAGS([-Wsign-compare], denora_gcc_sign_compare)
+DENORA_GCC_TRY_FLAGS([-fstack-protector], denora_gcc_fstack_protector)
+if test "$denora_gcc_fstack_protector" = "yes"; then
+        STRICT="$STRICT --param=ssp-buffer-size=4 "
+fi
+DENORA_GCC_TRY_FLAGS([-Wp,-D_FORTIFY_SOURCE=2], denora_gcc_fortify_source)
+
+
+AC_SUBST(DENORALIBS)
+AC_SUBST(CFLAGS)
+AC_SUBST(OPCFLAGS)
+AC_SUBST(STRICT)
+AC_SUBST(LDFLAGS)
+
+AC_CONFIG_FILES(		\
+	Makefile		\
+	src/bin/denorarc	\
+)
+
+AC_OUTPUT
+
+cat <<EOT
+
+$DIS_MODULES
+$DIS_MYSQL
+$DIS_DMALLOC
+
+All done!  Now run "make" (or possibly "gmake") to compile Denora.
+See the INSTALL, README and FAQ files if you have any problems.
+EOT
+

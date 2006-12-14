@@ -1,0 +1,149 @@
+/* StatServ core functions
+ *
+ * (C) 2004-2006 Denora Team
+ * Contact us at info@nomadirc.net
+ *
+ * Please read COPYING and README for furhter details.
+ *
+ * Based on the original code of Anope by Anope Team.
+ * Based on the original code of Thales by Lucas.
+ *
+ * $Id: ss_core.c 608 2006-05-23 07:35:24Z trystan $
+ *
+ */
+/*************************************************************************/
+
+#include "denora.h"
+
+static int do_shutdown(User * u, int ac, char **av);
+static int do_restart(User * u, int ac, char **av);
+static int do_reload(User * u, int ac, char **av);
+int DenoraInit(int argc, char **argv);
+void DenoraFini(void);
+
+/**
+ * Create the command, and tell Denora about it.
+ * @param argc Argument count
+ * @param argv Argument list
+ * @return MOD_CONT to allow the module, MOD_STOP to stop it
+ **/
+int DenoraInit(int argc, char **argv)
+{
+    Command *c;
+
+    if (denora->debug >= 2) {
+        protocol_debug(NULL, argc, argv);
+    }
+    moduleAddAuthor("Denora");
+    moduleAddVersion("$Id: ss_core.c 608 2006-05-23 07:35:24Z trystan $");
+    moduleSetType(CORE);
+
+    c = createCommand("SHUTDOWN", do_shutdown, is_stats_admin, -1, -1, -1,
+                      STAT_HELP_SHUTDOWN);
+    moduleAddCommand(STATSERV, c, MOD_UNIQUE);
+
+    c = createCommand("RESTART", do_restart, is_stats_admin, -1, -1, -1,
+                      STAT_HELP_RESTART);
+    moduleAddCommand(STATSERV, c, MOD_UNIQUE);
+
+    c = createCommand("RELOAD", do_reload, is_stats_admin, -1, -1, -1,
+                      STAT_HELP_RELOAD);
+    moduleAddCommand(STATSERV, c, MOD_UNIQUE);
+
+    return MOD_CONT;
+}
+
+/**
+ * Unload the module
+ **/
+void DenoraFini(void)
+{
+
+}
+
+/* SHUTDOWN command. */
+
+static int do_shutdown(User * u, int ac, char **av)
+{
+    char buf[BUFSIZE];
+    SET_SEGV_LOCATION();
+
+    if (denora->protocoldebug) {
+        protocol_debug(NULL, ac, av);
+    }
+
+    denora->qmsg = calloc(512 + strlen(u->nick), 1);
+    if (!denora->qmsg) {
+        ircsnprintf(denora->qmsg, 512,
+                    "SHUTDOWN command received, but out of memory!");
+    } else {
+        ircsnprintf(buf, BUFSIZE, "SHUTDOWN command received from %s",
+                    u->nick);
+        denora->qmsg = sstrdup(buf);
+    }
+
+    SET_SEGV_LOCATION();
+
+    denora->save_data = 1;
+    denora->delayed_quit = 1;
+    return MOD_CONT;
+}
+
+/*************************************************************************/
+
+/* RESTART command */
+
+static int do_restart(User * u, int ac, char **av)
+{
+    char buf[BUFSIZE];
+    if (denora->protocoldebug) {
+        protocol_debug(NULL, ac, av);
+    }
+#ifdef STATS_BIN
+    denora->qmsg = calloc(512 + strlen(u->nick), 1);
+    if (!denora->qmsg) {
+        ircsnprintf(denora->qmsg, 512,
+                    "RESTART command received, but out of memory!");
+    } else {
+        ircsnprintf(buf, BUFSIZE, "RESTART command received from %s",
+                    u->nick);
+        denora->qmsg = sstrdup(buf);
+    }
+
+    /*    raise(SIGHUP); */
+    do_restart_denora();
+#else
+    notice_lang(s_StatServ, u, STAT_CANNOT_RESTART);
+#endif
+    return MOD_CONT;
+}
+
+/*************************************************************************/
+
+static int do_reload(User * u, int ac, char **av)
+{
+    if (denora->protocoldebug) {
+        protocol_debug(NULL, ac, av);
+    }
+
+    send_event(EVENT_RELOAD, 1, EVENT_START);
+
+    if (initconf(denora->config, 1, mainconf) == -1) {
+        denora->qmsg = calloc(512 + strlen(u->nick), 1);
+        if (!denora->qmsg)
+            ircsnprintf(denora->qmsg, 512,
+                        "Error during the reload of the configuration file, but out of memory!");
+        else
+            denora->qmsg = sstrdup("Error Reading Configuration File");
+        denora->quitting = 1;
+    } else {
+        merge_confs();
+    }
+
+    send_event(EVENT_RELOAD, 1, EVENT_STOP);
+
+    notice_lang(s_StatServ, u, STAT_RELOAD);
+    return MOD_CONT;
+}
+
+/*************************************************************************/

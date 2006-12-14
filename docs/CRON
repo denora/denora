@@ -1,0 +1,163 @@
+Denora CRON Events
+-- $Id: CRON 632 2006-07-29 10:22:43Z crazy $
+---------------------
+
+1) Intro
+2) Cron Events
+3) Triggered Events List
+
+1) Introduction to CRON Events
+
+    Cron Events are setup to give module developers the ablitiy to have code
+    run at given times without having to figure out the time in seconds for
+    which their event is to be trigggered. A list of time events can be found 
+    below. The rest of this document assumes that you are used to writing modules.
+
+2) Cron Events
+
+    A) All functions most be formatted as:
+
+        int functioname(char *name);
+
+    B) In DenoraInit you must declare CronEvent in some fashion; it is into
+       this variable that we will create the cron event handler. Here is what
+       the base DenoraInit should look like at this point:
+
+        int DenoraInit(int argc, char **argv)
+        {
+            CronEvent *cevt = NULL;
+            int status;
+
+            moduleAddAuthor(AUTHOR);
+            moduleAddVersion(VERSION);
+            return MOD_CONT;
+        }
+
+    C) Pass "createCronEvent" the name of the event. In this case we are
+       going to hook time event of midnight, "CRON_MIDNIGHT".
+
+        cevt = createCronEventHook(CRON_MIDNIGHT, midnight_check);
+
+    D) The Handler is not ready for use yet; now you must add it to the hash
+       with "AddCronEvent". You will want to pass to this function the
+       return of "createCronEvent"
+
+        status = moduleAddCronEvent(cevt);
+
+       It will return the same module error codes as adding a regular message,
+       which you can use to confirm it was added correctly.
+
+    E) With that setup in your function you will be passed 1 item. The message
+       is very simple; it could be as simple as a start, stop or message. In
+       the case of saving it has a start and stop.
+
+        int midnight_check(char *name)
+        {
+         /* its midnight transfer current users over to daily users */
+           stats->daily_users = stats_users;
+            return MOD_CONT;
+        }
+
+3) Triggered Events List
+
+    Here's a list of all event hooks we currently offer, with a description
+    of what argument is being passed to the event functions for this type of
+    event. 
+
+    CRON_MIDNIGHT
+        Run at midnight, every night
+
+    CRON_WEEKLY_SUNDAY
+        Run at midnight, Sunday, this is helpful for weekly stats
+
+    CRON_WEEKLY_MONDAY
+        Run at midnight, Monday, this is helpful for weekly stats
+
+    CRON_WEEKLY_TUESDAY
+        Run at midnight, Tuesday, this is helpful for weekly stats
+
+    CRON_WEEKLY_WEDNESDAY
+        Run at midnight, Wednesday, this is helpful for weekly stats
+
+    CRON_WEEKLY_THURSDAY
+        Run at midnight, Thursday, this is helpful for weekly stats
+
+    CRON_WEEKLY_FRIDAY
+        Run at midnight, Friday, this is helpful for weekly stats
+
+    CRON_WEEKLY_SATURDAY
+        Run at midnight, Saturday, this is helpful for weekly stats
+
+    CRON_MONTHLY
+        Run at Midnight on the first of the Month
+
+    CRON_HOUR_1
+	Run at 1am, every day
+
+    CRON_HOUR_2
+	Run at 2am, every day
+
+    CRON_HOUR_3
+	Run at 3am, every day
+	
+    CRON_HOUR_4
+	Run at 2am, every day
+	
+    CRON_HOUR_5
+	Run at 5 am, every day
+
+    CRON_HOUR_6
+	Run at 6 am, every day
+
+    CRON_HOUR_7
+	Run at 7 am, every day
+
+    CRON_HOUR_8
+	Run at 8 am, every day
+
+    CRON_HOUR_9
+	Run at 9 am, every day
+
+    CRON_HOUR_10
+	Run at 10 am, every day
+
+    CRON_HOUR_11
+	Run at 11 am, every day
+
+    CRON_HOUR_12
+	Run at 12 noon every day
+
+    CRON_HOUR_13
+	Run at 1 pm, every day
+
+   CRON_HOUR_14
+	Run at 2 pm, every day
+
+   CRON_HOUR_15
+	Run at 3 pm, every day
+
+   CRON_HOUR_16
+	Run at 4 pm, every day
+
+   CRON_HOUR_17
+	Run at 5 pm, every day
+
+   CRON_HOUR_18
+	Run at 6 pm, every day
+
+   CRON_HOUR_19
+	Run at 7 pm, every day
+
+   CRON_HOUR_20
+	Run at 8 pm, every day
+
+    CRON_HOUR_21
+	Run at 9 pm, every day
+
+    CRON_HOUR_22
+	Run at 10 pm, every day
+
+    CRON_HOUR_23
+	Run at 11 pm, every day	
+
+

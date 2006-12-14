@@ -1,0 +1,404 @@
+#!/bin/sh
+#
+# Configuration script for Denora MySQL Support.
+#
+# (C) 2004-2006 Denora Team
+# Contact us at info@nomadirc.net
+#
+# This program is free but copyrighted software; see the file COPYING for
+# details.
+#
+# Based on the original code of Anope by Anope Team.
+# Based on the original code of Thales by Lucas.
+#
+# $Id: mydbgen 713 2006-09-16 11:41:55Z Hal9000 $
+
+
+msg ()
+
+{
+
+echo  -e "\033[1;34m>>\033[1;0m \033[1;1m$1\033[1;0m" >&2
+
+}
+
+msg2 ()
+
+{
+
+echo  -e "\033[1;32m->\033[1;0m \033[1;1m$1\033[1;0m" >&2
+
+}
+
+msg3 ()
+
+{
+
+echo  -e -n "\033[1;37m->\033[1;0m \033[1;1m\c\033[1;0m" >&2
+
+}
+msg_error ()
+
+{
+
+echo  -e "\033[1;31m>> ERROR:\033[1;0m \033[1;1m$1\033[1;0m" >&2
+
+}
+
+msg_warning ()
+
+{
+
+echo -e "\033[1;31m>> WARNING:\033[1;0m \033[1;1m$*\033[1;0m" >&2
+
+}
+
+## don't start if we can't find mysql
+if ! `which mysql 2>/dev/null >/dev/null`; then
+        msg_error "HEH! Cannot find mysql in your PATH!!.. abording.."
+        exit 0
+fi
+
+OS=`uname`
+
+if [ "$OS" = "FreeBSD" ]; then 
+   MVER=`mysql -V | awk '{print $5}' | sed 's/.\([0-9]\)\([0-9]\).*//g'`
+elif [ "$OS" = "Linux" ]; then
+  MVER=`mysql -V | awk '{print $5}' | sed 's/.\([0-9]\).\([0-9]\).*//g'`
+ else 
+   MVER=""
+fi
+
+RMVER=`mysql -V |sed 's|,.*||g'`
+
+if [ "$MVER" = "" ]; then
+  msg_warning "Your OS:' "$OS"' is not yet fully supported from mydbgen."
+  msg_warning "Please report this to: http://bugtracker.nomadirc.net/ ."
+
+elif [ "$MVER" = "3" ]; then
+  msg_warning "Your MySQL version:' "$RMVER"'"
+  msg_warning "is no longer fully supported and may be not compatible with Denora."
+  msg_warning "Use it at your own risk"
+  
+fi
+
+echo ""
+msg "This script will guide you through the process of configuring your Denora"
+msg "installation to make use of MySQL support. This script must be used for both"
+msg "new installs as well as for upgrading for users who have a previous version" 
+msg "of Denora installed"
+echo ""
+
+while [ -z "$DBFILE" ] ; do
+        echo ""
+        msg "What is the IRCD type do you plan to use denora with?"
+        msg "This need be the same name as in denora.conf (e.g: unreal32)"
+        msg3
+            read cc
+
+        if [ ! -z "$cc" ] ; then
+            DBFILE=$cc
+			if [ ! -f "sql/$DBFILE.sql" ] ; then
+        		msg_error "Required file was not found!";
+        		exit
+			fi
+        fi
+done
+
+while [ -z "$SQLHOST" ] ; do
+        echo ""
+        msg "What is the hostname of your MySQL server?"
+        msg3
+            read cc
+        if [ ! -z "$cc" ] ; then
+            SQLHOST=$cc
+        fi
+done
+
+while [ -z "$SQLUSER" ] ; do
+        echo ""
+        msg "What is your MySQL username?"
+        msg3
+            read cc
+        if [ ! -z "$cc" ] ; then
+            SQLUSER=$cc
+        fi
+done
+
+OLD_TTY=`stty -g`
+
+echo ""
+msg "What is your MySQL password?"
+msg3
+stty -echo echonl
+read cc
+if [ ! -z "$cc" ] ; then
+	SQLPASS=$cc
+fi
+stty $OLD_TTY
+
+mysqlshow -h$SQLHOST -u$SQLUSER -p$SQLPASS >/dev/null 2>&1
+if test "$?" = "1" ; then
+	msg_error "Unable to login, verify your login/password and hostname"
+	exit
+fi
+
+while [ -z "$SQLDB" ] ; do
+        echo ""
+        msg "What is the name of the Denora SQL database?"
+        msg3
+            read cc
+        if [ ! -z "$cc" ] ; then
+            SQLDB=$cc
+        fi
+done
+
+MYSQLDUMP="mysqldump -h$SQLHOST -u$SQLUSER -p$SQLPASS $SQLDB"
+MYSQLSHOW="mysqlshow -h$SQLHOST -u$SQLUSER -p$SQLPASS $SQLDB"
+MYSQL="mysql -h$SQLHOST -u$SQLUSER -p$SQLPASS $SQLDB"
+USQLDB="sql/.tmp.sql"
+## the INSERT IGNORE stuff
+USQLDB2="sql/.tmp2.sql"
+echo ""
+
+$MYSQLSHOW 2> /dev/null | grep -q $SQLDB
+if test "$?" = "1" ; then
+	msg "Unable to find databse, creating... "
+	mysql -h$SQLHOST -u$SQLUSER -p$SQLPASS -Bs -e "create database $SQLDB" >/dev/null 2>&1
+	if test "$?" = "0" ; then
+		msg2 "done!"
+	else
+		msg2 "failed!"
+		FAILED="$FAILED 'database creation'"
+	fi
+fi
+
+$MYSQL -Bs -e "show tables like 'chan'" | grep -q chan
+if test "$?" = "1" ; then
+	msg "Unable to find Denora schema, creating... "
+	$MYSQL < "sql/$DBFILE.sql"
+	if test "$?" = "0" ; then
+		msg2 "done!"
+	else
+		msg2 "failed!"
+		FAILED="$FAILED 'schema creation'"
+	fi
+fi
+
+## update to 1.0.1 ugly but we have svn user and they have mixed tables / columns
+## so we need to check all 
+
+# hack hack hack 
+cp sql/update.sql sql/update.sql.bak
+
+msg  "Checking for missing tables... "
+
+## bug 167 .. NOTE to self "change the whole mydbgen for 1.3.x" 
+
+if [ "$DBFILE" = "hybrid" ]; then
+ echo "DROP TABLE IF EXISTS sgline;" >> sql/update.sql
+ echo "CREATE TABLE sgline (" >> sql/update.sql
+ echo  "id mediumint(15) NOT NULL auto_increment," >> sql/update.sql
+ echo  "mask varchar(255) NOT NULL default ''," >> sql/update.sql
+ echo  "reason varchar(255) NOT NULL default ''," >> sql/update.sql
+ echo  "PRIMARY KEY  (id)" >> sql/update.sql
+ echo ") TYPE=MyISAM;" >> sql/update.sql
+
+fi
+
+
+if [ "$DBFILE" = "hybrid" ]; then
+	$MYSQL -Bs -e "show tables like 'sgline'" | grep -q sgline
+  else
+	$MYSQL -Bs -e "show tables like 'serverstats'" | grep -q serverstats
+fi
+if test "$?" = "1" ; then
+      msg "Updating your tables... "
+      $MYSQL < "sql/update.sql"
+    if test "$?" = "0" ; then
+      msg2 "done!"
+  else
+      msg2 "failed!"
+      FAILED="$FAILED 'schema creation'"
+fi
+  else
+     msg "No missing tables found.. good!"
+
+fi
+
+## hack hack hack ..
+
+rm -f sql/update.sql
+mv sql/update.sql.bak sql/update.sql
+
+
+echo " "
+msg "Checking for missing columns..."
+
+# chan columns 
+
+$MYSQL -Bs -e "describe chan maxusers" 2> /dev/null | grep -q maxusers
+if test "$?" = "1" ; then
+	echo "ALTER TABLE chan ADD maxusers INT( 15 ) NOT NULL;" >> $USQLDB
+fi
+
+$MYSQL -Bs -e "describe chan maxusertime" 2> /dev/null | grep -q maxusertime
+if test "$?" = "1" ; then
+	echo "ALTER TABLE chan ADD maxusertime INT( 15 ) NOT NULL;" >> $USQLDB
+fi
+
+$MYSQL -Bs -e "describe chan kickcount" 2> /dev/null | grep -q kickcount
+if test "$?" = "1" ; then
+	echo "ALTER TABLE chan ADD kickcount INT( 15 ) NOT NULL;" >> $USQLDB
+fi
+
+# cstats columns
+
+$MYSQL -Bs -e "describe cstats timeadded" 2> /dev/null | grep -q timeadded
+if test "$?" = "1" ; then
+	echo "ALTER TABLE cstats ADD timeadded INT( 10 ) AFTER letters;" >> $USQLDB
+fi
+
+# user columns
+
+if [ "$DBFILE" = "unreal32" ]; then
+	$MYSQL -Bs -e "describe user mode_ls" 2> /dev/null | grep -q mode_ls
+	if test "$?" = "1" ; then
+		echo "ALTER TABLE user ADD mode_ls ENUM( 'Y', 'N' ) DEFAULT 'N' NOT NULL AFTER mode_lr;" >> $USQLDB
+	fi
+fi
+
+if [ "$DBFILE" = "unreal32" ]; then
+	$MYSQL -Bs -e "describe user mode_uo" 2> /dev/null | grep -q mode_uo
+	if test "$?" = "1" ; then
+		echo "ALTER TABLE user ADD mode_uo ENUM( 'Y', 'N' ) DEFAULT 'N' NOT NULL AFTER mode_uh;" >> $USQLDB
+	fi
+fi
+
+$MYSQL -Bs -e "describe user lastquitmsg" 2> /dev/null | grep -q lastquitmsg
+if test "$?" = "1" ; then
+	echo "ALTER TABLE user ADD lastquitmsg VARCHAR( 255 ) NOT NULL AFTER lastquit;" >> $USQLDB
+fi
+
+## bug 167
+
+if [ "$DBFILE" = "hybrid" ]; then
+ 	$MYSQL -Bs -e "describe user hiddenhostname" 2> /dev/null | grep -q hiddenhostname
+	if test "$?" = "1" ; then
+		echo "ALTER TABLE user ADD hiddenhostname varchar(64) NOT NULL default '' AFTER  hostname;" >> $USQLDB
+	fi
+fi
+
+# maxvalues fields
+
+echo "INSERT IGNORE INTO maxvalues ( type , val , time ) VALUES ( 'users', '0', '0000-00-00 00:00:00' );" >> $USQLDB2
+echo "INSERT IGNORE INTO maxvalues ( type , val , time ) VALUES ( 'channels', '0', '0000-00-00 00:00:00' );" >> $USQLDB2
+echo "INSERT IGNORE INTO maxvalues ( type , val , time ) VALUES ( 'servers', '0', '0000-00-00 00:00:00' );" >> $USQLDB2
+echo "INSERT IGNORE INTO maxvalues ( type , val , time ) VALUES ( 'opers', '0', '0000-00-00 00:00:00' );" >> $USQLDB2
+
+# current fields
+
+echo "INSERT IGNORE INTO current VALUES ( 'chans', '0', '0' );" >> $USQLDB2
+
+# server columns 
+
+$MYSQL -Bs -e "describe server ping" 2> /dev/null | grep -q ping
+if test "$?" = "1" ; then
+     echo "ALTER TABLE server ADD ping INT( 15 ) NOT NULL;" >> $USQLDB
+fi
+
+$MYSQL -Bs -e "describe server highestping" 2> /dev/null | grep -q highestping
+if test "$?" = "1" ; then
+     echo "ALTER TABLE server ADD highestping INT( 15 ) NOT NULL;" >> $USQLDB
+fi
+
+$MYSQL -Bs -e "describe server maxpingtime" 2> /dev/null | grep -q maxpingtime
+if test "$?" = "1" ; then
+     echo "ALTER TABLE server ADD maxpingtime INT( 15 ) NOT NULL;" >> $USQLDB
+fi
+
+$MYSQL -Bs -e "describe server lastpingtime" 2> /dev/null | grep -q lastpingtime
+if test "$?" = "1" ; then
+     echo "ALTER TABLE server ADD lastpingtime INT( 15 ) NOT NULL AFTER maxpingtime;" >> $USQLDB
+fi
+
+$MYSQL -Bs -e "describe server uline" 2> /dev/null | grep -q uline
+if test "$?" = "1" ; then
+     echo "ALTER TABLE server ADD uline INT( 2 ) NOT NULL ;" >> $USQLDB
+fi
+
+$MYSQL -Bs -e "describe server ircopskills" 2> /dev/null | grep -q ircopskills
+if test "$?" = "1" ; then
+     echo "ALTER TABLE server ADD ircopskills INT( 10 ) NOT NULL;" >> $USQLDB
+fi
+
+$MYSQL -Bs -e "describe server serverkills" 2> /dev/null | grep -q serverkills
+if test "$?" = "1" ; then
+     echo "ALTER TABLE server ADD serverkills INT( 10 ) NOT NULL;" >> $USQLDB
+fi
+
+$MYSQL -Bs -e "describe server opers" 2> /dev/null | grep -q opers
+if test "$?" = "1" ; then
+     echo "ALTER TABLE server ADD opers INT( 15 ) NOT NULL;" >> $USQLDB
+fi
+
+$MYSQL -Bs -e "describe server maxopers" 2> /dev/null | grep -q maxopers
+if test "$?" = "1" ; then
+     echo "ALTER TABLE server ADD maxopers INT( 15 ) NOT NULL;" >> $USQLDB
+fi
+
+$MYSQL -Bs -e "describe server maxopertime" 2> /dev/null | grep -q maxopertime
+if test "$?" = "1" ; then
+     echo "ALTER TABLE server ADD maxopertime INT( 15 ) NOT NULL;" >> $USQLDB
+fi
+
+$MYSQL -Bs -e "describe ustats firstadded" 2> /dev/null | grep -q firstadded
+if test "$?" = "1" ; then
+     echo "ALTER TABLE ustats ADD firstadded INT( 10 ) NOT NULL AFTER lastspoke;" >> $USQLDB
+fi
+
+## INSERT IGNORE stuff
+$MYSQL < "$USQLDB2"
+rm -f $USQLDB2
+
+if [  -f "$USQLDB" ] ; then
+      msg "Updating your columns... "
+      $MYSQL < "$USQLDB"
+if test "$?" = "0" ; then
+      msg2 "done!"
+    else
+      msg2 "failed!"
+      FAILED="$FAILED 'schema creation'"
+   fi
+rm -f $USQLDB
+     else
+     msg "No missing columns found.. good!"
+fi
+
+
+
+if test "x$FAILED" = "x" ; then
+	# Try to find out more about this installation
+	SQLSOCK="$(mysql_config --socket 2> /dev/null)"
+	SQLPORT="$(mysql_config --port 2> /dev/null)"
+	echo ""
+	msg "Your MySQL setup is complete and your Denora schema is up to date. Make"
+	msg "sure you configure MySQL on your denora.conf file prior to launching"
+	msg "Denora. Your configuration values are:"
+	echo ""
+	echo "sql {"
+	echo "	type        mysql;"
+        echo "	host        $SQLHOST;"
+        echo "	user        $SQLUSER;"
+        echo "	passwd      ********;"
+        echo "	name        $SQLDB;"
+	echo "	sock        $SQLSOCK;"
+	echo "	port        $SQLPORT;"
+	echo "};"
+	echo ""
+else
+	msg_error "The following operations failed:"
+	msg_error "$FAILED"
+fi
+
+exit

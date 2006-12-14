@@ -1,0 +1,287 @@
+Denora Internal Events
+-- $Id: EVENTS 708 2006-09-15 18:30:20Z trystan $
+---------------------
+
+1) Intro
+2) Complex Events
+3) Triggered Events
+4) Triggered Events List
+
+1) Introduction to Internal Events
+
+    Internal Events are setup to give module developers more information
+    about what the core is doing at different times. This information can
+    be as complex as data we are feeding to the uplink, to simple triggered
+    events such as the databases being saved. A list of triggered  events
+    can be found below. Additional there is a module included with the core
+    which can  provide some clue as to how to use the code in your modules.
+    The rest of this document assumes that you are used to writing modules.
+
+2) Complex Events
+
+    This type of events are based around what happens when we talk to the
+    IRCd, much like MESSAGE events that the IRCD sends to us. The events
+    are triggered when Denora writes to the ircd. To watch for these events
+    you must have some knowledge of how the IRCd command system works. In
+    our example we will trap for NICK events.
+
+    A) All functions most be formatted as:
+
+        int functioname(char *source, int ac, char **av);
+
+    B) In DenoraInit you must declare EvtMessage in some fashion, it is into
+       this variable that we will create the event handler. Here is what the
+       base DenoraInit should look like at this point:
+
+        int DenoraInit(int argc, char **argv)
+        {
+            EvtMessage *msg = NULL;
+            int status;
+
+            moduleAddAuthor(AUTHOR);
+            moduleAddVersion(VERSION);
+            return MOD_CONT;
+        }
+
+       Note that AUTHOR and VERSION should be defined above the DenoraInit
+       function, just like you should do with any module.
+
+    C) Pass "createEventHandler" the name of the message in this case NICK,
+       and the function that was created in Step A. At this point you should
+       assign the return of "createEventHandler" to the EvtMessage variable.
+
+        msg = createEventHandler("NICK", my_nick);
+
+    D) The Handler is not ready for use yet; now you must add it to the hash
+       with "moduleAddEventHandler". You will want to pass to this function
+       the return of "createEventHandler".
+
+        status = moduleAddEventHandler(msg);
+
+       It will return the same module error codes as adding a regular message,
+       which you can use to confirm it was added correctly.
+
+    E) With that setup in your function you will be passed 3 items. The source
+       most of the time this will be set to ServerName or NULL; consult our
+       IRCd documentation about how messages are formatted. AC is the count of
+       variables you will find in AV.
+
+        int my_nick(char *source, int ac, char **av)
+        {
+            alog(LOG_NORMAL, "Internal Event - nick is %s",av[0]);
+            return MOD_CONT;
+        }
+
+3) Triggered Events
+
+    These events also known as "event hooks" are internal events such as
+    expiring of nicks to the saving of databases.
+
+    A) All functions most be formatted as:
+
+        int functioname(int argc, char **argv);
+
+    B) In DenoraInit you must declare EvtHook in some fashion; it is into
+       this variable that we will create the event handler. Here is what
+       the base DenoraInit should look like at this point:
+
+        int DenoraInit(int argc, char **argv)
+        {
+            EvtHook *hook = NULL;
+            int status;
+
+            moduleAddAuthor(AUTHOR);
+            moduleAddVersion(VERSION);
+            return MOD_CONT;
+        }
+
+    C) Pass "createEventHook" the name of the event. In this case we are
+       going to hook to the saving of databases, "EVENT_DB_SAVING".
+
+        hook = createEventHook(EVENT_DB_SAVING, my_save);
+
+    D) The Handler is not ready for use yet; now you must add it to the hash
+       with "moduleAddEventHook". You will want to pass to this function the
+       return of "createEventHook"
+
+        status = moduleAddEventHook(hook);
+
+       It will return the same module error codes as adding a regular message,
+       which you can use to confirm it was added correctly.
+
+    E) With that setup in your function you will be passed 1 item. The message
+       is very simple; it could be as simple as a start, stop or message. In
+       the case of saving it has a start and stop.
+
+        int my_save(int argc, char **argv)
+        {
+            if (!stricmp(argv[0], EVENT_START)) {
+                alog("Saving the databases! has started");
+            } else {
+                alog("Saving the databases is complete");
+            }
+            return MOD_CONT;
+        }
+
+4) Triggered Events List
+
+    Here's a list of all event hooks we currently offer, with a description
+    of what argument is being passed to the event functions for this type of
+    event. All arguments are plain-text strings (char *). The list is sorted
+    in alphabetical order.
+
+    Note that all events are emitted AFTER the action has taken place, so
+    any deleted nick/channel/etc won't exist anymore and any created one will
+    exist when your function is being run, unless noted otherwise.
+
+    Also note that EVENT_START and EVENT_STOP should not be matched with an
+    equal sign, but with string comparision. See the bundled events module for
+    an example on how to do this.
+
+
+	EVENT_CHAN_PRIVMSG
+		Sent when a PRIVMSG is received in a channel
+        Argument 1 - Sender
+        Argument 2 - Channel
+        Argument 3 - Message
+
+    EVENT_CHANGE_NICK
+        A user has just changed it's nick.
+        Argument 1 - Old Nick
+        Argument 2 - New Nick
+
+    EVENT_CHANNEL_MODE
+		This event is sent when a changed mode is changed or updated. 
+		Argument 1 - EVENT_MODE_ADD or EVENT_MODE_REMOVE
+		Arugment 2 - Channel
+        Argument 3 - Mode
+        Argument 4 - extra data not always sent
+
+    EVENT_CHAN_KICK
+        Someone has just been kicked from a channel.
+        Argument 1  The nick of the user that has been kicked.
+        Argument 2  The channel the user has been kicked from.
+
+    EVENT_CHANNEL_TOPIC
+        The topic of the channel has been set/changed
+        Argument 1  The channel name
+        Argument 2  The topic setter
+        Argument 3  The topic that was set (this can be NULL)
+
+    EVENT_CONNECT
+        This event is emitted when the connection to our uplink hub is being
+        made.
+        The argument is either EVENT_START or EVENT_STOP, to indicate if it's
+        emitted before or after the connection has been made. EVENT_STOP is
+        emitted before our burst is being sent over the link.
+
+    EVENT_CTCP_VERSION
+        A new user has been introduced on the network, and has replied to CTCP
+        version requests.
+        Argument 1 - Users nick
+        Argument 2 - CTCP Version
+
+    EVENT_DB_SAVING
+        This event is emitted when the databases are being saved.
+        The argument is either EVENT_START or EVENT_STOP, to indicate if it's
+        emitted before or after the saving routines.
+
+	EVENT_FANTASY
+		This event is sent when a user in a chanstats channel uses a ! command
+        Argument 1 - Fantasy Command
+        Argument 2 - User sending command
+		Argument 3 - Channel
+		Argument 4 - Parameters (not always sent)
+
+	EVENT_GLOBAL_KILL
+		This event is sent when a ircop kills off a user from the network
+        Argument 1 - Person who set it
+        Argument 2 - Person whom was affected
+		Argument 3 - Reason
+
+    EVENT_NEWNICK
+        A new user has been introduced on the network.
+        Argument 1 - contains the nickname of the newly introduced user.
+
+    EVENT_RESTART
+        This event is emitted before the stats are being restarted.
+        The argument is always EVENT_START.
+
+    EVENT_RELOAD
+        This event is emitted before the stats are being reloaded.
+        Argument 1 - EVENT_START or EVENT_STOP
+
+   EVENT_SENT_CTCP_VERSION
+       The core has sent a request for the client to respond to ctcp version, since
+       clients can ignore this request, the event EVENT_CTCP_VERSION may never be
+       triggered.
+       Argument 1 - Nick
+
+	EVENT_SERVER
+	   A new server has been introduced to Denora.
+       Argument 1 - server name
+
+	EVENT_JUPE_SERVER
+	   A new jupe server has been introduced to Denora.
+       Argument 1 - server name
+
+	EVENT_SERVER_KILL
+		This event is sent when a server kills off a user from the network
+        Argument 1 - Server who set it
+        Argument 2 - Person whom was affected
+		Argument 3 - Reason
+
+    EVENT_SHUTDOWN
+        This event is emitted when Denora is being shut down.
+        The argument is either EVENT_START or EVENT_STOP, to indicate where in
+        the process of restarting the core is. With EVENT_START, stats are
+        still fully online and operating. With EVENT_STOP, every internal clean
+        up has been done already, and the SQUIT has been sent; the only thing
+        done after emitting the event is closing the socket to the uplink hub.
+
+   EVENT_SQUIT
+       This event is sent when Denora received a SQUIT or is SQUITing itself
+       Argument 1 - Server Name
+       Argument 2 - Message
+
+    EVENT_SIGNAL
+        This event is emitted when Denora is quitting because of a signal it
+        received.
+        Argument 1 - Signal type
+        Argument 2 - contains the quit message that will be sent with the SQUIT
+                     for this shutdown.
+
+    EVENT_USER_LOGOFF
+        A user has left the network. This event is emitted before the internal
+        removal is performed, so the user still exists internally.
+        Argument 1 - contains the nickname of the user leaving the network.
+
+    EVENT_USER_JOIN
+        A user joined a channel.
+        Argument 1 - Users Nick
+        Argument 2 - Channel Name
+
+	EVENT_USER_MODE
+		This event is sent when a users mode is changed or updated. 
+		Argument 1 - EVENT_MODE_ADD or EVENT_MODE_REMOVE
+		Arugment 2 - Nick
+        Argument 3 - Mode
+        Argument 4 - extra data not always sent
+
+    EVENT_USER_PART
+        A user left a channel.
+        Argument 1 - Users Nick
+        Argument 2 - Channel Name
+        Argument 3 - Part Message (optional)
+
+	EVENT_UPLINK_SYNC_COMPLETE
+		The uplink server has completed syncing
+        Argument 1 - server name
+
+	EVENT_SERVER_SYNC_COMPLETE
+		This server has finisehd syncing
+	    Arguement 1 - Server name
+
+
+
+

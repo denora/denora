@@ -1,0 +1,46 @@
+#!/bin/sh
+
+# Crontab script for Denora
+# 
+# To know how to install the crontab, read the INSTALL file.
+# $Id: example.chk 232 2005-05-14 23:10:10Z trystan $
+#
+
+###############################################################
+# CONFIGURATION
+###############################################################
+
+# Denora binary directory
+DENOPATH=/home/ircd/stats/
+
+# Name of the pid file
+DENOPIDF=stats.pid
+
+# Name of the executable
+DENOPROG=stats
+
+# Parameters to pass to the executable
+DENOARGS=""
+#DENOARGS="-debug"
+
+###############################################################
+#                 DON'T EDIT ANYTHING BELOW                   #
+###############################################################
+
+PATH=/bin:/usr/bin:/usr/local/bin
+
+DENOPID=
+
+cd $DENOPATH
+
+if [ -f $DENOPIDF ]
+then
+	DENOPID=`cat $DENOPIDF`
+	if [ `ps auwx | grep $DENOPROG | grep $DENOPID | grep -v -c grep` = 1 ]
+	then
+		exit	
+	fi
+	rm -f $DENOPIDF
+fi
+
+./$DENOPROG $DENOARGS

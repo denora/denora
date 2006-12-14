@@ -1,0 +1,32 @@
+#!/bin/sh
+#
+# (C) 2004-2006 Denora Team
+# Contact us at info@nomadirc.net
+#
+# This program is free but copyrighted software; see the file COPYING for
+# details.
+#
+# Based on the original code of Anope by Anope Team.
+# Based on the original code of Thales by Lucas.
+#
+# $Id: cp-recursive 531 2006-01-07 06:16:45Z crazy $
+
+if [ $1 = "-t" ] ; then
+	shift
+fi
+if [ ! "$2" ] ; then
+	echo >&2 Usage: $0 '<sourcedir> <targetdir>'
+	exit 1
+fi
+if [ -d "$1" ] ; then
+	dir="$1"
+else
+	dir="`echo $1 | sed 's#\(.*\)/.*#\1#'`"
+fi
+while [ "$2" ] ; do
+	shift
+done
+if [ ! -d $1 ] ; then
+	mkdir -p $1 || exit 1
+fi
+/bin/tar -Ccf $dir - . | /bin/tar -Cxf $1 -

@@ -1,0 +1,44 @@
+Contrib Tools for Denora - README FILE
+
+-----------------------------------------------
+eggdrop stats.mod -> denora chanstats converter [smconv.pl]
+-----------------------------------------------
+version 1.0.0 - <Hal9000@pimpmylinux.org>
+
+INTRODUCTION
+This converter, written in Perl, is intended to use for importing the database file
+(usually 'statsmod.dat') of the popular stats.mod module for eggdrop bots.
+The converter is non-destructive, in other words it will NOT overwrite any existing
+data in your denora installation. Instead, it will smartly merge the data by summing
+the various values with the existing ones, if existing.
+So this converter works well both on new installs as well as on denora databases
+which have been in use for some time.
+
+REQUIREMENTS
+As of the current version, the converter has been tested on Denora 1.0.1 build 370
+with UnrealIRCd 3.2 database schema, stats.mod 1.3.3 database and MySQL 4.1.
+The converter "should" work on any database scheme, and should work on any
+stats.mod 1.3.x and 1.4.x databases as well (maybe earlier dbs too), but has
+not been tested.
+
+BEFORE CONVERTING
+- Place smconv.pl into the directory where denora is installed and chmod +x
+  if necessary.
+- Copy your stats.mod file into the denora directory as well.
+- Please note that the converter will have to shut down denora during upgrade.
+  MAKE SURE YOU DISABLE ANY CRON CHECKS TO KEEP DENORA FROM STARTING UP DURING CONVERSION!
+
+CONVERTING
+Run ./smconv.pl and follow instructions on screen.
+If you chose option 1 or 2, you will be asked three questions, asking wether to
+convert monthly/weekly/daily stats. Just answer 'y' to all those questions, unless
+you stopped using stats.mod yesterday or earlier.
+For example, if you stopped using stats.mod at the end of last month,
+and now the first week of the new month just started, you won't need to import
+daily/weekly/monthly stats as they would refer to last month. Be careful on this
+or you'll get a database with wrong data.
+
+FEEDBACK
+Contact the author for any feedback. Thank you.
+
+--- EOF ---

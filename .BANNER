@@ -1,0 +1,22 @@
+
+ _____                    __
+|  _  \       __       __/  \
+| | \  |     /  \__   /      \___
+| |  | | ___/ _ __ \_/_  _ __  __\_
+| |  |  / _ \| '_ \/ _ \| '__|/  _ |
+| |_/  |  __/| | |  |_| | |  ' (_| |
+|_____/ \___||_| |_\___/|_|   \__,_|_
+
+          Statistics for IRC Networks
+                                 Denora-CURVER
+
+This program will help you to compile your Stats software, and ask you
+questions regarding the compile-time settings of it during the process.
+regarding the setup of it, during the process.
+
+Denora is a set of IRC Stats expanded upon Luca's Thales.
+For all your Denora needs please visit our portal
+at http://denora.nomadirc.net/
+
+For more detailed information on the features of Denora CURSHORTVER please
+read the self-named documentation found on the 'docs' directory.

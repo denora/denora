@@ -1,0 +1,32 @@
+# Make file
+#
+# (C) 2004-2006 Denora Team
+# Contact us at info@nomadirc.net
+#
+# Please read COPYING and README for further details.
+#
+# Based on the original code of Anope by Anope Team.
+# Based on the original code of Thales by Lucas.
+#
+# $Id: makefile.sub.win32 717 2006-09-20 18:52:16Z trystan $
+#
+
+include ../../../Makefile.inc.win32
+
+OBJECTS= $(SRCS:.c=.obj)
+CFLAGS=/nologo /LD /MD /D MODULE_COMPILE $(CFLAGS) /I"../../../include" /I "../"
+LFLAGS=/nologo ../../denora.lib wsock32.lib $(LIBS) $(LFLAGS) $(MYSQL_LIB_PATH) /export:DenoraInit /export:DenoraFini /OUT:$(TARGET)
+
+all: 
+    $(CC) $(SRCS) $(CFLAGS) ..\..\mod_version.c /link $(LFLAGS)
+
+distclean: clean spotless
+
+clean:
+        -@del *.obj
+
+spotless: clean
+        -@del *.dll *.lib *.exp *.dll.manifest
+        
+install:
+        -@copy *.dll ..\..\..\$(DATDEST)\modules

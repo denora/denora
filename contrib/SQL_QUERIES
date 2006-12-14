@@ -1,0 +1,89 @@
+Some example SQL queries
+
+- number of users in a channel
+    
+    SELECT COUNT(*) users 
+    FROM chan, ison 
+    WHERE chan.chanid = ison.chanid AND channel="#denora"
+
+
+- top 5 channels on the network which are neither secret (+s) nor private (+p)
+
+    SELECT channel, COUNT(*) AS user_count
+    FROM chan, ison
+    WHERE chan.chanid = ison.chanid AND chan.mode_ls="N" AND chan.mode_lp="N"
+    GROUP BY channel
+    ORDER BY user_count DESC
+    LIMIT 5;
+
+
+- Channels where user Trystan is, and his status on those channels
+    (founder, protect, op, halfop or voice)
+
+    SELECT channel, ison.mode_lq, ison.mode_la, 
+	ison.mode_lo, ison.mode_lh, ison.mode_lv
+    FROM chan, ison, user
+    WHERE chan.chanid = ison.chanid
+        AND ison.nickid = user.nickid
+        AND user.nick="Trystan"
+    ORDER BY channel;
+
+    
+- Number of users on each server, dont show services
+
+    SELECT server.server, COUNT(*) AS user_count
+    FROM server, user
+    WHERE server.servid = user.servid
+        AND server.server NOT LIKE "%services%"
+    GROUP BY server.server
+    ORDER BY user_count ASC;
+
+
+- Number of ircops on each server
+
+    SELECT server.server, COUNT(*) AS ircop_count
+    FROM server, user
+    WHERE server.servid = user.servid AND user.mode_lo="Y"
+    GROUP BY server.server
+    ORDER BY server ASC;
+
+- All online users who are not in a channel (dont show services)
+
+    SELECT nick, hostname FROM user 
+    LEFT JOIN ison ON user.nickid=ison.nickid 
+    WHERE ison.nickid is null 
+	AND user.online="Y" 
+	AND user.mode_us="N";
+
+
+- All clones in the network
+
+    SELECT u1.nick, u1.hostname, u1.hiddenhostname 
+    FROM ison, chan, user u1,user u2 
+    WHERE u1.nick <> u2.nick 
+        AND u1.hostname=u2.hostname 
+	AND u1.online="Y"
+	AND u2.online="Y"
+	AND u1.mode_us="N"
+	AND u2.mode_us="N"
+    GROUP BY u1.nick 
+    ORDER BY u1.hostname, u1.nick;
+
+
+- All clones in a chan
+
+    SELECT u1.nick, u1.hostname, u1.hiddenhostname, channel
+    FROM ison, chan, user u1,user u2, ison s1, ison s2
+    WHERE channel="#denora"
+    AND s1.chanid=chan.chanid
+	AND s2.chanid=chan.chanid
+        AND u1.nickid = s1.nickid
+	AND u2.nickid = s2.nickid
+        AND u1.nick <> u2.nick
+        AND u1.hostname=u2.hostname
+    GROUP BY u1.nick
+    ORDER BY u1.hostname, u1.nick;
+
+
+
+

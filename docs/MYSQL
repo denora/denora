@@ -1,0 +1,42 @@
+Denora MySQL Support
+-------------------
+
+1) Introduction
+
+    With the first release of Denora, there has been support for MYSQL
+    storage of information. Which can allow a user to get real time stats
+    for their web pages
+
+2) Requirements
+
+    1. MySQL server version 4.x or greater **
+    2. MySQL libs and development files (usually called mysql-dev).
+    3. A MySQL user account
+    4. A MySQL database
+
+3) Installation
+
+    1. The ./Config script automatically detects if your system is capable
+       of running Denora with MySQL support. There is no need anymore to
+       answer yes when asked.
+
+       Note: You might need to run "(g)make distclean" prior to running ./Config
+
+    2. Compile Denora as usual. The (g)make process will now compile MySQL
+       support into Denora.
+
+    3. Install Denora as usual. 
+
+4) Configuration
+
+    1. Go to your "stats bin directory" (eg: /home/someuser/stats/) and run mydbgen 
+       to help on the schema creation and adjustments.
+
+    2. Edit denora.conf and add your MySQL data to the MySQL configuration
+       block. 
+
+    3. Start or restart services to make use of the new Denora executable.
+
+
+** Note on older mysql such as 3.x are no longer fully supported it is recommended that
+   you update to a more current version of mysql.

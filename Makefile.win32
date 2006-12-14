@@ -1,0 +1,102 @@
+# Makefile for Denora.
+#
+# (C) 2004-2006 Denora Team
+# Contact us at info@nomadirc.net
+#
+# Please read COPYING and README for further details.
+#
+# Based on the original code of Anope by Anope Team.
+# Based on the original code of Thales by Lucas.
+#
+# $Id: Makefile.win32 525 2006-01-01 20:38:28Z trystan $
+#
+
+include Makefile.inc.win32
+
+###########################################################################
+
+all: src core languages protocols modules install
+
+src: include\version.h include\sysconf.h include\language.h
+        cd src && $(MAKE) && cd ..
+        
+install:
+        -@mkdir $(DATDEST)\backups
+        -@mkdir $(DATDEST)\logs
+        -@mkdir $(DATDEST)\languages
+        cd lang && $(MAKE) install && cd ..
+        cd src && $(MAKE) install && cd ..
+        cd src\protocol && $(MAKE) install && cd ..
+        cd src\modules && $(MAKE) install && cd ..
+		cd src\core && $(MAKE) install && cd ..
+        -@echo ---
+        -@echo Denora has been insalled successfully!
+        -@echo ---
+        
+clean:
+        cd src && $(MAKE) spotless && cd ..
+        cd lang && $(MAKE) spotless && cd ..
+        -@erase *.exe version.h *.obj
+        cd src\modules && $(MAKE) spotless && cd ..
+		cd src\protocol && $(MAKE) spotless && cd ..
+		cd src\core && $(MAKE) spotless && cd ..
+
+spotless:
+        cd lang && $(MAKE) spotless && cd ..
+        cd src && $(MAKE) spotless && cd ..
+        cd src\modules && $(MAKE) spotless && cd ..\..
+        cd src\protocol && $(MAKE) spotless && cd ..\..
+		cd src\core && $(MAKE) spotless && cd ..\..
+        -@erase version.h include\language.h include\sysconf.h include\version.h *~ denora.exe version.sh.exe *.obj  version.sh.exe.manifest denora.exe.manifest
+
+mypasql: 
+        $(MYPASQL_BUILD)
+
+distclean: spotless
+
+dist:
+        $(MAKE) clean
+
+#Compile mypasql
+        $(MYPASQL_BUILD)
+
+#Cleanup
+        $(MAKE) spotless
+
+
+###########################################################################
+
+core: FRC
+	cd src\core && $(MAKE) && cd ..\..
+
+languages: FRC
+        cd lang && $(MAKE) && cd ..
+
+modules: FRC
+        cd src\modules && $(MAKE) && cd ..\..
+
+protocols: FRC
+	cd src\protocol && $(MAKE) && cd ..\..
+
+###########################################################################
+
+include\sysconf.h:
+        copy include\sysconf.h.win32 include\sysconf.h
+
+lang\language.h: lang\Makefile lang\index
+        cd lang && $(MAKE) language.h && cd ..
+
+lang\index:
+        cd lang && $(MAKE) index && cd ..
+        
+include\language.h: lang\language.h
+        cd lang && copy language.h ..\include\language.h && cd ..
+        
+include\version.h: version.sh.exe version.log include\denora.h
+        version.sh.exe
+                copy version.h include\version.h
+
+version.sh.exe:
+        $(CC) $(CFLAGS) include\version.sh.c
+
+FRC:

@@ -1,0 +1,311 @@
+/*
+ *
+ * (C) 2004-2006 Denora Team
+ * Contact us at info@nomadirc.net
+ *
+ * Please read COPYING and README for furhter details.
+ *
+ * Based on the original code of Anope by Anope Team.
+ * Based on the original code of Thales by Lucas.
+ * 
+ * $Id: sysconf.h.in 654 2006-08-06 19:34:51Z trystan $
+ *
+ */
+
+/* include/sysconf.h.in.  Generated from configure.in by autoheader.  */
+
+/* "Default umask Permissions" */
+#undef DEFUMASK
+
+/* "No prefix needed for dlopen" */
+#undef DL_PREFIX
+
+/* "Has sys/types.h" */
+#undef HAS_SYS_TYPES_H
+
+/* "System supports long long" */
+#undef HAVE_LONG_LONG
+
+/* "" */
+#undef HAVE_MALLOC_H
+
+/* "" */
+#undef HAVE_SSL
+
+/* "System supports set/get/rlimit" */
+#undef HAVE_GETSETRLIMIT
+
+/* "" */
+#undef HAVE_SIGNAL_H
+
+/* "" */
+#undef HAVE_INLINE
+
+/* "" */
+#undef HAVE_POLL_H
+
+/* "" */
+#undef HAVE_CRYPT
+
+/* "" */
+#undef HAVE_PERL_H
+
+/* */
+#undef HAVE_DMALLOC
+
+/* */
+#undef HAS_RTLD_LOCAL
+
+/* MySQL supports charset */
+#undef HAVE_MYSQL_SET_CHARSET
+
+/* */
+#undef USE_THREADS
+
+/* Define to 1 if you have the `fork' function. */
+#undef HAVE_FORK
+
+/* Define if you have `__PRETTY_FUNCTION__'.  */
+#undef HAVE_PRETTY_FUNCTION
+
+/* Define if you have `__FUNCTION__' but no `__PRETTY_FUNCTION__'.  */
+#undef HAVE_FUNCTION
+
+/* Define if you have `__func__' but no `__PRETTY_FUNCTION__' nor
+   `__FUNCTION__'  */
+#undef HAVE_FUNC
+
+/* Define to 1 if you have the `gethostbyname' function. */
+#undef HAVE_GETHOSTBYNAME
+
+/* Define to 1 if you have the `gethostbyname_r' function. */
+#undef HAVE_GETHOSTBYNAME_R
+
+/* Define to 1 if you have the `gettimeofday' function. */
+#undef HAVE_GETTIMEOFDAY
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the `setgrent' function. */
+#undef HAVE_SETGRENT
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the `freeaddrinfo' function. */
+#undef HAVE_FREEADDRINFO
+
+/* Define to 1 if you have the `gai_strerror' function. */
+#undef HAVE_GAI_STRERROR
+
+/* Define to 1 if you have the `getaddrinfo' function. */
+#undef HAVE_GETADDRINFO
+
+/* */
+#undef HAVE_STRUCT_SOCKADDR_STORAGE
+
+/* */
+#undef HAVE_STRUCT_SOCKADDR_IN6
+
+/* */
+#undef HAVE_STRUCT_IN6_ADDR
+
+/* */
+#undef HAVE_STRUCT_ADDRINFO
+
+/* */
+#undef RFC2553BIS
+
+/* */
+#undef HAVE_SS_FAMILY_IN_SS
+
+/* */
+#undef HAVE___SS_FAMILY_IN_SS
+
+
+/* Define to 1 if you have the `strlcpy' function. */
+#undef HAVE_STRLCPY
+
+/* Define to 1 if you have the `inet_aton' function. */
+#undef HAVE_INETATON
+
+/* Define to 1 if you have the `strlcat' function. */
+#undef HAVE_STRLCAT
+
+/* Define to 1 if you have the `strerror' function. */
+#undef HAVE_STRERROR
+
+/* Define to 1 if you have the `stricmp' function. */
+#undef HAVE_STRICMP
+
+/* Define to 1 if you have the `stricmp' function. */
+#undef HAVE_STRNICMP
+
+/* "" */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the `strsignal' function. */
+#undef HAVE_STRSIGNAL
+
+/* Define to 1 if you have the `strspn' function. */
+#undef HAVE_STRSPN
+
+/* Define to 1 if you have the `sys_errlist' function. */
+#undef HAVE_SYS_ERRLIST
+
+/* "" */
+#undef HAVE_SYS_SELECT_H
+
+/* "" */
+#undef HAVE_BACKTRACE
+
+/* "" */
+#undef HAVE_LIBZ
+
+/* "" */
+#undef HAVE_NETINETIN
+
+/* "" */
+#undef POSIX_SIGNALS
+
+/* "" */
+#undef BSD_RELIABLE_SIGNALS
+
+/* "" */
+#undef SYSV_UNRELIABLE_SIGNALS
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the `umask' function. */
+#undef HAVE_UMASK
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* "Module dir" */
+#undef MODULE_PATH
+
+/* "Has mysql/mysql.h" */
+#undef MYSQL_HEADER_PREFIX
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* "Run group" */
+#undef RUNGROUP
+
+/* "Binary Dir" */
+#undef STATS_BIN
+
+/* "services bin dir" */
+#undef STATS_DIR
+
+/* "stats os" */
+#undef STATS_OS
+
+/* "stats build" */
+#undef STATS_BUILD
+
+/* "stats cpu" */
+#undef STATS_CPU
+
+/* The size of a `int', as computed by sizeof. */
+#undef SIZEOF_INT
+
+/* The size of a `long', as computed by sizeof. */
+#undef SIZEOF_LONG
+
+/* The size of a `short', as computed by sizeof. */
+#undef SIZEOF_SHORT
+
+/* "modules not available" */
+#undef STATIC_LINKING
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* "Modules available" */
+#undef USE_MODULES
+
+/* "Use Mysql" */
+#undef USE_MYSQL
+
+/* "Has libpq-fe.h" */
+#undef USE_POSTGRE
+
+/* "path to the header" */
+#undef POSTGRE_PATH
+
+/* Define as 1 if your va_list type is an array */
+#undef HAVE_VA_LIST_AS_ARRAY
+
+/* "mem debug" */
+#undef MEMORY_DEBUG
+
+/* Define to `short' if <sys/types.h> does not define. */
+#undef int16_t
+
+/* Define to `long' if <sys/types.h> does not define. */
+#undef int32_t
+
+/* Define to `unsigned short' if <sys/types.h> does not define. */
+#undef u_int16_t
+
+/* Define to `unsigned long' if <sys/types.h> does not define. */
+#undef u_int32_t
+
+/* Static config, copy from here to below before running autoheader! */
+
+#ifdef HAS_SYS_TYPES_H
+#include <sys/types.h>
+#endif
+
+#ifdef __STRICT_ANSI__
+#include <stdarg.h>
+#include <stdio.h>
+#include <signal.h>
+
+/* We KNOW these are not ansi, we are defining them here to suppress the warnings
+   messages on a "make strict" compile */
+int vprintf(const char *format, va_list ap);
+int vfprintf(FILE *stream, const char *format, va_list ap);
+char *strndup(const char *s, size_t n);
+int mkstemp(char *template);
+
+FILE *popen(const char *command, const char *type);
+int pclose(FILE *stream);
+FILE *fdopen(int fildes, const char *mode);
+
+int ftruncate(int fd, off_t length);
+
+#ifdef HAVE_STRSIGNAL
+char *strsignal(int sig);
+#endif
+
+#endif

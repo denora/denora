@@ -1,0 +1,44 @@
+# Make file
+#
+# (C) 2004-2006 Denora Team
+# Contact us at info@nomadirc.net
+#
+# Please read COPYING and README for further details.
+#
+# Based on the original code of Anope by Anope Team.
+# Based on the original code of Thales by Lucas.
+#
+# $Id: Makefile.win32 717 2006-09-20 18:52:16Z trystan $
+#
+
+include ../../Makefile.inc.win32
+
+SRCS=ss_admin.c ss_chanstats.c ss_core.c ss_envinfo.c ss_exclude.c ss_export.c ss_help.c ss_html.c \
+	ss_login.c ss_modules.c ss_set.c ss_stats.c ss_userdebug.c ss_fantasy_gstats.c \
+	ss_fantasy_gtop10.c ss_fantasy_gtop.c ss_fantasy_help.c ss_fantasy_peak.c \
+	ss_fantasy_stats.c ss_fantasy_top10.c ss_fantasy_top.c xmlrpc_channeldata.c \
+	xmlrpc_channelslist.c xmlrpc_get.c event_motd.c event_uline.c event_229.c event_351.c event_242.c \
+	cron_chanstats.c cron_daily.c html_ctcp.c html_daily.c html_map.c html_misc.c html_netstat.c \
+	html_servdtl.c html_server.c html_tld.c html_top10chan.c html_top10kicks.c html_top10topics.c \
+    html_topchan.c 
+OBJECTS= $(SRCS:.c=.dll)
+CFLAGS=/LD /MD /D MODULE_COMPILE $(CFLAGS) /I"../../include"
+LFLAGS=/link ../denora.lib wsock32.lib $(LIBS) $(LFLAGS) $(MYSQL_LIB_PATH) $(POSTGRE_LIB_PATH) /export:DenoraInit /export:DenoraFini
+
+all: $(OBJECTS)
+
+distclean: clean spotless
+
+.c.dll:
+        $(CC) $(CFLAGS) $< ..\mod_version.c $(LFLAGS)
+
+clean:
+        -@del *.obj
+
+spotless: clean
+        -@del *.dll *.lib *.exp *.dll.manifest
+
+install:
+        -@mkdir ..\..\$(DATDEST)\core
+        -@mkdir ..\..\$(DATDEST)\core\runtime
+        -@copy *.dll ..\..\$(DATDEST)\core

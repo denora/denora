@@ -1,0 +1,138 @@
+#!/bin/sh
+#
+# Configuration script for Stats.
+#
+# (C) 2004-2006 Denora Team
+# Contact us at info@nomadirc.net
+#
+# This program is free but copyrighted software; see the file COPYING for
+# details.
+#
+# Based on the original code of Anope by Anope Team.
+# Based on the original code of Thales by Lucas.
+#
+# $Id: denorarc.in 531 2006-01-07 06:16:45Z crazy $
+#
+
+
+
+DENORAPID="@DATDEST@/stats.pid"
+DENOPROG="@BINDEST@/stats"
+LOG="@DATDEST@/logs/"
+DRCVERSION="1.2"
+
+isDenoraRunning () {
+if [ ! -f $DENORAPID ] ; then
+	echo "Warning: Denora is not currently running"
+	exit 1
+fi
+
+PID=`cat $DENORAPID`
+
+if [ ! `ps auxw | grep $DENOPROG | grep $PID | grep -v -c grep` ] ; then
+	echo "Warning: Denora is not currently running"
+	exit 1
+fi
+}
+
+if [ ! -f $DENOPROG ] ; then
+	echo "Error: $DENOPROG cannot be accessed"
+	exit 1
+fi
+
+
+if [ "$UID" = "0" ] ; then
+  echo "#######################################";
+  echo "# Warning: Do NOT run Denora as root! #";
+  echo "#######################################";
+  exit 1
+fi
+
+if [ "$1" = "start" ] ; then
+
+if [ -f $DENORAPID ] ; then
+	PID=`cat $DENORAPID`
+	if [ `ps auxw | grep $DENOPROG | grep $PID | grep -v -c grep` = 1 ] ; then
+		echo "Warning! Denora is already running"
+		exit 1
+	fi
+fi
+	echo "Starting Denora"
+	shift
+	$DENOPROG $*
+	sleep 1
+		if [ ! -f $DENORAPID ] ; then
+	        echo "Unfortunately it seems Denora did not start successfully"
+                echo "This error has been logged in your Denora Log file"
+                echo "Located in "$LOG""
+                echo "This may help you diagnose the problem"
+                echo "Further help may be available from http://denora.nomadirc.net"
+		exit 1
+		fi
+		PID=`cat $DENORAPID`
+		if [ ! `ps auxw | grep $DENOPROG | grep $PID | grep -v -c grep` ] ; then
+		echo "Unfortunately it seems Denora did not start successfully"
+		echo "This error has been logged in your Denora Log file"
+		echo "Located in "$LOG""
+		echo "This may help you diagnose the problem"
+		echo "Further help may be available from http://denora.nomadirc.net"
+		exit 1
+		fi
+
+elif [ "$1" = "stop" ] ; then
+	isDenoraRunning
+	echo "Terminating Denora"
+	kill -15 `cat $DENORAPID`
+
+elif [ "$1" = "status" ] ; then
+	if [ -f $DENORAPID ] ; then
+		PID=`cat $DENORAPID`
+        	if [ `ps auxw | grep $PID | grep -v -c grep` = 1 ] ; then
+		        echo "Denora is currently running"
+		        exit 1
+	        fi
+	fi
+
+	echo "Denora is not currently running"
+
+## :/ SIGUSR2 is ignored after the first restart so we stop / start Denora for now ##
+elif [ "$1" = "restart" ] ; then
+	isDenoraRunning
+	echo "Restarting Denora"
+	kill -15 `cat $DENORAPID`
+	sleep 1
+	$DENOPROG
+
+elif [ "$1" = "rehash" ] ; then
+	isDenoraRunning
+	echo "Saving Databases and Rehashing Configuration"
+	kill -1 `cat $DENORAPID`
+
+elif [ "$1" = "version" ] ; then
+	$DENOPROG -version
+
+elif [ "$1" = "help" ] ; then
+	if [ "$2" = "paramlist" ] ; then
+		$DENOPROG -help
+		else
+		echo "DenoraRC is a remote control script for easy"
+		echo "controlling of Denora from the command console"
+		echo "$0 start          Start Denora"
+		echo "	   	       	Additional parameters may be passed"
+		echo "	   	       	(e.g. $0 start -nofork)"
+		echo "	   	       	For a list of type $0 $1 paramlist"
+		echo "$0 stop           Shutdown Denora"
+		echo "$0 status         Show Denora's Status"
+		echo "$0 restart        Restart Denora (Databases will be saved)"
+		echo "$0 rehash         Rehash Configuration and Save Databases"
+		echo "$0 version        Return Denora Version and Build Information"
+		echo "$0 help           Show this help menu"
+		echo "If you need further help please check the /docs/"
+		echo "folder or make use of our extensive online support at"
+		echo "http://denora.nomadirc.net"
+	fi
+	
+else
+	echo "Denora Remote Control ($DRCVERSION)"
+	echo "Usage: $0 [start|stop|status|restart|rehash|version|help]"
+fi

@@ -1,0 +1,25 @@
+# Make file for Win32
+#
+# (C) 2004-2006 Denora Team
+# Contact us at info@nomadirc.net
+#
+# Please read COPYING and README for further details.
+#
+# Based on the original code of Anope by Anope Team.
+# Based on the original code of Thales by Lucas.
+#
+# $Id: makefile.win32 525 2006-01-01 20:38:28Z trystan $
+#
+
+###########################################################################
+
+clean: 
+	-@erase language.h
+
+spotless: clean
+	-@erase sysconf.h version.h
+
+distclean: spotless
+
+
+FRC:

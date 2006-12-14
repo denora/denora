@@ -1,0 +1,64 @@
+# Make file
+#
+# (C) 2004-2006 Denora Team
+# Contact us at info@nomadirc.net
+#
+# Please read COPYING and README for further details.
+#
+# Based on the original code of Anope by Anope Team.
+# Based on the original code of Thales by Lucas.
+#
+# $Id: Makefile.win32 525 2006-01-01 20:38:28Z trystan $
+#
+
+include ../Makefile.inc.win32
+
+
+LANGOBJS = en_us es de fr nl it
+LANGSRCS = en_us.l es.l de.l fr.l nl.l it.l
+
+LANGCOMP = ./langcomp
+#LANGCOMP = ./langcomp -w
+
+
+all: $(LANGOBJS)
+
+
+install: all
+        -copy en_us ..\$(DATDEST)\languages
+        -copy es ..\$(DATDEST)\languages
+        -copy de ..\$(DATDEST)\languages
+        -copy fr ..\$(DATDEST)\languages
+        -copy nl ..\$(DATDEST)\languages
+        -copy it ..\$(DATDEST)\languages
+
+clean:
+        -@erase $(LANGOBJS) langcomp.exe langtool.exe *.obj index *.exp *.lib *.suo
+
+spotless: clean
+        -@erase language.h *.manifest
+
+en_us:    en_us.l    langtool.exe langcomp.exe index
+        langcomp $@.l
+es:       es.l       langtool.exe langcomp.exe index
+        langcomp $@.l
+de:       de.l       langtool.exe langcomp.exe index
+        langcomp $@.l
+fr:       fr.l       langtool.exe langcomp.exe index
+        langcomp $@.l
+nl:       nl.l       langtool.exe langcomp.exe index
+        langcomp $@.l
+it:       it.l       langtool.exe langcomp.exe index
+        langcomp $@.l
+
+langtool.exe: langtool.c
+        $(CC) $(CFLAGS) langtool.c
+
+langcomp.exe: langcomp.c
+        $(CC) $(CFLAGS) langcomp.c
+
+language.h: langtool.exe index
+        langtool language.h
+
+index: langtool.exe en_us.l
+        langtool index

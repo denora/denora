@@ -1,0 +1,42 @@
+# Makefile for Denora.
+#
+# (C) 2004-2006 Denora Team
+# Contact us at info@nomadirc.net
+#
+# Please read COPYING and README for further details.
+#
+# Based on the original code of Anope by Anope Team.
+# Based on the original code of Thales by Lucas.
+#
+# $Id: Makefile.sub 581 2006-03-21 09:29:03Z trystan $
+#
+
+MAKEARGS = 'CFLAGS=${CFLAGS}' 'CC=${CC}' 'DENORALIBS=${DENORALIBS}' \
+	   'LDFLAGS=${LDFLAGS}' 'BINDEST=${BINDEST}' 'INSTALL=${INSTALL}' \
+           'INCLUDEDIR=${INCLUDEDIR}' 'RM=${RM}' 'CP=${CP}' \
+      	   'TOUCH=${TOUCH}' 'SHELL=${SHELL}' 'DATDEST=${DATDEST}' \
+  	   'RUNGROUP=${RUNGROUP}' 'MODULE_PATH=${MODULE_PATH}' 'POSTGRE=${POSTGRE}'\
+	   'MYSQL=${MYSQL}' 'SHARED=${SHARED}' 'MODULEFLAGS=${MODULEFLAGS}' 'RDYNAMNIC=${RDYNAMNIC}'
+
+OBJECTS= $(SRCS:.c=.o)
+SO_FILES=$(OBJECTS:.o=.s)
+CDEFS= -Wall
+
+all: module
+
+module: $(OBJECTS) so
+
+distclean: spotless
+
+.c.o:
+	$(CC) ${CFLAGS} ${CDEFS} ${RDYNAMNIC} ${MODULEFLAGS} -I../ -I../../${INCLUDEDIR} -c $<
+
+so:
+	$(CC) ${SHARED} $(OBJECTS) -o ../$(TARGET).so ${PROFILE}
+
+clean:
+	rm -f *.o *.so *.c~ core
+
+spotless:
+	rm -f *~ *.o *.so *.c~ core
+

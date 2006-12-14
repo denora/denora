@@ -1,0 +1,50 @@
+/*
+ *
+ * (C) 2004-2006 Denora Team
+ * Contact us at info@nomadirc.net
+ *
+ * Please read COPYING and README for furhter details.
+ *
+ * Based on the original code of Anope by Anope Team.
+ * Based on the original code of Thales by Lucas.
+ * 
+ * $Id: sysconf.h.win32 716 2006-09-20 17:06:11Z trystan $
+ *
+ */
+
+#define STATS_DIR "data"
+#define STATS_BIN "denora.exe"
+
+#define HAVE_STRINGS_H		0
+#define HAVE_STRING_H       1
+#define HAVE_SYS_SELECT_H	0
+#define HAVE_SYS_SYSPROTO_H	0
+#define HAVE_STDLIB_H       1
+#define HAVE_SIGNAL_H       1
+
+#define HAVE_STRERROR		1
+#define HAVE_SYS_ERRLIST	0
+#define HAVE_STRICMP		1
+#define HAVE_STRNICMP		1
+#define HAVE_STRSPN		    1
+#define HAVE_GETTIMEOFDAY	1
+#define HAVE_SETGRENT		0
+#define HAVE_UMASK		    0
+#define HAVE_FORK		    0
+#define HAVE_GETHOSTBYNAME	1
+#define HAVE_BACKTRACE 		0
+#define HAVE_FUNCTION       1
+#define HAVE_STRUCT_SOCKADDR_STORAGE 1
+
+/* Enable Module support */
+#define USE_MODULES
+#define MODULE_PATH "\\modules\\"
+
+#define STATS_BUILD "Windows"
+
+#define USE_THREADS 1
+
+/* Since windows does not have autoconf */
+#define PACKAGE_NAME "Denora"
+#define PACKAGE_VERSION VERSION_STRING
+
