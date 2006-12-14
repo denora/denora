@@ -324,50 +324,41 @@ void sql_do_addusers(int chanid, char *users)
         if (nickid != -1) {
             if (ircd->owner && ircd->protect && ircd->halfop
                 && ircd->gagged) {
-                rdb_query
-                    (QUERY_LOW,
-                     "INSERT IGNORE INTO %s (nickid, chanid, mode_lo, mode_lv, mode_lq, mode_lh, mode_la, mode_lg) VALUES (%d, %d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\', \'%s\')",
-                     IsOnTable, nickid, chanid, (op ? "Y" : "N"),
-                     (voice ? "Y" : "N"), (owner ? "Y" : "N"),
-                     (halfop ? "Y" : "N"), (protect ? "Y" : "N"),
-                     (shunned ? "Y" : "N"));
-            }
-            if (ircd->owner && ircd->protect && ircd->halfop
-                && !ircd->gagged) {
-                rdb_query
-                    (QUERY_LOW,
-                     "INSERT IGNORE INTO %s (nickid, chanid, mode_lo, mode_lv, mode_lq, mode_lh, mode_la) VALUES (%d, %d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\')",
-                     IsOnTable, nickid, chanid, (op ? "Y" : "N"),
-                     (voice ? "Y" : "N"), (owner ? "Y" : "N"),
-                     (halfop ? "Y" : "N"), (protect ? "Y" : "N"));
-            }
-
-            if (!ircd->owner && ircd->protect && ircd->halfop
-                && !ircd->gagged) {
-                rdb_query
-                    (QUERY_LOW,
-                     "INSERT IGNORE INTO %s (nickid, chanid, mode_lo, mode_lv, mode_lh, mode_la) VALUES (%d, %d,\'%s\',\'%s\',\'%s\',\'%s\')",
-                     IsOnTable, nickid, chanid, (op ? "Y" : "N"),
-                     (voice ? "Y" : "N"), (halfop ? "Y" : "N"),
-                     (protect ? "Y" : "N"));
-            }
-
-            if (!ircd->owner && !ircd->protect && ircd->halfop
-                && !ircd->gagged) {
-                rdb_query
-                    (QUERY_LOW,
-                     "INSERT IGNORE INTO %s (nickid, chanid, mode_lo, mode_lv, mode_lh) VALUES (%d, %d,\'%s\',\'%s\',\'%s\')",
-                     IsOnTable, nickid, chanid, (op ? "Y" : "N"),
-                     (voice ? "Y" : "N"), (halfop ? "Y" : "N"));
-            }
-
-            if (!ircd->owner && !ircd->protect && !ircd->halfop
-                && !ircd->gagged) {
-                rdb_query
-                    (QUERY_LOW,
-                     "INSERT IGNORE INTO %s (nickid, chanid, mode_lo, mode_lv) VALUES (%d, %d,\'%s\',\'%s\')",
-                     IsOnTable, nickid, chanid, (op ? "Y" : "N"),
-                     (voice ? "Y" : "N"));
+                rdb_query(QUERY_LOW,
+                          "INSERT IGNORE INTO %s (nickid, chanid, mode_lo, mode_lv, mode_lq, mode_lh, mode_la, mode_lg) VALUES (%d, %d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\', \'%s\')",
+                          IsOnTable, nickid, chanid, (op ? "Y" : "N"),
+                          (voice ? "Y" : "N"), (owner ? "Y" : "N"),
+                          (halfop ? "Y" : "N"), (protect ? "Y" : "N"),
+                          (shunned ? "Y" : "N"));
+            } else if (ircd->owner && ircd->protect && ircd->halfop
+                       && !ircd->gagged) {
+                rdb_query(QUERY_LOW,
+                          "INSERT IGNORE INTO %s (nickid, chanid, mode_lo, mode_lv, mode_lq, mode_lh, mode_la) VALUES (%d, %d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\')",
+                          IsOnTable, nickid, chanid, (op ? "Y" : "N"),
+                          (voice ? "Y" : "N"), (owner ? "Y" : "N"),
+                          (halfop ? "Y" : "N"), (protect ? "Y" : "N"));
+            } else if (!ircd->owner && ircd->protect && ircd->halfop
+                       && !ircd->gagged) {
+                rdb_query(QUERY_LOW,
+                          "INSERT IGNORE INTO %s (nickid, chanid, mode_lo, mode_lv, mode_lh, mode_la) VALUES (%d, %d,\'%s\',\'%s\',\'%s\',\'%s\')",
+                          IsOnTable, nickid, chanid, (op ? "Y" : "N"),
+                          (voice ? "Y" : "N"), (halfop ? "Y" : "N"),
+                          (protect ? "Y" : "N"));
+            } else if (!ircd->owner && !ircd->protect && ircd->halfop
+                       && !ircd->gagged) {
+                rdb_query(QUERY_LOW,
+                          "INSERT IGNORE INTO %s (nickid, chanid, mode_lo, mode_lv, mode_lh) VALUES (%d, %d,\'%s\',\'%s\',\'%s\')",
+                          IsOnTable, nickid, chanid, (op ? "Y" : "N"),
+                          (voice ? "Y" : "N"), (halfop ? "Y" : "N"));
+            } else if (!ircd->owner && !ircd->protect && !ircd->halfop
+                       && !ircd->gagged) {
+                rdb_query(QUERY_LOW,
+                          "INSERT IGNORE INTO %s (nickid, chanid, mode_lo, mode_lv) VALUES (%d, %d,\'%s\',\'%s\')",
+                          IsOnTable, nickid, chanid, (op ? "Y" : "N"),
+                          (voice ? "Y" : "N"));
+            } else {
+                alog(LOG_DEBUG,
+                     "Error: unable to insert user in ison table!");
             }
         } else {
             alog(LOG_NONEXISTANT,
@@ -656,7 +647,7 @@ void do_p10_burst(int ac, char **av)
             nomode = 0;
             t = myStrGetToken(s, ':', 0);
             m = myStrGetToken(s, ':', 1);
-            user = find_byuid(t);
+            user = user_find(t);
             if (!user) {
                 alog(LOG_NONEXISTANT,
                      langstr(ALOG_DEBUG_SJOIN_NONEXISTANT), t, av[0]);
@@ -680,6 +671,7 @@ void do_p10_burst(int ac, char **av)
             i++;
             free(t);
         }
+        c = findchan(av[0]);
         if (c) {
             /* Set the timestamp */
             c->creation_time = strtol(av[1], NULL, 10);
@@ -687,7 +679,7 @@ void do_p10_burst(int ac, char **av)
             chan_set_modes(c, 1, &av[2]);
         }
         /* all that and now to the bans */
-        c = findchan(av[0]);
+
         i = 0;
         if (c) {
             while ((s = myStrGetToken(av[4], ' ', i))) {
@@ -709,7 +701,7 @@ void do_p10_burst(int ac, char **av)
             nomode = 0;
             t = myStrGetToken(s, ':', 0);
             m = myStrGetToken(s, ':', 1);
-            user = find_byuid(t);
+            user = user_find(t);
             if (!user) {
                 alog(LOG_NONEXISTANT,
                      langstr(ALOG_DEBUG_SJOIN_NONEXISTANT), t, av[0]);
@@ -735,14 +727,17 @@ void do_p10_burst(int ac, char **av)
             i++;
         }
     } else if (ac == 4) {
+        //alog(LOG_DEBUG, "[DEBUG] ac=4");
         c = findchan(av[0]);
         if (*av[2] == '+') {
             while ((s = myStrGetToken(av[3], ',', i))) {
+                //alog(LOG_DEBUG, "[DEBUG] begin loop");
                 nomode = 0;
                 t = myStrGetToken(s, ':', 0);
                 m = myStrGetToken(s, ':', 1);
-                user = find_byuid(t);
+                user = user_find(t);
                 if (!user) {
+                    //alog(LOG_DEBUG, "[DEBUG] user not found");
                     alog(LOG_NONEXISTANT,
                          langstr(ALOG_DEBUG_SJOIN_NONEXISTANT), t, av[0]);
                     i++;
@@ -750,32 +745,38 @@ void do_p10_burst(int ac, char **av)
                     DenoraFree(m);
                     continue;
                 }
+                //alog(LOG_DEBUG, "[DEBUG] user FOUND!");
                 v[0] = av[0];
                 do_join(user->nick, 1, v);
                 if (m) {
+                    //alog(LOG_DEBUG, "[DEBUG] m matches");
                     x[0] = av[0];
                     x[1] = p10_mode_parse(m, &nomode);
                     if (!nomode) {
+                        //alog(LOG_DEBUG, "[DEBUG] !nomode matches");
                         x[2] = user->nick;
                         do_cmode(user->nick, 3, x);
                         free(x[1]);
                     }
                     free(m);
                 }
+                //alog(LOG_DEBUG, "[DEBUG] end loop");
                 i++;
-                if (c) {
-                    /* Set the timestamp */
-                    c->creation_time = strtol(av[1], NULL, 10);
-                    /* We now update the channel mode. */
-                    chan_set_modes(c, 1, &av[2]);
-                }
+            }
+            c = findchan(av[0]);
+            if (c) {
+                /* Set the timestamp */
+                c->creation_time = strtol(av[1], NULL, 10);
+                /* We now update the channel mode. */
+                //alog(LOG_DEBUG, "[DEBUG] Calling chan_set_modes()");
+                chan_set_modes(c, 1, &av[2]);
             }
         } else {
             while ((s = myStrGetToken(av[2], ',', i))) {
                 nomode = 0;
                 t = myStrGetToken(s, ':', 0);
                 m = myStrGetToken(s, ':', 1);
-                user = find_byuid(t);
+                user = user_find(t);
                 if (!user) {
                     alog(LOG_NONEXISTANT,
                          langstr(ALOG_DEBUG_SJOIN_NONEXISTANT), t, av[0]);

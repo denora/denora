@@ -43,7 +43,7 @@ ChanBanMode *FindChanBanMode(char *name)
 
     for (privcurrent = CHANBANMODEHANDLERS[idx]; privcurrent;
          privcurrent = privcurrent->next) {
-        if (stricmp(name, privcurrent->mode) == 0) {
+        if (strcmp(name, privcurrent->mode) == 0) {
             return privcurrent->cbm;
         }
     }
@@ -346,6 +346,7 @@ void sql_channel_invite(int type, Channel * c, char *mask)
     MYSQL_RES *mysql_res;
 #endif
     char *sqlchan;
+    char *sqlmask;
 
     SET_SEGV_LOCATION();
 
@@ -354,7 +355,7 @@ void sql_channel_invite(int type, Channel * c, char *mask)
     }
 
     if (mask) {
-        mask = rdb_escape(mask);
+        sqlmask = rdb_escape(mask);
     }
     if (c && c->name) {
         sqlchan = rdb_escape(c->name);
@@ -366,7 +367,7 @@ void sql_channel_invite(int type, Channel * c, char *mask)
         rdb_query
             (QUERY_HIGH,
              "SELECT mask FROM %s WHERE chan = \'%s\' and mask = \'%s\';",
-             ChanInviteTable, sqlchan, mask);
+             ChanInviteTable, sqlchan, sqlmask);
 #ifdef USE_MYSQL
         mysql_res = mysql_store_result(mysql);
         if (mysql_res) {
@@ -374,7 +375,7 @@ void sql_channel_invite(int type, Channel * c, char *mask)
                 rdb_query
                     (QUERY_LOW,
                      "INSERT IGNORE INTO %s (chan, mask) VALUES (\'%s\', \'%s\')",
-                     ChanInviteTable, sqlchan, mask);
+                     ChanInviteTable, sqlchan, sqlmask);
             }
             mysql_free_result(mysql_res);
         }
@@ -382,14 +383,14 @@ void sql_channel_invite(int type, Channel * c, char *mask)
     } else if (type == 2) {
         rdb_query(QUERY_LOW,
                   "DELETE FROM %s WHERE chan=\'%s\' AND mask=\'%s\'",
-                  ChanInviteTable, sqlchan, mask);
+                  ChanInviteTable, sqlchan, sqlmask);
     } else {
         rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chan=\'%s\'",
                   ChanInviteTable, sqlchan);
     }
     SET_SEGV_LOCATION();
-    if (mask) {
-        free(mask);
+    if (sqlmask) {
+        free(sqlmask);
     }
     if (sqlchan) {
         free(sqlchan);

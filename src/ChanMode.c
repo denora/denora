@@ -119,7 +119,7 @@ ChanMode *FindChanMode(char *name)
 
     for (privcurrent = CHANMODEHANDLERS[idx]; privcurrent;
          privcurrent = privcurrent->next) {
-        if (stricmp(name, privcurrent->mode) == 0) {
+        if (strcmp(name, privcurrent->mode) == 0) {
             return privcurrent->cm;
         }
     }
@@ -366,7 +366,6 @@ void chan_set_modes(Channel * chan, int ac, char **av)
                            (add ? EVENT_MODE_ADD : EVENT_MODE_REMOVE),
                            chan->name, modebuf);
             }
-            return;
         }
         cbm = FindChanBanMode(modebuf);
         if (cbm) {

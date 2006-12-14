@@ -149,6 +149,8 @@ You also will need to:
     The sql schedume files can be found in the installation directory in a
     folder called "sql", you can use this to directly import the tables into
     sql via command line utilities or web interfaces.
+    IMPORTANT: first import denora.sql, then the .sql file corresponding to
+    your ircd!
 
 
 6. Starting Denora

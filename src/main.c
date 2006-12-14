@@ -303,10 +303,10 @@ void denora_restart(void)
                 tn = list_next(CStatshead, tn);
             }
         }
+        if (LogChannel) {
+            denora_cmd_part(s_StatServ, LogChannel, "%s", denora->qmsg);
+        }
         denora_cmd_squit(ServerName, denora->qmsg);
-    }
-    if (LogChannel) {
-        denora_cmd_part(s_StatServ, LogChannel, "%s", denora->qmsg);
     }
     disconn(servsock);
     close_log();
@@ -365,10 +365,10 @@ void denora_shutdown(void)
                 tn = list_next(CStatshead, tn);
             }
         }
+        if (LogChannel) {
+            denora_cmd_part(s_StatServ, LogChannel, "%s", denora->qmsg);
+        }
         denora_cmd_squit(ServerName, denora->qmsg);
-    }
-    if (LogChannel) {
-        denora_cmd_part(s_StatServ, LogChannel, "%s", denora->qmsg);
     }
     if (XMLRPC_Enable) {
         extsock_close();

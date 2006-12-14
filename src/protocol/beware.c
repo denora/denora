@@ -34,7 +34,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* +j                        */
      IRCD_DISABLE,              /* +L                        */
      IRCD_DISABLE,              /* +f Mode                   */
-     IRCD_DISABLE,              /* +j                        */
+     IRCD_DISABLE,              /* +j Mode                   */
      IRCD_DISABLE,              /* +L Mode                   */
      NULL,                      /* CAPAB Chan Modes          */
      IRCD_DISABLE,              /* We support TOKENS         */
@@ -48,8 +48,8 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* owner                     */
      IRCD_DISABLE,              /* protect                   */
      IRCD_DISABLE,              /* halfop                    */
-     NULL,                      /* user modes                */
-     NULL,                      /* channel modes             */
+     NULL,                      /* User modes                */
+     NULL,                      /* Channel modes             */
      IRCD_DISABLE,              /* flood                     */
      IRCD_DISABLE,              /* flood other               */
      IRCD_DISABLE,              /* vhost                     */
@@ -114,29 +114,45 @@ IRCDCAPAB myIrcdcap[] = {
 
 void IRCDModeInit(void)
 {
-    ModuleSetUserMode(UMODE_I, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_O, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_R, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_X, IRCD_ENABLE);
+    /* User Modes
+     * i - invisible. A user which has this mode is invisible to anyone who does not know his nick.
+     * o - IRC Operator.
+     * w - receive wallops
+     * s - receive server notices
+     * x - host mask. Your host will appear as something like "hidden-1234.domain.com" to other users.
+     * d - deaf. Do not receive privmsg/notice messages in channels.
+     * k - Service. can only be set by a server. cannot be kicked, deoped, killed.
+     */
     ModuleSetUserMode(UMODE_d, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_g, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_h, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_i, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_k, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_n, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_o, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_r, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_s, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_w, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_x, IRCD_ENABLE);
     ModuleUpdateSQLUserMode();
-    CreateChanBanMode(CMODE_b, add_ban, del_ban);
 
-    /* Channel Modes */
+    /* Channel Modes
+     * b (mask) - ban mask from channel.
+     * i - invite only channel. Users cannot join the channel wihtout being invited by a chanop.
+     * k (key) - channel key (password) needed to join.
+     * l (number) - limit users in channel. If atleast this number of users is in the channel, no more users can join.
+     * m - moderated. With this mode set, only chanops and users with voice can talk.
+     * n - no external messages. If set, users which are not member of the channel cannot send messages.
+     * o (nick) - Chanop. Prifixes a user's nick with @, allows setting channel modes and using /kick.
+     * p - private. The channel will not be visible to those who don't know the name of the channel.
+     * s - secret. the channel will not be listed at all.
+     * t - only ops set topic.
+     * v (nick) - voice. Prefixes a user's nick with +, allows users to talk in a moderated channel
+     * c - no colors (must set qnetmodes in bircd.ini)
+     * C - no CTCP to channel (must set qnetmodes in bircd.ini)
+     * N - no notices to channel
+     */
+    CreateChanBanMode(CMODE_b, add_ban, del_ban);
     CreateChanMode(CMODE_C, NULL, NULL);
-    CreateChanMode(CMODE_D, NULL, NULL);
     CreateChanMode(CMODE_N, NULL, NULL);
     CreateChanMode(CMODE_c, NULL, NULL);
-    CreateChanMode(CMODE_d, NULL, NULL);
     CreateChanMode(CMODE_i, NULL, NULL);
     CreateChanMode(CMODE_k, set_key, get_key);
     CreateChanMode(CMODE_l, set_limit, get_limit);
@@ -146,11 +162,8 @@ void IRCDModeInit(void)
     CreateChanMode(CMODE_r, NULL, NULL);
     CreateChanMode(CMODE_s, NULL, NULL);
     CreateChanMode(CMODE_t, NULL, NULL);
-    CreateChanMode(CMODE_u, NULL, NULL);
-
     ModuleSetChanUMode('v', 'v', STATUS_VOICE);
     ModuleSetChanUMode('o', 'o', STATUS_OP);
-
     ModuleUpdateSQLChanMode();
 }
 
@@ -377,10 +390,12 @@ void beware_cmd_stats(char *sender, const char *letter, char *server)
 /* PART */
 void beware_cmd_part(char *nick, char *chan, char *buf)
 {
+    Uid *ud;
+    ud = find_uid(nick);
     if (buf) {
-        send_cmd(nick, "L %s :%s", chan, buf);
+        send_cmd((ud ? ud->uid : nick), "L %s :%s", chan, buf);
     } else {
-        send_cmd(nick, "L %s", chan);
+        send_cmd((ud ? ud->uid : nick), "L %s", chan);
     }
 }
 
@@ -468,10 +483,22 @@ int denora_event_away(char *source, int ac, char **av)
 
 int denora_event_topic(char *source, int ac, char **av)
 {
+    char *newav[4];
+    User *u;
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    do_topic(ac, av);
+    if (ac < 2)
+        return MOD_CONT;
+
+    u = user_find(source);
+    newav[0] = av[0];
+    newav[1] = u->nick;
+    newav[2] = (ac == 2) ? itostr(time(NULL)) : av[ac - 2];
+    newav[3] = av[ac - 1];
+
+    do_topic(4, newav);
     return MOD_CONT;
 }
 

@@ -56,7 +56,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* vhost other               */
      IRCD_DISABLE,              /* channek linking           */
      IRCD_ENABLE,               /* p10                       */
-     IRCD_DISABLE,              /* ts6                       */
+     IRCD_DISABLE,              /* TS6                       */
      IRCD_ENABLE,               /* numeric ie.. 350 etc      */
      IRCD_DISABLE,              /* channel mode gagged       */
      IRCD_DISABLE,              /* spamfilter                */
@@ -106,38 +106,61 @@ IRCDCAPAB myIrcdcap[] = {
      0,                         /* DOZIP        */
      0,
      0,
-     0,}
+     0}
 };
 
 /*************************************************************************/
 
 void IRCDModeInit(void)
 {
-    ModuleSetUserMode(UMODE_O, IRCD_ENABLE);
+    /* User Modes
+     * i - marks a users as invisible;
+     * s - marks a user for receipt of server notices;
+     * w - user receives wallops;
+     * o - operator flag.
+     * d - Deaf & Dumb.  This user will not get any channel traffic. Used for bots.
+     * k - This user cannot be kicked, deop'd or /kill'd.  This usermode may only
+     *     be set by a server, it may not be set by a user.  This is used by
+     *     undernet service bots (X/W/UWorld etc)
+     * g - List channel HACK:'s
+     */
     ModuleSetUserMode(UMODE_d, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_g, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_i, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_k, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_o, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_r, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_r, IRCD_ENABLE);    // regged user
     ModuleSetUserMode(UMODE_s, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_x, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_x, IRCD_ENABLE);    // hidden host
+    ModuleSetUserMode(UMODE_w, IRCD_ENABLE);
     ModuleUpdateSQLUserMode();
+
+    /* Channel Modes
+     * o - give/take channel operator privileges;
+     * p - private channel flag;
+     * s - secret channel flag;
+     * i - invite-only channel flag;
+     * t - topic settable by channel operator only flag;
+     * n - no messages to channel from clients on the outside;
+     * m - moderated channel;
+     * l - set the user limit to channel;
+     * b - set a ban mask to keep users out;
+     * v - give/take the ability to speak on a moderated channel;
+     * k - set a channel key (password).
+     */
+
     CreateChanBanMode(CMODE_b, add_ban, del_ban);
-    /* Channel Modes */
     CreateChanMode(CMODE_i, NULL, NULL);
     CreateChanMode(CMODE_k, set_key, get_key);
     CreateChanMode(CMODE_l, set_limit, get_limit);
     CreateChanMode(CMODE_m, NULL, NULL);
     CreateChanMode(CMODE_n, NULL, NULL);
     CreateChanMode(CMODE_p, NULL, NULL);
-    CreateChanMode(CMODE_r, NULL, NULL);
+    CreateChanMode(CMODE_r, NULL, NULL);        // regged chan
     CreateChanMode(CMODE_s, NULL, NULL);
     CreateChanMode(CMODE_t, NULL, NULL);
-
     ModuleSetChanUMode('v', 'v', STATUS_VOICE);
     ModuleSetChanUMode('o', 'o', STATUS_OP);
-
     ModuleUpdateSQLChanMode();
 }
 
@@ -377,10 +400,12 @@ void ircu_cmd_stats(char *sender, const char *letter, char *server)
 /* PART */
 void ircu_cmd_part(char *nick, char *chan, char *buf)
 {
+    Uid *ud;
+    ud = find_uid(nick);
     if (buf) {
-        send_cmd(nick, "L %s :%s", chan, buf);
+        send_cmd((ud ? ud->uid : nick), "L %s :%s", chan, buf);
     } else {
-        send_cmd(nick, "L %s", chan);
+        send_cmd((ud ? ud->uid : nick), "L %s", chan);
     }
 }
 
@@ -472,12 +497,22 @@ int denora_event_away(char *source, int ac, char **av)
 
 int denora_event_topic(char *source, int ac, char **av)
 {
+    char *newav[4];
+    User *u;
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    if (ac != 4)
+    if (ac < 2)
         return MOD_CONT;
-    do_topic(ac, av);
+
+    u = user_find(source);
+    newav[0] = av[0];
+    newav[1] = u->nick;
+    newav[2] = (ac == 2) ? itostr(time(NULL)) : av[ac - 2];
+    newav[3] = av[ac - 1];
+
+    do_topic(4, newav);
     return MOD_CONT;
 }
 

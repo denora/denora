@@ -37,7 +37,7 @@ TABLE OF CONTENTS
         * Lucas Nussbaum <lucas@lucas-nussbaum.net>
         * Pieter Bootsma <geniusdex@anope.org>
         * Thomas Juberg Stensås <ShadowMaster@Shadow-Realm.org>
-        * Trystan .S Lee <trystan@nomadirc.net>
+        * Trystan S. Lee <trystan@nomadirc.net>
         * openglx <openglx@brasnerd.com.br>
 
     Thales credits:
@@ -48,29 +48,30 @@ TABLE OF CONTENTS
 
     Denora credits:
 
-        * Trystan .S Lee      <trystan@nomadirc.net>
+        * Trystan S. Lee      <trystan@nomadirc.net>
         * Gabriel Acevedo H.  <drstein@chatadventista.com>
         * Jens Voss           <DukePyrolator@FantasyIRC.net>
         * Florian Schulze     <certus@randombytes.de>
         * Gabriel Craciunescu <da.crew@gmx.net>
+        * Hal9000             <hal9000@pimpmylinux.org>
 
     Denora Translations:
         * Gabriel Acevedo H.  <drstein@chatadventista.com> (es.l)
         * Gabriel Craciunescu <da.crew@gmx.net>            (de.l)
         * Xaf                 <root@sbird.org>             (fr.l)
         * Pieter Bootms       <geniusdex@anope.org>        (nl.l)
-	* dotslasher          <dotslasher@staticbox.com>   (nl.l)
-        * Gordon Shumway      <hal9000@musichat.net>       (it.l, example.it.conf)
+        * dotslasher          <dotslasher@staticbox.com>   (nl.l)
+        * Hal9000             <hal9000@pimpmylinux.org>    (it.l, example.it.conf)
         * Daniel Arndt        <MaOaM@gmx.org>              (example.de.conf)
         * Alvaro              <agonzal@gmail.com>          (es.l, example.es.conf)
-	* illu                <illu@icedslash.org>         (fr.l)
+        * illu                <illu@icedslash.org>         (fr.l)
 
     This program is free but copyrighted software; see the file docs/COPYING
     for details.
 
-	Denora team would like to thank the following people for their contributions:
+        Denora team would like to thank the following people for their contributions:
 
-	* Klaas Tammling <webmaster@st-city.net>   : Providing AMD64 bit shell
+        * Klaas Tammling <webmaster@st-city.net>   : Providing AMD64 bit shell
 
 
 2. PRESENTATION
@@ -86,36 +87,37 @@ TABLE OF CONTENTS
 
     Denora currently works with:
 
+        * Asuka IRCu
         * Bahamut 1.4 and 1.8
+        * Beware 1.5.x
+        * Charybdis 1.0 - 2.1
+        * DreamForge 4.6.7
+        * FreeQuest IRCd 2.1.3
+        * Hybrid IRCd 7.0
+        * Hyperion/DancerIRCd
+        * Inspircd 1.0.x
+        * Inspircd 1.1.x
+        * IrcDreams 2.19.4
+        * IRCU 2.10
+        * LiquidIRCD 1.0.4
+        * MusIRCD 2.0x
+        * Nefarious IRCu
+        * NeoIRCd 0.95
+        * ngIRCd 0.9.1
+        * Plexus IRCd 2.0.5
+        * Plexus IRCd 3.x.x
         * Ptlink 6.19.0
+        * QuakeIRCd 2.0 Ruby
+        * Rage IRCd 2.0.0 beta-6 or later
         * Ratbox 2.0.6
-        * Solid IRCD 3.5.6 or later
+        * ShadowIRCd 4.0 beta 3
+        * Solid IRCd 3.5.6 or later
+        * SorceryNET IRCd 1.3.7
         * Ultimate 2.8.2
         * Ultimate 3.0.0 alpha26 or later
-        * ViagraIRCd 1.3.x
-        * Hybrid IRCd 7.0
-        * Plexus IRCd 2.0.5
-	* Plexus IRCd 3.x.x
-        * Rage IRCD 2.0.0 beta-6 or later
         * Unreal 3.1
         * Unreal 3.2 beta19 or later
-        * IRCU 2.10
-        * Inspircd 1.0 and 1.1
-        * ShadowIRCD 4.0 beta 3
-        * FreeQuest IRCd 2.1.3
-        * Asuka IRCu
-        * Nefarious IRCu
-        * QuakeIRCD 2.0 Ruby
-        * SorceryNET IRCD 1.3.7
-        * IrcDreams 2.19.4
-        * LiquidIRCD 1.0.4
-        * NeoIRCD 0.95
-        * DreamForge 4.6.7
-        * Hyperion/DancerIRCD
-        * MusIRCD 2.0x
-        * Beware 1.5.x IRCD
-        * ngIRCD 0.9.1 IRCD
-        * Charybdis 1.0.x IRCD
+        * ViagraIRCd 1.3.x
 
     Denora could also work with some of the deamons derivated by the ones 
     listed above.
@@ -152,7 +154,7 @@ TABLE OF CONTENTS
         -version        Display the version of Denora
         -socketdebug    Display socket write/read info only useful if you want
                         to debug connection problems.
-	-protocoldebug  Display protocol debug information, very helpful in 
+        -protocoldebug  Display protocol debug information, very helpful in 
                         supporting ircds.
 
 5. CONTACT AND SUPPORT

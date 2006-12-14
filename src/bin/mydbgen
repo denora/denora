@@ -155,15 +155,13 @@ done
 
 MYSQLDUMP="mysqldump -h$SQLHOST -u$SQLUSER -p$SQLPASS $SQLDB"
 MYSQLSHOW="mysqlshow -h$SQLHOST -u$SQLUSER -p$SQLPASS $SQLDB"
-MYSQL="mysql -h$SQLHOST -u$SQLUSER -p$SQLPASS $SQLDB"
+MYSQL="mysql -f -h$SQLHOST -u$SQLUSER -p$SQLPASS $SQLDB"
 USQLDB="sql/.tmp.sql"
-## the INSERT IGNORE stuff
-USQLDB2="sql/.tmp2.sql"
 echo ""
 
 $MYSQLSHOW 2> /dev/null | grep -q $SQLDB
 if test "$?" = "1" ; then
-	msg "Unable to find databse, creating... "
+	msg "Unable to find database, creating..."
 	mysql -h$SQLHOST -u$SQLUSER -p$SQLPASS -Bs -e "create database $SQLDB" >/dev/null 2>&1
 	if test "$?" = "0" ; then
 		msg2 "done!"
@@ -173,84 +171,19 @@ if test "$?" = "1" ; then
 	fi
 fi
 
-$MYSQL -Bs -e "show tables like 'chan'" | grep -q chan
-if test "$?" = "1" ; then
-	msg "Unable to find Denora schema, creating... "
+msg "Creating/Refreshing Denora database schema..."
+$MYSQL < "sql/denora.sql"
+if test "$?" = "0" ; then
+	msg2 "done!"
+	msg "Inserting ircd-specific modes... (you can safelly ignore any errors here)"
 	$MYSQL < "sql/$DBFILE.sql"
-	if test "$?" = "0" ; then
-		msg2 "done!"
-	else
-		msg2 "failed!"
-		FAILED="$FAILED 'schema creation'"
-	fi
+	msg2 "done!"
+else
+	msg2 "failed!"
+	FAILED="$FAILED 'schema creation'"
 fi
 
-## update to 1.0.1 ugly but we have svn user and they have mixed tables / columns
-## so we need to check all 
-
-# hack hack hack 
-cp sql/update.sql sql/update.sql.bak
-
-msg  "Checking for missing tables... "
-
-## bug 167 .. NOTE to self "change the whole mydbgen for 1.3.x" 
-
-if [ "$DBFILE" = "hybrid" ]; then
- echo "DROP TABLE IF EXISTS sgline;" >> sql/update.sql
- echo "CREATE TABLE sgline (" >> sql/update.sql
- echo  "id mediumint(15) NOT NULL auto_increment," >> sql/update.sql
- echo  "mask varchar(255) NOT NULL default ''," >> sql/update.sql
- echo  "reason varchar(255) NOT NULL default ''," >> sql/update.sql
- echo  "PRIMARY KEY  (id)" >> sql/update.sql
- echo ") TYPE=MyISAM;" >> sql/update.sql
-
-fi
-
-
-if [ "$DBFILE" = "hybrid" ]; then
-	$MYSQL -Bs -e "show tables like 'sgline'" | grep -q sgline
-  else
-	$MYSQL -Bs -e "show tables like 'serverstats'" | grep -q serverstats
-fi
-if test "$?" = "1" ; then
-      msg "Updating your tables... "
-      $MYSQL < "sql/update.sql"
-    if test "$?" = "0" ; then
-      msg2 "done!"
-  else
-      msg2 "failed!"
-      FAILED="$FAILED 'schema creation'"
-fi
-  else
-     msg "No missing tables found.. good!"
-
-fi
-
-## hack hack hack ..
-
-rm -f sql/update.sql
-mv sql/update.sql.bak sql/update.sql
-
-
-echo " "
 msg "Checking for missing columns..."
-
-# chan columns 
-
-$MYSQL -Bs -e "describe chan maxusers" 2> /dev/null | grep -q maxusers
-if test "$?" = "1" ; then
-	echo "ALTER TABLE chan ADD maxusers INT( 15 ) NOT NULL;" >> $USQLDB
-fi
-
-$MYSQL -Bs -e "describe chan maxusertime" 2> /dev/null | grep -q maxusertime
-if test "$?" = "1" ; then
-	echo "ALTER TABLE chan ADD maxusertime INT( 15 ) NOT NULL;" >> $USQLDB
-fi
-
-$MYSQL -Bs -e "describe chan kickcount" 2> /dev/null | grep -q kickcount
-if test "$?" = "1" ; then
-	echo "ALTER TABLE chan ADD kickcount INT( 15 ) NOT NULL;" >> $USQLDB
-fi
 
 # cstats columns
 
@@ -259,20 +192,16 @@ if test "$?" = "1" ; then
 	echo "ALTER TABLE cstats ADD timeadded INT( 10 ) AFTER letters;" >> $USQLDB
 fi
 
-# ustats columns
-
-if [ "$DBFILE" = "charybdis" ]; then
-	$MYSQL -Bs -e "describe ustats timeadded" 2> /dev/null | grep -q timeadded
-	if test "$?" != "1" ; then
-		echo "ALTER TABLE ustats DROP timeadded;" >> $USQLDB
-	fi
+$MYSQL -Bs -e "describe cstats time" 2> /dev/null | grep -q time
+if test "$?" != "1" ; then
+	echo "ALTER TABLE cstats DROP time;" >> $USQLDB
 fi
 
-if [ "$DBFILE" = "beware" ]; then
-	$MYSQL -Bs -e "describe ustats timeadded" 2> /dev/null | grep -q timeadded
-	if test "$?" != "1" ; then
-		echo "ALTER TABLE ustats DROP timeadded;" >> $USQLDB
-	fi
+# ustats columns
+
+$MYSQL -Bs -e "describe ustats timeadded" 2> /dev/null | grep -q timeadded
+if test "$?" != "1" ; then
+	echo "ALTER TABLE ustats DROP timeadded;" >> $USQLDB
 fi
 
 # user columns
@@ -282,9 +211,6 @@ if [ "$DBFILE" = "unreal32" ]; then
 	if test "$?" = "1" ; then
 		echo "ALTER TABLE user ADD mode_ls ENUM( 'Y', 'N' ) DEFAULT 'N' NOT NULL AFTER mode_lr;" >> $USQLDB
 	fi
-fi
-
-if [ "$DBFILE" = "unreal32" ]; then
 	$MYSQL -Bs -e "describe user mode_uo" 2> /dev/null | grep -q mode_uo
 	if test "$?" = "1" ; then
 		echo "ALTER TABLE user ADD mode_uo ENUM( 'Y', 'N' ) DEFAULT 'N' NOT NULL AFTER mode_uh;" >> $USQLDB
@@ -304,17 +230,6 @@ if [ "$DBFILE" = "hybrid" ]; then
 		echo "ALTER TABLE user ADD hiddenhostname varchar(64) NOT NULL default '' AFTER  hostname;" >> $USQLDB
 	fi
 fi
-
-# maxvalues fields
-
-echo "INSERT IGNORE INTO maxvalues ( type , val , time ) VALUES ( 'users', '0', '0000-00-00 00:00:00' );" >> $USQLDB2
-echo "INSERT IGNORE INTO maxvalues ( type , val , time ) VALUES ( 'channels', '0', '0000-00-00 00:00:00' );" >> $USQLDB2
-echo "INSERT IGNORE INTO maxvalues ( type , val , time ) VALUES ( 'servers', '0', '0000-00-00 00:00:00' );" >> $USQLDB2
-echo "INSERT IGNORE INTO maxvalues ( type , val , time ) VALUES ( 'opers', '0', '0000-00-00 00:00:00' );" >> $USQLDB2
-
-# current fields
-
-echo "INSERT IGNORE INTO current VALUES ( 'chans', '0', '0' );" >> $USQLDB2
 
 # server columns 
 
@@ -372,10 +287,6 @@ $MYSQL -Bs -e "describe ustats firstadded" 2> /dev/null | grep -q firstadded
 if test "$?" = "1" ; then
      echo "ALTER TABLE ustats ADD firstadded INT( 10 ) NOT NULL AFTER lastspoke;" >> $USQLDB
 fi
-
-## INSERT IGNORE stuff
-$MYSQL < "$USQLDB2"
-rm -f $USQLDB2
 
 if [  -f "$USQLDB" ] ; then
       msg "Updating your columns... "

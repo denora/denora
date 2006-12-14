@@ -263,10 +263,12 @@ void asuka_cmd_stats(char *sender, const char *letter, char *server)
 /* ABAAA L #ircops */
 void asuka_cmd_part(char *nick, char *chan, char *buf)
 {
+    Uid *ud;
+    ud = find_uid(nick);
     if (buf) {
-        send_cmd(nick, "L %s :%s", chan, buf);
+        send_cmd((ud ? ud->uid : nick), "L %s :%s", chan, buf);
     } else {
-        send_cmd(nick, "L %s", chan);
+        send_cmd((ud ? ud->uid : nick), "L %s", chan);
     }
 }
 
@@ -372,16 +374,22 @@ int denora_event_away(char *source, int ac, char **av)
 
 int denora_event_topic(char *source, int ac, char **av)
 {
+    char *newav[4];
+    User *u;
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    if (ac != 4) {
-        alog(LOG_DEBUG,
-             "Unknown TOPIC formatted message please report the following");
-        protocol_debug(source, ac, av);
+    if (ac < 2)
         return MOD_CONT;
-    }
-    do_topic(ac, av);
+
+    u = user_find(source);
+    newav[0] = av[0];
+    newav[1] = u->nick;
+    newav[2] = (ac == 2) ? itostr(time(NULL)) : av[ac - 2];
+    newav[3] = av[ac - 1];
+
+    do_topic(4, newav);
     return MOD_CONT;
 }
 
@@ -1010,6 +1018,23 @@ void moduleAddIRCDCmds(void)
 
 void IRCDModeInit(void)
 {
+    /* User Modes
+     * o - oper
+     * O - local op
+     * i - invisible
+     * w - receive wallops
+     * s - servnotice
+     * d - deaf
+     * k - chserv
+     * g - debug
+     * r - account
+     * x - hiddenhost
+     * X - xtraop
+     * n - no chan
+     * I - noidle
+     * R - accountonly
+     * h - sethost
+     */
     ModuleSetUserMode(UMODE_I, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_O, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_R, IRCD_ENABLE);
@@ -1026,8 +1051,24 @@ void IRCDModeInit(void)
     ModuleSetUserMode(UMODE_w, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_x, IRCD_ENABLE);
     ModuleUpdateSQLUserMode();
+
+    /* Channel Modes
+     * p - private
+     * s - secret
+     * m - moderated
+     * t - topic limit
+     * i - invite only
+     * n - no privmsgs
+     * r - reg only
+     * D - deljoins
+     * d - wasdeljoin
+     * c - no colour
+     * C - no ctcp
+     * N - no notice
+     * u - no quit parts
+     */
+
     CreateChanBanMode(CMODE_b, add_ban, del_ban);
-    /* Channel Modes */
     CreateChanMode(CMODE_C, NULL, NULL);
     CreateChanMode(CMODE_D, NULL, NULL);
     CreateChanMode(CMODE_N, NULL, NULL);
@@ -1043,10 +1084,8 @@ void IRCDModeInit(void)
     CreateChanMode(CMODE_s, NULL, NULL);
     CreateChanMode(CMODE_t, NULL, NULL);
     CreateChanMode(CMODE_u, NULL, NULL);
-
     ModuleSetChanUMode('v', 'v', STATUS_VOICE);
     ModuleSetChanUMode('o', 'o', STATUS_OP);
-
     ModuleUpdateSQLChanMode();
 }
 

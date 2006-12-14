@@ -284,12 +284,31 @@ int denora_event_nick(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
+/* :42XAAAAAB TOPIC #testchan :test test test */
 int denora_event_topic(char *source, int ac, char **av)
 {
+    char *newav[5];
+    User *u;
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    do_topic(ac, av);
+    if (ac == 2) {
+        u = user_find(source);
+        if (u) {
+            newav[0] = sstrdup(av[0]);
+            newav[1] = sstrdup(u->nick);
+            newav[2] = itostr(time(NULL));
+            newav[3] = sstrdup(av[1]);
+            do_topic(4, newav);
+            free(newav[0]);
+            free(newav[1]);
+            free(newav[3]);
+        }
+
+    } else {
+        do_topic(ac, av);
+    }
     return MOD_CONT;
 }
 

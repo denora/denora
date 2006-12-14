@@ -56,6 +56,9 @@ Provided by Nomad Dev. <dev@nomadirc.net> - 2006
 01/01 A StatServ parts logchan if its enabled                     [#163]
 08/07 U Updated es.l                                              [ #00]
 08/06 R Removed MAKE GCC4STRICT                                   [ #00]
+12/02 F Part Logchan before sending SQUIT                         [#361]
+12/02 F Channel Mode parser not being case sensitive              [#360]
+12/02 F Fixed Charybdis TOPIC causing segfaults                   [#362]
 09/15 F JUPE Servers are now flagged correctly (see config)       [#325]
 09/12 F Ignore Unreal SVSMODE +d not to be confused with MODE +d  [#337]
 09/10 F Fixed Inspircd TOPIC event, and prevent segfaults         [#333]
@@ -266,6 +269,11 @@ Provided by Nomad Dev. <dev@nomadirc.net> - 2005
 08/05 F Fixed maxvalues setting on clean installs.                [#122]
 
 Provided by Hal9000 <hal9000@pimpmylinux.org>
+12/04 F Cleaned up user/chan modes in unreal32 module and sql     [ #00]
+12/03 F Fixed topic not being set on P10 ircds                    [ #00]
+12/03 F Fixed user/chan modes in P10 protocol modules and sql     [ #00]
+12/03 A Reorganized, cleaned up and fixed sql files               [ #00]
+11/30 F More fixes to the Charybdis SQL database file             [ #00]
 11/30 F Fixed ustats table for Charybdis and Beware               [ #00]
 11/29 F Fixed not decreasing user count on server kills           [#350]
 11/26 F Fixed user modes not being reset on user reconnect        [#359]
@@ -327,6 +335,8 @@ Provided by BarkerJr <BarkerJr@GMail.com>
 Provided by Obi_Wan <webmaster@st-city.net>
 05/12 F Fix to sumuser not replying when successful               [#247]
 
+Provided by OUTsider <outsider@scarynet.org>
+12/04 F Fixed P10 ircds not parting channels                      [ #00]
 
 
 Denora Version 1.1.0
@@ -443,6 +453,7 @@ Provided by MaOaM <MaOaM@gmx.org> - 2005
 
 Provided by Alvaro <agonzal@gmail.com> - 2005
 06/28 A Added Spanish example configuration file                  [ #00]
+
 
 Denora Version 1.0.0
 -------------------
@@ -602,6 +613,4 @@ Provided by Hal9000 <hal9000@pimpmylinux.org> - 2005
 Provided by Alvaro <agonzal@gmail.com> - 2005
 05/29 F Spanish language typos                                    [ #00]
 05/24 F Spanish language typos and non-translated strings         [ #00]
-
-
 
