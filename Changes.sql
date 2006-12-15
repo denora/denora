@@ -1,6 +1,17 @@
 Denora Version svn
 -------------------
 
+CREATE TABLE `admin` (
+  `id` tinyint(3) NOT NULL auto_increment,
+  `uname` varchar(32) NOT NULL default '',
+  `passwd` mediumblob NOT NULL,
+  `level` tinyint(1) NOT NULL default '0',
+  `host` varchar(32) NOT NULL default '',
+  `lang` tinyint(2) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `uname` (`uname`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
 ALTER TABLE `server` ADD `lastpingtime` INT( 15 ) NOT NULL AFTER `maxpingtime` ;
 
 ALTER TABLE `user` ADD `lastquitmsg` VARCHAR( 255 ) NOT NULL AFTER `lastquit` ;

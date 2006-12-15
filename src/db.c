@@ -251,6 +251,9 @@ void db_connect(void)
             tablecount++;
         }
     }
+    if (!rdb_check_table(AdminTable)) {
+        tablecount++;
+    }
 
     if (tablecount) {
         alog(LOG_ERROR,

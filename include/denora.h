@@ -966,6 +966,7 @@ struct user_ {
     char *uid;			/* Univeral ID			*/
     uint16 language;
     uint16 admin;
+    uint16 confadmin;   /* if admin is from configfile */
     char *ctcp;
     int sqlid;			/* mysql id number */
 	char *sqlnick;

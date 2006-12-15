@@ -340,6 +340,7 @@ E char *SpamTable;
 E char *CurrentTable;
 E char *ChanStatsTable;
 E char *ServerStatsTable;
+E char *AdminTable;
 
 E char *ChannelDB;
 E char *ctcpDB;
@@ -1032,6 +1033,9 @@ E void load_admin_db(void);
 E void save_admin_db(void);
 E Dadmin *first_admin(void);
 E Dadmin *next_admin(void);
+E int add_sqladmin (char *name, char *passwd, int level, char *host, int lang);
+E int del_sqladmin (char *name);
+E void reset_sqladmin (void);
 
 E char *MakePassword(char *plaintext);
 E int ValidPassword(char *plaintext, char *checkvs);

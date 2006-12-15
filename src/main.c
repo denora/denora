@@ -1244,6 +1244,9 @@ int init(int ac, char **av)
              (long int) stats->opers_max_time);
     }
 
+    /* Dumping all admins (from config file and admin.db) to sql */
+    reset_sqladmin();
+
     /**
       * Load our delayed modules - modules that are planing on making clients need to wait till now
       * where as modules wanting to modify our ircd connection messages need to load earlier :|

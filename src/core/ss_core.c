@@ -72,6 +72,11 @@ static int do_shutdown(User * u, int ac, char **av)
         protocol_debug(NULL, ac, av);
     }
 
+    if (!u->confadmin) {
+        notice_lang(s_StatServ, u, PERMISSION_DENIED);
+        return MOD_CONT;
+    }
+
     denora->qmsg = calloc(512 + strlen(u->nick), 1);
     if (!denora->qmsg) {
         ircsnprintf(denora->qmsg, 512,
@@ -98,6 +103,11 @@ static int do_restart(User * u, int ac, char **av)
     char buf[BUFSIZE];
     if (denora->protocoldebug) {
         protocol_debug(NULL, ac, av);
+    }
+
+    if (!u->confadmin) {
+        notice_lang(s_StatServ, u, PERMISSION_DENIED);
+        return MOD_CONT;
     }
 #ifdef STATS_BIN
     denora->qmsg = calloc(512 + strlen(u->nick), 1);

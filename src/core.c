@@ -969,10 +969,10 @@ void post_config_check(void)
 
     if (error) {
         alog(LOG_ERROR,
-             "Numerious configuration options are incorrectly defined exiting");
+             "Numerious configuration options are incorrectly defined, exiting");
         if (!denora->nofork && isatty(2)) {
             fprintf(stderr,
-                    "Numerious configuration options are incorrectly defined exiting");
+                    "Numerious configuration options are incorrectly defined, exiting");
         }
         exit(1);
     }

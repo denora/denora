@@ -1100,7 +1100,7 @@ ALOG_DEBUG_NONEXISTANT_USER_JOIN
 	Channel: Join von nicht vorhandenen User %s  Channel ID %d
 
 ALOG_DEBUG_CHANGE_MODE_CHAN
-	Debug: Ändere Modis in %s zu %s
+	Debug: Ändere Modes in %s zu %s
 
 AL0G_DEBUG_BAD_CHAN_MODE
 	Debug: Mißgebildete Mode entdeckt in %s.
@@ -1423,16 +1423,35 @@ STAT_ADMIN_DELETED
 STAT_ADMIN_NOTADMIN
 	%s ist kein Stats Admin
 
+STAT_ADMIN_SHOW
+	Benutzername: %s Hostmaske: %s Sprachen-ID: %d
+
 STAT_HELP_ADMIN
-	Syntax: ADMIN [add|del] user pass [host] [langnum]
-	
 	Das Hinzufügen oder Löschen von Stats Admin hat keinen Einfluss
 	auf Admins die sich in der Konfigurationsdatei befinden.
-
+	
+	ADMIN ADD Benutzer Passwort [Hostmaske] [Sprachnummer]
+	ADMIN DEL Benutzer
+	ADMIN SETPASS Benutzer neues-Passwort
+	ADMIN SHOW Benutzer
+	ADMIN LIST
+	
+	Der ADMIN ADD Befehl fügt den angegebenen Stats Admin hinzu
+	
+	Der ADMIN DEL Befehl löscht den angegebenen Stats Admin
+	
+	Der ADMIN SETPASS Befehl erlaubt es dass passwort eines admins
+	zu ändern
+	
+	Der ADMIN SHOW Befehl zeigt informationen zum angegebenen
+	Admin an
+	
+	Der ADMIN LIST Befehl listet alle konfigurierten Admins
+	
 	Beschränkt auf Stats Admin
 
 STAT_ADMIN_SYNTAX
-	ADMIN {ADD|DEL} USER [PASS|HOST|langnum]
+	ADMIN [ADD|DEL|LIST] user pass [host] [langnum]
 
 STAT_ADMIN_DELETE_CONFIG
 	Kann nicht %s entfernen weil er sich in der Konfigurationsdatei befindet
@@ -1442,15 +1461,3 @@ STAT_CHGPASS_OK
 
 STAT_CHGPASS_CONFIG
 	Kann nicht Passwörter der Konfigurationsdatei ändern
-
-STAT_CHGPASS_SYNTAX
-	CHGPASS ADMINNAME NEUESPASSWORT
-
-STAT_HELP_CHGPASS
-	Syntax: CHGPASS Benutzer Passwort
-	
-	Ändert Stats Admin Passwörter
-
-	Beschränkt auf Stats Admin
-
-

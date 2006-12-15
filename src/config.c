@@ -156,6 +156,7 @@ char *SglineTable;
 char *SqlineTable;
 char *ChanStatsTable;
 char *ServerStatsTable;
+char *AdminTable;
 
 char *AliasesTable;
 char *CStatsTable;
@@ -1064,6 +1065,9 @@ int confadd_tables(cVar * vars[], int lnum)
         } else if (tmp->type && (tmp->type->flag & TABFF_CHANQUIET)) {
             tmp->type = NULL;
             ChanQuietTable = sstrdup(tmp->value);
+        } else if (tmp->type && (tmp->type->flag & TABFF_ADMINS)) {
+            tmp->type = NULL;
+            AdminTable = sstrdup(tmp->value);
         }
 
     }
@@ -1149,6 +1153,9 @@ int confadd_tables(cVar * vars[], int lnum)
     if (!ChanQuietTable) {
         ChanQuietTable = sstrdup("chanquiet");
     }
+    if (!AdminTable) {
+        AdminTable = sstrdup("admin");
+    }
     return lnum;
 }
 
@@ -1214,6 +1221,9 @@ void merge_confs()
     }
     modules = new_modules;
     new_modules = NULL;
+
+    /* Rebuild admin sql table */
+    reset_sqladmin();
     return;
 }
 

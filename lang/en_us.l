@@ -262,7 +262,7 @@ MODULE_HELP_HEADER
 STAT_HELP
 	%S commands:
 	    STATS       Show status of network
-	    LOGIN       Makes you an Stats Administrator.
+	    LOGIN       Makes you a Stats Administrator.
 	    LOGOUT      Logout from your admin account.
 
 STAT_HELP_STATS
@@ -291,8 +291,8 @@ STAT_HELP_RELOAD
 
 STAT_HELP_ADMIN_CMD
 	Commands available to Stats Admins only:
-	    ADMIN       Add/Delete Stats Admins
-	    CHANSTATS   Create Monitored Channels for Stats
+	    ADMIN       Manage Stats Admins
+	    CHANSTATS   Manage Monitored Channels for Stats
 	    ENVINFO     Show environment information
 	    EXCLUDE     Exclude users, channels from stats
 	    EXPORT      Export data to XML
@@ -366,7 +366,7 @@ STAT_HELP_USERDEBUG
 STAT_HELP_LOGIN
 	Syntax: LOGIN name password
 	
-	Makes you an Stats Administrator.
+	Makes you a Stats Administrator.
 
 STAT_HELP_LOGOUT
 	Syntax: LOGOUT
@@ -400,13 +400,13 @@ STAT_HELP_ENVINFO
 ###########################################################################
 
 STAT_ADMIN_LOGGED_IN
-	You are now an Stats Administrator.
+	You are now a Stats Administrator.
 
 STAT_ADMIN_LOGGED_OUT
 	You are now logged out of your admin account.
 
 STAT_ADMIN_ALREADY_LOGGED
-	You are already an Stats Administrator!
+	You are already a Stats Administrator!
 
 STAT_LOGIN_SYNTAX
 	LOGIN name password
@@ -890,13 +890,13 @@ HTML_NETSTATS_TITLE
 	Network Statistics
 
 NOW_STATS_ADMIN
-	%s (%s) is now an Stats administrator.
+	%s (%s) is now a Stats administrator.
 
 STATS_AUTH_FAILED
 	Authentication failed for %s
 
 STATS_ADMIN_LOGOUT
-	%s is no longer an Stats administrator.
+	%s is no longer a Stats administrator.
 
 SHUTDOWN_SAVING_DB
 	Updating databases on shutdown, please wait.
@@ -1417,16 +1417,36 @@ STAT_ADMIN_DELETED
 STAT_ADMIN_NOTADMIN
 	%s is not a Stats Admin
 
-STAT_HELP_ADMIN
-	Syntax: ADMIN [add|del] user pass [host] [langnum]
-	
-	Add or Remove a Stats Admin does not affect admins whom
-	Are added in the config file.	
+STAT_ADMIN_SHOW
+	Username: %s Hostmask: %s Language ID: %d
 
+STAT_HELP_ADMIN
+	Add or Remove a Stats Admin does not affect admins whom
+	Are added in the config file.
+	
+	ADMIN ADD username password [hostmask] [lang-number]
+	ADMIN DEL username
+	ADMIN SETPASS username new-password
+	ADMIN SHOW username
+	ADMIN LIST
+	
+	The ADMIN ADD command adds the specified user as a Stats Admin
+	
+	The ADMIN DEL command removes the specified user from Stats Admin
+	
+	The ADMIN SETPASS command allows you to change the password of
+	the specified admin.
+	
+	The ADMIN SHOW command allows you to see the details of the
+	specified admin
+	
+	The ADMIN LIST command will display a list of all currently
+	available Stat Admins accounts
+	
 	Limited to Stats Admin
 
 STAT_ADMIN_SYNTAX
-	ADMIN {ADD|DEL} USER [PASS|HOST|langnum]
+	ADMIN {ADD|DEL|SETPASS|SHOW|LIST} [user|pass|host|langnum]
 
 STAT_ADMIN_DELETE_CONFIG
 	Can not delete %s as they are stored in the config file
@@ -1435,15 +1455,4 @@ STAT_CHGPASS_OK
 	Password has been changed for %s
 
 STAT_CHGPASS_CONFIG
-	Can not change config file admin passwords
-
-STAT_CHGPASS_SYNTAX
-	CHGPASS ADMINNAME NEWPASS
-
-STAT_HELP_CHGPASS
-	Syntax: CHGPASS user pass
-	
-	Change Stats Admin passwords on the fly
-
-	Limited to Stats Admin
-
+	Cannot change config file admin passwords

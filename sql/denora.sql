@@ -446,3 +446,17 @@ CREATE TABLE `spamfilters` (
   `regex` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
+
+-- --------------------------------------------------------
+
+DROP TABLE IF EXISTS `admin`;
+CREATE TABLE `admin` (
+  `id` tinyint(3) unsigned NOT NULL auto_increment,
+  `uname` varchar(32) NOT NULL default '',
+  `passwd` mediumblob NOT NULL,
+  `level` tinyint(1) NOT NULL default '0',
+  `host` varchar(32) NOT NULL default '',
+  `lang` tinyint(2) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `uname` (`uname`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;

@@ -1436,16 +1436,36 @@ STAT_ADMIN_DELETED
 STAT_ADMIN_NOTADMIN
 	%s is not a Stats Admin
 
+STAT_ADMIN_SHOW
+	Username: %s Hostmask: %s Language ID: %d
+
 STAT_HELP_ADMIN
-	Syntax: ADMIN [add|del] user pass [host] [langnum]
-	
 	Add or Remove a Stats Admin does not affect admins whom
 	Are added in the config file.	
-
+	
+	ADMIN ADD username password [hostmask] [lang-number]
+	ADMIN DEL username
+	ADMIN SETPASS username new-password
+	ADMIN SHOW username
+	ADMIN LIST
+	
+	The ADMIN ADD command adds the specified user as a Stats Admin
+	
+	The ADMIN DEL command removes the specified user from Stats Admin
+	
+	The ADMIN SETPASS command allows you to change the password of
+	the specified admin.
+	
+	The ADMIN SHOW command allows you to see the details of the
+	specified admin
+	
+	The ADMIN LIST command will display a list of all currently
+	available Stat Admins accounts
+	
 	Limited to Stats Admin
 
 STAT_ADMIN_SYNTAX
-	ADMIN {ADD|DEL} USER [PASS|HOST|langnum]
+	ADMIN [ADD|DEL|LIST] user pass [host] [langnum]
 
 STAT_ADMIN_DELETE_CONFIG
 	Can not delete %s as they are stored in the config file
@@ -1455,15 +1475,3 @@ STAT_CHGPASS_OK
 
 STAT_CHGPASS_CONFIG
 	Can not change config file admin passwords
-
-STAT_CHGPASS_SYNTAX
-	CHGPASS ADMINNAME NEWPASS
-
-STAT_HELP_CHGPASS
-	Syntax: CHGPASS user pass
-	
-	Change Stats Admin passwords on the fly
-
-	Limited to Stats Admin
-
-

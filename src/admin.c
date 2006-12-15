@@ -263,3 +263,82 @@ Dadmin *next_admin(void)
 }
 
 /*************************************************************************/
+
+int add_sqladmin(char *name, char *passwd, int level, char *host, int lang)
+{
+
+#ifdef USE_MYSQL
+    MYSQL_RES *mysql_res;
+#endif
+
+    SET_SEGV_LOCATION();
+
+    if (!denora->do_sql) {
+        return -1;
+    }
+
+    rdb_query(QUERY_LOW,
+              "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', '%s', %d, '%s', %d)",
+              AdminTable, name, passwd, level, host, lang);
+
+#ifdef USE_MYSQL
+    mysql_res = mysql_store_result(mysql);
+    if (mysql_res) {
+        SET_SEGV_LOCATION();
+        mysql_free_result(mysql_res);
+        return 1;
+    }
+#endif
+
+    return 0;
+}
+
+int del_sqladmin(char *name)
+{
+
+#ifdef USE_MYSQL
+    MYSQL_RES *mysql_res;
+#endif
+
+    SET_SEGV_LOCATION();
+
+    if (!denora->do_sql) {
+        return -1;
+    }
+
+    rdb_query(QUERY_LOW, "DELETE FROM %s WHERE uname = '%s'",
+              AdminTable, name);
+
+#ifdef USE_MYSQL
+    mysql_res = mysql_store_result(mysql);
+    if (mysql_res) {
+        SET_SEGV_LOCATION();
+        mysql_free_result(mysql_res);
+        return 1;
+    }
+#endif
+
+    return 0;
+}
+
+void reset_sqladmin(void)
+{
+    Dadmin *a;
+    int i;
+
+    SET_SEGV_LOCATION();
+
+    if (denora->do_sql) {
+        rdb_query(QUERY_LOW, "TRUNCATE TABLE %s", AdminTable);
+        for (i = 0; i < 1024; i++) {
+            for (a = adminlists[i]; a; a = a->next) {
+                rdb_query(QUERY_LOW,
+                          "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', '%s', %d, '%s', %d)",
+                          AdminTable, a->name, a->passwd, a->configfile,
+                          a->hosts[0], a->language);
+            }
+        }
+    }
+
+    return;
+}

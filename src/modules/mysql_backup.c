@@ -177,6 +177,11 @@ int do_sql_backup(int argc, char **argv)
             rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", SpamTable,
                       output);
         }
+#ifdef USE_MYSQL
+        dbMySQLPrepareForQuery();
+#endif
+        rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", AdminTable,
+                  output);
     }
     return MOD_CONT;
 }

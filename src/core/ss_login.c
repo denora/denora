@@ -83,6 +83,11 @@ static int do_login(User * u, int ac, char **av)
     } else {
         if (ValidPassword(av[1], aadmin->passwd)) {
             u->admin = 1;
+            if (aadmin->configfile == 1) {
+                u->confadmin = 1;
+            } else {
+                u->confadmin = 0;
+            }
             /* Use the language set in denora.conf */
             if (aadmin->language) {
                 u->language = aadmin->language;
@@ -114,6 +119,7 @@ static int do_logout(User * u, int ac, char **av)
     }
     if (u->admin) {
         u->admin = 0;
+        u->confadmin = 0;
         denora_cmd_global(s_StatServ, langstring(STATS_ADMIN_LOGOUT),
                           u->nick);
         notice_lang(s_StatServ, u, STAT_ADMIN_LOGGED_OUT);

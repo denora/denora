@@ -16,7 +16,6 @@
 #include "denora.h"
 
 static int do_admin(User * u, int ac, char **av);
-static int do_chgpass(User * u, int ac, char **av);
 int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
 
@@ -41,10 +40,6 @@ int DenoraInit(int argc, char **argv)
                       STAT_HELP_ADMIN);
     moduleAddCommand(STATSERV, c, MOD_UNIQUE);
 
-    c = createCommand("CHGPASS", do_chgpass, is_stats_admin, -1, -1, -1,
-                      STAT_HELP_CHGPASS);
-    moduleAddCommand(STATSERV, c, MOD_UNIQUE);
-
     return MOD_CONT;
 }
 
@@ -54,33 +49,6 @@ int DenoraInit(int argc, char **argv)
 void DenoraFini(void)
 {
 
-}
-
-static int do_chgpass(User * u, int ac, char **av)
-{
-    Dadmin *a;
-
-    if (denora->protocoldebug) {
-        protocol_debug(NULL, ac, av);
-    }
-
-    if (ac < 2) {
-        syntax_error(s_StatServ, u, "CHGPASS", STAT_CHGPASS_SYNTAX);
-        return MOD_CONT;
-    }
-    a = find_admin_byname(av[1]);
-    if (a) {
-        if (a->configfile) {
-            notice_lang(s_StatServ, u, STAT_CHGPASS_CONFIG, av[1]);
-            return MOD_CONT;
-        }
-        free(a->passwd);
-        a->passwd = sstrdup(MakePassword(av[2]));
-        notice_lang(s_StatServ, u, STAT_CHGPASS_OK, av[1]);
-    } else {
-        notice_lang(s_StatServ, u, STAT_ADMIN_NOTADMIN, av[1]);
-    }
-    return MOD_CONT;
 }
 
 /*
@@ -94,17 +62,22 @@ static int do_admin(User * u, int ac, char **av)
 {
     Dadmin *a;
     User *u2;
+    int i;
+    int disp = 1;
 
     if (denora->protocoldebug) {
         protocol_debug(NULL, ac, av);
     }
 
-    if (ac < 2) {
+    if (ac < 1) {
         syntax_error(s_StatServ, u, "ADMIN", STAT_ADMIN_SYNTAX);
         return MOD_CONT;
     }
-
     if (!stricmp(av[0], "ADD")) {
+        if (!u->confadmin) {
+            notice_lang(s_StatServ, u, PERMISSION_DENIED);
+            return MOD_CONT;
+        }
         if (ac < 3) {
             syntax_error(s_StatServ, u, "ADMIN", STAT_ADMIN_SYNTAX);
             return MOD_CONT;
@@ -127,9 +100,18 @@ static int do_admin(User * u, int ac, char **av)
                 }
             }
             a->passwd = sstrdup(MakePassword(av[2]));
+            add_sqladmin(a->name, a->passwd, 0, a->hosts[0], a->language);
             notice_lang(s_StatServ, u, STAT_ADMIN_CREATED, av[1]);
         }
     } else if (!stricmp(av[0], "DEL")) {
+        if (!u->confadmin) {
+            notice_lang(s_StatServ, u, PERMISSION_DENIED);
+            return MOD_CONT;
+        }
+        if (ac < 2) {
+            syntax_error(s_StatServ, u, "ADMIN", STAT_ADMIN_SYNTAX);
+            return MOD_CONT;
+        }
         a = find_admin_byname(av[1]);
         if (a) {
             if (a->configfile) {
@@ -142,9 +124,49 @@ static int do_admin(User * u, int ac, char **av)
             if (u2) {
                 u2->admin = 0;
             }
+            del_sqladmin(av[1]);
             notice_lang(s_StatServ, u, STAT_ADMIN_DELETED, av[1]);
         } else {
             notice_lang(s_StatServ, u, STAT_ADMIN_NOTADMIN, av[1]);
+        }
+    } else if (!stricmp(av[0], "SETPASS")) {
+        if (!u->confadmin) {
+            notice_lang(s_StatServ, u, PERMISSION_DENIED);
+            return MOD_CONT;
+        }
+        if (ac < 3) {
+            syntax_error(s_StatServ, u, "ADMIN", STAT_ADMIN_SYNTAX);
+            return MOD_CONT;
+        }
+        a = find_admin_byname(av[1]);
+        if (a) {
+            if (a->configfile) {
+                notice_lang(s_StatServ, u, STAT_CHGPASS_CONFIG, av[1]);
+                return MOD_CONT;
+            }
+            free(a->passwd);
+            a->passwd = sstrdup(MakePassword(av[2]));
+            notice_lang(s_StatServ, u, STAT_CHGPASS_OK, av[1]);
+        } else {
+            notice_lang(s_StatServ, u, STAT_ADMIN_NOTADMIN, av[1]);
+        }
+    } else if (!stricmp(av[0], "SHOW")) {
+        if (ac < 2) {
+            syntax_error(s_StatServ, u, "ADMIN", STAT_ADMIN_SYNTAX);
+            return MOD_CONT;
+        }
+        a = find_admin_byname(av[1]);
+        if (a) {
+            notice_lang(s_StatServ, u, STAT_ADMIN_SHOW, a->name,
+                        a->hosts[0], a->language);
+        } else {
+            notice_lang(s_StatServ, u, STAT_ADMIN_NOTADMIN, av[1]);
+        }
+    } else if (!stricmp(av[0], "LIST")) {
+        for (i = 0; i < 1024; i++) {
+            for (a = adminlists[i]; a; a = a->next) {
+                notice(s_StatServ, u->nick, "%d %s", disp++, a->name);
+            }
         }
     } else {
         syntax_error(s_StatServ, u, "ADMIN", STAT_ADMIN_SYNTAX);

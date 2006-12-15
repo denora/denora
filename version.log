@@ -9,11 +9,41 @@ VERSION_MAJOR="1"
 VERSION_MINOR="2"
 VERSION_PATCH="0"
 VERSION_EXTRA="-RC4"
-VERSION_BUILD="7"
+VERSION_BUILD="8"
 
 # $Log$
+#
+# BUILD : 1.2.0 (8)
+# BUGS  : N/A
+# NOTES : Added support for admin users stored into SQL. Added ADMIN LIST|SHOW|SETPASS commands. ADMIN ADD|DEL|SETPASS and REBOOT|SHUTDOWN for 
+# config file admins only.
 #
 # BUILD : 1.2.0 (7)
 # BUGS  : N/A
 # NOTES : Adaptations to the new repo
 #
+# BUILD : 1.2.0 (6)
+# BUGS  : N/A
+# NOTES : Fixes to last commit
+#
+# BUILD : 1.2.0 (5)
+# BUGS  : N/A
+# NOTES : Denora 1.2.0 revision 742
+#
+# BUILD : 1.2.0 (4)
+# BUGS  : N/A
+# NOTES : Updated version.log
+#
+# BUILD : 1.2.0 (3)
+# BUGS  : N/A
+# NOTES : Denora 1.2.0 revision 733
+#
+# BUILD : 1.2.0 (2)
+# BUGS  : N/A
+# NOTES : Set Id keyword on all files
+#
+# BUILD : 1.2.0 (1)
+# BUGS  : N/A
+# NOTES : Initial import (Denora 1.2.0-RC4 revision 717)
+#
+

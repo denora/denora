@@ -51,11 +51,11 @@ int db_optimize(const char *name)
     alog(LOG_NORMAL, "Optimzing MYSQL tables");
 
     sprintf(tables,
-            "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s",
+            "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s",
             UserTable, ChanBansTable, IsOnTable, ServerTable, GlineTable,
             ChanTable, MaxValueTable, TLDTable, CTCPTable, ChanStatsTable,
             ServerStatsTable, AliasesTable, CStatsTable, UStatsTable,
-            CurrentTable, StatsTable);
+            CurrentTable, StatsTable, AdminTable);
     if (ircd->except)
         sprintf(tables, "%s, %s", tables, ChanExceptTable);
     if (ircd->invitemode)

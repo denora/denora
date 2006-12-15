@@ -269,6 +269,9 @@ Provided by Nomad Dev. <dev@nomadirc.net> - 2005
 08/05 F Fixed maxvalues setting on clean installs.                [#122]
 
 Provided by Hal9000 <hal9000@pimpmylinux.org>
+12/07 A ADMIN ADD|DEL|SETPASS for config file admins only         [ #00]
+12/06 A Added ADMIN LIST|SHOW|SETPASS commands                    [ #00]
+12/06 A Added support for admin users stored into SQL             [ #00]
 12/04 F Cleaned up user/chan modes in unreal32 module and sql     [ #00]
 12/03 F Fixed topic not being set on P10 ircds                    [ #00]
 12/03 F Fixed user/chan modes in P10 protocol modules and sql     [ #00]
