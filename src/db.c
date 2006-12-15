@@ -1168,6 +1168,7 @@ int db_getchancreate(char *chan)
     if (!denora->do_sql) {
         return -1;
     }
+    strtolwr(channel);
     rdb_query(QUERY_HIGH, "SELECT chanid FROM %s WHERE channel=\'%s\'",
               ChanTable, channel);
 #ifdef USE_MYSQL
