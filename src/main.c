@@ -631,6 +631,7 @@ void introduce_user(const char *user)
 {
     ChannelStats *cs;
     lnode_t *tn;
+    Uid *ud;
 
     /* Watch out for infinite loops... */
 #define LTSIZE 20
@@ -657,12 +658,15 @@ void introduce_user(const char *user)
     if (!LargeNet) {
         if (!PartOnEmpty) {
             tn = list_first(CStatshead);
+            ud = find_uid(s_StatServ);
             while (tn != NULL) {
                 cs = lnode_get(tn);
                 denora_cmd_join(s_StatServ, cs->name, time(NULL));
                 if (AutoOp && AutoMode) {
                     denora_cmd_mode(ServerName, cs->name, "%s %s",
-                                    AutoMode, s_StatServ);
+                                    AutoMode,
+                                    ((ircd->p10
+                                      && ud) ? ud->uid : s_StatServ));
                 }
                 tn = list_next(CStatshead, tn);
             }

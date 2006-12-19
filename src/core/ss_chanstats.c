@@ -67,6 +67,7 @@ static int do_chanstats(User * u, int ac, char **av)
     int i;
     int x = 0;
     char *sqlchan;
+    Uid *ud;
 
     if (ac >= 1) {
         cmd1 = av[0];
@@ -140,20 +141,26 @@ static int do_chanstats(User * u, int ac, char **av)
                 notice_lang(s_StatServ, u, STAT_CHANSTATS_CHAN_ADDED,
                             cmd2);
 
+                ud = find_uid(s_StatServ);
                 if (PartOnEmpty) {
                     c = findchan(cmd2);
                     if (c) {
                         denora_cmd_join(s_StatServ, cs->name, time(NULL));
                         if (AutoOp && AutoMode) {
                             denora_cmd_mode(ServerName, cs->name, "%s %s",
-                                            AutoMode, s_StatServ);
+                                            AutoMode,
+                                            ((ircd->p10
+                                              && ud) ? ud->
+                                             uid : s_StatServ));
                         }
                     }
                 } else {
                     denora_cmd_join(s_StatServ, cs->name, time(NULL));
                     if (AutoOp && AutoMode) {
                         denora_cmd_mode(ServerName, cs->name, "%s %s",
-                                        AutoMode, s_StatServ);
+                                        AutoMode,
+                                        ((ircd->p10
+                                          && ud) ? ud->uid : s_StatServ));
                     }
                 }
                 free(sqlchan);

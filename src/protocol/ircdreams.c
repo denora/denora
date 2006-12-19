@@ -160,9 +160,9 @@ void IRCDModeInit(void)
     CreateChanMode(CMODE_t, NULL, NULL);
 
 
-    ModuleSetChanUMode('h', 'h', STATUS_HALFOP);
-    ModuleSetChanUMode('v', 'v', STATUS_VOICE);
-    ModuleSetChanUMode('o', 'o', STATUS_OP);
+    ModuleSetChanUMode('%', 'h', STATUS_HALFOP);
+    ModuleSetChanUMode('+', 'v', STATUS_VOICE);
+    ModuleSetChanUMode('@', 'o', STATUS_OP);
 
     ModuleUpdateSQLChanMode();
 
@@ -665,7 +665,7 @@ int denora_event_sjoin(char *source, int ac, char **av)
         protocol_debug(source, ac, av);
     }
 
-    do_p10_burst(ac, av);
+    do_p10_burst(source, ac, av);
     return MOD_CONT;
 }
 

@@ -148,7 +148,7 @@ E void chan_set_user_status(Channel * chan, User * user, int16 status);
 
 E void do_cmode(const char *source, int ac, char **av);
 E void do_join(const char *source, int ac, char **av);
-E void do_p10_burst(int ac, char **av);
+E void do_p10_burst(char *source, int ac, char **av);
 E void do_bmask(char **av);
 E void do_kick(const char *source, int ac, char **av);
 E void do_p10_kick(const char *source, int ac, char **av);

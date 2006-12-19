@@ -357,8 +357,8 @@ void sql_do_addusers(int chanid, char *users)
                           IsOnTable, nickid, chanid, (op ? "Y" : "N"),
                           (voice ? "Y" : "N"));
             } else {
-                alog(LOG_DEBUG,
-                     "Error: unable to insert user in ison table!");
+                alog(LOG_ERROR,
+                     "ERROR: Unable to insert user in ison table!");
             }
         } else {
             alog(LOG_NONEXISTANT,
@@ -388,12 +388,15 @@ void sql_do_addusers(int chanid, char *users)
  */
 void sql_do_sjoin(char *chan, char *users, char **modes, int nbmodes)
 {
+    int chanid;
+
     if (!chan || !users) {
         return;
     }
 
     SET_SEGV_LOCATION();
-    sql_do_addusers(db_getchancreate(chan), users);
+    chanid = db_getchancreate(chan);
+    sql_do_addusers(chanid, users);
     if (nbmodes) {
         sql_do_chanmodes(chan, modes);
     }
@@ -596,11 +599,29 @@ char *p10_mode_parse(char *mode, int *nomode)
     char *s;
     char modebuf[15];
     char *temp = NULL;
+    nomode = 0;
+    char *flag;
 
     /* We make all the users join */
     s = mode;
     while (*s) {
-        while (csmodes[(int) *s] != 0) {
+        switch (*s) {
+        case 'o':
+            flag = "@";
+            break;
+        case 'h':
+            flag = "%";
+            break;
+        case 'v':
+            flag = "+";
+            break;
+        default:
+            alog(LOG_ERROR,
+                 "ERROR: Unknown user flag in p10_mode_parse()");
+            flag = "";
+            break;
+        }
+        while (csmodes[(int) *flag] != 0) {
             nomode++;
             if (temp) {
                 ircsnprintf(modebuf, sizeof(modebuf), "%s%c", temp, *s);
@@ -629,194 +650,138 @@ char *p10_mode_parse(char *mode, int *nomode)
  * @param av is the array
  * @return void - no returend value
  */
-void do_p10_burst(int ac, char **av)
+void do_p10_burst(char *source, int ac, char **av)
 {
+    /*
+     * av[0] <channel>
+     * av[1] <timestamp>
+     * av[2+] [<+modes> [<mode extra parameters>]] [<users>] [<%bans>]
+     * - <modes> is a parameter of which the first character is a +, it is parsed as a channel mode change;
+     *           there can be extra parameters after the mode parameter for key and limit
+     * - <users> parameter has no prefix char. it is a comma separated list, where each entry is
+     *           either <nicknum> or <nicknum>:<modes>. if the colon+modes is present, it defines membership
+     *           modes which apply to that entry, and to all following entries until there's another entry which
+     *           defines modes. the modes paramer contains the membership mode chars ("o" for ops, etc). for sending,
+     *           it must have the modes from high priority to low priority - "ov" is valid, "vo" is not.
+     * - <bans> parameter: the first character is a %, then a space separated list of bans.
+     * - in a generated burst message, the users must be sorted by the modes: first users w/o modes, then users
+     *   with voice, then with op, then with op+voice: num,num:v,num:o,num:ov
+     */
+
     Channel *c;
     User *user;
     char *s, *t, *m;
     char *v[32];
     char *x[32];
     int i = 0;
-    int num = 0;
     int nomode = 0;
+    int pc = 2;
+    char *newav[32];
+    int j = 2;
+    char *flag;
+    char *modes;
 
-    /* Double check to avoid unknown modes that need parameters */
-    if (ac == 5) {
-        c = findchan(av[0]);
-        while ((s = myStrGetToken(av[3], ',', i))) {
-            nomode = 0;
-            t = myStrGetToken(s, ':', 0);
-            m = myStrGetToken(s, ':', 1);
-            user = user_find(t);
-            if (!user) {
-                alog(LOG_NONEXISTANT,
-                     langstr(ALOG_DEBUG_SJOIN_NONEXISTANT), t, av[0]);
-                i++;
-                DenoraFree(t);
-                DenoraFree(m);
-                continue;
-            }
-            v[0] = av[0];
-            do_join(user->nick, 1, v);
-            if (m) {
-                x[0] = av[0];
-                x[1] = p10_mode_parse(m, &nomode);
-                if (!nomode) {
-                    x[2] = user->nick;
-                    do_cmode(user->nick, 3, x);
-                    free(x[1]);
+    c = findchan(av[0]);
+    if (!c) {
+        c = chan_create(av[0]);
+        db_getchancreate(av[0]);
+    }
+    if (c) {
+        c->creation_time = strtol(av[1], NULL, 10);     // Setting the timestamp
+        while (pc < ac) {
+            switch (*av[pc]) {
+            case '+':          // set modes, and extra modes if needed
+                newav[0] = av[0];
+                newav[1] = av[pc];
+                if (myNumToken(av[pc], 'l') || myNumToken(av[pc], 'k')) {
+                    newav[2] = av[pc + 1];
+                    do_cmode(source, 3, newav);
+                    pc++;
+                } else {
+                    do_cmode(source, 2, newav);
                 }
-                free(m);
-            }
-            i++;
-            free(t);
-        }
-        c = findchan(av[0]);
-        if (c) {
-            /* Set the timestamp */
-            c->creation_time = strtol(av[1], NULL, 10);
-            /* We now update the channel mode. */
-            chan_set_modes(c, 1, &av[2]);
-        }
-        /* all that and now to the bans */
-
-        i = 0;
-        if (c) {
-            while ((s = myStrGetToken(av[4], ' ', i))) {
-                num = myNumToken(s, '%');
-                if (num) {
+                pc++;
+                break;
+            case '%':          // set bans
+                i = 0;
+                while ((s = myStrGetToken(av[pc], ' ', i))) {
                     m = myStrGetToken(s, '%', 1);
                     add_ban(c, m);
                     free(m);
-                } else {
-                    add_ban(c, s);
-                }
-                free(s);
-                i++;
-            }
-        }
-    } else if (ac == 3) {
-        c = findchan(av[0]);
-        while ((s = myStrGetToken(av[2], ',', i))) {
-            nomode = 0;
-            t = myStrGetToken(s, ':', 0);
-            m = myStrGetToken(s, ':', 1);
-            user = user_find(t);
-            if (!user) {
-                alog(LOG_NONEXISTANT,
-                     langstr(ALOG_DEBUG_SJOIN_NONEXISTANT), t, av[0]);
-                i++;
-                DenoraFree(t);
-                DenoraFree(m);
-                continue;
-            }
-            v[0] = av[0];
-            do_join(user->nick, 1, v);
-            if (m) {
-                x[0] = av[0];
-                x[1] = p10_mode_parse(m, &nomode);
-                if (!nomode) {
-                    x[2] = user->nick;
-                    do_cmode(user->nick, 3, x);
-                    free(x[1]);
-                }
-                free(m);
-            }
-            DenoraFree(t);
-            DenoraFree(s);
-            i++;
-        }
-    } else if (ac == 4) {
-        //alog(LOG_DEBUG, "[DEBUG] ac=4");
-        c = findchan(av[0]);
-        if (*av[2] == '+') {
-            while ((s = myStrGetToken(av[3], ',', i))) {
-                //alog(LOG_DEBUG, "[DEBUG] begin loop");
-                nomode = 0;
-                t = myStrGetToken(s, ':', 0);
-                m = myStrGetToken(s, ':', 1);
-                user = user_find(t);
-                if (!user) {
-                    //alog(LOG_DEBUG, "[DEBUG] user not found");
-                    alog(LOG_NONEXISTANT,
-                         langstr(ALOG_DEBUG_SJOIN_NONEXISTANT), t, av[0]);
-                    i++;
-                    DenoraFree(t);
-                    DenoraFree(m);
-                    continue;
-                }
-                //alog(LOG_DEBUG, "[DEBUG] user FOUND!");
-                v[0] = av[0];
-                do_join(user->nick, 1, v);
-                if (m) {
-                    //alog(LOG_DEBUG, "[DEBUG] m matches");
-                    x[0] = av[0];
-                    x[1] = p10_mode_parse(m, &nomode);
-                    if (!nomode) {
-                        //alog(LOG_DEBUG, "[DEBUG] !nomode matches");
-                        x[2] = user->nick;
-                        do_cmode(user->nick, 3, x);
-                        free(x[1]);
-                    }
-                    free(m);
-                }
-                //alog(LOG_DEBUG, "[DEBUG] end loop");
-                i++;
-            }
-            c = findchan(av[0]);
-            if (c) {
-                /* Set the timestamp */
-                c->creation_time = strtol(av[1], NULL, 10);
-                /* We now update the channel mode. */
-                //alog(LOG_DEBUG, "[DEBUG] Calling chan_set_modes()");
-                chan_set_modes(c, 1, &av[2]);
-            }
-        } else {
-            while ((s = myStrGetToken(av[2], ',', i))) {
-                nomode = 0;
-                t = myStrGetToken(s, ':', 0);
-                m = myStrGetToken(s, ':', 1);
-                user = user_find(t);
-                if (!user) {
-                    alog(LOG_NONEXISTANT,
-                         langstr(ALOG_DEBUG_SJOIN_NONEXISTANT), t, av[0]);
-                    i++;
-                    DenoraFree(t);
-                    DenoraFree(m);
-                    continue;
-                }
-                v[0] = av[0];
-                do_join(user->nick, 1, v);
-                if (m) {
-                    x[0] = av[0];
-                    x[1] = p10_mode_parse(m, &nomode);
-                    if (!nomode) {
-                        x[2] = user->nick;
-                        do_cmode(user->nick, 3, x);
-                        free(x[1]);
-                    }
-                    free(m);
-                }
-                i++;
-            }
-            /* all that and now to the bans */
-            c = findchan(av[0]);
-            i = 0;
-            if (c) {
-                while ((s = myStrGetToken(av[3], ' ', i))) {
-                    num = myNumToken(s, '%');
-                    if (num) {
-                        m = myStrGetToken(s, '%', 1);
-                        add_ban(c, m);
-                        free(m);
-                    } else {
-                        add_ban(c, s);
-                    }
                     free(s);
                     i++;
                 }
+                pc++;
+                break;
+            case '~':          // set excepts
+                // (probably won't work since, as i understand, it's sent along with bans so need to test this...)
+                i = 0;
+                while ((s = myStrGetToken(av[pc], ' ', i))) {
+                    m = myStrGetToken(s, '~', 1);
+                    add_exception(c, m);
+                    free(m);
+                    free(s);
+                    i++;
+                }
+                pc++;
+                break;
+            default:           // add users
+                flag = NULL;
+                while ((s = myStrGetToken(av[pc], ',', i))) {
+                    nomode = 0;
+                    t = myStrGetToken(s, ':', 0);
+                    m = myStrGetToken(s, ':', 1);
+                    user = user_find(t);
+                    if (!user) {
+                        alog(LOG_NONEXISTANT,
+                             langstr(ALOG_DEBUG_SJOIN_NONEXISTANT), t,
+                             av[0]);
+                        i++;
+                        DenoraFree(t);
+                        DenoraFree(m);
+                        continue;
+                    }
+                    v[0] = av[0];
+                    do_join(user->nick, 1, v);  // make user join the channel
+                    if (m) {
+                        flag = sstrdup(m);
+                        free(m);
+                    }
+                    if (flag) {
+                        x[0] = av[0];
+                        x[1] = p10_mode_parse(flag, &nomode);
+                        if (x[1]) {
+                            if (*x[1] == '+') {
+                                modes = sstrdup(x[1]);
+                                j = 2;
+                                while (*modes) {
+                                    switch (*modes) {
+                                    case '+':
+                                        break;
+                                    default:
+                                        x[j++] = user->nick;
+                                        break;
+                                    }
+                                    modes++;
+                                }
+                                do_cmode(user->nick, j, x);     // setting user qaohv flags
+                                free(x[1]);
+                            }
+                        }
+                    }
+                    i++;
+                    free(t);
+                }
+                if (flag) {
+                    free(flag);
+                }
+                pc++;
+                break;
             }
         }
+    } else {
+        alog(LOG_ERROR,
+             "ERROR: Unable to find channel %s in do_p10_burst()", av[0]);
     }
 }
 
@@ -841,7 +806,9 @@ void do_join(const char *source, int ac, char **av)
     if (ac < 1) {
         return;
     }
-
+    // if ircd is p10, we should copy source to a prefixednick var,
+    // then go thorugh source and ++ in case of @%+, and pass prefixednick
+    // to sql func instead of nick
     user = user_find(source);
     if (!user) {
         alog(LOG_NONEXISTANT, langstr(ALOG_DEBUG_JOIN_NONEXISTANT),
@@ -905,9 +872,9 @@ void do_p10_kick(const char *source, int ac, char **av)
 /*************************************************************************/
 
 /* Handle a KICK command.
- *	av[0] = channel
- *	av[1] = nick(s) being kicked
- *	av[2] = reason
+ *    av[0] = channel
+ *    av[1] = nick(s) being kicked
+ *    av[2] = reason
  */
 void do_kick(const char *source, int ac, char **av)
 {
@@ -917,6 +884,7 @@ void do_kick(const char *source, int ac, char **av)
     Channel *c2;
     ChannelStats *cs;
     int chanid;
+    Uid *ud;
 
     SET_SEGV_LOCATION();
 
@@ -978,8 +946,11 @@ void do_kick(const char *source, int ac, char **av)
             if (!stricmp(s, s_StatServ)) {
                 denora_cmd_join(s_StatServ, av[0], time(NULL));
                 if (AutoOp && AutoMode) {
+                    ud = find_uid(s_StatServ);
                     denora_cmd_mode(ServerName, cs->name, "%s %s",
-                                    AutoMode, s_StatServ);
+                                    AutoMode,
+                                    ((ircd->p10
+                                      && ud) ? ud->uid : s_StatServ));
                 }
             }
         }
@@ -989,8 +960,8 @@ void do_kick(const char *source, int ac, char **av)
 /*************************************************************************/
 
 /* Handle a PART command.
- *	av[0] = channels to leave
- *	av[1] = reason (optional)
+ *    av[0] = channels to leave
+ *    av[1] = reason (optional)
  */
 void do_part(const char *source, int ac, char **av)
 {
@@ -1375,10 +1346,12 @@ void do_cmode(const char *source, int ac, char **av)
     ac--;
     av++;
     SET_SEGV_LOCATION();
+
     chan_set_modes(chan, ac, av);
     SET_SEGV_LOCATION();
-    if (denora->do_sql)
+    if (denora->do_sql) {
         sql_do_chanmodes(chan->name, av);
+    }
     if ((u = user_find(source))) {
         if (denora->do_sql && !LargeNet) {
             e = find_exclude(u->nick, u->server->name);
@@ -1476,6 +1449,7 @@ void chan_adduser2(User * user, Channel * c)
 {
     struct c_userlist *u;
     ChannelStats *cs;
+    Uid *ud;
 
     SET_SEGV_LOCATION();
 
@@ -1514,8 +1488,9 @@ void chan_adduser2(User * user, Channel * c)
     if (PartOnEmpty && cs && c->statservon == 0) {
         denora_cmd_join(s_StatServ, c->name, time(NULL));
         if (AutoOp && AutoMode) {
+            ud = find_uid(s_StatServ);
             denora_cmd_mode(ServerName, cs->name, "%s %s", AutoMode,
-                            s_StatServ);
+                            ((ircd->p10 && ud) ? ud->uid : s_StatServ));
         }
     }
 

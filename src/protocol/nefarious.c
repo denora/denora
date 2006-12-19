@@ -18,9 +18,9 @@
 int p10nickcnt = 0;
 
 IRCDVar myIrcd[] = {
-    {"Nefarious IRCu 0.4.0",    /* ircd name                 */
+    {"Nefarious IRCu 0.4.0+",   /* ircd name                 */
      "+iok",                    /* StatServ mode             */
-     IRCD_DISABLE,              /* Vhost                     */
+     IRCD_ENABLE,               /* Vhost                     */
      IRCD_DISABLE,              /* Supports SGlines          */
      IRCD_DISABLE,              /* sgline sql table          */
      IRCD_ENABLE,               /* Supports SQlines          */
@@ -44,15 +44,15 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* SJOIN ban char            */
      IRCD_DISABLE,              /* SJOIN except char         */
      IRCD_DISABLE,              /* SJOIN invite char         */
-     IRCD_DISABLE,              /* umode for vhost           */
+     IRCD_ENABLE,               /* umode for vhost           */
      IRCD_DISABLE,              /* owner                     */
      IRCD_DISABLE,              /* protect                   */
      IRCD_ENABLE,               /* halfop                    */
-     NULL,                      /* User modes                */
-     NULL,                      /* Channel modes             */
+     NULL,                      /* user modes                */
+     NULL,                      /* channel modes             */
      IRCD_DISABLE,              /* flood                     */
      IRCD_DISABLE,              /* flood other               */
-     IRCD_DISABLE,              /* vhost                     */
+     IRCD_ENABLE,               /* vhost                     */
      IRCD_DISABLE,              /* vhost other               */
      IRCD_DISABLE,              /* channek linking           */
      IRCD_ENABLE,               /* p10                       */
@@ -104,9 +104,10 @@ IRCDCAPAB myIrcdcap[] = {
      0,                         /* TLKEXT       */
      0,                         /* DODKEY       */
      0,                         /* DOZIP        */
-     0,
-     0,
-     0}
+     0,                         /* CHANMODES    */
+     0,                         /* sjb64        */
+     0,                         /* nickchar     */
+     }
 };
 
 /*************************************************************************/
@@ -207,9 +208,9 @@ void IRCDModeInit(void)
     CreateChanMode(CMODE_S, NULL, NULL);
     CreateChanMode(CMODE_T, NULL, NULL);
     CreateChanMode(CMODE_Z, NULL, NULL);
-    ModuleSetChanUMode('v', 'v', STATUS_VOICE);
-    ModuleSetChanUMode('h', 'h', STATUS_HALFOP);
-    ModuleSetChanUMode('o', 'o', STATUS_OP);
+    ModuleSetChanUMode('+', 'v', STATUS_VOICE);
+    ModuleSetChanUMode('%', 'h', STATUS_HALFOP);
+    ModuleSetChanUMode('@', 'o', STATUS_OP);
     ModuleUpdateSQLChanMode();
 }
 
@@ -243,7 +244,7 @@ char *nefarious_nickip(char *host)
 **      parv[8] = info
 ** NICK - change 
 **      source  = oldnick
-**	parv[0] = new nickname
+**      parv[0] = new nickname
 **      parv[1] = timestamp
 */
 /* 
@@ -257,6 +258,7 @@ int denora_event_nick(char *source, int ac, char **av)
     Server *s;
     char *temp;
     char *ipchar;
+    char *vhost;
 
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
@@ -270,7 +272,29 @@ int denora_event_nick(char *source, int ac, char **av)
     if (ac != 2) {
         s = server_find(source);
         *source = '\0';
-        if (ac == 10) {
+        if (ac == 11) {
+            /* Source Ab
+             * av[0] = Rudolf
+             * av[1] = 1
+             * av[2] = 1165496998
+             * av[3] = letal
+             * av[4] = 89.32.218.79
+             * av[5] = +irxh
+             * av[6] = LetaL
+             * av[7] = letal@LetaL.helpers.beirut.com       
+             * av[8] = BZINpP
+             * av[9] = AbM27
+             * av[10] = 7 everything
+             */
+            ipchar = nefarious_nickip(av[8]);
+            vhost = myStrGetToken(av[7], '@', 1);
+            user =
+                do_nick(source, av[0], av[3], av[4], (s ? s->name : temp),
+                        av[10], strtoul(av[2], NULL, 10), 0,
+                        ipchar, vhost, av[9], strtoul(av[1],
+                                                      NULL, 10), av[5]);
+            free(ipchar);
+        } else if (ac == 10) {
             ipchar = nefarious_nickip(av[7]);
             user =
                 do_nick(source, av[0], av[3], av[4], (s ? s->name : temp),
@@ -286,17 +310,6 @@ int denora_event_nick(char *source, int ac, char **av)
                         av[7], strtoul(av[1], NULL, 10), av[5]);
             free(ipchar);
         } else if (ac == 8) {
-            /* no user modes   */
-            /* Source AB       
-               av[0] = Trystan 
-               av[1] = 1       
-               av[2] = 1144080460 
-               av[3] = tslee
-               av[4] = c-67-186-230-12.hsd1.ut.comcast.net
-               av[5] = BDuuYM
-               av[6] = ABAAB
-               av[7] = Dreams are answers to questions not yet asked
-             */
             ipchar = nefarious_nickip(av[5]);
             do_nick(source, av[0], av[3], av[4], (s ? s->name : temp),
                     av[7], strtoul(av[2], NULL, 10), 0,
@@ -308,6 +321,7 @@ int denora_event_nick(char *source, int ac, char **av)
             protocol_debug(temp, ac, av);
         }
     } else {
+        // Nick change
         user = find_byuid(source);
         do_nick((user ? user->nick : source), av[0], NULL, NULL, NULL,
                 NULL, strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0,
@@ -367,7 +381,7 @@ void moduleAddIRCDMsgs(void) {
     /* ping */
     m = createMessage("G",        denora_event_ping); addCoreMessage(IRCD,m);
     /* pong */
-    m = createMessage("Z",        denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("RO",       denora_event_pong); addCoreMessage(IRCD,m);
     /* MODE */
     m = createMessage("M",        denora_event_mode); addCoreMessage(IRCD,m);
     /* CREATE */
@@ -408,12 +422,12 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("W",        denora_event_whois); addCoreMessage(IRCD,m);
     /* SERVER */
     m = createMessage("S",        denora_event_server); addCoreMessage(IRCD,m);
-    /* PONG */
-    m = createMessage("Z",        denora_event_pong); addCoreMessage(IRCD,m);
     /* STATS */
     m = createMessage("R",        m_stats); addCoreMessage(IRCD,m);
     /* ACCCOUNT */
     m = createMessage("AC",       denora_event_null); addCoreMessage(IRCD,m);
+    /* KILL */
+    m = createMessage("D",        denora_event_kill); addCoreMessage(IRCD,m);
     /* GLINE */
     m = createMessage("GL",       denora_event_sgline); addCoreMessage(IRCD,m);
     /* INFO */
@@ -510,7 +524,9 @@ int denora_event_pong(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    server_store_pong(source, time(NULL));
+    alog(LOG_DEBUG,
+         "Got a PONG, call to server_store_pong() disabled for testing purposes");
+    //server_store_pong(source, time(NULL));
     return MOD_CONT;
 }
 
@@ -602,6 +618,7 @@ int denora_event_quit(char *source, int ac, char **av)
 
 /* Channel modes */
 /* ABAAA M #ircops +v ABAAB */
+/* AKAAD M #street -o+b AxC3U *!*@`.users.beirut.com */
 int denora_event_mode(char *source, int ac, char **av)
 {
     User *u;
@@ -635,6 +652,10 @@ int denora_event_kill(char *source, int ac, char **av)
     }
     if (ac != 2)
         return MOD_CONT;
+/*
+ * 66AAA D AxC5i :defender.beirut.com!Defender (You have a scan score of ^B8^B and are possibly an ^Bautomated virus drone^B.
+ * Please read the following page for details of the scoring system and how to avoid this in the future: ^Bhttp://chat.beirut.com^B)
+ */
 
     m_kill(source, av[0], av[1]);
     return MOD_CONT;
@@ -684,16 +705,17 @@ int denora_event_create(char *source, int ac, char **av)
 
 /* BURST joins simlar to SJOIN */
 /* AB B #denora 1113091975 +tn ABAAB,ABAAA:o :%*!*@*.aol.com */
-/* s  c  0        1         2   3              4 */
+/* s  c 0       1          2   3             4 */
 /* AB B #test23 1115788230 ABAAB,ABAAA:o */
-/* s  c 0         1         2 */
+/* s  c 0       1          2 */
+/* AB B #test23 1115788230 :%*!*@*.aol.com */
+/* s  c 0       1          2 */
 int denora_event_sjoin(char *source, int ac, char **av)
 {
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    alog(LOG_DEBUG, "Calling do_p10_burst");
-    do_p10_burst(ac, av);
+    do_p10_burst(source, ac, av);
     return MOD_CONT;
 }
 
@@ -896,9 +918,22 @@ void nefarious_cmd_eob(void)
 
 void nefarious_cmd_ping(char *server)
 {
-    /* AB G !1115872042.64217 denora.nomadirc.net 1115872042.64217 */
-    send_cmd(p10id, "G !%s %s %s", militime_float(NULL), server,
-             militime_float(NULL));
+    /* AB G !1115872042.64217 denora.nomadirc.net 1115872042.64217  
+     * [OUT]: AB RI AL ABAAB 1165972073 45741 :<No client start time>
+     * [IN ]: AL RO ScaryNet.Org ABAAB 1165972073 45741 :<No client start time>
+     */
+
+    Uid *ud;
+    Server *s;
+    struct timeval t;
+    ud = find_uid(s_StatServ);
+    s = server_find(server);
+    gettimeofday(&t, NULL);
+
+    send_cmd(p10id, "RI %s %s %ld %ld",
+             ((s
+               && s->suid) ? s->suid : server),
+             (ud ? ud->uid : s_StatServ), t.tv_sec, t.tv_usec);
 }
 
 void nefarious_cmd_ctcp(char *source, char *dest, char *buf)
@@ -924,7 +959,7 @@ void nefarious_cmd_motd(char *sender, char *server)
     ud = find_uid(sender);
     s = server_find(server);
 
-    send_cmd((ud ? ud->uid : sender), "MO %s",
+    send_cmd((ud ? ud->uid : sender), "MO :%s",
              (s ? (s->suid ? s->suid : server) : server));
 
 }
@@ -974,7 +1009,7 @@ int DenoraInit(int argc, char **argv)
     moduleAddVersion("$Id$");
     moduleSetType(PROTOCOL);
 
-    pmodule_ircd_version("Nefarious IRCu 0.4.0");
+    pmodule_ircd_version("Nefarious IRCu 0.4.0+");
     pmodule_ircd_cap(myIrcdcap);
     pmodule_ircd_var(myIrcd);
     pmodule_ircd_useTSMode(0);

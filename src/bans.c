@@ -290,10 +290,12 @@ const char *ban_char_to_action(char *val)
 void p10_gline(char *source, int ac, char **av)
 {
     Server *s = NULL;
+    User *u = NULL;
     char buf[BUFSIZE];
     char *user;
     char *host;
     char *address;
+    char *setby;
 
     *buf = '\0';
 
@@ -308,11 +310,26 @@ void p10_gline(char *source, int ac, char **av)
 
     if (source) {
         s = server_find(source);
+        if (!s) {
+            u = user_find(source);
+        }
+    }
+    if (s) {
+        setby = s->name;
+    } else if (u) {
+        setby = u->sqlnick;
+    } else {
+        setby = source;
     }
 
     SET_SEGV_LOCATION();
 
-    address = myStrGetToken(av[1], '!', 1);
+    address = (*av[1] == '!') ? myStrGetToken(av[1], '!', 1) : av[1];
+    if (*address == '+') {
+        address = myStrGetToken(address, '+', 1);
+    } else if (*address == '-') {
+        address = myStrGetToken(address, '-', 1);
+    }
     user = myStrGetToken(address, '@', 0);
     host = myStrGetToken(address, '@', 1);
 
@@ -321,8 +338,7 @@ void p10_gline(char *source, int ac, char **av)
     if (*av[1] == '+') {
         if (ac >= 4) {
             ircsnprintf(buf, BUFSIZE - 1, "%ld", (long int) time(NULL));
-            sql_do_server_bans_add(NULL, user, host,
-                                   (s ? s->name : source), buf, av[2],
+            sql_do_server_bans_add(NULL, user, host, setby, buf, av[2],
                                    av[3]);
         } else {
             alog(LOG_DEBUG,
@@ -721,7 +737,7 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
             if (mysql_num_rows(mysql_res) == 0) {
                 rdb_query
                     (QUERY_LOW,
-                     "INSERT INTO %s (type, user, host, setby, setat, expires, reason) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',%ld, %ld,\'%s\')",
+                     "INSERT INTO %s (type, user, host, setby, setat, expires, reason) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',%ld,%ld,\'%s\')",
                      GlineTable, type, sqluser, sqlhost, setby,
                      strtoul(setat, NULL, 10), strtoul(expires, NULL, 10),
                      reason);
@@ -757,7 +773,7 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
             if (mysql_num_rows(mysql_res) == 0) {
                 rdb_query
                     (QUERY_LOW,
-                     "INSERT INTO %s (user, host, setby, setat, expires, reason) VALUES(\'%s\',\'%s\',\'%s\',%ld, %ld,\'%s\')",
+                     "INSERT INTO %s (user, host, setby, setat, expires, reason) VALUES(\'%s\',\'%s\',\'%s\',%ld,%ld,\'%s\')",
                      GlineTable, sqluser, sqlhost, setby, setattime,
                      expire, reason);
             } else {

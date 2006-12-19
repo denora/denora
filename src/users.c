@@ -818,7 +818,7 @@ User *find_byuid(const char *uid)
     while (u) {
         next = next_uid();
         if (u && u->uid) {
-            if (!stricmp(uid, u->uid)) {
+            if (!strcmp(uid, u->uid)) {
                 return u;
             }
         }
