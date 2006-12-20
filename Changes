@@ -269,6 +269,7 @@ Provided by Nomad Dev. <dev@nomadirc.net> - 2005
 08/05 F Fixed maxvalues setting on clean installs.                [#122]
 
 Provided by Hal9000 <hal9000@pimpmylinux.org>
+12/20 F Fixed Denora crashing on certain user quits/parts         [#363]
 12/19 A Added vhost support to Nefarious                          [#346]
 12/19 F Fixed many P10-related bugs, especially on Nefarious      [#348]
 12/19 F Fixed P10 nicks getting truncated in sql_do_addusers      [#364]

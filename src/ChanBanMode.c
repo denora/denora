@@ -389,7 +389,7 @@ void sql_channel_invite(int type, Channel * c, char *mask)
                   ChanInviteTable, sqlchan);
     }
     SET_SEGV_LOCATION();
-    if (sqlmask) {
+    if (mask && sqlmask) {
         free(sqlmask);
     }
     if (sqlchan) {
