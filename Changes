@@ -344,6 +344,10 @@ Provided by Obi_Wan <webmaster@st-city.net>
 05/12 F Fix to sumuser not replying when successful               [#247]
 
 Provided by OUTsider <outsider@scarynet.org>
+01/05 F Improved query generation in sql_do_addusers              [ #00]
+01/05 F Use strlcpy/strlcat instead of strcpy/strcat              [ #00]
+01/05 F Make P10 send EA only when EOB comes from uplink server   [ #00]
+01/05 U Updated Dutch language file                               [ #00]
 12/04 F Fixed P10 ircds not parting channels                      [ #00]
 
 

@@ -72,10 +72,10 @@ void add_line(char **buf, char *line)
     if (*buf != NULL) {
         oldlen = strlen(*buf);
         tmp = malloc(oldlen + 1);
-        strcpy(tmp, *buf);
+        strlcpy(tmp, *buf, sizeof(tmp));
         *buf = realloc(*buf, oldlen + strlen(line) + 1);
-        strcpy(*buf, tmp);
-        strcat(*buf, line);
+        strlcpy(*buf, tmp, sizeof(buf));
+        strlcat(*buf, line, sizeof(buf));
         free(tmp);
     } else
         *buf = strdup(line);

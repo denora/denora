@@ -580,10 +580,10 @@ STATS_CHANSTATS_RENAMEUSER_SYNTAX
 	CHANSTATS RENAME gebruiker newgebruiker
 
 STATS_CHANSTATS_SUMUSER_DONE
-	The data from %s has been transferred to %s
+	De gegevens van %s zijn nu overgezet naar %s
 
 STATS_CHANSTATS_RENAMEUSER_DONE
-	User %s has been renamed to %s
+	Gebruiker %s is hernoemd naar %s
 
 # EXCLUDE responses
 STAT_EXCLUDE_SYNTAX
@@ -602,7 +602,7 @@ STAT_EXCLUDE_NOT_FOUND
 	%s wordt niet uitgesloten van statistieken.
 
 STAT_EXCLUDE_LIST_HEADER
-	Exclude List
+	Uitzonderingen lijst
 
 # EXPORT responses
 STATS_EXPORT_CHANNELS
@@ -678,10 +678,10 @@ STATS_MESSAGE
 	%2i %-16s letters: %s, woorden: %s, regels: %s, smileys: %s, acties: %s
 
 STATS_MESSAGE_ONE
-	letters: %s, words: %s, lines: %s, smileys: %s, actions: %s
+	letters: %s, woorden: %s, regels: %s, smileys: %s, acties: %s
 
 STATS_CHANNEL_PEAK
-	Channel user peak was %d
+	Kanaal gebruikers piek was %d
 
 # ENVINFO responses
 STAT_ENVINFO_HEADER
@@ -711,7 +711,7 @@ STATS_HTML_EXPORTED
 # HTML code
 HTML_LANG
 	<META HTTP-EQUIV="CHARSET" CONTENT="ISO-8859-1">
-	<META HTTP-EQUIV="CONTENT-LANGUAGE" CONTENT="German">
+	<META HTTP-EQUIV="CONTENT-LANGUAGE" CONTENT="Dutch">
 
 HTML_NETSTATS_HEADER
 	<table border = 0><tr><th colspan="4"><b>Netwerk Statistieken:</b></th></tr>
@@ -837,7 +837,7 @@ HTML_CHAN_TOP10_HEADER
 	<table border = 0><tr><th>Kanaal</th><th align=right>Totaal aantal binnenkomsten</th></tr>
 
 HTML_CHAN_TOP10_FOOTER
-	</table>(*) indicates channel is active at the moment
+	</table>(*) geeft aan dat kanaal op dit moment actief is
 
 HTML_CHAN_TOP10_CONTENT
 	<tr><td>%s (*)</td><td align=right>%ld</td></tr>
@@ -1416,62 +1416,62 @@ ALOG_MOD_CALLBACK_DISPLAY
 	debug: module CallBack toegevoegd: [%s] door uitvoering op %ld
 
 ALOG_VHOST_NONEXISTANT_USER
-	user: SETHOST/CHGHOST for nonexistent user %s
+	user: SETHOST/CHGHOST voor niet existerende gebruiker %s
 
 ALOG_CHGNAME_NONEXISTANT_USER
-	user: SETNAME/CHGNAME for nonexistent user %s
+	user: SETNAME/CHGNAME voor niet existerende gebruiker %s
 
 ALOG_CHGIDENT_NONEXISTANT_USER
-	user: SETNAME/CHGNAME for nonexistent user %s
+	user: SETNAME/CHGNAME voor niet existerende gebruiker %s
 
 STAT_ADMIN_ALREADY
-	%s is already a stats admin
+	%s is reeds een stats admin
 
 STAT_ADMIN_CREATED
-	%s is now a Stats Admin
+	%s is nu een Stats Admin
 
 STAT_ADMIN_DELETED
-	%s has been removed from Stats Admin
+	%s is verwijdert worden van de Stats Admin
 
 STAT_ADMIN_NOTADMIN
-	%s is not a Stats Admin
+	%s is geen Stats Admin
 
 STAT_ADMIN_SHOW
-	Username: %s Hostmask: %s Language ID: %d
+	Gebruiker: %s Hostmask: %s Taal ID: %d
 
 STAT_HELP_ADMIN
-	Add or Remove a Stats Admin does not affect admins whom
-	Are added in the config file.	
+	Het toevoegen of verwijderen van Admins heeft geen effect
+	op beheerders die in het config bestand toegevoegd zijn.
 	
-	ADMIN ADD username password [hostmask] [lang-number]
-	ADMIN DEL username
-	ADMIN SETPASS username new-password
-	ADMIN SHOW username
+	ADMIN ADD gebruikersnaam wachtwoord [hostmask] [taalid]
+	ADMIN DEL gebruikersnaam
+	ADMIN SETPASS gebruikersnaam nieuw-wachtwoord
+	ADMIN SHOW gebruikersnaam
 	ADMIN LIST
 	
-	The ADMIN ADD command adds the specified user as a Stats Admin
+	Het ADMIN ADD commando voegt een gespecificeerde gebruiker toe.
 	
-	The ADMIN DEL command removes the specified user from Stats Admin
+	Het ADMIN DEL commando verwijdert een gespecificeerde gebruiker.
 	
-	The ADMIN SETPASS command allows you to change the password of
-	the specified admin.
+	Het ADMIN SETPASS commando stelt je in staat om het wachtwoord te
+	wijzigen van een bepaalde admin.
 	
-	The ADMIN SHOW command allows you to see the details of the
-	specified admin
+	Het ADMIN SHOW commando geeft je meer informatie betreffende een
+	administrator.
 	
-	The ADMIN LIST command will display a list of all currently
-	available Stat Admins accounts
+	Het ADMIN LIST commando geeft een lijst weer van alle momenteel
+	in het systeem aanwezige beheerders weer.
 	
-	Limited to Stats Admin
+	Vereist: Stats Admin
 
 STAT_ADMIN_SYNTAX
-	ADMIN [ADD|DEL|LIST] user pass [host] [langnum]
+	ADMIN [ADD|DEL|LIST] gebruiker wachtwoord [host] [taalnum]
 
 STAT_ADMIN_DELETE_CONFIG
-	Can not delete %s as they are stored in the config file
+	Kan %s niet verwijderen. Deze is in het configuratie bestand aanwezig.
 
 STAT_CHGPASS_OK
-	Password has been changed for %s
+	Wachtwoord van %s gewijzigd.
 
 STAT_CHGPASS_CONFIG
-	Can not change config file admin passwords
+	Kan wachtwoorden van in het configuratie bestand aanwezige beheerder niet wijzigen.

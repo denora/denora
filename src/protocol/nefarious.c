@@ -356,10 +356,16 @@ int denora_event_error(char *source, int ac, char **av)
 
 int denora_event_eob(char *source, int ac, char **av)
 {
+    Server *s;
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    send_cmd(NULL, "%s EA", p10id);
+
+    s = server_find(source);
+    if (stricmp(s->name, denora->uplink) == 0) {
+        send_cmd(NULL, "%s EA", p10id);
+    }
     update_sync_state(source, SYNC_COMPLETE);
     return MOD_CONT;
 }

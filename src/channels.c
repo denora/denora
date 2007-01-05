@@ -262,6 +262,8 @@ void sql_do_addusers(int chanid, char *users)
 {
     int op, voice, halfop, owner, protect, shunned;
     char *nextusers;
+    char flagbuf[BUFSIZE];
+    char valuebuf[BUFSIZE];
     int nickid, status_flag;
     User *u;
 
@@ -322,44 +324,45 @@ void sql_do_addusers(int chanid, char *users)
         users = rdb_escape((u ? u->nick : users));
         nickid = db_checknick((u ? u->nick : users));
         if (nickid != -1) {
-            if (ircd->owner && ircd->protect && ircd->halfop
-                && ircd->gagged) {
-                rdb_query(QUERY_LOW,
-                          "INSERT IGNORE INTO %s (nickid, chanid, mode_lo, mode_lv, mode_lq, mode_lh, mode_la, mode_lg) VALUES (%d, %d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\', \'%s\')",
-                          IsOnTable, nickid, chanid, (op ? "Y" : "N"),
-                          (voice ? "Y" : "N"), (owner ? "Y" : "N"),
-                          (halfop ? "Y" : "N"), (protect ? "Y" : "N"),
-                          (shunned ? "Y" : "N"));
-            } else if (ircd->owner && ircd->protect && ircd->halfop
-                       && !ircd->gagged) {
-                rdb_query(QUERY_LOW,
-                          "INSERT IGNORE INTO %s (nickid, chanid, mode_lo, mode_lv, mode_lq, mode_lh, mode_la) VALUES (%d, %d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\')",
-                          IsOnTable, nickid, chanid, (op ? "Y" : "N"),
-                          (voice ? "Y" : "N"), (owner ? "Y" : "N"),
-                          (halfop ? "Y" : "N"), (protect ? "Y" : "N"));
-            } else if (!ircd->owner && ircd->protect && ircd->halfop
-                       && !ircd->gagged) {
-                rdb_query(QUERY_LOW,
-                          "INSERT IGNORE INTO %s (nickid, chanid, mode_lo, mode_lv, mode_lh, mode_la) VALUES (%d, %d,\'%s\',\'%s\',\'%s\',\'%s\')",
-                          IsOnTable, nickid, chanid, (op ? "Y" : "N"),
-                          (voice ? "Y" : "N"), (halfop ? "Y" : "N"),
-                          (protect ? "Y" : "N"));
-            } else if (!ircd->owner && !ircd->protect && ircd->halfop
-                       && !ircd->gagged) {
-                rdb_query(QUERY_LOW,
-                          "INSERT IGNORE INTO %s (nickid, chanid, mode_lo, mode_lv, mode_lh) VALUES (%d, %d,\'%s\',\'%s\',\'%s\')",
-                          IsOnTable, nickid, chanid, (op ? "Y" : "N"),
-                          (voice ? "Y" : "N"), (halfop ? "Y" : "N"));
-            } else if (!ircd->owner && !ircd->protect && !ircd->halfop
-                       && !ircd->gagged) {
-                rdb_query(QUERY_LOW,
-                          "INSERT IGNORE INTO %s (nickid, chanid, mode_lo, mode_lv) VALUES (%d, %d,\'%s\',\'%s\')",
-                          IsOnTable, nickid, chanid, (op ? "Y" : "N"),
-                          (voice ? "Y" : "N"));
-            } else {
-                alog(LOG_ERROR,
-                     "ERROR: Unable to insert user in ison table!");
+            /* Build the query dynamically */
+            /* First, setup the head and tail for the basic query */
+            ircsnprintf(flagbuf, sizeof(flagbuf),
+                        "INSERT IGNORE INTO %s (nickid, chanid, mode_lo, mode_lv",
+                        IsOnTable);
+            ircsnprintf(valuebuf, sizeof(valuebuf),
+                        ") VALUES (%d, %d, \'%s\', \'%s\'", nickid, chanid,
+                        (op ? "Y" : "N"), (voice ? "Y" : "N"));
+
+            /* Next, check if an ircd supports a certain mode and add */
+            if (ircd->owner) {
+                strlcat(flagbuf, ", mode_lq", sizeof(flagbuf));
+                strlcat(valuebuf, (owner ? ",\'Y\'" : ", \'N\'"),
+                        sizeof(valuebuf));
             }
+            if (ircd->protect) {
+                strlcat(flagbuf, ", mode_la", sizeof(flagbuf));
+                strlcat(valuebuf, (protect ? ",\'Y\'" : ", \'N\'"),
+                        sizeof(valuebuf));
+            }
+            if (ircd->halfop) {
+                strlcat(flagbuf, ", mode_lh", sizeof(flagbuf));
+                strlcat(valuebuf, (halfop ? ",\'Y\'" : ", \'N\'"),
+                        sizeof(valuebuf));
+            }
+            if (ircd->gagged) {
+                strlcat(flagbuf, ", mode_lg", sizeof(flagbuf));
+                strlcat(valuebuf, (shunned ? ",\'Y\'" : ", \'N\'"),
+                        sizeof(valuebuf));
+            }
+
+            /* Close the querystring */
+            strlcat(valuebuf, ")", sizeof(valuebuf));
+
+            /* Put it together */
+            strlcat(flagbuf, valuebuf, sizeof(valuebuf));
+
+            /* Execute */
+            rdb_query(QUERY_LOW, flagbuf);
         } else {
             alog(LOG_NONEXISTANT,
                  langstr(ALOG_DEBUG_NONEXISTANT_USER_JOIN),
