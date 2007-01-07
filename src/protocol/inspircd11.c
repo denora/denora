@@ -1121,7 +1121,8 @@ int DenoraInit(int argc, char **argv)
         protocol_debug(NULL, argc, argv);
     }
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id$");
+    moduleAddVersion
+        ("$Id$");
     moduleSetType(PROTOCOL);
 
     pmodule_ircd_version("InspIRCd 1.1 Beta 8+");
