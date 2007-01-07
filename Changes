@@ -269,6 +269,7 @@ Provided by Nomad Dev. <dev@nomadirc.net> - 2005
 08/05 F Fixed maxvalues setting on clean installs.                [#122]
 
 Provided by Hal9000 <hal9000@pimpmylinux.org>
+01/06 U Updated GeoIP.dat                                         [ #00]
 12/20 F Fixed Denora crashing on certain user quits/parts         [#363]
 12/19 A Added vhost support to Nefarious                          [#346]
 12/19 F Fixed many P10-related bugs, especially on Nefarious      [#348]
@@ -324,6 +325,9 @@ Provided by Hal9000 <hal9000@pimpmylinux.org>
 12/13 U Updated mydbgen to add timeadded                          [ #00]
 04/08 F Fixed problem with mydbgen cause by previous patch        [#228]
 12/07 F Fixes to hourly cron events                               [ #00]
+
+Provided by w00t <robin@barafranca.com>
+01/06 F Fixed inspircd11 module not parsing JOIN correctly        [#372]
 
 Provided by dotslasher <dotslasher@staticbox.com>
 01/04 U Updated nl.l file                    	                  [ #00]

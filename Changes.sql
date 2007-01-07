@@ -1,5 +1,5 @@
-Denora Version svn
--------------------
+Denora Version SVN
+------------------
 
 CREATE TABLE `admin` (
   `id` tinyint(3) NOT NULL auto_increment,
@@ -17,7 +17,7 @@ ALTER TABLE `server` ADD `lastpingtime` INT( 15 ) NOT NULL AFTER `maxpingtime` ;
 ALTER TABLE `user` ADD `lastquitmsg` VARCHAR( 255 ) NOT NULL AFTER `lastquit` ;
 
 Denora Version 1.1.0
--------------------
+--------------------
 
   /* this query is for ircds with +f flood modes */
   ALTER TABLE `chan` CHANGE `mode_lf_data` `mode_lf_data` VARCHAR( 255 ) NOT NULL 

@@ -1,5 +1,5 @@
-Denora Version svn
--------------------
+Denora Version SVN
+------------------
 *** New Strings:
 	STAT_STATS_PAGE
 	STATS_HELP_CHANNEL_3
@@ -35,7 +35,7 @@ Denora Version svn
 *** Del Strings:
 
 Denora Version 1.1.0
--------------------
+--------------------
 *** New Strings:
 	STAT_CHANSTATS_CHAN_LARGENET
 	STAT_CHANSTATS_LOGCHAN

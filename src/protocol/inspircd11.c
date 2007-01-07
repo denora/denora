@@ -1,5 +1,5 @@
 
-/* InspIRCd 1.1 Beta 5 functions
+/* InspIRCd 1.1 Beta 8 functions
  *
  * (C) 2005-2006 Craig Edwards <brain@inspircd.org>
  * (C) 2004-2006 Denora Team
@@ -45,7 +45,7 @@
 
 /* ***** WARNING ******
  *
- * While InspIRCd 1.1 beta 5 is relatively stable, it is very picky
+ * While InspIRCd 1.1 beta 8 is relatively stable, it is very picky
  * about the sources commands come from. If i've made commands
  * come from nicks or servers here, where it looks odd to you,
  * this is NORMAL and the way it should be done.
@@ -761,7 +761,7 @@ int denora_event_join(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    if (ac != 1)
+    if (ac != 2)
         return MOD_CONT;
     do_join(source, ac, av);
     return MOD_CONT;
@@ -1124,7 +1124,7 @@ int DenoraInit(int argc, char **argv)
     moduleAddVersion("$Id$");
     moduleSetType(PROTOCOL);
 
-    pmodule_ircd_version("InspIRCd 1.1 Beta 5+");
+    pmodule_ircd_version("InspIRCd 1.1 Beta 8+");
     pmodule_ircd_cap(myIrcdcap);
     pmodule_ircd_var(myIrcd);
     pmodule_ircd_useTSMode(0);
