@@ -936,7 +936,7 @@ void nefarious_cmd_ping(char *server)
     s = server_find(server);
     gettimeofday(&t, NULL);
 
-    send_cmd(p10id, "RI %s %s %ld %ld",
+    send_cmd(p10id, "RI %s %s %ld %ld :<No client start time>",
              ((s
                && s->suid) ? s->suid : server),
              (ud ? ud->uid : s_StatServ), t.tv_sec, t.tv_usec);
@@ -972,13 +972,19 @@ void nefarious_cmd_motd(char *sender, char *server)
 
 int denora_event_notice(char *source, int ac, char **av)
 {
+    User *user_s = NULL;
+    User *user_r = NULL;
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
     if (ac != 2) {
         return MOD_CONT;
     }
-    m_notice(source, av[0], av[1]);
+
+    user_s = user_find(source);
+    user_r = user_find(av[0]);
+    m_notice(user_s->nick, user_r->nick, av[1]);
     return MOD_CONT;
 }
 

@@ -683,6 +683,7 @@ void do_p10_burst(char *source, int ac, char **av)
     int j = 2;
     char *flag;
     char *modes;
+    int except = 0;
 
     c = findchan(av[0]);
     if (!c) {
@@ -705,24 +706,18 @@ void do_p10_burst(char *source, int ac, char **av)
                 }
                 pc++;
                 break;
-            case '%':          // set bans
+            case '%':          // set bans and excepts
                 i = 0;
+                av[pc]++;
                 while ((s = myStrGetToken(av[pc], ' ', i))) {
-                    m = myStrGetToken(s, '%', 1);
-                    add_ban(c, m);
-                    free(m);
-                    free(s);
-                    i++;
-                }
-                pc++;
-                break;
-            case '~':          // set excepts
-                // (probably won't work since, as i understand, it's sent along with bans so need to test this...)
-                i = 0;
-                while ((s = myStrGetToken(av[pc], ' ', i))) {
-                    m = myStrGetToken(s, '~', 1);
-                    add_exception(c, m);
-                    free(m);
+                    if (strcmp(s, "~") == 0) {
+                        except = 1;
+                    }
+                    if (except == 0) {
+                        add_ban(c, s);
+                    } else {
+                        add_exception(c, s);
+                    }
                     free(s);
                     i++;
                 }

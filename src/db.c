@@ -203,53 +203,40 @@ void db_connect(void)
     } else {
         tablecount++;
     }
-
     if (rdb_check_table(CTCPTable)) {
         rdb_clear_table(CTCPTable);
     } else {
         tablecount++;
     }
-
-    if (ircd->spamfilter) {
-        if (rdb_check_table(SpamTable)) {
-            rdb_clear_table(SpamTable);
-        } else {
-            tablecount++;
-        }
+    if (rdb_check_table(SpamTable)) {
+        rdb_clear_table(SpamTable);
+    } else {
+        tablecount++;
     }
-    if (ircd->except) {
-        if (rdb_check_table(ChanExceptTable)) {
-            rdb_clear_table(ChanExceptTable);
-        } else {
-            tablecount++;
-        }
+    if (rdb_check_table(ChanExceptTable)) {
+        rdb_clear_table(ChanExceptTable);
+    } else {
+        tablecount++;
     }
-    if (ircd->invitemode) {
-        if (rdb_check_table(ChanInviteTable)) {
-            rdb_clear_table(ChanInviteTable);
-        } else {
-            tablecount++;
-        }
+    if (rdb_check_table(ChanInviteTable)) {
+        rdb_clear_table(ChanInviteTable);
+    } else {
+        tablecount++;
     }
     if (rdb_check_table(TLDTable)) {
         rdb_clear_table(TLDTable);
     } else {
         tablecount++;
     }
-    if (ircd->sgline_table) {
-        if (rdb_check_table(SglineTable)) {
-            rdb_clear_table(SglineTable);
-        } else {
-            tablecount++;
-        }
+    if (rdb_check_table(SglineTable)) {
+        rdb_clear_table(SglineTable);
+    } else {
+        tablecount++;
     }
-    if (ircd->sqline_table) {
+    if (rdb_check_table(SqlineTable)) {
         rdb_clear_table(SqlineTable);
-        if (rdb_check_table(SqlineTable)) {
-            rdb_clear_table(SqlineTable);
-        } else {
-            tablecount++;
-        }
+    } else {
+        tablecount++;
     }
     if (!rdb_check_table(AdminTable)) {
         tablecount++;
@@ -257,7 +244,7 @@ void db_connect(void)
 
     if (tablecount) {
         alog(LOG_ERROR,
-             "Denora is missing %d required sql tables, disabling sql",
+             "Denora is missing %d required sql tables, disabling sql. Run ./mydbgen to update your sql db.",
              tablecount);
         denora->do_sql = 0;
         return;
