@@ -1,5 +1,5 @@
 @echo off
-rem Denora (c) 2004-2006 Nomad Dev Team
+rem Denora (c) 2004-2007 Nomad Dev Team
 rem Contact us at info@nomadirc.org
 rem
 rem This program is free but copyrighted software; see the file COPYING for

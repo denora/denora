@@ -1,6 +1,6 @@
 /* InspIRCD
  *
- * (C) 2004-2006 Denora Team
+ * (C) 2004-2007 Denora Team
  * Contact us at info@nomadirc.net
  *
  * Please read COPYING and README for furhter details.
@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  * 
- * $Id: inspircd11.h 728 2006-11-22 16:51:25Z Hal9000 $
+ * $Id$
  *
  */
 

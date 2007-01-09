@@ -1,6 +1,6 @@
 # United States English language file.
 #
-# Denora (c) 2004-2006 Denora Team
+# Denora (c) 2004-2007 Denora Team
 # Contact us at dev@nomadirc.net
 #
 # This program is free but copyrighted software; see the file COPYING for

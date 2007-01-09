@@ -1,6 +1,6 @@
 /* Plexus 3 IRCD
  *
- * (C) 2004-2006 Denora Team
+ * (C) 2004-2007 Denora Team
  * Contact us at info@nomadirc.net
  *
  * Please read COPYING and README for furhter details.

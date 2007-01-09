@@ -1,6 +1,6 @@
 # Italian language file.
 #
-# Denora (c) 2004-2006 Denora Team
+# Denora (c) 2004-2007 Denora Team
 # Contact us at dev@nomadirc.net
 #
 # Italian translation (c) 2005-2006 Hal9000 (hal9000@pimpmylinux.org)

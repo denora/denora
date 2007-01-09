@@ -1,7 +1,7 @@
 /* Macros to handle insertion, deletion, iteration, and searching for
  * linked lists and arrays.
  *
- * (C) 2004-2006 Denora Team
+ * (C) 2004-2007 Denora Team
  * Contact us at info@nomadirc.net
  *
  * Please read COPYING and README for furhter details.
