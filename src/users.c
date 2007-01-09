@@ -1002,7 +1002,7 @@ Uid *find_nickuid(const char *uid)
     for (i = 0; i < 1024; i++) {
         for (u = uidlist[i]; u; u = u->next) {
             if (u->uid) {
-                if (!stricmp(uid, u->uid)) {
+                if (!strcmp(uid, u->uid)) {
                     return u;
                 }
             }

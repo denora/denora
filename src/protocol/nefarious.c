@@ -1,6 +1,6 @@
 /* Nefarious ircu IRCD functions
  *
- * (C) 2004-2006 Denora Team
+ * (C) 2004-2007 Denora Team
  * Contact us at info@nomadirc.net
  *
  * Please read COPYING and README for furhter details.
@@ -18,7 +18,7 @@
 int p10nickcnt = 0;
 
 IRCDVar myIrcd[] = {
-    {"Nefarious IRCu 0.4.0+",   /* ircd name                 */
+    {"Nefarious IRCu 1.0.0+",   /* ircd name                 */
      "+iok",                    /* StatServ mode             */
      IRCD_ENABLE,               /* Vhost                     */
      IRCD_DISABLE,              /* Supports SGlines          */
@@ -26,8 +26,8 @@ IRCDVar myIrcd[] = {
      IRCD_ENABLE,               /* Supports SQlines          */
      IRCD_DISABLE,              /* sqline sql table          */
      IRCD_DISABLE,              /* Supports SZlines          */
-     IRCD_DISABLE,              /* Has exceptions +e         */
-     IRCD_DISABLE,              /* vidents                   */
+     IRCD_ENABLE,               /* Has exceptions +e         */
+     IRCD_ENABLE,               /* vidents                   */
      IRCD_ENABLE,               /* NICKIP                    */
      IRCD_DISABLE,              /* VHOST ON NICK             */
      IRCD_DISABLE,              /* +f                        */
@@ -44,7 +44,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* SJOIN ban char            */
      IRCD_DISABLE,              /* SJOIN except char         */
      IRCD_DISABLE,              /* SJOIN invite char         */
-     IRCD_ENABLE,               /* umode for vhost           */
+     's',                       /* umode for vhost           */
      IRCD_DISABLE,              /* owner                     */
      IRCD_DISABLE,              /* protect                   */
      IRCD_ENABLE,               /* halfop                    */
@@ -52,8 +52,8 @@ IRCDVar myIrcd[] = {
      NULL,                      /* channel modes             */
      IRCD_DISABLE,              /* flood                     */
      IRCD_DISABLE,              /* flood other               */
-     IRCD_ENABLE,               /* vhost                     */
-     IRCD_DISABLE,              /* vhost other               */
+     'x',                       /* vhost                     */
+     'f',                       /* vhost other               */
      IRCD_DISABLE,              /* channek linking           */
      IRCD_ENABLE,               /* p10                       */
      IRCD_DISABLE,              /* TS6                       */
@@ -61,7 +61,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* channel mode gagged       */
      IRCD_DISABLE,              /* spamfilter                */
      'b',                       /* ban char                  */
-     IRCD_DISABLE,              /* except char               */
+     'e',                       /* except char               */
      IRCD_DISABLE,              /* invite char               */
      IRCD_DISABLE,              /* zip                       */
      IRCD_DISABLE,              /* ssl                       */
@@ -76,7 +76,7 @@ IRCDVar myIrcd[] = {
 
 IRCDCAPAB myIrcdcap[] = {
     {
-     0,                         /* NOQUIT       */
+     1,                         /* NOQUIT       */
      0,                         /* TSMODE       */
      0,                         /* UNCONNECT    */
      0,                         /* NICKIP       */
@@ -450,6 +450,8 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("U",        denora_event_null); addCoreMessage(IRCD,m);    
     /* End of Burst Acknowledge */
     m = createMessage("EA",       denora_event_null); addCoreMessage(IRCD,m);
+    /* FAKEHOST */
+    m = createMessage("FA",       denora_event_fakehost); addCoreMessage(IRCD,m);    
 }
 
 /* *INDENT-ON* */
@@ -988,6 +990,16 @@ int denora_event_notice(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
+int denora_event_fakehost(char *source, int ac, char **av)
+{
+    User *ud;
+
+    ud = user_find(av[0]);
+
+    change_user_host(ud->nick, av[1]);
+    return MOD_CONT;
+}
+
 void moduleAddIRCDCmds()
 {
     pmodule_cmd_nick(nefarious_cmd_nick);
@@ -1021,7 +1033,7 @@ int DenoraInit(int argc, char **argv)
     moduleAddVersion("$Id$");
     moduleSetType(PROTOCOL);
 
-    pmodule_ircd_version("Nefarious IRCu 0.4.0+");
+    pmodule_ircd_version("Nefarious IRCu 1.0.0+");
     pmodule_ircd_cap(myIrcdcap);
     pmodule_ircd_var(myIrcd);
     pmodule_ircd_useTSMode(0);

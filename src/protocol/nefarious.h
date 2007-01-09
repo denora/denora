@@ -63,6 +63,7 @@ int denora_event_burst(char *source, int ac, char **av);
 int denora_event_create(char *source, int ac, char **av);
 int denora_event_pong(char *source, int ac, char **av);
 int denora_event_sgline(char *source, int ac, char **av);
+int denora_event_fakehost(char *source, int ac, char **av);
 void IRCDModeInit(void);
 int DenoraInit(int argc, char **argv);
 void moduleAddIRCDMsgs(void);

@@ -712,6 +712,9 @@ void do_p10_burst(char *source, int ac, char **av)
                 while ((s = myStrGetToken(av[pc], ' ', i))) {
                     if (strcmp(s, "~") == 0) {
                         except = 1;
+                        free(s);
+                        i++;
+                        continue;
                     }
                     if (except == 0) {
                         add_ban(c, s);
