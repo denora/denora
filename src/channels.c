@@ -183,7 +183,7 @@ void InitStatsChanList(void)
 void sql_do_part(char *chan, User * u)
 {
     char *sqlchan;
-    int chanid, nickid, users;
+    int chanid, nickid;
 
     SET_SEGV_LOCATION();
     sqlchan = rdb_escape(chan);
@@ -194,13 +194,9 @@ void sql_do_part(char *chan, User * u)
         rdb_query(QUERY_LOW,
                   "DELETE FROM %s WHERE nickid=%d AND chanid=%d",
                   IsOnTable, nickid, chanid);
-        users = db_getchannel_users(sqlchan);
-        if (users) {
-            users--;
-            rdb_query(QUERY_LOW,
-                      "UPDATE %s SET currentusers=%d WHERE chanid=%d",
-                      ChanTable, users, chanid);
-        }
+        rdb_query(QUERY_LOW,
+                  "UPDATE %s SET currentusers=currentusers-1 WHERE chanid=%d",
+                  ChanTable, chanid);
         db_checkemptychan(chanid);
     }
     SET_SEGV_LOCATION();
@@ -913,6 +909,7 @@ void do_kick(const char *source, int ac, char **av)
                 rdb_query(QUERY_LOW,
                           "UPDATE %s SET kickcount=%d WHERE chanid=%d",
                           ChanTable, c2->stats->kickcount, chanid);
+                sql_do_part(chan, user);
                 free(chan);
             }
         }

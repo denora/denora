@@ -481,7 +481,7 @@ int db_checknick_nt(char *nick)
             (myNumToken(host, '.') >= 2) ? strchr(host, '.') : host;
         queryhost = StrReverse(queryhost);
         rdb_query(QUERY_HIGH,
-                  "SELECT nickid,nick FROM %s WHERE (username=\'%s\' AND REVERSE(hostname) LIKE \'%s.%%\' AND online=\'N\') OR nick=\'%s\' ORDER BY connecttime DESC",
+                  "SELECT nickid,nick FROM %s WHERE (username=\'%s\' AND REVERSE(hostname) LIKE \'%s%%\' AND online=\'N\') OR nick=\'%s\' ORDER BY connecttime DESC",
                   UserTable, username, queryhost, u->sqlnick);
 
 #ifdef USE_MYSQL
@@ -754,7 +754,7 @@ void db_removenick_nt(char *nick, char *reason)
                 (myNumToken(host, '.') >= 2) ? strchr(host, '.') : host;
             queryhost = StrReverse(queryhost);
             rdb_query(QUERY_HIGH,
-                      "SELECT nick FROM %s WHERE username=\'%s\' AND REVERSE(hostname) LIKE \'%s.%%\' AND online=\'Y\' AND nick != \'%s\' ORDER BY connecttime DESC",
+                      "SELECT nick FROM %s WHERE username=\'%s\' AND REVERSE(hostname) LIKE \'%s%%\' AND online=\'Y\' AND nick != \'%s\' ORDER BY connecttime DESC",
                       UserTable, username, queryhost, u->sqlnick);
 #ifdef USE_MYSQL
             mysql_res = mysql_store_result(mysql);
@@ -846,7 +846,6 @@ void db_removefromchans(int nickid)
 #ifdef USE_MYSQL
     MYSQL_RES *mysql_res;
     char **res;
-    int users;
     int chanid;
 #endif
 
@@ -870,14 +869,10 @@ void db_removefromchans(int nickid)
     if (mysql_res) {
         while ((res = mysql_fetch_row(mysql_res))) {
             char *chan = rdb_escape(res[1]);
-            users = db_getchannel_users(chan);
             chanid = db_getchannel(chan);
-            if (users) {
-                users--;
-                rdb_query(QUERY_LOW,
-                          "UPDATE %s SET currentusers=%d WHERE chanid=%d",
-                          ChanTable, users, chanid);
-            }
+            rdb_query(QUERY_LOW,
+                      "UPDATE %s SET currentusers=currentusers-1 WHERE chanid=%d",
+                      ChanTable, chanid);
             db_checkemptychan(atoi(res[0]));
             free(chan);
         }
