@@ -33,7 +33,8 @@ int DenoraInit(int argc, char **argv)
         protocol_debug(NULL, argc, argv);
     }
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id$");
+    moduleAddVersion
+        ("$Id$");
     moduleSetType(CORE);
 
     evt = createCronEvent(CRON_MIDNIGHT, users_daily);

@@ -768,7 +768,8 @@ int DenoraInit(int argc, char **argv)
     }
 
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id$");
+    moduleAddVersion
+        ("$Id$");
     moduleSetType(PROTOCOL);
 
     pmodule_ircd_version("LiquidIRCd 1.0.4+");

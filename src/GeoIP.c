@@ -583,6 +583,7 @@ unsigned long lookupaddress(const char *host)
     struct hostent *phe = &phe2;
     int result = 0;
     if (addr == INADDR_NONE) {
+        alog(LOG_DEBUG, "debug: Looking up hostname %s", host);
         phe = gethostbyname(host);
         if (!phe || result != 0) {
             return 0;

@@ -43,7 +43,8 @@ int DenoraInit(int argc, char **argv)
         protocol_debug(NULL, argc, argv);
     }
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id$");
+    moduleAddVersion
+        ("$Id$");
     moduleSetType(CORE);
 
     c = createCommand("EXCLUDE", do_exclude, is_stats_admin, -1, -1, -1,

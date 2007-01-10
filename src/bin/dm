@@ -64,6 +64,7 @@ my (
     $ver_patch,
     $ver_build,
     $ver_revision,
+    $ver_extra,
     $ver_comment,
     $svn_comment,
     $cver,
@@ -354,6 +355,7 @@ sub do_put() {
         $ver_minor = $_ if (/VERSION_MINOR/);
         $ver_patch = $_ if (/VERSION_PATCH/);
         $ver_build = $_ if (/VERSION_BUILD/);
+        $ver_extra = $_ if (/VERSION_EXTRA/);
     }
     close(REV);
 
@@ -362,9 +364,10 @@ sub do_put() {
     ($junk, $ver_minor) = split('"', $ver_minor);
     ($junk, $ver_patch) = split('"', $ver_patch);
     ($junk, $ver_build) = split('"', $ver_build);
+    ($junk, $ver_extra) = split('"', $ver_extra);
 
-    $cver = "$ver_major.$ver_minor.$ver_patch ($ver_build)";
-    $nver = "$ver_major.$ver_minor.$ver_patch ($ver_revision)";
+    $cver = "$ver_major.$ver_minor.$ver_patch.$ver_build ($ver_extra)";
+    $nver = "$ver_major.$ver_minor.$ver_patch.$ver_revision ($ver_extra)";
 
     # Greet the developer
     banner();

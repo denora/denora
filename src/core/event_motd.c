@@ -36,7 +36,8 @@ int DenoraInit(int argc, char **argv)
         protocol_debug(NULL, argc, argv);
     }
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id$");
+    moduleAddVersion
+        ("$Id$");
     moduleSetType(CORE);
 
     m = createMessage("372", denora_event_372);
