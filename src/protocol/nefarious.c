@@ -270,56 +270,107 @@ int denora_event_nick(char *source, int ac, char **av)
     temp = sstrdup(source);
 
     if (ac != 2) {
+        char *realname, *ip, *nick;
+        char *ident, *host, *modes, *modes2;
+        char *uid = "";
+        char *account = "";
+        char *fakehost = NULL;
+        char *sethost = NULL;
+        char *timestamp = "";
+        char hhostbuf[255];
+        int ishidden = 0, isaccount = 0;
+
         s = server_find(source);
         *source = '\0';
-        if (ac == 11) {
-            /* Source Ab
-             * av[0] = Rudolf
-             * av[1] = 1
-             * av[2] = 1165496998
-             * av[3] = letal
-             * av[4] = 89.32.218.79
-             * av[5] = +irxh
-             * av[6] = LetaL
-             * av[7] = letal@LetaL.helpers.beirut.com       
-             * av[8] = BZINpP
-             * av[9] = AbM27
-             * av[10] = 7 everything
-             */
-            ipchar = nefarious_nickip(av[8]);
-            vhost = myStrGetToken(av[7], '@', 1);
-            user =
-                do_nick(source, av[0], av[3], av[4], (s ? s->name : temp),
-                        av[10], strtoul(av[2], NULL, 10), 0,
-                        ipchar, vhost, av[9], strtoul(av[1],
-                                                      NULL, 10), av[5]);
-            free(ipchar);
-        } else if (ac == 10) {
-            ipchar = nefarious_nickip(av[7]);
-            user =
-                do_nick(source, av[0], av[3], av[4], (s ? s->name : temp),
-                        av[9], strtoul(av[2], NULL, 10), 0,
-                        ipchar, NULL, av[8], strtoul(av[1],
-                                                     NULL, 10), av[5]);
-            free(ipchar);
-        } else if (ac == 9) {
-            ipchar = nefarious_nickip(av[6]);
-            user =
-                do_nick(source, av[0], av[3], av[4], (s ? s->name : temp),
-                        av[8], strtoul(av[2], NULL, 10), 0, ipchar, NULL,
-                        av[7], strtoul(av[1], NULL, 10), av[5]);
-            free(ipchar);
-        } else if (ac == 8) {
-            ipchar = nefarious_nickip(av[5]);
-            do_nick(source, av[0], av[3], av[4], (s ? s->name : temp),
-                    av[7], strtoul(av[2], NULL, 10), 0,
-                    ipchar, NULL, av[6], strtoul(av[1], NULL, 10), NULL);
-            free(ipchar);
-        } else {
-            alog(LOG_DEBUG,
-                 "Unknown NICK formatted message please report the following");
-            protocol_debug(temp, ac, av);
+
+        realname = strdup(av[ac - 1]);
+        uid = strdup(av[ac - 2]);
+        ip = strdup(av[ac - 3]);
+        nick = strdup(av[0]);
+        ident = strdup(av[3]);
+        host = strdup(av[4]);
+        modes = strdup(av[5]);
+        modes2 = strdup(av[5]);
+
+        if (strpbrk(av[5], "+")) {
+            int cnt = 6;
+            int c = 1;
+            char *uaccount = "";
+            char *accb, *acc = NULL;
+
+            while (*modes) {
+                switch (*modes) {
+                case 'r':
+                    isaccount = 1;
+                    uaccount = av[cnt++];
+                    for (acc = strtok_r(uaccount, ":", &accb);
+                         acc; acc = strtok_r(NULL, ":", &accb)) {
+                        if (c == 1)
+                            account = strdup(acc);
+                        else if (c == 2)
+                            timestamp = strdup(acc);
+                        c++;
+                    }
+                    c = 1;
+                    break;
+                case 'h':
+                    sethost = strdup(av[cnt++]);
+                    break;
+                case 'f':
+                    fakehost = strdup(av[cnt++]);
+                    break;
+                case 'x':
+                    ishidden = 1;
+                    break;
+                default:
+                    break;
+                }
+                modes++;
+            }
+            modes = strdup(modes2);
+        } else
+            modes = NULL;
+
+        /* do_nick(const char *source, char *nick, char *username, char *host,
+           char *server, char *realname, time_t ts, uint32 svid,
+           uint32 ip, char *vhost, char *uid, int hopcount, char *modes) */
+
+        ipchar = nefarious_nickip(ip);
+
+        if (isaccount && ishidden) {
+            ircsnprintf(hhostbuf, sizeof(account) + sizeof(hhostbuf) + 2,
+                        "%s%s%s", HiddenPrefix, account, HiddenSuffix);
         }
+
+        user = do_nick(source, nick, ident, host, (s ? s->name : temp),
+                       realname, strtoul(av[2], NULL, 10), 0, ipchar,
+                       (ishidden
+                        && isaccount) ? hhostbuf : NULL, uid,
+                       strtoul(av[1], NULL, 10), modes);
+
+        if (user) {
+            if (fakehost || sethost) {
+                char *vhost = "";
+                if (sethost) {
+                    int h = 1;
+                    char *uhb, *uh = NULL;
+                    char *vident = "";
+                    for (uh = strtok_r(sethost, "@", &uhb);
+                         uh; uh = strtok_r(NULL, "@", &uhb)) {
+                        if (h == 1)
+                            vident = uh;
+                        else if (h == 2)
+                            vhost = uh;
+                        h++;
+                    }
+                    h = 1;
+                    change_user_username(user->nick, vident);
+                }
+                change_user_host(user->nick, sethost ? vhost : fakehost);
+                //set host as ip
+            }
+        }
+        free(ipchar);
     } else {
         // Nick change
         user = find_byuid(source);
@@ -985,7 +1036,7 @@ int denora_event_notice(char *source, int ac, char **av)
     }
 
     user_s = user_find(source);
-    if (*av[0] == '#') {
+    if (*av[0] == '#' || *av[0] == '&') {
         m_notice(user_s->nick, av[0], av[1]);
     } else {
         user_r = user_find(av[0]);

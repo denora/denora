@@ -74,6 +74,8 @@ static char *temp_userhost;
 
 char *LogChannel;
 char *NetworkName;
+char *HiddenPrefix;
+char *HiddenSuffix;
 
 char *s_StatServ;
 char *desc_StatServ;
@@ -524,12 +526,23 @@ int confadd_netinfo(cVar * vars[], int lnum)
         } else if (tmp->type && (tmp->type->flag & SCONFF_CTCPEOB)) {
             tmp->type = NULL;
             CTCPUsersEOB = 1;
+        } else if (tmp->type && (tmp->type->flag & SCONFF_HIDDENPREFIX)) {
+            tmp->type = NULL;
+            HiddenPrefix = sstrdup(tmp->value);
+        } else if (tmp->type && (tmp->type->flag & SCONFF_HIDDENSUFFIX)) {
+            tmp->type = NULL;
+            HiddenSuffix = sstrdup(tmp->value);
         }
-
     }
     if (BadPtr(NetworkName)) {
         confparse_error(langstring(CONFIG_NETINFO_NAME_ERROR), lnum);
         return -1;
+    }
+    if (!HiddenPrefix) {
+        HiddenPrefix = "";
+    }
+    if (!HiddenSuffix) {
+        HiddenSuffix = ".users.mynet.tld";
     }
     if (LargeNet) {
         alog(LOG_NORMAL, langstr(ALOG_LARGENET_WARNING_1));

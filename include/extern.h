@@ -262,6 +262,8 @@ E char *ServiceHost;
 E char *LogChannel;
 E char *Smiley;
 E char *NetworkName;
+E char *HiddenPrefix;
+E char *HiddenSuffix;
 
 E char *s_StatServ;
 E char *desc_StatServ;

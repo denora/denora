@@ -269,6 +269,10 @@ Provided by Nomad Dev. <dev@nomadirc.net> - 2005
 08/05 F Fixed maxvalues setting on clean installs.                [#122]
 
 Provided by Hal9000 <hal9000@pimpmylinux.org>
+01/11 F Fixed wrong handling of chan modes in p10 burst           [ #00]
+01/11 A Improved P10 hidden host support                          [ #00]
+01/11 F Improved nefarious nick parser                            [ #00]
+01/11 F Send ip instead of host to GeoIP for improved performance [ #00]
 01/10 F Fixed kicked users not being removed from count and ison  [#371]
 01/08 F Fixed except support in P10 burst function                [ #00]
 01/08 F Fixed channel bans not parsed correctly on P10 burst      [ #00]

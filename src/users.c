@@ -1050,8 +1050,8 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 
     if (!*source) {
         if (!LargeNet) {
-            country_code = GeoIP_country_code_by_name(gi, host);
-            country_name = GeoIP_country_name_by_name(gi, host);
+            country_code = GeoIP_country_code_by_name(gi, ipchar);
+            country_name = GeoIP_country_name_by_name(gi, ipchar);
             if (!country_name) {
                 if (host && !stricmp("localhost", host)) {
                     country_name = "localhost";
@@ -1080,7 +1080,7 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
         user->realname = sstrdup((realname ? realname : ""));
         user->timestamp = ts;
         user->my_signon = time(NULL);
-        user->vhost = (vhost ? sstrdup(vhost) : sstrdup(host));
+        user->vhost = (vhost ? sstrdup(vhost) : NULL);
         user->uid = (uid ? sstrdup(uid) : NULL);
         user->admin = 0;        /* 0 by default, winner, eh? */
         user->hopcount = hopcount;
