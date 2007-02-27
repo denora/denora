@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="3"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="21"
+VERSION_BUILD="22"
 
 # $Log$
+#
+# BUILD : 1.3.0.22 (SVN)
+# BUGS  : N/A
+# NOTES : Fixed AutoMode forced to +o in nefarious. Fixed segfault on server/global notice in nefarious. Fixed segfault in m_away.
 #
 # BUILD : 1.3.0.21 (SVN)
 # BUGS  : N/A

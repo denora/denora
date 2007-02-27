@@ -60,26 +60,17 @@ int m_away(char *source, char *msg)
         stats->away++;
         u->isaway = 1;
         u->awaymsg = sstrdup(msg);
-        if (denora->do_sql) {
-            sqlmsg = rdb_escape(msg);
-            rdb_query
-                (QUERY_LOW,
-                 "UPDATE %s SET away=\'Y\', awaymsg=\'%s\' WHERE nickid=%d",
-                 UserTable, sqlmsg, db_getnick(u->sqlnick));
-            free(sqlmsg);
-        }
     } else {
         stats->away--;
         u->isaway = 0;
-        if (u->awaymsg) {
-            free(u->awaymsg);
-        }
-        if (denora->do_sql) {
-            rdb_query
-                (QUERY_LOW,
-                 "UPDATE %s SET away=\'N\', awaymsg=\'\' WHERE nickid=%d",
-                 UserTable, db_getnick(u->sqlnick));
-        }
+        u->awaymsg = NULL;
+    }
+    if (denora->do_sql) {
+        rdb_query
+            (QUERY_LOW,
+             "UPDATE %s SET away=\'%s\', awaymsg=\'%s\' WHERE nickid=%d",
+             UserTable, (u->isaway ? (char *) "Y" : (char *) "N"),
+             rdb_escape(u->awaymsg), db_getnick(u->sqlnick));
     }
     return MOD_CONT;
 }

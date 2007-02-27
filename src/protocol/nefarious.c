@@ -545,6 +545,7 @@ void nefarious_cmd_part(char *nick, char *chan, char *buf)
 void nefarious_cmd_join(char *user, char *channel, time_t chantime)
 {
     Uid *ud;
+    char *modes = NULL;
 
     ud = find_uid(user);
 
@@ -552,8 +553,15 @@ void nefarious_cmd_join(char *user, char *channel, time_t chantime)
         send_cmd((ud ? ud->uid : user), "J %s %ld", channel,
                  (long int) chantime);
     } else {
-        send_cmd(p10id, "B %s %ld %s:o", channel,
-                 (long int) time(NULL), (ud ? ud->uid : user));
+        if (AutoOp && AutoMode) {
+            modes = sstrdup(AutoMode);
+            *modes++;           // since the first char is +, we skip it
+            send_cmd(p10id, "B %s %ld %s:%s", channel,
+                     (long int) chantime, (ud ? ud->uid : user), modes);
+        } else {
+            send_cmd(p10id, "B %s %ld %s", channel,
+                     (long int) chantime, (ud ? ud->uid : user));
+        }
     }
 }
 
@@ -892,7 +900,7 @@ int denora_event_privmsg(char *source, int ac, char **av)
     u = find_byuid(source);
     id = find_nickuid(av[0]);
 
-    if (ac != 2)
+    if (ac != 2 || *av[0] == '$' || strlen(source) == 2)
         return MOD_CONT;
     m_privmsg((u ? u->nick : source), (id ? id->nick : av[0]), av[1]);
     return MOD_CONT;
@@ -1031,7 +1039,7 @@ int denora_event_notice(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    if (ac != 2) {
+    if (ac != 2 || *av[0] == '$' || strlen(source) == 2) {
         return MOD_CONT;
     }
 

@@ -269,6 +269,7 @@ Provided by Nomad Dev. <dev@nomadirc.net> - 2005
 08/05 F Fixed maxvalues setting on clean installs.                [#122]
 
 Provided by Hal9000 <hal9000@pimpmylinux.org>
+02/27 F Fixed AutoMode forced to +o in nefarious                  [ #00]
 01/11 F Fixed wrong handling of chan modes in p10 burst           [ #00]
 01/11 A Improved P10 hidden host support                          [ #00]
 01/11 F Improved nefarious nick parser                            [ #00]
@@ -356,6 +357,8 @@ Provided by Obi_Wan <webmaster@st-city.net>
 05/12 F Fix to sumuser not replying when successful               [#247]
 
 Provided by OUTsider <outsider@scarynet.org>
+02/27 F Fixed segfault on server/global notice in nefarious       [ #00]
+02/27 F Fixed segfault in m_away                                  [ #00]
 01/05 F Improved query generation in sql_do_addusers              [ #00]
 01/05 F Use strlcpy/strlcat instead of strcpy/strcat              [ #00]
 01/05 F Make P10 send EA only when EOB comes from uplink server   [ #00]
