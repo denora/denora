@@ -269,6 +269,10 @@ Provided by Nomad Dev. <dev@nomadirc.net> - 2005
 08/05 F Fixed maxvalues setting on clean installs.                [#122]
 
 Provided by Hal9000 <hal9000@pimpmylinux.org>
+05/09 F Fixed version message defined twice in InspIRCd 1.1       [#380]
+05/09 F Fixed GeoIP not working correctly on InspIRCd 1.1         [#377]
+02/28 A Added swhois support to nefarious                         [ #00]
+02/28 A Added P10 account support                                 [ #00]
 02/27 F Fixed AutoMode forced to +o in nefarious                  [ #00]
 01/11 F Fixed wrong handling of chan modes in p10 burst           [ #00]
 01/11 A Improved P10 hidden host support                          [ #00]
