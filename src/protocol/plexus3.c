@@ -258,7 +258,7 @@ int denora_event_nick(char *source, int ac, char **av)
             *source = '\0';
             user = do_nick(source, av[0], av[4], av[5], s->name, av[10],
                            strtoul(av[2], NULL, 10), 0, av[6], av[9],
-                           av[7], strtoul(av[1], NULL, 10), av[3]);
+                           av[7], strtoul(av[1], NULL, 10), av[3], NULL);
             if (user) {
                 denora_set_umode(user, 1, &av[3]);
             }
@@ -273,12 +273,12 @@ int denora_event_nick(char *source, int ac, char **av)
             user = do_nick(source, av[0], av[4], av[8], av[6], av[9],
                            strtoul(av[2], NULL, 10),
                            strtoul(av[7], NULL, 0), ipchar, av[5], NULL,
-                           strtoul(av[1], NULL, 0), av[3]);
+                           strtoul(av[1], NULL, 0), av[3], NULL);
             free(ipchar);
         } else {
             do_nick(source, av[0], NULL, NULL, NULL, NULL,
                     strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0,
-                    NULL);
+                    NULL, NULL);
         }
     }
     free(temp);
@@ -444,7 +444,7 @@ int denora_event_encap(char *source, int ac, char **av)
     }
     if (!stricmp(av[1], "SVSNICK")) {
         do_nick(av[2], av[3], NULL, NULL, NULL, NULL,
-                time(NULL), 0, NULL, NULL, NULL, 0, NULL);
+                time(NULL), 0, NULL, NULL, NULL, 0, NULL, NULL);
     }
     if (!stricmp(av[1], "SVSMODE")) {
         newav[0] = av[2];

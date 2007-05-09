@@ -677,6 +677,9 @@ void delete_user(User * user)
         free(user->vhost);
     }
     free(user->ip);
+    if (user->account) {
+        free(user->account);
+    }
     if (CTCPUsers) {
         if (user->ctcp) {
             ctcp_update(user->ctcp);
@@ -1036,7 +1039,7 @@ Uid *find_nickuid(const char *uid)
 User *do_nick(const char *source, char *nick, char *username, char *host,
               char *server, char *realname, time_t ts, uint32 svid,
               char *ipchar, char *vhost, char *uid, int hopcount,
-              char *modes)
+              char *modes, char *account)
 {
 
     User *user;
@@ -1082,6 +1085,7 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
         user->my_signon = time(NULL);
         user->vhost = (vhost ? sstrdup(vhost) : NULL);
         user->uid = (uid ? sstrdup(uid) : NULL);
+        user->account = (account ? sstrdup(account) : NULL);
         user->admin = 0;        /* 0 by default, winner, eh? */
         user->hopcount = hopcount;
         user->ip = sstrdup(ipchar);
@@ -1366,6 +1370,91 @@ void do_kill(char *nick, char *msg)
     alog(LOG_DEBUG, "debug: %s killed: %s", nick, msg);
     send_event(EVENT_USER_LOGOFF, 2, user->nick, msg);
     delete_user(user);
+}
+
+/*************************************************************************/
+
+/**
+ * Handle ACCOUNT messages from the ircd (p10 only)
+ *
+ * @param nick is the user who the account is being set on
+ * @param account is the account name
+ * @param flag is 1 if the account is to be removed, or 3 if the account is to be renamed.
+ *
+ * @return void - no returend value
+ *
+ */
+void do_p10account(User * user, char *account, int flag)
+{
+    int nickid;
+    char *sqlaccount = NULL;
+    char hhostbuf[255];
+
+    if (flag != 1) {
+        if (!account || !*account) {
+            return;
+        }
+    }
+
+    SET_SEGV_LOCATION();
+
+    if (!user) {
+        alog(LOG_NONEXISTANT, "debug: ACCOUNT %s on nonexistent nick: %s",
+             account, user->nick);
+        return;
+    }
+
+    if (flag == 0) {
+        alog(LOG_DEBUG, "debug: account %s set on %s", account,
+             user->nick);
+        user->account = sstrdup(account);
+        ircsnprintf(hhostbuf, sizeof(account) + sizeof(hhostbuf) + 2,
+                    "%s%s%s", HiddenPrefix, account, HiddenSuffix);
+
+        if (!user->vhost && UserHasMode(user->nick, UMODE_x)) {
+            alog(LOG_DEBUG, "debug: setting vhost %s on %s", hhostbuf,
+                 user->nick);
+            user->vhost = sstrdup(hhostbuf);
+        }
+    } else if (flag == 1) {
+        alog(LOG_DEBUG, "debug: account removed from %s", user->nick);
+        user->account = NULL;
+
+        if (user->vhost) {
+            alog(LOG_DEBUG, "debug: removing vhost from %s", user->nick);
+            user->vhost = NULL;
+        }
+    } else if (flag == 2) {
+        alog(LOG_DEBUG, "debug: account %s renaming on %s", account,
+             user->nick);
+        user->account = sstrdup(account);
+        ircsnprintf(hhostbuf, sizeof(account) + sizeof(hhostbuf) + 2,
+                    "%s%s%s", HiddenPrefix, account, HiddenSuffix);
+
+        if (UserHasMode(user->nick, UMODE_x)) {
+            alog(LOG_DEBUG, "debug: setting vhost %s on %s", hhostbuf,
+                 user->nick);
+            user->vhost = sstrdup(hhostbuf);
+        }
+    }
+
+    SET_SEGV_LOCATION();
+
+    if (denora->do_sql) {
+        sqlaccount = rdb_escape(account);
+        nickid = db_getnick_unsure(user->sqlnick);
+        if (nickid == -1) {
+            alog(LOG_NONEXISTANT, "ACCOUNT set for nonexistent user %s",
+                 user);
+        } else {
+            rdb_query(QUERY_LOW,
+                      "UPDATE %s SET account=\'%s\' WHERE nickid=%d",
+                      UserTable, sqlaccount, nickid);
+        }
+        free(sqlaccount);
+    }
+
+    SET_SEGV_LOCATION();
 }
 
 /*************************************************************************/

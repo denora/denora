@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `nickip` varchar(255) NOT NULL default '',
   `username` varchar(11) NOT NULL default '',
   `swhois` varchar(255) NOT NULL default '',
+  `account` varchar(100) NOT NULL default '',
   `connecttime` datetime NOT NULL default '0000-00-00 00:00:00',
   `servid` int(10) unsigned NOT NULL default '0',
   `server` varchar(255) NOT NULL default '',

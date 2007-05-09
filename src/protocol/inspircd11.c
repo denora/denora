@@ -59,7 +59,7 @@
 #include "inspircd11.h"
 
 IRCDVar myIrcd[] = {
-    {"InspIRCd 1.1 Beta 5",     /* ircd name                    */
+    {"InspIRCd 1.1.x",          /* ircd name                    */
      "+io",                     /* StatServ mode                */
      IRCD_ENABLE,               /* Vhost                        */
      IRCD_ENABLE,               /* Supports SGlines             */
@@ -246,7 +246,7 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("METADATA",  denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("FMODE",     denora_event_fmode); addCoreMessage(IRCD,m);
     m = createMessage("FTOPIC",    denora_event_ftopic); addCoreMessage(IRCD,m);
-    m = createMessage("VERSION",   denora_event_version); addCoreMessage(IRCD,m);
+    //m = createMessage("VERSION",   denora_event_version); addCoreMessage(IRCD,m);
     m = createMessage("OPERTYPE",  denora_event_opertype); addCoreMessage(IRCD,m);
     m = createMessage("ADDLINE",   denora_event_addline); addCoreMessage(IRCD,m);
     m = createMessage("GLINE",     denora_event_gline); addCoreMessage(IRCD,m);
@@ -281,14 +281,15 @@ int denora_event_eob(char *source, int ac, char **av)
 int denora_event_svsnick(char *source, int ac, char **av)
 {
     do_nick(av[0], av[1], NULL, NULL, NULL,
-            NULL, strtoul(av[2], NULL, 10), 0, NULL, NULL, NULL, 0, NULL);
+            NULL, strtoul(av[2], NULL, 10), 0, NULL, NULL, NULL, 0, NULL,
+            NULL);
     return MOD_CONT;
 }
 
 int denora_event_sanick(char *source, int ac, char **av)
 {
     do_nick(av[0], av[1], NULL, NULL, NULL,
-            NULL, (int) time(NULL), 0, NULL, NULL, NULL, 0, NULL);
+            NULL, (int) time(NULL), 0, NULL, NULL, NULL, 0, NULL, NULL);
     return MOD_CONT;
 }
 
@@ -889,18 +890,6 @@ int denora_event_fjoin(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
-char *inspircd_nickip(char *host)
-{
-    struct in_addr addy;
-    struct in_addr addr;
-
-    uint32 *ad = (uint32 *) & addy;
-    inet_aton(host, &addy);
-
-    addr.s_addr = htonl(*ad);
-    return sstrdup(inet_ntoa(addr));
-}
-
 int denora_event_nick(char *source, int ac, char **av)
 {
     User *user;
@@ -917,12 +906,11 @@ int denora_event_nick(char *source, int ac, char **av)
                            source,      /* server */
                            av[7],       /* realname */
                            strtoul(av[0], NULL, 10),
-                           0, inspircd_nickip(av[6]), av[3], NULL, 1,
-                           av[5]);
+                           0, av[6], av[3], NULL, 1, av[5], NULL);
         }
     } else {
         do_nick(source, av[0], NULL, NULL, NULL, NULL,
-                0, 0, NULL, NULL, NULL, 0, NULL);
+                0, 0, NULL, NULL, NULL, 0, NULL, NULL);
     }
 
     return MOD_CONT;
@@ -1125,7 +1113,7 @@ int DenoraInit(int argc, char **argv)
         ("$Id$");
     moduleSetType(PROTOCOL);
 
-    pmodule_ircd_version("InspIRCd 1.1 Beta 8+");
+    pmodule_ircd_version("InspIRCd 1.1.x");
     pmodule_ircd_cap(myIrcdcap);
     pmodule_ircd_var(myIrcd);
     pmodule_ircd_useTSMode(0);

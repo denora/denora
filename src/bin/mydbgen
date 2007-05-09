@@ -222,6 +222,11 @@ if test "$?" = "1" ; then
 	echo "ALTER TABLE user ADD lastquitmsg VARCHAR( 255 ) NOT NULL AFTER lastquit;" >> $USQLDB
 fi
 
+$MYSQL -Bs -e "describe user account" 2> /dev/null | grep -q account
+if test "$?" = "1" ; then
+	echo "ALTER TABLE user ADD account VARCHAR( 100 ) NOT NULL DEFAULT '' AFTER swhois;" >> $USQLDB
+fi
+
 ## bug 167
 
 if [ "$DBFILE" = "hybrid" ]; then

@@ -566,7 +566,7 @@ E void change_user_username(char *source, char *username);
 E void change_user_realname(char *source, char *realname);
 
 E User *do_nick(const char *source, char *nick, char *username, char *host,
-              char *server, char *realname, time_t ts, uint32 svid, char *ip, char *vhost, char *uid, int hopcount, char *modes);
+              char *server, char *realname, time_t ts, uint32 svid, char *ip, char *vhost, char *uid, int hopcount, char *modes, char *account);
 
 E void do_umode(const char *source, int ac, char **av);
 E void do_svsumode(int ac, char **av);
@@ -748,6 +748,7 @@ E void sql_do_nick(User *u);
 E void sql_do_sdesc(char *user, char *msg);
 E void server_set_desc(char *server, char *msg);
 E void do_swhois(char *user, char *msg);
+E void do_p10account(User *user, char *account, int flag);
 E void sql_do_nick_chg(char *newnick, char *oldnick);
 E void sql_do_addusers(int chanid, char *users);
 E void sql_do_sjoin(char *chan, char *users, char **modes, int nbmodes);

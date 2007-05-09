@@ -964,6 +964,7 @@ struct user_ {
     uint32 svid;		/* Services ID 			*/
     uint32 mode;		/* See below 			*/
     char *uid;			/* Univeral ID			*/
+    char *account;		/* P10 Account			*/
     uint16 language;
     uint16 admin;
     uint16 confadmin;   /* if admin is from configfile */

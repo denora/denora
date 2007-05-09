@@ -211,11 +211,12 @@ int denora_event_nick(char *source, int ac, char **av)
         user = do_nick(source, av[0], av[4], av[5], av[7], av[9],
                        strtoul(av[2], NULL, 10),
                        strtoul(av[8], NULL, 0), ipchar, av[6], NULL,
-                       strtoul(av[1], NULL, 0), av[3]);
+                       strtoul(av[1], NULL, 0), av[3], NULL);
         free(ipchar);
     } else {
         do_nick(source, av[0], NULL, NULL, NULL, NULL,
-                strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0, NULL);
+                strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0, NULL,
+                NULL);
     }
     return MOD_CONT;
 }
@@ -319,7 +320,7 @@ int denora_event_svsnick(char *source, int ac, char **av)
         protocol_debug(source, ac, av);
     }
     do_nick(av[0], av[1], NULL, NULL, NULL, NULL,
-            time(NULL), 0, NULL, NULL, NULL, 0, NULL);
+            time(NULL), 0, NULL, NULL, NULL, 0, NULL, NULL);
     return MOD_CONT;
 }
 

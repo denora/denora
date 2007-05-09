@@ -173,12 +173,14 @@ int denora_event_nick(char *source, int ac, char **av)
         *source = '\0';
         ipchar = host_resolve(av[3]);
         do_nick(source, av[0], av[2], av[3], temp, av[6],
-                0, 0, ipchar, NULL, NULL, strtoul(av[1], NULL, 10), av[5]);
+                0, 0, ipchar, NULL, NULL, strtoul(av[1], NULL, 10), av[5],
+                NULL);
         free(temp);
         free(ipchar);
     } else {
         do_nick(source, av[0], NULL, NULL, NULL, NULL,
-                strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0, NULL);
+                strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0, NULL,
+                NULL);
     }
     return MOD_CONT;
 }

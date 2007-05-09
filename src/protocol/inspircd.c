@@ -281,14 +281,15 @@ int denora_event_eob(char *source, int ac, char **av)
 int denora_event_svsnick(char *source, int ac, char **av)
 {
     do_nick(av[0], av[1], NULL, NULL, NULL,
-            NULL, strtoul(av[2], NULL, 10), 0, NULL, NULL, NULL, 0, NULL);
+            NULL, strtoul(av[2], NULL, 10), 0, NULL, NULL, NULL, 0, NULL,
+            NULL);
     return MOD_CONT;
 }
 
 int denora_event_sanick(char *source, int ac, char **av)
 {
     do_nick(av[0], av[1], NULL, NULL, NULL,
-            NULL, (int) time(NULL), 0, NULL, NULL, NULL, 0, NULL);
+            NULL, (int) time(NULL), 0, NULL, NULL, NULL, 0, NULL, NULL);
     return MOD_CONT;
 }
 
@@ -850,11 +851,11 @@ int denora_event_nick(char *source, int ac, char **av)
                            av[7],       /* realname */
                            strtoul(av[0], NULL, 10),
                            0, inspircd_nickip(av[6]), av[3], NULL, 1,
-                           av[5]);
+                           av[5], NULL);
         }
     } else {
         do_nick(source, av[0], NULL, NULL, NULL, NULL,
-                0, 0, NULL, NULL, NULL, 0, NULL);
+                0, 0, NULL, NULL, NULL, 0, NULL, NULL);
     }
 
     return MOD_CONT;

@@ -217,16 +217,18 @@ int denora_event_nick(char *source, int ac, char **av)
         if (ac == 7) {
             do_nick(source, av[0], av[3], av[4], av[5], av[6],
                     strtoul(av[2], NULL, 10), 0, ipchar, NULL, NULL,
-                    strtoul(av[1], NULL, 10), NULL);
+                    strtoul(av[1], NULL, 10), NULL, NULL);
         } else {
             do_nick(source, av[0], av[3], av[4], av[5], av[7],
                     strtoul(av[2], NULL, 10), strtoul(av[6], NULL, 0),
-                    ipchar, NULL, NULL, strtoul(av[1], NULL, 10), NULL);
+                    ipchar, NULL, NULL, strtoul(av[1], NULL, 10), NULL,
+                    NULL);
         }
         free(ipchar);
     } else {
         do_nick(source, av[0], NULL, NULL, NULL, NULL,
-                strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0, NULL);
+                strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0, NULL,
+                NULL);
     }
     return MOD_CONT;
 }

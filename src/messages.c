@@ -44,7 +44,6 @@ int m_nickcoll(char *user)
 int m_away(char *source, char *msg)
 {
     User *u;
-    char *sqlmsg;
 
     if (!source) {
         return MOD_CONT;

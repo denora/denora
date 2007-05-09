@@ -176,20 +176,21 @@ int denora_event_nick(char *source, int ac, char **av)
             user =
                 do_nick(source, av[0], av[3], av[4], (s ? s->name : temp),
                         av[9], strtoul(av[2], NULL, 10), 0, ipchar, NULL,
-                        av[8], strtoul(av[1], NULL, 10), av[5]);
+                        av[8], strtoul(av[1], NULL, 10), av[5], NULL);
             free(ipchar);
         } else if (ac == 9) {
             ipchar = asuka_nickip(av[6]);
             user =
                 do_nick(source, av[0], av[3], av[4], (s ? s->name : temp),
                         av[8], strtoul(av[2], NULL, 10), 0, ipchar, NULL,
-                        av[7], strtoul(av[1], NULL, 10), av[5]);
+                        av[7], strtoul(av[1], NULL, 10), av[5], NULL);
             free(ipchar);
         } else if (ac == 8) {
             ipchar = asuka_nickip(av[5]);
             do_nick(source, av[0], av[3], av[4], (s ? s->name : temp),
                     av[7], strtoul(av[2], NULL, 10), 0,
-                    ipchar, NULL, av[6], strtoul(av[1], NULL, 10), NULL);
+                    ipchar, NULL, av[6], strtoul(av[1], NULL, 10), NULL,
+                    NULL);
             free(ipchar);
         } else {
             alog(LOG_DEBUG,
@@ -200,7 +201,7 @@ int denora_event_nick(char *source, int ac, char **av)
         user = find_byuid(source);
         do_nick((user ? user->nick : source), av[0], NULL, NULL, NULL,
                 NULL, strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0,
-                NULL);
+                NULL, NULL);
     }
     free(temp);
     return MOD_CONT;

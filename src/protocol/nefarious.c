@@ -346,7 +346,7 @@ int denora_event_nick(char *source, int ac, char **av)
                        realname, strtoul(av[2], NULL, 10), 0, ipchar,
                        (ishidden
                         && isaccount) ? hhostbuf : NULL, uid,
-                       strtoul(av[1], NULL, 10), modes);
+                       strtoul(av[1], NULL, 10), modes, account);
 
         if (user) {
             if (fakehost || sethost) {
@@ -376,7 +376,7 @@ int denora_event_nick(char *source, int ac, char **av)
         user = find_byuid(source);
         do_nick((user ? user->nick : source), av[0], NULL, NULL, NULL,
                 NULL, strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0,
-                NULL);
+                NULL, NULL);
     }
     free(temp);
     return MOD_CONT;
@@ -418,6 +418,39 @@ int denora_event_eob(char *source, int ac, char **av)
         send_cmd(NULL, "%s EA", p10id);
     }
     update_sync_state(source, SYNC_COMPLETE);
+    return MOD_CONT;
+}
+
+int denora_event_account(char *source, int ac, char **av)
+{
+    Server *s;
+    User *u;
+
+    if ((ac < 2) || !source || !(s = server_find(source)))
+        return 0;               /* source must be server. */
+
+    u = user_find(av[0]);
+    if (!u)
+        return 1;               /* A QUIT probably passed the ACCOUNT. */
+
+    if (!strcmp(av[1], "R"))    /* Set */
+        do_p10account(u, av[2], 0);
+    else if (!strcmp(av[1], "M"))       /* Rename */
+        do_p10account(u, av[2], 2);
+    else if (!strcmp(av[1], "U"))       /* Remove */
+        do_p10account(u, NULL, 1);
+    else
+        do_p10account(u, av[1], 0);     /* For backward compatability */
+
+    return MOD_CONT;
+}
+
+int denora_event_swhois(char *source, int ac, char **av)
+{
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
+    }
+    do_swhois(av[0], av[1]);
     return MOD_CONT;
 }
 
@@ -482,7 +515,7 @@ void moduleAddIRCDMsgs(void) {
     /* STATS */
     m = createMessage("R",        m_stats); addCoreMessage(IRCD,m);
     /* ACCCOUNT */
-    m = createMessage("AC",       denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("AC",       denora_event_account); addCoreMessage(IRCD,m);
     /* KILL */
     m = createMessage("D",        denora_event_kill); addCoreMessage(IRCD,m);
     /* GLINE */
@@ -503,6 +536,8 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("EA",       denora_event_null); addCoreMessage(IRCD,m);
     /* FAKEHOST */
     m = createMessage("FA",       denora_event_fakehost); addCoreMessage(IRCD,m);    
+    /* SWHOIS */
+    m = createMessage("SW",       denora_event_swhois); addCoreMessage(IRCD,m);    
 }
 
 /* *INDENT-ON* */
@@ -591,9 +626,8 @@ int denora_event_pong(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    alog(LOG_DEBUG,
-         "Got a PONG, call to server_store_pong() disabled for testing purposes");
-    //server_store_pong(source, time(NULL));
+
+    server_store_pong(source, time(NULL));
     return MOD_CONT;
 }
 
@@ -640,11 +674,12 @@ int denora_event_away(char *source, int ac, char **av)
 
 int denora_event_topic(char *source, int ac, char **av)
 {
-    char *newav[4];
+    char *newav[5];
 
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
+
     if (ac < 4)
         return MOD_CONT;
 
@@ -652,6 +687,7 @@ int denora_event_topic(char *source, int ac, char **av)
     newav[1] = av[1];
     newav[2] = av[ac - 2];
     newav[3] = av[ac - 1];
+    newav[4] = '\0';
 
     do_topic(4, newav);
     return MOD_CONT;

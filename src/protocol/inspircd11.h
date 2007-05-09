@@ -83,6 +83,5 @@ int DenoraInit(int argc, char **argv);
 void moduleAddIRCDMsgs(void);
 void moduleAddIRCDCmds(void);
 void DenoraFini(void);
-char *inspircd_nickip(char *host);
 void IRCDModeInit(void);
 

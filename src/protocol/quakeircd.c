@@ -773,7 +773,7 @@ int denora_event_nick(char *source, int ac, char **av)
             ipchar = host_resolve(av[4]);
             do_nick(source, av[0], av[3], av[4], (s ? s->name : av[5]),
                     av[6], ts, 0, 0, NULL, NULL, strtoul(av[1], NULL, 10),
-                    NULL);
+                    NULL, NULL);
             free(ipchar);
         } else if (ac == 11) {
             ipchar = quakeircd_nickip(av[9]);
@@ -781,7 +781,7 @@ int denora_event_nick(char *source, int ac, char **av)
                 do_nick(source, av[0], av[3], av[4], (s ? s->name : av[5]),
                         av[10], ts, strtoul(av[6], NULL, 0),
                         ipchar, av[8], NULL, strtoul(av[1], NULL, 10),
-                        av[7]);
+                        av[7], NULL);
             free(ipchar);
 
         } else {
@@ -790,12 +790,13 @@ int denora_event_nick(char *source, int ac, char **av)
             user =
                 do_nick(source, av[0], av[3], av[4], (s ? s->name : av[5]),
                         av[9], ts, strtoul(av[6], NULL, 0), 0, av[8], NULL,
-                        strtoul(av[1], NULL, 10), av[7]);
+                        strtoul(av[1], NULL, 10), av[7], NULL);
             free(ipchar);
         }
     } else {
         do_nick(source, av[0], NULL, NULL, NULL, NULL,
-                strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0, NULL);
+                strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0, NULL,
+                NULL);
     }
     return MOD_CONT;
 }

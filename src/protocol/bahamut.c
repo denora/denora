@@ -247,19 +247,20 @@ int denora_event_nick(char *source, int ac, char **av)
                            strtoul(av[2], NULL, 10), strtoul(av[7], NULL,
                                                              0),
                            ipchar, NULL, NULL,
-                           strtoul(av[1], NULL, 0), av[3]);
+                           strtoul(av[1], NULL, 0), av[3], NULL);
         }
         if (ac == 9) {
             ipchar = bahamut_nickip(av[7]);
             user = do_nick(source, av[0], av[4], av[5], av[6], av[8],
                            strtoul(av[2], NULL, 10), 0,
                            ipchar, NULL, NULL, strtoul(av[1], NULL, 0),
-                           av[3]);
+                           av[3], NULL);
         }
         free(ipchar);
     } else {
         do_nick(source, av[0], NULL, NULL, NULL, NULL,
-                strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0, NULL);
+                strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0, NULL,
+                NULL);
     }
     return MOD_CONT;
 }
