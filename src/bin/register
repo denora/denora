@@ -20,7 +20,7 @@ SENDMAIL="/usr/sbin/sendmail"
 REGISTERVERSION="1.2"
 
 # DO NOT CHANGE IF YOU WANT TO REGISTER WITH DENORA
-REGISTRYADDRESS="dev@nomadirc.net"
+REGISTRYADDRESS="dev@pimpmylinux.org"
 
 ################################################
 # END OF CONFIGURATION
