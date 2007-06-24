@@ -160,12 +160,6 @@ void do_swhois(char *user, char *msg)
 
     SET_SEGV_LOCATION();
 
-    if (!msg || !*msg) {
-        alog(LOG_ERROR,
-             "SWHOIS message was NULL, please run debug to get more info");
-        return;
-    }
-
     /* Find the user struct for the given user */
     u = user_find(user);
     if (!u) {
@@ -178,12 +172,12 @@ void do_swhois(char *user, char *msg)
         free(u->swhois);
         u->swhois = NULL;
     }
-    u->swhois = sstrdup(msg);
+    u->swhois = (!msg || !*msg) ? NULL : sstrdup(msg);
 
     SET_SEGV_LOCATION();
 
     if (denora->do_sql) {
-        sqlmsg = rdb_escape(msg);
+        sqlmsg = (!msg || !*msg) ? NULL : rdb_escape(msg);
         nickid = db_getnick_unsure(u->sqlnick);
         if (nickid == -1) {
             alog(LOG_NONEXISTANT, langstr(ALOG_SWHOIS_ERROR), user);

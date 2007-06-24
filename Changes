@@ -269,6 +269,7 @@ Provided by Nomad Dev. <dev@nomadirc.net> - 2005
 08/05 F Fixed maxvalues setting on clean installs.                [#122]
 
 Provided by Hal9000 <hal9000@pimpmylinux.org>
+06/24 F Empty SWHOIS message now clears value instead of error    [#397]
 05/09 F Fixed version message defined twice in InspIRCd 1.1       [#380]
 05/09 F Fixed GeoIP not working correctly on InspIRCd 1.1         [#377]
 02/28 A Added swhois support to nefarious                         [ #00]
