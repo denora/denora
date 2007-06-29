@@ -460,4 +460,4 @@ CREATE TABLE `admin` (
   `lang` tinyint(2) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `uname` (`uname`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM AUTO_INCREMENT=1 ;
