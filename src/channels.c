@@ -598,8 +598,9 @@ char *p10_mode_parse(char *mode, int *nomode)
     char *s;
     char modebuf[15];
     char *temp = NULL;
-    nomode = 0;
     char *flag;
+
+    nomode = 0;
 
     /* We make all the users join */
     s = mode;
