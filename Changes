@@ -1,5 +1,8 @@
 Denora Version SVN
 -------------------
+Provided by Nomad Dev. <dev@nomadirc.net> - 2007
+07/04 F Fixed compiling issue on x86_64 machines                  [#390]
+
 Provided by Nomad Dev. <dev@nomadirc.net> - 2006
 09/15 A Added lastping time to the server table                   [#341]
 09/15 A Denora excludes its own clients from stats                [#340]

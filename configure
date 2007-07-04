@@ -13172,6 +13172,9 @@ fi
 
 { echo "$as_me:$LINENO: checking for compiler option to produce PIC" >&5
 echo $ECHO_N "checking for compiler option to produce PIC... $ECHO_C" >&6; }
+if test "$host_cpu" = "x86_64"; then
+    CFLAGS="$CFLAGS -fPIC"
+fi
 if test "${ac_cv_pic+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
