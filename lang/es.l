@@ -1,7 +1,7 @@
 # Spanish language file.
 #
 # Denora (c) 2004-2007 Denora Team
-# Contact us at dev@nomadirc.net
+# Contact us at dev@denorastats.org
 #
 # This program is free but copyrighted software; see the file COPYING for
 # details.
@@ -17,7 +17,7 @@
 # English messages do.  (Obviously, this doesn't hold for the strftime()
 # format lines immediately below.)  If you can't get a natural translation
 # of a message without changing the order of the parameters, let us know
-# (dev@nomadirc.net) which message is causing a problem and I'll see
+# (dev@denorastats.org) which message is causing a problem and I'll see
 # what I can do.
 #
 # In help messages, "%S" (capital S, not lowercase) refers to the name of

@@ -1,7 +1,7 @@
 /* Stats -- main source file.
  *
  * (C) 2004-2007 Denora Team
- * Contact us at info@nomadirc.net
+ * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for further details.
  *
@@ -895,7 +895,7 @@ static int parse_options(int ac, char **av)
                         , (denora->flag_sql ? denora->flag_sql : ""),
                         denora->build, denora->date, denora->time);
                 fprintf(stdout,
-                        "Denora IRC Stats (http://denora.nomadirc.net)\n");
+                        "Denora IRC Stats (http://denorastats.org/)\n");
                 fprintf(stdout, "Usage ./stats [options] ...\n");
                 fprintf(stdout,
                         "-remote        -remote hostname[:port]\n");
@@ -917,9 +917,9 @@ static int parse_options(int ac, char **av)
 #endif
                 fprintf(stdout, "\n");
                 fprintf(stdout,
-                        "Further support is available from http://denora.nomadirc.net\n");
+                        "Further support is available from http://denorastats.org/\n");
                 fprintf(stdout,
-                        "Or visit US on IRC at irc.nomadirc.net #denora\n");
+                        "Or visit US on IRC at irc.denorastats.org #denora\n");
                 return 0;
             } else {
                 fprintf(stderr, "Unknown option -%s\n", value);
@@ -1119,7 +1119,7 @@ int init(int ac, char **av)
         alog(LOG_NORMAL,
              "it as stable, if you are willing to test and allow us");
         alog(LOG_NORMAL,
-             "mark it as stable please email dev@nomadirc.net");
+             "mark it as stable please email dev@denorastats.org");
         alog(LOG_NORMAL,
              "======================== WARNING =========================");
     }

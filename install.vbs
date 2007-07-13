@@ -2,7 +2,7 @@
 ' install.vbs - Windows Configuration
 '
 ' (C) 2004-2007 Denora Team
-' Contact us at info@nomadirc.net
+' Contact us at info@denorastats.org
 '
 ' Please read COPYING and README for furhter details.
 '
@@ -92,7 +92,7 @@ Else
         WScript.Echo ""
         WScript.Echo "Denora is a set of IRC Stats expanded upon Luca's Thales."
         WScript.Echo "For all your Denora needs please visit our portal"
-        WScript.Echo "at http://denora.nomadirc.net/"
+        WScript.Echo "at http://denorastats.org/"
         WScript.Echo ""
         WScript.Echo "For more detailed information on the features of Denora "& verStringShort
         WScript.Echo "please read the self-named documentation found on the 'docs' directory."
@@ -429,7 +429,7 @@ Else
                         WScript.Echo ""
                         WScript.Echo "Sorry, but you didn't have all the required libraries installed."
                         WScript.Echo ""
-                        WScript.Echo "See http://denora.nomadirc.net for a list of downloads needed to install Denora"
+                        WScript.Echo "See http://denorastats.org/ for a list of downloads needed to install Denora"
                         WScript.Echo ""
         End If
 

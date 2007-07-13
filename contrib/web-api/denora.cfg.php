@@ -23,7 +23,7 @@ $denora_tld_db        = "tld";
 $denora_cstats_db     = "cstats";
 
 $denora_server_type = "unreal32";
-$denora_default_server = "irc.nomadirc.net";
+$denora_default_server = "irc.denorastats.org";
 $denora_default_server_port = "6667";
 $denora_use_def_server = 1;
 $denora_use_def_port = 0;

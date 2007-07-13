@@ -31,7 +31,7 @@ using for the ircd or a dedicated one will be good enough.
 The very first thing you need to do is to get the Denora package
 (if not already done). You can find it at the following place:
 
-    http://denora.nomadirc.net/
+    http://denorastats.org/
 
 Next, unpack the package in your home directory, and go into the
 created directory.

@@ -1,9 +1,9 @@
 Denora Version SVN
 -------------------
-Provided by Nomad Dev. <dev@nomadirc.net> - 2007
+Provided by Nomad Dev. <dev@denorastats.org> - 2007
 07/04 F Fixed compiling issue on x86_64 machines                  [#390]
 
-Provided by Nomad Dev. <dev@nomadirc.net> - 2006
+Provided by Nomad Dev. <dev@denorastats.org> - 2006
 09/15 A Added lastping time to the server table                   [#341]
 09/15 A Denora excludes its own clients from stats                [#340]
 08/28 A Added generic linked list code - fixes sorting            [ #00]
@@ -200,7 +200,7 @@ Provided by Nomad Dev. <dev@nomadirc.net> - 2006
 01/02 F Fixed segfault with ngircd                                [ #00]
 01/01 F Fixed Shutdown message cut short                          [ #00]
 
-Provided by Nomad Dev. <dev@nomadirc.net> - 2005
+Provided by Nomad Dev. <dev@denorastats.org> - 2005
 12/30 A Moved sjoin +I char to the ircd protocol modules          [ #00]
 12/30 A Cleaned up ircd struct info with IRCD_ENABLE/IRCD_DISABLE [ #00]
 12/30 A Added support for PTLink CHGHOST command                  [ #00]
@@ -271,7 +271,7 @@ Provided by Nomad Dev. <dev@nomadirc.net> - 2005
 08/06 F Fixed EXCLUDE ADD not checking the nick lenghts.          [ #00]
 08/05 F Fixed maxvalues setting on clean installs.                [#122]
 
-Provided by Hal9000 <hal9000@pimpmylinux.org>
+Provided by Hal9000 <hal9000@denorastats.org>
 06/24 F Empty SWHOIS message now clears value instead of error    [#397]
 05/09 F Fixed version message defined twice in InspIRCd 1.1       [#380]
 05/09 F Fixed GeoIP not working correctly on InspIRCd 1.1         [#377]
@@ -376,7 +376,7 @@ Provided by OUTsider <outsider@scarynet.org>
 
 Denora Version 1.1.0
 -------------------
-Provided by Nomad Dev. <dev@nomadirc.net> - 2005
+Provided by Nomad Dev. <dev@denorastats.org> - 2005
 07/25 A pseudo clients op themselves when joining a channel.      [#118]
 07/23 A Added support for Unreal SVS2MODE.                        [ #00]
 07/22 A Added xml_moduleData() to write out module data to xml    [ #00]
@@ -474,7 +474,7 @@ Provided by Nomad Dev. <dev@nomadirc.net> - 2005
 Provided by Izlots <Christian.Schroer@gmail.com> - 2005
 06/12 F !peak was case sensetive                                  [ #80]
 
-Provided by Hal9000 <hal9000@pimpmylinux.org> - 2005
+Provided by Hal9000 <hal9000@denorastats.org> - 2005
 07/05 U Updated it.l and example.it.conf                          [ #00]
 07/02 U Update it.l and convertor to v0.7.0                       [ #00]
 06/11 A Added exapmle.it.conf                                     [ #00]
@@ -492,7 +492,7 @@ Provided by Alvaro <agonzal@gmail.com> - 2005
 
 Denora Version 1.0.0
 -------------------
-Provided by Nomad Dev. <dev@nomadirc.net> - 2004/2005
+Provided by Nomad Dev. <dev@denorastats.org> - 2004/2005
 05/29 A StatServ display now shows info about the mod better      [ #00]
 05/20 A Added !help, !stats, !gstats.                             [ #57]
 05/19 A Added SQL Ping check so if the server goes way we know    [ #00]
@@ -642,7 +642,7 @@ Provided by Xaf <root@sbird.org> - 2005
 Provided by GeniusDex <geniusdex@anope.org>
 05/16 A Dutch Translation.                                        [ #00]
 
-Provided by Hal9000 <hal9000@pimpmylinux.org> - 2005
+Provided by Hal9000 <hal9000@denorastats.org> - 2005
 05/17 A Italian Translation.                                      [ #00]
 
 Provided by Alvaro <agonzal@gmail.com> - 2005

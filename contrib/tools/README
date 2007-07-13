@@ -3,7 +3,7 @@ Contrib Tools for Denora - README FILE
 -----------------------------------------------
 eggdrop stats.mod -> denora chanstats converter [smconv.pl]
 -----------------------------------------------
-version 1.0.0 - <Hal9000@pimpmylinux.org>
+version 1.0.0 - <hal9000@denorastats.org>
 
 INTRODUCTION
 This converter, written in Perl, is intended to use for importing the database file

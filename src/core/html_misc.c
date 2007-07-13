@@ -1,7 +1,7 @@
 /* Html Misc
  *
  * (C) 2004-2007 Denora Team
- * Contact us at info@nomadirc.net
+ * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
  *
@@ -136,7 +136,7 @@ void html_credits(FILE * ptr)
     fprintf(ptr, "%s compiled on [%s %s %s]<br>", tempc,
             denora->date, denora->time, denora->build);
     fprintf(ptr,
-            "<a href=http://denora.nomadirc.net>denora.nomadirc.net</a><br>");
+            "<a href=\"http://denorastats.org/\">denorastats.org</a><br>");
 #ifdef MSVS2005
     localtime_s(&tm, &ts);
 #else

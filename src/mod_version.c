@@ -1,7 +1,7 @@
 /* Version information for Stats.
  *
  * (C) 2004-2007 Denora Team
- * Contact us at info@nomadirc.net
+ * Contact us at info@denorastats.org
  *
  * Please read COPYING and CREDITS for furhter details.
  *

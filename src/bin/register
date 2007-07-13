@@ -17,10 +17,10 @@ REGCACHE="register.cache"
 SENDMAIL="/usr/sbin/sendmail"
 
 # SCRIPT VERSION NUMBER (DO NOT ALTER)
-REGISTERVERSION="1.2"
+REGISTERVERSION="1.3"
 
 # DO NOT CHANGE IF YOU WANT TO REGISTER WITH DENORA
-REGISTRYADDRESS="dev@pimpmylinux.org"
+REGISTRYADDRESS="dev@denorastats.org"
 
 ################################################
 # END OF CONFIGURATION
@@ -32,13 +32,13 @@ Show_Questions () {
 	echo "1. What is your network name? (e.g. Denora IRC Network)"
 	read NETWORKNAME
 	echo CONNECTADDRESS=\"$NETWORKNAME\" >> $REGCACHE
-	echo "2. What is your network's connection address (e.g. irc.nomadirc.net)"
+	echo "2. What is your network's connection address (e.g. irc.denorastats.org)"
 	read CONNECTADDRESS
 	echo CONNECTADDRESS=\"$CONNECTADDRESS\" >> $REGCACHE
-	echo "3. Primary contact email address? (e.g. irc-admin@nomadirc.net)"
+	echo "3. Primary contact email address? (e.g. irc-admin@denorastats.org)"
 	read CONTACTEMAIL
 	echo CONTACTEMAIL=\"$CONTACTEMAIL\" >> $REGCACHE
-	echo "4. What is your network's website address (e.g. http://www.nomadirc.net)"
+	echo "4. What is your network's website address (e.g. http://www.denorastats.org/)"
 	read WEBSITEADDRESS
 	echo WEBSITEADDRESS=\"$WEBSITEADDRESS\" >> $REGCACHE
 	echo "5. Would you like your network to be listed in a public database?"

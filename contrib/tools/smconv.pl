@@ -2,7 +2,7 @@
 
  ###########################################################################
  #   Copyright (C) 2005-2006 by Hal9000                                    #
- #   hal9000@pimpmylinux.org                                               #
+ #   hal9000@denorastats.org                                               #
  #                                                                         #
  #   This program is free software; you can redistribute it and/or modify  #
  #   it under the terms of the GNU General Public License as published by  #

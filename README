@@ -2,7 +2,7 @@
 # Denora -- IRC statistics for IRC networks  #
 ##############################################
 
-Information about Denora may be found at http://denora.nomadirc.net/
+Information about Denora may be found at http://denorastats.org/
 
 -----------------
 TABLE OF CONTENTS
@@ -53,7 +53,7 @@ TABLE OF CONTENTS
         * Jens Voss           <DukePyrolator@FantasyIRC.net>
         * Florian Schulze     <certus@randombytes.de>
         * Gabriel Craciunescu <da.crew@gmx.net>
-        * Hal9000             <hal9000@pimpmylinux.org>
+        * Hal9000             <hal9000@denorastats.org>
 
     Denora Translations:
         * Gabriel Acevedo H.  <drstein@chatadventista.com> (es.l)
@@ -61,7 +61,7 @@ TABLE OF CONTENTS
         * Xaf                 <root@sbird.org>             (fr.l)
         * Pieter Bootms       <geniusdex@anope.org>        (nl.l)
         * dotslasher          <dotslasher@staticbox.com>   (nl.l)
-        * Hal9000             <hal9000@pimpmylinux.org>    (it.l, example.it.conf)
+        * Hal9000             <hal9000@denorastats.org>    (it.l, example.it.conf)
         * Daniel Arndt        <MaOaM@gmx.org>              (example.de.conf)
         * Alvaro              <agonzal@gmail.com>          (es.l, example.es.conf)
         * illu                <illu@icedslash.org>         (fr.l)
@@ -162,17 +162,17 @@ TABLE OF CONTENTS
 
     * If you read the documentation carefully, and didn't find the answer
       to your question, feel free to post on the website forums or join our
-      IRC channel (irc.nomadirc.net #denora). Once you join our Support channel,
+      IRC channel (irc.denorastats.org #denora). Once you join our Support channel,
       just type "? report" for instructions on how to report a Bug. Be as
       precise as possible when asking a question, because we have no extraordinary
       powers and can't guess things if they aren't provided. The more precise you
       are, the sooner you'll be likely to get an answer.
 
     * If you think you found a bug, add it to the bug tracking system on our
-      website (http://denora.nomadirc.net) and - again - be as precise as possible. Also
+      website (http://denorastats.org/) and - again - be as precise as possible. Also
       say whether the bug happens always or under what circumstances, and anything
       that could be useful to track your bug down. If you wrote a patch, send it
       over.
 
-    * Support is also available via our forums located at http://denora.nomadirc.net/forum/
+    * Support is also available via our forums located at http://denorastats.org/forum/
 
