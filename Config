@@ -354,9 +354,12 @@ echo ""
 
 ok=0
 DEF=yes
-echo "Allow Denora to automatically check for mysql libaries?"
-echo "unless you get errors with make, there is no need to"
-echo "change this setting."
+echo "Allow Denora to automatically check for mysql client development libaries?"
+echo "unless you get errors with make, there is no need to change this setting."
+echo "WARNING: You NEED the mysql client devel libraries installed on your system"
+echo "         in order to compile Denora with SQL support."
+echo "         On Debian/Ubuntu systems for example, you need to install the"
+echo "         libmysqlclient15-dev package or similar."
 while [ $ok -lt 1 ] ; do
         echo2 "[$MYSQL] "
         if read INPUT ; then : ; else echo "" ; exit 1 ; fi

@@ -1,0 +1,6 @@
+This directory contains deprecated IRCd protocol modules for IRCds that
+are old or no longer maintained.
+You may use them and tweak them as you wish, but we can't guarantee
+that they will work and we won't give support!
+
+NO SUPPORT!!!

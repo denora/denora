@@ -10352,7 +10352,7 @@ else
 fi
 
 x="0";
-DIS_MYSQL="  MySql: No"
+DIS_MYSQL="  MySQL Support: NO"
 
 # Check whether --with-mysql was given.
 if test "${with_mysql+set}" = set; then
@@ -10725,7 +10725,7 @@ if test "$x" = "1"; then
 	DENORALIBS="$DENORALIBS$MYSQLCLIENT_LIBS "
 	CFLAGS="$CFLAGS $MYSQLCLIENT_CFLAGS "
 	LDFLAGS="$LDFLAGS $MYSQLCLIENT_LDFLAGS "
-    DIS_MYSQL="  MySql: Yes"
+    DIS_MYSQL="  MySQL Support: YES"
 
 for ac_func in mysql_set_charset_name
 do
@@ -12887,7 +12887,7 @@ _ACEOF
 fi
 
 
-DIS_MODULES="Modules: Yes"
+DIS_MODULES="Modules Support: YES"
 
 
 
@@ -13078,7 +13078,7 @@ cat >>confdefs.h <<\_ACEOF
 _ACEOF
 
   USE_MODULES="yes"
-  DIS_MODULES="Modules: Yes"
+  DIS_MODULES="Modules Support: YES"
 
 else
 
@@ -13089,7 +13089,7 @@ cat >>confdefs.h <<\_ACEOF
 #define STATIC_LINKING "NO_MODULES"
 _ACEOF
 
-  DIS_MODULES="Modules: No"
+  DIS_MODULES="Modules Support: NO"
 
 fi
 
@@ -32904,7 +32904,13 @@ $DIS_MODULES
 $DIS_MYSQL
 $DIS_DMALLOC
 
-All done!  Now run "make" (or possibly "gmake") to compile Denora.
+All done! Above you can see if Modules Support and MySQL Support will be compiled or not.
+If you intended to compile MySQL support and you see "NO", then your system is probably
+missing the mysql client development libraries. Please consult your distribution package
+manager and install the required package, then try running ./Config again.
+
+If you are satisfied with the results so far, run "make"
+(or possibly "gmake") to compile Denora.
 See the INSTALL, README and FAQ files if you have any problems.
 EOT
 
