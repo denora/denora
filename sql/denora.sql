@@ -454,7 +454,7 @@ DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin` (
   `id` tinyint(3) unsigned NOT NULL auto_increment,
   `uname` varchar(32) NOT NULL default '',
-  `passwd` mediumblob NOT NULL,
+  `passwd` varchar(32) NOT NULL default '',
   `level` tinyint(1) NOT NULL default '0',
   `host` varchar(32) NOT NULL default '',
   `lang` tinyint(2) NOT NULL default '0',

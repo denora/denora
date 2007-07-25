@@ -272,6 +272,7 @@ Provided by Nomad Dev. <dev@denorastats.org> - 2005
 08/05 F Fixed maxvalues setting on clean installs.                [#122]
 
 Provided by Hal9000 <hal9000@denorastats.org>
+07/25 A Admin passwords are now MD5-encrypted in SQL              [ #00]
 07/18 U Updated GeoIP database file                               [ #00]
 07/18 A Moved deprecated ircd protocol files out of the way       [ #00]
 07/18 A Made the ./Config process more clear about MySQL support  [ #00]

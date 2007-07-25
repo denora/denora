@@ -278,7 +278,7 @@ int add_sqladmin(char *name, char *passwd, int level, char *host, int lang)
     }
 
     rdb_query(QUERY_LOW,
-              "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', '%s', %d, '%s', %d)",
+              "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', MD5('%s'), %d, '%s', %d)",
               AdminTable, name, passwd, level, host, lang);
 
 #ifdef USE_MYSQL
@@ -333,7 +333,7 @@ void reset_sqladmin(void)
         for (i = 0; i < 1024; i++) {
             for (a = adminlists[i]; a; a = a->next) {
                 rdb_query(QUERY_LOW,
-                          "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', '%s', %d, '%s', %d)",
+                          "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', MD5('%s'), %d, '%s', %d)",
                           AdminTable, a->name, a->passwd, a->configfile,
                           a->hosts[0], a->language);
             }
