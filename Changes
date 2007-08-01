@@ -1,6 +1,7 @@
 Denora Version SVN
 -------------------
 Provided by Nomad Dev. <dev@denorastats.org> - 2007
+08/01 F EVENT_USER_PART referenced freed memory                   [#386]
 07/04 F Fixed compiling issue on x86_64 machines                  [#390]
 
 Provided by Nomad Dev. <dev@denorastats.org> - 2006

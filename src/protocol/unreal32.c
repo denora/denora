@@ -1,4 +1,5 @@
 /* Unreal 3.2.x
+/* Unreal 3.2.x
  *
  * (C) 2004-2007 Denora Team
  * Contact us at info@denorastats.org
@@ -1407,7 +1408,6 @@ void moduleAddIRCDMsgs(void) {
 
 
 /* *INDENT-ON* */
-void moduleAddIRCDCmds()
 {
     pmodule_cmd_nick(unreal_cmd_nick);
     pmodule_cmd_mode(unreal_cmd_mode);
@@ -1453,3 +1453,4 @@ int DenoraInit(int argc, char **argv)
 
     return MOD_CONT;
 }
+ 

@@ -1010,6 +1010,8 @@ void do_part(const char *source, int ac, char **av)
                 return;
             }
             SET_SEGV_LOCATION();
+            send_event(EVENT_USER_PART, 3, user->nick, c->chan->name,
+                       av[1] ? av[1] : "");
             chan_deluser(user, c->chan);
             c2 = findchan(av[0]);
             if (c2) {
@@ -1028,8 +1030,6 @@ void do_part(const char *source, int ac, char **av)
                 user->chans = c->next;
             }
             SET_SEGV_LOCATION();
-            send_event(EVENT_USER_PART, 3, user->nick, c->chan->name,
-                       av[1] ? av[1] : "");
             free(c);
         }
     }
