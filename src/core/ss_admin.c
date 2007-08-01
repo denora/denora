@@ -74,6 +74,8 @@ static int do_admin(User * u, int ac, char **av)
         return MOD_CONT;
     }
     if (!stricmp(av[0], "ADD")) {
+        alog(LOG_NORMAL, "%s: %s: ADMIN ADD %s ****", s_StatServ, u->nick,
+             av[1]);
         if (!u->confadmin) {
             notice_lang(s_StatServ, u, PERMISSION_DENIED);
             return MOD_CONT;
@@ -104,6 +106,8 @@ static int do_admin(User * u, int ac, char **av)
             notice_lang(s_StatServ, u, STAT_ADMIN_CREATED, av[1]);
         }
     } else if (!stricmp(av[0], "DEL")) {
+        alog(LOG_NORMAL, "%s: %s: ADMIN DEL %s", s_StatServ, u->nick,
+             av[1]);
         if (!u->confadmin) {
             notice_lang(s_StatServ, u, PERMISSION_DENIED);
             return MOD_CONT;
@@ -130,6 +134,8 @@ static int do_admin(User * u, int ac, char **av)
             notice_lang(s_StatServ, u, STAT_ADMIN_NOTADMIN, av[1]);
         }
     } else if (!stricmp(av[0], "SETPASS")) {
+        alog(LOG_NORMAL, "%s: %s: ADMIN SETPASS %s ****", s_StatServ,
+             u->nick, av[1]);
         if (!u->confadmin) {
             notice_lang(s_StatServ, u, PERMISSION_DENIED);
             return MOD_CONT;
@@ -151,6 +157,8 @@ static int do_admin(User * u, int ac, char **av)
             notice_lang(s_StatServ, u, STAT_ADMIN_NOTADMIN, av[1]);
         }
     } else if (!stricmp(av[0], "SHOW")) {
+        alog(LOG_NORMAL, "%s: %s: ADMIN SHOW %s", s_StatServ, u->nick,
+             av[1]);
         if (ac < 2) {
             syntax_error(s_StatServ, u, "ADMIN", STAT_ADMIN_SYNTAX);
             return MOD_CONT;
@@ -163,6 +171,7 @@ static int do_admin(User * u, int ac, char **av)
             notice_lang(s_StatServ, u, STAT_ADMIN_NOTADMIN, av[1]);
         }
     } else if (!stricmp(av[0], "LIST")) {
+        alog(LOG_NORMAL, "%s: %s: ADMIN LIST", s_StatServ, u->nick);
         for (i = 0; i < 1024; i++) {
             for (a = adminlists[i]; a; a = a->next) {
                 notice(s_StatServ, u->nick, "%d %s", disp++, a->name);

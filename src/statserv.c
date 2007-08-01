@@ -63,7 +63,7 @@ void statserv(User * u, char *buf)
         }
         /* do not show the login password in the logchannel */
         /* there is a special log message in do_login */
-        if (stricmp(cmd, "LOGIN") != 0) {
+        if (stricmp(cmd, "LOGIN") != 0 && stricmp(cmd, "ADMIN") != 0) {
             alog(LOG_NORMAL, "%s: %s: %s", s_StatServ, u->nick, buf2);
         }
         mod_run_cmd(s_StatServ, u, STATSERV, cmd, str);

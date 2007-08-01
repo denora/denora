@@ -27,7 +27,7 @@ echo2 () {
 Show_Banner () {
 	if [ -f .BANNER ] ; then
 		clear
-        . version.log
+        .version.log
         cat .BANNER | sed "s/CURVER/$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH$VERSION_EXTRA ($VERSION_BUILD)/" | sed "s/CURSHORTVER/$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH/" | more
 	fi
     echo ""

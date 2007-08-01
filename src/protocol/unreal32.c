@@ -11,7 +11,7 @@
  * 
  * $Id$
  *
- * last tested with Unreal3.2.3
+ * last tested with Unreal 3.2.7
  *
  */
 
@@ -1408,7 +1408,6 @@ void moduleAddIRCDMsgs(void) {
 
 
 /* *INDENT-ON* */
-void moduleAddIRCDCmds()
 {
     pmodule_cmd_nick(unreal_cmd_nick);
     pmodule_cmd_mode(unreal_cmd_mode);

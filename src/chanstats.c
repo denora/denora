@@ -309,7 +309,7 @@ static void make_stats(User * u, char *receiver, char *msg)
     /* is a action ? */
     if (strncmp("\01ACTION", msg, 7) == 0) {    /* is a action ? */
         action = 1;
-        letters = letters - 9;  /* remove from the counted letters */
+        letters = letters - 7;  /* remove from the counted letters */
         words = words - 1;      /* remove from the counted words */
     }
     words = words - smileys;    /* do not count smileys as words */
