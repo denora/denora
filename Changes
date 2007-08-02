@@ -273,6 +273,7 @@ Provided by Nomad Dev. <dev@denorastats.org> - 2005
 08/05 F Fixed maxvalues setting on clean installs.                [#122]
 
 Provided by Hal9000 <hal9000@denorastats.org> - 2007
+08/02 F Fixed admin struct not being cleaned up on reload         [#381]
 08/01 F Passwords are now hidden from log on ADMIN ADD/SETPASS    [#402]
 08/01 F Fixed extreme letter counting on some actions             [#399]
 08/01 F Fixed ./Config not working on some Ubuntu systems         [ #00]

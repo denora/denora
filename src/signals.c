@@ -242,6 +242,9 @@ VOIDSIG signal_rehash(int signum)
 #ifdef SIGHUP
     if (signum == SIGHUP) {
 #endif
+        Dadmin *a;
+        int i;
+
         alog(LOG_NORMAL,
              "Received SIGHUP: Saving Databases & Rehash Configuration");
         if (initconf(denora->config, 1, mainconf) == -1) {
@@ -255,6 +258,15 @@ VOIDSIG signal_rehash(int signum)
             denora->quitting = 1;
             send_event(EVENT_SIGNAL, 2, "SIGHUP", denora->qmsg);
         } else {
+            /* Remove all config file admins from admin struct before re-reading config file */
+            for (i = 0; i < 1024; i++) {
+                for (a = adminlists[i]; a; a = a->next) {
+                    if (a->configfile) {
+                        free_admin(a);
+                    }
+                    break;
+                }
+            }
             merge_confs();
         }
 #ifdef	POSIX_SIGNALS
