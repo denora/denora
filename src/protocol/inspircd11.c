@@ -1,5 +1,5 @@
 
-/* InspIRCd 1.1 Beta 8 functions
+/* InspIRCd 1.1.12+ functions
  *
  * (C) 2005-2006 Craig Edwards <brain@inspircd.org>
  * (C) 2004-2007 Denora Team
@@ -45,7 +45,7 @@
 
 /* ***** WARNING ******
  *
- * While InspIRCd 1.1 beta 8 is relatively stable, it is very picky
+ * While InspIRCd 1.1 is relatively stable, it is very picky
  * about the sources commands come from. If i've made commands
  * come from nicks or servers here, where it looks odd to you,
  * this is NORMAL and the way it should be done.
@@ -59,7 +59,7 @@
 #include "inspircd11.h"
 
 IRCDVar myIrcd[] = {
-    {"InspIRCd 1.1.x",          /* ircd name                    */
+    {"InspIRCd 1.1.12+",        /* ircd name                    */
      "+io",                     /* StatServ mode                */
      IRCD_ENABLE,               /* Vhost                        */
      IRCD_ENABLE,               /* Supports SGlines             */
@@ -110,7 +110,7 @@ IRCDVar myIrcd[] = {
      NULL,                      /* nickchar                     */
      IRCD_ENABLE,               /* svid                         */
      IRCD_DISABLE,              /* hidden oper                  */
-     IRCD_ENABLE,               /* extra warning                */
+     IRCD_DISABLE,              /* extra warning                */
      IRCD_ENABLE                /* Report sync state            */
      }
     ,
@@ -239,14 +239,12 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("SQUIT",     denora_event_squit); addCoreMessage(IRCD,m);
     m = createMessage("TOPIC",     denora_event_topic); addCoreMessage(IRCD,m);
     m = createMessage("IDLE",      denora_event_idle); addCoreMessage(IRCD,m);
-
     m = createMessage("FHOST",     denora_event_fhost); addCoreMessage(IRCD,m);
     m = createMessage("FNAME",     denora_event_fname); addCoreMessage(IRCD,m);
     m = createMessage("PONG",      denora_event_pong); addCoreMessage(IRCD,m);
     m = createMessage("METADATA",  denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("FMODE",     denora_event_fmode); addCoreMessage(IRCD,m);
     m = createMessage("FTOPIC",    denora_event_ftopic); addCoreMessage(IRCD,m);
-    //m = createMessage("VERSION",   denora_event_version); addCoreMessage(IRCD,m);
     m = createMessage("OPERTYPE",  denora_event_opertype); addCoreMessage(IRCD,m);
     m = createMessage("ADDLINE",   denora_event_addline); addCoreMessage(IRCD,m);
     m = createMessage("GLINE",     denora_event_gline); addCoreMessage(IRCD,m);
@@ -266,10 +264,66 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("GLOBOPS",   denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("SAJOIN",    denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("SAPART",    denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("PUSH",      denora_event_push); addCoreMessage(IRCD,m);
 
 }
 
 /* *INDENT-ON* */
+
+int denora_event_push(char *source, int ac, char **av)
+{
+/* Thanks to w00t from the inspircd team for helping me to write this function
+ * debug: Received: :rock.musichat.net PUSH TestBOT ::rock.musichat.net 242 TestBOT :Server up 1 days, 07:47:54
+ */
+    Server *s;
+    char *num;
+    char buf[NET_BUFSIZE];
+
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
+    }
+
+    num = myStrGetToken(av[1], ' ', 1);
+    av[1] = myStrGetTokenRemainder(av[1], ' ', 3);
+
+    if (!strcmp(num, "375")) {
+        rdb_query(QUERY_LOW, "UPDATE %s SET motd=\'\' WHERE server=\'%s\'",
+                  ServerTable, source);
+    } else if (!strcmp(num, "372")) {
+        s = server_find(source);
+        if (!s)
+            return MOD_CONT;
+        av[1]++;
+        if (ac >= 2) {
+            if (s->motd) {
+                ircsnprintf(buf, NET_BUFSIZE - 1, "%s\n\r%s", s->motd,
+                            av[1]);
+                free(s->motd);
+                s->motd = sstrdup(buf);
+            } else {
+                s->motd = sstrdup(av[1]);
+            }
+        }
+    } else if (!strcmp(num, "376")) {
+        s = server_find(source);
+        if (!s)
+            return MOD_CONT;
+        sql_motd_store(s);
+    } else if (!strcmp(num, "242")) {
+        av[1]++;
+        sql_do_uptime(source, av[1]);
+    } else if (!strcmp(num, "248")) {
+        av[2] = myStrGetTokenRemainder(av[1], ' ', 1);
+        av[1] = myStrGetToken(av[1], ' ', 1);
+        sql_uline(av[2]);
+    } else {
+        alog(LOG_ERROR,
+             "Don't know how to handle numeric %s. Please contact the Denora developers.",
+             num);
+    }
+
+    return MOD_CONT;
+}
 
 int denora_event_eob(char *source, int ac, char **av)
 {
@@ -504,6 +558,7 @@ void inspircd_cmd_notice(char *source, char *dest, char *buf)
 
 void inspircd_cmd_stats(char *sender, const char *letter, char *server)
 {
+    send_cmd(sender, "STATS %s %s", letter, server);
 }
 
 void inspircd_cmd_privmsg(char *source, char *dest, char *buf)
@@ -994,7 +1049,7 @@ void inspircd_cmd_version(char *server)
 
 void inspircd_cmd_motd(char *sender, char *server)
 {
-    /* Remote MOTD not implemented in beta 6 */
+    send_cmd(sender, "MOTD %s", server);
 }
 
 int denora_event_notice(char *source, int ac, char **av)
@@ -1113,7 +1168,7 @@ int DenoraInit(int argc, char **argv)
         ("$Id$");
     moduleSetType(PROTOCOL);
 
-    pmodule_ircd_version("InspIRCd 1.1.x");
+    pmodule_ircd_version("InspIRCd 1.1.12+");
     pmodule_ircd_cap(myIrcdcap);
     pmodule_ircd_var(myIrcd);
     pmodule_ircd_useTSMode(0);
