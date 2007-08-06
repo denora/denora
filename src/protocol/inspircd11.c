@@ -730,6 +730,7 @@ int denora_event_quit(char *source, int ac, char **av)
     }
     if (ac != 1)
         return MOD_CONT;
+
     do_quit(source, ac, av);
     return MOD_CONT;
 }
@@ -948,6 +949,9 @@ int denora_event_fjoin(char *source, int ac, char **av)
 int denora_event_nick(char *source, int ac, char **av)
 {
     User *user;
+    char *ptr;
+    char buf[BUFSIZE];
+    char *ptr2 = buf;
 
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
@@ -955,6 +959,18 @@ int denora_event_nick(char *source, int ac, char **av)
 
     if (ac != 1) {
         if (ac == 8) {
+            // Here we should check if av[5] contains +o, and if so remove it, as this will be handled by OPERTYPE
+            ptr = av[5];
+            while (ptr && *ptr) {
+                if (*ptr != 'o') {
+                    /* not o, add it to the clean list */
+                    ptr2 = ptr;
+                    ptr2++;
+                }
+                /* increment original */
+                ptr++;
+            }
+            av[5] = buf;
             user = do_nick("", av[1],   /* nick */
                            av[4],       /* username */
                            av[2],       /* realhost */
