@@ -36,7 +36,9 @@ void ircu_cmd_stats(char *sender, const char *letter, char *server);
 void ircu_cmd_motd(char *sender, char *server);
 void ircu_cmd_ping(char *server);
 void IRCDModeInit(void);
+
 int denora_event_436(char *source, int ac, char **av);
+int denora_event_account(char *source, int ac, char **av);
 int denora_event_away(char *source, int ac, char **av);
 int denora_event_ping(char *source, int ac, char **av);
 int denora_event_motd(char *source, int ac, char **av);
@@ -63,6 +65,8 @@ int denora_event_burst(char *source, int ac, char **av);
 int denora_event_create(char *source, int ac, char **av);
 int denora_event_pong(char *source, int ac, char **av);
 int denora_event_sgline(char *source, int ac, char **av);
+int denora_event_rping(char *source, int ac, char **av);
+int denora_event_rpong(char *source, int ac, char **av);
 
 int DenoraInit(int argc, char **argv);
 void moduleAddIRCDMsgs(void);

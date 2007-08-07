@@ -18,9 +18,9 @@
 int p10nickcnt = 0;
 
 IRCDVar myIrcd[] = {
-    {"ircu2.10.*",              /* ircd name                 */
+    {"IRCu 2.10.11+",           /* ircd name                 */
      "+iok",                    /* StatServ mode             */
-     IRCD_DISABLE,              /* Vhost                     */
+     IRCD_ENABLE,               /* Vhost                     */
      IRCD_DISABLE,              /* Supports SGlines          */
      IRCD_DISABLE,              /* sgline sql table          */
      IRCD_ENABLE,               /* Supports SQlines          */
@@ -52,9 +52,9 @@ IRCDVar myIrcd[] = {
      NULL,                      /* Channel modes             */
      IRCD_DISABLE,              /* flood                     */
      IRCD_DISABLE,              /* flood other               */
-     IRCD_DISABLE,              /* vhost                     */
+     'x',                       /* vhost                     */
      IRCD_DISABLE,              /* vhost other               */
-     IRCD_DISABLE,              /* channek linking           */
+     IRCD_DISABLE,              /* channel linking           */
      IRCD_ENABLE,               /* p10                       */
      IRCD_DISABLE,              /* TS6                       */
      IRCD_ENABLE,               /* numeric ie.. 350 etc      */
@@ -64,7 +64,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* except char               */
      IRCD_DISABLE,              /* invite char               */
      IRCD_DISABLE,              /* zip                       */
-     IRCD_DISABLE,              /* ssl                       */
+     IRCD_ENABLE,               /* ssl                       */
      IRCD_ENABLE,               /* uline                     */
      NULL,                      /* nickchar                  */
      IRCD_DISABLE,              /* svid                      */
@@ -104,72 +104,54 @@ IRCDCAPAB myIrcdcap[] = {
      0,                         /* TLKEXT       */
      0,                         /* DODKEY       */
      0,                         /* DOZIP        */
-     0,
-     0,
-     0}
+     0,                         /* CHANMODES    */
+     0,                         /* sjb64        */
+     0,                         /* nickchar     */
+     }
 };
 
 /*************************************************************************/
 
 void IRCDModeInit(void)
 {
-    /* User Modes
-     * i - marks a users as invisible;
-     * s - marks a user for receipt of server notices;
-     * w - user receives wallops;
-     * o - operator flag.
-     * d - Deaf & Dumb.  This user will not get any channel traffic. Used for bots.
-     * k - This user cannot be kicked, deop'd or /kill'd.  This usermode may only
-     *     be set by a server, it may not be set by a user.  This is used by
-     *     undernet service bots (X/W/UWorld etc)
-     * g - List channel HACK:'s
-     */
-    ModuleSetUserMode(UMODE_d, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_g, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_i, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_k, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_o, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_r, IRCD_ENABLE);    // regged user
-    ModuleSetUserMode(UMODE_s, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_x, IRCD_ENABLE);    // hidden host
-    ModuleSetUserMode(UMODE_w, IRCD_ENABLE);
+    /* User Modes */
+    ModuleSetUserMode(UMODE_d, IRCD_ENABLE);    /* Deaf Mode */
+    ModuleSetUserMode(UMODE_g, IRCD_ENABLE);    /* Server debug messages */
+    ModuleSetUserMode(UMODE_h, IRCD_ENABLE);    /* */
+    ModuleSetUserMode(UMODE_i, IRCD_ENABLE);    /* Invisible */
+    ModuleSetUserMode(UMODE_k, IRCD_ENABLE);    /* Service */
+    ModuleSetUserMode(UMODE_o, IRCD_ENABLE);    /* Local Operator */
+    ModuleSetUserMode(UMODE_r, IRCD_ENABLE);    /* Registered */
+    ModuleSetUserMode(UMODE_s, IRCD_ENABLE);    /* Server Notices */
+    ModuleSetUserMode(UMODE_w, IRCD_ENABLE);    /* Wallops */
+    ModuleSetUserMode(UMODE_x, IRCD_ENABLE);    /* Hidden Host */
+    ModuleSetUserMode(UMODE_O, IRCD_ENABLE);    /* Global Operator */
     ModuleUpdateSQLUserMode();
 
-    /* Channel Modes
-     * o - give/take channel operator privileges;
-     * p - private channel flag;
-     * s - secret channel flag;
-     * i - invite-only channel flag;
-     * t - topic settable by channel operator only flag;
-     * n - no messages to channel from clients on the outside;
-     * m - moderated channel;
-     * l - set the user limit to channel;
-     * b - set a ban mask to keep users out;
-     * v - give/take the ability to speak on a moderated channel;
-     * k - set a channel key (password).
-     */
+    /* Channel List Modes */
+    CreateChanBanMode(CMODE_b, add_ban, del_ban);       /* Ban */
 
-    CreateChanBanMode(CMODE_b, add_ban, del_ban);
-    CreateChanMode(CMODE_i, NULL, NULL);
-    CreateChanMode(CMODE_k, set_key, get_key);
-    CreateChanMode(CMODE_l, set_limit, get_limit);
-    CreateChanMode(CMODE_m, NULL, NULL);
-    CreateChanMode(CMODE_n, NULL, NULL);
-    CreateChanMode(CMODE_p, NULL, NULL);
-    CreateChanMode(CMODE_r, NULL, NULL);        // regged chan
-    CreateChanMode(CMODE_s, NULL, NULL);
-    CreateChanMode(CMODE_t, NULL, NULL);
-    ModuleSetChanUMode('+', 'v', STATUS_VOICE);
-    ModuleSetChanUMode('@', 'o', STATUS_OP);
+    /* Channel Modes */
+    CreateChanMode(CMODE_D, NULL, NULL);        /* Delayed Join */
+    CreateChanmode(CMODE_d, NULL, NULL);        /* Delayed Join */
+    CreateChanMode(CMODE_A, NULL, NULL);        /* Channel Admin Pass */
+    CreateChanMode(CMODE_U, NULL, NULL);        /* Channel User Pass */
+    CreateChanMode(CMODE_i, NULL, NULL);        /* Invite Only */
+    CreateChanMode(CMODE_k, set_key, get_key);  /* Keyed */
+    CreateChanMode(CMODE_l, set_limit, get_limit);      /* Invite Only */
+    CreateChanMode(CMODE_m, NULL, NULL);        /* Moderated */
+    CreateChanMode(CMODE_n, NULL, NULL);        /* No external messages */
+    CreateChanMode(CMODE_p, NULL, NULL);        /* Private */
+    CreateChanMode(CMODE_r, NULL, NULL);        /* Registered Only */
+    CreateChanMode(CMODE_s, NULL, NULL);        /* Secret */
+    CreateChanMode(CMODE_t, NULL, NULL);        /* Topic only changeable by ops */
+    CreateChanMode(CMODE_u, NULL, NULL);        /* No Quitmessages */
+
+    /* Channel User Modes */
+    ModuleSetChanUMode('+', 'v', STATUS_VOICE); /* Voice */
+    ModuleSetChanUMode('@', 'o', STATUS_OP);    /* Operator */
     ModuleUpdateSQLChanMode();
 }
-
-/*************************************************************************/
-
-/* On Services connect the modes are given */
-/* AB N Trystan` 1 1098031638 tslee comcast.net +i AYAmXj ABAAC : real */
-/* On user join they are not */
-/* AB N Trystan  1 1101443066 tslee comcast.net AYAmXj ABAAB : real */
 
 char *ircu_nickip(char *host)
 {
@@ -181,6 +163,11 @@ char *ircu_nickip(char *host)
     return sstrdup(inet_ntoa(addr));
 }
 
+/* On Services connect the modes are given */
+/* AB N Trystan` 1 1098031638 tslee comcast.net +i AYAmXj ABAAC : real */
+/* On user join they are not */
+/* AB N Trystan  1 1101443066 tslee comcast.net AYAmXj ABAAB : real */
+
 /*
 ** NICK - new
 **      source  = Ownering Server Prefix
@@ -190,25 +177,29 @@ char *ircu_nickip(char *host)
 **      parv[3] = username
 **      parv[4] = host
 **      parv[5] = modes
-**      parv[6] = base64 ip
-**	parv[7] = uid
-**      parv[8] = info
+**	parv[6] = account if authed
+**      parv[6|7] = base64 ip
+**	parv[7|8] = uid
+**      parv[8|9] = info
 ** NICK - change 
 **      source  = oldnick
 **	parv[0] = new nickname
 **      parv[1] = timestamp
 */
+/* 
+  AB N Trystan 1 1117327797 tslee c-24-2-101-227.hsd1.ut.comcast.net +i AYAmXj ABAAB :Dreams are answers to questions not yet asked
+        0      1  2          2      3                                 4 5       6     7
+ */
 
 int denora_event_nick(char *source, int ac, char **av)
 {
     User *user;
     Server *s;
     char *temp;
-    char *ipchar = NULL;
+    char *ipchar;
 
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
 
     /* do_nick(const char *source, char *nick, char *username, char *host,
        char *server, char *realname, time_t ts, uint32 svid,
@@ -217,39 +208,59 @@ int denora_event_nick(char *source, int ac, char **av)
     temp = sstrdup(source);
 
     if (ac != 2) {
+        char *realname, *ip, *nick;
+        char *ident, *host, *modes, *modes2;
+        char *uid = "";
+        char *account = "";
+        char *timestamp = "";
+        char hhostbuf[255];
+        int ishidden = 0, isaccount = 0;
+
         s = server_find(source);
         *source = '\0';
-        if (ac == 10) {
-            ipchar = ircu_nickip(av[7]);
-            user =
-                do_nick(source, av[0], av[3], av[4], (s ? s->name : temp),
-                        av[9], strtoul(av[2], NULL, 10), 0,
-                        ipchar, NULL, av[8], strtoul(av[1],
-                                                     NULL, 10), av[5],
-                        NULL);
-            free(ipchar);
-        } else if (ac == 9) {
-            /* server sending is not important for this */
-            ipchar = ircu_nickip(av[6]);
-            user =
-                do_nick(source, av[0], av[3], av[4], (s ? s->name : temp),
-                        av[8], strtoul(av[2], NULL, 10), 0,
-                        ipchar, NULL, av[7], strtoul(av[1],
-                                                     NULL, 10), av[5],
-                        NULL);
-            free(ipchar);
-        } else if (ac == 8) {
-            ipchar = ircu_nickip(av[5]);
-            do_nick(source, av[0], av[3], av[4], (s ? s->name : temp),
-                    av[7], strtoul(av[2], NULL, 10), 0,
-                    ipchar, NULL, av[6], strtoul(av[1], NULL, 10), NULL,
-                    NULL);
-            free(ipchar);
-        } else {
-            alog(LOG_DEBUG,
-                 "Unknown NICK formatted message please report the following");
-            protocol_debug(temp, ac, av);
+
+        realname = strdup(av[ac - 1]);
+        uid = strdup(av[ac - 2]);
+        ip = strdup(av[ac - 3]);
+        nick = strdup(av[0]);
+        ident = strdup(av[3]);
+        host = strdup(av[4]);
+        modes = strdup(av[5]);
+        modes2 = strdup(av[5]);
+        timestamp = strdup(av[2]);
+
+        if (strpbrk(av[5], "+")) {
+            while (*modes) {
+                switch (*modes) {
+                case 'r':
+                    isaccount = 1;
+                    account = strdup(av[6]);
+                    break;
+                case 'x':
+                    ishidden = 1;
+                    break;
+                default:
+                    break;
+                }
+                modes++;
+            }
+            modes = strdup(modes2);
+        } else
+            modes = NULL;
+
+        ipchar = ircu_nickip(ip);
+
+        if (isaccount && ishidden) {
+            ircsnprintf(hhostbuf, sizeof(av[6]) + sizeof(hhostbuf) + 2,
+                        "%s%s%s", HiddenPrefix, av[6], HiddenSuffix);
         }
+
+        user = do_nick(source, nick, ident, host, (s ? s->name : temp),
+                       realname, strtoul(timestamp, NULL, 10), 0, ipchar,
+                       (ishidden && isaccount) ? hhostbuf : NULL, uid,
+                       strtoul(av[1], NULL, 10), modes, account);
+
+        free(ipchar);
     } else {
         user = find_byuid(source);
         do_nick((user ? user->nick : source), av[0], NULL, NULL, NULL,
@@ -262,9 +273,9 @@ int denora_event_nick(char *source, int ac, char **av)
 
 int denora_event_436(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
+
     if (ac < 1)
         return MOD_CONT;
 
@@ -274,12 +285,12 @@ int denora_event_436(char *source, int ac, char **av)
 
 int denora_event_error(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
-    if (ac >= 1) {
+
+    if (ac >= 1)
         alog(LOG_ERROR, "ERROR: %s", av[0]);
-    }
+
     return MOD_CONT;
 }
 
@@ -287,18 +298,16 @@ int denora_event_eob(char *source, int ac, char **av)
 {
     Server *s;
 
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
 
     s = server_find(source);
-    if (stricmp(s->name, denora->uplink) == 0) {
+    if (stricmp(s->name, denora->uplink) == 0)
         send_cmd(NULL, "%s EA", p10id);
-    }
+
     update_sync_state(source, SYNC_COMPLETE);
     return MOD_CONT;
 }
-
 
 /* *INDENT-OFF* */
 void moduleAddIRCDMsgs(void) {
@@ -316,8 +325,6 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("N",        denora_event_nick); addCoreMessage(IRCD,m);
     /* ping */
     m = createMessage("G",        denora_event_ping); addCoreMessage(IRCD,m);
-    /* pong */
-    m = createMessage("Z",        denora_event_null); addCoreMessage(IRCD,m);
     /* MODE */
     m = createMessage("M",        denora_event_mode); addCoreMessage(IRCD,m);
     /* CREATE */
@@ -362,8 +369,10 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("Z",        denora_event_pong); addCoreMessage(IRCD,m);
     /* STATS */
     m = createMessage("R",        m_stats); addCoreMessage(IRCD,m);
-    /* ACCCOUNT */
-    m = createMessage("AC",       denora_event_null); addCoreMessage(IRCD,m);
+    /* ACCOUNT */
+    m = createMessage("AC",       denora_event_account); addCoreMessage(IRCD,m);
+    /* KILL */
+    m = createMessage("D",	  denora_event_kill); addCoreMessage(IRCD,m);
     /* GLINE */
     m = createMessage("GL",       denora_event_sgline); addCoreMessage(IRCD,m);
     /* INFO */
@@ -375,11 +384,14 @@ void moduleAddIRCDMsgs(void) {
     /* TRACE */
     m = createMessage("TR",       denora_event_null); addCoreMessage(IRCD,m);
     /* RPING */
-    m = createMessage("RI",       denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("RI",       denora_event_rping); addCoreMessage(IRCD,m);
+    /* RPONG */
+    m = createMessage("RO",	  denora_event_rpong); addCoreMessage(IRCD,m);
     /* End of Burst Acknowledge */
     m = createMessage("EA",       denora_event_null); addCoreMessage(IRCD,m);
+    /* SILENCE */
+    m = createMessage("U",	  denora_event_null); addCoreMessage(IRCD,m);
 }
-
 
 /* *INDENT-ON* */
 
@@ -387,9 +399,9 @@ void moduleAddIRCDMsgs(void) {
 /* UNGLINE : AK GL * -*!*@*.aol.com */
 int denora_event_sgline(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
+
     p10_gline(source, ac, av);
     return MOD_CONT;
 }
@@ -422,6 +434,7 @@ void ircu_cmd_part(char *nick, char *chan, char *buf)
 void ircu_cmd_join(char *user, char *channel, time_t chantime)
 {
     Uid *ud;
+    char *modes = NULL;
 
     ud = find_uid(user);
 
@@ -429,8 +442,15 @@ void ircu_cmd_join(char *user, char *channel, time_t chantime)
         send_cmd((ud ? ud->uid : user), "J %s %ld", channel,
                  (long int) chantime);
     } else {
-        send_cmd(p10id, "B %s %ld %s:o", channel,
-                 (long int) time(NULL), (ud ? ud->uid : user));
+        if (AutoOp && AutoMode) {
+            modes = sstrdup(AutoMode);
+            *modes++;           // since the first char is +, we skip it
+            send_cmd(p10id, "B %s %ld %s:%s", channel,
+                     (long int) chantime, (ud ? ud->uid : user), modes);
+        } else {
+            send_cmd(p10id, "B %s %ld %s", channel,
+                     (long int) chantime, (ud ? ud->uid : user));
+        }
     }
 }
 
@@ -442,6 +462,7 @@ void ircu_cmd_squit(char *servname, char *message)
 
 void ircu_cmd_connect(void)
 {
+
     if (!BadPtr(Numeric)) {
         inttobase64(p10id, atoi(Numeric), 2);
         me_server =
@@ -454,11 +475,34 @@ void ircu_cmd_connect(void)
     }
 }
 
+/* RPING */
+/* AB RI AN ABAAB 1166048441 214764 :<No client start time> */
+int denora_event_rping(char *source, int ac, char **av)
+{
+    if (denora->protocoldebug)
+        protocol_debug(source, ac, av);
+
+    send_cmd(av[0], "RO %s %s %s %s :%s", ServerName, av[1], av[2], av[3],
+             av[4]);
+    return MOD_CONT;
+}
+
+/* RPONG */
+/* AN RO Stats.ScaryNet.Org ABAAA 1166048441 214764 :<No client start time> */
+int denora_event_rpong(char *source, int ac, char **av)
+{
+    if (denora->protocoldebug)
+        protocol_debug(source, ac, av);
+
+    server_store_pong(source, time(NULL));
+    return MOD_CONT;
+}
+
 int denora_event_pong(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
+
     server_store_pong(source, time(NULL));
     return MOD_CONT;
 }
@@ -474,8 +518,8 @@ void ircu_cmd_capab()
     /* not used by p10 */
 }
 
-/* SERVER [SERVERNAME] [HOPCOUNT] [START TIME] [LINK TIME] [PROTOCOL] [NUMERIC/MAXCONN] :[DESCRIPTION] */
-/* SERVER irc.undernet.org 1 933022556 947908144 J10 AA]]] :[127.0.0.1] A Undernet Server */
+/* SERVER [SERVERNAME]     [HOPCOUNT] [START TIME] [LINK TIME] [PROTOCOL] [NUMERIC/MAXCONN] :[DESCRIPTION] */
+/* SERVER irc.undernet.org 1          933022556    947908144   J10        AA]]]             :[127.0.0.1] A Undernet Server */
 void ircu_cmd_server(char *servname, int hop, char *descript)
 {
     send_cmd(NULL, "SERVER %s %d %ld %lu J10 %s]]] +s :%s", servname, hop,
@@ -497,29 +541,72 @@ void ircu_cmd_global(char *source, char *buf)
 /* ABAAC A */
 int denora_event_away(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
+
     m_away(source, (ac ? av[0] : NULL));
     return MOD_CONT;
 }
 
-int denora_event_topic(char *source, int ac, char **av)
+/* Old style AC */
+/* ABAAB AC ANAC] :Trystan */
+
+/* AC With login on connect */
+/* ABAAC AC ANAC] R :Trystan */
+int denora_event_account(char *source, int ac, char **av)
 {
-    char *newav[4];
+    Server *s;
     User *u;
 
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
-    if (ac < 2)
+
+    if ((ac < 2) || !source || !(s = server_find(source)))
         return MOD_CONT;
 
-    u = user_find(source);
+    u = find_byuid(av[0]);
+    if (!u)
+        return MOD_CONT;
+
+    if (!strcmp(av[1], "R"))    /* Set */
+        do_p10account(u, av[2], 0);
+    else if (!strcmp(av[1], "M"))       /* Rename */
+        do_p10account(u, av[2], 2);
+    else if (!strcmp(av[1], "U"))       /* Remove */
+        do_p10account(u, NULL, 1);
+    else
+        do_p10account(u, av[1], 0);     /* For backward compatability */
+
+    return MOD_CONT;
+}
+
+/* During Burst (topicburst with lastts enabled) */
+/* [SOURCE] T [CHANNEL] [TIMESTAMP] [LASTSET]  :[TOPIC] */
+/* AB       T #channel  1160681786  1162869140 :This is a topic */
+
+/* During Burst (topicburst without lastts enabled) */
+/* [SOURCE] T [CHANNEL] [TIMESTAMP] :[TOPIC] */
+/* AX       T #channel  1154382905 :This is a topic */
+
+/* By user */
+/* [SOURCE] T [CHANNEL] [TIMESTAMP] :[TOPIC] */
+/* ABAAC    T #channel  1163489401  :This is a topic */
+
+int denora_event_topic(char *source, int ac, char **av)
+{
+    if (denora->protocoldebug)
+        protocol_debug(source, ac, av);
+
+    if (ac < 4)
+        return MOD_CONT;
+
+    char *newav[5];
+
     newav[0] = av[0];
-    newav[1] = u->nick;
-    newav[2] = (ac == 2) ? itostr(time(NULL)) : av[ac - 2];
+    newav[1] = av[1];
+    newav[2] = av[ac - 2];
     newav[3] = av[ac - 1];
+    newav[4] = '\0';
 
     do_topic(4, newav);
     return MOD_CONT;
@@ -527,11 +614,12 @@ int denora_event_topic(char *source, int ac, char **av)
 
 int denora_event_squit(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
+
     if (ac != 2)
         return MOD_CONT;
+
     do_squit(av[0]);
     return MOD_CONT;
 }
@@ -539,11 +627,12 @@ int denora_event_squit(char *source, int ac, char **av)
 /* ABAAB Q :Quit */
 int denora_event_quit(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
+
     if (ac != 1)
         return MOD_CONT;
+
     do_quit(source, ac, av);
     return MOD_CONT;
 }
@@ -555,12 +644,16 @@ int denora_event_quit(char *source, int ac, char **av)
 /* ABAAA M #ircops +v ABAAB */
 int denora_event_mode(char *source, int ac, char **av)
 {
+    if (denora->protocoldebug)
+        protocol_debug(source, ac, av);
+
+    if (ac < 2)
+        return MOD_CONT;
+
     User *u;
+
     char *sender;
 
-    if (denora->protocoldebug) {
-        protocol_debug(source, ac, av);
-    }
     u = find_byuid(source);
 
     if (!u) {
@@ -569,22 +662,32 @@ int denora_event_mode(char *source, int ac, char **av)
         sender = u->nick;
     }
 
-    if (ac < 2)
-        return MOD_CONT;
-
     if (*av[0] == '#' || *av[0] == '&') {
         do_cmode(source, ac, av);
     } else {
         do_umode(sender, ac, av);
+        if (strcmp(av[1], "x") != -1) {
+            User *v;
+            char hhostbuf[255];
+
+            v = user_find(av[0]);
+            if (v->account) {
+                ircsnprintf(hhostbuf,
+                            sizeof(v->account) + sizeof(hhostbuf) + 2,
+                            "%s%s%s", HiddenPrefix, v->account,
+                            HiddenSuffix);
+                change_user_host(v->nick, hhostbuf);
+            }
+        }
     }
     return MOD_CONT;
 }
 
 int denora_event_kill(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
+
     if (ac != 2)
         return MOD_CONT;
 
@@ -593,11 +696,12 @@ int denora_event_kill(char *source, int ac, char **av)
 }
 
 /* ABAAA K #ircops ABAAC :Trystan` */
+/* ABAAA K #testchan ABAAB :test */
 int denora_event_kick(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
+
     do_p10_kick(source, ac, av);
     return MOD_CONT;
 }
@@ -606,15 +710,14 @@ int denora_event_kick(char *source, int ac, char **av)
 /* ABAAB J #ircops 1098031328 */
 int denora_event_join(char *source, int ac, char **av)
 {
-    User *u;
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
-    u = find_byuid(source);
 
-    if (ac != 2) {
+    if (ac != 2)
         return MOD_CONT;
-    }
+
+    User *u;
+    u = find_byuid(source);
 
     do_join((u ? u->nick : source), ac, av);
     return MOD_CONT;
@@ -624,9 +727,9 @@ int denora_event_join(char *source, int ac, char **av)
 /* ABAAA C #ircops 1098031328 */
 int denora_event_create(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
+
     do_join(source, ac, av);
     return MOD_CONT;
 }
@@ -638,9 +741,9 @@ int denora_event_create(char *source, int ac, char **av)
 /* s  c 0         1         2 */
 int denora_event_sjoin(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
+
     do_p10_burst(source, ac, av);
     return MOD_CONT;
 }
@@ -648,9 +751,9 @@ int denora_event_sjoin(char *source, int ac, char **av)
 /* ABAAA MO AG */
 int denora_event_motd(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
+
     m_motd(source);
     return MOD_CONT;
 }
@@ -728,13 +831,13 @@ void ircu_cmd_nick(char *nick, char *name, const char *modes)
 /* (AB S trystan.nomadirc.net 2 0 1106520454 P10 ACAP] +h :Test Server) */
 int denora_event_server(char *source, int ac, char **av)
 {
+    if (denora->protocoldebug)
+        protocol_debug(source, ac, av);
+
     Server *s;
+
     char uplinknum[3];
     *uplinknum = '\0';
-
-    if (denora->protocoldebug) {
-        protocol_debug(source, ac, av);
-    }
     strlcpy(uplinknum, av[5], sizeof(uplinknum));
 
     if (!stricmp(av[1], "1")) {
@@ -750,16 +853,18 @@ int denora_event_server(char *source, int ac, char **av)
 /* ABAAA P ADAAB :help */
 int denora_event_privmsg(char *source, int ac, char **av)
 {
+    if (denora->protocoldebug)
+        protocol_debug(source, ac, av);
+
+    if (ac != 2 || *av[0] == '$' || strlen(source) == 2)
+        return MOD_CONT;
+
     User *u;
     Uid *id;
-    if (denora->protocoldebug) {
-        protocol_debug(source, ac, av);
-    }
+
     u = find_byuid(source);
     id = find_nickuid(av[0]);
 
-    if (ac != 2)
-        return MOD_CONT;
     m_privmsg((u ? u->nick : source), (id ? id->nick : av[0]), av[1]);
     return MOD_CONT;
 }
@@ -767,32 +872,33 @@ int denora_event_privmsg(char *source, int ac, char **av)
 /* ABAAA L #ircops */
 int denora_event_part(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
+
     do_part(source, ac, av);
     return MOD_CONT;
 }
 
 int denora_event_whois(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
-    if (source && ac >= 1) {
+
+    if (source && ac >= 1)
         m_whois(source, av[1]);
-    }
+
     return MOD_CONT;
 }
 
 /* AB G !1098031985.558075 services.nomadirc.net 1098031985.558075 */
 int denora_event_ping(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
+
     if (ac < 1)
         return MOD_CONT;
+
     ircu_cmd_pong(p10id, av[0]);
     return MOD_CONT;
 }
@@ -843,9 +949,15 @@ void ircu_cmd_eob(void)
 
 void ircu_cmd_ping(char *server)
 {
-    /* AB G !1115872042.64217 denora.nomadirc.net 1115872042.64217 */
-    send_cmd(p10id, "G !%s %s %s", militime_float(NULL), server,
-             militime_float(NULL));
+    Uid *ud;
+    Server *s;
+    struct timeval t;
+    ud = find_uid(s_StatServ);
+    s = server_find(server);
+    gettimeofday(&t, NULL);
+    send_cmd(p10id, "RI %s %s %ld %ld :<No client start time>",
+             ((s && s->suid) ? s->suid : server),
+             (ud ? ud->uid : s_StatServ), t.tv_sec, t.tv_usec);
 }
 
 void ircu_cmd_ctcp(char *source, char *dest, char *buf)
@@ -871,20 +983,29 @@ void ircu_cmd_motd(char *sender, char *server)
     ud = find_uid(sender);
     s = server_find(server);
 
-    send_cmd((ud ? ud->uid : sender), "MO %s",
+    send_cmd((ud ? ud->uid : sender), "MO :%s",
              (s ? (s->suid ? s->suid : server) : server));
 
 }
 
 int denora_event_notice(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
-    if (ac != 2) {
+
+    if (ac != 2 || *av[0] == '$' || strlen(source) == 2)
         return MOD_CONT;
+
+    User *user_s = NULL;
+    User *user_r = NULL;
+
+    user_s = user_find(source);
+    if (*av[0] == '#') {
+        m_notice(user_s->nick, av[0], av[1]);
+    } else {
+        user_r = user_find(av[0]);
+        m_notice(user_s->nick, user_r->nick, av[1]);
     }
-    m_notice(source, av[0], av[1]);
     return MOD_CONT;
 }
 
@@ -921,7 +1042,7 @@ int DenoraInit(int argc, char **argv)
     moduleAddVersion("$Id$");
     moduleSetType(PROTOCOL);
 
-    pmodule_ircd_version("ircu2.10.*");
+    pmodule_ircd_version("IRCu 2.10.11+");
     pmodule_ircd_cap(myIrcdcap);
     pmodule_ircd_var(myIrcd);
     pmodule_ircd_useTSMode(0);

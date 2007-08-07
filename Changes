@@ -273,6 +273,7 @@ Provided by Nomad Dev. <dev@denorastats.org> - 2005
 08/05 F Fixed maxvalues setting on clean installs.                [#122]
 
 Provided by Hal9000 <hal9000@denorastats.org> - 2007
+08/07 U Updated GeoIP database file                               [ #00]
 08/06 F [inspircd11] Fixed opers counted twice on burst           [#394]
 08/03 F [inspircd11] fixed server uptime not being caught         [ #00]
 08/03 F [inspircd11] fixed server MOTDs not working               [ #00]
@@ -382,6 +383,7 @@ Provided by Obi_Wan <webmaster@st-city.net>
 05/12 F Fix to sumuser not replying when successful               [#247]
 
 Provided by OUTsider <outsider@scarynet.org>
+08/07 F Updated ircu module to work with 2.10.11+                 [ #00]
 02/27 F Fixed segfault on server/global notice in nefarious       [ #00]
 02/27 F Fixed segfault in m_away                                  [ #00]
 01/05 F Improved query generation in sql_do_addusers              [ #00]
