@@ -273,6 +273,7 @@ Provided by Nomad Dev. <dev@denorastats.org> - 2005
 08/05 F Fixed maxvalues setting on clean installs.                [#122]
 
 Provided by Hal9000 <hal9000@denorastats.org> - 2007
+08/08 F [inspircd11] Fixed autoop not working                     [#378]
 08/07 U Updated GeoIP database file                               [ #00]
 08/06 F [inspircd11] Fixed opers counted twice on burst           [#394]
 08/03 F [inspircd11] fixed server uptime not being caught         [ #00]

@@ -953,9 +953,8 @@ int denora_event_nick(char *source, int ac, char **av)
     char buf[BUFSIZE];
     char *ptr2 = buf;
 
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
 
     if (ac != 1) {
         if (ac == 8) {
@@ -964,13 +963,15 @@ int denora_event_nick(char *source, int ac, char **av)
             while (ptr && *ptr) {
                 if (*ptr != 'o') {
                     /* not o, add it to the clean list */
-                    ptr2 = ptr;
+                    *ptr2 = *ptr;
                     ptr2++;
                 }
                 /* increment original */
                 ptr++;
             }
-            av[5] = buf;
+            *ptr2 = '\0';
+            av[5] = (!strcmp(buf, "+")) ? NULL : buf;
+
             user = do_nick("", av[1],   /* nick */
                            av[4],       /* username */
                            av[2],       /* realhost */
@@ -1082,11 +1083,7 @@ int denora_event_notice(char *source, int ac, char **av)
 
 void inspircd_cmd_mode(char *source, char *dest, char *buf)
 {
-    if (!stricmp(source, ServerName)) {
-        send_cmd(source, "FMODE %s %i %s", dest, time(NULL), buf);
-    } else {
-        send_cmd(source, "MODE %s %s", dest, buf);
-    }
+    send_cmd(source, "MODE %s %s", dest, buf);
 }
 
 void inspircd_cmd_eob(void)
