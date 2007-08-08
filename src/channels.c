@@ -131,30 +131,33 @@ void save_chan_db(void)
     tn = list_first(StatsChanhead);
     while (tn != NULL) {
         ss = lnode_get(tn);
-        new_write_db_entry("name", dbptr, "%s", ss->name);
-        new_write_db_entry("kickcnt", dbptr, "%d", ss->kickcount);
-        new_write_db_entry("joincnt", dbptr, "%d", ss->joincounter);
-        new_write_db_entry("topiccnt", dbptr, "%d", ss->topic_count);
-        new_write_db_entry("maxusercnt", dbptr, "%d", ss->maxusercount);
-        new_write_db_entry("maxusertime", dbptr, "%ld",
-                           (long int) ss->maxusertime);
-        new_write_db_entry("partcount", dbptr, "%d", ss->partcount);
-        new_write_db_entry("partcounttime", dbptr, "%ld",
-                           (long int) ss->partcounttime);
+        if (ss->joincounttime > (time(NULL) - ClearChanInActive)) {
+            new_write_db_entry("name", dbptr, "%s", ss->name);
+            new_write_db_entry("kickcnt", dbptr, "%d", ss->kickcount);
+            new_write_db_entry("joincnt", dbptr, "%d", ss->joincounter);
+            new_write_db_entry("topiccnt", dbptr, "%d", ss->topic_count);
+            new_write_db_entry("maxusercnt", dbptr, "%d",
+                               ss->maxusercount);
+            new_write_db_entry("maxusertime", dbptr, "%ld",
+                               (long int) ss->maxusertime);
+            new_write_db_entry("partcount", dbptr, "%d", ss->partcount);
+            new_write_db_entry("partcounttime", dbptr, "%ld",
+                               (long int) ss->partcounttime);
 
-        new_write_db_entry("kickcounttime", dbptr, "%ld",
-                           (long int) ss->kickcounttime);
+            new_write_db_entry("kickcounttime", dbptr, "%ld",
+                               (long int) ss->kickcounttime);
 
-        new_write_db_entry("joincounttime", dbptr, "%ld",
-                           (long int) ss->joincounttime);
+            new_write_db_entry("joincounttime", dbptr, "%ld",
+                               (long int) ss->joincounttime);
 
-        new_write_db_entry("topiccounttime", dbptr, "%ld",
-                           (long int) ss->topiccounttime);
+            new_write_db_entry("topiccounttime", dbptr, "%ld",
+                               (long int) ss->topiccounttime);
 
-        new_write_db_entry("modecount", dbptr, "%d", ss->modecount);
-        new_write_db_entry("modecounttime", dbptr, "%ld",
-                           (long int) ss->modecounttime);
-        new_write_db_endofblock(dbptr);
+            new_write_db_entry("modecount", dbptr, "%d", ss->modecount);
+            new_write_db_entry("modecounttime", dbptr, "%ld",
+                               (long int) ss->modecounttime);
+            new_write_db_endofblock(dbptr);
+        }
         tn = list_next(StatsChanhead, tn);
     }
     SET_SEGV_LOCATION();
