@@ -594,13 +594,13 @@ int denora_event_account(char *source, int ac, char **av)
 
 int denora_event_topic(char *source, int ac, char **av)
 {
+    char *newav[5];
+
     if (denora->protocoldebug)
         protocol_debug(source, ac, av);
 
     if (ac < 4)
         return MOD_CONT;
-
-    char *newav[5];
 
     newav[0] = av[0];
     newav[1] = av[1];
@@ -644,15 +644,14 @@ int denora_event_quit(char *source, int ac, char **av)
 /* ABAAA M #ircops +v ABAAB */
 int denora_event_mode(char *source, int ac, char **av)
 {
+    User *u;
+    char *sender;
+
     if (denora->protocoldebug)
         protocol_debug(source, ac, av);
 
     if (ac < 2)
         return MOD_CONT;
-
-    User *u;
-
-    char *sender;
 
     u = find_byuid(source);
 
@@ -710,13 +709,14 @@ int denora_event_kick(char *source, int ac, char **av)
 /* ABAAB J #ircops 1098031328 */
 int denora_event_join(char *source, int ac, char **av)
 {
+    User *u;
+
     if (denora->protocoldebug)
         protocol_debug(source, ac, av);
 
     if (ac != 2)
         return MOD_CONT;
 
-    User *u;
     u = find_byuid(source);
 
     do_join((u ? u->nick : source), ac, av);
@@ -831,12 +831,12 @@ void ircu_cmd_nick(char *nick, char *name, const char *modes)
 /* (AB S trystan.nomadirc.net 2 0 1106520454 P10 ACAP] +h :Test Server) */
 int denora_event_server(char *source, int ac, char **av)
 {
+    Server *s;
+    char uplinknum[3];
+
     if (denora->protocoldebug)
         protocol_debug(source, ac, av);
 
-    Server *s;
-
-    char uplinknum[3];
     *uplinknum = '\0';
     strlcpy(uplinknum, av[5], sizeof(uplinknum));
 
@@ -853,14 +853,14 @@ int denora_event_server(char *source, int ac, char **av)
 /* ABAAA P ADAAB :help */
 int denora_event_privmsg(char *source, int ac, char **av)
 {
+    User *u;
+    Uid *id;
+
     if (denora->protocoldebug)
         protocol_debug(source, ac, av);
 
     if (ac != 2 || *av[0] == '$' || strlen(source) == 2)
         return MOD_CONT;
-
-    User *u;
-    Uid *id;
 
     u = find_byuid(source);
     id = find_nickuid(av[0]);
@@ -934,6 +934,7 @@ void ircu_cmd_bot_nick(char *nick, char *user, char *host, char *real,
                        char *modes)
 {
     char nicknumbuf[6];
+
     send_cmd(p10id, "N %s 1 %ld %s %s %s B]AAAB %sAA%c :%s", nick,
              (long int) time(NULL), user, host, modes, p10id,
              (p10nickcnt + 'A'), real);
@@ -969,6 +970,7 @@ void ircu_cmd_version(char *server)
 {
     Uid *ud;
     Server *s;
+
     ud = find_uid(s_StatServ);
     s = server_find(server);
 
@@ -980,6 +982,7 @@ void ircu_cmd_motd(char *sender, char *server)
 {
     Uid *ud;
     Server *s;
+
     ud = find_uid(sender);
     s = server_find(server);
 
@@ -990,14 +993,14 @@ void ircu_cmd_motd(char *sender, char *server)
 
 int denora_event_notice(char *source, int ac, char **av)
 {
+    User *user_s = NULL;
+    User *user_r = NULL;
+
     if (denora->protocoldebug)
         protocol_debug(source, ac, av);
 
     if (ac != 2 || *av[0] == '$' || strlen(source) == 2)
         return MOD_CONT;
-
-    User *user_s = NULL;
-    User *user_r = NULL;
 
     user_s = user_find(source);
     if (*av[0] == '#') {

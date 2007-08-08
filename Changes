@@ -1,8 +1,38 @@
 Denora Version SVN
 -------------------
-Provided by Nomad Dev. <dev@denorastats.org> - 2007
+Provided by Denora Stats Dev. <dev@denorastats.org> - 2007
+07/25 A Admin passwords are now MD5-encrypted in SQL              [ #00]
+07/18 A Moved deprecated ircd protocol files out of the way       [ #00]
+07/18 A Made the ./Config process more clear about MySQL support  [ #00]
+02/28 A Added swhois support to nefarious                         [ #00]
+02/28 A Added P10 account support                                 [ #00]
+01/11 A Improved P10 hidden host support                          [ #00]
+08/07 U Updated GeoIP database file                               [ #00]
+07/18 U Updated GeoIP database file                               [ #00]
+01/06 U Updated GeoIP.dat                                         [ #00]
 08/01 F EVENT_USER_PART referenced freed memory                   [#386]
+08/08 F Inactive channels now get cleared from chan.db as well    [#355]
+08/08 F [inspircd11] Fixed autoop not working                     [#378]
+08/06 F [inspircd11] Fixed opers counted twice on burst           [#394]
+08/03 F [inspircd11] fixed server uptime not being caught         [ #00]
+08/03 F [inspircd11] fixed server MOTDs not working               [ #00]
+08/03 F [inspircd11] ulined servers not being marked as ulined    [#382]
+08/02 F Fixed admin struct not being cleaned up on reload         [#381]
+08/01 F Passwords are now hidden from log on ADMIN ADD/SETPASS    [#402]
+08/01 F Fixed extreme letter counting on some actions             [#399]
+08/01 F Fixed ./Config not working on some Ubuntu systems         [ #00]
 07/04 F Fixed compiling issue on x86_64 machines                  [#390]
+06/24 F Empty SWHOIS message now clears value instead of error    [#397]
+05/09 F Fixed version message defined twice in InspIRCd 1.1       [#380]
+05/09 F Fixed GeoIP not working correctly on InspIRCd 1.1         [#377]
+02/27 F Fixed AutoMode forced to +o in nefarious                  [ #00]
+01/11 F Fixed wrong handling of chan modes in p10 burst           [ #00]
+01/11 F Improved nefarious nick parser                            [ #00]
+01/11 F Send ip instead of host to GeoIP for improved performance [ #00]
+01/10 F Fixed kicked users not being removed from count and ison  [#371]
+01/08 F Fixed except support in P10 burst function                [ #00]
+01/08 F Fixed channel bans not parsed correctly on P10 burst      [ #00]
+01/08 F Fixed version replies not handled correctly in nefarious  [ #00]
 
 Provided by Nomad Dev. <dev@denorastats.org> - 2006
 09/15 A Added lastping time to the server table                   [#341]
@@ -272,38 +302,6 @@ Provided by Nomad Dev. <dev@denorastats.org> - 2005
 08/06 F Fixed EXCLUDE ADD not checking the nick lenghts.          [ #00]
 08/05 F Fixed maxvalues setting on clean installs.                [#122]
 
-Provided by Hal9000 <hal9000@denorastats.org> - 2007
-08/08 F Inactive channels now get cleared from chan.db as well    [#355]
-08/08 F [inspircd11] Fixed autoop not working                     [#378]
-08/07 U Updated GeoIP database file                               [ #00]
-08/06 F [inspircd11] Fixed opers counted twice on burst           [#394]
-08/03 F [inspircd11] fixed server uptime not being caught         [ #00]
-08/03 F [inspircd11] fixed server MOTDs not working               [ #00]
-08/03 F [inspircd11] ulined servers not being marked as ulined    [#382]
-08/02 F Fixed admin struct not being cleaned up on reload         [#381]
-08/01 F Passwords are now hidden from log on ADMIN ADD/SETPASS    [#402]
-08/01 F Fixed extreme letter counting on some actions             [#399]
-08/01 F Fixed ./Config not working on some Ubuntu systems         [ #00]
-07/25 A Admin passwords are now MD5-encrypted in SQL              [ #00]
-07/18 U Updated GeoIP database file                               [ #00]
-07/18 A Moved deprecated ircd protocol files out of the way       [ #00]
-07/18 A Made the ./Config process more clear about MySQL support  [ #00]
-06/24 F Empty SWHOIS message now clears value instead of error    [#397]
-05/09 F Fixed version message defined twice in InspIRCd 1.1       [#380]
-05/09 F Fixed GeoIP not working correctly on InspIRCd 1.1         [#377]
-02/28 A Added swhois support to nefarious                         [ #00]
-02/28 A Added P10 account support                                 [ #00]
-02/27 F Fixed AutoMode forced to +o in nefarious                  [ #00]
-01/11 F Fixed wrong handling of chan modes in p10 burst           [ #00]
-01/11 A Improved P10 hidden host support                          [ #00]
-01/11 F Improved nefarious nick parser                            [ #00]
-01/11 F Send ip instead of host to GeoIP for improved performance [ #00]
-01/10 F Fixed kicked users not being removed from count and ison  [#371]
-01/08 F Fixed except support in P10 burst function                [ #00]
-01/08 F Fixed channel bans not parsed correctly on P10 burst      [ #00]
-01/08 F Fixed version replies not handled correctly in nefarious  [ #00]
-01/06 U Updated GeoIP.dat                                         [ #00]
-
 Provided by Hal9000 <hal9000@denorastats.org> - 2006
 12/20 F Fixed Denora crashing on certain user quits/parts         [#363]
 12/19 A Added vhost support to Nefarious                          [#346]
@@ -359,9 +357,16 @@ Provided by Hal9000 <hal9000@denorastats.org> - 2006
 03/24 U Updated example.it.conf                                   [ #00]
 
 Provided by Hal9000 <hal9000@denorastats.org> - 2005
+06/11 A Added exapmle.it.conf                                     [ #00]
+06/04 A Added an eggdrop stats.mod to Denora SQL convertor        [ #00]
 12/13 U Updated mydbgen to add timeadded                          [ #00]
-04/08 F Fixed problem with mydbgen cause by previous patch        [#228]
+07/05 U Updated it.l and example.it.conf                          [ #00]
+07/02 U Update it.l and convertor to v0.7.0                       [ #00]
+06/07 U Update it.l and convertor to v0.6.0                       [ #00]
 12/07 F Fixes to hourly cron events                               [ #00]
+07/05 F Fixed minor issues with the pie chart examples.           [ #00]
+07/05 F Fixed minor issues with the web api.                      [ #00]
+04/08 F Fixed problem with mydbgen cause by previous patch        [#228]
 
 Provided by w00t <robin@barafranca.com>
 01/06 F Fixed inspircd11 module not parsing JOIN correctly        [#372]
@@ -494,15 +499,6 @@ Provided by Nomad Dev. <dev@denorastats.org> - 2005
 
 Provided by Izlots <Christian.Schroer@gmail.com> - 2005
 06/12 F !peak was case sensetive                                  [ #80]
-
-Provided by Hal9000 <hal9000@denorastats.org> - 2005
-07/05 U Updated it.l and example.it.conf                          [ #00]
-07/02 U Update it.l and convertor to v0.7.0                       [ #00]
-06/11 A Added exapmle.it.conf                                     [ #00]
-06/07 U Update it.l and convertor to v0.6.0                       [ #00]
-06/04 A Added an eggdrop stats.mod to Denora SQL convertor        [ #00]
-07/05 F Fixed minor issues with the pie chart examples.           [ #00]
-07/05 F Fixed minor issues with the web api.                      [ #00]
 
 Provided by MaOaM <MaOaM@gmx.org> - 2005
 06/11 A Added exapmle.de.conf                                     [ #00]
