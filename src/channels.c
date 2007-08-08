@@ -697,10 +697,12 @@ void do_p10_burst(char *source, int ac, char **av)
         db_getchancreate(av[0]);
     }
     if (c) {
-        c->creation_time = strtol(av[1], NULL, 10);     // Setting the timestamp
+        /* Setting the timestamp */
+        c->creation_time = strtol(av[1], NULL, 10);
         while (pc < ac) {
             switch (*av[pc]) {
-            case '+':          // set modes, and extra modes if needed
+                /* set modes, and extra modes if needed */
+            case '+':
                 newav[0] = av[0];
                 newav[1] = av[pc];
                 if (myNumToken(av[pc], 'l') && myNumToken(av[pc], 'k')) {
@@ -719,7 +721,8 @@ void do_p10_burst(char *source, int ac, char **av)
                 }
                 pc++;
                 break;
-            case '%':          // set bans and excepts
+                /* set bans and excepts */
+            case '%':
                 i = 0;
                 av[pc]++;
                 while ((s = myStrGetToken(av[pc], ' ', i))) {
@@ -739,7 +742,8 @@ void do_p10_burst(char *source, int ac, char **av)
                 }
                 pc++;
                 break;
-            default:           // add users
+                /* add users */
+            default:
                 flag = NULL;
                 while ((s = myStrGetToken(av[pc], ',', i))) {
                     nomode = 0;
@@ -756,7 +760,8 @@ void do_p10_burst(char *source, int ac, char **av)
                         continue;
                     }
                     v[0] = av[0];
-                    do_join(user->nick, 1, v);  // make user join the channel
+                    /* make user join the channel */
+                    do_join(user->nick, 1, v);
                     if (m) {
                         flag = sstrdup(m);
                         free(m);
@@ -778,7 +783,8 @@ void do_p10_burst(char *source, int ac, char **av)
                                     }
                                     modes++;
                                 }
-                                do_cmode(user->nick, j, x);     // setting user qaohv flags
+                                /* setting user qaohv flags */
+                                do_cmode(user->nick, j, x);
                                 free(x[1]);
                             }
                         }

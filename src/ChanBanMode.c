@@ -345,8 +345,8 @@ void sql_channel_invite(int type, Channel * c, char *mask)
 #ifdef USE_MYSQL
     MYSQL_RES *mysql_res;
 #endif
-    char *sqlchan;
-    char *sqlmask;
+    char *sqlchan = NULL;
+    char *sqlmask = NULL;
 
     SET_SEGV_LOCATION();
 

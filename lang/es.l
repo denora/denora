@@ -426,8 +426,8 @@ STAT_STATS_SERVER_COUNT
 
 STAT_STATS_CHAN_COUNT
 	Estadisticas de canales para %s:
-	Canales actualmente usuados:  %d
-	Maximo de canales usuados:    %d
+	Canales actualmente usados:  %d
+	Maximo de canales usados:    %d
 
 STAT_STATS_USER_COUNT
 	Estadisticas de usuarios para %s
@@ -438,7 +438,7 @@ STAT_STATS_SYNTAX
 	STATS [SERVERS|CHANNELS|USERS]
 
 STAT_STATS_PAGE
-	For more stats visit %s
+	Para mas estadisticas visita %s
 
 # SET responses
 STAT_SET_SYNTAX
@@ -503,7 +503,7 @@ STAT_HELP_CHANSTATS
 	El comando CHANSTATS SUMUSER transfiere todas las estadisticas desde
 	usuario2 a usuario1 y elimina usuario2.
 	
-	The CHANSTATS RENAME command renames user1 into user2.
+	El comando CHANSTATS RENAME renombra user1 a user2.
 
 STAT_CHANSTATS_SYNTAX
 	CHANSTATS {ADD|DEL|LIST|SET|SUMUSER|RENAME} [CHAN|USER|OPTION]
@@ -1429,18 +1429,20 @@ STAT_HELP_ADMIN
 	ADMIN SHOW username
 	ADMIN LIST
 	
-	The ADMIN ADD command adds the specified user as a Stats Admin
+	El comando ADMIN ADD agrega al usuario especificado a la lista
+	de Administradores
 	
-	The ADMIN DEL command removes the specified user from Stats Admin
+	El comando ADMIN DEL quita al usuario especificado de la lista
+	de Administradores
 	
-	The ADMIN SETPASS command allows you to change the password of
-	the specified admin.
+	El comando ADMIN SETPASS te permite cambiar el password del 
+	administrador especificado.
 	
-	The ADMIN SHOW command allows you to see the details of the
-	specified admin
+	El comando ADMIN SHOW te permite ver los detalles del administrador 
+	especificado
 	
-	The ADMIN LIST command will display a list of all currently
-	available Stat Admins accounts
+	El comando ADMIN LIST muestra una lista de todos los administradores 
+	disponibles.
 	
 	Limitado a Stats Admin
 

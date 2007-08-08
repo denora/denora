@@ -296,7 +296,8 @@ int denora_event_nick(char *source, int ac, char **av)
             int cnt = 6;
             int c = 1;
             char *uaccount = "";
-            char *accb, *acc = NULL;
+            char *accb = NULL;
+            char *acc = NULL;
 
             while (*modes) {
                 switch (*modes) {
@@ -367,12 +368,12 @@ int denora_event_nick(char *source, int ac, char **av)
                     change_user_username(user->nick, vident);
                 }
                 change_user_host(user->nick, sethost ? vhost : fakehost);
-                //set host as ip
+                /* set host as ip */
             }
         }
         free(ipchar);
     } else {
-        // Nick change
+        /* Nick change */
         user = find_byuid(source);
         do_nick((user ? user->nick : source), av[0], NULL, NULL, NULL,
                 NULL, strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0,
@@ -590,7 +591,7 @@ void nefarious_cmd_join(char *user, char *channel, time_t chantime)
     } else {
         if (AutoOp && AutoMode) {
             modes = sstrdup(AutoMode);
-            *modes++;           // since the first char is +, we skip it
+            *modes++;           /* since the first char is +, we skip it */
             send_cmd(p10id, "B %s %ld %s:%s", channel,
                      (long int) chantime, (ud ? ud->uid : user), modes);
         } else {

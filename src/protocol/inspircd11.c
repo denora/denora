@@ -896,10 +896,10 @@ int denora_event_fjoin(char *source, int ac, char **av)
     if (ac < 3)
         return MOD_CONT;
 
-    newav[0] = av[1];           // Timestamp
-    newav[1] = av[0];           // Channel
-    newav[2] = (char *) "+";    // Modes
-    newav[3] = people;          // Nickname
+    newav[0] = av[1];           /* Timestamp */
+    newav[1] = av[0];           /* Channel */
+    newav[2] = (char *) "+";    /* Mode */
+    newav[3] = people;          /* Nickname */
 
     *people = '\0';
 

@@ -444,7 +444,7 @@ void ircu_cmd_join(char *user, char *channel, time_t chantime)
     } else {
         if (AutoOp && AutoMode) {
             modes = sstrdup(AutoMode);
-            *modes++;           // since the first char is +, we skip it
+            *modes++;           /* since the first char is +, we skip it */
             send_cmd(p10id, "B %s %ld %s:%s", channel,
                      (long int) chantime, (ud ? ud->uid : user), modes);
         } else {
