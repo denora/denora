@@ -580,7 +580,7 @@ int main(int ac, char **av)
         }
 
         waiting = 1;
-        i = (long int) sgets2(inbuf, sizeof(inbuf), servsock);
+        i = atoi(sgets2(inbuf, sizeof(inbuf), servsock));
         waiting = 0;
         if ((i > 0) || (i < (-1))) {
             SET_START_TIME();

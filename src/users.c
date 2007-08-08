@@ -110,7 +110,8 @@ void sql_do_usermodes(User * u, char *modes)
 
 void sql_reset_usermodes(int nickid, char *nickname)
 {
-    char *modes = "qwertzuiopasdfghjklyxcvbnmQWERTZUIOPASDFGHJKLYXCVBNM";
+    const char *modes =
+        "qwertzuiopasdfghjklyxcvbnmQWERTZUIOPASDFGHJKLYXCVBNM";
     char db[MAX_SQL_BUF];
     char tmp[14] = "mode_XX=\'X\', ";
     char buf[1000];

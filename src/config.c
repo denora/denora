@@ -74,7 +74,7 @@ static char *temp_userhost;
 
 char *LogChannel;
 char *NetworkName;
-char *HiddenPrefix;
+const char *HiddenPrefix;
 char *HiddenSuffix;
 
 char *s_StatServ;
@@ -542,7 +542,7 @@ int confadd_netinfo(cVar * vars[], int lnum)
         HiddenPrefix = "";
     }
     if (!HiddenSuffix) {
-        HiddenSuffix = ".users.mynet.tld";
+        HiddenSuffix = sstrdup(".users.mynet.tld");
     }
     if (LargeNet) {
         alog(LOG_NORMAL, langstr(ALOG_LARGENET_WARNING_1));

@@ -262,7 +262,7 @@ E char *ServiceHost;
 E char *LogChannel;
 E char *Smiley;
 E char *NetworkName;
-E char *HiddenPrefix;
+E const char *HiddenPrefix;
 E char *HiddenSuffix;
 
 E char *s_StatServ;

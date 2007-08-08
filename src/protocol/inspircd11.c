@@ -918,7 +918,7 @@ int denora_event_fjoin(char *source, int ac, char **av)
 
         for (; *userv[i]; userv[i]++) {
             /* does this char match a known prefix? */
-            if (csmodes[*userv[i]]) {
+            if (csmodes[(int) *userv[i]]) {
                 prefixandnick[nlen++] = *userv[i];
                 continue;
             }
@@ -958,7 +958,8 @@ int denora_event_nick(char *source, int ac, char **av)
 
     if (ac != 1) {
         if (ac == 8) {
-            // Here we should check if av[5] contains +o, and if so remove it, as this will be handled by OPERTYPE
+            /* Here we should check if av[5] contains +o, and if so remove it,
+             * as this will be handled by OPERTYPE */
             ptr = av[5];
             while (ptr && *ptr) {
                 if (*ptr != 'o') {

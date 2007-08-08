@@ -601,7 +601,7 @@ char *p10_mode_parse(char *mode, int *nomode)
     char *s;
     char modebuf[15];
     char *temp = NULL;
-    char *flag;
+    const char *flag;
 
     nomode = 0;
 
@@ -826,9 +826,9 @@ void do_join(const char *source, int ac, char **av)
     if (ac < 1) {
         return;
     }
-    // if ircd is p10, we should copy source to a prefixednick var,
-    // then go thorugh source and ++ in case of @%+, and pass prefixednick
-    // to sql func instead of nick
+    /* if ircd is p10, we should copy source to a prefixednick var,
+     * then go thorugh source and ++ in case of @%+, and pass prefixednick
+     * to sql func instead of nick */
     user = user_find(source);
     if (!user) {
         alog(LOG_NONEXISTANT, langstr(ALOG_DEBUG_JOIN_NONEXISTANT),
