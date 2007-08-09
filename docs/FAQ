@@ -4,6 +4,7 @@ Denora Frequently Asked Questions
 
 1) Remote MOTD don't work on Unreal
 2) Get the error "/usr/bin/ld: cannot find -lmysqlclient"
+3) My FreeBSD box complains about 'Shared object "nss_dns.so.1" not found'
 
 Q1) Remote MOTD don't work on Unreal
 A1) Remote MOTD do work, just not if the motd file name is not ircd.motd, if you have set
@@ -18,8 +19,23 @@ Q2) Get the error "/usr/bin/ld: cannot find -lmysqlclient"
 A2) This means that the linker (ld) does not know where the lib of
     mysqlclient is. 
 
-	To resolve
+    To resolve
     1. MySQL libs and development files (usually called mysql-dev)
     2. Make sure that the path to mysql lib dir is in /etc/ld.so.conf
 
+----------------------------------------------------------------------------------------------
+
+Q3) My FreeBSD box complains about 'Shared object "nss_dns.so.1" not found'
+A3) This problem hasn't been figured out yet, but a posible fix is:
+
+    Do a soft link for nss_dns.so.1 to one of the following files:
+      * /usr/local/lib/nss_lookupd.so.1
+      * /usr/compat/linux/lib/libnss_dns.so.1
+    e.g: ln -s /usr/local/lib/nss_lookupd.so.1 /usr/local/lib/nss_dns.so.1
+
+    Other solution offered by Anope IRC Services is:
+
+    "... you can delete the /etc/nsswitch.conf file. Please keep in
+     mind that removing a configuration file can be dangerous, so only
+     do this if you know what you are doing."
 
