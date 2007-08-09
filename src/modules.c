@@ -941,11 +941,11 @@ void modules_delayed_init(void)
             status = loadModule(mod_current_module, NULL);
             alog(LOG_DEBUG, langstr(ALOG_MOD_STATUS), status,
                  ModuleGetErrStr(status));
+            mod_current_module = NULL;
+            mod_current_user = NULL;
             if (status != MOD_ERR_OK) {
                 destroyModule(m);
             }
-            mod_current_module = NULL;
-            mod_current_user = NULL;
         }
     }
 #endif
