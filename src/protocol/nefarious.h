@@ -37,6 +37,7 @@ void nefarious_cmd_motd(char *sender, char *server);
 void nefarious_cmd_ping(char *server);
 
 int denora_event_436(char *source, int ac, char **av);
+int denora_event_account(char *source, int ac, char **av);
 int denora_event_away(char *source, int ac, char **av);
 int denora_event_ping(char *source, int ac, char **av);
 int denora_event_motd(char *source, int ac, char **av);
@@ -46,6 +47,7 @@ int denora_event_kill(char *source, int ac, char **av);
 int denora_event_mode(char *source, int ac, char **av);
 int denora_event_quit(char *source, int ac, char **av);
 int denora_event_squit(char *source, int ac, char **av);
+int denora_event_swhois(char *source, int ac, char **av);
 int denora_event_topic(char *source, int ac, char **av);
 int denora_event_whois(char *source, int ac, char **av);
 int denora_event_part(char *source, int ac, char **av);

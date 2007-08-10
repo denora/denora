@@ -1,4 +1,4 @@
-Contrib Tools for Denora - README FILE
+﻿Contrib Tools for Denora - README FILE
 
 -----------------------------------------------
 eggdrop stats.mod -> denora chanstats converter [smconv.pl]
@@ -41,4 +41,41 @@ or you'll get a database with wrong data.
 FEEDBACK
 Contact the author for any feedback. Thank you.
 
---- EOF ---
+CHANGELOG
+v1.0.0 - 26.11.05
+* support for fixing < 0.7.0 conversions removed
+* updated author's email address
+v0.7.0 - 02.07.05
+* added support for updating ChannelStats.db and chan.db files as well
+* removed some user prompts as they are not useful anymore (they were just for testing)
+* this program now requires to be run in the denora directory
+* denora is now stopped/started automatically
+* sql output file is deleted after successful import
+* sql database can be backed up before merge
+* created startup menu for easilly chosing different operation modes
+* some little cleanups
+* moved release notes to the README file and wrote some instructions
+v0.6.0 - 07.06.05
+* fixed design flaw which would cause denora to segfault when trying to sumuser
+  old users if daily, and/or weekly, and/or monthly stats were not imported
+v0.5.0 - 07.06.05
+* added support for converting user data, to allow sumuser before users join the net
+  and denora becomes aware of them, and to prevent StatServ (harmless) error messages
+  if users that are not in table join but stats already exist for them
+v0.4.1 - 05.06.05
+* removed feature introduced in v0.4.0 as it was useless: denora overwrites the chan
+  table with data taken from chan.db, so i'll probably implement conversion for this later
+* channel names and nicknames are now properly escaped to avoid potential sql problems
+v0.4.0 - 04.06.05
+* added support for max channel users for denora rev. 315+
+v0.3.0 - 04.06.05
+* dumped the mysql/dbi module usage in favor of a simpler and more compatible system command
+* wooops! fixed sql query typo in daily, weekly and monthly stats
+* removed useless (but harmless) ` from some sql queries
+v0.2.0 - 04.06.05
+* added some user interactivity
+* added dbi mysql support
+v0.1.0 - 04.06.05
+* added support for daily, weekly and monthly stats
+v0.0.0 - 04.06.05
+* initial release for denora rev. 314+

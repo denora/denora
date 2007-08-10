@@ -322,7 +322,7 @@ char *unreal32_lkill_servername(char *message)
     buf = sstrdup(message); /* the whole quit message */
     servername = strtok(buf, " "); /* the servername in brackets */
     servername[strlen(servername) - 1] = '\0'; /* last bracket removed */
-    *servername++; /* first bracket removed */
+    servername++; /* first bracket removed */
 
     return servername;
 }
@@ -334,7 +334,7 @@ char *unreal32_lkill_msg(char *message)
     /* Let's get the kill message */
     msg = strchr(message, '('); /* the (kill message) */
     msg[strlen(msg) - 1] = '\0'; /* removes last character ')' */
-    *msg++; /* removes first character '(' */
+    msg++; /* removes first character '(' */
 
     return msg;
 }

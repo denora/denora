@@ -1,8 +1,13 @@
-##############################################
-# Denora -- IRC statistics for IRC networks  #
-##############################################
+ _____                    __
+|  _  \       __       __/  \
+| | \  |     /  \__   /      \___
+| |  | | ___/ _ __ \_/_  _ __  __\_
+| |  |  / _ \| '_ \/ _ \| '__|/  _ |
+| |_/  |  __/| | |  |_| | |  ' (_| |
+|_____/ \___||_| |_\___/|_|   \__,_|_
 
-Information about Denora may be found at http://denorastats.org/
+          Statistics for IRC Networks
+          http://denorastats.org/
 
 -----------------
 TABLE OF CONTENTS
@@ -53,9 +58,12 @@ TABLE OF CONTENTS
         * Jens Voss           <DukePyrolator@FantasyIRC.net>
         * Florian Schulze     <certus@randombytes.de>
         * Gabriel Craciunescu <crazy@denorastats.org>
-        * Hal9000             <hal9000@denorastats.org>
+        * Sebastian V.        <hal9000@denorastats.org>
+        * Klaas Tammling      <obi_wan@denorastats.org>
+        * Alexander Maassen   <outsider@denorastats.org>
 
     Denora Translations:
+
         * Gabriel Acevedo H.  <drstein@denorastats.org>    (es.l)
         * Gabriel Craciunescu <crazy@denorastats.org>      (de.l)
         * Xaf                 <root@sbird.org>             (fr.l)
@@ -68,10 +76,6 @@ TABLE OF CONTENTS
 
     This program is free but copyrighted software; see the file docs/COPYING
     for details.
-
-        Denora team would like to thank the following people for their contributions:
-
-        * Klaas Tammling <webmaster@st-city.net>   : Providing AMD64 bit shell
 
 
 2. PRESENTATION

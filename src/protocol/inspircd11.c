@@ -609,7 +609,7 @@ char *inspircd11_lkill_killer(char *message)
     buf = sstrdup(message);
     killer = strtok(buf, " ");
     killer = strtok(NULL, " ");
-    *killer++;
+    killer++;
 
     return killer;
 }
@@ -623,7 +623,7 @@ char *inspircd11_lkill_msg(char *message)
     msg = strchr(message, '(');
     msg = strchr(message, '(');
     msg[strlen(msg) - 2] = '\0';
-    *msg++;                     /* removes first character '(' */
+    msg++;                      /* removes first character '(' */
 
     return msg;
 }

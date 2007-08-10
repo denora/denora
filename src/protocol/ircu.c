@@ -69,7 +69,7 @@ IRCDVar myIrcd[] = {
      NULL,                      /* nickchar                  */
      IRCD_DISABLE,              /* svid                      */
      IRCD_DISABLE,              /* hidden oper               */
-     IRCD_ENABLE,               /* extra warning             */
+     IRCD_DISABLE,              /* extra warning             */
      IRCD_ENABLE                /* Report sync state         */
      },
 };
@@ -133,7 +133,7 @@ void IRCDModeInit(void)
 
     /* Channel Modes */
     CreateChanMode(CMODE_D, NULL, NULL);        /* Delayed Join */
-    CreateChanmode(CMODE_d, NULL, NULL);        /* Delayed Join */
+    CreateChanMode(CMODE_d, NULL, NULL);        /* Delayed Join */
     CreateChanMode(CMODE_A, NULL, NULL);        /* Channel Admin Pass */
     CreateChanMode(CMODE_U, NULL, NULL);        /* Channel User Pass */
     CreateChanMode(CMODE_i, NULL, NULL);        /* Invite Only */
@@ -210,9 +210,9 @@ int denora_event_nick(char *source, int ac, char **av)
     if (ac != 2) {
         char *realname, *ip, *nick;
         char *ident, *host, *modes, *modes2;
-        char *uid = "";
-        char *account = "";
-        char *timestamp = "";
+        const char *uid = "";
+        const char *account = "";
+        const char *timestamp = "";
         char hhostbuf[255];
         int ishidden = 0, isaccount = 0;
 
@@ -257,8 +257,9 @@ int denora_event_nick(char *source, int ac, char **av)
 
         user = do_nick(source, nick, ident, host, (s ? s->name : temp),
                        realname, strtoul(timestamp, NULL, 10), 0, ipchar,
-                       (ishidden && isaccount) ? hhostbuf : NULL, uid,
-                       strtoul(av[1], NULL, 10), modes, account);
+                       (ishidden
+                        && isaccount) ? hhostbuf : NULL, (char *) uid,
+                       strtoul(av[1], NULL, 10), modes, (char *) account);
 
         free(ipchar);
     } else {
@@ -444,7 +445,7 @@ void ircu_cmd_join(char *user, char *channel, time_t chantime)
     } else {
         if (AutoOp && AutoMode) {
             modes = sstrdup(AutoMode);
-            *modes++;           /* since the first char is +, we skip it */
+            modes++;            /* since the first char is +, we skip it */
             send_cmd(p10id, "B %s %ld %s:%s", channel,
                      (long int) chantime, (ud ? ud->uid : user), modes);
         } else {
