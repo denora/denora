@@ -76,7 +76,7 @@ IRCDVar myIrcd[] = {
 
 IRCDCAPAB myIrcdcap[] = {
     {
-     0,                         /* NOQUIT       */
+     1,                         /* NOQUIT       */
      0,                         /* TSMODE       */
      0,                         /* UNCONNECT    */
      0,                         /* NICKIP       */
@@ -618,7 +618,7 @@ int denora_event_squit(char *source, int ac, char **av)
     if (denora->protocoldebug)
         protocol_debug(source, ac, av);
 
-    if (ac != 2)
+    if (ac < 2)
         return MOD_CONT;
 
     do_squit(av[0]);

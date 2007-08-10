@@ -813,7 +813,7 @@ void delete_server(Server * serv, const char *quitreason, int depth)
 
     if (ircdcap->noquit || ircdcap->qs) {
         if ((denora->capab & ircdcap->noquit)
-            || (denora->capab & ircdcap->qs)) {
+            || (denora->capab & ircdcap->qs) || ircd->p10) {
             alog(LOG_DEBUG, langstr(ALOG_DEL_SERVER_NOQUIT));
             u = firstuser();
             while (u) {
