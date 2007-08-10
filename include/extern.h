@@ -247,6 +247,7 @@ E int moduleGetConfigDirective(char *configfile, Directive * d);
 E char *RemoteServer;
 E int   RemotePort;
 E char *RemotePassword;
+E char *QuitPrefix;
 
 E int NumExcludeServers;
 E char **ExcludeServers;

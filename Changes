@@ -1,17 +1,20 @@
 Denora Version SVN
 -------------------
 Provided by Denora Stats Dev. <dev@denorastats.org> - 2007
+08/10 A New optional token on connect block for quitprefix        [#404]
 07/25 A Admin passwords are now MD5-encrypted in SQL              [ #00]
 07/18 A Moved deprecated ircd protocol files out of the way       [ #00]
 07/18 A Made the ./Config process more clear about MySQL support  [ #00]
 02/28 A Added swhois support to nefarious                         [ #00]
 02/28 A Added P10 account support                                 [ #00]
 01/11 A Improved P10 hidden host support                          [ #00]
+08/10 U Improved Local Kills detection                            [#404]
 08/09 U Updated FAQ file regarding bug #314                       [#314]
 08/08 U Updated Spanish language file (es.l)                      [ #00]
 08/07 U Updated GeoIP database file                               [ #00]
 07/18 U Updated GeoIP database file                               [ #00]
 01/06 U Updated GeoIP.dat                                         [ #00]
+08/10 F InspIRCd11 Local kills are now detected                   [#404]
 08/10 F Fixed broken behavior on certain server splits            [#347]
 08/10 F Local kills are now detected by Denora (Unreal32 only)    [#404]
 08/09 F Fixed syntax error in include/version.sh                  [ #00]

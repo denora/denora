@@ -291,14 +291,27 @@ void unreal_cmd_quit(char *source, char *buf)
 */
 int unreal32_parse_lkill(char *message)
 {
-    const char *quittoken = "Quit: ";
     const char *localkillmsg = "Local kill by";
 
     /* is it a Local kill message? */
-    if ((strncmp(message, quittoken, 5) != 0) && (strstr(message, localkillmsg) != NULL))
+    if ((strncmp(message, QuitPrefix, strlen(QuitPrefix)) != 0) && (strstr(message, localkillmsg) != NULL))
         return 1;
 
     return 0;
+}
+
+char *unreal32_lkill_killer(char *message)
+{
+    char *buf, *killer = NULL;
+
+    /* Let's get the killer nickname */
+    killer = strchr(message, ']');
+    killer = strchr(message, 'y');
+    buf = sstrdup(killer);
+    killer = strtok(buf, " ");
+    killer = strtok(NULL, " ");
+
+    return killer;
 }
 
 char *unreal32_lkill_servername(char *message)
@@ -316,7 +329,7 @@ char *unreal32_lkill_servername(char *message)
 
 char *unreal32_lkill_msg(char *message)
 {
-    char *buf, *msg = NULL;
+    char *msg = NULL;
 
     /* Let's get the kill message */
     msg = strchr(message, '('); /* the (kill message) */
@@ -615,6 +628,7 @@ int denora_event_squit(char *source, int ac, char **av)
 
 int denora_event_quit(char *source, int ac, char **av)
 {
+    char *killer = NULL;
     char *servername = NULL;
     char *msg = NULL;
 
@@ -628,10 +642,13 @@ int denora_event_quit(char *source, int ac, char **av)
     if (unreal32_parse_lkill(av[0]) == 0) {
         do_quit(source, ac, av);
     } else {
+        killer = unreal32_lkill_killer(av[0]);
         servername = unreal32_lkill_servername(av[0]);
         msg = unreal32_lkill_msg(av[0]);
 
-        if (servername)
+        if (killer)
+           m_kill(killer, source, msg);
+        else if (servername)
            m_kill(servername, source, msg);
         else
             m_kill(source, source, msg);

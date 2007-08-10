@@ -586,6 +586,48 @@ void inspircd_cmd_quit(char *source, char *buf)
     }
 }
 
+/* A Local kill message is received by Denora like this:
+ * :Hal9001 QUIT :Killed (Hal9000 (DEATH TO HIP HOP!!!))
+*/
+int inspircd11_parse_lkill(char *message)
+{
+    const char *localkillmsg = "Killed (";
+
+    /* is it a Local kill message? */
+    if ((strncmp(message, QuitPrefix, strlen(QuitPrefix)) != 0)
+        && (strstr(message, localkillmsg) != NULL))
+        return 1;
+
+    return 0;
+}
+
+char *inspircd11_lkill_killer(char *message)
+{
+    char *buf, *killer = NULL;
+
+    /* Let's get the killer nickname */
+    buf = sstrdup(message);
+    killer = strtok(buf, " ");
+    killer = strtok(NULL, " ");
+    *killer++;
+
+    return killer;
+}
+
+/* Killed (Hal9000 (DEATH TO HIP HOP!!!)) */
+char *inspircd11_lkill_msg(char *message)
+{
+    char *msg = NULL;
+
+    /* Let's get the kill message */
+    msg = strchr(message, '(');
+    msg = strchr(message, '(');
+    msg[strlen(msg) - 2] = '\0';
+    *msg++;                     /* removes first character '(' */
+
+    return msg;
+}
+
 /* PROTOCTL */
 void inspircd_cmd_capab()
 {
@@ -725,13 +767,28 @@ int denora_event_squit(char *source, int ac, char **av)
 
 int denora_event_quit(char *source, int ac, char **av)
 {
+    char *killer = NULL;
+    char *msg = NULL;
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
+
     if (ac != 1)
         return MOD_CONT;
 
-    do_quit(source, ac, av);
+    if (inspircd11_parse_lkill(av[0]) == 0) {
+        do_quit(source, ac, av);
+    } else {
+        killer = inspircd11_lkill_killer(av[0]);
+        msg = inspircd11_lkill_msg(av[0]);
+
+        if (killer)
+            m_kill(killer, source, msg);
+        else
+            m_kill(source, source, msg);
+    }
+
     return MOD_CONT;
 }
 

@@ -97,5 +97,6 @@ void DenoraFini(void);
 
 char *unreal32_nickip(char *host);
 
+char *unreal32_lkill_killer(char *message);
 char *unreal32_lkill_servername(char *message);
 char *unreal32_lkill_msg(char *message);

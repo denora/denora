@@ -59,6 +59,7 @@ char *RemoteServer;
 int RemotePort;
 char *RemotePassword;
 char *IRCDModule;
+char *QuitPrefix;
 
 char *LocalHost;
 int LocalPort;
@@ -242,6 +243,9 @@ int confadd_connect(cVar * vars[], int lnum)
         } else if (tmp->type && (tmp->type->flag & SCONFF_PROTOCOL)) {
             tmp->type = NULL;
             IRCDModule = sstrdup(tmp->value);
+        } else if (tmp->type && (tmp->type->flag & SCONFF_QUITPREFIX)) {
+            tmp->type = NULL;
+            QuitPrefix = sstrdup(tmp->value);
         } else if (tmp->type && (tmp->type->flag & SCONFF_BINDHOST)) {
             tmp->type = NULL;
             LocalHost = sstrdup(tmp->value);
@@ -262,6 +266,8 @@ int confadd_connect(cVar * vars[], int lnum)
         confparse_error(langstring(CONFIG_PROTOCOL_ERROR), lnum);
         return -1;
     }
+    if (!QuitPrefix)
+        QuitPrefix = sstrdup("Quit:");
     if (!RemotePort) {
         confparse_error(langstring(CONFIG_PORT_ERROR_NOTDEF), lnum);
         return -1;

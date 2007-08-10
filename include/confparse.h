@@ -111,25 +111,27 @@
 #define SCONFT_HIDDENSUFFIX  "HIDDENSUFFIX"
 #define SCONFF_HIDDENSUFFIX             0x40000000
 
-#define SCONFT_PROTOCOL   "PROTOCOL"
+#define SCONFT_PROTOCOL    "PROTOCOL"
 #define SCONFF_PROTOCOL                 0x00100000
+#define SCONFT_QUITPREFIX  "QUITPREFIX"
+#define SCONFF_QUITPREFIX               0x00200000
 
 #define SCONFT_CHANDB      "CHANNELDB"
-#define SCONFF_CHANDB                   0x00100000
+#define SCONFF_CHANDB                   0x00400000
 #define SCONFT_CTCPDB      "CTCPDB"
-#define SCONFF_CTCPDB                   0x00200000
+#define SCONFF_CTCPDB                   0x00800000
 #define SCONFT_SERVERDB    "SERVERDB"
-#define SCONFF_SERVERDB                 0x00400000
+#define SCONFF_SERVERDB                 0x01000000
 #define SCONFT_CHANSTATSDB "CHANSTATSDB"
-#define SCONFF_CHANSTATSDB              0x00800000
+#define SCONFF_CHANSTATSDB              0x02000000
 #define SCONFT_TLDDB   	   "TLDDB"
-#define SCONFF_TLDDB                    0x01000000
+#define SCONFF_TLDDB                    0x04000000
 #define SCONFT_EXCLUDEDB   "EXCLUDEDB"
-#define SCONFF_EXCLUDEDB                0x02000000
+#define SCONFF_EXCLUDEDB                0x08000000
 #define SCONFT_STATSDB     "STATSDB"
-#define SCONFF_STATSDB                  0x04000000
+#define SCONFF_STATSDB                  0x10000000
 #define SCONFT_ADMINDB     "ADMINDB"
-#define SCONFF_ADMINDB                  0x08000000
+#define SCONFF_ADMINDB                  0x20000000
 
 
 #define TIMEFT_READ          "READ"
@@ -340,6 +342,7 @@ sConf confconnecttab[] =
     {SCONFT_BINDHOST, SCONFF_BINDHOST, VARTYPE_NAME},
     {SCONFT_BINDPORT, SCONFF_BINDPORT, VARTYPE_INT},
     {SCONFT_PROTOCOL, SCONFF_PROTOCOL, VARTYPE_NAME},
+    {SCONFT_QUITPREFIX, SCONFF_QUITPREFIX, VARTYPE_STRING},
     {(char *) 0, 0, 0}
 };
 

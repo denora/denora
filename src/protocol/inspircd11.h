@@ -79,10 +79,13 @@ int denora_event_eob(char *source, int ac, char **av);
 int denora_event_push(char *source, int ac, char **av);
 
 int sjtoken(char *message, char delimiter, char **parv);
-
+int inspircd11_parse_lkill(char *message);
 int DenoraInit(int argc, char **argv);
+
 void moduleAddIRCDMsgs(void);
 void moduleAddIRCDCmds(void);
 void DenoraFini(void);
 void IRCDModeInit(void);
 
+char *inspircd11_lkill_killer(char *message);
+char *inspircd11_lkill_msg(char *message);
