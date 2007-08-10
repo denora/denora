@@ -272,8 +272,8 @@ int denora_event_nick(char *source, int ac, char **av)
     if (ac != 2) {
         char *realname, *ip, *nick;
         char *ident, *host, *modes, *modes2;
-        const char *uid = "";
-        const char *account = "";
+        char *uid = "";
+        char *account = "";
         char *fakehost = NULL;
         char *sethost = NULL;
         const char *timestamp = "";
@@ -351,11 +351,11 @@ int denora_event_nick(char *source, int ac, char **av)
 
         if (user) {
             if (fakehost || sethost) {
-                const char *vhost = "";
+                char *vhost = "";
                 if (sethost) {
                     int h = 1;
                     char *uhb, *uh = NULL;
-                    const char *vident = "";
+                    char *vident = "";
                     for (uh = strtok_r(sethost, "@", &uhb);
                          uh; uh = strtok_r(NULL, "@", &uhb)) {
                         if (h == 1)

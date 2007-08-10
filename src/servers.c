@@ -840,6 +840,10 @@ void delete_server(Server * serv, const char *quitreason, int depth)
     }
 
     if (serv->slinks_count) {
+        for (i = 0; i < serv->slinks_count; i++) {
+            alog(LOG_DEBUG, "debug: %s has slinks[%d] = %s", serv->name, i,
+                 serv->slinks[i]);
+        }
         i = 0;
         x = -1;
         ARRAY_FOREACH(i, serv->slinks) {
@@ -850,24 +854,13 @@ void delete_server(Server * serv, const char *quitreason, int depth)
             } else {
                 alog(LOG_DEBUG, "Can not find server %s", serv->slinks[i]);
             }
-            if (x > 0) {
-                if (serv->slinks[x]) {
-                    free(serv->slinks[x]);
-                }
-                ARRAY_REMOVE(serv->slinks, x);
-            }
         }
-    }
-
-    if (!depth) {
-        x = -1;
-        x = find_server_link(serv->uplink, serv->name);
-        if (x >= 0) {
-            if (serv->uplink->slinks[x]) {
-                free(serv->uplink->slinks[x]);
-            }
-            ARRAY_REMOVE(serv->uplink->slinks, x);
+        i = 0;
+        ARRAY_FOREACH(i, serv->slinks) {
+            free(serv->slinks[i]);
+            ARRAY_REMOVE(serv->slinks, i);
         }
+        alog(LOG_DEBUG, "debug: Reached the end of the loop");
     }
 
     send_event(EVENT_SQUIT, 2, serv->name, quitreason);
