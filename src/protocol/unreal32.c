@@ -286,6 +286,46 @@ void unreal_cmd_quit(char *source, char *buf)
     }
 }
 
+/* A Local kill message is received by Denora like this:
+ * :gacevedo QUIT :[test.unrealircd.com] Local kill by DrStein (Testing!)
+*/
+int unreal32_parse_lkill(char *message)
+{
+    const char *quittoken = "Quit: ";
+    const char *localkillmsg = "Local kill by";
+
+    /* is it a Local kill message? */
+    if ((strncmp(message, quittoken, 5) != 0) && (strstr(message, localkillmsg) != NULL))
+        return 1;
+
+    return 0;
+}
+
+char *unreal32_lkill_servername(char *message)
+{
+    char *buf, *servername = NULL;
+
+    /* Let's get the servername */
+    buf = sstrdup(message); /* the whole quit message */
+    servername = strtok(buf, " "); /* the servername in brackets */
+    servername[strlen(servername) - 1] = '\0'; /* last bracket removed */
+    *servername++; /* first bracket removed */
+
+    return servername;
+}
+
+char *unreal32_lkill_msg(char *message)
+{
+    char *buf, *msg = NULL;
+
+    /* Let's get the kill message */
+    msg = strchr(message, '('); /* the (kill message) */
+    msg[strlen(msg) - 1] = '\0'; /* removes last character ')' */
+    *msg++; /* removes first character '(' */
+
+    return msg;
+}
+
 /*************************************************************************/
 
 /* PROTOCTL */
@@ -575,12 +615,28 @@ int denora_event_squit(char *source, int ac, char **av)
 
 int denora_event_quit(char *source, int ac, char **av)
 {
+    char *servername = NULL;
+    char *msg = NULL;
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
+
     if (ac != 1)
         return MOD_CONT;
-    do_quit(source, ac, av);
+
+    if (unreal32_parse_lkill(av[0]) == 0) {
+        do_quit(source, ac, av);
+    } else {
+        servername = unreal32_lkill_servername(av[0]);
+        msg = unreal32_lkill_msg(av[0]);
+
+        if (servername)
+           m_kill(servername, source, msg);
+        else
+            m_kill(source, source, msg);
+    }
+
     return MOD_CONT;
 }
 

@@ -88,8 +88,14 @@ int denora_event_sgline(char *source, int ac, char **av);
 int denora_event_pong(char *source, int ac, char **av);
 int denora_event_svs2mode(char *source, int ac, char **av);
 
+int unreal32_parse_lkill(char *message);
+
 int DenoraInit(int argc, char **argv);
 void moduleAddIRCDMsgs(void);
 void moduleAddIRCDCmds(void);
 void DenoraFini(void);
+
 char *unreal32_nickip(char *host);
+
+char *unreal32_lkill_servername(char *message);
+char *unreal32_lkill_msg(char *message);
