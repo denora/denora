@@ -48,46 +48,22 @@ char *char_encode(char *s1)
         c = s1[i];
         if (c > 127) {
             ircsnprintf(buf2, 15, "&#%ld;", (long int) c);
-            if (buf4) {
-                ircsnprintf(buf3, BUFSIZE, "%s%s", buf4, buf2);
-            } else {
-                ircsnprintf(buf3, BUFSIZE, "%s", buf2);
-            }
+            ircsnprintf(buf3, BUFSIZE, "%s%s", buf4, buf2);
             ircsnprintf(buf4, BUFSIZE, "%s", buf3);
         } else if (c == '&') {
-            if (buf4) {
-                ircsnprintf(buf3, BUFSIZE, "%s%s", buf4, "&amp;");
-            } else {
-                ircsnprintf(buf3, BUFSIZE, "%s", "&amp;");
-            }
+            ircsnprintf(buf3, BUFSIZE, "%s%s", buf4, "&amp;");
             ircsnprintf(buf4, BUFSIZE, "%s", buf3);
         } else if (c == '<') {
-            if (buf4) {
-                ircsnprintf(buf3, BUFSIZE, "%s%s", buf4, "&lt;");
-            } else {
-                ircsnprintf(buf3, BUFSIZE, "%s", "&lt;");
-            }
+            ircsnprintf(buf3, BUFSIZE, "%s%s", buf4, "&lt;");
             ircsnprintf(buf4, BUFSIZE, "%s", buf3);
         } else if (c == '>') {
-            if (buf4) {
-                ircsnprintf(buf3, BUFSIZE, "%s%s", buf4, "&gt;");
-            } else {
-                ircsnprintf(buf3, BUFSIZE, "%s", "&gt;");
-            }
+            ircsnprintf(buf3, BUFSIZE, "%s%s", buf4, "&gt;");
             ircsnprintf(buf4, BUFSIZE, "%s", buf3);
         } else if (c == '"') {
-            if (buf4) {
-                ircsnprintf(buf3, BUFSIZE, "%s%s", buf4, "&quot;");
-            } else {
-                ircsnprintf(buf3, BUFSIZE, "%s", "&quot;");
-            }
+            ircsnprintf(buf3, BUFSIZE, "%s%s", buf4, "&quot;");
             ircsnprintf(buf4, BUFSIZE, "%s", buf3);
         } else {
-            if (buf4) {
-                ircsnprintf(buf3, BUFSIZE, "%s%c", buf4, c);
-            } else {
-                ircsnprintf(buf3, BUFSIZE, "%c", c);
-            }
+            ircsnprintf(buf3, BUFSIZE, "%s%c", buf4, c);
             ircsnprintf(buf4, BUFSIZE, "%s", buf3);
         }
     }

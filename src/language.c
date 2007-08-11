@@ -151,18 +151,15 @@ void lang_init()
     SET_SEGV_LOCATION();
 
     for (i = 0; i < NUM_LANGS; i++) {
-        if (langtexts) {
-            if (langtexts[langorder[i]] != NULL) {
-                SET_SEGV_LOCATION();
-                for (j = 0; j < NUM_STRINGS; j++) {
-                    if (!langtexts[langorder[i]][j]) {
-                        langtexts[langorder[i]][j] =
-                            langtexts[DEF_LANGUAGE][j];
-                    }
-                    if (!langtexts[langorder[i]][j]) {
-                        langtexts[langorder[i]][j] =
-                            langtexts[LANG_EN_US][j];
-                    }
+        if (langtexts[langorder[i]] != NULL) {
+            SET_SEGV_LOCATION();
+            for (j = 0; j < NUM_STRINGS; j++) {
+                if (!langtexts[langorder[i]][j]) {
+                    langtexts[langorder[i]][j] =
+                        langtexts[DEF_LANGUAGE][j];
+                }
+                if (!langtexts[langorder[i]][j]) {
+                    langtexts[langorder[i]][j] = langtexts[LANG_EN_US][j];
                 }
             }
         }
@@ -185,10 +182,8 @@ void lang_destory(void)
     int j;
 
     for (i = 0; i < NUM_LANGS; i++) {
-        if (langtexts) {
-            for (j = 0; j < NUM_STRINGS; j++) {
-                free(langtexts[i][j]);
-            }
+        for (j = 0; j < NUM_STRINGS; j++) {
+            free(langtexts[i][j]);
         }
     }
 

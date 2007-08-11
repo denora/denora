@@ -144,10 +144,6 @@ void process()
      * crash - in that case, we want to know what we crashed on. */
     strlcpy(buf, inbuf, sizeof(buf));
 
-    if (BadPtr(buf)) {
-        return;
-    }
-
     /* Split the buffer into pieces. */
     if (*buf == ':' || *buf == '@') {
         s = strpbrk(buf, " ");
@@ -192,22 +188,15 @@ void process()
     } else {
         *source = 0;
     }
-    if (!BadPtr(source)) {
-        serv = server_find(source);
-        if (serv) {
-            is_server = 1;
-        }
-    } else {
-        is_server = 0;
+    serv = server_find(source);
+    if (serv) {
+        is_server = 1;
     }
 
     if (!is_server) {
         doCleanBuffer((char *) buf);
     }
 
-    if (BadPtr(buf)) {
-        return;
-    }
     s = strpbrk(buf, " ");
     if (s) {
         *s = 0;

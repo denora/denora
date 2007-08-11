@@ -230,9 +230,7 @@ void denora_cmd_numeric(char *source, int numeric, const char *fmt, ...)
         ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
         va_end(args);
     }
-    if (!buf) {
-        return;
-    }
+
     u = finduser(source);
 
     if (ircd->numerics) {

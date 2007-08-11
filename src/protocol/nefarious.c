@@ -282,20 +282,19 @@ int denora_event_nick(char *source, int ac, char **av)
         s = server_find(source);
         *source = '\0';
 
-        realname = strdup(av[ac - 1]);
-        uid = strdup(av[ac - 2]);
-        ip = strdup(av[ac - 3]);
-        nick = strdup(av[0]);
-        ident = strdup(av[3]);
-        host = strdup(av[4]);
-        modes = strdup(av[5]);
-        modes2 = strdup(av[5]);
+        realname = sstrdup(av[ac - 1]);
+        uid = sstrdup(av[ac - 2]);
+        ip = sstrdup(av[ac - 3]);
+        nick = sstrdup(av[0]);
+        ident = sstrdup(av[3]);
+        host = sstrdup(av[4]);
+        modes = sstrdup(av[5]);
+        modes2 = sstrdup(av[5]);
 
         if (strpbrk(av[5], "+")) {
             int cnt = 6;
             int c = 1;
             char *uaccount = sstrdup("");
-            char *accb = NULL;
             char *acc = NULL;
 
             while (*modes) {
@@ -303,21 +302,21 @@ int denora_event_nick(char *source, int ac, char **av)
                 case 'r':
                     isaccount = 1;
                     uaccount = av[cnt++];
-                    for (acc = strtok_r(uaccount, ":", &accb);
-                         acc; acc = strtok_r(NULL, ":", &accb)) {
+                    for (acc = strtok(uaccount, ":");
+                         acc; acc = strtok(NULL, ":")) {
                         if (c == 1)
-                            account = strdup(acc);
+                            account = sstrdup(acc);
                         else if (c == 2)
-                            timestamp = strdup(acc);
+                            timestamp = sstrdup(acc);
                         c++;
                     }
                     c = 1;
                     break;
                 case 'h':
-                    sethost = strdup(av[cnt++]);
+                    sethost = sstrdup(av[cnt++]);
                     break;
                 case 'f':
-                    fakehost = strdup(av[cnt++]);
+                    fakehost = sstrdup(av[cnt++]);
                     break;
                 case 'x':
                     ishidden = 1;
@@ -327,7 +326,7 @@ int denora_event_nick(char *source, int ac, char **av)
                 }
                 modes++;
             }
-            modes = strdup(modes2);
+            modes = sstrdup(modes2);
         } else
             modes = NULL;
 
@@ -353,10 +352,10 @@ int denora_event_nick(char *source, int ac, char **av)
                 const char *vhost = "";
                 if (sethost) {
                     int h = 1;
-                    char *uhb, *uh = NULL;
+                    char *uh = NULL;
                     const char *vident = "";
-                    for (uh = strtok_r(sethost, "@", &uhb);
-                         uh; uh = strtok_r(NULL, "@", &uhb)) {
+                    for (uh = strtok(sethost, "@");
+                         uh; uh = strtok(NULL, "@")) {
                         if (h == 1)
                             vident = uh;
                         else if (h == 2)

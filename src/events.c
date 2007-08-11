@@ -156,11 +156,7 @@ void event_message_process(char *eventbuf)
 
     strlcpy(buf, eventbuf, sizeof(buf));
 
-    if (!BadPtr(buf)) {
-        doCleanBuffer((char *) buf);
-    } else {
-        return;
-    }
+    doCleanBuffer((char *) buf);
 
     /* Split the buffer into pieces. */
     if (*buf == ':') {

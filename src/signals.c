@@ -403,9 +403,7 @@ void do_backtrace(int header)
              "paste results and following line into the bugtracker");
         alog(LOG_NORMAL,
              "[================ COPY THE FOLLOWING =================]");
-        if (!BadPtr(segv_location)) {
-            alog(LOG_NORMAL, "Backtrace: %s", segv_location);
-        }
+        alog(LOG_NORMAL, "Backtrace: %s", segv_location);
         alog(LOG_NORMAL, "[inbuf][%s]", inbuf);
         alog(LOG_NORMAL,
              "Backtrace: Denora version %s build #%s, compiled %s %s",
@@ -420,9 +418,7 @@ void do_backtrace(int header)
             }
         }
     } else {
-        if (!BadPtr(segv_location)) {
-            alog(LOG_NORMAL, "Execution trace: %s", segv_location);
-        }
+        alog(LOG_NORMAL, "Execution trace: %s", segv_location);
         alog(LOG_NORMAL, "Execution trace: in progress");
     }
     size = backtrace(array, 10);

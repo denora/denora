@@ -164,9 +164,6 @@ void denora_cmd_mode(char *source, char *dest, const char *fmt, ...)
         ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
         va_end(args);
     }
-    if (!buf) {
-        return;
-    }
     ircdproto.ircd_cmd_mode(source, dest, buf);
 }
 
@@ -225,9 +222,6 @@ void denora_cmd_notice(char *source, char *dest, const char *fmt, ...)
     } else {
         return;
     }
-    if (!buf) {
-        return;
-    }
     ircdproto.ircd_cmd_notice(source, dest, buf);
 }
 
@@ -250,9 +244,6 @@ void denora_cmd_action(char *source, char *dest, const char *fmt, ...)
         return;
     }
 
-    if (!buf) {
-        return;
-    }
     ircsnprintf(actionbuf, BUFSIZE - 1, "%cACTION %s %c", 1, buf, 1);
     ircdproto.ircd_cmd_privmsg(source, dest, actionbuf);
 }
@@ -281,9 +272,6 @@ void denora_cmd_privmsg(char *source, char *dest, const char *fmt, ...)
         va_start(args, fmt);
         ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
         va_end(args);
-    }
-    if (!buf) {
-        return;
     }
     ircdproto.ircd_cmd_privmsg(source, dest, buf);
 }
@@ -381,19 +369,11 @@ void denora_cmd_part(char *nick, char *chan, const char *fmt, ...)
         return;
     }
     v[0] = sstrdup(chan);
-    if (buf) {
-        v[1] = sstrdup(buf);
-    }
-    if (buf) {
-        ircdproto.ircd_cmd_part(nick, chan, buf);
-    } else {
-        ircdproto.ircd_cmd_part(nick, chan, NULL);
-    }
-    do_part(nick, (buf ? 2 : 1), v);
+    v[1] = sstrdup(buf);
+    ircdproto.ircd_cmd_part(nick, chan, buf);
+    do_part(nick, 2, v);
     free(v[0]);
-    if (buf) {
-        free(v[1]);
-    }
+    free(v[1]);
 }
 
 /*************************************************************************/
@@ -407,9 +387,6 @@ void denora_cmd_global(char *source, const char *fmt, ...)
         va_start(args, fmt);
         ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
         va_end(args);
-    }
-    if (!buf) {
-        return;
     }
     ircdproto.ircd_cmd_global((source ? source : ServerName), buf);
 }
@@ -494,11 +471,8 @@ void denora_cmd_ctcp(char *source, char *dest, const char *fmt, ...)
         va_end(args);
     }
 
-    if (!buf) {
-        return;
-    } else {
-        s = normalizeBuffer(buf);
-    }
+    s = normalizeBuffer(buf);
+
     ircdproto.ircd_cmd_ctcp(source, dest, s);
     free(s);
 }

@@ -58,10 +58,6 @@ void vsend_cmd(const char *source, const char *fmt, va_list args)
     if (!BadPtr(fmt)) {
         ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
 
-        if (BadPtr(buf)) {
-            return;
-        }
-
         if (source) {
             if (ircd->p10) {
                 sockprintf(servsock, "%s %s\r\n", source, buf);
@@ -103,9 +99,6 @@ void notice_server(char *source, Server * s, char *fmt, ...)
         ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
         va_end(args);
 
-        if (!buf) {
-            return;
-        }
         denora_cmd_serv_notice(source, s->name, buf);
     }
 }
@@ -130,10 +123,6 @@ void notice_user(char *source, User * u, const char *fmt, ...)
         va_start(args, fmt);
         ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
         va_end(args);
-
-        if (!buf) {
-            return;
-        }
 
         denora_cmd_notice(source, u->nick, buf);
     }
@@ -267,11 +256,6 @@ void notice(char *source, char *dest, const char *fmt, ...)
         va_start(args, fmt);
         ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
 
-        if (!buf) {
-            va_end(args);
-            return;
-        }
-
         denora_cmd_notice(source, dest, "%s", buf);
         va_end(args);
     }
@@ -299,9 +283,6 @@ void privmsg(char *source, char *dest, const char *fmt, ...)
         va_end(args);
     }
 
-    if (!buf) {
-        return;
-    }
     denora_cmd_privmsg(source, dest, "%s", buf);
 }
 

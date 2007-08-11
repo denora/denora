@@ -219,22 +219,22 @@ int denora_event_nick(char *source, int ac, char **av)
         s = server_find(source);
         *source = '\0';
 
-        realname = strdup(av[ac - 1]);
-        uid = strdup(av[ac - 2]);
-        ip = strdup(av[ac - 3]);
-        nick = strdup(av[0]);
-        ident = strdup(av[3]);
-        host = strdup(av[4]);
-        modes = strdup(av[5]);
-        modes2 = strdup(av[5]);
-        timestamp = strdup(av[2]);
+        realname = sstrdup(av[ac - 1]);
+        uid = sstrdup(av[ac - 2]);
+        ip = sstrdup(av[ac - 3]);
+        nick = sstrdup(av[0]);
+        ident = sstrdup(av[3]);
+        host = sstrdup(av[4]);
+        modes = sstrdup(av[5]);
+        modes2 = sstrdup(av[5]);
+        timestamp = sstrdup(av[2]);
 
         if (strpbrk(av[5], "+")) {
             while (*modes) {
                 switch (*modes) {
                 case 'r':
                     isaccount = 1;
-                    account = strdup(av[6]);
+                    account = sstrdup(av[6]);
                     break;
                 case 'x':
                     ishidden = 1;
@@ -244,7 +244,7 @@ int denora_event_nick(char *source, int ac, char **av)
                 }
                 modes++;
             }
-            modes = strdup(modes2);
+            modes = sstrdup(modes2);
         } else
             modes = NULL;
 
