@@ -525,9 +525,41 @@ int denora_event_opertype(char *source, int ac, char **av)
     return denora_event_mode(source, 2, newav);
 }
 
+int has_globopsmod = 0;
 /* Event: PROTOCTL */
 int denora_event_capab(char *source, int ac, char **av)
 {
+    int argc = 5;
+    char *argv[5];
+
+    if (strcasecmp(av[0], "START") == 0) {
+        /* reset CAPAB */
+        has_globopsmod = 0;
+    } else if (strcasecmp(av[0], "MODULES") == 0
+               && strstr(av[1], "m_globops.so")) {
+        has_globopsmod = 1;
+    } else if (strcasecmp(av[0], "END") == 0) {
+        if (has_globopsmod == 0) {
+            send_cmd(NULL,
+                     "ERROR :m_globops.so is not loaded. This is required by Denora");
+            denora->qmsg =
+                sstrdup
+                ("Remote server does not have the m_globops.so module loaded, and this is required.");
+            denora->quitting = 1;
+            return MOD_STOP;
+        }
+
+        /* Generate a fake capabs parsing call so things like NOQUIT work
+         * fine. It's ugly, but it works....
+         */
+        argv[0] = sstrdup("NOQUIT");
+        argv[1] = sstrdup("SSJ3");
+        argv[2] = sstrdup("NICK2");
+        argv[3] = sstrdup("VL");
+        argv[4] = sstrdup("TLKEXT");
+
+        capab_parse(argc, argv);
+    }
     return MOD_CONT;
 }
 

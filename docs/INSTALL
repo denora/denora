@@ -133,9 +133,6 @@ You also will need to:
     Note that this block-style configuration files differ heavily, depending
     on the IRCd. Read your IRCd documentation for more details on the exact 
     configuration used by your IRCd.
-    
-    Important nore for Inspircd users: make sure your IRCd has the m_globops
-    module loaded, since Denora needs it to run properly.
 
 5. Setting up the MySQL server
 ------------------------------
