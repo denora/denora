@@ -484,6 +484,31 @@ static int check_db(User * u, Channel * c, char *nick, char *chan)
 #ifndef USE_MYSQL
     return 0;
 #else
+
+    /* Check if user has +r */
+    if (UserStatsRegistered) {
+        if (!UserHasMode(u->nick, UMODE_r)) {
+            /* User is not +r so he gets ignored */
+            u->cstats = 2;
+        } else if (UserHasMode(u->nick, UMODE_r) && (u->cstats == 2)) {
+            /* User is +r but is set to ignore, so reset. */
+            u->cstats = 0;
+        }
+    }
+
+    /* check for ignore */
+    rdb_query
+        (QUERY_HIGH,
+         "SELECT `ignore` FROM %s WHERE uname=\'%s\' AND `ignore`='Y';",
+         AliasesTable, u->sgroup);
+    mysql_res = mysql_store_result(mysql);
+    if (mysql_res) {
+        if (mysql_num_rows(mysql_res) > 0) {
+            u->cstats = 2;      /* ignore this user */
+        }
+        mysql_free_result(mysql_res);
+    }
+
     /* get alias from db */
     if (u->cstats == 0) {
         rdb_query(QUERY_HIGH, "SELECT uname FROM %s WHERE nick=\'%s\';",
@@ -517,18 +542,6 @@ static int check_db(User * u, Channel * c, char *nick, char *chan)
     }
 
     SET_SEGV_LOCATION();
-    /* check for ignore */
-    rdb_query
-        (QUERY_HIGH,
-         "SELECT `ignore` FROM %s WHERE uname=\'%s\' AND `ignore`='Y';",
-         AliasesTable, u->sgroup);
-    mysql_res = mysql_store_result(mysql);
-    if (mysql_res) {
-        if (mysql_num_rows(mysql_res) > 0) {
-            u->cstats = 2;      /* ignore this user */
-        }
-        mysql_free_result(mysql_res);
-    }
 
     if (c->cstats == 0) {
         SET_SEGV_LOCATION();

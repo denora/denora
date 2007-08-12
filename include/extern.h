@@ -303,6 +303,7 @@ E int   UseTS6;
 E char *Numeric;
 E int LargeNet;
 E int NickTracking;
+E int UserStatsRegistered;
 E char *TS6SID;
 E char p10id[3];
 E char *TS6UPLINK;
