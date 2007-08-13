@@ -1,6 +1,7 @@
 Denora Version SVN
 -------------------
 Provided by Denora Stats Dev. <dev@denorastats.org> - 2007
+08/13 A Added XMLRPC documentation                                [#407]
 08/12 A Added option to track only +r users on chanstats          [ #00]
 08/10 A New optional token on connect block for quitprefix        [#404]
 07/25 A Admin passwords are now MD5-encrypted in SQL              [ #00]

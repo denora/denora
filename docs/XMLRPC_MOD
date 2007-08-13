@@ -1,0 +1,107 @@
+Denora XMLRPC Module Coding
+-- $Id: CRON 2 2006-12-14 17:38:30Z Hal9000 $
+---------------------
+
+1) Intro
+2) Basics
+3) Triggered Events List
+
+1) Introduction to XMLRPC Module Coding
+
+	XMLRPC is a powerful tool to get information from denora, this document
+    covers how to create your own methods and handle returning data to the
+    requestor
+
+2) Basics
+
+    A) All functions most be formatted as:
+
+        int functioname(deno_socket_t xmlsocket, int ac, char **av);
+
+    B) In DenoraInit you must declare XMLRPC Method in some fashion; it is into
+       this variable that we will create the method handler. Here is what
+       the base DenoraInit should look like at this point:
+
+        int DenoraInit(int argc, char **argv)
+        {
+            XMLRPCCmd *xml = NULL;
+            int status;
+
+            moduleAddAuthor(AUTHOR);
+            moduleAddVersion(VERSION);
+            return MOD_CONT;
+        }
+
+    C) Pass "createXMLCommand" the name of the method. 
+
+        xml = createXMLCommand("denora.getstat", xmlrpc_getstat);
+
+    D) The Handler is not ready for use yet; now you must add it to the hash
+       with "moduleAddXMLRPCcmd". You will want to pass to this function the
+       return of "createCronEvent"
+
+        status = moduleAddXMLRPCcmd(xml);
+
+       It will return the same module error codes as adding a regular message,
+       which you can use to confirm it was added correctly.
+
+    E) With that setup in your function you will be passed a socket that will
+       be the user's socket that asked for the info, an array count and an array
+
+		int xmlrpc_getstat(deno_socket_t xmlsocket, int ac, char **av)
+		{
+    		char buf[BUFSIZE];
+	    	*buf = '\0';
+
+		    if (!stricmp(av[0], "users")) {
+    		    ircsnprintf(buf, BUFSIZE, "<i4>%ld</i4>", (long int) stats->users);
+	    	} else if (!stricmp(av[0], "chans")) {
+	    	    ircsnprintf(buf, BUFSIZE, "<i4>%ld</i4>", (long int) stats->chans);
+    		} else {
+        		ircsnprintf(buf, BUFSIZE, "<i4>%ld</i4>", (long int) stats->users);
+    		}
+    		xmlrpc_send(xmlsocket, 1, buf);
+    		return MOD_CONT;
+		}
+
+		note that for a valid XMLRPC method it must have an argument, this is part of the XMLRPC
+        standard. Place your data into a buffer and send it to back to the requestor.
+
+3) API for XMLRPC
+
+	char *xmlrpc_array(int argc, ...) - used to turn a char array into a XMLRPC array
+  
+    char *xmlrpc_double(char *buf, double value) - returns a XMLRPC formatted tag for integers that are doubles, must
+                                                   pass the buffer to append the data to.
+
+    char *xmlrpc_base64(char *buf, char *value) - returns a XMLRPC formatted tag for base64 encoding, must
+                                                   pass the buffer to append the data to.
+
+    char *xmlrpc_boolean(char *buf, int value) - returns a XMLRPC formatted tag for integers that are boolean, must
+                                                   pass the buffer to append the data to.
+
+	char *xmlrpc_string(char *buf, char *value) - returns a XMLRPC formatted tag for a string, must
+                                                   pass the buffer to append the data to.
+
+	char *xmlrpc_integer(char *buf, int value)  - returns a XMLRPC formatted tag for integers, must
+                                                   pass the buffer to append the data to.
+
+	char *xmlrpc_time2date(char *buf, time_t t) - returns a XMLRPC formatted tag for a current time, must
+                                                   pass the buffer to append the data to.
+
+	void xmlrpc_send(deno_socket_t socket_fd, int argc, ...) - write your buffer back to the requestor, pass it as many arguments
+                                                               as needed.
+
+	int xmlrpc_set_options(int type, const char *value) - set options for the XMLRPC functions
+														  Valid types are
+														  * XMLRPC_HTTP_HEADER
+														  * XMLRPC_ENCODE
+ 														  * XMLRPC_INTTAG
+
+														  XMLRPC_HTTP_HEADER can either be set to XMLRPC_ON, XMLRPC_OFF
+														  XMLRPC_INTTAG can either be set ot XMLRPC_I4, XMLRPC_INT
+
+	void xmlrpc_generic_error(deno_socket_t socket_fd, int code, const char *string, ...) - return a generic "fault" error back to
+																						    the requestor
+
+	int xmlrpc_getlast_error(void) - get the last error code from the XMLRPC layer.

@@ -1,0 +1,90 @@
+Denora XMLRPC Support
+-------------------
+
+1) Introduction
+
+	Denora supports obtaining stats via standard XMLRPC calls. Denora creates
+    a XMLRPC server by which local and remote clients can make calls to Denora
+    to get real time data from it without the use of SQL or any other database
+    method.
+
+	Note this is a bit slower then SQL but provides a valid alternative to SQL
+
+
+2) Requirements
+
+    1. Ablitiy to bind to an IP address and port other then the one used to connect to IRC
+    2. Denora 1.1.x or higher
+    3. XMLRPC enabled client code (PHP, ASP, etc)
+
+3) Configuration
+
+	xmlrpc {
+    	xmlrpc_enable                   # You must set this for XMLRPC to start
+    	xmlrpc_host 127.0.0.1;          # IP address to have the XMLRPC server on
+    	xmlrpc_port 8080;               # Port on which to listen to
+    	xmlrpc_accept 127.0.0.1;        # Accept only data from these hosts
+    	xmlrpc_accept 192.168.0.1;      # Accept only data from these hosts
+	};
+
+    xmlrpc_enable - enables the XMLRPC server and its modules to load on startup
+    xmlrpc_host   - is the IP address by which to bind the XMLRPC server to
+    xmlrpc_port   - is the port on which the XMLRPC server will be listening
+    xmlrpc_accept - IP address to accept requests from, this prevents flooding form unwanted addresses
+                    there can be up to 128 different entries.
+
+    Start denora as normal, the XMLRPC default modules will load and be listening for incoming
+    connections.
+
+4) Methods already defined in Denora
+
+   Denora comes with a few XMLRPC methods predefined, see XMLRPC_MOD for how to code your own methods
+
+   denora.getstat - returns the current user or channel count
+     av[0] = [users|chans]
+   
+   denora.channeldata - returns information about a given channel
+     av[0] = [topic|usercount|maxusercount|modes]
+
+	denora.channellist - returns channel list
+      av[0] = not required
+
+
+4. PHP Example
+
+	This is a very simple PHP example
+
+	<?php
+
+	$string = xmlrpc_encode_request("denora.getstat","users");
+
+	printf("XMLRPC call");
+	echo("<pre>");
+	print(htmlspecialchars($string));
+	echo("</pre>");
+
+	$data = NULL;
+
+	$fp = @fsockopen ("127.0.0.1", 9090, $errno, $errstr, 30);
+	if (!$fp) { 
+	   echo "Error in Connecting : $errstr ($errno)<br>\n"; 
+	} else { 
+	   fputs ($fp, $string); 
+	   while (!feof($fp)) { 
+    	   $data .= fgets($fp,128); 
+   		} 
+   		fclose ($fp); 
+	}
+
+	printf("XMLRPC client data");
+	echo("<pre>");
+	printf("%s", htmlspecialchars($data));
+	echo("</pre>");
+
+	$array = xmlrpc_decode($data);
+
+	printf("Array print out");
+	print_r($array);
+
+	?>
+

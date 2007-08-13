@@ -39,7 +39,7 @@ Denora CRON Events
         cevt = createCronEventHook(CRON_MIDNIGHT, midnight_check);
 
     D) The Handler is not ready for use yet; now you must add it to the hash
-       with "AddCronEvent". You will want to pass to this function the
+       with "moduleAddCronEvent". You will want to pass to this function the
        return of "createCronEvent"
 
         status = moduleAddCronEvent(cevt);
