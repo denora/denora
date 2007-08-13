@@ -73,4 +73,6 @@ void moduleAddIRCDCmds(void);
 void DenoraFini(void);
 char *nefarious_nickip(char *host);
 
-
+int nefarious_parse_lkill(char *message);
+char *nefarious_lkill_killer(char *message);
+char *nefarious_lkill_msg(char *message);

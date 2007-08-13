@@ -1,7 +1,7 @@
 /*************************************************************************/
 /* Bahamut IRCD Protocol v1.4.x - v1.8.x                                 */
 /* (C) 2004-2007 Denora Team                                             */
-/* Contact us at info@denorastats.org                                       */
+/* Contact us at info@denorastats.org                                    */
 /*                                                                       */
 /* Please read COPYING and README for furhter details.                   */
 /*                                                                       */
@@ -571,12 +571,27 @@ int denora_event_squit(char *source, int ac, char **av)
 
 int denora_event_quit(char *source, int ac, char **av)
 {
+    char *killer = NULL;
+    char *msg = NULL;
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
     if (ac != 1)
         return MOD_CONT;
-    do_quit(source, ac, av);
+
+    if (bahamut_parse_lkill(av[0]) == 0) {
+        do_quit(source, ac, av);
+    } else {
+        killer = bahamut_lkill_killer(av[0]);
+        msg = bahamut_lkill_msg(av[0]);
+
+        if (killer)
+            m_kill(killer, source, msg);
+        else
+            m_kill(source, source, msg);
+    }
+
     return MOD_CONT;
 }
 
@@ -708,6 +723,45 @@ void bahamut_cmd_quit(char *source, char *buf)
     } else {
         send_cmd(source, "QUIT");
     }
+}
+
+int bahamut_parse_lkill(char *message)
+{
+    const char *localkillmsg = "Local kill by";
+
+    /* is it a Local kill message? */
+    if ((strncmp(message, QuitPrefix, strlen(QuitPrefix)) != 0)
+        && (strstr(message, localkillmsg) != NULL))
+        return 1;
+
+    return 0;
+}
+
+char *bahamut_lkill_killer(char *message)
+{
+    char *buf, *killer = NULL;
+
+    /* Let's get the killer nickname */
+    killer = strchr(message, 'y');
+    buf = sstrdup(killer);
+    killer = strtok(buf, " ");
+    killer = strtok(NULL, " ");
+
+    return killer;
+}
+
+char *bahamut_lkill_msg(char *message)
+{
+    char *buf, *msg = NULL;
+
+    /* Let's get the kill message */
+    msg = strchr(message, 'y');
+    buf = sstrdup(msg);
+    msg = strtok(buf, " ");
+    msg = strtok(NULL, " ");
+    msg = strtok(NULL, " ");
+
+    return msg;
 }
 
 /*************************************************************************/
@@ -857,7 +911,8 @@ int DenoraInit(int argc, char **argv)
     }
 
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id$");
+    moduleAddVersion
+        ("$Id$");
     moduleSetType(PROTOCOL);
 
     pmodule_ircd_version("BahamutIRCd 1.4.*/1.8.*");

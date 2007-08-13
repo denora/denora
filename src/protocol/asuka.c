@@ -419,13 +419,28 @@ int denora_event_squit(char *source, int ac, char **av)
 /* ABAAB Q :Quit */
 int denora_event_quit(char *source, int ac, char **av)
 {
+    char *killer = NULL;
+    char *msg = NULL;
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
 
     if (ac != 1)
         return MOD_CONT;
-    do_quit(source, ac, av);
+
+    if (asuka_parse_lkill(av[0]) == 0) {
+        do_quit(source, ac, av);
+    } else {
+        killer = asuka_lkill_killer(av[0]);
+        msg = asuka_lkill_msg(av[0]);
+
+        if (killer)
+            m_kill(killer, source, msg);
+        else
+            m_kill(source, source, msg);
+    }
+
     return MOD_CONT;
 }
 
@@ -603,6 +618,46 @@ void asuka_cmd_quit(char *source, char *buf)
     } else {
         send_cmd((ud ? ud->uid : source), "Q");
     }
+}
+
+/* Local kills handling - DrStein */
+int asuka_parse_lkill(char *message)
+{
+    const char *localkillmsg = "Killed (";
+
+    /* is it a Local kill message? */
+    if ((strncmp(message, QuitPrefix, strlen(QuitPrefix)) != 0)
+        && (strstr(message, localkillmsg) != NULL))
+        return 1;
+
+    return 0;
+}
+
+char *asuka_lkill_killer(char *message)
+{
+    char *buf, *killer = NULL;
+
+    /* Let's get the killer nickname */
+    buf = sstrdup(message);
+    killer = strtok(buf, " ");
+    killer = strtok(NULL, " ");
+    killer++;
+
+    return killer;
+}
+
+/* Killed (*.beirut.com (KILL TESTING)) */
+char *asuka_lkill_msg(char *message)
+{
+    char *msg = NULL;
+
+    /* Let's get the kill message */
+    msg = strchr(message, '(');
+    msg = strchr(message, '(');
+    msg[strlen(msg) - 2] = '\0';
+    msg++;                      /* removes first character '(' */
+
+    return msg;
 }
 
 /*************************************************************************/

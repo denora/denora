@@ -66,4 +66,6 @@ void DenoraFini(void);
 char *asuka_nickip(char *host);
 void IRCDModeInit(void);
 
-
+int asuka_parse_lkill(char *message);
+char *asuka_lkill_killer(char *message);
+char *asuka_lkill_msg(char *message);

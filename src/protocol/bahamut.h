@@ -62,11 +62,15 @@ int denora_event_burst(char *source, int ac, char **av);
 int denora_event_sqline(char *source, int ac, char **av);
 int denora_event_pong(char *source, int ac, char **av);
 
+int bahamut_parse_lkill(char *message);
+
 int DenoraInit(int argc, char **argv);
 void moduleAddIRCDMsgs(void);
 void moduleAddIRCDCmds(void);
 void DenoraFini(void);
 char *bahamut_nickip(char *host);
 
-
+char *bahamut_lkill_killer(char *message);
+char *bahamut_lkill_servername(char *message);
+char *bahamut_lkill_msg(char *message);
 

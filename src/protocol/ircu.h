@@ -74,3 +74,6 @@ void moduleAddIRCDCmds(void);
 void DenoraFini(void);
 char *ircu_nickip(char *host);
 
+int ircu_parse_lkill(char *message);
+char *ircu_lkill_killer(char *message);
+char *ircu_lkill_msg(char *message);
