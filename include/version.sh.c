@@ -54,7 +54,7 @@ char *denoraStrDup(const char *src)
     char *ret = NULL;
     if (src) {
         if ((ret = (char *) malloc(strlen(src) + 1))) {
-            strlcpy(ret, src, sizeof(ret));
+            strcpy(ret, src);
         }
     }
     return ret;

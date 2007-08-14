@@ -9,9 +9,15 @@ VERSION_MAJOR="1"
 VERSION_MINOR="3"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="64"
+VERSION_BUILD="65"
 
 # $Log$
+#
+# BUILD : 1.3.0.65 (SVN)
+# BUGS  : N/A
+# NOTES : 
+#  Updated SDK and MySQL paths for Windows. Reverted changes made to version.sh.c, Windows doesnt have 
+# strlcpy()
 #
 # BUILD : 1.3.0.64 (SVN)
 # BUGS  : 407

@@ -14,7 +14,7 @@
 '
 
 ' Declare global variables
-Dim AnoVersion
+Dim DenoVersion
 Dim UseMySQL
 Dim UsePostgreSQL
 Dim CompilerVer
@@ -43,12 +43,12 @@ Dim VS2005Dep  ' We need to do some defines to prevent issues
   ' please specify that drive letter here.
   DefaultDrive = "C"
 
-AnoVersion = "1.2.0"
+DenoVersion = "1.3.0"
 UseMySQL = "0"
 CompilerVer = "VC7"
 Set fso = CreateObject("Scripting.FileSystemObject")
-MySQLLibPath = DefaultDrive & ":\Program Files\mysql\MySQL Server 4.1\lib\opt"
-MySQLHeadPath = DefaultDrive & ":\Program Files\mysql\MySQL Server 4.1\include"
+MySQLLibPath = DefaultDrive & ":\Program Files\MySQL\MySQL Server 5.0\lib\opt"
+MySQLHeadPath = DefaultDrive & ":\Program Files\MySQL\MySQL Server 5.0\include"
 LibPath = ""
 LibPath2 = ""
 IncDir = ""
@@ -155,7 +155,7 @@ Else
                 WScript.Echo "I found a copy of Microsoft Visual Studio 2005.."
                 LibPath = DefaultDrive & ":\Program Files\Microsoft Visual Studio 8\VC\Lib"
                 ' debug stuff  -- heinz
-                LibPath2 = DefaultDrive & ":\Program Files\Microsoft Platform SDK\lib"
+                LibPath2 = DefaultDrive & ":\Program Files\Microsoft Platform SDK for Windows 2003 Server R2\lib"
                 ' LibPath2 = "F:\MSSDK\Lib"
                 If (fso.FileExists(LibPath & "/MSVCRT.lib") = False And fso.FileExists(LibPath2 & "/MSVCRT.lib") = False) Then
                         WScript.Echo "Hm. I can't seem to find the default library.."
@@ -243,9 +243,9 @@ Else
                 End If
         End If
         
-        If (fso.FolderExists(DefaultDrive & ":\Program Files\Microsoft Platform SDK\Lib") And LibPath = "") Then
+        If (fso.FolderExists(DefaultDrive & ":\Program Files\Microsoft Platform SDK for Windows 2003 Server R2\Lib") And LibPath = "") Then
                 WScript.Echo "I found a copy of Microsoft Platform SDK.."
-                LibPath = DefaultDrive & ":\Program Files\Microsoft Platform SDK\Lib"
+                LibPath = DefaultDrive & ":\Program Files\Microsoft Platform SDK for Windows 2003 Server R2\Lib"
                 LibPath2 = DefaultDrive & ":\Program Files\Microsoft Visual Studio .NET 2003\VC7\Lib"
                 CompilerVer = "SDK"
                 If (fso.FileExists(LibPath & "/MSVCRT.lib") = False And fso.FileExists(LibPath2 & "/MSVCRT.lib") = False) Then
@@ -274,7 +274,7 @@ Else
                 End If
         End If
         
-        If (fso.FileExists(DefaultDrive & ":\Program Files\Microsoft Visual Studio 8\VC\Bin\nmake.exe") = False And fso.FileExists(DefaultDrive & ":\Program Files\Microsoft Visual Studio .NET 2003\VC7\Bin\nmake.exe") = False AND fso.FileExists(DefaultDrive & ":\Program Files\Microsoft Visual Studio\VC98\Bin\nmake.exe") = False AND fso.FileExists(DefaultDrive & ":\nmake.exe") = False AND fso.FileExists(DefaultDrive & ":\Program Files\Microsoft Platform SDK\Bin\nmake.exe") = False) Then
+        If (fso.FileExists(DefaultDrive & ":\Program Files\Microsoft Visual Studio 8\VC\Bin\nmake.exe") = False And fso.FileExists(DefaultDrive & ":\Program Files\Microsoft Visual Studio .NET 2003\VC7\Bin\nmake.exe") = False AND fso.FileExists(DefaultDrive & ":\Program Files\Microsoft Visual Studio\VC98\Bin\nmake.exe") = False AND fso.FileExists(DefaultDrive & ":\nmake.exe") = False AND fso.FileExists(DefaultDrive & ":\Program Files\Microsoft Platform SDK for Windows 2003 Server R2\Bin\nmake.exe") = False) Then
                         WScript.Echo ""
                         WScript.Echo "I couldn't seem to find a copy of nmake.exe on your system.."
                         WScript.Echo ""
