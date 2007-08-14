@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="3"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="70"
+VERSION_BUILD="71"
 
 # $Log$
+#
+# BUILD : 1.3.0.71 (SVN)
+# BUGS  : N/A
+# NOTES : Second part of changes for Windows.
 #
 # BUILD : 1.3.0.70 (SVN)
 # BUGS  : N/A

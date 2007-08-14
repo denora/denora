@@ -21,8 +21,4 @@ spotless: clean
 
 distclean: spotless
 
-version.h: Makefile.win32 version.js version.log denora.h $(SRCS)
-	cscript /nologo version.js
-
-
 FRC:

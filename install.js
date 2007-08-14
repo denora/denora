@@ -219,7 +219,7 @@ var buildPackages = [
                                                                  },
                                                                  {
                                                                         'findtext' : /CURSHORTVER/g,
-                                                                        'replacement' : function() { findDenoraVersion(); return denoraShortVersion; }
+                                                                        'replacement' : function() { FindDenoraVersion(); return denoraShortVersion; }
                                                                  },
                                                                  {
                                                                         'findtext' : / For more options type .\/Config --help/g,

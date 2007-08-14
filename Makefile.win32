@@ -47,7 +47,7 @@ spotless:
         cd src\modules && $(MAKE) spotless && cd ..\..
         cd src\protocol && $(MAKE) spotless && cd ..\..
 		cd src\core && $(MAKE) spotless && cd ..\..
-        -@erase version.h include\language.h include\sysconf.h include\version.h *~ denora.exe version.sh.exe *.obj  version.sh.exe.manifest denora.exe.manifest
+        -@erase version.h include\language.h include\sysconf.h include\version.h *~ denora.exe *.obj  denora.exe.manifest
 
 mypasql: 
         $(MYPASQL_BUILD)
@@ -85,6 +85,10 @@ include\sysconf.h:
 
 lang\language.h: lang\Makefile lang\index
         cd lang && $(MAKE) language.h && cd ..
+
+include\version.h: version.js version.log denora.h $(SRCS)
+        cscript /nologo version.js
+	copy version.h include\version.h
 
 lang\index:
         cd lang && $(MAKE) index && cd ..
