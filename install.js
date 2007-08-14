@@ -354,7 +354,7 @@ var buildPackages = [
                 WScript.Echo("\nConfiguration Complete!");
                 WScript.Echo("-----------------------\n");
                 WScript.Echo("Denora has been configured to your system. To compile, simply type:");
-                WScript.Echo("make\n");
+                WScript.Echo("nmake -f Makefile.win32\n");
 		    WScript.Echo("If you update Denora, you should run this script again to ensure\nall available options are set.\n");
           
         }                        
