@@ -103,14 +103,15 @@ void xmlrpc_process(deno_socket_t socket_fd, char *buffer)
             xmlrpc_generic_error(socket_fd, xmlrpc_error_code,
                                  "XMLRPC error: Missing methodRequest or methodName.");
         }
+        free(tmp);
     } else {
         xmlrpc_error_code = -2;
         xmlrpc_generic_error(socket_fd, xmlrpc_error_code,
                              "XMLRPC error: Invalid document end at line 1");
     }
     SET_SEGV_LOCATION();
-    free(av);
-    free(tmp);
+    if (ac)
+        free(av);
 }
 
 /*************************************************************************/
