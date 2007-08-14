@@ -92,11 +92,4 @@ lang\index:
 include\language.h: lang\language.h
         cd lang && copy language.h ..\include\language.h && cd ..
         
-include\version.h: version.sh.exe version.log include\denora.h
-        version.sh.exe
-                copy version.h include\version.h
-
-version.sh.exe:
-        $(CC) $(CFLAGS) include\version.sh.c
-
 FRC:

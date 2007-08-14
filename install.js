@@ -14,6 +14,7 @@
 //
 
 var denoraVersion = "Unknown";
+var denoraShortVersion = "Unknown";
 var vMaj, vMin, vPat, vBuild, vExtra;
 var drivesToCheck = ['C', 'D', 'E', 'F', 'G', 'H'];
 
@@ -217,6 +218,10 @@ var buildPackages = [
                                                                         'replacement' : function() { FindDenoraVersion(); return denoraVersion; }
                                                                  },
                                                                  {
+                                                                        'findtext' : /CURSHORTVER/g,
+                                                                        'replacement' : function() { findDenoraVersion(); return denoraShortVersion; }
+                                                                 },
+                                                                 {
                                                                         'findtext' : / For more options type .\/Config --help/g,
                                                                         'replacement' : function() { return ''; }
                                                                  }
@@ -401,6 +406,7 @@ var buildPackages = [
                 }
                 versionLog.close();
                 denoraVersion = vMaj+"."+vMin+"."+vPat+"."+vBuild+vExtra;
+                denoraShortVersion = vMaj+"."+vMin;
                 return;
         }
         
