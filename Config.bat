@@ -1,5 +1,5 @@
 @echo off
-rem Denora (c) 2004-2007 Nomad Dev Team
+rem Denora (c) 2004-2007 Denora Team
 rem Contact us at info@denorastats.org
 rem
 rem This program is free but copyrighted software; see the file COPYING for
@@ -10,4 +10,4 @@ rem Based on the original code of Thales by Lucas.
 rem
 rem $Id$
 del include\sysconf.h
-cscript /nologo install.vbs
+cscript /nologo install.js

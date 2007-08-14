@@ -15,16 +15,12 @@
 # Set this to 1 to enable MySQL support
 USE_MYSQL=0
 # Set this to the path where the MySQL includes can be found
-MYSQL_INC="c:\\mysql\\include\\"
+#MYSQL_INC="c:\\mysql\\include\\"
 # Set this to the path where the MySQL libraries can be found
-MYSQL_LIB="c:\\mysql\\lib\\opt\\"
+#MYSQL_LIB="c:\\mysql\\lib\\opt\\"
 
-# Set this to 1 to enable PostgreSQL support
-USE_POSTGRE=0
-# Set this to the path where the MySQL includes can be found
-POSTGRE_INC="C:\\Program Files\\PostgreSQL\\8.0\\include\\"
-# Set this to the path where the MySQL libraries can be found
-POSTGRE_LIB="C:\\Program Files\\PostgreSQL\\8.0\\lib\\ms\\"
+# Set this to 1 to enable database encryption
+DB_ENCRYPTION=0
 
 # If you want to change the names/locations of files/folders, you
 # can do that here.
@@ -38,11 +34,13 @@ DATDEST=data
 
 # If you are getting errors such as 'Cannot find wsock32.lib', then change
 # the following line to the path where the library files can be found.
-#LIBPATH=C:\\Program Files\\Microsoft Visual Studio .NET 2003\\Vc7\\lib
+#
+#  Eg: LIBPATH=C:\\Program Files\\Microsoft Visual Studio .NET 2003\\Vc7\\lib
+#
 LIBPATH=
 
 # If you edited the line above, uncomment the next line.
-LFLAGS=/LIBPATH:"$(LIBPATH)"
+#LFLAGS=/LIBPATH:"$(LIBPATH)"
 
 
 ###############################################################
@@ -54,7 +52,7 @@ CC=cl
 RC=rc
 MAKE=nmake -f Makefile.win32
 BASE_CFLAGS=/O2 /MD
-LIBS=wsock32.lib advapi32.lib user32.lib /NODEFAULTLIB:libcmtd.lib
+LIBS=wsock32.lib advapi32.lib /NODEFAULTLIB:libcmtd.lib
 ELIBS=
 MLIBS=
 
@@ -70,7 +68,7 @@ MYSQL_INC_PATH=/I $(MYSQL_INC)
 
 MYSQL_C=mysql.c
 MYSQL_O=mysql.obj
-BASE_CFLAGS=/D USE_MYSQL $(BASE_CFLAGS) /D HAVE_MYSQL_MYSQL_H
+BASE_CFLAGS=/D USE_MYSQL /D USE_RDB $(BASE_CFLAGS) /D HAVE_MYSQL_MYSQL_H
 
 MYPASQL_BUILD=$(CC) /LD $(MYSQL_INC_PATH) src\mypasql.c /link $(MYSQL_LIB_PATH) $(LFLAGS) \
 /DEF:src\mypasql.def libmysql.lib zlib.lib ws2_32.lib advapi32.lib /NODEFAULTLIB:LIBCMTD.lib
@@ -93,6 +91,10 @@ POSTGRE_O=postgre.obj
 BASE_CFLAGS=/D USE_POSTGRE $(BASE_CFLAGS)
 
 LIBS=$(LIBS) libpq.lib
+!ENDIF
+
+!IF $(DB_ENCRYPTION) == 1
+BASE_CFLAGS=/D USE_ENCRYPTION /D ENCRYPT_MD5 $(BASE_CFLAGS)
 !ENDIF
 
 # Note that changing any of these options (or, in fact, anything in this

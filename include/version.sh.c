@@ -46,7 +46,7 @@ char *next_token;
 #endif
 
 #if !defined(HAVE_STRLCPY)
-size_t strlcpy(char *dest, const char *src, size_t size)
+size_t strlcpy(char *dest, const char *src, size_t size);
 #endif
 
 char *denoraStrDup(const char *src);
