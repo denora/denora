@@ -45,6 +45,10 @@ char *next_token;
 #define snprintf _snprintf
 #endif
 
+#if !defined(HAVE_STRLCPY)
+size_t strlcpy(char *dest, const char *src, size_t size)
+#endif
+
 char *denoraStrDup(const char *src);
 
 /*************************************************************************/
@@ -54,7 +58,7 @@ char *denoraStrDup(const char *src)
     char *ret = NULL;
     if (src) {
         if ((ret = (char *) malloc(strlen(src) + 1))) {
-            strcpy(ret, src);
+            strlcpy(ret, src, sizeof(ret));
         }
     }
     return ret;
@@ -303,5 +307,18 @@ void parse_line(FILE * fd, char *line)
 
 /*************************************************************************/
 
+#if !defined(HAVE_STRLCPY)
+size_t strlcpy(char *dest, const char *src, size_t size)
+{
+    size_t ret = strlen(src);
 
+    if (size) {
+        size_t len = (ret >= size) ? size - 1 : ret;
+        memcpy(dest, src, len);
+        dest[len] = '\0';
+    }
+    return ret;
+}
+#endif
 
+/*************************************************************************/
