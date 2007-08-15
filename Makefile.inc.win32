@@ -52,7 +52,7 @@ CC=cl
 RC=rc
 MAKE=nmake -f Makefile.win32
 BASE_CFLAGS=/O2 /MD
-LIBS=wsock32.lib advapi32.lib /NODEFAULTLIB:libcmtd.lib
+LIBS=user32.lib wsock32.lib advapi32.lib /NODEFAULTLIB:libcmtd.lib
 ELIBS=
 MLIBS=
 

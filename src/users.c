@@ -8,7 +8,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * $Id$
  *
  */
@@ -855,16 +855,20 @@ User *first_uid(void)
  */
 User *next_uid(void)
 {
-    if (current)
+    if (current) {
         current = current->next;
+    }
+
     if (!current && next_index < 1024) {
         while (next_index < 1024 && current == NULL) {
             current = userlist[next_index++];
         }
     }
+
     alog(LOG_EXTRADEBUG, "debug: next_uid() returning %s %s",
          current ? current->nick : "NULL (end of list)",
          current ? current->uid : "");
+
     return current;
 }
 
@@ -886,15 +890,19 @@ Uid *uid_first(void)
 
 Uid *uid_next(void)
 {
-    if (ucurrent)
+    if (ucurrent) {
         ucurrent = ucurrent->next;
+    }
+
     if (!ucurrent && next_index < 1024) {
         while (next_index < 1024 && ucurrent == NULL)
             ucurrent = uidlist[next_index++];
     }
+
     alog(LOG_EXTRADEBUG, "debug: uid_next() returning %s %s",
          ucurrent ? ucurrent->nick : "NULL (end of list)",
          ucurrent ? ucurrent->uid : "");
+
     return ucurrent;
 }
 

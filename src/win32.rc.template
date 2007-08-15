@@ -50,11 +50,11 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "Denora Dev"
+            VALUE "CompanyName", "Denora Team"
             VALUE "FileDescription", "Denora IRC Stats"
             VALUE "FileVersion", VERSION_STRING
             VALUE "InternalName", "Denora"
-            VALUE "LegalCopyright", "Copyright (C) 2005"
+            VALUE "LegalCopyright", "Copyright (C) 2005-2007 Denora Team"
             VALUE "OriginalFilename", "denora.exe"
             VALUE "ProductName", "Denora"
             VALUE "ProductVersion", VERSION_STRING

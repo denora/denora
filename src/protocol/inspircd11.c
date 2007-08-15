@@ -1184,7 +1184,7 @@ void inspircd_cmd_eob(void)
 int sjtoken(char *message, char delimiter, char **parv)
 {
     char *next;
-    uint16_t count;
+    unsigned count;
 
     if (!message)
         return 0;

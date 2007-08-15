@@ -31,6 +31,12 @@ Denora for Windows
             that only the top selection, and the bottom selection are checked. This will cut down
             install time dramatically)
 
+            In some cases, when compiling Denora, the compiler will complain about it can't find
+            windows.h and some other headers. A solution for this is to copy the contents of the
+            "include" folder of Microsoft Windows PlatformSDK to the "include" folder of
+            Microsoft Visual C++ 2005 Express Edition. Both can be found in %ProgramFiles%
+            folder. 
+
         * MySQL for Windows (only needed if building with MySQL enabled):
             http://dev.mysql.com/
 
@@ -54,14 +60,14 @@ Denora for Windows
  
     5) You are now ready to compile. At the prompt type:
 
-        make
+        nmake -f Makefile.win32
 
        Once you are back at the command prompt again, if there have been no
-       errors, you are ready to go. Should you encounter errors check how to
+       errors, you are ready to go. If there are errors check how to
        adjust the Makefile.inc.win32 to help resolve the issue. If those
        changes in Makefile.inc.win32 didn't help, file a bug report.
 
-    6) Anope will install the files where the belong. The only thing you need
+    6) Denora will install the files where they belong. The only thing you need
        to do is rename "data/example.conf" to be "denora.conf".
 
        You have now completed the building phase of Denora for Windows. You can
