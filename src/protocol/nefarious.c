@@ -1135,7 +1135,7 @@ int denora_event_notice(char *source, int ac, char **av)
     }
 
     user_s = user_find(source);
-    if (*av[0] == '#' || *av[0] == '&' && user_s) {
+    if ((*av[0] == '#' || *av[0] == '&') && (user_s)) {
         m_notice(user_s->nick, av[0], av[1]);
     } else if (user_s) {
         user_r = user_find(av[0]);

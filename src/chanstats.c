@@ -15,7 +15,7 @@
 #include "denora.h"
 
 static void make_stats(User * u, char *receiver, char *msg);
-static int countsmileys(char *text);
+static unsigned int countsmileys(char *text);
 static int check_db(User * u, Channel * c, char *nick, char *chan);
 static char *newsplit(char **rest);
 list_t *CStatshead;
@@ -263,7 +263,8 @@ void do_cstats(User * u, char *receiver, char *msg)
 
 static void make_stats(User * u, char *receiver, char *msg)
 {
-    int letters = 0, words = 1, action = 0, smileys = 0, i = 0;
+    unsigned int letters = 0, words = 1, action = 0, smileys = 0;
+    int i = 0;
     char *nick, *chan;
     char *buf;
     Channel *c;
@@ -823,7 +824,7 @@ User *finduser_by_sgroup(char *nick, char *sgroup)
 
 /*************************************************************************/
 
-static int countsmileys(char *text)
+static unsigned int countsmileys(char *text)
 {
     char buf[1024], *pbuf, *smiley, *p;
     int ismileys = 0;
