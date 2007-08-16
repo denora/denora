@@ -51,7 +51,7 @@ void xmlrpc_process(deno_socket_t socket_fd, char *buffer)
     XMLRPCCmd *xcurrent = NULL;
     XMLRPCCmd *xml;
     char *tmp;
-    int ac;
+    int ac = 0;
     char **av;
     char *name = NULL;
 

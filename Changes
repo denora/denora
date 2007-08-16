@@ -10,6 +10,7 @@ Provided by Denora Stats Dev. <dev@denorastats.org> - 2007
 02/28 A Added swhois support to nefarious                         [ #00]
 02/28 A Added P10 account support                                 [ #00]
 01/11 A Improved P10 hidden host support                          [ #00]
+08/15 U Added a new question/answer to docs/FAQ                   [ #00]
 08/14 U Replaced old include/version.sh.c for include/version.js  [ #00]
 08/14 U Replaced old install.vbs for new Anope install.js         [ #00]
 08/14 U Updated Windows paths for SDK and MySQL                   [ #00]
