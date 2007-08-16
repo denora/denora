@@ -835,23 +835,27 @@ void moduleAddIRCDCmds() {
 
 int DenoraInit(int argc, char **argv) 
 {
-  if (denora->protocoldebug) {
+    if (denora->protocoldebug) {
         protocol_debug(NULL, argc, argv);
-  }
-	moduleAddAuthor("Denora");
+    }
+    /* Only 1 protocol module may be loaded */
+    if (protocolModuleLoaded()) {
+        alog(LOG_NORMAL, langstr(ALOG_MOD_BE_ONLY_ONE));
+        return MOD_STOP;
+    }
+    moduleAddAuthor("Denora");
     moduleAddVersion("$Id$");
     moduleSetType(PROTOCOL);
 
     pmodule_ircd_version("UltimateIRCd 3.0.0.a26+");
     pmodule_ircd_cap(myIrcdcap);
     pmodule_ircd_var(myIrcd);
-	pmodule_ircd_useTSMode(0);
+    pmodule_ircd_useTSMode(0);
     IRCDModeInit();
-	pmodule_oper_umode(UMODE_o);
+    pmodule_oper_umode(UMODE_o);
     pmodule_irc_var(IRC_ULTIMATE3);
     moduleAddIRCDCmds();
     moduleAddIRCDMsgs();
     return MOD_CONT;
 }
-
 

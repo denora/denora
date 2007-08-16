@@ -1166,6 +1166,11 @@ int DenoraInit(int argc, char **argv)
     if (denora->protocoldebug) {
         protocol_debug(NULL, argc, argv);
     }
+    /* Only 1 protocol module may be loaded */
+    if (protocolModuleLoaded()) {
+        alog(LOG_NORMAL, langstr(ALOG_MOD_BE_ONLY_ONE));
+        return MOD_STOP;
+    }
     /* Actual module code stuff */
     moduleAddAuthor("Denora");
     moduleAddVersion("$Id$");

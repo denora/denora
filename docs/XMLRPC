@@ -3,12 +3,12 @@ Denora XMLRPC Support
 
 1) Introduction
 
-	Denora supports obtaining stats via standard XMLRPC calls. Denora creates
+    Denora supports obtaining stats via standard XMLRPC calls. Denora creates
     a XMLRPC server by which local and remote clients can make calls to Denora
     to get real time data from it without the use of SQL or any other database
     method.
 
-	Note this is a bit slower then SQL but provides a valid alternative to SQL
+    Note this is a bit slower then SQL but provides a valid alternative to SQL
 
 
 2) Requirements
@@ -19,13 +19,13 @@ Denora XMLRPC Support
 
 3) Configuration
 
-	xmlrpc {
+    xmlrpc {
     	xmlrpc_enable                   # You must set this for XMLRPC to start
-    	xmlrpc_host 127.0.0.1;          # IP address to have the XMLRPC server on
-    	xmlrpc_port 8080;               # Port on which to listen to
-    	xmlrpc_accept 127.0.0.1;        # Accept only data from these hosts
-    	xmlrpc_accept 192.168.0.1;      # Accept only data from these hosts
-	};
+        xmlrpc_host 127.0.0.1;          # IP address to have the XMLRPC server on
+        xmlrpc_port 8080;               # Port on which to listen to
+        xmlrpc_accept 127.0.0.1;        # Accept only data from these hosts
+        xmlrpc_accept 192.168.0.1;      # Accept only data from these hosts
+    };
 
     xmlrpc_enable - enables the XMLRPC server and its modules to load on startup
     xmlrpc_host   - is the IP address by which to bind the XMLRPC server to

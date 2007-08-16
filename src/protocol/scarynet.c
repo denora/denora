@@ -1103,6 +1103,12 @@ int DenoraInit(int argc, char **argv)
     if (denora->protocoldebug) {
         protocol_debug(NULL, argc, argv);
     }
+    /* Only 1 protocol module may be loaded */
+    if (protocolModuleLoaded()) {
+        alog(LOG_NORMAL, langstr(ALOG_MOD_BE_ONLY_ONE));
+        return MOD_STOP;
+    }
+
     moduleAddAuthor("Denora");
     moduleAddVersion("$Id: scarynet.c 64 2007-05-08 16:48:13Z outsider $");
     moduleSetType(PROTOCOL);
