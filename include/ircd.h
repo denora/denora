@@ -44,4 +44,5 @@
 #define IRC_PLEXUS3    31  /* Plexus IRCd v3                             */
 #define IRC_MUSIRCD    32  /* MusIRCD v2.x                               */
 #define IRC_INSPIRCD11 33  /* Inspircd 1.1.x                             */
+#define IRC_SCARYNET   34  /* ScaryNet 2.10.11.x			 */
 

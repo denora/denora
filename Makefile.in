@@ -161,6 +161,13 @@ distclean:
 	(cd src ; ${MAKE} distclean )
 	rm -f config.log config.status config.cache Makefile install-sh src/bin/denorarc
 
+recompile:
+	cp config.cache config.bak
+	(${MAKE} distclean)
+	cp config.bak config.cache
+	./Config -quick
+	(${MAKE} strict && ${MAKE} install)
+
 install: DUMMY
 	(cd src ; ${MAKE} ${MAKEARGS} install)
 

@@ -869,17 +869,28 @@ void asuka_cmd_motd(char *sender, char *server)
 }
 
 /*************************************************************************/
-
 int denora_event_notice(char *source, int ac, char **av)
 {
+    User *user_s = NULL;
+    User *user_r = NULL;
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
 
-    if (ac != 2) {
+    if (ac != 2 || *av[0] == '$' || strlen(source) == 2) {
         return MOD_CONT;
     }
-    m_notice(source, av[0], av[1]);
+
+    user_s = user_find(source);
+    if (*av[0] == '#' && user_s) {
+        m_notice(user_s->nick, av[0], av[1]);
+    } else if (user_s) {
+        user_r = user_find(av[0]);
+        if (user_r) {
+            m_notice(user_s->nick, user_r->nick, av[1]);
+        }
+    }
     return MOD_CONT;
 }
 

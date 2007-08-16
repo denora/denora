@@ -85,7 +85,7 @@ Run_Config () {
     echo "./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_POSTGRELIB $WITH_POSTGREHEADER $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_THREADING"
     
     ./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_POSTGRELIB $WITH_POSTGREHEADER $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_THREADING
-    if [ "$REGSCRIPT" != "" ] ; then
+    if [ "$REGSCRIPT" = "yes" ] ; then
     	src/bin/register
     fi
 }
@@ -101,7 +101,7 @@ exists () {                     # because some shells don't have test -e
 Load_Cache () {
     if [ -f config.cache -a -r config.cache -a ! "$NOCACHE" ] ; then
         echo "Using defaults from config.cache. To ignore, rm config.cache"
-        . config.cache
+        . ./config.cache
         CAN_QUICK="yes"
     	if [ "$BINDEST" = "" ] ; then
 			BINDEST=$HOME/stats
@@ -109,19 +109,19 @@ Load_Cache () {
     	if [ "$DATDEST" = "" ] ; then
         	DATDEST=$HOME/stats
     	fi
-		if [ "$MYSQL" = "" ] ; then
-		   	MYSQL="yes"
-		fi
-		if [ "$DMEMORY" = "" ] ; then
+	if [ "$MYSQL" = "" ] ; then
+		MYSQL="yes"
+	fi
+	if [ "$DMEMORY" = "" ] ; then
     		DMEMORY="no"
     	fi
-		if [ "$REGSCRIPT" = "" ] ; then
+	if [ "$REGSCRIPT" = "" ] ; then
     		REGSCRIPT="no"
     	fi
-		if [ "$ENCRYPT" = "" ] ; then
+	if [ "$ENCRYPT" = "" ] ; then
     		ENCRYPT="no"
     	fi
-		if [ "$THREAD" = "" ] ; then
+	if [ "$THREAD" = "" ] ; then
     		THREAD="no"
     	fi
     else
@@ -555,6 +555,7 @@ MYSQL="$MYSQL"
 REGSCRIPT="$REGSCRIPT"
 DMEMORY="$DMEMORY"
 ENCRYPT="$ENCRYPT"
+REGSCRIPT="$REGSCRIPT"
 EOT
 echo "done."
 

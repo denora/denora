@@ -828,6 +828,7 @@ void delete_server(Server * serv, const char *quitreason, int depth)
                 }
                 u = unext;
             }
+            free(u);
             alog(LOG_DEBUG, "debug: delete_server() cleared all users");
         } else {
             alog(LOG_DEBUG,

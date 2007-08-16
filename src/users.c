@@ -20,6 +20,8 @@ Uid *uidlist[1024];
 static Uid *ucurrent;
 static User *current;
 static int next_index;
+static int unext_index;
+static int uidnext_index;
 User *new_user(const char *nick);
 GeoIP *gi;
 
@@ -772,6 +774,7 @@ User *firstuser(void)
     while (next_index < 1024 && current == NULL) {
         current = userlist[next_index++];
     }
+    alog(LOG_EXTRADEBUG, "debug: Hash index %d", next_index);
     alog(LOG_EXTRADEBUG, "debug: firstuser() returning %s",
          current ? current->nick : "NULL (end of list)");
     if (current) {
@@ -801,6 +804,7 @@ User *nextuser(void)
             current = userlist[next_index++];
         }
     }
+    alog(LOG_EXTRADEBUG, "debug: Hash index %d", next_index);
     alog(LOG_EXTRADEBUG, "debug: nextuser() returning %s",
          current ? current->nick : "NULL (end of list)");
     return current;
@@ -835,10 +839,11 @@ User *find_byuid(const char *uid)
  */
 User *first_uid(void)
 {
-    next_index = 0;
-    while (next_index < 1024 && current == NULL) {
-        current = userlist[next_index++];
+    unext_index = 0;
+    while (unext_index < 1024 && current == NULL) {
+        current = userlist[unext_index++];
     }
+    alog(LOG_EXTRADEBUG, "Hash index %d", unext_index);
     alog(LOG_EXTRADEBUG, "debug: first_uid() returning %s %s",
          current ? current->nick : "NULL (end of list)",
          current ? current->uid : "");
@@ -859,12 +864,13 @@ User *next_uid(void)
         current = current->next;
     }
 
-    if (!current && next_index < 1024) {
-        while (next_index < 1024 && current == NULL) {
-            current = userlist[next_index++];
+    if (!current && unext_index < 1024) {
+        while (unext_index < 1024 && current == NULL) {
+            current = userlist[unext_index++];
         }
     }
 
+    alog(LOG_EXTRADEBUG, "debug: Hash index %d", unext_index);
     alog(LOG_EXTRADEBUG, "debug: next_uid() returning %s %s",
          current ? current->nick : "NULL (end of list)",
          current ? current->uid : "");
@@ -876,9 +882,9 @@ User *next_uid(void)
 
 Uid *uid_first(void)
 {
-    next_index = 0;
-    while (next_index < 1024 && ucurrent == NULL) {
-        ucurrent = uidlist[next_index++];
+    uidnext_index = 0;
+    while (uidnext_index < 1024 && ucurrent == NULL) {
+        ucurrent = uidlist[uidnext_index++];
     }
     alog(LOG_EXTRADEBUG, "debug: uid_first() returning %s %s",
          ucurrent ? ucurrent->nick : "NULL (end of list)",
@@ -894,9 +900,9 @@ Uid *uid_next(void)
         ucurrent = ucurrent->next;
     }
 
-    if (!ucurrent && next_index < 1024) {
-        while (next_index < 1024 && ucurrent == NULL)
-            ucurrent = uidlist[next_index++];
+    if (!ucurrent && uidnext_index < 1024) {
+        while (uidnext_index < 1024 && ucurrent == NULL)
+            ucurrent = uidlist[uidnext_index++];
     }
 
     alog(LOG_EXTRADEBUG, "debug: uid_next() returning %s %s",

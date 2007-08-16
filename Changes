@@ -1,6 +1,11 @@
 Denora Version SVN
 -------------------
 Provided by Denora Stats Dev. <dev@denorastats.org> - 2007
+
+08/16 U Updated uid and userlist indexes                          [#395]
+08/16 U Updated p10 to do double check before m_notice            [ #00]
+08/16 A Added recompile option to Makefile, make recompile        [ #00]
+08/16 A Added new protocol ScaryNet				  [ #00]
 08/13 A Added XMLRPC documentation                                [#407]
 08/12 A Added option to track only +r users on chanstats          [ #00]
 08/10 A New optional token on connect block for quitprefix        [#404]

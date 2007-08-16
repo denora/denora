@@ -219,7 +219,7 @@ int m_notice(char *source, char *receiver, char *msg)
     char *version;
     char *clean;
 
-    if (BadPtr(source)) {
+    if (BadPtr(source) || BadPtr(receiver) || BadPtr(msg)) {
         return MOD_CONT;
     }
 

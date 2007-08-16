@@ -964,23 +964,23 @@ struct user_ {
     uint32 svid;		/* Services ID 			*/
     uint32 mode;		/* See below 			*/
     char *uid;			/* Univeral ID			*/
-    char *account;		/* P10 Account			*/
+    char *account;		/* P10 Account                  */
     uint16 language;
     uint16 admin;
-    uint16 confadmin;   /* if admin is from configfile */
+    uint16 confadmin;   	/* if admin is from configfile */
     char *ctcp;
     int sqlid;			/* mysql id number */
-	char *sqlnick;
-	char *swhois;
-	int hopcount;
+    char *sqlnick;
+    char *swhois;
+    int hopcount;
 
-	int isaway;
-	char *awaymsg;
+    int isaway;
+    char *awaymsg;
 
-    int cstats;          /* used for channelstats - dont modify it */
-    char *sgroup;        /* contains the escaped name of the stats-group */
+    int cstats;          	/* used for channelstats - dont modify it */
+    char *sgroup;        	/* contains the escaped name of the stats-group */
 
-    ModuleData *moduleData;		/* defined for it, it should allow the module Add/Get */
+    ModuleData *moduleData;	/* defined for it, it should allow the module Add/Get */
     char *country_code;
     char *country_name;
 
@@ -989,8 +989,8 @@ struct user_ {
     struct u_chanlist {
         struct u_chanlist *next, *prev;
         Channel *chan;
-        int16 status;    /* Associated flags; see CSTATUS_* below. */
-    } *chans;            /* Channels user has joined */
+        int16 status;    	/* Associated flags; see CSTATUS_* below. */
+    } *chans;            	/* Channels user has joined */
 
     struct u_modes {
         struct u_modes *next, *prev;
