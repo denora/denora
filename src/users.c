@@ -841,14 +841,17 @@ User *find_byuid(const char *uid)
 User *first_uid(void)
 {
     unext_index = 0;
+
     while (unext_index < 1024 && uidcurrent == NULL) {
         uidcurrent = userlist[unext_index++];
     }
+
     alog(LOG_EXTRADEBUG, "debug: UID Hash index %d", unext_index);
     alog(LOG_EXTRADEBUG, "debug: first_uid() returning %s %s",
          uidcurrent ? uidcurrent->nick : "NULL (end of list)",
          uidcurrent ? uidcurrent->uid : "");
-    return current;
+
+    return uidcurrent;
 }
 
 /*************************************************************************/
@@ -876,7 +879,7 @@ User *next_uid(void)
          uidcurrent ? uidcurrent->nick : "NULL (end of list)",
          uidcurrent ? uidcurrent->uid : "");
 
-    return current;
+    return uidcurrent;
 }
 
 /*************************************************************************/
