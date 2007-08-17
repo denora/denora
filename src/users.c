@@ -19,6 +19,7 @@ User *userlist[1024];
 Uid *uidlist[1024];
 static Uid *ucurrent;
 static User *current;
+static User *uidcurrent;
 static int next_index;
 static int unext_index;
 static int uidnext_index;
@@ -774,7 +775,7 @@ User *firstuser(void)
     while (next_index < 1024 && current == NULL) {
         current = userlist[next_index++];
     }
-    alog(LOG_EXTRADEBUG, "debug: Hash index %d", next_index);
+    alog(LOG_EXTRADEBUG, "debug: User Hash index %d", next_index);
     alog(LOG_EXTRADEBUG, "debug: firstuser() returning %s",
          current ? current->nick : "NULL (end of list)");
     if (current) {
@@ -804,7 +805,7 @@ User *nextuser(void)
             current = userlist[next_index++];
         }
     }
-    alog(LOG_EXTRADEBUG, "debug: Hash index %d", next_index);
+    alog(LOG_EXTRADEBUG, "debug: User Hash index %d", next_index);
     alog(LOG_EXTRADEBUG, "debug: nextuser() returning %s",
          current ? current->nick : "NULL (end of list)");
     return current;
@@ -840,13 +841,13 @@ User *find_byuid(const char *uid)
 User *first_uid(void)
 {
     unext_index = 0;
-    while (unext_index < 1024 && current == NULL) {
-        current = userlist[unext_index++];
+    while (unext_index < 1024 && uidcurrent == NULL) {
+        uidcurrent = userlist[unext_index++];
     }
-    alog(LOG_EXTRADEBUG, "Hash index %d", unext_index);
+    alog(LOG_EXTRADEBUG, "debug: UID Hash index %d", unext_index);
     alog(LOG_EXTRADEBUG, "debug: first_uid() returning %s %s",
-         current ? current->nick : "NULL (end of list)",
-         current ? current->uid : "");
+         uidcurrent ? uidcurrent->nick : "NULL (end of list)",
+         uidcurrent ? uidcurrent->uid : "");
     return current;
 }
 
@@ -860,20 +861,20 @@ User *first_uid(void)
  */
 User *next_uid(void)
 {
-    if (current) {
-        current = current->next;
+    if (uidcurrent) {
+        uidcurrent = uidcurrent->next;
     }
 
-    if (!current && unext_index < 1024) {
-        while (unext_index < 1024 && current == NULL) {
-            current = userlist[unext_index++];
+    if (!uidcurrent && unext_index < 1024) {
+        while (unext_index < 1024 && uidcurrent == NULL) {
+            uidcurrent = userlist[unext_index++];
         }
     }
 
-    alog(LOG_EXTRADEBUG, "debug: Hash index %d", unext_index);
+    alog(LOG_EXTRADEBUG, "debug: UID Hash index %d", unext_index);
     alog(LOG_EXTRADEBUG, "debug: next_uid() returning %s %s",
-         current ? current->nick : "NULL (end of list)",
-         current ? current->uid : "");
+         uidcurrent ? uidcurrent->nick : "NULL (end of list)",
+         uidcurrent ? uidcurrent->uid : "");
 
     return current;
 }
