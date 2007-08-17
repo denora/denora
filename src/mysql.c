@@ -291,16 +291,20 @@ char *db_mysql_hidepass(char *sql)
         return sstrdup("");
     }
 
-    if (!(buf = strstr(sql, "MD5"))) {
+    buf = strstr(sql, "MD5");
+    if (!buf) {
         return sql;
     }
 
-    hidden = sstrdup(sql);
-
     buf = strstr(buf, ", ('");
+    if (!buf) {
+        return sql;
+    }
+
     slen = strlen(sql);
     pos = (slen - strlen(buf)) + 4;
 
+    hidden = sstrdup(sql);
     for (i = pos; i < slen; i++) {
         if (hidden[i] != ')') {
             hidden[i] = 'x';

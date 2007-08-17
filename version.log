@@ -8,10 +8,14 @@
 VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
-VERSION_EXTRA="-RC1"
-VERSION_BUILD="86"
+VERSION_EXTRA="RC1"
+VERSION_BUILD="87"
 
 # $Log$
+#
+# BUILD : 1.4.0.87 (RC1)
+# BUGS  : N/A
+# NOTES : Fixes bug I introduces in my last commit. Litle fix for Windows installation
 #
 # BUILD : 1.4.0.86 (-RC1)
 # BUGS  : N/A
