@@ -338,7 +338,7 @@ int displayCommand(Command * c)
 
     alog(LOG_DEBUG, langstr(ALOG_CMD_DISPLAY_LIST), c->name);
     for (cmd = c; cmd; cmd = cmd->next) {
-        alog(LOG_DEBUG, "%d:  0x%p", ++i, (void *) cmd);
+        alog(LOG_DEBUG, "%d:  %p", ++i, (void *) cmd);
     }
     alog(LOG_DEBUG, "debug: end");
     return 0;
@@ -387,7 +387,7 @@ int displayMessage(Message * m)
 
     alog(LOG_DEBUG, langstr(ALOG_MSG_DISPLAY_LIST), m->name);
     for (msg = m; msg; msg = msg->next) {
-        alog(LOG_DEBUG, "%d: 0x%p", ++i, (void *) msg);
+        alog(LOG_DEBUG, "%d: %p", ++i, (void *) msg);
     }
     alog(LOG_DEBUG, "debug: end");
     return 0;
@@ -437,7 +437,7 @@ int addCommand(CommandHash * cmdTable[], Command * c, int pos)
                 c->next = ccurrent->c;
                 ccurrent->c = c;
                 alog(LOG_DEBUG,
-                     "debug: existing cmd: (0x%p), new cmd (0x%p)",
+                     "debug: existing cmd: (%p), new cmd (%p)",
                      (void *) c->next, (void *) c);
                 return MOD_ERR_OK;
             } else if (pos == 2) {
@@ -446,7 +446,7 @@ int addCommand(CommandHash * cmdTable[], Command * c, int pos)
                 while (tail->next)
                     tail = tail->next;
                 alog(LOG_DEBUG,
-                     "debug: existing cmd: (0x%p), new cmd (0x%p)",
+                     "debug: existing cmd: (%p), new cmd (%p)",
                      (void *) tail, (void *) c);
                 tail->next = c;
                 c->next = NULL;
@@ -2158,7 +2158,7 @@ int addMessage(MessageHash * msgTable[], Message * m, int pos)
                 m->next = msgcurrent->m;
                 msgcurrent->m = m;
                 alog(LOG_DEBUG,
-                     "debug: existing msg: (0x%p) (%s) , new msg (0x%p) (%s)",
+                     "debug: existing msg: (%p) (%s) , new msg (%p) (%s)",
                      (void *) m->next, m->next->name, (void *) m, m->name);
                 return MOD_ERR_OK;
             } else if (pos == 2) {
@@ -2166,7 +2166,7 @@ int addMessage(MessageHash * msgTable[], Message * m, int pos)
                 while (tail->next)
                     tail = tail->next;
                 alog(LOG_DEBUG,
-                     "debug: existing msg: (0x%p), new msg (0x%p) (%s)",
+                     "debug: existing msg: (%p), new msg (%p) (%s)",
                      (void *) tail, (void *) m, m->name);
                 tail->next = m;
                 m->next = NULL;
