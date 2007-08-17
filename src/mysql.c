@@ -24,6 +24,7 @@ MYSQL_FIELD *mysql_fields;      /* MySQL Fields  */
 MYSQL_ROW mysql_row;            /* MySQL Row     */
 
 void db_mysql_error(int severity, const char *msg);
+char *db_mysql_hidepass(char *sql);
 
 /*************************************************************************/
 
