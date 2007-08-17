@@ -320,7 +320,7 @@ static void make_stats(User * u, char *receiver, char *msg)
     rdb_query
         (QUERY_LOW,
          "UPDATE %s SET letters=letters+%i, words=words+%i, line=line+1, "
-         "actions=actions+%i, smileys=smileys+%i, lastspoke=%i, time%i=time%i+1 "
+         "actions=actions+%i, smileys=smileys+%d, lastspoke=%i, time%i=time%i+1 "
          "WHERE (uname=\'%s\' AND (chan=\'global\' OR chan=\'%s\'));",
          UStatsTable, letters, words, action, smileys, time(NULL), hour,
          hour, u->sgroup, chan);
@@ -330,7 +330,7 @@ static void make_stats(User * u, char *receiver, char *msg)
     rdb_query
         (QUERY_LOW,
          "UPDATE %s SET letters=letters+%i, words=words+%i, line=line+1, "
-         "actions=actions+%i, smileys=smileys+%i, lastspoke=%i, time%i=time%i+1 WHERE chan=\'%s\';",
+         "actions=actions+%i, smileys=smileys+%d, lastspoke=%i, time%i=time%i+1 WHERE chan=\'%s\';",
          CStatsTable, letters, words, action, smileys, time(NULL), hour,
          hour, chan);
     free(nick);

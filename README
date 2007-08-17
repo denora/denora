@@ -81,15 +81,18 @@ TABLE OF CONTENTS
 2. PRESENTATION
 ---------------
 
-    Denora is a set of Stats Services for IRC networks that allows users to
-    get a complete overview of their network from SQL, HTML and XML data.
+    Denora is a set of Stats Services for IRC networks that allows IRC
+    network admins to get a complete and comprehensive overview of their
+    IRC network. Denora exports this information to MySQL, HTML XML and
+    flatfile databases.
+    
+    Denora's StatServ pseudo client, provides access to commands such as
+    shutdown, restart, or  view stats about the network.
 
-    Currently available services are:
+    Denora Stats and phpDenora[1] working together, is the most powerful
+    tool for generating statistics for IRC.
 
-    * StatServ, provides access to commands such as shutdown, restart, or
-      view stats about the network
-
-    Denora currently works with:
+    Denora currently works with the following IRCds:
 
         * Asuka IRCu
         * Bahamut 1.4 and 1.8
@@ -108,6 +111,8 @@ TABLE OF CONTENTS
 
     Denora could also work with some of the deamons derivated by the ones 
     listed above.
+
+    [1] http://denorastats.org/
 
 
 3. INSTALLATION

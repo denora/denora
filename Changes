@@ -1,9 +1,8 @@
-Denora Version SVN
--------------------
-Provided by Denora Stats Dev. <dev@denorastats.org> - 2007
+Denora Version 1.4.0
+--------------------
+Provided by Denora Team <dev@denorastats.org> - 2007
 
-08/16 U Updated uid and userlist indexes                          [#395]
-08/16 U Updated p10 to do double check before m_notice            [ #00]
+08/17 A Admins passwords are now hidden in debug messages         [#414]
 08/16 A Added recompile option to Makefile, make recompile        [ #00]
 08/16 A Added new protocol ScaryNet				  [ #00]
 08/13 A Added XMLRPC documentation                                [#407]
@@ -15,6 +14,8 @@ Provided by Denora Stats Dev. <dev@denorastats.org> - 2007
 02/28 A Added swhois support to nefarious                         [ #00]
 02/28 A Added P10 account support                                 [ #00]
 01/11 A Improved P10 hidden host support                          [ #00]
+08/16 U Updated uid and userlist indexes                          [#395]
+08/16 U Updated p10 to do double check before m_notice            [ #00]
 08/15 U Added a new question/answer to docs/FAQ                   [ #00]
 08/14 U Replaced old include/version.sh.c for include/version.js  [ #00]
 08/14 U Replaced old install.vbs for new Anope install.js         [ #00]
@@ -25,6 +26,7 @@ Provided by Denora Stats Dev. <dev@denorastats.org> - 2007
 08/07 U Updated GeoIP database file                               [ #00]
 07/18 U Updated GeoIP database file                               [ #00]
 01/06 U Updated GeoIP.dat                                         [ #00]
+08/17 F smiley counting was wrong on x64 boxes                    [#411]
 08/16 F Denora can load one protocol each time                    [ #00]
 08/15 F Fixed crash on xmlrpc connection                          [#403]
 08/13 F [nefarious] Local kills are now detected                  [#404]

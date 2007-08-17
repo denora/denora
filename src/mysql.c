@@ -171,7 +171,7 @@ int db_mysql_query(char *sql)
         return 0;
     }
 
-    alog(LOG_SQLDEBUG, "sql debug: %s", sql);
+    alog(LOG_SQLDEBUG, "sql debug: %s", db_mysql_hidepass(sql));
 
     pingresult = mysql_ping(mysql);
     if (!pingresult) {
@@ -277,6 +277,39 @@ char *db_mysql_quote(char *sql)
     mysql_real_escape_string(mysql, quoted, sql, slen);
     return quoted;
 
+}
+
+/*************************************************************************/
+
+char *db_mysql_hidepass(char *sql)
+{
+    int slen, pos, i;
+    char *buf, *hidden;
+
+    if (!sql) {
+        return sstrdup("");
+    }
+
+    if (!(buf = strstr(sql, "MD5"))) {
+        return sql;
+    }
+
+    hidden = sstrdup(sql);
+
+    buf = strstr(buf, ", ('");
+    slen = strlen(sql);
+    pos = (slen - strlen(buf)) + 4;
+
+    for (i = pos; i < slen; i++) {
+        if (hidden[i] != ')') {
+            hidden[i] = 'x';
+        } else {
+            hidden[i - 1] = sql[i - 1];
+            break;
+        }
+    }
+
+    return hidden;
 }
 
 /*************************************************************************/
