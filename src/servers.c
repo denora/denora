@@ -802,7 +802,6 @@ void delete_server(Server * serv, const char *quitreason, int depth)
     User *u, *unext;
     Server *s;
     int i, x;
-    char *sqlnick;
 
     if (!serv) {
         alog(LOG_DEBUG, langstr(ALOG_ERR_DEL_SERVER));
@@ -818,13 +817,10 @@ void delete_server(Server * serv, const char *quitreason, int depth)
             u = firstuser();
             while (u) {
                 unext = nextuser();
-                if (u->server == serv) {
-                    sqlnick = rdb_escape(u->nick);
-                    if (denora->do_sql) {
-                        db_removenick(sqlnick, (char *) quitreason);
-                    }
+                if (u->server->name == serv->name) {
+                    if (denora->do_sql)
+                        db_removenick(u->sqlnick, (char *) quitreason);
                     delete_user(u);
-                    free(sqlnick);
                 }
                 u = unext;
             }
