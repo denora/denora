@@ -859,6 +859,13 @@ void post_config_check(void)
             error++;
         }
     }
+    if (!ConfigTable) {
+        alog(LOG_ERROR, "%s", langstring(CONFIG_TABLE_CONFIG_ERROR));
+        if (!denora->nofork && isatty(2)) {
+            fprintf(stderr, "%s", langstring(CONFIG_TABLE_CONFIG_ERROR));
+        }
+        error++;
+    }
     if (!UserTable) {
         alog(LOG_ERROR, "%s", langstring(CONFIG_TABLE_USER_ERROR));
         if (!denora->nofork && isatty(2)) {
@@ -1315,6 +1322,7 @@ void destroy_all(void)
 
 
     free(denora->uplink);
+    free(ConfigTable);
     free(UserTable);
     free(ChanBansTable);
     free(ChanExceptTable);

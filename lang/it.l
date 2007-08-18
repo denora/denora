@@ -942,6 +942,9 @@ CONFIG_UPTIME_TO_LOW
 CONFIG_DELAYMOD_T0MANY
 	Troppi moduli ritardati (max 128)
 
+CONFIG_TABLE_CONFIG_ERROR
+	Errore nella definizione di config nel blocco tables
+
 CONFIG_TABLE_USER_ERROR
 	Errore nella definizione di users nel blocco tables
 

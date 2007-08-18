@@ -1,10 +1,9 @@
 Denora Version 1.4.0
 --------------------
 Provided by Denora Team <dev@denorastats.org> - 2007
-
 08/17 A Admins passwords are now hidden in debug messages         [#414]
 08/16 A Added recompile option to Makefile, make recompile        [ #00]
-08/16 A Added new protocol ScaryNet				  [ #00]
+08/16 A Added new protocol ScaryNet	                              [ #00]
 08/13 A Added XMLRPC documentation                                [#407]
 08/12 A Added option to track only +r users on chanstats          [ #00]
 08/10 A New optional token on connect block for quitprefix        [#404]
@@ -26,6 +25,7 @@ Provided by Denora Team <dev@denorastats.org> - 2007
 08/07 U Updated GeoIP database file                               [ #00]
 07/18 U Updated GeoIP database file                               [ #00]
 01/06 U Updated GeoIP.dat                                         [ #00]
+08/19 F Fixed admin table scheme not mysql 4.0 compatible         [ #00]
 08/17 F smiley counting was wrong on x64 boxes                    [#411]
 08/16 F Denora can load one protocol each time                    [ #00]
 08/15 F Fixed crash on xmlrpc connection                          [#403]

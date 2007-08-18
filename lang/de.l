@@ -946,6 +946,9 @@ CONFIG_UPTIME_TO_LOW
 CONFIG_DELAYMOD_T0MANY
 	Zu viele Module (max 128)
 
+CONFIG_TABLE_CONFIG_ERROR
+	Fehlerhafte config Definition im tables block
+
 CONFIG_TABLE_USER_ERROR
 	Fehlerhafte users Definition im tables block
 

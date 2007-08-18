@@ -182,6 +182,11 @@ int do_sql_backup(int argc, char **argv)
 #endif
         rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", AdminTable,
                   output);
+#ifdef USE_MYSQL
+        dbMySQLPrepareForQuery();
+#endif
+        rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", ConfigTable,
+                  output);
     }
     return MOD_CONT;
 }

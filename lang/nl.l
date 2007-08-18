@@ -959,6 +959,9 @@ CONFIG_UPTIME_TO_LOW
 CONFIG_DELAYMOD_T0MANY
 	Te veel late modules (maximaal 128)
 
+CONFIG_TABLE_CONFIG_ERROR
+	Missende config in tables block
+
 CONFIG_TABLE_USER_ERROR
 	Missende users (gebruikers) in tables blok
 

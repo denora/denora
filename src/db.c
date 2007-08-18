@@ -172,75 +172,55 @@ void db_connect(void)
     }
     SET_SEGV_LOCATION();
 
-    /* Cleaning up the database */
-    if (rdb_check_table(ChanTable)) {
-        rdb_clear_table(ChanTable);
-    } else {
+    /* Checking for missing tables */
+    if (!rdb_check_table(ChanTable))
         tablecount++;
-    }
-    if (rdb_check_table(IsOnTable)) {
-        rdb_clear_table(IsOnTable);
-    } else {
+    if (!rdb_check_table(IsOnTable))
         tablecount++;
-    }
-    if (rdb_check_table(ServerTable)) {
-        rdb_clear_table(ServerTable);
-    } else {
+    if (!rdb_check_table(ServerTable))
         tablecount++;
-    }
-    if (rdb_check_table(UserTable)) {
-        rdb_clear_table(UserTable);
-    } else {
+    if (!rdb_check_table(UserTable))
         tablecount++;
-    }
-    if (rdb_check_table(GlineTable)) {
-        rdb_clear_table(GlineTable);
-    } else {
+    if (!rdb_check_table(GlineTable))
         tablecount++;
-    }
-    if (rdb_check_table(ChanBansTable)) {
-        rdb_clear_table(ChanBansTable);
-    } else {
+    if (!rdb_check_table(ChanBansTable))
         tablecount++;
-    }
-    if (rdb_check_table(CTCPTable)) {
-        rdb_clear_table(CTCPTable);
-    } else {
+    if (!rdb_check_table(CTCPTable))
         tablecount++;
-    }
-    if (rdb_check_table(SpamTable)) {
-        rdb_clear_table(SpamTable);
-    } else {
+    if (!rdb_check_table(SpamTable))
         tablecount++;
-    }
-    if (rdb_check_table(ChanExceptTable)) {
-        rdb_clear_table(ChanExceptTable);
-    } else {
+    if (!rdb_check_table(ChanExceptTable))
         tablecount++;
-    }
-    if (rdb_check_table(ChanInviteTable)) {
-        rdb_clear_table(ChanInviteTable);
-    } else {
+    if (!rdb_check_table(ChanInviteTable))
         tablecount++;
-    }
-    if (rdb_check_table(TLDTable)) {
-        rdb_clear_table(TLDTable);
-    } else {
+    if (!rdb_check_table(TLDTable))
         tablecount++;
-    }
-    if (rdb_check_table(SglineTable)) {
-        rdb_clear_table(SglineTable);
-    } else {
+    if (!rdb_check_table(SglineTable))
         tablecount++;
-    }
-    if (rdb_check_table(SqlineTable)) {
-        rdb_clear_table(SqlineTable);
-    } else {
+    if (!rdb_check_table(SqlineTable))
         tablecount++;
-    }
-    if (!rdb_check_table(AdminTable)) {
+    if (!rdb_check_table(MaxValueTable))
         tablecount++;
-    }
+    if (!rdb_check_table(AliasesTable))
+        tablecount++;
+    if (!rdb_check_table(CStatsTable))
+        tablecount++;
+    if (!rdb_check_table(UStatsTable))
+        tablecount++;
+    if (!rdb_check_table(StatsTable))
+        tablecount++;
+    if (!rdb_check_table(CurrentTable))
+        tablecount++;
+    if (!rdb_check_table(ChanStatsTable))
+        tablecount++;
+    if (!rdb_check_table(ServerStatsTable))
+        tablecount++;
+    if (!rdb_check_table(ChanQuietTable))
+        tablecount++;
+    if (!rdb_check_table(AdminTable))
+        tablecount++;
+    if (!rdb_check_table(ConfigTable))
+        tablecount++;
 
     if (tablecount) {
         alog(LOG_ERROR,
@@ -248,7 +228,36 @@ void db_connect(void)
              tablecount);
         denora->do_sql = 0;
         return;
+        /* Instead of doing this, we should dump these .sql files:
+         *  - sql/denora.sql
+         *  - sql/{IRCDModule}.sql
+         * Check for missing tables again. If it still goes wrong (meaning dump failed), disable SQL
+         */
     }
+
+    /* Cleaning up the database */
+    rdb_clear_table(ChanTable);
+    rdb_clear_table(IsOnTable);
+    rdb_clear_table(ServerTable);
+    rdb_clear_table(UserTable);
+    rdb_clear_table(GlineTable);
+    rdb_clear_table(ChanBansTable);
+    rdb_clear_table(CTCPTable);
+    rdb_clear_table(SpamTable);
+    rdb_clear_table(ChanExceptTable);
+    rdb_clear_table(ChanInviteTable);
+    rdb_clear_table(TLDTable);
+    rdb_clear_table(SglineTable);
+    rdb_clear_table(SqlineTable);
+
+    /* Now we should check for the db_version value in the ConfigTable.
+     *  - If it doesnt exist, assume rev.0 (make all checks/modifications)
+     *  - If it exists, take the rev. value and make necessary modifications
+     *  - When done, update the db_version with the denora revision number
+     */
+
+    /*rdb_query(QUERY_LOW, "INSERT INTO %s (parameter, value) VALUES(\'db_version\',\'%s\') ON DUPLICATE KEY UPDATE value=\'%s\'",
+       ConfigTable, VERSION_BUILD, VERSION_BUILD); */
 
     e = first_exclude();
     while (e) {

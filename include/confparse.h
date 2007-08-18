@@ -251,6 +251,8 @@
 #define TABFF_CHANQUIET                0x00200000
 #define TABFT_ADMINS      "ADMINS"
 #define TABFF_ADMINS                   0x00400000
+#define TABFT_CONFIG      "CONFIG"
+#define TABFF_CONFIG                   0x00600000
 
 
 
@@ -508,6 +510,7 @@ sConf conftablestab[] =
     {TABFT_SERVSTATS, TABFF_SERVSTATS, VARTYPE_NAME},
     {TABFT_CHANQUIET, TABFF_CHANQUIET, VARTYPE_NAME},
     {TABFT_ADMINS, TABFF_ADMINS, VARTYPE_NAME},
+    {TABFT_CONFIG, TABFF_CONFIG, VARTYPE_NAME},
     {(char *) 0, 0, 0}
 };
 

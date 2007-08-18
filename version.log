@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="90"
+VERSION_BUILD="91"
 
 # $Log$
+#
+# BUILD : 1.4.0.91 (SVN)
+# BUGS  : N/A
+# NOTES : Fixed admin table scheme not mysql 4.0 compatible. Some minor cleanups. First part of the DB Checker implementation (not functional yet)
 #
 # BUILD : 1.4.0.90 (SVN)
 # BUGS  : N/A

@@ -144,6 +144,7 @@ int ClearChanInActive;
 int HidePasswords;
 char *Smiley;
 
+char *ConfigTable;
 char *UserTable;
 char *ChanBansTable;
 char *ChanExceptTable;
@@ -1022,7 +1023,10 @@ int confadd_tables(cVar * vars[], int lnum)
     int c = 0;
 
     for (tmp = vars[c]; tmp; tmp = vars[++c]) {
-        if (tmp->type && (tmp->type->flag & TABFF_USERS)) {
+        if (tmp->type && (tmp->type->flag & TABFF_CONFIG)) {
+            tmp->type = NULL;
+            ConfigTable = sstrdup(tmp->value);
+        } else if (tmp->type && (tmp->type->flag & TABFF_USERS)) {
             tmp->type = NULL;
             UserTable = sstrdup(tmp->value);
         } else if (tmp->type && (tmp->type->flag & TABFF_CHANBANS)) {
@@ -1093,6 +1097,10 @@ int confadd_tables(cVar * vars[], int lnum)
             AdminTable = sstrdup(tmp->value);
         }
 
+    }
+    if (!ConfigTable) {
+        confparse_error(langstring(CONFIG_TABLE_CONFIG_ERROR), lnum);
+        return -1;
     }
     if (!UserTable) {
         confparse_error(langstring(CONFIG_TABLE_USER_ERROR), lnum);

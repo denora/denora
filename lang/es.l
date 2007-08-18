@@ -939,6 +939,9 @@ CONFIG_UPTIME_TO_LOW
 CONFIG_DELAYMOD_T0MANY
 	Excesivos delayed modules (max 128)
 
+CONFIG_TABLE_CONFIG_ERROR
+	Falta definire config en el bloque tables
+
 CONFIG_TABLE_USER_ERROR
 	Falta definir users en el bloque tables
 

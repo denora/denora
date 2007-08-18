@@ -322,6 +322,7 @@ E int ModulesNumber;
 E int ModulesDelayedNumber;
 
 E int HidePasswords;
+E char *ConfigTable;
 E char *UserTable;
 E char *ChanBansTable;
 E char *ChanExceptTable;
