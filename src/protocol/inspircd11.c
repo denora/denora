@@ -316,10 +316,6 @@ int denora_event_push(char *source, int ac, char **av)
         av[2] = myStrGetTokenRemainder(av[1], ' ', 1);
         av[1] = myStrGetToken(av[1], ' ', 1);
         sql_uline(av[2]);
-    } else {
-        alog(LOG_ERROR,
-             "Don't know how to handle numeric %s. Please contact the Denora developers.",
-             num);
     }
 
     return MOD_CONT;

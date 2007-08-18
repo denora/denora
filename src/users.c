@@ -1045,6 +1045,7 @@ Uid *find_nickuid(const char *uid)
  * @param uid if the ircd uses uid for the nick it is passed now
  * @param hopcount is the hop count
  * @param modes is the user modes if they are sent on nick
+ * @param account is the user account, if sent on nick (P10 ircds only)
  *
  * @return void - no returend value
  *

@@ -8,7 +8,7 @@ dnl details.
  
 dnl Based heavily on the Anope configure.in script.
 
-AC_INIT(denora, 1.2.0, info@denorastats.org)
+AC_INIT(denora, 1.4.0, info@denorastats.org)
 
 dnl Sneaky way to get an id into the configure script.
 AC_COPYRIGHT([$Id$])

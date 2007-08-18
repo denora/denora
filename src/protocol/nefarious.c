@@ -1,4 +1,4 @@
-/* Nefarious ircu IRCD functions
+/* Nefarious ircu P10 IRCD functions
  *
  * (C) 2004-2007 Denora Team
  * Contact us at info@denorastats.org
@@ -262,9 +262,6 @@ int denora_event_nick(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    /* do_nick(const char *source, char *nick, char *username, char *host,
-       char *server, char *realname, time_t ts, uint32 svid,
-       uint32 ip, char *vhost, char *uid, int hopcount, char *modes) */
 
     temp = sstrdup(source);
 
@@ -332,7 +329,7 @@ int denora_event_nick(char *source, int ac, char **av)
 
         /* do_nick(const char *source, char *nick, char *username, char *host,
            char *server, char *realname, time_t ts, uint32 svid,
-           uint32 ip, char *vhost, char *uid, int hopcount, char *modes) */
+           uint32 ip, char *vhost, char *uid, int hopcount, char *modes, char *account) */
 
         ipchar = nefarious_nickip(ip);
 

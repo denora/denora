@@ -86,11 +86,11 @@ TABLE OF CONTENTS
     IRC network. Denora exports this information to MySQL, HTML XML and
     flatfile databases.
     
-    Denora's StatServ pseudo client, provides access to commands such as
-    shutdown, restart, or  view stats about the network.
+    Denora's StatServ pseudo client, provides access to commands that
+    allow to manage and view the network stats.
 
-    Denora Stats and phpDenora[1] working together, is the most powerful
-    tool for generating statistics for IRC.
+    Denora Stats coupled with phpDenora[1] is the most powerful tool
+    for generating statistics for IRC.
 
     Denora currently works with the following IRCds:
 
@@ -105,6 +105,7 @@ TABLE OF CONTENTS
         * ngIRCd 0.9.1
         * Plexus IRCd 3.x.x
         * Ratbox 2.0.6
+        * ScaryNet IRCu 2.10.11
         * Solid IRCd 3.5.6 or later
         * Ultimate 3.0.0 alpha26 or later
         * Unreal 3.2 beta19 or later
@@ -152,19 +153,17 @@ TABLE OF CONTENTS
 5. CONTACT AND SUPPORT
 ----------------------
 
-    * If you read the documentation carefully, and didn't find the answer
-      to your question, feel free to post on the website forums or join our
-      IRC channel (irc.denorastats.org #denora). Once you join our Support channel,
-      just type "? report" for instructions on how to report a Bug. Be as
-      precise as possible when asking a question, because we have no extraordinary
-      powers and can't guess things if they aren't provided. The more precise you
-      are, the sooner you'll be likely to get an answer.
+    * If you read the documentation carefully, which you also can find on our wiki
+      (http://wiki.denorastats.org/) and didn't find the answer to your question,
+      feel free to post on the website forums or join our IRC channel
+      (irc.denorastats.org #denora). Be as precise as possible when asking a question,
+      because we have no extraordinary powers and can't guess things if they aren't
+      provided. The more precise you are, the sooner you'll be likely to get an answer.
 
     * If you think you found a bug, add it to the bug tracking system on our
-      website (http://denorastats.org/) and - again - be as precise as possible. Also
-      say whether the bug happens always or under what circumstances, and anything
-      that could be useful to track your bug down. If you wrote a patch, send it
-      over.
+      website (http://denorastats.org/mantis/) and - again - be as precise as possible.
+      Also say whether the bug happens always or under what circumstances, and anything
+      that could be useful to track your bug down. If you wrote a patch, send it over.
 
     * Support is also available via our forums located at http://denorastats.org/forum/
 
