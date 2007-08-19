@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="92"
+VERSION_BUILD="93"
 
 # $Log$
+#
+# BUILD : 1.4.0.93 (SVN)
+# BUGS  : N/A
+# NOTES : Reverted the DB Checker stuff of rev. 91
 #
 # BUILD : 1.4.0.92 (SVN)
 # BUGS  : N/A

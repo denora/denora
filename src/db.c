@@ -228,11 +228,6 @@ void db_connect(void)
              tablecount);
         denora->do_sql = 0;
         return;
-        /* Instead of doing this, we should dump these .sql files:
-         *  - sql/denora.sql
-         *  - sql/{IRCDModule}.sql
-         * Check for missing tables again. If it still goes wrong (meaning dump failed), disable SQL
-         */
     }
 
     /* Cleaning up the database */
@@ -249,15 +244,6 @@ void db_connect(void)
     rdb_clear_table(TLDTable);
     rdb_clear_table(SglineTable);
     rdb_clear_table(SqlineTable);
-
-    /* Now we should check for the db_version value in the ConfigTable.
-     *  - If it doesnt exist, assume rev.0 (make all checks/modifications)
-     *  - If it exists, take the rev. value and make necessary modifications
-     *  - When done, update the db_version with the denora revision number
-     */
-
-    /*rdb_query(QUERY_LOW, "INSERT INTO %s (parameter, value) VALUES(\'db_version\',\'%s\') ON DUPLICATE KEY UPDATE value=\'%s\'",
-       ConfigTable, VERSION_BUILD, VERSION_BUILD); */
 
     e = first_exclude();
     while (e) {

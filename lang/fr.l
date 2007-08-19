@@ -951,9 +951,6 @@ CONFIG_UPTIME_TO_LOW
 CONFIG_DELAYMOD_T0MANY
 	Modules retardés excessifs (max 128)
 
-CONFIG_TABLE_CONFIG_ERROR
-	Définition de config manquante dans les blocs "tables"
-
 CONFIG_TABLE_USER_ERROR
 	Définition de users manquante dans les blocs "tables"
 

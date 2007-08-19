@@ -9,14 +9,6 @@
 -- we don't want to drop them if they already exist.
 -- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `denora_config` (
-  `parameter` varchar(32) NOT NULL default '',
-  `value` varchar(1024) NOT NULL default '',
-  PRIMARY KEY  (`parameter`)
-) TYPE=MyISAM;
-
--- --------------------------------------------------------
-
 CREATE TABLE IF NOT EXISTS `server` (
   `servid` int(10) unsigned NOT NULL auto_increment,
   `server` varchar(64) NOT NULL default '',
