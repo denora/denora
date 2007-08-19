@@ -219,8 +219,6 @@ void db_connect(void)
         tablecount++;
     if (!rdb_check_table(AdminTable))
         tablecount++;
-    if (!rdb_check_table(ConfigTable))
-        tablecount++;
 
     if (tablecount) {
         alog(LOG_ERROR,

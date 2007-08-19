@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="93"
+VERSION_BUILD="94"
 
 # $Log$
+#
+# BUILD : 1.4.0.94 (SVN)
+# BUGS  : N/A
+# NOTES : Sorry, last commit was incomplete (and broken), fixed now
 #
 # BUILD : 1.4.0.93 (SVN)
 # BUGS  : N/A
