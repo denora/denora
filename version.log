@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="91"
+VERSION_BUILD="92"
 
 # $Log$
+#
+# BUILD : 1.4.0.92 (SVN)
+# BUGS  : N/A
+# NOTES : Fixed mistakes in Changes.conf
 #
 # BUILD : 1.4.0.91 (SVN)
 # BUGS  : N/A
