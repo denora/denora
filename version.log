@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="94"
+VERSION_BUILD="95"
 
 # $Log$
+#
+# BUILD : 1.4.0.95 (SVN)
+# BUGS  : 416
+# NOTES : UserStatsRegistered var should be inited to zero. I took a part of OUTsider patch to fix this.
 #
 # BUILD : 1.4.0.94 (SVN)
 # BUGS  : N/A

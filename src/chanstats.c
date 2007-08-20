@@ -486,7 +486,7 @@ static int check_db(User * u, Channel * c, char *nick, char *chan)
 #else
 
     /* Check if user has +r */
-    if (UserStatsRegistered) {
+    if (UserStatsRegistered == 1) {
         if (!UserHasMode(u->nick, UMODE_r)) {
             /* User is not +r so he gets ignored */
             u->cstats = 2;
