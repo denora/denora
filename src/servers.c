@@ -811,25 +811,19 @@ void delete_server(Server * serv, const char *quitreason, int depth)
     alog(LOG_DEBUG, langstr(ALOG_DEL_SERVER_FOR), serv->name);
 
     if (ircdcap->noquit || ircdcap->qs) {
-        if ((denora->capab & ircdcap->noquit)
-            || (denora->capab & ircdcap->qs) || ircd->p10) {
-            alog(LOG_DEBUG, langstr(ALOG_DEL_SERVER_NOQUIT));
-            u = firstuser();
-            while (u) {
-                unext = nextuser();
-                if (u->server->name == serv->name) {
-                    if (denora->do_sql)
-                        db_removenick(u->sqlnick, (char *) quitreason);
-                    delete_user(u);
-                }
-                u = unext;
+        alog(LOG_DEBUG, langstr(ALOG_DEL_SERVER_NOQUIT));
+        u = firstuser();
+        while (u) {
+            unext = nextuser();
+            if (u->server->name == serv->name) {
+                if (denora->do_sql)
+                    db_removenick(u->sqlnick, (char *) quitreason);
+                delete_user(u);
             }
-            free(u);
-            alog(LOG_DEBUG, "debug: delete_server() cleared all users");
-        } else {
-            alog(LOG_DEBUG,
-                 "uplink did not send us NOQUIT or QS - assume we will get user quits");
+            u = unext;
         }
+        free(u);
+        alog(LOG_DEBUG, "debug: delete_server() cleared all users");
     } else {
         alog(LOG_DEBUG, "uplink does not support NOQUIT or QS on SQUIT");
         alog(LOG_DEBUG, "ircdcap->noquit %d ircdcap->qs %d",

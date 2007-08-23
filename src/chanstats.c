@@ -16,7 +16,7 @@
 
 static void make_stats(User * u, char *receiver, char *msg);
 static uint32 countsmileys(char *text);
-static int check_db(User * u, Channel * c, char *nick, char *chan);
+static int check_db(User * u, Channel * c);
 static char *newsplit(char **rest);
 list_t *CStatshead;
 
@@ -264,7 +264,6 @@ void do_cstats(User * u, char *receiver, char *msg)
 static void make_stats(User * u, char *receiver, char *msg)
 {
     uint32 letters = 0, words = 1, action = 0, smileys = 0, i = 0;
-    char *nick, *chan;
     char *buf;
     Channel *c;
     int hour;
@@ -284,14 +283,10 @@ static void make_stats(User * u, char *receiver, char *msg)
         return;
     }
 
-    nick = rdb_escape(u->nick);
-    chan = rdb_escape(receiver);
     c = findchan(receiver);
-    check_db(u, c, nick, chan);
+    check_db(u, c);
     if (u->cstats == 2) {       /* ignore */
         SET_SEGV_LOCATION();
-        free(nick);
-        free(chan);
         return;
     }
     SET_SEGV_LOCATION();
@@ -310,7 +305,7 @@ static void make_stats(User * u, char *receiver, char *msg)
     if (strncmp("\01ACTION", msg, 7) == 0) {    /* is a action ? */
         action = 1;
         letters = letters - 7;  /* remove from the counted letters */
-        words = words - 1;      /* remove from the counted words */
+        words--;                /* remove from the counted words */
     }
     words = words - smileys;    /* do not count smileys as words */
     SET_SEGV_LOCATION();
@@ -323,7 +318,7 @@ static void make_stats(User * u, char *receiver, char *msg)
          "actions=actions+%i, smileys=smileys+%d, lastspoke=%i, time%i=time%i+1 "
          "WHERE (uname=\'%s\' AND (chan=\'global\' OR chan=\'%s\'));",
          UStatsTable, letters, words, action, smileys, time(NULL), hour,
-         hour, u->sgroup, chan);
+         hour, u->sgroup, c->sqlchan);
     SET_SEGV_LOCATION();
 
 /* update chan */
@@ -332,9 +327,7 @@ static void make_stats(User * u, char *receiver, char *msg)
          "UPDATE %s SET letters=letters+%i, words=words+%i, line=line+1, "
          "actions=actions+%i, smileys=smileys+%d, lastspoke=%i, time%i=time%i+1 WHERE chan=\'%s\';",
          CStatsTable, letters, words, action, smileys, time(NULL), hour,
-         hour, chan);
-    free(nick);
-    free(chan);
+         hour, c->sqlchan);
 }
 
 /*************************************************************************/
@@ -342,8 +335,6 @@ static void make_stats(User * u, char *receiver, char *msg)
 void count_kicks(User * kicker, User * kicked, Channel * c)
 {
 #ifdef USE_MYSQL
-    char *kicker_, *kicked_, *chan_;
-
     if (!c) {
         return;
     }
@@ -353,39 +344,31 @@ void count_kicks(User * kicker, User * kicked, Channel * c)
 
     SET_SEGV_LOCATION();
 
-    chan_ = rdb_escape(c->name);
-
     if (kicker && !is_excluded(kicker)) {
-        kicker_ = rdb_escape(kicker->nick);
-        check_db(kicker, c, kicker_, chan_);
+        check_db(kicker, c);
         if (kicker->cstats != 2) {      /* check for ignore */
             rdb_query
                 (QUERY_LOW, "UPDATE %s SET kicks=kicks+1 "
                  "WHERE (uname=\'%s\' AND (chan=\'global\' OR chan=\'%s\'));",
-                 UStatsTable, kicker->sgroup, chan_);
+                 UStatsTable, kicker->sgroup, c->sqlchan);
             rdb_query
                 (QUERY_LOW,
                  "UPDATE %s SET kicks=kicks+1 WHERE chan=\'%s\';",
-                 CStatsTable, chan_);
+                 CStatsTable, c->sqlchan);
         }
-        free(kicker_);
     }
 
     SET_SEGV_LOCATION();
 
     if (kicked && !is_excluded(kicked)) {
-        kicked_ = rdb_escape(kicked->nick);
-        check_db(kicked, c, kicked_, chan_);
+        check_db(kicked, c);
         if (kicked->cstats != 2) {      /* check for ignore */
             rdb_query
                 (QUERY_LOW, "UPDATE %s SET kicked=kicked+1 "
                  "WHERE (uname=\'%s\' AND (chan=\'global\' OR chan=\'%s\'));",
-                 UStatsTable, kicked->sgroup, chan_);
+                 UStatsTable, kicked->sgroup, c->sqlchan);
         }
-        free(kicked_);
     }
-    free(chan_);
-
 #endif
 }
 
@@ -393,8 +376,6 @@ void count_kicks(User * kicker, User * kicked, Channel * c)
 
 void count_topics(User * u, Channel * c)
 {
-    char *user_, *chan_;
-
     if (!denora->do_sql) {
         return;
     }
@@ -411,10 +392,7 @@ void count_topics(User * u, Channel * c)
         return;
     }
 
-    user_ = rdb_escape(u->nick);
-    chan_ = rdb_escape(c->name);
-
-    check_db(u, c, user_, chan_);
+    check_db(u, c);
 
     SET_SEGV_LOCATION();
 
@@ -422,21 +400,18 @@ void count_topics(User * u, Channel * c)
         rdb_query
             (QUERY_LOW, "UPDATE %s SET topics=topics+1 "
              "WHERE (uname=\'%s\' AND (chan=\'global\' OR chan=\'%s\'));",
-             UStatsTable, u->sgroup, chan_);
+             UStatsTable, u->sgroup, c->sqlchan);
         rdb_query
             (QUERY_LOW, "UPDATE %s SET topics=topics+1 WHERE chan=\'%s\';",
-             CStatsTable, chan_);
+             CStatsTable, c->sqlchan);
     }
     SET_SEGV_LOCATION();
-    free(user_);
-    free(chan_);
 }
 
 /*************************************************************************/
 
 void count_modes(User * u, Channel * c)
 {
-    char *user_, *chan_;
     if (!denora->do_sql) {
         return;
     }
@@ -453,28 +428,23 @@ void count_modes(User * u, Channel * c)
         return;
     }
 
-    user_ = rdb_escape(u->nick);
-    chan_ = rdb_escape(c->name);
-
-    check_db(u, c, user_, chan_);
+    check_db(u, c);
     SET_SEGV_LOCATION();
     if (u->cstats != 2) {       /* check for ignore */
         rdb_query
             (QUERY_LOW, "UPDATE %s SET modes=modes+1 "
              "WHERE (uname=\'%s\' AND (chan=\'global\' OR chan=\'%s\'));",
-             UStatsTable, u->sgroup, chan_);
+             UStatsTable, u->sgroup, c->sqlchan);
         rdb_query
             (QUERY_LOW, "UPDATE %s SET modes=modes+1 WHERE chan=\'%s\';",
-             CStatsTable, chan_);
+             CStatsTable, c->sqlchan);
     }
     SET_SEGV_LOCATION();
-    free(user_);
-    free(chan_);
 }
 
 /*************************************************************************/
-                                     /* rdb_escape nick and chan ! */
-static int check_db(User * u, Channel * c, char *nick, char *chan)
+
+static int check_db(User * u, Channel * c)
 {
 #ifdef USE_MYSQL
     int i;
@@ -498,8 +468,9 @@ static int check_db(User * u, Channel * c, char *nick, char *chan)
 
     /* get alias from db */
     if (u->cstats == 0) {
-        rdb_query(QUERY_HIGH, "SELECT uname FROM %s WHERE nick=\'%s\';",
-                  AliasesTable, nick);
+        rdb_query(QUERY_HIGH,
+                  "SELECT uname,`ignore` FROM %s WHERE nick=\'%s\';",
+                  AliasesTable, u->sqlnick);
         mysql_res = mysql_store_result(mysql);
         if (mysql_res) {
             if (mysql_num_rows(mysql_res) > 0) {        /* exists this nick already in the database? */
@@ -508,46 +479,36 @@ static int check_db(User * u, Channel * c, char *nick, char *chan)
                     free(u->sgroup);
                 }
                 u->sgroup = rdb_escape(mysql_row[0]);
-                u->cstats = 1;
+                if (!stricmp(mysql_row[1], "Y")) {
+                    u->cstats = 2;
+                } else {
+                    u->cstats = 1;
+                }
             } else {            /* num_rows = 0 */
                 /* create alias and global */
                 rdb_query(QUERY_LOW,
                           "INSERT INTO %s SET nick=\'%s\', uname=\'%s\';",
-                          AliasesTable, nick, nick);
+                          AliasesTable, u->sqlnick, u->sqlnick);
                 for (i = 0; i < 4; i++) {
                     rdb_query
                         (QUERY_LOW,
                          "INSERT IGNORE INTO %s SET uname=\'%s\', chan=\'global\', type=%i;",
-                         UStatsTable, nick, i);
+                         UStatsTable, u->sqlnick, i);
                 }
                 u->cstats = 1;
                 free(u->sgroup);
-                u->sgroup = sstrdup(nick);
+                u->sgroup = sstrdup(u->sqlnick);
             }
             mysql_free_result(mysql_res);
         }
     }
 
     SET_SEGV_LOCATION();
-
-    /* check for ignore */
-    rdb_query
-        (QUERY_HIGH,
-         "SELECT `ignore` FROM %s WHERE uname=\'%s\' AND `ignore`='Y';",
-         AliasesTable, u->sgroup);
-    mysql_res = mysql_store_result(mysql);
-    if (mysql_res) {
-        if (mysql_num_rows(mysql_res) > 0) {
-            u->cstats = 2;      /* ignore this user */
-        }
-        mysql_free_result(mysql_res);
-    }
-
     if (c->cstats == 0) {
         SET_SEGV_LOCATION();
         rdb_query(QUERY_HIGH,
                   "SELECT chan FROM %s WHERE chan=\'%s\' AND type=0;",
-                  CStatsTable, chan);
+                  CStatsTable, c->sqlchan);
         mysql_res = mysql_store_result(mysql);
         if (mysql_res) {
             if (mysql_num_rows(mysql_res) > 0) {        /* exists this chan already in the database? */
@@ -557,7 +518,7 @@ static int check_db(User * u, Channel * c, char *nick, char *chan)
                 for (i = 0; i < 4; i++) {
                     rdb_query(QUERY_LOW,
                               "INSERT INTO %s SET chan=\'%s\', type=%d;",
-                              CStatsTable, chan, i);
+                              CStatsTable, c->sqlchan, i);
                 }
                 c->cstats = 1;
             }                   /* num_rows */
@@ -569,7 +530,7 @@ static int check_db(User * u, Channel * c, char *nick, char *chan)
         rdb_query
             (QUERY_HIGH,
              "SELECT uname FROM %s WHERE uname=\'%s\' AND chan=\'%s\';",
-             UStatsTable, u->sgroup, chan);
+             UStatsTable, u->sgroup, c->sqlchan);
         mysql_res = mysql_store_result(mysql);
         if (mysql_res) {
             if (mysql_num_rows(mysql_res) == 0) {
@@ -578,7 +539,7 @@ static int check_db(User * u, Channel * c, char *nick, char *chan)
                     rdb_query
                         (QUERY_LOW,
                          "INSERT IGNORE INTO %s SET uname=\'%s\', chan=\'%s\', type=%d, firstadded=%ld;",
-                         UStatsTable, u->sgroup, chan, i,
+                         UStatsTable, u->sgroup, c->sqlchan, i,
                          (long int) time(NULL));
                 }
             }

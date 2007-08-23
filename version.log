@@ -9,9 +9,14 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="98"
+VERSION_BUILD="99"
 
 # $Log$
+#
+# BUILD : 1.4.0.99 (SVN)
+# BUGS  : 416
+# NOTES : Updated check_db. Removed unneccessary rdb_escape usage. Updated NOQUIT/QS support not to rely on 
+# CAPAB. All the above provided by OUTsider.
 #
 # BUILD : 1.4.0.98 (SVN)
 # BUGS  : 423
