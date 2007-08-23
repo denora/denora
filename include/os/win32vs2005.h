@@ -101,6 +101,10 @@ char *win32_vs2005_next_token;
 #define VER_SUITE_COMPUTE_SERVER 0x00004000
 #endif
 
+#ifndef VER_SUITE_EMBEDDEDNT
+#define VER_SUITE_EMBEDDEDNT 0x00000040
+#endif
+
 typedef   signed __int16  int16;
 typedef   signed __int16  int16_t;
 typedef unsigned __int16 uint16;

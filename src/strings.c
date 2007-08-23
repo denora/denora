@@ -19,6 +19,12 @@
 char *StrReverse(char *t)
 {
     int i, j;
+
+    if (t == NULL) {
+        alog(LOG_DEBUG, "Error: StrReverse() called with NULL values");
+        return NULL;
+    }
+
     for (i = 0, j = strlen(t) - 1; i < j; i++, j--) {
         SWAP_CHAR(t[i], t[j]);
     }

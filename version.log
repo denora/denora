@@ -9,9 +9,14 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="96"
+VERSION_BUILD="97"
 
 # $Log$
+#
+# BUILD : 1.4.0.97 (SVN)
+# BUGS  : 416, 422, 424
+# NOTES : StrReverse() now checks for NULL parameter. Added missed defines in include/os/win32*. Order of 
+# defines in confparse corrected for UserStatsRegistered
 #
 # BUILD : 1.4.0.96 (SVN)
 # BUGS  : 416
