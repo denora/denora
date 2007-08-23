@@ -13,6 +13,7 @@ Provided by Denora Team <dev@denorastats.org> - 2007
 02/28 A Added swhois support to nefarious                         [ #00]
 02/28 A Added P10 account support                                 [ #00]
 01/11 A Improved P10 hidden host support                          [ #00]
+08/23 U Updated autoconf stuff                                    [#423]
 08/16 U Updated uid and userlist indexes                          [#395]
 08/16 U Updated p10 to do double check before m_notice            [ #00]
 08/15 U Added a new question/answer to docs/FAQ                   [ #00]

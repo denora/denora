@@ -41,6 +41,10 @@ if test "$ac_cv_prog_gcc" = "yes"; then
     fi
 fi
 
+if test "$host_cpu" = "x86_64"; then
+    CFLAGS="$CFLAGS -fPIC"
+fi
+
 DENORA_CFLAGS_GCC_TRY_FLAGS(-ggdb, denora_ggdb)
 DENORA_CPU_GCC_TRY_FLAGS(-O3, ac_cv_denora_O3)
 
@@ -123,7 +127,7 @@ else
 fi
 
 x="0";
-DIS_MYSQL="  MySql: No"
+DIS_MYSQL="  MySQL Support: NO"
 AC_ARG_WITH(mysql, [ --without-mysql     Do not use MySQL even if we find it],,[ 
 AM_PATH_MYSQLCLIENT(,[
 	AC_DEFINE_UNQUOTED(USE_MYSQL,1,"Use Mysql")
@@ -138,7 +142,7 @@ if test "$x" = "1"; then
 	DENORALIBS="$DENORALIBS$MYSQLCLIENT_LIBS "
 	CFLAGS="$CFLAGS $MYSQLCLIENT_CFLAGS "
 	LDFLAGS="$LDFLAGS $MYSQLCLIENT_LDFLAGS "
-    DIS_MYSQL="  MySql: Yes"
+    DIS_MYSQL="  MySQL Support: YES"
 	AC_CHECK_FUNCS(mysql_set_charset_name,AC_DEFINE([HAVE_MYSQL_SET_CHARSET], [1], [MySQL supports charset]))
 fi
 ])
@@ -154,7 +158,7 @@ if test "$ac_cv_pthread" = "yes"; then
     DENORALIBS="$DENORALIBS$PTHREAD_LIBS "
     AC_DEFINE_UNQUOTED(USE_THREADS,1,"Use threads")    
  ])
-   DIS_THREADING="THREADING: Yes"
+   DIS_THREADING="THREADING Support: YES"
 else
   DIS_THREADING=""
 fi
@@ -248,34 +252,6 @@ fi
 AC_SUBST(PERL_CFLAGS)
 AC_SUBST(PERL_LDFLAGS)
 
-POSTGRESQL="Postgre: No"
-POSTGRE=""
-
-AC_ARG_WITH(postgreheader, [ --with-postgreheader=path     Specify the path to your Postgre installation], [ 
-    echo "Checking for PostgreSQL header"
-    AC_DEFINE_UNQUOTED(POSTGRE_PATH,"$withval","path to the header")
-    AC_CHECK_HEADER($withval/libpq-fe.h, [
-		PGINC="-I$withval"])    
-    
-
-])
-
-AC_ARG_WITH(postgrelib, [ --with-postgrelib=path     Specify the path to your Postgre library], [ 
-    echo "Checking for PostgreSQL library"
-    if test -d $withval ; then
-	AC_CHECK_LIB(pq, PQconnectdb, PQLIB="-lpq")
-	POSTGRE="postgre.c"
-	DENORALIBS="$DENORALIBS $PQLIB"
-	CFLAGS="$CFLAGS $PGINC "
-	LDFLAGS="$LDFLAGS -L$withval -lpq "
-	AC_DEFINE(USE_POSTGRE,1,"Has libpq-fe.h")
-	POSTGRESQL="Postgre: Yes"
-    else 
-    	POSTGRESQL="Postgre: No"
-    fi
-])
-
-AC_SUBST(POSTGRE)
 TYPE_SOCKLEN_T
 
 
@@ -412,7 +388,7 @@ if test "x$ac_cv_have___ss_family_in_struct_ss" = "xyes" ; then
 fi
 
 
-DIS_MODULES="Modules: Yes"
+DIS_MODULES="Modules Support: YES"
 
 dnl module checking based on Unreal's module checking code
 AC_DEFUN(AC_ENABLE_DYN,
@@ -421,12 +397,12 @@ AC_CHECK_FUNC(dlopen,, AC_CHECK_LIB(dl,dlopen,[
   DENORALIBS="$DENORALIBS -ldl"
   AC_DEFINE(USE_MODULES,1,"Modules are available")
   USE_MODULES="yes"
-  DIS_MODULES="Modules: Yes"
+  DIS_MODULES="Modules Support: YES"
 ],
 [
 AC_MSG_WARN(Dynamic linking is not enabled because dlopen was not found)
 AC_DEFINE(STATIC_LINKING,"NO_MODULES","modules not available")
-  DIS_MODULES="Modules: No"
+  DIS_MODULES="Modules Support: NO"
 ]))
 
 hold_cflags=$CFLAGS
@@ -965,7 +941,12 @@ $DIS_MODULES
 $DIS_MYSQL
 $DIS_DMALLOC
 
-All done!  Now run "make" (or possibly "gmake") to compile Denora.
+All done! Above you can see if Modules Support and MySQL Support will be compiled or not.
+If you intended to compile MySQL support and you see "NO", then your system is probably
+missing the mysql client development libraries. Please consult your distribution package
+manager and install the required package, then try running ./Config again.
+ 
+Now run "make" (or possibly "gmake") to compile Denora.
 See the INSTALL, README and FAQ files if you have any problems.
 EOT
 
