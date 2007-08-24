@@ -314,16 +314,19 @@ int denora_event_topic(char *source, int ac, char **av)
 
 int denora_event_tburst(char *source, int ac, char **av)
 {
+    char *scratch;
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    if (ac != 5)
+    if (ac != 4)
         return MOD_CONT;
 
-    av[0] = av[1];
-    av[1] = av[3];
-    av[3] = av[4];
+    scratch = av[2];
+    av[2] = av[1];
+    av[1] = scratch;
     do_topic(4, av);
+
     return MOD_CONT;
 }
 
@@ -829,6 +832,11 @@ int denora_event_tmode(char *source, int ac, char **av)
         protocol_debug(source, ac, av);
     }
     if (*av[1] == '#' || *av[1] == '&') {
+        /* do_cmode() doesn't like a timestamp as the first
+         * parameter, so we do this since it wants a string vector --nenolod
+         */
+        ac--;
+        av++;
         do_cmode(source, ac, av);
     }
     return MOD_CONT;

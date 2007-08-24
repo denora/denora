@@ -422,6 +422,10 @@ Provided by OUTsider <outsider@scarynet.org>
 01/05 U Updated Dutch language file                               [ #00]
 12/04 F Fixed P10 ircds not parting channels                      [ #00]
 
+Provided by nenolod <nenolod@nenolod.net>
+08/24 A implement support for charybdis TBURST mechanism          [#425]
+08/24 F handle charybdis TMODE event correctly                    [#425]
+
 
 Denora Version 1.1.0
 -------------------

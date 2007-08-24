@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="99"
+VERSION_BUILD="100"
 
 # $Log$
+#
+# BUILD : 1.4.0.100 (SVN)
+# BUGS  : 425
+# NOTES : Handle charybdis TMODE event correctly. Implement support for charybdis TBURST mechanism.
 #
 # BUILD : 1.4.0.99 (SVN)
 # BUGS  : 416
