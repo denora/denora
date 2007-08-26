@@ -266,7 +266,7 @@ static void make_stats(User * u, char *receiver, char *msg)
     uint32 letters = 0, words = 1, action = 0, smileys = 0, i = 0;
     char *buf;
     Channel *c;
-    int hour;
+    uint32 hour;
 
     SET_SEGV_LOCATION();
 
@@ -315,7 +315,7 @@ static void make_stats(User * u, char *receiver, char *msg)
     rdb_query
         (QUERY_LOW,
          "UPDATE %s SET letters=letters+%i, words=words+%i, line=line+1, "
-         "actions=actions+%i, smileys=smileys+%d, lastspoke=%i, time%i=time%i+1 "
+         "actions=actions+%i, smileys=smileys+%d, lastspoke=%i, time%d=time%d+1 "
          "WHERE (uname=\'%s\' AND (chan=\'global\' OR chan=\'%s\'));",
          UStatsTable, letters, words, action, smileys, time(NULL), hour,
          hour, u->sgroup, c->sqlchan);
@@ -325,7 +325,7 @@ static void make_stats(User * u, char *receiver, char *msg)
     rdb_query
         (QUERY_LOW,
          "UPDATE %s SET letters=letters+%i, words=words+%i, line=line+1, "
-         "actions=actions+%i, smileys=smileys+%d, lastspoke=%i, time%i=time%i+1 WHERE chan=\'%s\';",
+         "actions=actions+%i, smileys=smileys+%d, lastspoke=%i, time%d=time%d+1 WHERE chan=\'%s\';",
          CStatsTable, letters, words, action, smileys, time(NULL), hour,
          hour, c->sqlchan);
 }

@@ -987,7 +987,8 @@ int DenoraInit(int argc, char **argv)
     }
 
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id$");
+    moduleAddVersion
+        ("$Id$");
     moduleSetType(PROTOCOL);
     pmodule_ircd_version("Charybdis 1.0+");
     pmodule_ircd_cap(myIrcdcap);

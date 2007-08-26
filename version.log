@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="100"
+VERSION_BUILD="101"
 
 # $Log$
+#
+# BUILD : 1.4.0.101 (SVN)
+# BUGS  : N/A
+# NOTES : Fixed query problem in chanstats on some x64 boxes
 #
 # BUILD : 1.4.0.100 (SVN)
 # BUGS  : 425
