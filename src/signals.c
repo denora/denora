@@ -82,6 +82,7 @@ void signal_init()
     }
 
     act.sa_handler = signal_die;
+    (void) sigemptyset(&act.sa_mask);
     (void) sigaddset(&act.sa_mask, SIGTERM);
     (void) sigaction(SIGTERM, &act, NULL);
     if (!DumpCore) {
@@ -90,7 +91,26 @@ void signal_init()
         (void) sigaddset(&act.sa_mask, SIGSEGV);
         (void) sigaction(SIGSEGV, &act, NULL);
     } else {
-        (void) signal(SIGSEGV, SIG_DFL);
+        act.sa_handler = SIG_DFL;
+        (void) sigemptyset(&act.sa_mask);
+        (void) sigaddset(&act.sa_mask, SIGSEGV);
+        (void) sigaction(SIGSEGV, &act, NULL);
+
+        act.sa_handler = SIG_DFL;
+        (void) sigemptyset(&act.sa_mask);
+        (void) sigaddset(&act.sa_mask, SIGBUS);
+        (void) sigaction(SIGBUS, &act, NULL);
+
+        act.sa_handler = SIG_DFL;
+        (void) sigemptyset(&act.sa_mask);
+        (void) sigaddset(&act.sa_mask, SIGILL);
+        (void) sigaction(SIGILL, &act, NULL);
+
+        act.sa_handler = SIG_DFL;
+        (void) sigemptyset(&act.sa_mask);
+        (void) sigaddset(&act.sa_mask, SIGTRAP);
+        (void) sigaction(SIGTRAP, &act, NULL);
+
     }
 #else
 # ifndef	HAVE_RELIABLE_SIGNALS
@@ -114,8 +134,14 @@ void signal_init()
     }
     if (!DumpCore) {
         (void) signal(SIGSEGV, signal_segfault);
+        (void) signal(SIGBUS, sighandler);
+        (void) signal(SIGILL, sighandler);
+        (void) signal(SIGTRAP, sighandler);
     } else {
         (void) signal(SIGSEGV, SIG_DFL);
+        (void) signal(SIGBUS, SIG_DFL);
+        (void) signal(SIGILL, SIG_DFL);
+        (void) signal(SIGTRAP, SIG_DFL);
     }
 #endif
 
@@ -124,15 +150,6 @@ void signal_init()
 #endif
     (void) signal(SIGFPE, sighandler);
     (void) signal(SIGQUIT, sighandler);
-    if (!DumpCore) {
-        (void) signal(SIGBUS, sighandler);
-        (void) signal(SIGILL, sighandler);
-        (void) signal(SIGTRAP, sighandler);
-    } else {
-        (void) signal(SIGBUS, SIG_DFL);
-        (void) signal(SIGILL, SIG_DFL);
-        (void) signal(SIGTRAP, SIG_DFL);
-    }
 
 #if !defined(USE_THREADS)
     (void) signal(SIGUSR1, sighandler); /* This is our "out-of-memory" panic switch */

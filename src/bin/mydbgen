@@ -293,6 +293,8 @@ if test "$?" = "1" ; then
      echo "ALTER TABLE ustats ADD firstadded INT( 10 ) NOT NULL AFTER lastspoke;" >> $USQLDB
 fi
 
+echo "ALTER TABLE server CHANGE uptime uptime INT( 15 ) NOT NULL DEFAULT '0';" >> $USQLDB
+
 if [  -f "$USQLDB" ] ; then
       msg "Updating your columns... "
       $MYSQL < "$USQLDB"

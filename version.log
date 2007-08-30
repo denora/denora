@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="101"
+VERSION_BUILD="102"
 
 # $Log$
+#
+# BUILD : 1.4.0.102 (SVN)
+# BUGS  : 428,429
+# NOTES : Fixed SQL column for server uptime limiting to 97 days. Applied Trystans signals patch.
 #
 # BUILD : 1.4.0.101 (SVN)
 # BUGS  : N/A

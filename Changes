@@ -29,6 +29,8 @@ Provided by Denora Team <dev@denorastats.org> - 2007
 08/07 U Updated GeoIP database file                               [ #00]
 07/18 U Updated GeoIP database file                               [ #00]
 01/06 U Updated GeoIP.dat                                         [ #00]
+08/30 F Fixed SQL column for server uptime limiting to 97 days    [#428]
+08/30 F Applied Trystan's signals patch                           [#429]
 08/26 F Fixed query problem in chanstats on some x64 boxes        [ #00]
 08/23 F Fixed issue with not registered users on P10              [#416]
 08/19 F Fixed admin table scheme not mysql 4.0 compatible         [ #00]

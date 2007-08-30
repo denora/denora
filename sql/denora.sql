@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `server` (
   `online` enum('Y','N') NOT NULL default 'Y',
   `lastsplit` datetime default NULL,
   `version` varchar(255) NOT NULL default '',
-  `uptime` mediumint(15) NOT NULL default '0',
+  `uptime` int(15) NOT NULL default '0',
   `motd` text,
   `currentusers` int(15) NOT NULL default '0',
   `maxusers` int(15) NOT NULL default '0',
