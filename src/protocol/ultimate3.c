@@ -313,7 +313,7 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("GOPER",     denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("RAKILL",    denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("SILENCE",   denora_event_null); addCoreMessage(IRCD,m);
-    m = createMessage("SVSKILL",   denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("SVSKILL",   denora_event_kill); addCoreMessage(IRCD,m);
     m = createMessage("SVSMODE",   denora_event_svsmode); addCoreMessage(IRCD,m);
     m = createMessage("SVSNICK",   denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("SVSNOOP",   denora_event_null); addCoreMessage(IRCD,m);

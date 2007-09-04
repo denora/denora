@@ -1332,9 +1332,9 @@ void moduleAddIRCDMsgs(void) {
     if (UseTokens) {
      m = createMessage("U",        denora_event_null); addCoreMessage(IRCD,m);
     }
-    m = createMessage("SVSKILL",   denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("SVSKILL",   denora_event_kill); addCoreMessage(IRCD,m);
     if (UseTokens) {
-     m = createMessage("h",        denora_event_null); addCoreMessage(IRCD,m);
+     m = createMessage("h",        denora_event_kill); addCoreMessage(IRCD,m);
     }
     m = createMessage("SVSMODE",   denora_event_svsmode); addCoreMessage(IRCD,m);
     if (UseTokens) {

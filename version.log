@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="102"
+VERSION_BUILD="103"
 
 # $Log$
+#
+# BUILD : 1.4.0.103 (SVN)
+# BUGS  : 421
+# NOTES : Fixed SVSKILL not being handled. Updated GeoIP database file.
 #
 # BUILD : 1.4.0.102 (SVN)
 # BUGS  : 428,429
