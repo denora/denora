@@ -369,9 +369,7 @@ CREATE TABLE `ison` (
   `mode_lo` enum('Y','N') NOT NULL default 'N',
   `mode_lq` enum('Y','N') NOT NULL default 'N',
   `mode_lv` enum('Y','N') NOT NULL default 'N',
-  PRIMARY KEY  (`nickid`,`chanid`),
-  KEY `nickid` (`nickid`),
-  KEY `chanid` (`chanid`)
+  PRIMARY KEY  (`nickid`,`chanid`)
 ) TYPE=MyISAM;
 
 -- --------------------------------------------------------
