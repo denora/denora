@@ -381,8 +381,9 @@ int denora_event_away(char *source, int ac, char **av)
 
 int denora_event_topic(char *source, int ac, char **av)
 {
-    char *newav[4];
+    char *newav[5];
     User *u;
+    Server *s;
 
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
@@ -391,10 +392,12 @@ int denora_event_topic(char *source, int ac, char **av)
         return MOD_CONT;
 
     u = user_find(source);
+    s = server_find(source);
     newav[0] = av[0];
-    newav[1] = u->nick;
+    newav[1] = u ? u->nick : (s ? s->name : 'unknown');
     newav[2] = (ac == 2) ? itostr(time(NULL)) : av[ac - 2];
     newav[3] = av[ac - 1];
+    newav[4] = '\0';
 
     do_topic(4, newav);
     return MOD_CONT;

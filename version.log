@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="104"
+VERSION_BUILD="105"
 
 # $Log$
+#
+# BUILD : 1.4.0.105 (SVN)
+# BUGS  : 439
+# NOTES : Fixed segfault in Asuka topic handling (needs testing)
 #
 # BUILD : 1.4.0.104 (SVN)
 # BUGS  : N/A

@@ -3,7 +3,7 @@ Denora Version 1.4.0
 Provided by Denora Team <dev@denorastats.org> - 2007
 08/17 A Admins passwords are now hidden in debug messages         [#414]
 08/16 A Added recompile option to Makefile, make recompile        [ #00]
-08/16 A Added new protocol ScaryNet	                          [ #00]
+08/16 A Added new protocol ScaryNet	                         [ #00]
 08/13 A Added XMLRPC documentation                                [#407]
 08/12 A Added option to track only +r users on chanstats          [ #00]
 08/10 A New optional token on connect block for quitprefix        [#404]
@@ -30,6 +30,7 @@ Provided by Denora Team <dev@denorastats.org> - 2007
 08/07 U Updated GeoIP database file                               [ #00]
 07/18 U Updated GeoIP database file                               [ #00]
 01/06 U Updated GeoIP.dat                                         [ #00]
+10/07 F Fixed segfault in Asuka topic handling                    [#439]
 09/12 F Fixed SQL structure error of ison table                   [ #00]
 09/04 F Fixed SVSKILL not being handled                           [#421]
 08/30 F Fixed SQL column for server uptime limiting to 97 days    [#428]
