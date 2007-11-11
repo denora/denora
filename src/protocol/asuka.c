@@ -158,45 +158,70 @@ int denora_event_nick(char *source, int ac, char **av)
     char *temp;
     char *ipchar;
 
+    if (denora->protocoldebug)
+        protocol_debug(source, ac, av);
+
     /* do_nick(const char *source, char *nick, char *username, char *host,
        char *server, char *realname, time_t ts, uint32 svid,
        uint32 ip, char *vhost, char *uid, int hopcount, char *modes) */
 
-    if (denora->protocoldebug) {
-        protocol_debug(source, ac, av);
-    }
-
     temp = sstrdup(source);
 
     if (ac != 2) {
+        char *realname, *ip, *nick;
+        char *ident, *host, *modes, *modes2;
+        const char *uid = "";
+        const char *account = "";
+        const char *timestamp = "";
+        char hhostbuf[255];
+        int ishidden = 0, isaccount = 0;
+
         s = server_find(source);
         *source = '\0';
-        if (ac == 10) {
-            ipchar = asuka_nickip(av[7]);
-            user =
-                do_nick(source, av[0], av[3], av[4], (s ? s->name : temp),
-                        av[9], strtoul(av[2], NULL, 10), 0, ipchar, NULL,
-                        av[8], strtoul(av[1], NULL, 10), av[5], NULL);
-            free(ipchar);
-        } else if (ac == 9) {
-            ipchar = asuka_nickip(av[6]);
-            user =
-                do_nick(source, av[0], av[3], av[4], (s ? s->name : temp),
-                        av[8], strtoul(av[2], NULL, 10), 0, ipchar, NULL,
-                        av[7], strtoul(av[1], NULL, 10), av[5], NULL);
-            free(ipchar);
-        } else if (ac == 8) {
-            ipchar = asuka_nickip(av[5]);
-            do_nick(source, av[0], av[3], av[4], (s ? s->name : temp),
-                    av[7], strtoul(av[2], NULL, 10), 0,
-                    ipchar, NULL, av[6], strtoul(av[1], NULL, 10), NULL,
-                    NULL);
-            free(ipchar);
-        } else {
-            alog(LOG_DEBUG,
-                 "Unknown NICK formatted message please report the following");
-            protocol_debug(temp, ac, av);
+
+        realname = sstrdup(av[ac - 1]);
+        uid = sstrdup(av[ac - 2]);
+        ip = sstrdup(av[ac - 3]);
+        nick = sstrdup(av[0]);
+        ident = sstrdup(av[3]);
+        host = sstrdup(av[4]);
+        modes = sstrdup(av[5]);
+        modes2 = sstrdup(av[5]);
+        timestamp = sstrdup(av[2]);
+
+        if (strpbrk(av[5], "+")) {
+            while (*modes) {
+                switch (*modes) {
+                case 'r':
+                    isaccount = 1;
+                    account = sstrdup(av[6]);
+                    break;
+                case 'x':
+                    ishidden = 1;
+                    break;
+                default:
+                    break;
+                }
+                modes++;
+            }
+            modes = sstrdup(modes2);
+        } else
+            modes = NULL;
+
+        ipchar = asuka_nickip(ip);
+
+        if (isaccount && ishidden) {
+            ircsnprintf(hhostbuf, sizeof(av[6]) + sizeof(hhostbuf) + 2,
+                        "%s%s%s", HiddenPrefix, av[6], HiddenSuffix);
         }
+
+        user = do_nick(source, nick, ident, host, (s ? s->name : temp),
+                       realname, strtoul(timestamp, NULL, 10), 0, ipchar,
+                       (ishidden
+                        && isaccount) ? hhostbuf : NULL, (char *) uid,
+                       strtoul(av[1], NULL, 10), modes, (char *) account);
+
+        free(ipchar);
     } else {
         user = find_byuid(source);
         do_nick((user ? user->nick : source), av[0], NULL, NULL, NULL,
@@ -382,20 +407,17 @@ int denora_event_away(char *source, int ac, char **av)
 int denora_event_topic(char *source, int ac, char **av)
 {
     char *newav[5];
-    User *u;
-    Server *s;
 
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    if (ac < 2)
+
+    if (ac < 4)
         return MOD_CONT;
 
-    u = user_find(source);
-    s = server_find(source);
     newav[0] = av[0];
-    newav[1] = u ? u->nick : (s ? s->name : 'unknown');
-    newav[2] = (ac == 2) ? itostr(time(NULL)) : av[ac - 2];
+    newav[1] = av[1];
+    newav[2] = av[ac - 2];
     newav[3] = av[ac - 1];
     newav[4] = '\0';
 
@@ -867,7 +889,7 @@ void asuka_cmd_motd(char *sender, char *server)
     ud = find_uid(sender);
     s = server_find(server);
 
-    send_cmd((ud ? ud->uid : sender), "MO %s",
+    send_cmd((ud ? ud->uid : sender), "MO :%s",
              (s ? (s->suid ? s->suid : server) : server));
 }
 
