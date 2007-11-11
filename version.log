@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="105"
+VERSION_BUILD="106"
 
 # $Log$
+#
+# BUILD : 1.4.0.106 (SVN)
+# BUGS  : 443
+# NOTES : Fixed sjoin with more than two parameters going wrong
 #
 # BUILD : 1.4.0.105 (SVN)
 # BUGS  : 439

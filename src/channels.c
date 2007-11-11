@@ -1099,7 +1099,7 @@ void do_sjoin(const char *source, int ac, char **av)
     }
 
     /* Double check to avoid unknown modes that need parameters */
-    if (ac >= 4 && ac <= 6) {
+    if (ac >= 4) {
         if (denora->do_sql) {
             sqlusers = sstrdup(av[ac - 1]);
             sql_do_sjoin(av[1], sqlusers, &av[2], (ac > 3) ? ac - 3 : 0);
