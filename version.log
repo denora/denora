@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="107"
+VERSION_BUILD="108"
 
 # $Log$
+#
+# BUILD : 1.4.0.108 (SVN)
+# BUGS  : N/A
+# NOTES : Some langfile fixes, and fix for uninitialized variable in an error message
 #
 # BUILD : 1.4.0.107 (SVN)
 # BUGS  : 444,445

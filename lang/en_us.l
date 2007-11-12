@@ -1073,7 +1073,7 @@ ALOG_SQL_NOTSET
 	MySQL Error: Set all required configuration options.
 
 ALOG_HTML_ERR_WRITE
-	Error: unable to accessing file for writing: %s
+	Error: unable to access file for writing: %s
 
 ALOG_DB_ERROR
 	WARNING! DB_READ_ERROR in %s

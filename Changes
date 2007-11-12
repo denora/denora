@@ -30,6 +30,7 @@ Provided by Denora Team <dev@denorastats.org> - 2007
 08/07 U Updated GeoIP database file                               [ #00]
 07/18 U Updated GeoIP database file                               [ #00]
 01/06 U Updated GeoIP.dat                                         [ #00]
+11/12 F Help for CHANSTATS SET was wrong in italian lang file     [ #00]
 11/12 F Fixed Asuka nick parser skipping some nicks               [#445]
 11/12 F Fixed segfault on topic set in Asuka                      [#444]
 11/11 F Fixed sjoin with more than two parameters going wrong     [#443]
