@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="108"
+VERSION_BUILD="109"
 
 # $Log$
+#
+# BUILD : 1.4.0.109 (SVN)
+# BUGS  : 427
+# NOTES : Fixed chanstats problems after removing user from exclude
 #
 # BUILD : 1.4.0.108 (SVN)
 # BUGS  : N/A

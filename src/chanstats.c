@@ -469,7 +469,7 @@ static int check_db(User * u, Channel * c)
     /* get alias from db */
     if (u->cstats == 0) {
         rdb_query(QUERY_HIGH,
-                  "SELECT uname,`ignore` FROM %s WHERE nick=\'%s\';",
+                  "SELECT uname,`ignore` FROM %s WHERE uname=\'%s\';",
                   AliasesTable, u->sqlnick);
         mysql_res = mysql_store_result(mysql);
         if (mysql_res) {

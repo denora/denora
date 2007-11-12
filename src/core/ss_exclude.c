@@ -104,6 +104,8 @@ static int do_exclude(User * u, int ac, char **av)
             name = rdb_escape(av[1]);
             rdb_query(QUERY_LOW, "DELETE FROM %s WHERE uname=\'%s\'",
                       UStatsTable, av[1]);
+            rdb_query(QUERY_LOW, "DELETE FROM %s WHERE uname=\'%s\'",
+                      AliasesTable, av[1]);
             free(name);
         } else {
             notice_lang(s_StatServ, u, STAT_EXCLUDE_ALREADY, av[1]);

@@ -151,10 +151,16 @@ void load_exclude_db(void)
 Exclude *make_exclude(char *mask)
 {
     Exclude *e;
+    User *u;
 
     e = calloc(sizeof(Exclude), 1);
     e->name = sstrdup(mask);
     insert_exclude(e);
+
+    u = user_find(mask);
+    if (u) {
+        u->cstats = 0;
+    }
     return e;
 }
 
