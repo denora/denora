@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="110"
+VERSION_BUILD="111"
 
 # $Log$
+#
+# BUILD : 1.4.0.111 (SVN)
+# BUGS  : 446
+# NOTES : Fixed problem on user quits with some mysql servers. Updated GeoIP database.
 #
 # BUILD : 1.4.0.110 (SVN)
 # BUGS  : N/A

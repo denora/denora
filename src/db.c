@@ -684,7 +684,7 @@ void db_removenick(char *nick, char *reason)
     if (UserCacheTime) {
         sqlreason = rdb_escape(reason);
         rdb_query(QUERY_LOW,
-                  "UPDATE %s SET online=\'N\', lastquit=NOW(), lastquitmsg=\'%s\', servid=NULL WHERE nickid=%d",
+                  "UPDATE %s SET online=\'N\', lastquit=NOW(), lastquitmsg=\'%s\', servid=0 WHERE nickid=%d",
                   UserTable, sqlreason, nickid);
     } else {
         rdb_query(QUERY_LOW, "DELETE FROM %s WHERE nickid=%d",
@@ -803,7 +803,7 @@ void db_removenick_nt(char *nick, char *reason)
                 } else {
                     mysql_free_result(mysql_res);
                     rdb_query(QUERY_LOW,
-                              "UPDATE %s SET online=\'N\', lastquit=NOW(), lastquitmsg=\'%s\', servid=NULL WHERE nickid=%d",
+                              "UPDATE %s SET online=\'N\', lastquit=NOW(), lastquitmsg=\'%s\', servid=0 WHERE nickid=%d",
                               UserTable, sqlreason, nickid);
                 }
             }
@@ -817,7 +817,7 @@ void db_removenick_nt(char *nick, char *reason)
 #endif
         } else {
             rdb_query(QUERY_LOW,
-                      "UPDATE %s SET online=\'N\', lastquit=NOW(), lastquitmsg=\'%s\', servid=NULL WHERE nickid=%d",
+                      "UPDATE %s SET online=\'N\', lastquit=NOW(), lastquitmsg=\'%s\', servid=0 WHERE nickid=%d",
                       UserTable, sqlreason, nickid);
         }
         if (sqlreason) {
