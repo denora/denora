@@ -1082,7 +1082,7 @@ ALOG_DEBUG_DB_OK
 	debug: %s read successfully
 
 ALOG_DEBUG_UNKNOW_CMODE
-	debug: unknown mode channel mode %c
+	debug: unknown channel mode %c
 
 ALOG_DEBUG_LAST_LINE
 	debug: last line is %s
@@ -1262,7 +1262,7 @@ ALOG_DONE_DISPLAY
 	debug: done displaying message %s
 
 ALOG_UKNOWN_USER_MODE
-	debug: unknown mode : usermode %c (in %s)
+	debug: unknown user mode %c (in %s)
 
 ALOG_SWHOIS_ERROR
 	SWHOIS set for nonexistent user %s.

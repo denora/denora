@@ -333,7 +333,7 @@ void denora_cmd_join(char *user, char *channel, time_t chantime)
             do_join(user, 1, v);
         }
         if (AutoOp) {
-            v[1] = AutoMode;
+            v[1] = sstrdup(AutoMode);
             while (*v[1]) {
                 switch (*v[1]) {
                 case '+':
@@ -341,11 +341,12 @@ void denora_cmd_join(char *user, char *channel, time_t chantime)
                 case '-':
                     break;
                 default:
-                    v[i++] = user;
+                    v[i++] = sstrdup(user);
                     break;
                 }
                 v[1]++;
             }
+            v[1] = sstrdup(AutoMode);
             do_cmode(user, i, v);
         }
     }

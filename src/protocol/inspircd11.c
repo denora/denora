@@ -103,7 +103,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* spamfilter                   */
      'b',                       /* ban char                     */
      'e',                       /* except char                  */
-     IRCD_DISABLE,              /* invite char                  */
+     'I',                       /* invite char                  */
      IRCD_DISABLE,              /* zip                          */
      IRCD_DISABLE,              /* ssl                          */
      IRCD_ENABLE,               /* uline                        */
@@ -173,7 +173,7 @@ void IRCDModeInit(void)
     ModuleUpdateSQLUserMode();
     CreateChanBanMode(CMODE_b, add_ban, del_ban);
     CreateChanBanMode(CMODE_e, add_exception, del_exception);
-
+    CreateChanBanMode(CMODE_I, add_invite, del_invite);
 
     /* Channel Modes */
     CreateChanMode(CMODE_C, NULL, NULL);
@@ -207,8 +207,8 @@ void IRCDModeInit(void)
     ModuleSetChanUMode('%', 'h', STATUS_HALFOP);
     ModuleSetChanUMode('+', 'v', STATUS_VOICE);
     ModuleSetChanUMode('@', 'o', STATUS_OP);
-    ModuleSetChanUMode('~', 'a', STATUS_PROTECTED);
-    ModuleSetChanUMode('*', 'q', STATUS_OWNER);
+    ModuleSetChanUMode('&', 'a', STATUS_PROTECTED);
+    ModuleSetChanUMode('~', 'q', STATUS_OWNER);
 
     ModuleUpdateSQLChanMode();
 
@@ -265,6 +265,7 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("SAJOIN",    denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("SAPART",    denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("PUSH",      denora_event_push); addCoreMessage(IRCD,m);
+    m = createMessage("VERSION",   denora_event_version); addCoreMessage(IRCD,m);
 
 }
 
@@ -507,6 +508,14 @@ int denora_event_version(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
+
+    /*char *version, *buf = NULL;
+       buf = sstrdup(av[0]);
+       version = strtok(buf, " ");
+       av[0] = sstrdup(version); */
+
+    av[0] = strtok(av[0], " ");
+
     sql_do_server_version(source, ac, av);
     return MOD_CONT;
 }
@@ -721,7 +730,10 @@ void inspircd_cmd_connect(void)
     send_cmd(NULL, "SERVER %s %s %d :%s", ServerName, RemotePassword, 0,
              ServerDesc);
     send_cmd(NULL, "BURST");
-    send_cmd(ServerName, "VERSION :Denora");
+    send_cmd(ServerName,
+             "VERSION :Denora-%s %s :%s -- build #%s, compiled %s %s",
+             denora->version, ServerName, ircd->name, denora->build,
+             denora->date, denora->time);
 }
 
 /* Events */

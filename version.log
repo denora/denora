@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="111"
+VERSION_BUILD="112"
 
 # $Log$
+#
+# BUILD : 1.4.0.112 (SVN)
+# BUGS  : N/A
+# NOTES : Fixed Stats bot modes not set in sql. Added Invite Exception support to inspircd module. Fixed various inspircd issues.
 #
 # BUILD : 1.4.0.111 (SVN)
 # BUGS  : 446
