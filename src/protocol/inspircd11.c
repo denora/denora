@@ -160,14 +160,17 @@ void IRCDModeInit(void)
 {
     ModuleSetUserMode(UMODE_B, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_G, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_H, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_I, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_Q, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_R, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_S, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_W, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_g, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_h, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_i, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_o, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_r, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_s, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_w, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_x, IRCD_ENABLE);
     ModuleUpdateSQLUserMode();
@@ -178,7 +181,7 @@ void IRCDModeInit(void)
     /* Channel Modes */
     CreateChanMode(CMODE_C, NULL, NULL);
     CreateChanMode(CMODE_G, NULL, NULL);
-    CreateChanMode(CMODE_J, NULL, NULL);
+    CreateChanMode(CMODE_J, set_rejoinlock, get_rejoinlock);
     CreateChanMode(CMODE_K, NULL, NULL);
     CreateChanMode(CMODE_L, set_redirect, get_redirect);
     CreateChanMode(CMODE_M, NULL, NULL);
@@ -191,6 +194,7 @@ void IRCDModeInit(void)
     CreateChanMode(CMODE_T, NULL, NULL);
     CreateChanMode(CMODE_V, NULL, NULL);
     CreateChanMode(CMODE_c, NULL, NULL);
+    CreateChanMode(CMODE_f, set_flood, get_flood);
     CreateChanMode(CMODE_g, NULL, NULL);
     CreateChanMode(CMODE_i, NULL, NULL);
     CreateChanMode(CMODE_j, set_flood_alt, get_flood_alt);

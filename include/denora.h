@@ -1085,6 +1085,7 @@ struct channel_ {
     char topic_setter[NICKMAX];		/* Who set the topic */
     time_t topic_time;			/* When topic was set */
     uint32 limit;			/* 0 if none */
+    uint32 rejoinlock;			/* 0 if none */
     char *key;				/* NULL if none */
     char *redirect;			/* +L; NULL if none */
     char *flood;			/* +f; NULL if none */

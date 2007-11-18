@@ -695,6 +695,21 @@ char *get_limit(Channel * chan)
 
 /*************************************************************************/
 
+char *get_rejoinlock(Channel * chan)
+{
+    if (!chan) {
+        return NULL;
+    }
+    SET_SEGV_LOCATION();
+
+    if (chan->rejoinlock == 0) {
+        return NULL;
+    }
+    return itostr(chan->rejoinlock);
+}
+
+/*************************************************************************/
+
 char *get_redirect(Channel * chan)
 {
     SET_SEGV_LOCATION();
@@ -779,6 +794,22 @@ void set_limit(Channel * chan, char *value)
     chan->limit = (!BadPtr(value) ? strtoul(value, NULL, 10) : 0);
 
     alog(LOG_DEBUG, langstr(ALOG_LIMIT_SET_TO), chan->name, chan->limit);
+}
+
+/*************************************************************************/
+
+void set_rejoinlock(Channel * chan, char *value)
+{
+    SET_SEGV_LOCATION();
+
+    if (!chan) {
+        return;
+    }
+
+    chan->rejoinlock = (!BadPtr(value) ? strtoul(value, NULL, 10) : 0);
+
+    alog(LOG_DEBUG, "debug: Rejoin lock for channel %s set to %u",
+         chan->name, chan->rejoinlock);
 }
 
 /*************************************************************************/
