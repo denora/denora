@@ -12,61 +12,24 @@
  *
  * $Id$
  *
- * Following modules loaded during testing
- * <module name="m_chanprotect.so">
- * <module name="m_globops.so">
- * <module name="m_noinvite.so">
- * <module name="m_services.so">
- * <module name="m_chghost.so">
- * <module name="m_nokicks.so">
- * <module name="m_sethost.so">
- * <module name="m_cloaking.so">
- * <module name="m_nonicks.so">
- * <module name="m_sajoin.so">
- * <module name="m_setidle.so">
- * <module name="m_blockcolor.so">
- * <module name="m_nonotice.so">
- * <module name="m_samode.so">
- * <module name="m_park.so">
- * <module name="m_setname.so">
- * <module name="m_botmode.so">
- * <module name="m_knock.so">
- * <module name="m_operchans.so">
- * <module name="m_showwhois.so">
- * <module name="m_stripcolor.so">
- * <module name="m_censor.so">
- * <module name="m_redirect.so">
- * <module name="m_chanfilter.so">
- * <module name="m_noctcp.so">
+ * last tested with InspIRCd 1.1.15
  *
  */
 
 /*************************************************************************/
-
-/* ***** WARNING ******
- *
- * While InspIRCd 1.1 is relatively stable, it is very picky
- * about the sources commands come from. If i've made commands
- * come from nicks or servers here, where it looks odd to you,
- * this is NORMAL and the way it should be done.
- *
- * Also, some commands arent implemented yet (like remote MOTD
- * and some work differently (VERSION) but its now a proper
- * protocol that links to a proper network (none of this mesh bs).
- */
 
 #include "denora.h"
 #include "inspircd11.h"
 
 IRCDVar myIrcd[] = {
     {"InspIRCd 1.1.12+",        /* ircd name                    */
-     "+io",                     /* StatServ mode                */
+     "+ioS",                    /* StatServ mode                */
      IRCD_ENABLE,               /* Vhost                        */
-     IRCD_ENABLE,               /* Supports SGlines             */
+     IRCD_DISABLE,              /* Supports SGlines             */
      IRCD_DISABLE,              /* sgline sql table             */
-     IRCD_ENABLE,               /* Supports SQlines             */
+     IRCD_DISABLE,              /* Supports SQlines             */
      IRCD_DISABLE,              /* sqline sql table             */
-     IRCD_ENABLE,               /* Supports SZlines             */
+     IRCD_DISABLE,              /* Supports SZlines             */
      IRCD_ENABLE,               /* Has exceptions +e            */
      IRCD_ENABLE,               /* vidents                      */
      IRCD_ENABLE,               /* NICKIP                       */
@@ -74,16 +37,16 @@ IRCDVar myIrcd[] = {
      IRCD_ENABLE,               /* +f                           */
      IRCD_DISABLE,              /* +j                           */
      IRCD_ENABLE,               /* +L                           */
-     IRCD_DISABLE,              /* +f Mode                      */
-     IRCD_DISABLE,              /* +j Mode                      */
+     CMODE_f,                   /* +f Mode                      */
+     CMODE_j,                   /* +j Mode                      */
      CMODE_L,                   /* +L Mode                      */
      NULL,                      /* CAPAB Chan Modes             */
-     IRCD_ENABLE,               /* We support Unreal TOKENS     */
+     IRCD_DISABLE,              /* We support Unreal TOKENS     */
      IRCD_DISABLE,              /* TOKENS are CASE Sensitive    */
      IRCD_ENABLE,               /* TIME STAMPS are BASE64       */
-     IRCD_DISABLE,              /* +I support                   */
-     '&',                       /* SJOIN ban char               */
-     '\"',                      /* SJOIN except char            */
+     IRCD_ENABLE,               /* +I support                   */
+     IRCD_DISABLE,              /* SJOIN ban char               */
+     IRCD_DISABLE,              /* SJOIN except char            */
      IRCD_DISABLE,              /* SJOIN invite char            */
      UMODE_x,                   /* umode for vhost              */
      IRCD_ENABLE,               /* channel owner                */
@@ -92,13 +55,13 @@ IRCDVar myIrcd[] = {
      NULL,
      NULL,
      'f',                       /* flood                        */
-     IRCD_DISABLE,              /* flood other                  */
+     'j',                       /* flood other                  */
      'x',                       /* vhost                        */
-     't',                       /* vhost other                  */
+     IRCD_DISABLE,              /* vhost other                  */
      'L',                       /* channek linking              */
      IRCD_DISABLE,              /* p10 protocol                 */
      IRCD_DISABLE,              /* ts6 protocol                 */
-     IRCD_ENABLE,               /* numeric ie.. 350 etc         */
+     IRCD_DISABLE,              /* numeric ie.. 350 etc         */
      IRCD_DISABLE,              /* channel mode gagged          */
      IRCD_DISABLE,              /* spamfilter                   */
      'b',                       /* ban char                     */
@@ -108,8 +71,8 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* ssl                          */
      IRCD_ENABLE,               /* uline                        */
      NULL,                      /* nickchar                     */
-     IRCD_ENABLE,               /* svid                         */
-     IRCD_DISABLE,              /* hidden oper                  */
+     IRCD_DISABLE,              /* svid                         */
+     IRCD_ENABLE,               /* hidden oper                  */
      IRCD_DISABLE,              /* extra warning                */
      IRCD_ENABLE                /* Report sync state            */
      }
@@ -142,7 +105,7 @@ IRCDCAPAB myIrcdcap[] = {
      0,                         /* VHOST        */
      CAPAB_SSJ3,                /* SSJ3         */
      CAPAB_NICK2,               /* NICK2        */
-     CAPAB_UMODE2,              /* UMODE2       */
+     0,                         /* UMODE2       */
      CAPAB_VL,                  /* VL           */
      CAPAB_TLKEXT,              /* TLKEXT       */
      0,                         /* DODKEY       */
@@ -166,8 +129,10 @@ void IRCDModeInit(void)
     ModuleSetUserMode(UMODE_R, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_S, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_W, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_d, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_h, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_i, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_n, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_o, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_r, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_s, IRCD_ENABLE);
@@ -223,53 +188,62 @@ void IRCDModeInit(void)
 void moduleAddIRCDMsgs(void) {
     Message *m;
 
-    m = createMessage("436",       denora_event_436); addCoreMessage(IRCD,m);
+    m = createMessage("ADDLINE",   denora_event_addline); addCoreMessage(IRCD,m);
+    m = createMessage("ADMIN",     denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("AWAY",      denora_event_away); addCoreMessage(IRCD,m);
+    m = createMessage("BURST",     denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("CAPAB",     denora_event_capab); addCoreMessage(IRCD,m);
+    m = createMessage("CHGHOST",   denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("CHGIDENT",  denora_event_chgident); addCoreMessage(IRCD,m);
+    m = createMessage("CHGNAME",   denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("CREDITS",     denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("ELINE",     denora_event_eline); addCoreMessage(IRCD,m);
+    m = createMessage("ENDBURST",  denora_event_eob); addCoreMessage(IRCD,m);
+    m = createMessage("FHOST",     denora_event_fhost); addCoreMessage(IRCD,m);
+    m = createMessage("FJOIN",     denora_event_fjoin); addCoreMessage(IRCD,m);
+    m = createMessage("FMODE",     denora_event_fmode); addCoreMessage(IRCD,m);
+    m = createMessage("FNAME",     denora_event_fname); addCoreMessage(IRCD,m);
+    m = createMessage("FTOPIC",    denora_event_ftopic); addCoreMessage(IRCD,m);
+    m = createMessage("GLINE",     denora_event_gline); addCoreMessage(IRCD,m);
+    m = createMessage("GLOBOPS",   denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("IDLE",      denora_event_idle); addCoreMessage(IRCD,m);
     m = createMessage("INVITE",    denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("JOIN",      denora_event_join); addCoreMessage(IRCD,m);
-    m = createMessage("FJOIN",     denora_event_fjoin); addCoreMessage(IRCD,m);
     m = createMessage("KICK",      denora_event_kick); addCoreMessage(IRCD,m);
     m = createMessage("KILL",      denora_event_kill); addCoreMessage(IRCD,m);
+    m = createMessage("METADATA",  denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("MODE",      denora_event_mode); addCoreMessage(IRCD,m);
     m = createMessage("MOTD",      denora_event_motd); addCoreMessage(IRCD,m);
     m = createMessage("NICK",      denora_event_nick); addCoreMessage(IRCD,m);
     m = createMessage("NOTICE",    denora_event_notice); addCoreMessage(IRCD,m);
+    m = createMessage("OPERTYPE",  denora_event_opertype); addCoreMessage(IRCD,m);
     m = createMessage("PART",      denora_event_part); addCoreMessage(IRCD,m);
     m = createMessage("PASS",      denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("PING",      denora_event_ping); addCoreMessage(IRCD,m);
-    m = createMessage("PRIVMSG",   denora_event_privmsg); addCoreMessage(IRCD,m);
-    m = createMessage("QUIT",      denora_event_quit); addCoreMessage(IRCD,m);
-    m = createMessage("SERVER",    denora_event_server); addCoreMessage(IRCD,m);
-    m = createMessage("SQUIT",     denora_event_squit); addCoreMessage(IRCD,m);
-    m = createMessage("TOPIC",     denora_event_topic); addCoreMessage(IRCD,m);
-    m = createMessage("IDLE",      denora_event_idle); addCoreMessage(IRCD,m);
-    m = createMessage("FHOST",     denora_event_fhost); addCoreMessage(IRCD,m);
-    m = createMessage("FNAME",     denora_event_fname); addCoreMessage(IRCD,m);
     m = createMessage("PONG",      denora_event_pong); addCoreMessage(IRCD,m);
-    m = createMessage("METADATA",  denora_event_null); addCoreMessage(IRCD,m);
-    m = createMessage("FMODE",     denora_event_fmode); addCoreMessage(IRCD,m);
-    m = createMessage("FTOPIC",    denora_event_ftopic); addCoreMessage(IRCD,m);
-    m = createMessage("OPERTYPE",  denora_event_opertype); addCoreMessage(IRCD,m);
-    m = createMessage("ADDLINE",   denora_event_addline); addCoreMessage(IRCD,m);
-    m = createMessage("GLINE",     denora_event_gline); addCoreMessage(IRCD,m);
-    m = createMessage("ZLINE",     denora_event_zline); addCoreMessage(IRCD,m);
-    m = createMessage("QLINE",     denora_event_qline); addCoreMessage(IRCD,m);
-    m = createMessage("KLINE",     denora_event_null); addCoreMessage(IRCD,m);
-    m = createMessage("ELINE",     denora_event_eline); addCoreMessage(IRCD,m);
-    m = createMessage("BURST",     denora_event_null); addCoreMessage(IRCD,m);
-    m = createMessage("ENDBURST",  denora_event_eob); addCoreMessage(IRCD,m);
-    m = createMessage("CAPAB",     denora_event_null); addCoreMessage(IRCD,m);
-    m = createMessage("AES",       denora_event_null); addCoreMessage(IRCD,m);
-    m = createMessage("SVSNICK",   denora_event_svsnick); addCoreMessage(IRCD,m);
-    m = createMessage("SANICK",    denora_event_sanick); addCoreMessage(IRCD,m);
-    m = createMessage("SVSMODE",   denora_event_svsmode); addCoreMessage(IRCD,m);
-    m = createMessage("SAMODE",    denora_event_svsmode); addCoreMessage(IRCD,m);
-    m = createMessage("SVSJOIN",   denora_event_svsjoin); addCoreMessage(IRCD,m);
-    m = createMessage("GLOBOPS",   denora_event_null); addCoreMessage(IRCD,m);
-    m = createMessage("SAJOIN",    denora_event_null); addCoreMessage(IRCD,m);
-    m = createMessage("SAPART",    denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("PRIVMSG",   denora_event_privmsg); addCoreMessage(IRCD,m);
     m = createMessage("PUSH",      denora_event_push); addCoreMessage(IRCD,m);
+    m = createMessage("QLINE",     denora_event_qline); addCoreMessage(IRCD,m);
+    m = createMessage("QUIT",      denora_event_quit); addCoreMessage(IRCD,m);
+    m = createMessage("REHASH",    denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("SAJOIN",    denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("SAMODE",    denora_event_svsmode); addCoreMessage(IRCD,m);
+    m = createMessage("SANICK",    denora_event_sanick); addCoreMessage(IRCD,m);
+    m = createMessage("SAPART",    denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("SERVER",    denora_event_server); addCoreMessage(IRCD,m);
+    m = createMessage("SETHOST",   denora_event_fhost); addCoreMessage(IRCD,m);
+    m = createMessage("SETIDENT",  denora_event_setident); addCoreMessage(IRCD,m);
+    m = createMessage("SETNAME",   denora_event_fname); addCoreMessage(IRCD,m);
+    m = createMessage("SILENCE",   denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("SQUIT",     denora_event_squit); addCoreMessage(IRCD,m);
+    m = createMessage("SVSJOIN",   denora_event_svsjoin); addCoreMessage(IRCD,m);
+    m = createMessage("SVSMODE",   denora_event_svsmode); addCoreMessage(IRCD,m);
+    m = createMessage("SVSNICK",   denora_event_svsnick); addCoreMessage(IRCD,m);
+    m = createMessage("TOPIC",     denora_event_topic); addCoreMessage(IRCD,m);
     m = createMessage("VERSION",   denora_event_version); addCoreMessage(IRCD,m);
+    m = createMessage("WALLOPS",   denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("WHOIS",     denora_event_whois); addCoreMessage(IRCD,m);
+    m = createMessage("ZLINE",     denora_event_zline); addCoreMessage(IRCD,m);
 
 }
 
@@ -752,11 +726,6 @@ int denora_event_ping(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
-int denora_event_436(char *source, int ac, char **av)
-{
-    return MOD_CONT;
-}
-
 int denora_event_away(char *source, int ac, char **av)
 {
     return MOD_CONT;
@@ -803,7 +772,7 @@ int denora_event_squit(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    if (ac != 1)
+    if (ac < 1)
         return MOD_CONT;
     do_squit(av[0]);
     return MOD_CONT;
@@ -976,6 +945,23 @@ int denora_event_fhost(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
+int denora_event_setident(char *source, int ac, char **av)
+{
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
+    }
+    change_user_username(source, av[0]);
+    return MOD_CONT;
+}
+
+int denora_event_chgident(char *source, int ac, char **av)
+{
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
+    }
+    change_user_username(av[0], av[1]);
+    return MOD_CONT;
+}
 
 /* FJOIN is like SJOIN, but not quite. It doesnt sync
  * simple-modes, or bans/excepts.
@@ -1127,6 +1113,14 @@ int denora_event_part(char *source, int ac, char **av)
         protocol_debug(source, ac, av);
     }
     do_part(source, ac, av);
+    return MOD_CONT;
+}
+
+int denora_event_whois(char *source, int ac, char **av)
+{
+    if (source && ac >= 1) {
+        m_whois(source, av[0]);
+    }
     return MOD_CONT;
 }
 

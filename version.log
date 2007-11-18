@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="113"
+VERSION_BUILD="114"
 
 # $Log$
+#
+# BUILD : 1.4.0.114 (SVN)
+# BUGS  : 436
+# NOTES : Fixed many protocol message handlings for inspircd11. Fixed several inspircd11 protocol properties.
 #
 # BUILD : 1.4.0.113 (SVN)
 # BUGS  : N/A
