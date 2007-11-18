@@ -235,6 +235,7 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("SETIDENT",  denora_event_setident); addCoreMessage(IRCD,m);
     m = createMessage("SETNAME",   denora_event_fname); addCoreMessage(IRCD,m);
     m = createMessage("SILENCE",   denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("SNONOTICE", denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("SQUIT",     denora_event_squit); addCoreMessage(IRCD,m);
     m = createMessage("SVSJOIN",   denora_event_svsjoin); addCoreMessage(IRCD,m);
     m = createMessage("SVSMODE",   denora_event_svsmode); addCoreMessage(IRCD,m);
@@ -486,14 +487,7 @@ int denora_event_version(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-
-    /*char *version, *buf = NULL;
-       buf = sstrdup(av[0]);
-       version = strtok(buf, " ");
-       av[0] = sstrdup(version); */
-
     av[0] = strtok(av[0], " ");
-
     sql_do_server_version(source, ac, av);
     return MOD_CONT;
 }
@@ -1058,7 +1052,7 @@ int denora_event_nick(char *source, int ac, char **av)
                 ptr++;
             }
             *ptr2 = '\0';
-            av[5] = (!strcmp(buf, "+")) ? NULL : buf;
+            av[5] = (!strcmp(buf, "++")) ? NULL : buf;
 
             user = do_nick("", av[1],   /* nick */
                            av[4],       /* username */
