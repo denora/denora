@@ -341,6 +341,7 @@ void chan_set_modes(Channel * chan, int ac, char **av)
         ircsnprintf(modebuf, sizeof(modebuf), "%c", mode);
 
         cm = FindChanMode(modebuf);
+        cbm = FindChanBanMode(modebuf);
         if (cm) {
             if (add)
                 SetChanMode(chan, modebuf);
@@ -366,9 +367,7 @@ void chan_set_modes(Channel * chan, int ac, char **av)
                            (add ? EVENT_MODE_ADD : EVENT_MODE_REMOVE),
                            chan->name, modebuf);
             }
-        }
-        cbm = FindChanBanMode(modebuf);
-        if (cbm) {
+        } else if (cbm) {
             if (ac == 0) {
                 alog(LOG_ERROR, langstr(ALOG_DEBUG_MODE_NO_PARAM),
                      add ? '+' : '-', mode, chan->name);
@@ -391,6 +390,15 @@ void chan_set_modes(Channel * chan, int ac, char **av)
                            (add ? EVENT_MODE_ADD : EVENT_MODE_REMOVE),
                            chan->name, modebuf);
             }
+        } else {
+            /* mode must be one of qaohv and must be ignored */
+            if (ac == 0) {
+                alog(LOG_ERROR, langstr(ALOG_DEBUG_MODE_NO_PARAM),
+                     add ? '+' : '-', mode, chan->name);
+                continue;
+            }
+            ac--;
+            av++;
         }
     }
 
