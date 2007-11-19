@@ -678,11 +678,9 @@ int denora_event_mode(char *source, int ac, char **av)
 int denora_event_svs2mode(char *source, int ac, char **av)
 {
     char *modes = av[1];
-    char *tbuf = NULL;
     char buf[256];
-    char modebuf[256];
     char *newav[4];
-    int add = 0;
+    char *tbuf = '\0';
 
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
@@ -690,53 +688,38 @@ int denora_event_svs2mode(char *source, int ac, char **av)
     if (ac < 2) {
         return MOD_CONT;
     }
-    /* yes Unreal sucks - they over lap the user mode of d go figure, want to bitch that this
-       cause Denora to be slow see the Unreal people and tell them having two modes that do
-       two different things is fucked and thank Jobe1986 for pointing out Unreals fuck up
-     */
+
     while (*modes) {
         switch (*modes) {
         case '+':
-            add = 1;
+            ircsnprintf(buf, sizeof(buf), "%s+", tbuf);
+            free(tbuf);
+            tbuf = sstrdup(buf);
             break;
         case '-':
-            add = 0;
+            ircsnprintf(buf, sizeof(buf), "%s-", tbuf);
+            free(tbuf);
+            tbuf = sstrdup(buf);
             break;
         case 'd':
-            /* Must ignore it otherwise Jobe's bug will not be fixed */
+            /* if +d has an argument, we must ignore it (bug #337) */
             if (ac == 3) {
                 break;
-            } else {
-                if (tbuf) {
-                    ircsnprintf(buf, sizeof(buf), "%s%c", tbuf, *modes);
-                    free(tbuf);
-                    tbuf = sstrdup(buf);
-                } else {
-                    ircsnprintf(buf, sizeof(buf), "%c", *modes);
-                    tbuf = sstrdup(buf);
-                }
             }
         default:
-            if (tbuf) {
-                ircsnprintf(buf, sizeof(buf), "%s%c", tbuf, *modes);
-                free(tbuf);
-                tbuf = sstrdup(buf);
-            } else {
-                ircsnprintf(buf, sizeof(buf), "%c", *modes);
-                tbuf = sstrdup(buf);
-            }
+            ircsnprintf(buf, sizeof(buf), "%s%c", tbuf, *modes);
+            free(tbuf);
+            tbuf = sstrdup(buf);
             break;
         }
         (void) *modes++;
     }
     if (tbuf) {
-        ircsnprintf(modebuf, sizeof(modebuf), "%s%s", (add ? "+" : "-"),
-                    tbuf);
-        free(tbuf);
         newav[0] = av[0];
-        newav[1] = sstrdup(modebuf);
+        newav[1] = sstrdup(tbuf);
         newav[2] = av[2];
         do_svsumode(ac, newav);
+        free(tbuf);
         if (newav[1]) {
             free(newav[1]);
         }
@@ -868,65 +851,46 @@ int denora_event_sethost(char *source, int ac, char **av)
 int denora_event_svsmode(char *source, int ac, char **av)
 {
     char *modes = av[1];
-    char *tbuf = NULL;
     char buf[256];
-    char modebuf[256];
     char *newav[4];
-    int add = 0;
+    char *tbuf = '\0';
 
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
 
     if (*av[0] != '#') {
-        /* yes Unreal sucks - they over lap the user mode of d go figure, want to bitch that this
-           cause Denora to be slow see the Unreal people and tell them having two modes that do
-           two different things is fucked and thank Jobe1986 for pointing out Unreals fuck up
-         */
         while (*modes) {
             switch (*modes) {
             case '+':
-                add = 1;
+				ircsnprintf(buf, sizeof(buf), "%s+", tbuf);
+				free(tbuf);
+				tbuf = sstrdup(buf);
                 break;
             case '-':
-                add = 0;
+				ircsnprintf(buf, sizeof(buf), "%s-", tbuf);
+			    free(tbuf);
+		        tbuf = sstrdup(buf);
                 break;
             case 'd':
-                /* Must ignore it otherwise Jobe's bug will not be fixed */
+                /* if +d has an argument, we must ignore it (bug #337) */
                 if (ac == 3) {
                     break;
-                } else {
-                    if (tbuf) {
-                        ircsnprintf(buf, sizeof(buf), "%s%c", tbuf,
-                                    *modes);
-                        free(tbuf);
-                        tbuf = sstrdup(buf);
-                    } else {
-                        ircsnprintf(buf, sizeof(buf), "%c", *modes);
-                        tbuf = sstrdup(buf);
-                    }
                 }
             default:
-                if (tbuf) {
-                    ircsnprintf(buf, sizeof(buf), "%s%c", tbuf, *modes);
-                    free(tbuf);
-                    tbuf = sstrdup(buf);
-                } else {
-                    ircsnprintf(buf, sizeof(buf), "%c", *modes);
-                    tbuf = sstrdup(buf);
-                }
+                ircsnprintf(buf, sizeof(buf), "%s%c", tbuf, *modes);
+                free(tbuf);
+                tbuf = sstrdup(buf);
                 break;
             }
             (void) *modes++;
         }
         if (tbuf) {
-            ircsnprintf(modebuf, sizeof(modebuf), "%s%s",
-                        (add ? "+" : "-"), tbuf);
-            free(tbuf);
             newav[0] = av[0];
-            newav[1] = sstrdup(modebuf);
+            newav[1] = sstrdup(tbuf);
             newav[2] = av[2];
             do_svsumode(ac, newav);
+			free(tbuf);
             if (newav[1]) {
                 free(newav[1]);
             }

@@ -387,16 +387,18 @@ char *sgets(char *buf, int len, deno_socket_t s)
     fd_set fds;
     char *ptr = buf;
 
+    flush_write_buffer(0);
+
     if (len == 0)
         return NULL;
-    FD_ZERO(&fds);
     FD_SET(s, &fds);
     tv.tv_sec = ReadTimeout;
     tv.tv_usec = 0;
     while (read_buffer_len() == 0 &&
            (c = select(s + 1, &fds, NULL, NULL, &tv)) < 0) {
-        if (deno_sockgeterr() != SOCKERR_EINTR)
+        if (deno_sockgeterr() != EINTR)
             break;
+        flush_write_buffer(0);
     }
     if (read_buffer_len() == 0 && c == 0)
         return (char *) -1;

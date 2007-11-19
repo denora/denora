@@ -392,11 +392,6 @@ void chan_set_modes(Channel * chan, int ac, char **av)
             }
         } else {
             /* mode must be one of qaohv and must be ignored */
-            if (ac == 0) {
-                alog(LOG_ERROR, langstr(ALOG_DEBUG_MODE_NO_PARAM),
-                     add ? '+' : '-', mode, chan->name);
-                continue;
-            }
             ac--;
             av++;
         }

@@ -129,7 +129,9 @@ void IRCDModeInit(void)
     ModuleSetUserMode(UMODE_R, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_S, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_W, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_c, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_d, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_g, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_h, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_i, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_n, IRCD_ENABLE);
@@ -145,6 +147,7 @@ void IRCDModeInit(void)
 
     /* Channel Modes */
     CreateChanMode(CMODE_C, NULL, NULL);
+    CreateChanMode(CMODE_F, NULL, NULL);
     CreateChanMode(CMODE_G, NULL, NULL);
     CreateChanMode(CMODE_J, set_rejoinlock, get_rejoinlock);
     CreateChanMode(CMODE_K, NULL, NULL);
@@ -171,6 +174,7 @@ void IRCDModeInit(void)
     CreateChanMode(CMODE_r, NULL, NULL);
     CreateChanMode(CMODE_s, NULL, NULL);
     CreateChanMode(CMODE_t, NULL, NULL);
+    CreateChanMode(CMODE_u, NULL, NULL);
     CreateChanMode(CMODE_z, NULL, NULL);
 
     ModuleSetChanUMode('%', 'h', STATUS_HALFOP);
@@ -715,9 +719,10 @@ int denora_event_ping(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    if (ac < 1)
+    if (ac < 1) {
         return MOD_CONT;
-    inspircd_cmd_pong(ac > 1 ? av[1] : ServerName, av[0]);
+    }
+    inspircd_cmd_pong(ac > 1 ? av[0] : ServerName, source);
     return MOD_CONT;
 }
 

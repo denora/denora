@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="118"
+VERSION_BUILD="119"
 
 # $Log$
+#
+# BUILD : 1.4.0.119 (SVN)
+# BUGS  : 449,450
+# NOTES : Fixed SVSMODE and SVS2MODE parsing in unreal32 module. Fixed false errors in channel mode parsing (caused by recent commit). Added some missing user and channel modes to inspircd11. Fixed socket issue that could lead to connection loss.
 #
 # BUILD : 1.4.0.118 (SVN)
 # BUGS  : 447

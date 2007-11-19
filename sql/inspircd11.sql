@@ -16,8 +16,10 @@ ADD `mode_lp` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lr` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ls` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lt` enum('Y','N') NOT NULL default 'N',
+ADD `mode_lu` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lz` enum('Y','N') NOT NULL default 'N',
 ADD `mode_uc` enum('Y','N') NOT NULL default 'N',
+ADD `mode_uf` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ug` enum('Y','N') NOT NULL default 'N',
 ADD `mode_uj` enum('Y','N') NOT NULL default 'N',
 ADD `mode_uk` enum('Y','N') NOT NULL default 'N',
@@ -40,7 +42,9 @@ ADD `mode_uj_data` int(10) NOT NULL default '';
 
 -- --------------------------------------------------------
 
-ALTER TABLE `user` ADD `mode_ld` enum('Y','N') NOT NULL default 'N',
+ALTER TABLE `user` ADD `mode_lc` enum('Y','N') NOT NULL default 'N',
+ADD `mode_ld` enum('Y','N') NOT NULL default 'N',
+ADD `mode_lg` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lh` enum('Y','N') NOT NULL default 'N',
 ADD `mode_li` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ln` enum('Y','N') NOT NULL default 'N',
