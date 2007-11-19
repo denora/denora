@@ -1,5 +1,5 @@
 
-/* InspIRCd 1.1.12+ functions
+/* InspIRCd 1.1 functions
  *
  * (C) 2005-2006 Craig Edwards <brain@inspircd.org>
  * (C) 2004-2007 Denora Team
@@ -22,7 +22,7 @@
 #include "inspircd11.h"
 
 IRCDVar myIrcd[] = {
-    {"InspIRCd 1.1.12+",        /* ircd name                    */
+    {"InspIRCd 1.1.x",          /* ircd name                    */
      "+ioS",                    /* StatServ mode                */
      IRCD_ENABLE,               /* Vhost                        */
      IRCD_DISABLE,              /* Supports SGlines             */
@@ -196,9 +196,10 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("CHGHOST",   denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("CHGIDENT",  denora_event_chgident); addCoreMessage(IRCD,m);
     m = createMessage("CHGNAME",   denora_event_null); addCoreMessage(IRCD,m);
-    m = createMessage("CREDITS",     denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("CREDITS",   denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("ELINE",     denora_event_eline); addCoreMessage(IRCD,m);
     m = createMessage("ENDBURST",  denora_event_eob); addCoreMessage(IRCD,m);
+    m = createMessage("ERROR",     denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("FHOST",     denora_event_fhost); addCoreMessage(IRCD,m);
     m = createMessage("FJOIN",     denora_event_fjoin); addCoreMessage(IRCD,m);
     m = createMessage("FMODE",     denora_event_fmode); addCoreMessage(IRCD,m);
@@ -546,7 +547,7 @@ void inspircd_cmd_nick(char *nick, char *name, const char *modes)
     send_cmd(ServerName, "NICK %ld %s %s %s %s +%s 0.0.0.0 :%s",
              (long int) time(NULL), nick, ServiceHost, ServiceHost,
              ServiceUser, modes, name);
-    send_cmd(ServerName, "OPERTYPE Service");
+    send_cmd(nick, "OPERTYPE Service");
 }
 
 void inspircd_cmd_bot_nick(char *nick, char *user, char *host, char *real,
@@ -554,7 +555,7 @@ void inspircd_cmd_bot_nick(char *nick, char *user, char *host, char *real,
 {
     send_cmd(ServerName, "NICK %ld %s %s %s %s +%s 0.0.0.0 :%s",
              (long int) time(NULL), nick, host, host, user, modes, real);
-    send_cmd(ServerName, "OPERTYPE Bot");
+    send_cmd(nick, "OPERTYPE Bot");
 }
 
 void inspircd_cmd_notice(char *source, char *dest, char *buf)
@@ -1277,7 +1278,7 @@ int DenoraInit(int argc, char **argv)
         ("$Id$");
     moduleSetType(PROTOCOL);
 
-    pmodule_ircd_version("InspIRCd 1.1.12+");
+    pmodule_ircd_version("InspIRCd 1.1.x");
     pmodule_ircd_cap(myIrcdcap);
     pmodule_ircd_var(myIrcd);
     pmodule_ircd_useTSMode(0);

@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="116"
+VERSION_BUILD="117"
 
 # $Log$
+#
+# BUILD : 1.4.0.117 (SVN)
+# BUGS  : 448
+# NOTES : Fixed inspircd11 not allowed to /stats
 #
 # BUILD : 1.4.0.116 (SVN)
 # BUGS  : 426
