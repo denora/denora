@@ -392,6 +392,9 @@ void chan_set_modes(Channel * chan, int ac, char **av)
             }
         } else {
             /* mode must be one of qaohv and must be ignored */
+            if (ac == 0) {
+                continue;
+            }
             ac--;
             av++;
         }

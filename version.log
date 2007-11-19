@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="119"
+VERSION_BUILD="120"
 
 # $Log$
+#
+# BUILD : 1.4.0.120 (SVN)
+# BUGS  : N/A
+# NOTES : Oops! Fixed crashbug introduced in rev. 119 (my delete key got stuck, you know...)
 #
 # BUILD : 1.4.0.119 (SVN)
 # BUGS  : 449,450
