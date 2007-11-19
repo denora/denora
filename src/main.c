@@ -622,6 +622,10 @@ void introduce_user(const char *user)
     lnode_t *tn;
     Uid *ud;
 
+    char *modes;
+    char nickbuf[BUFSIZE];
+    *nickbuf = '\0';
+
     /* Watch out for infinite loops... */
 #define LTSIZE 20
     static int lasttimes[LTSIZE];
@@ -652,10 +656,22 @@ void introduce_user(const char *user)
                 cs = lnode_get(tn);
                 denora_cmd_join(s_StatServ, cs->name, time(NULL));
                 if (AutoOp && AutoMode) {
-                    denora_cmd_mode(ServerName, cs->name, "%s %s",
-                                    AutoMode,
-                                    ((ircd->p10
-                                      && ud) ? ud->uid : s_StatServ));
+                    modes = sstrdup(AutoMode);
+                    while (*modes) {
+                        switch (*modes) {
+                        case '+':
+                            break;
+                        case '-':
+                            break;
+                        default:
+                            ircsnprintf(nickbuf, BUFSIZE, "%s %s", nickbuf,
+                                        ((ircd->p10
+                                          && ud) ? ud->uid : s_StatServ));
+                        }
+                        (void) *modes++;
+                    }
+                    denora_cmd_mode(ServerName, cs->name, "%s%s", AutoMode,
+                                    nickbuf);
                 }
                 tn = list_next(CStatshead, tn);
             }

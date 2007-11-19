@@ -905,6 +905,9 @@ void do_kick(const char *source, int ac, char **av)
     ChannelStats *cs;
     int chanid;
     Uid *ud;
+    char *modes;
+    char nickbuf[BUFSIZE];
+    *nickbuf = '\0';
 
     SET_SEGV_LOCATION();
 
@@ -968,10 +971,22 @@ void do_kick(const char *source, int ac, char **av)
                 denora_cmd_join(s_StatServ, av[0], time(NULL));
                 if (AutoOp && AutoMode) {
                     ud = find_uid(s_StatServ);
-                    denora_cmd_mode(ServerName, cs->name, "%s %s",
-                                    AutoMode,
-                                    ((ircd->p10
-                                      && ud) ? ud->uid : s_StatServ));
+                    modes = sstrdup(AutoMode);
+                    while (*modes) {
+                        switch (*modes) {
+                        case '+':
+                            break;
+                        case '-':
+                            break;
+                        default:
+                            ircsnprintf(nickbuf, BUFSIZE, "%s %s", nickbuf,
+                                        ((ircd->p10
+                                          && ud) ? ud->uid : s_StatServ));
+                        }
+                        (void) *modes++;
+                    }
+                    denora_cmd_mode(ServerName, cs->name, "%s%s", AutoMode,
+                                    nickbuf);
                 }
             }
         }
@@ -1471,6 +1486,9 @@ void chan_adduser2(User * user, Channel * c)
     struct c_userlist *u;
     ChannelStats *cs;
     Uid *ud;
+    char *modes;
+    char nickbuf[BUFSIZE];
+    *nickbuf = '\0';
 
     SET_SEGV_LOCATION();
 
@@ -1510,8 +1528,20 @@ void chan_adduser2(User * user, Channel * c)
         denora_cmd_join(s_StatServ, c->name, time(NULL));
         if (AutoOp && AutoMode) {
             ud = find_uid(s_StatServ);
-            denora_cmd_mode(ServerName, cs->name, "%s %s", AutoMode,
-                            ((ircd->p10 && ud) ? ud->uid : s_StatServ));
+            modes = sstrdup(AutoMode);
+            while (*modes) {
+                switch (*modes) {
+                case '+':
+                    break;
+                default:
+                    ircsnprintf(nickbuf, BUFSIZE, "%s %s", nickbuf,
+                                ((ircd->p10
+                                  && ud) ? ud->uid : s_StatServ));
+                }
+                (void) *modes++;
+            }
+            denora_cmd_mode(ServerName, cs->name, "%s%s", AutoMode,
+                            nickbuf);
         }
     }
 

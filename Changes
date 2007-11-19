@@ -33,6 +33,7 @@ Provided by Denora Team <dev@denorastats.org> - 2007
 08/07 U Updated GeoIP database file                               [ #00]
 07/18 U Updated GeoIP database file                               [ #00]
 01/06 U Updated GeoIP.dat                                         [ #00]
+11/19 F Fixed only first automode mode being set on the bot       [#447]
 11/19 F Fixed inspircd11 not allowed to /stats                    [#448]
 11/18 F Fixed parsing problem with multiple chan modes            [#426]
 11/18 F Fixed several inspircd11 protocol properties              [ #00]
