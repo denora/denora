@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="120"
+VERSION_BUILD="121"
 
 # $Log$
+#
+# BUILD : 1.4.0.121 (SVN)
+# BUGS  : N/A
+# NOTES : The recent socket fix broke win32 compile. Thanks Trystan for pointing it out.
 #
 # BUILD : 1.4.0.120 (SVN)
 # BUGS  : N/A

@@ -396,7 +396,7 @@ char *sgets(char *buf, int len, deno_socket_t s)
     tv.tv_usec = 0;
     while (read_buffer_len() == 0 &&
            (c = select(s + 1, &fds, NULL, NULL, &tv)) < 0) {
-        if (deno_sockgeterr() != EINTR)
+        if (deno_sockgeterr() != SOCKERR_EINTR)
             break;
         flush_write_buffer(0);
     }
