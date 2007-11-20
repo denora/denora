@@ -38,7 +38,7 @@ ADD `mode_lj_data` varchar(5) NOT NULL default '',
 ADD `mode_lk_data` varchar(23) NOT NULL default '',
 ADD `mode_ll_data` int(10) NOT NULL default '0',
 ADD `mode_ul_data` varchar(33) NOT NULL default '',
-ADD `mode_uj_data` int(10) NOT NULL default '';
+ADD `mode_uj_data` int(10) NOT NULL default '0';
 
 -- --------------------------------------------------------
 
