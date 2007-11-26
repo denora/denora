@@ -1,11 +1,12 @@
 Denora Version 1.4.0
 --------------------
 Provided by Denora Team <dev@denorastats.org> - 2007
+11/26 A New HTML template which now validates against 4.01 strict [ #00]
 11/18 A Added rejoin lock time support for inspircd               [ #00]
 11/18 A Added Invite Exception support to inspircd module         [ #00]
 08/17 A Admins passwords are now hidden in debug messages         [#414]
 08/16 A Added recompile option to Makefile, make recompile        [ #00]
-08/16 A Added new protocol ScaryNet	                         [ #00]
+08/16 A Added new protocol ScaryNet	                          [ #00]
 08/13 A Added XMLRPC documentation                                [#407]
 08/12 A Added option to track only +r users on chanstats          [ #00]
 08/10 A New optional token on connect block for quitprefix        [#404]

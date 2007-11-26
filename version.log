@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="122"
+VERSION_BUILD="123"
 
 # $Log$
+#
+# BUILD : 1.4.0.123 (SVN)
+# BUGS  : N/A
+# NOTES : New HTML template which now validates against 4.01 strict
 #
 # BUILD : 1.4.0.122 (SVN)
 # BUGS  : N/A

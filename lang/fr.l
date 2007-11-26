@@ -702,8 +702,8 @@ STATS_HTML_EXPORTED
 
 # HTML code
 HTML_LANG
-	<META HTTP-EQUIV="CHARSET" CONTENT="ISO-8859-1">
-	<META HTTP-EQUIV="CONTENT-LANGUAGE" CONTENT="French">
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<meta http-equiv="Content-Language" content="French">
 
 HTML_NETSTATS_HEADER
 	<table border = 0><tr><th colspan="4"><b>Statistiques Réseau:</b></th></tr>
@@ -712,7 +712,7 @@ HTML_NETSTATS_FOOTER
 	</table>
 
 HTML_NETSTATS_USERS
-	<td>Utilisateurs Actuels: </td> <td> %ld </td> <td>Utilisateurs Maximum: </td> <td> %ld [%s] </td></tr>
+	<tr><td>Utilisateurs Actuels: </td> <td> %ld </td> <td>Utilisateurs Maximum: </td> <td> %ld [%s] </td></tr>
 
 HTML_NETSTATS_CHANS
 	<tr><td>Salons Actuels: </td> <td> %ld </td> <td>Salons Maximum: </td> <td> %ld [%s] </td></tr>
@@ -745,10 +745,10 @@ HTML_SERVER_HEADER
 	<table border=0><tr><th colspan = 2>Nom du Serveur</th></tr>
 
 HTML_SERVER_CONTENT
-	<tr><td height="4">Serveur: </td><td height="4"><a href=#%s> %s </a></td></tr>
+	<tr><td>Serveur: </td><td><a href="#%s"> %s </a></td></tr>
 
 HTML_SERVER_CONTENT_ONLINE
-	<tr><td height="4">Serveur: </td><td height="4"><a href=#%s> %s (*) </a></td></tr>
+	<tr><td>Serveur: </td><td><a href="#%s"> %s (*) </a></td></tr>
 
 HTML_SERVER_FOOTER
 	</table>(*) indique que le serveur est relié au réseau actuellement<br>(Cliquez sur le nom d'un serveur pour plus d'informations)
@@ -760,7 +760,7 @@ HTML_DAILY_FOOTER
 	</table>
 
 HTML_DAILY_RESET_AT
-	<tr><td colspan="4"><center>(Toutes les Statistiques Journalières sont remises à zéro à minuit)</center></td></tr>
+	<tr><td colspan="4">(Toutes les Statistiques Journalières sont remises à zéro à minuit)</td></tr>
 
 HTML_DAILY_USER
 	<tr><td colspan="2">Utilisateurs Max du jour: </td><td colspan="2"> %ld [%s] </td></tr>
@@ -784,7 +784,7 @@ HTML_CTCP_FOOTER
 	</table>
 
 HTML_SERVER_DETAIL_HEADER
-	<table border=0><tr><th><a name=%s>Serveur:</th><th colspan = 2><b>%s</b></th></tr>
+	<table border=0><tr><th><a name="%s"></a>Serveur:</th><th colspan = 2><b>%s</b></th></tr>
 
 HTML_SERVER_DETAIL_FOOTER
 	</table>
@@ -886,7 +886,7 @@ HTML_NETMAP_TITLE
 	Map du réseau
 
 HTML_VERSION
-	La version est %s %s
+	Powered by <a href="http://denorastats.org/">Denora</a> version %s %s
 
 HTML_MOST_UNWELCOME_TITLE
 	Canaux les plus facheux

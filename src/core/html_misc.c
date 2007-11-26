@@ -128,15 +128,8 @@ void html_credits(FILE * ptr)
     struct tm tm;
     char timebuf[64];
     time_t ts;
-    char *tempc;
     ts = time(NULL);
 
-    tempc = char_encode(ServerName);
-    fprintf(ptr, "StatServ Information:<br>");
-    fprintf(ptr, "%s compiled on [%s %s %s]<br>", tempc,
-            denora->date, denora->time, denora->build);
-    fprintf(ptr,
-            "<a href=\"http://denorastats.org/\">denorastats.org</a><br>");
 #ifdef MSVS2005
     localtime_s(&tm, &ts);
 #else
@@ -145,7 +138,6 @@ void html_credits(FILE * ptr)
     strftime_lang(timebuf, sizeof(timebuf), NULL,
                   STRFTIME_DATE_TIME_FORMAT, &tm);
     fprintf(ptr, "HTML Last Generated at %s", timebuf);
-    free(tempc);
 }
 
 /*************************************************************************/

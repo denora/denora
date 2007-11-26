@@ -691,8 +691,8 @@ STATS_HTML_EXPORTED
 
 # HTML code
 HTML_LANG
-	<META HTTP-EQUIV="CHARSET" CONTENT="ISO-8859-1">
-	<META HTTP-EQUIV="CONTENT-LANGUAGE" CONTENT="English">
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<meta http-equiv="Content-Language" content="English">
 
 HTML_NETSTATS_HEADER
 	<table border = 0><tr><th colspan="4"><b>Network Statistics:</b></th></tr>
@@ -701,7 +701,7 @@ HTML_NETSTATS_FOOTER
 	</table>
 
 HTML_NETSTATS_USERS
-	<td>Current Users: </td> <td> %ld </td> <td>Maximum Users: </td> <td> %ld [%s] </td></tr>
+	<tr><td>Current Users: </td> <td> %ld </td> <td>Maximum Users: </td> <td> %ld [%s] </td></tr>
 
 HTML_NETSTATS_CHANS
 	<tr><td>Current Channels: </td> <td> %ld </td> <td>Maximum Channels: </td> <td> %ld [%s] </td></tr>
@@ -734,10 +734,10 @@ HTML_SERVER_HEADER
 	<table border=0><tr><th colspan = 2>Server name</th></tr>
 
 HTML_SERVER_CONTENT
-	<tr><td height="4">Server: </td><td height="4"><a href=#%s> %s </a></td></tr>
+	<tr><td>Server: </td><td><a href="#%s"> %s </a></td></tr>
 
 HTML_SERVER_CONTENT_ONLINE
-	<tr><td height="4">Server: </td><td height="4"><a href=#%s> %s (*) </a></td></tr>
+	<tr><td>Server: </td><td><a href="#%s"> %s (*) </a></td></tr>
 
 HTML_SERVER_FOOTER
 	</table>(*) indicates server is online at the moment<br>(Click on a Server name for more information)
@@ -749,7 +749,7 @@ HTML_DAILY_FOOTER
 	</table>
 
 HTML_DAILY_RESET_AT
-	<tr><td colspan="4"><center>(All Daily Statistics are reset at Midnight)</center></td></tr>
+	<tr><td colspan="4">(All Daily Statistics are reset at Midnight)</td></tr>
 
 HTML_DAILY_USER
 	<tr><td colspan="2">Max Daily Users: </td><td colspan="2"> %ld [%s] </td></tr>
@@ -773,7 +773,7 @@ HTML_CTCP_FOOTER
 	</table>
 
 HTML_SERVER_DETAIL_HEADER
-	<table border=0><tr><th><a name=%s>Server:</th><th colspan = 2><b>%s</b></th></tr>
+	<table border=0><tr><th><a name="%s"></a>Server:</th><th colspan = 2><b>%s</b></th></tr>
 
 HTML_SERVER_DETAIL_FOOTER
 	</table>
@@ -875,7 +875,7 @@ HTML_NETMAP_TITLE
 	Network Map
 
 HTML_VERSION
-	Version is %s %s
+	Powered by <a href="http://denorastats.org/">Denora</a> version %s %s
 
 HTML_MOST_UNWELCOME_TITLE
 	Most Unwelcome Channels
