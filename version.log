@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="125"
+VERSION_BUILD="126"
 
 # $Log$
+#
+# BUILD : 1.4.0.126 (SVN)
+# BUGS  : 452
+# NOTES : Improved GeoIP performance and fixed not working on win32
 #
 # BUILD : 1.4.0.125 (SVN)
 # BUGS  : 451

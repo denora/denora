@@ -1067,8 +1067,8 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 
     if (!*source) {
         if (!LargeNet) {
-            country_code = GeoIP_country_code_by_name(gi, ipchar);
-            country_name = GeoIP_country_name_by_name(gi, ipchar);
+            country_code = GeoIP_country_code_by_addr(gi, ipchar);
+            country_name = GeoIP_country_name_by_addr(gi, ipchar);
             if (!country_name) {
                 if (host && !stricmp("localhost", host)) {
                     country_name = "localhost";
