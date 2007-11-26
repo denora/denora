@@ -70,7 +70,7 @@ char *win32_vs2005_next_token;
 #undef getpid
 #define getpid _getpid
 
-#define READ_PERM _S_IREAD
+#define READ_PERM _S_IWRITE
 #define FILE_READ "rb"
 #define FILE_WRITE "wb"
 #define FILE_APPEND "a"

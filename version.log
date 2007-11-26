@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="124"
+VERSION_BUILD="125"
 
 # $Log$
+#
+# BUILD : 1.4.0.125 (SVN)
+# BUGS  : 451
+# NOTES : Fixed html output file being read-only on windows systems
 #
 # BUILD : 1.4.0.124 (SVN)
 # BUGS  : 454

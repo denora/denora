@@ -49,7 +49,7 @@
 #undef chmod
 #define chmod(f, p) _chmod(f, p)
 
-#define READ_PERM _S_IREAD
+#define READ_PERM _S_IWRITE
 
 #define FILE_READ "rb"
 #define FILE_WRITE "wb"
