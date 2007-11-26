@@ -487,8 +487,9 @@ static int check_db(User * u, Channel * c)
             } else {            /* num_rows = 0 */
                 /* create alias and global */
                 rdb_query(QUERY_LOW,
-                          "INSERT INTO %s SET nick=\'%s\', uname=\'%s\';",
-                          AliasesTable, u->sqlnick, u->sqlnick);
+                          "INSERT INTO %s (nick, uname) VALUES (\'%s\', \'%s\') ON DUPLICATE KEY UPDATE uname=\'%s\'",
+                          AliasesTable, u->sqlnick, u->sqlnick,
+                          u->sqlnick);
                 for (i = 0; i < 4; i++) {
                     rdb_query
                         (QUERY_LOW,

@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="123"
+VERSION_BUILD="124"
 
 # $Log$
+#
+# BUILD : 1.4.0.124 (SVN)
+# BUGS  : 454
+# NOTES : Fixed mysql duplicate key errors when keepusers disabled
 #
 # BUILD : 1.4.0.123 (SVN)
 # BUGS  : N/A
