@@ -28,7 +28,7 @@ var installerQuestions = [
                                                 {
                                                         'question' : [
                                                                                 'Do you want to compile Denora with MySQL Support?',
-                                                                                'NOTE: You will need to have installed MySQL 3.23 or Above'
+                                                                                'NOTE: You will need to have installed MySQL 4.0 or Above'
                                                                           ],
                                                         'short' : 'Enable MySQL Support?',
                                                         'options' : [
@@ -71,6 +71,25 @@ var installerQuestions = [
 
 var buildPackages = [
 
+                                        {
+                                                        'name' : 'Microsoft Visual Studio 2008',
+                                                        'libpaths' : [
+                                                                                'Program Files\\Microsoft Visual Studio 9.0\\VC\\Lib',
+                                                                                'Program Files\\Microsoft Platform SDK for Windows Server 2003 R2\\Lib'
+                                                                         ],
+                                                        'incpaths' : [
+                                                                                'Program Files\\Microsoft Visual Studio 9.0\\VC\\Include',
+                                                                                'Program Files\\Microsoft Platform SDK for Windows Server 2003 R2\\Include'
+                                                                         ],
+                                                        'nmake' : [
+                                                                                'Program Files\\Microsoft Platform SDK for Windows Server 2003 R2\\Bin',
+                                                                                ''
+                                                                        ],
+                                                        'additional_switches' : [
+                                                                                                '/w'
+                                                                      	],
+							'installedDrive' : 'C'
+                                        },
                                         {
                                                         'name' : 'Microsoft Visual Studio 2005 (New PSDK)',
                                                         'libpaths' : [
@@ -158,7 +177,7 @@ var buildPackages = [
 							'incpaths' : [
 									  'Program Files\\MySQL\\MySQL Server 5.1\\Include'
 								],
-							'dllfile' : 'Program Files\\MySQL\\MySQL Server 5.1\\bin\\libmyql.dll',
+							'dllfile' : 'Program Files\\MySQL\\MySQL Server 5.1\\bin\\libmySQL.dll',
 							'installedDrive' : 'C'
 						},
 
@@ -196,18 +215,6 @@ var buildPackages = [
                                                                         ],
                                                         'dllfile' : 'Program Files\\MySQL\\MySQL Server 4.0\\Bin\\libmysql.dll',
 							'installedDrive' : 'C'
-                                                },                                                                                                                                                                           
-                                                        
-                                                {
-                                                        'name' : 'MySQL 3.23 or older (or other default path)',
-                                                        'libpaths' : [
-                                                                                'mysql\\lib\\opt'
-                                                                        ],
-                                                        'incpaths' : [
-                                                                                'mysql\\include'
-                                                                        ],
-                                                        'dllfile' : 'mysql\\Bin\\libmysql.dll',
-							'installedDrive' : 'C'                               
                                                 }
 
                                 ];                  
@@ -405,8 +412,8 @@ var buildPackages = [
                         }                                                                                                
                 }
                 versionLog.close();
-                denoraVersion = vMaj+"."+vMin+"."+vPat+"."+vBuild+vExtra;
-                denoraShortVersion = vMaj+"."+vMin;
+                denoraVersion = vMaj+"."+vMin+"."+vPat+"."+vBuild+" "+vExtra;
+                denoraShortVersion = vMaj+"."+vMin+"."+vPat;
                 return;
         }
         

@@ -624,7 +624,6 @@ void introduce_user(const char *user)
 
     char *modes;
     char nickbuf[BUFSIZE];
-    *nickbuf = '\0';
 
     /* Watch out for infinite loops... */
 #define LTSIZE 20
@@ -634,6 +633,8 @@ void introduce_user(const char *user)
     memmove(lasttimes, lasttimes + 1, sizeof(lasttimes) - sizeof(int));
     lasttimes[LTSIZE - 1] = time(NULL);
 #undef LTSIZE
+
+    *nickbuf = '\0';
 
     SET_SEGV_LOCATION();
     if (!user || stricmp(user, s_StatServ) == 0) {

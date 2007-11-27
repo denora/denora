@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="127"
+VERSION_BUILD="128"
 
 # $Log$
+#
+# BUILD : 1.4.0.128 (SVN)
+# BUGS  : N/A
+# NOTES : Some fixes for win32 compilation, added VS2008 support
 #
 # BUILD : 1.4.0.127 (SVN)
 # BUGS  : 453
