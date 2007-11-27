@@ -15,7 +15,7 @@
 
 #include "denora.h"
 
-ChanModeHash *CHANMODEHANDLERS[MAX_CMD_HASH];
+ChanModeHash *CHANMODEHANDLERS[MAX_MODE_HASH];
 unsigned long cmodes[128];
 char csmodes[128];
 unsigned long sjoinmodes[128];
@@ -113,7 +113,7 @@ ChanMode *FindChanMode(char *name)
     if (!name) {
         return NULL;
     }
-    idx = CMD_HASH(name);
+    idx = MODEHASHSENSITVE(name);
 
     SET_SEGV_LOCATION();
 
@@ -165,7 +165,7 @@ int addChanMode(ChanMode * m)
 
     SET_SEGV_LOCATION();
 
-    modindex = CMD_HASH(m->mode);
+    modindex = MODEHASHSENSITVE(m->mode);
 
     for (privcurrent = CHANMODEHANDLERS[modindex]; privcurrent;
          privcurrent = privcurrent->next) {

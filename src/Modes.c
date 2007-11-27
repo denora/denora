@@ -230,21 +230,19 @@ int UserHasMode(char *user, int m)
     User *u;
     char modebuf[16];
     struct u_modes *um;
-    int ret;
 
     u = user_find(user);
     if (!u) {
-        ret = 0;
+        return 0;
     }
     if (umodes[m]) {
         ircsnprintf(modebuf, sizeof(modebuf), "%c", m);
         for (um = u->modes; um && strcmp(modebuf, um->mode) != 0;
              um = um->next);
-        ret = (um ? 1 : 0);
+        return (um ? 1 : 0);
     } else {
-        ret = 0;
+        return 0;
     }
-    return ret;
 }
 
 /*************************************************************************/

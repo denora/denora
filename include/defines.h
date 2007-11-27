@@ -267,6 +267,9 @@
 #define UIDHASH(nick)	(((nick)[0]&31)<<5 | ((nick)[1]&31))
 #define ADMINHASH(nick)	(((nick)[0]&31)<<5 | ((nick)[1]&31))
 #define CMD_HASH(x)      (((x)[0]&31)<<5 | ((x)[1]&31))	/* Will gen a hash from a string :) */
+#define MODEHASH(x)      (((x)[0]&31)<<5 | ((x)[1]&31))
+#define MODEHASH2(x)      (((x)[0]&31)<<6 | ((x)[1]&31))
+#define MODEHASHSENSITVE(x)  ((x[0] >= 65 && x[0] <= 90 ? MODEHASH2(x) : MODEHASH(x)))
 
 
 /* Cheaper than isspace() or isblank() */
@@ -426,6 +429,8 @@
 #define MOD_ERR_NO_MOD_NAME 13
 
 #define MAX_CMD_HASH 1024
+#define MAX_MODE_HASH 26625
+
 
 #define MOD_STOP 1
 #define MOD_CONT 0
