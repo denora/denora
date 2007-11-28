@@ -177,7 +177,11 @@ void _setup_dbfilename(void)
 
     if (NULL == GeoIPDBFileName) {
 #ifdef _WIN32
+#ifdef STATS_DIR
+        ircsnprintf(path, BUFSIZE, "%s\\%s", STATS_DIR, "GeoIP.dat");
+#else
         ircsnprintf(path, BUFSIZE, "%s", "GeoIP.dat");
+#endif
 #else
 #ifdef STATS_DIR
         ircsnprintf(path, BUFSIZE, "%s/%s", STATS_DIR, "GeoIP.dat");
@@ -603,7 +607,8 @@ int GeoIP_id_by_name(GeoIP * localgi, const char *name)
     unsigned long ipnum;
     int ret;
 
-    if (!gi || name == NULL) {
+    if (!localgi || name == NULL) {
+        alog(LOG_DEBUG, "Invalid pointer to localgi or addr variables");
         return 0;
     }
 
@@ -611,6 +616,7 @@ int GeoIP_id_by_name(GeoIP * localgi, const char *name)
         alog(LOG_ERROR, "Database is not the GeoIP Country Edition");
         return 0;
     }
+
     if (!(ipnum = lookupaddress(name)))
         return 0;
     ret = _seek_record(localgi, ipnum) - COUNTRY_BEGIN;
@@ -663,9 +669,12 @@ int GeoIP_id_by_addr(GeoIP * localgi, const char *addr)
 {
     unsigned long ipnum;
     int ret;
-    if (addr == NULL) {
+
+    if (!localgi || addr == NULL) {
+        alog(LOG_DEBUG, "Invalid pointer to localgi or addr variables");
         return 0;
     }
+
     if (localgi->databaseType != GEOIP_COUNTRY_EDITION) {
         alog(LOG_ERROR, "Database is Invalid for GeoIP Country Edition");
         return 0;
