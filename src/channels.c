@@ -436,9 +436,7 @@ void chan_deluser(User * user, Channel * c)
     if (c->stats->usercount == 1 && cs && PartOnEmpty) {
         denora_cmd_part(s_StatServ, c->name, "Parting Empty Channel");
         c->statservon = 0;
-    }
-
-    if (!c->users) {
+    } else if (!c->users) {
         chan_delete(c);
     }
 }

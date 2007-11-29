@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="130"
+VERSION_BUILD="131"
 
 # $Log$
+#
+# BUILD : 1.4.0.131 (SVN)
+# BUGS  : 456
+# NOTES : Fixed segfault if partonempty was enabled. Added partonempty option to example confs, as it was missing.
 #
 # BUILD : 1.4.0.130 (SVN)
 # BUGS  : 455
