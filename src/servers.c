@@ -864,6 +864,15 @@ void delete_server(Server * serv, const char *quitreason, int depth)
     serv->ss->split_stats = 1;
     serv->ss->lastseen = time(NULL);
 
+    if (servlist->prev)
+        servlist->prev->next = servlist->next;
+    if (servlist->next)
+        servlist->next->prev = servlist->prev;
+    if (servlist->uplink) {
+        if (servlist->uplink->links == serv)
+            servlist->uplink->links = servlist->next;
+    }
+
     free(serv->desc);
     if (serv->version) {
         free(serv->version);

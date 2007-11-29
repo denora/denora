@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="129"
+VERSION_BUILD="130"
 
 # $Log$
+#
+# BUILD : 1.4.0.130 (SVN)
+# BUGS  : 455
+# NOTES : Fixed servlist not being cleaned after server quit
 #
 # BUILD : 1.4.0.129 (SVN)
 # BUGS  : 457
