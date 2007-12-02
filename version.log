@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="131"
+VERSION_BUILD="132"
 
 # $Log$
+#
+# BUILD : 1.4.0.132 (SVN)
+# BUGS  : N/A
+# NOTES : Tiny fix to denora.sql. Fixes to the example conf files and completely rewrote english example conf file.
 #
 # BUILD : 1.4.0.131 (SVN)
 # BUGS  : 456

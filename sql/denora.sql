@@ -458,4 +458,4 @@ CREATE TABLE `admin` (
   `lang` tinyint(2) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `uname` (`uname`)
-) TYPE=MyISAM
+) TYPE=MyISAM;
