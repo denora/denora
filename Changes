@@ -1,6 +1,7 @@
 Denora Version 1.4.0
 --------------------
 Provided by Denora Team <dev@denorastats.org> - 2007
+12/02 A New example config file (english)                         [ #00]
 11/26 A New HTML template which now validates against 4.01 strict [ #00]
 11/18 A Added rejoin lock time support for inspircd               [ #00]
 11/18 A Added Invite Exception support to inspircd module         [ #00]
@@ -34,6 +35,7 @@ Provided by Denora Team <dev@denorastats.org> - 2007
 08/07 U Updated GeoIP database file                               [ #00]
 07/18 U Updated GeoIP database file                               [ #00]
 01/06 U Updated GeoIP.dat                                         [ #00]
+12/06 F Fixed some chanstats values going bad on certain systems  [ #00]
 11/29 F Fixed segfault if partonempty was enabled                 [#456]
 11/29 F Fixed servlist not being cleaned after server quit        [#455]
 11/28 F Fixed GeoIP problems on win32                             [#457]
