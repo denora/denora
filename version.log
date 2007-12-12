@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="133"
+VERSION_BUILD="134"
 
 # $Log$
+#
+# BUILD : 1.4.0.134 (SVN)
+# BUGS  : N/A
+# NOTES : Applying native EOL breaking to docs/WIN32.txt
 #
 # BUILD : 1.4.0.133 (SVN)
 # BUGS  : N/A
