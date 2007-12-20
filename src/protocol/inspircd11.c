@@ -218,9 +218,12 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("KILL",      denora_event_kill); addCoreMessage(IRCD,m);
     m = createMessage("METADATA",  denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("MODE",      denora_event_mode); addCoreMessage(IRCD,m);
+    m = createMessage("MODENOTICE",denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("MOTD",      denora_event_motd); addCoreMessage(IRCD,m);
     m = createMessage("NICK",      denora_event_nick); addCoreMessage(IRCD,m);
     m = createMessage("NOTICE",    denora_event_notice); addCoreMessage(IRCD,m);
+    m = createMessage("OPERNOTICE",denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("OPERQUIT",  denora_event_null); addCoreMessage(IRCD,m);    
     m = createMessage("OPERTYPE",  denora_event_opertype); addCoreMessage(IRCD,m);
     m = createMessage("PART",      denora_event_part); addCoreMessage(IRCD,m);
     m = createMessage("PASS",      denora_event_null); addCoreMessage(IRCD,m);
@@ -242,6 +245,7 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("SILENCE",   denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("SNONOTICE", denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("SQUIT",     denora_event_squit); addCoreMessage(IRCD,m);
+    m = createMessage("SVSHOLD",   denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("SVSJOIN",   denora_event_svsjoin); addCoreMessage(IRCD,m);
     m = createMessage("SVSMODE",   denora_event_svsmode); addCoreMessage(IRCD,m);
     m = createMessage("SVSNICK",   denora_event_svsnick); addCoreMessage(IRCD,m);
@@ -270,6 +274,12 @@ int denora_event_push(char *source, int ac, char **av)
 
     num = myStrGetToken(av[1], ' ', 1);
     av[1] = myStrGetTokenRemainder(av[1], ' ', 3);
+
+    if (!num) {
+        alog(LOG_ERROR,
+             "ERROR: Something wicked while handling the PUSH message, i have no numeric (truncated message)");
+        return MOD_CONT;
+    }
 
     if (!strcmp(num, "375")) {
         rdb_query(QUERY_LOW, "UPDATE %s SET motd=\'\' WHERE server=\'%s\'",

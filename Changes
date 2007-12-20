@@ -35,6 +35,7 @@ Provided by Denora Team <dev@denorastats.org> - 2007
 08/07 U Updated GeoIP database file                               [ #00]
 07/18 U Updated GeoIP database file                               [ #00]
 01/06 U Updated GeoIP.dat                                         [ #00]
+12/20 F Fixed segfault in inspircd11 on truncate PUSH messages    [#460]
 12/06 F Fixed some chanstats values going bad on certain systems  [ #00]
 11/29 F Fixed segfault if partonempty was enabled                 [#456]
 11/29 F Fixed servlist not being cleaned after server quit        [#455]
@@ -466,6 +467,9 @@ Provided by OUTsider <outsider@scarynet.org>
 Provided by nenolod <nenolod@nenolod.net>
 08/24 A implement support for charybdis TBURST mechanism          [#425]
 08/24 F handle charybdis TMODE event correctly                    [#425]
+
+Provided by Kein <kein-of@yandex.ru>
+12/20 A Added Russian example config file and language file       [ #00]
 
 
 Denora Version 1.1.0
