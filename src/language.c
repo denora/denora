@@ -27,6 +27,7 @@ static int langorder[NUM_LANGS] = {
     LANG_FR,                    /* French */
     LANG_NL,                    /* Dutch */
     LANG_IT,                    /* Italian */
+    LANG_RU,                    /* Russian */
 };
 
 /*************************************************************************/

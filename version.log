@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="135"
+VERSION_BUILD="136"
 
 # $Log$
+#
+# BUILD : 1.4.0.136 (SVN)
+# BUGS  : N/A
+# NOTES : Oops, russian language impmlementation was largely incomplete in last commit. Should be ok now ;)
 #
 # BUILD : 1.4.0.135 (SVN)
 # BUGS  : 460
