@@ -148,6 +148,7 @@ void lang_init()
     load_lang(LANG_FR, "fr");
     load_lang(LANG_NL, "nl");
     load_lang(LANG_IT, "it");
+    load_lang(LANG_RU, "ru");
 
     SET_SEGV_LOCATION();
 

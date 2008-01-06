@@ -527,16 +527,13 @@ int decode_ip(char *buf)
 
     SET_SEGV_LOCATION();
 
-    b64_decode(buf, targ, 25);
+    if (len == 8)               /* IPv4 */
+        b64_decode(buf, targ, 25);
     ia = *(struct in_addr *) targ;
     SET_SEGV_LOCATION();
-
-    if (len == 24) {            /* IPv6 */
-        return 0;
-    } else if (len == 8)        /* IPv4 */
-        return ia.s_addr;
-    else                        /* Error?? */
-        return 0;
+    return ia.s_addr;
+    else                        /* IPv6 or Error */
+    return 0;
 }
 
 /*************************************************************************/

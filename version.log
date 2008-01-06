@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="136"
+VERSION_BUILD="137"
 
 # $Log$
+#
+# BUILD : 1.4.0.137 (SVN)
+# BUGS  : 467
+# NOTES : Fixed Denora crashing when using Russian langfile. Improved performance of IP decoding.
 #
 # BUILD : 1.4.0.136 (SVN)
 # BUGS  : N/A
