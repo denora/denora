@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="140"
+VERSION_BUILD="141"
 
 # $Log$
+#
+# BUILD : 1.4.0.141 (SVN)
+# BUGS  : 431
+# NOTES : State-machine driven UID generator for TS6 ircds
 #
 # BUILD : 1.4.0.140 (SVN)
 # BUGS  : 465,469

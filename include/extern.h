@@ -512,6 +512,10 @@ E void capab_parse(int ac, char **av);
 
 E ServStats *make_servstats(const char *server);
 
+E char *ts6_uid_retrieve(void);
+E void ts6_uid_increment(unsigned int slot);
+E void ts6_uid_init(void);
+
 /**** sockutil.c ****/
 
 E int32 total_read, total_written;

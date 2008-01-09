@@ -17,8 +17,6 @@
 #include "denora.h"
 #include "plexus3.h"
 
-int ts6nickcount = 0;
-
 IRCDVar myIrcd[] = {
     {"Plexus-3.0.0+",           /* ircd name                 */
      "+oai",                    /* StatServ mode             */
@@ -607,15 +605,14 @@ void plexus_cmd_connect(void)
 void plexus_cmd_bot_nick(char *nick, char *user, char *host, char *real,
                          char *modes)
 {
-    char nicknumbuf[10];
+    char *nicknumbuf = ts6_uid_retrieve();
+
     if (UseTS6) {
-        ircsnprintf(nicknumbuf, 10, "%sAAAAA%c", Numeric,
-                    (ts6nickcount + 'A'));
         send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
                  (long int) time(NULL), modes, user, host, nicknumbuf,
                  real);
+
         new_uid(nick, nicknumbuf);
-        ts6nickcount++;
     } else {
         send_cmd(NULL, "NICK %s 1 %ld %s %s %s %s :%s", nick,
                  (long int) time(NULL), modes, user, host, ServerName,
@@ -854,18 +851,16 @@ void plexus_cmd_mode(char *source, char *dest, char *buf)
 void plexus_cmd_nick(char *nick, char *name, const char *mode)
 {
     char *ipaddr;
-    char nicknumbuf[10];
+    char *nicknumbuf = ts6_uid_retrieve();
 
     ipaddr = host_resolve(ServiceHost);
 
     if (UseTS6) {
-        ircsnprintf(nicknumbuf, 10, "%sAAAAA%c", Numeric,
-                    (ts6nickcount + 'A'));
         send_cmd(TS6SID, "UID %s 1 %ld %s %s %s %s %s 0 %s :%s", nick,
                  (long int) time(NULL), mode, ServiceUser, ServiceHost,
                  ipaddr, nicknumbuf, ServiceHost, name);
+
         new_uid(nick, nicknumbuf);
-        ts6nickcount++;
     } else {
         send_cmd(NULL, "NICK %s 1 %ld %s %s %s %s :%s", nick,
                  (long int) time(NULL), mode, ServiceUser, ServiceHost,

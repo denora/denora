@@ -15,8 +15,6 @@
 #include "denora.h"
 #include "charybdis.h"
 
-int ts6nickcount = 0;
-
 IRCDVar myIrcd[] = {
     {"Charybdis 1.0+",          /* ircd name                 */
      "+Sio",                    /* StatServ mode             */
@@ -71,7 +69,8 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* hidden oper               */
      IRCD_ENABLE,               /* extra warning             */
      IRCD_DISABLE               /* Report sync state         */
-     },
+     }
+    ,
 };
 
 IRCDCAPAB myIrcdcap[] = {
@@ -540,13 +539,12 @@ void charybdis_cmd_connect(void)
 void charybdis_cmd_bot_nick(char *nick, char *user, char *host, char *real,
                             char *modes)
 {
-    char nicknumbuf[10];
-    ircsnprintf(nicknumbuf, 10, "%sAAAAA%c", Numeric,
-                (ts6nickcount + 'A'));
+    char *nicknumbuf = ts6_uid_retrieve();
+
     send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
              (long int) time(NULL), modes, user, host, nicknumbuf, real);
+
     new_uid(nick, nicknumbuf);
-    ts6nickcount++;
 }
 
 void charybdis_cmd_part(char *nick, char *chan, char *buf)
@@ -769,14 +767,13 @@ void charybdis_cmd_mode(char *source, char *dest, char *buf)
 
 void charybdis_cmd_nick(char *nick, char *name, const char *mode)
 {
-    char nicknumbuf[10];
-    ircsnprintf(nicknumbuf, 10, "%sAAAAA%c", Numeric,
-                (ts6nickcount + 'A'));
+    char *nicknumbuf = ts6_uid_retrieve();
+
     send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
              (long int) time(NULL), mode, ServiceUser, ServiceHost,
              nicknumbuf, name);
+
     new_uid(nick, nicknumbuf);
-    ts6nickcount++;
 }
 
 /* QUIT */

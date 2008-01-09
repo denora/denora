@@ -15,8 +15,6 @@
 #include "denora.h"
 #include "hybrid.h"
 
-int ts6nickcount = 0;
-
 IRCDVar myIrcd[] = {
     {"HybridIRCd 7.*",          /* ircd name                    */
      "+o",                      /* StatServ mode                */
@@ -71,7 +69,8 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* hidden oper                 */
      IRCD_ENABLE,               /* extra warning               */
      IRCD_ENABLE                /* Report sync state           */
-     },
+     }
+    ,
 };
 
 IRCDCAPAB myIrcdcap[] = {
@@ -578,15 +577,14 @@ void hybrid_cmd_connect(void)
 void hybrid_cmd_bot_nick(char *nick, char *user, char *host, char *real,
                          char *modes)
 {
-    char nicknumbuf[10];
+    char *nicknumbuf = ts6_uid_retrieve();
+
     if (UseTS6) {
-        ircsnprintf(nicknumbuf, 10, "%sAAAAA%c", Numeric,
-                    (ts6nickcount + 'A'));
         send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
                  (long int) time(NULL), modes, user, host, nicknumbuf,
                  real);
+
         new_uid(nick, nicknumbuf);
-        ts6nickcount++;
     } else {
         send_cmd(NULL, "NICK %s 1 %ld %s %s %s %s :%s", nick,
                  (long int) time(NULL), modes, user, host, ServerName,
@@ -806,15 +804,13 @@ void hybrid_cmd_mode(char *source, char *dest, char *buf)
 
 void hybrid_cmd_nick(char *nick, char *name, const char *mode)
 {
-    char nicknumbuf[10];
+    char *nicknumbuf = ts6_uid_retrieve();
     if (UseTS6) {
-        ircsnprintf(nicknumbuf, 10, "%sAAAAA%c", Numeric,
-                    (ts6nickcount + 'A'));
         send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
                  (long int) time(NULL), mode, ServiceUser, ServiceHost,
                  nicknumbuf, name);
+
         new_uid(nick, nicknumbuf);
-        ts6nickcount++;
     } else {
         send_cmd(NULL, "NICK %s 1 %ld %s %s %s %s :%s", nick,
                  (long int) time(NULL), mode, ServiceUser, ServiceHost,
