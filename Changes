@@ -1,5 +1,10 @@
 Denora Version 1.4.0
 --------------------
+Provided by Denora Team <dev@denorastats.org> - 2008
+01/09 U Updated GeoIP.dat                                         [ #00]
+12/20 F Fixed p10 account not populated to sql on N message       [#465]
+12/20 F Give denorarc more time for the stats process to start    [#469]
+
 Provided by Denora Team <dev@denorastats.org> - 2007
 12/02 A New example config file (english)                         [ #00]
 11/26 A New HTML template which now validates against 4.01 strict [ #00]

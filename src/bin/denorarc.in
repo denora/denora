@@ -60,7 +60,7 @@ fi
 	echo "Starting Denora"
 	shift
 	$DENOPROG $*
-	sleep 1
+	sleep 3
 		if [ ! -f $DENORAPID ] ; then
 	        echo "Unfortunately it seems Denora did not start successfully"
                 echo "This error has been logged in your Denora Log file"
@@ -100,7 +100,7 @@ elif [ "$1" = "restart" ] ; then
 	isDenoraRunning
 	echo "Restarting Denora"
 	kill -15 `cat $DENORAPID`
-	sleep 1
+	sleep 2
 	$DENOPROG
 
 elif [ "$1" = "rehash" ] ; then

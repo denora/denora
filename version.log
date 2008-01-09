@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="139"
+VERSION_BUILD="140"
 
 # $Log$
+#
+# BUILD : 1.4.0.140 (SVN)
+# BUGS  : 465,469
+# NOTES : Updated GeoIP.dat. Fixed p10 account not populated to sql on N message. Give denorarc more time for the stats process to start.
 #
 # BUILD : 1.4.0.139 (SVN)
 # BUGS  : 467
