@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="141"
+VERSION_BUILD="142"
 
 # $Log$
+#
+# BUILD : 1.4.0.142 (SVN)
+# BUGS  : 466
+# NOTES : Added persistent channel mode support for nefarious
 #
 # BUILD : 1.4.0.141 (SVN)
 # BUGS  : 431

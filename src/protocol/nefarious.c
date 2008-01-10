@@ -54,7 +54,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* flood other               */
      'x',                       /* vhost                     */
      'f',                       /* vhost other               */
-     IRCD_DISABLE,              /* channek linking           */
+     IRCD_DISABLE,              /* channel linking           */
      IRCD_ENABLE,               /* p10                       */
      IRCD_DISABLE,              /* TS6                       */
      IRCD_ENABLE,               /* numeric ie.. 350 etc      */
@@ -70,7 +70,8 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* svid                      */
      IRCD_DISABLE,              /* hidden oper               */
      IRCD_DISABLE,              /* extra warning             */
-     IRCD_ENABLE                /* Report sync state         */
+     IRCD_ENABLE,               /* Report sync state         */
+     'z'                        /* Persistent channel mode   */
      },
 };
 

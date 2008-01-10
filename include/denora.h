@@ -771,6 +771,7 @@ struct ircdvars_ {
 	int hideoper;
 	int extrawarning;
 	int syncstate;
+	int persist_char;
 };
 
 /*************************************************************************/

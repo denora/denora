@@ -1,6 +1,7 @@
 Denora Version 1.4.0
 --------------------
 Provided by Denora Team <dev@denorastats.org> - 2008
+01/10 A Added persistent channel mode support for nefarious       [#466]
 01/09 U Updated GeoIP.dat                                         [ #00]
 01/09 F Fixed p10 account not populated to sql on N message       [#465]
 01/09 F Give denorarc more time for the stats process to start    [#469]
