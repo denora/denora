@@ -200,7 +200,7 @@ void sql_do_part(char *chan, User * u)
         rdb_query(QUERY_LOW,
                   "UPDATE %s SET currentusers=currentusers-1 WHERE chanid=%d",
                   ChanTable, chanid);
-        if (!ChanHasMode(c->name, ircd->persist_char))
+        if (!ChanHasMode(chan, ircd->persist_char))
             db_checkemptychan(chanid);
     }
     SET_SEGV_LOCATION();
