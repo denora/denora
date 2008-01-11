@@ -85,7 +85,7 @@ IRCDCAPAB myIrcdcap[] = {
     {
      CAPAB_NOQUIT,              /* NOQUIT       */
      0,                         /* TSMODE       */
-     0,                         /* UNCONNECT    */
+     1,                         /* UNCONNECT    */
      0,                         /* NICKIP       */
      0,                         /* SJOIN        */
      0,                         /* ZIP          */
@@ -246,6 +246,7 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("SILENCE",   denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("SNONOTICE", denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("SQUIT",     denora_event_squit); addCoreMessage(IRCD,m);
+    m = createMessage("RSQUIT",    denora_event_squit); addCoreMessage(IRCD,m);
     m = createMessage("SVSHOLD",   denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("SVSJOIN",   denora_event_svsjoin); addCoreMessage(IRCD,m);
     m = createMessage("SVSMODE",   denora_event_svsmode); addCoreMessage(IRCD,m);
@@ -970,6 +971,10 @@ int denora_event_chgident(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
+
+    if (ac != 2)
+        return MOD_CONT;
+
     change_user_username(av[0], av[1]);
     return MOD_CONT;
 }
@@ -1056,6 +1061,11 @@ int denora_event_nick(char *source, int ac, char **av)
 
     if (ac != 1) {
         if (ac == 8) {
+            int svid = 0;
+            int ts = strtoul(av[0], NULL, 10);
+            if (strchr(av[5], 'r') != NULL)
+                svid = ts;
+
             /* Here we should check if av[5] contains +o, and if so remove it,
              * as this will be handled by OPERTYPE */
             ptr = av[5];
@@ -1076,8 +1086,7 @@ int denora_event_nick(char *source, int ac, char **av)
                            av[2],       /* realhost */
                            source,      /* server */
                            av[7],       /* realname */
-                           strtoul(av[0], NULL, 10),
-                           0, av[6], av[3], NULL, 1, av[5], NULL);
+                           ts, svid, av[6], av[3], NULL, 1, av[5], NULL);
         }
     } else {
         do_nick(source, av[0], NULL, NULL, NULL, NULL,

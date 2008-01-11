@@ -24,14 +24,14 @@
 char *GetWindowsVersion(void)
 {
     OSVERSIONINFOEX osvi;
-    SYSTEM_INFO si;
     BOOL bOsVersionInfoEx;
     char buf[BUFSIZE];
     char *extra;
-    char *cpu;
-    char *rc;
+    char *cputype;
+    SYSTEM_INFO si;
 
     ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
+    ZeroMemory(&si, sizeof(SYSTEM_INFO));
     osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
 
     if (!(bOsVersionInfoEx = GetVersionEx((OSVERSIONINFO *) & osvi))) {
@@ -40,26 +40,46 @@ char *GetWindowsVersion(void)
             return sstrdup("");
         }
     }
+    GetSystemInfo(&si);
 
-    cpu = WindowsCPUArchitecture();
+    /* Determine CPU type 32 or 64 */
+    if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64) {
+        cputype = sstrdup(" 64-bit");
+    } else if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL) {
+        cputype = sstrdup(" 32-bit");
+    } else if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_IA64) {
+        cputype = sstrdup(" Itanium 64-bit");
+    } else {
+        cputype = sstrdup(" ");
+    }
 
     switch (osvi.dwPlatformId) {
         /* test for the Windows NT product family. */
     case VER_PLATFORM_WIN32_NT:
+        /* Windows Vista or Windows Server 2008 */
         if (osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 0) {
             if (osvi.wSuiteMask & VER_SUITE_ENTERPRISE) {
                 extra = sstrdup("Enterprise Edition");
             } else if (osvi.wSuiteMask & VER_SUITE_DATACENTER) {
                 extra = sstrdup("Datacenter Edition");
+            } else if (osvi.wSuiteMask & VER_SUITE_PERSONAL) {
+                extra = sstrdup("Home Premium/Basic");
             } else {
                 extra = sstrdup(" ");
             }
-            ircsnprintf(buf, sizeof(buf),
-                        "Microsoft Windows Vista %s (cpu %s)", extra, cpu);
+            if (osvi.wProductType & VER_NT_WORKSTATION) {
+                ircsnprintf(buf, sizeof(buf),
+                            "Microsoft Windows Vista %s%s", cputype,
+                            extra);
+            } else {
+                ircsnprintf(buf, sizeof(buf),
+                            "Microsoft Windows Server 2008 %s%s", cputype,
+                            extra);
+            }
             free(extra);
-        } else if (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 2) {
-            GetSystemInfo(&si);
-
+        }
+        /* Windows 2003 or Windows XP Pro 64 */
+        if (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 2) {
             if (osvi.wSuiteMask & VER_SUITE_DATACENTER) {
                 extra = sstrdup("Datacenter Edition");
             } else if (osvi.wSuiteMask & VER_SUITE_ENTERPRISE) {
@@ -71,42 +91,40 @@ char *GetWindowsVersion(void)
             } else {
                 extra = sstrdup("Standard Edition");
             }
-            if (GetSystemMetrics(SM_SERVERR2)) {
-                rc = sstrdup("R2 ");
-            } else {
-                rc = sstrdup(" ");
-            }
-            if (osvi.wProductType == VER_NT_WORKSTATION
+            if (osvi.wProductType & VER_NT_WORKSTATION
                 && si.wProcessorArchitecture ==
                 PROCESSOR_ARCHITECTURE_AMD64) {
                 ircsnprintf(buf, sizeof(buf),
-                            "Microsoft Windows XP Professional x64 Edition (cpu %s)",
-                            cpu);
+                            "Windows XP Professional x64 Edition %s",
+                            extra);
             } else {
                 ircsnprintf(buf, sizeof(buf),
-                            "Microsoft Windows Server 2003 %sFamily %s (cpu %s)",
-                            rc, extra, cpu);
+                            "Microsoft Windows Server 2003 Family %s%s",
+                            cputype, extra);
             }
             free(extra);
-            free(rc);
-        } else if (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 1) {
+        }
+        if (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 1) {
             if (osvi.wSuiteMask & VER_SUITE_EMBEDDEDNT) {
                 extra = sstrdup("Embedded");
             } else if (osvi.wSuiteMask & VER_SUITE_PERSONAL) {
                 extra = sstrdup("Home Edition");
+#ifdef SM_MEDIACENTER
             } else if (GetSystemMetrics(SM_MEDIACENTER)) {
                 extra = sstrdup("Media Center Edition");
+#endif
+#ifdef SM_TABLETPC
             } else if (GetSystemMetrics(SM_TABLETPC)) {
                 extra = sstrdup("Tablet Edition");
-            } else if (GetSystemMetrics(SM_STARTER)) {
-                extra = sstrdup("Starter Edition");
+#endif
             } else {
-                extra = sstrdup("Professional");
+                extra = sstrdup(" ");
             }
-            ircsnprintf(buf, sizeof(buf),
-                        "Microsoft Windows XP %s (cpu %s)", extra, cpu);
+            ircsnprintf(buf, sizeof(buf), "Microsoft Windows XP %s",
+                        extra);
             free(extra);
-        } else if (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 0) {
+        }
+        if (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 0) {
             if (osvi.wSuiteMask & VER_SUITE_DATACENTER) {
                 extra = sstrdup("Datacenter Server");
             } else if (osvi.wSuiteMask & VER_SUITE_ENTERPRISE) {
@@ -114,22 +132,19 @@ char *GetWindowsVersion(void)
             } else {
                 extra = sstrdup("Server");
             }
-            ircsnprintf(buf, sizeof(buf),
-                        "Microsoft Windows 2000 %s (cpu %s)", extra, cpu);
+            ircsnprintf(buf, sizeof(buf), "Microsoft Windows 2000 %s",
+                        extra);
             free(extra);
-        } else if (osvi.dwMajorVersion <= 4) {
+        }
+        if (osvi.dwMajorVersion <= 4) {
             if (osvi.wSuiteMask & VER_SUITE_ENTERPRISE) {
                 extra = sstrdup("Server 4.0, Enterprise Edition");
             } else {
                 extra = sstrdup("Server 4.0");
             }
-            ircsnprintf(buf, sizeof(buf),
-                        "Microsoft Windows NT %s (cpu %s)", extra, cpu);
+            ircsnprintf(buf, sizeof(buf), "Microsoft Windows NT %s",
+                        extra);
             free(extra);
-        } else {
-            ircsnprintf(buf, sizeof(buf),
-                        "Microsoft Windows ?? dwMajorVersion=%d dwMinorVersion=%d",
-                        osvi.dwMajorVersion, osvi.dwMinorVersion);
         }
     case VER_PLATFORM_WIN32_WINDOWS:
         if (osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0) {
@@ -157,7 +172,7 @@ char *GetWindowsVersion(void)
                         "Microsoft Windows Millennium Edition");
         }
     }
-    free(cpu);
+    free(cputype);
     return sstrdup(buf);
 }
 

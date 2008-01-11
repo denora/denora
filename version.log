@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="146"
+VERSION_BUILD="147"
 
 # $Log$
+#
+# BUILD : 1.4.0.147 (SVN)
+# BUGS  : N/A
+# NOTES : Several inspircd11 fixes. Detection of Windows Vista and Windows Server 2008. (from Anope)
 #
 # BUILD : 1.4.0.146 (SVN)
 # BUGS  : N/A
