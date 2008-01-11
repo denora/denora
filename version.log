@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="145"
+VERSION_BUILD="146"
 
 # $Log$
+#
+# BUILD : 1.4.0.146 (SVN)
+# BUGS  : N/A
+# NOTES : Fixed some make strict and make ansi warnings
 #
 # BUILD : 1.4.0.145 (SVN)
 # BUGS  : N/A

@@ -218,7 +218,7 @@ void sql_do_nick(User * u)
     SET_SEGV_LOCATION();
 
     username = rdb_escape(u->username);
-    account = (account) ? rdb_escape(u->account) : NULL;
+    account = (u->account) ? rdb_escape(u->account) : NULL;
     host = rdb_escape(u->host);
     server = rdb_escape(u->server->name);
     vhost = (ircd->vhost) ? rdb_escape(u->vhost) : NULL;
@@ -254,7 +254,7 @@ void sql_do_nick(User * u)
         if (KeepUserTable) {
             rdb_query
                 (QUERY_HIGH,
-                 "INSERT INTO %s (nick, hopcount, nickip, realname, hostname, hiddenhostname, username, swhois, account, connecttime, servid, server, countrycode, country) VALUES(\'%s\',%d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'\',\'%s\',FROM_UNIXTIME(%d),%d,\'%s\',\'%s\',\'%s\') ON DUPLICATE KEY UPDATE nick=\'%s\', hopcount=%d, nickip=\'%s\', realname=\'%s\', hostname=\'%s\', hiddenhostname=\'%s\', username=\'%s\', account=\'%s\', connecttime=FROM_UNIXTIME(%d), servid=%d, server=\'%s\', countrycode=\'%s\', country=\'%s\', lastquit=NULL, online=\'Y\', away=\'N\', awaymsg=\'\'",
+                 "INSERT INTO %s (nick,hopcount,nickip,realname,hostname,hiddenhostname,username,swhois,account,connecttime,servid,server,countrycode,country) VALUES(\'%s\',%d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'\',\'%s\',FROM_UNIXTIME(%d),%d,\'%s\',\'%s\',\'%s\') ON DUPLICATE KEY UPDATE nick=\'%s\', hopcount=%d, nickip=\'%s\', realname=\'%s\', hostname=\'%s\', hiddenhostname=\'%s\', username=\'%s\', account=\'%s\', connecttime=FROM_UNIXTIME(%d), servid=%d, server=\'%s\', countrycode=\'%s\', country=\'%s\', lastquit=NULL, online=\'Y\', away=\'N\', awaymsg=\'\'",
                  UserTable, u->sqlnick, u->hopcount, u->ip, realname,
                  host, vhost, username, account, u->timestamp, servid,
                  server, countrycode, countryname, u->sqlnick, u->hopcount,

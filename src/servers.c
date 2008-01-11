@@ -1401,17 +1401,14 @@ static unsigned int ts6_uid_index = 9;  /* last slot in uid buf */
 
 void ts6_uid_init(void)
 {
-    unsigned int i;
-
     /* check just in case... you can never be too safe. */
     if (TS6SID != NULL) {
-        snprintf(ts6_new_uid, 10, "%sAAAAAA", TS6SID);
+        ircsnprintf(ts6_new_uid, 10, "%sAAAAAA", TS6SID);
         ts6_uid_initted = 1;
     } else {
         alog(LOG_NORMAL,
              "warning: no TS6SID specified, disabling TS6 support.");
         UseTS6 = 0;
-
         return;
     }
 }
