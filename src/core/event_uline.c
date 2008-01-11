@@ -1,6 +1,6 @@
 /* Event Uline
  *
- * (C) 2004-2007 Denora Team
+ * © 2004-2008 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.

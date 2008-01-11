@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# (C) 2004-2007 Denora Team
+# © 2004-2008 Denora Team
 # Contact us at info@denorastats.org
 #
 # Please read COPYING and README for further details.
@@ -40,7 +40,7 @@ fi
 cat >version.h <<EOF
 /* Version information for Stats.
  *
- * (C) 2004-2007 Denora Team
+ * © 2004-2008 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and CREDITS for furhter details.

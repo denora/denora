@@ -1,6 +1,6 @@
 # Spanish language file.
 #
-# Denora (c) 2004-2007 Denora Team
+# Denora © 2004-2008 Denora Team
 # Contact us at dev@denorastats.org
 #
 # This program is free but copyrighted software; see the file COPYING for

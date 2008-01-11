@@ -1,4 +1,4 @@
-# (C) 2004-2007 Denora Team
+# © 2004-2008 Denora Team
 # Contact us at info@denorastats.org
 #
 # Please read COPYING and README for furhter details.
@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="144"
+VERSION_BUILD="145"
 
 # $Log$
+#
+# BUILD : 1.4.0.145 (SVN)
+# BUGS  : N/A
+# NOTES : Updated copyright info for 2008
 #
 # BUILD : 1.4.0.144 (SVN)
 # BUGS  : 466
