@@ -294,7 +294,7 @@ void sql_do_addusers(int chanid, char *users)
 
         SET_SEGV_LOCATION();
 
-        while (sjoinmodes[(int) *users] != 0) {
+        while ((int) *users >= 0 && sjoinmodes[(int) *users] != 0) {
             status_flag = sjoinmodes[(int) *users++];
             if (status_flag == STATUS_OP) {
                 op++;

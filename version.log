@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="147"
+VERSION_BUILD="148"
 
 # $Log$
+#
+# BUILD : 1.4.0.148 (SVN)
+# BUGS  : 468
+# NOTES : Fixed sjoin not handling unrealircd nickchar nicks well.
 #
 # BUILD : 1.4.0.147 (SVN)
 # BUGS  : N/A

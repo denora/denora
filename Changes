@@ -1,6 +1,7 @@
 Denora Version 1.4.0
 --------------------
 Provided by Denora Team <dev@denorastats.org> - 2008
+01/14 F Fixed sjoin not handling unrealircd nickchar nicks well   [#468]
 01/11 F Several inspircd11 fixes                                  [ #00]
 01/11 A Detection of Windows Vista and Windows Server 2008        [ #00]
 01/10 A Added persistent channel mode support for nefarious       [#466]
