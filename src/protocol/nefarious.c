@@ -816,6 +816,7 @@ int denora_event_create(char *source, int ac, char **av)
         protocol_debug(source, ac, av);
     }
     do_join(source, ac, av);
+    send_cmd(p10id, "M %s", av[0]);
     return MOD_CONT;
 }
 
