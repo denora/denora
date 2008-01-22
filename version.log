@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="149"
+VERSION_BUILD="150"
 
 # $Log$
+#
+# BUILD : 1.4.0.150 (SVN)
+# BUGS  : 463
+# NOTES : Handle user mode +h vhost correctly in nefarious. Reverted patch of rev. 149 as it didnt fix the problem, as it seems to be on the ircd side.
 #
 # BUILD : 1.4.0.149 (SVN)
 # BUGS  : 470
