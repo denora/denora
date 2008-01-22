@@ -104,7 +104,6 @@ void html_current_channels(FILE * ptr)
             if (s) {
                 e = find_exclude(s->name, NULL);
                 if (!e) {
-                    tempc = char_encode(s->name);
                     if (s->in_use) {
                         tempc = char_encode(s->name);
                         dfprintf(ptr, langstring(HTML_CHANNEL_CONTENT),

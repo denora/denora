@@ -699,7 +699,7 @@ STATS_HTML_EXPORTED
 
 # HTML code
 HTML_LANG
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
 	<meta http-equiv="Content-Language" content="Russian">
 
 HTML_NETSTATS_HEADER
