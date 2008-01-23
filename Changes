@@ -4,6 +4,8 @@ Provided by Denora Team <dev@denorastats.org> - 2008
 01/11 A Detection of Windows Vista and Windows Server 2008        [ #00]
 01/10 A Added persistent channel mode support for nefarious       [#466]
 01/09 U Updated GeoIP.dat                                         [ #00]
+01/23 F Fixed local kill handling on P10 ircds                    [#479]
+01/23 F Fixed incorrect non-western characters in html output     [#462]
 01/22 F Handle user mode +h vhost correctly in nefarious          [#463]
 01/14 F Fixed sjoin not handling unrealircd nickchar nicks well   [#468]
 01/11 F Several inspircd11 fixes                                  [ #00]

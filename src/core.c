@@ -46,11 +46,14 @@ char *char_encode(char *s1)
 
     for (i = 0; i <= (int) strlen(s1) - 1; i++) {
         c = s1[i];
-        if (c > 127) {
-            ircsnprintf(buf2, 15, "&#%ld;", (long int) c);
-            ircsnprintf(buf3, BUFSIZE, "%s%s", buf4, buf2);
-            ircsnprintf(buf4, BUFSIZE, "%s", buf3);
-        } else if (c == '&') {
+        /* This breaks html encoding for non-western charsets,
+         * so we better disable it for now */
+        /*if (c > 127) {
+           ircsnprintf(buf2, 15, "&#%ld;", (long int) c);
+           ircsnprintf(buf3, BUFSIZE, "%s%s", buf4, buf2);
+           ircsnprintf(buf4, BUFSIZE, "%s", buf3);
+           } else */
+        if (c == '&') {
             ircsnprintf(buf3, BUFSIZE, "%s%s", buf4, "&amp;");
             ircsnprintf(buf4, BUFSIZE, "%s", buf3);
         } else if (c == '<') {

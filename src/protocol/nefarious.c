@@ -707,6 +707,7 @@ int denora_event_quit(char *source, int ac, char **av)
 {
     char *killer = NULL;
     char *msg = NULL;
+    User *u;
 
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
@@ -719,11 +720,12 @@ int denora_event_quit(char *source, int ac, char **av)
     } else {
         killer = nefarious_lkill_killer(av[0]);
         msg = nefarious_lkill_msg(av[0]);
+        u = find_byuid(source);
 
         if (killer)
-            m_kill(killer, source, msg);
+            m_kill(killer, (u ? u->nick : source), msg);
         else
-            m_kill(source, source, msg);
+            m_kill((u ? u->nick : source), (u ? u->nick : source), msg);
     }
 
     return MOD_CONT;
