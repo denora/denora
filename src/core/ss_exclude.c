@@ -148,7 +148,7 @@ static int do_exclude(User * u, int ac, char **av)
                     }
                 }
                 to = atoi(tmp);
-                av[1] = sstrdup("*");
+                free(tmp);
             }
         }
 
