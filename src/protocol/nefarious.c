@@ -763,19 +763,19 @@ int denora_event_mode(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
+/* 66AAA D AxC5i :defender.beirut.com!Defender (reason) */
 int denora_event_kill(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    User *u, *k;
+
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
     if (ac != 2)
         return MOD_CONT;
-/*
- * 66AAA D AxC5i :defender.beirut.com!Defender (You have a scan score of ^B8^B and are possibly an ^Bautomated virus drone^B.
- * Please read the following page for details of the scoring system and how to avoid this in the future: ^Bhttp://chat.beirut.com^B)
- */
 
-    m_kill(source, av[0], av[1]);
+    u = find_byuid(source);
+    k = find_byuid(av[0]);
+    m_kill((u ? u->nick : source), (k ? k->nick : av[0]), av[1]);
     return MOD_CONT;
 }
 

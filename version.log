@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="152"
+VERSION_BUILD="153"
 
 # $Log$
+#
+# BUILD : 1.4.0.153 (SVN)
+# BUGS  : 479
+# NOTES : Global kills should be handled correctly as well now...
 #
 # BUILD : 1.4.0.152 (SVN)
 # BUGS  : 479,462

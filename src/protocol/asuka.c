@@ -516,14 +516,17 @@ int denora_event_mode(char *source, int ac, char **av)
 
 int denora_event_kill(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    User *u, *k;
+
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
 
     if (ac != 2)
         return MOD_CONT;
 
-    m_kill(source, av[0], av[1]);
+    u = find_byuid(source);
+    k = find_byuid(av[0]);
+    m_kill((u ? u->nick : source), (k ? k->nick : av[0]), av[1]);
     return MOD_CONT;
 }
 
