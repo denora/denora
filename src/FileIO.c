@@ -56,9 +56,8 @@ DENORA_INLINE FILE *FileOpen(char *file, const char *mode)
 #else
     if ((ptr = fopen(file, mode)) == NULL) {
 #endif
-        /*alog(LOG_ERROR, "Error accessing file: %s [%d][%s]", file, errno,
-           strerror(errno)); */
-        alog(LOG_ERROR, "Error accessing file: %s", file);
+        alog(LOG_ERROR, "Error accessing file: %s [%d][%s]", file, errno,
+             strerror(errno));
         return NULL;
     }
     return ptr;

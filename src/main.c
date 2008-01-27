@@ -1149,6 +1149,9 @@ int init(int ac, char **av)
 
     CreateUserModeCallBack((char *) "o", MODE_NOPARAM, handle_ircop);
 
+    /* Write our PID to the PID file. */
+    write_pidfile();
+
     load_stats_db();
     init_tld();
     load_tld_db();
@@ -1161,9 +1164,6 @@ int init(int ac, char **av)
     load_chan_db();
     load_exclude_db();
     load_admin_db();
-
-    /* Write our PID to the PID file. */
-    write_pidfile();
 
     /* Announce ourselves to the logfile. */
     alog(LOG_NORMAL,
