@@ -229,10 +229,17 @@ int new_write_db_endofblock(DenoraDBFile * dbptr)
 /*************************************************************************/
 
 void fill_db_ptr(DenoraDBFile * dbptr, int version, int core_version,
-                 char service[256], char filename[256])
+                 char *service, char *filename)
 {
     char buffer[PATH_MAX];
     char buf[BUFSIZE];
+    char tempbuf[BUFSIZE];
+
+    int failgetcwd = 0;
+    *buffer = '\0';
+    *buf = '\0';
+    *tempbuf = '\0';
+
 
 #ifdef _WIN32
     if (_getcwd(buffer, PATH_MAX) == NULL) {
@@ -240,25 +247,42 @@ void fill_db_ptr(DenoraDBFile * dbptr, int version, int core_version,
     if (getcwd(buffer, PATH_MAX) == NULL) {
 #endif
         alog(LOG_DEBUG, "debug: Unable to set Current working directory");
+        failgetcwd = 1;
     }
 
     dbptr->db_version = version;
     dbptr->core_db_version = core_version;
     SET_SEGV_LOCATION();
     if (!BadPtr(service)) {
-        strlcpy(dbptr->service, service, sizeof(dbptr->service));
+        dbptr->service = sstrdup(service);
     } else {
-        strlcpy(dbptr->service, "", sizeof(dbptr->service));
+        dbptr->service = sstrdup(service);
     }
+
 #ifndef _WIN32
-    ircsnprintf(buf, BUFSIZE, "%s/%s", buffer, filename);
-    strlcpy(dbptr->filename, buf, sizeof(dbptr->filename));
-    ircsnprintf(dbptr->temp_name, BUFSIZE, "%s.temp", buf);
+    if (failgetcwd) {
+        /* path failed just get the file name in there */
+        dbptr->filename = sstrdup(filename);
+        ircsnprintf(tempbuf, BUFSIZE, "%s.temp", filename);
+        dbptr->temp_name = sstrdup(tempbuf);
+    } else {
+        ircsnprintf(buf, BUFSIZE, "%s/%s", buffer, filename);
+        dbptr->filename = sstrdup(buf);
+        ircsnprintf(tempbuf, BUFSIZE, "%s.temp", buf);
+        dbptr->temp_name = sstrdup(tempbuf);
+    }
 #else
-    ircsnprintf(buf, BUFSIZE, "%s\\%s", buffer, filename);
-    strlcpy(dbptr->filename, buf, sizeof(dbptr->filename));
-    ircsnprintf(dbptr->temp_name, BUFSIZE, "%s\\%s.temp", buffer,
-                filename);
+    if (failgetcwd) {
+        /* path failed just get the file name in there */
+        dbptr->filename = sstrdup(filename);
+        ircsnprintf(tempbuf, BUFSIZE, "%s.temp", filename);
+        dbptr->temp_name = sstrdup(tempbuf);
+    } else {
+        ircsnprintf(buf, BUFSIZE, "%s\\%s", buffer, filename);
+        dbptr->filename = sstrdup(buf);
+        ircsnprintf(tempbuf, BUFSIZE, "%s.temp", buf);
+        dbptr->temp_name = sstrdup(tempbuf);
+    }
 #endif
     return;
 }

@@ -479,7 +479,7 @@ E void new_close_db(FILE * fptr, char **key, char **value);
 E int new_read_db_entry(char **key, char **value, FILE * fptr);
 E int new_write_db_entry(const char *key, DenoraDBFile * dbptr, const char *fmt, ...);
 E int new_write_db_endofblock(DenoraDBFile * dbptr);
-E void fill_db_ptr(DenoraDBFile * dbptr, int version, int core_version, char service[256], char filename[256]);
+E void fill_db_ptr(DenoraDBFile * dbptr, int version, int core_version, char *service, char *filename);
 
 E char **buildStringList(char *src, int *number);
 

@@ -639,9 +639,9 @@ struct db_file_ {
     FILE *fptr;              /* Pointer to the opened file               */
     int db_version;          /* The db version of the datafiles          */
     int core_db_version;     /* The current db version of this source    */
-    char service[256];       /* StatServ/etc.                            */
-    char filename[BUFSIZE];  /* Filename of the database                 */
-    char temp_name[BUFSIZE]; /* Temp filename of the database            */
+    char *service;       	 /* StatServ/etc.                            */
+    char *filename;  		 /* Filename of the database                 */
+    char *temp_name; 		 /* Temp filename of the database            */
 };
 
 /*************************************************************************/
