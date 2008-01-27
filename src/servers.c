@@ -864,15 +864,6 @@ void delete_server(Server * serv, const char *quitreason, int depth)
     serv->ss->split_stats = 1;
     serv->ss->lastseen = time(NULL);
 
-    if (servlist->prev)
-        servlist->prev->next = servlist->next;
-    if (servlist->next)
-        servlist->next->prev = servlist->prev;
-    if (servlist->uplink) {
-        if (servlist->uplink->links == serv)
-            servlist->uplink->links = servlist->next;
-    }
-
     free(serv->desc);
     if (serv->version) {
         free(serv->version);
@@ -887,6 +878,13 @@ void delete_server(Server * serv, const char *quitreason, int depth)
     if (serv->uplink) {
         if (serv->uplink->links == serv)
             serv->uplink->links = serv->next;
+        if (serv->uplink->slinks_count) {
+            i = 0;
+            ARRAY_FOREACH(i, serv->uplink->slinks) {
+                free(serv->uplink->slinks[i]);
+                ARRAY_REMOVE(serv->uplink->slinks, i);
+            }
+        }
     }
 
     if (denora->do_sql) {

@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="154"
+VERSION_BUILD="155"
 
 # $Log$
+#
+# BUILD : 1.4.0.155 (SVN)
+# BUGS  : 461
+# NOTES : Fixed slink array not cleaned in uplink struct on squit.
 #
 # BUILD : 1.4.0.154 (SVN)
 # BUGS  : 480

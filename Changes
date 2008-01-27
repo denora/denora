@@ -4,6 +4,7 @@ Provided by Denora Team <dev@denorastats.org> - 2008
 01/11 A Detection of Windows Vista and Windows Server 2008        [ #00]
 01/10 A Added persistent channel mode support for nefarious       [#466]
 01/09 U Updated GeoIP.dat                                         [ #00]
+01/27 F Fixed slink array not cleaned in uplink struct on squit   [#461]
 01/23 F Fixed memory leak in ss_exclude                           [#480]
 01/23 F Fixed kill handling on P10 ircds                          [#479]
 01/23 F Fixed incorrect non-western characters in html output     [#462]
