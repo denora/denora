@@ -597,12 +597,9 @@ Server *server_ping(Server * s)
             }
         }
         if (stricmp(ServerName, s->name)) {
-            if (s->flags != SERVER_JUPED) {
+            if (s->flags != SERVER_JUPED)
                 denora_cmd_ping(s->name);
-                s->lastping = time(NULL);
-            } else {
-                s->lastping = 0;
-            }
+            s->lastping = time(NULL);
         }
         return s;
     } else {
