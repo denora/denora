@@ -2,26 +2,26 @@ Denora Frequently Asked Questions
 -- $Id$
 ---------------------
 
-1) Remote MOTD don't work on Unreal
-2) Get the error "/usr/bin/ld: cannot find -lmysqlclient"
+1) Remote MOTD doesn't work
+2) I am getting the error "/usr/bin/ld: cannot find -lmysqlclient"
 3) My FreeBSD box complains about 'Shared object "nss_dns.so.1" not found'
 4) Can't connect to local MySQL server through socket '/tmp/mysql.sock'
+5) StatServ doesn't allow me to log in
 
-Q1) Remote MOTD don't work on Unreal
-A1) Remote MOTD do work, just not if the motd file name is not ircd.motd, if you have set
-    your motd to anything else remote MOTD requests will not work. A simple solution under
-    *nix based systems its to create a symlink 
+Q1) Remote MOTD doesn't work
+A1) Some ircds, like Unreal, don't send out remot MOTDs if the filename is different than
+    ircd.motd. A simple solution under *nix based systems is to create a symlink 
 
     ln -s my.custom.motd ~/Unrealxxx/ircd.motd
 
 ----------------------------------------------------------------------------------------------
 
-Q2) Get the error "/usr/bin/ld: cannot find -lmysqlclient"
+Q2) I am getting the error "/usr/bin/ld: cannot find -lmysqlclient"
 A2) This means that the linker (ld) does not know where the lib of
     mysqlclient is. 
 
     To resolve
-    1. MySQL libs and development files (usually called mysql-dev)
+    1. MySQL libs and development files (usually called libmysql-dev or similar)
     2. Make sure that the path to mysql lib dir is in /etc/ld.so.conf
 
 ----------------------------------------------------------------------------------------------
@@ -55,3 +55,7 @@ A4) Either your server is not running, or the MySQL socket is in another locatio
 
     http://dev.mysql.com/doc/refman/5.0/en/can-not-connect-to-server.html
 
+----------------------------------------------------------------------------------------------
+
+Q5) StatServ doesn't allow me to log in
+A5) You need to be an IRC Operator in order to be allowed to log in to Denora.

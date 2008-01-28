@@ -1107,7 +1107,7 @@ ALOG_DEBUG_NONEXISTANT_USER_JOIN
 ALOG_DEBUG_CHANGE_MODE_CHAN
 	debug: Changement des modes pour %s en %s
 
-AL0G_DEBUG_BAD_CHAN_MODE
+ALOG_DEBUG_BAD_CHAN_MODE
 	Debug: mode malformé détecté sur %s.
 
 ALOG_DEBUG_MODE_NO_PARAM

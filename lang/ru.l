@@ -1104,7 +1104,7 @@ ALOG_DEBUG_NONEXISTANT_USER_JOIN
 ALOG_DEBUG_CHANGE_MODE_CHAN
 	debug: изменение режимов для %s на %s
 
-AL0G_DEBUG_BAD_CHAN_MODE
+ALOG_DEBUG_BAD_CHAN_MODE
 	Debug: обнаружен некорректный режим на %s.
 
 ALOG_DEBUG_MODE_NO_PARAM

@@ -1115,7 +1115,7 @@ ALOG_DEBUG_NONEXISTANT_USER_JOIN
 ALOG_DEBUG_CHANGE_MODE_CHAN
 	foutopsporing: Modes voor %s worden veranderd in %s
 
-AL0G_DEBUG_BAD_CHAN_MODE
+ALOG_DEBUG_BAD_CHAN_MODE
 	foutopsporing: Misvormde mode gedetecteerd in %s.
 
 ALOG_DEBUG_MODE_NO_PARAM

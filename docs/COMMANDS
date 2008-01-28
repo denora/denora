@@ -1,0 +1,51 @@
+DENORA COMMANDS
+-- $Id$
+===============
+
+Denora has a pseudo client, which is usually named StatServ.
+StatServ accepts both public and private commands.
+PLEASE NOTE:
+- For public commands, the StatServ bot must be in the channel.
+  To add a channel, see the CHANSTATS ADD private command
+- For private commands: most private commands are reserved to
+  Stats Admins only. You need to be an identified IRC Operator
+  and LOGIN to StatServ to use those commands.
+
+Public commands
+---------------
+  !top10  :   The top 10 users of the current channel
+  !top    :   The top 3  users of the current channel
+  !gtop10 :   The top 10 users of the whole network
+  !gtop   :   The top 3  users of the whole network
+  !stats  :   User stats for the channel
+  !gstats :   User stats for the network
+  !peak   :   User peak for the current channel
+
+
+Private commands
+----------------
+
+Usage: /msg StatServ COMMAND [parameters]
+
+Commands for everyone:
+    STATS       Show status of network
+    LOGIN       Makes you a Stats Administrator
+    LOGOUT      Logout from your admin account
+Commands for Stats Administrators:
+    ADMIN       Manage Stats Admins
+    CHANSTATS   Manage Monitored Channels for Stats
+    ENVINFO     Show environment information
+    EXCLUDE     Exclude users, channels from stats
+    EXPORT      Export data to XML
+    HTML        Forces to create the HTML file
+    MODLOAD     Load a module
+    MODUNLOAD   Un-Load a module
+    MODLIST     List loaded modules
+    MODINFO     Info about a loaded module
+    RESTART     Causes Denora to restart
+    RELOAD      Causes Denora to reload the configuration file
+    SET         Set various run time options
+    SHUTDOWN    Terminate the Stats program with save 
+
+Some commands may require one or more parameters.
+For more information about a command, type /msg StatServ HELP COMMAND

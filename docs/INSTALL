@@ -1,10 +1,13 @@
 DENORA INSTALLATION INSTRUCTIONS
+-- $Id$
 ================================
 
 Table of contents
 -----------------
   1. Requirements
   2. Installing Denora
+    2.1 Quick install
+    2.2 Detailed instructions
   3. Upgrading Denora
   4. Setting up the IRCd
   5. Setting up the MySQL server
@@ -18,8 +21,9 @@ You should also read the README and FAQ files!
 
     A. C compiler, Denora should be able to compile with gcc3/4, cc, and win32 cl 
        (note gcc2 althought may work is not 100% supported any more)
-    B. *nix or Windows operating systems.  (sorry Mac OS 9 users)
-    C. If you want MySQL support you need to have development libs installed, v4 or later
+    B. *nix or Windows operating systems (sorry Mac OS 9 users)
+    C. If you want MySQL support you need to have mysql development libs installed,
+       v4 or later
 
 2. Installing Denora
 --------------------
@@ -28,6 +32,26 @@ IMPORTANT NOTE: it is not recommended to use (and therefore install)
 Denora as root. Use an unprivileged user instead -- the one you're
 using for the ircd or a dedicated one will be good enough.
 
+2.1 Quick Install in 10 steps
+-----------------------------
+   1. Download the latest Denora package from http://denorastats.org/
+   2. Unpack it using the non-root user that will run it later
+   3. Change to the Denora directory (cd denora)
+   4. Type ./Config and follow instructions on-screen
+   5. Type make
+   6. Type make install
+   7. Change to the directory Denora was installed to (specified during
+      ./Config)
+   8. Copy example.conf to denora.conf
+   9. Edit denora.conf (read the file carefully!)
+  10. Start Denora by typing ./stats
+      Read the COMMANDS file for a list of commands you can use.
+
+If you get lost at any point, just read the detailed installation instructions
+just below.
+
+2.2 Detailed Install instructions
+---------------------------------
 The very first thing you need to do is to get the Denora package
 (if not already done). You can find it at the following place:
 
@@ -213,6 +237,6 @@ to the user
 4. French
 5. Dutch
 6. Italian
-
+7. Russian
 
 -- $Id$

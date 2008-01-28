@@ -333,7 +333,7 @@ void chan_set_modes(Channel * chan, int ac, char **av)
         }
 
         if (((int) mode) < 0) {
-            alog(LOG_DEBUG, langstr(AL0G_DEBUG_BAD_CHAN_MODE), chan->name);
+            alog(LOG_DEBUG, langstr(ALOG_DEBUG_BAD_CHAN_MODE), chan->name);
             continue;
         }
         SET_SEGV_LOCATION();
