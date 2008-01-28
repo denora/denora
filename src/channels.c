@@ -49,10 +49,6 @@ void load_chan_db(void)
         return;                 /* Bang, an error occurred */
     }
 
-    /* For backwards compatibility with older chan.db files */
-    ss->secret = 1;
-    ss->private = 1;
-
     while (1) {
         /* read a new entry and fill key and value with it -Certus */
         retval = new_read_db_entry(&key, &value, dbptr->fptr);
@@ -82,6 +78,9 @@ void load_chan_db(void)
 
             if (!stricmp(key, "name")) {
                 ss = statschan_create(value);
+                /* For backwards compatibility with older chan.db files */
+                ss->secret = 1;
+                ss->private = 1;
             } else if (!stricmp(key, "kickcnt")) {
                 ss->kickcount = atoi(value);
             } else if (!stricmp(key, "joincnt")) {
