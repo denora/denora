@@ -4,6 +4,7 @@ Provided by Denora Team <dev@denorastats.org> - 2008
 01/11 A Detection of Windows Vista and Windows Server 2008        [ #00]
 01/10 A Added persistent channel mode support for nefarious       [#466]
 01/09 U Updated GeoIP.dat                                         [ #00]
+01/28 F Fixed sphtml setting not applying for inactive channels   [#473]
 01/27 F Write pid file before loading flatfile db files           [#469]
 01/27 F Fixed wrong wrong ping value stored for juped servers     [ #00]
 01/27 F Fixed slink array not cleaned in uplink struct on squit   [#461]

@@ -330,6 +330,12 @@ void chan_set_modes(Channel * chan, int ac, char **av)
         case '-':
             add = 0;
             continue;
+        case 's':
+            chan->stats->secret = add ? 1 : 0;
+            continue;
+        case 'p':
+            chan->stats->private = add ? 1 : 0;
+            continue;
         }
 
         if (((int) mode) < 0) {

@@ -49,6 +49,10 @@ void load_chan_db(void)
         return;                 /* Bang, an error occurred */
     }
 
+    /* For backwards compatibility with older chan.db files */
+    ss->secret = 1;
+    ss->private = 1;
+
     while (1) {
         /* read a new entry and fill key and value with it -Certus */
         retval = new_read_db_entry(&key, &value, dbptr->fptr);
@@ -102,6 +106,10 @@ void load_chan_db(void)
                 ss->modecount = atoi(value);
             } else if (!stricmp(key, "modecounttime")) {
                 ss->modecounttime = atoi(value);
+            } else if (!stricmp(key, "secret")) {
+                ss->secret = atoi(value);
+            } else if (!stricmp(key, "private")) {
+                ss->private = atoi(value);
             }
         }                       /* else */
     }                           /* while */
@@ -156,6 +164,8 @@ void save_chan_db(void)
             new_write_db_entry("modecount", dbptr, "%d", ss->modecount);
             new_write_db_entry("modecounttime", dbptr, "%ld",
                                (long int) ss->modecounttime);
+            new_write_db_entry("secret", dbptr, "%i", ss->secret);
+            new_write_db_entry("private", dbptr, "%i", ss->private);
             new_write_db_endofblock(dbptr);
         }
         tn = list_next(StatsChanhead, tn);
@@ -1625,6 +1635,8 @@ StatsChannel *statschan_create(char *chan)
         c->partcounttime = 0;
         c->modecount = 0;
         c->modecounttime = 0;
+        c->secret = 0;
+        c->private = 0;
         tn = lnode_create(c);
         list_append(StatsChanhead, tn);
     }

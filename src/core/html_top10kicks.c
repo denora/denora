@@ -101,12 +101,9 @@ void html_top10kicks(FILE * ptr)
         tn = list_first(StatsChanhead);
         while (tn) {
             s = lnode_get(tn);
-            if (SP_HTML) {
-                if (ChanHasMode(s->name, CMODE_s)
-                    || ChanHasMode(s->name, CMODE_p)) {
-                    tn = list_next(StatsChanhead, tn);
-                    continue;
-                }
+            if (SP_HTML && (s->secret || s->private)) {
+                tn = list_next(StatsChanhead, tn);
+                continue;
             }
             if (s) {
                 if (s->kickcount) {

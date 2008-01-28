@@ -1073,6 +1073,8 @@ struct statschan_ {
     time_t partcounttime;
     uint32 modecount;
     time_t modecounttime;
+    int secret;
+    int private;
     ModuleData *moduleData;
 };
 

@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="158"
+VERSION_BUILD="159"
 
 # $Log$
+#
+# BUILD : 1.4.0.159 (SVN)
+# BUGS  : 473
+# NOTES : Fixed sphtml setting not applying for inactive channels.
 #
 # BUILD : 1.4.0.158 (SVN)
 # BUGS  : 472
