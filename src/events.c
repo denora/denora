@@ -109,7 +109,7 @@ void send_event(const char *name, int argc, ...)
      * Now that the events have seen the message, free it up
      **/
     for (idx = 0; idx < argc; idx++) {
-        if (argv[idx]) {
+        if (!BadPtr(argv[idx])) {
             free(argv[idx]);
         }
     }
