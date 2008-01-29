@@ -9,7 +9,8 @@
 # Based on the original code of Anope by Anope Team.
 # Based on the original code of Thales by Lucas.
 #
-# $Id: ru.l 30 2007-12-18 07:28:15Z Kein $
+# $Id: ru.l 30 2008-01-27 18:21:22Z Kein $
+# Charaster set is cp1251
 #
 # When translating this file to another language, keep in mind that the
 # order of parameters for sprintf() is fixed in the source code, so your
@@ -1069,349 +1070,349 @@ CONFIG_SS_ALIASDESC_ERROR
 	Не верно указана или отсутствует опция aliasreal в блоке statserv.
 
 ALOG_FAILED_SQL_CONNECT
-	Ошибка подключения к SQL-базе данных : %s
+	Failed to connect to database : %s
 
 ALOG_SQL_ENABLED
-	%s: успешно включено.
+	%s: has been enabled.
 
 ALOG_SQL_DISABLED
-	MySQL: успешно отключено.
+	MySQL: has been disabled.
 
 ALOG_SQL_NOTSET
-	MySQL Error: указаны не все необходимые опции в sql-блоке.
+	MySQL Error: Set all required configuration options.
 
 ALOG_HTML_ERR_WRITE
-	Error: недостаточно прав для записи файла: %s
+	Error: unable to access file for writing: %s
 
 ALOG_DB_ERROR
-	WARNING! DB_READ_ERROR в %s
+	WARNING! DB_READ_ERROR in %s
 
 ALOG_DEBUG_DB_OK
-	debug: %s успешно считано
+	debug: %s read successfully
 
 ALOG_DEBUG_UNKNOW_CMODE
-	debug: неизвестный канальный режим %c
+	debug: unknown channel mode %c
 
 ALOG_DEBUG_LAST_LINE
-	debug: последняя строка %s
+	debug: last line is %s
 
 ALOG_DEBUG_REPORT_AT
-	debug: отпишитесь об ошибке на http://bugtracker.nomadirc.net
+	debug: report these to the bugtracker at http://bugtracker.nomadirc.net
 
 ALOG_DEBUG_NONEXISTANT_USER_JOIN
-	Channel: получен join несуществующего пользователя %s, ID канала %d
+	Channel: received join of non-existing user %s on channel ID %d
 
 ALOG_DEBUG_CHANGE_MODE_CHAN
-	debug: изменение режимов для %s на %s
+	debug: Changing modes for %s to %s
 
 ALOG_DEBUG_BAD_CHAN_MODE
-	Debug: обнаружен некорректный режим на %s.
+	Debug: Malformed mode detected on %s.
 
 ALOG_DEBUG_MODE_NO_PARAM
-	channel: режим %c%c на канале %s указан без параметров (?)
+	channel: mode %c%c with no parameter (?) for channel %s
 
 ALOG_DEBUG_FINDCHAN_BAD
-	Error: функция findchan() вызвана без параметров (NULL-значение)
+	Error: findchan() called with NULL values
 
 ALOG_DEBUG_FINDSTATCHAN_BAD
-	Error: функция findstatschan() вызвана без параметров (NULL-значение)
+	Error: findstatschan() called with NULL values
 
 ALOG_DEBUG_SJOIN_NONEXISTANT
-	user: получен SJOIN для несуществующего пользователя %s на %s
+	user: SJOIN for nonexistent user %s on %s
 
 ALOG_DEBUG_JOIN_NONEXISTANT
-	user: получен JOIN для несуществующего пользователя %s на %s
+	user: JOIN for nonexistent user %s on %s
 
 ALOG_DEBUG_JOIN
-	debug: %s зашел на %s
+	debug: %s joins %s
 
 ALOG_DEBUG_KICK_NONEXISTANT
-	user: получен KICK для несуществующего пользователя %s на %s: %s
+	user: KICK for nonexistent user %s on %s: %s
 
 ALOG_DEBUG_KICKED
-	debug: кикнут пользователь %s с канала %s
+	debug: kicking %s from %s
 
 ALOG_DEBUG_PART_NONEXISTANT
-	user: получен PART от несуществующего пользователя %s: %s
+	user: PART from nonexistent user %s: %s
 
 ALOG_DEBUG_PART
-	debug: %s покидает %s
+	debug: %s leaves %s
 
 ALOG_DEBUG_PART_BUG
-	user: BUG при покидании канала %s: запись о канале обнаружена, однако c->chan NULL
+	user: BUG parting %s: channel entry found but c->chan NULL
 
 ALOG_NON_TS_MODE
-	Режим TSMODE включен, однако MODE не имеет валидного TS
+	TSMODE enabled but MODE has no valid TS
 
 ALOG_DEBUG_NO_FIND_CHAN
-	debug: невозможно найти канал %s
+	debug: can't find chan %s
 
 ALOG_DEBUG_TOPIC_TS
-	debug: закодированное TS-значение TOPIC'а %s преобразовано в %d
+	debug: encoded TOPIC TS %s converted to %d
 
 ALOG_TOPIC_NONEXISTANT
-	channel: значение TOPIC'а %s для несуществующего канала %s
+	channel: TOPIC %s for nonexistent channel %s
 
 ALOG_ADD_BAN_BAD
-	debug: функция add_ban вызвана без параметров (NULL-значение)
+	debug: add_ban called with NULL values
 
 ALOG_ADD_BAN_ADDED
-	debug: добавлен бан %s на канале %s
+	debug: Added ban %s to channel %s
 
 ALOG_ADD_EXCEPTION_ADDED
-	debug: добавлено исключение %s на канале %s
+	debug: Added except %s to channel %s
 
 ALOG_ADD_INVITE_ADDED
-	debug: добавлено автоприглашение %s на канале %s
+	debug: Added invite %s to channel %s
 
 ALOG_CREATE_CHAN
-	debug: создание канала %s
+	debug: Creating channel %s
 
 ALOG_DELETE_CHAN
-	debug: удаление канала %s
+	debug: Deleting channel %s
 
 ALOG_BAN_FREE_ERROR
-	channel: BUG удаления %s: bans[%d] is NULL!
+	channel: BUG freeing %s: bans[%d] is NULL!
 
 ALOG_EXCEPTION_FREE_ERROR
-	channel: BUG удаления %s: excepts[%d] is NULL!
+	BUG freeing %s: excepts[%d] is NULL!
 
 ALOG_INVITE_FREE_ERROR
-	channel: BUG удаления %s: invite[%d] is NULL!
+	channel: BUG freeing %s: invite[%d] is NULL!
 
 ALOG_BAN_DEL_CHAN
-	debug: удален бан %s с канала: %s
+	debug: Deleted ban %s from channel %s
 
 ALOG_EXCEPTION_DEL_CHAN
-	debug: удалено исключение %s с канала: %s
+	debug: Deleted except %s from channel %s
 
 ALOG_INVITE_DEL_CHAN
-	debug: удалено автоприглашение %s с канала: %s
+	debug: Deleted invite %s from channel %s
 
 ALOG_DEBUG_FLOOD_MODE
-	debug: режим флуда для канала %s теперь: %s
+	debug: Flood mode for channel %s set to %s
 
 ALOG_NO_FLOOD
-	не указан
+	no flood settings
 
 ALOG_KEY_SET_TO
-	debug: Ключ для канала %s теперь: %s
+	debug: Key of channel %s set to %s
 
 ALOG_NO_KEY
-	не указан
+	no key
 
 ALOG_LIMIT_SET_TO
-	debug: лимит пользователей для  %s теперь: %u
+	debug: Limit of channel %s set to %u
 
 ALOG_REDIRECT_SET_TO
-	debug: опции перенаправления для %s теперь: %s
+	debug: Redirect of channel %s set to %s
 
 ALOG_NO_REDIRECT
-	без перенаправления
+	no redirect
 
 ALOG_DEBUG_BAD_FINDSGROUP
-	Error: функция findsgroup() вызвана без параметров (NULL-значение)
+	Error: findsgroup() called with NULL values
 
 ALOG_LARGENET_WARNING_1
-	Вы выбрали вариант запуска сервисов статистики с наименьшим кол-вом данных
+	You have selected to run Denora with the least amount of data
 
 ALOG_LARGENET_WARNING_2
-	сохраняемых в БД SQL. Стоит заметить, что использовать данный режим рекомендуется
+	stored in SQL, you should only use this option if you are on a
 
 ALOG_LARGENET_WARNING_3
-	только для ОЧЕНЬ больших сетей (100,000+ поль.) и при работе с удаленной SQL БД.
+	very large network of 100,000+ users or have a remote sql database
 
 CONFIG_ERROR_BASE
 	Conf Error:  %s near line %d of %s
 
 CONFIG_UNKNOWN_FILE
-	неизвестен
+	unknown
 
 CONFIG_ERROR_OPENING
-	Невозможно открыть конфигурационный файл %s
+	Unable to open config file %s
 
 ALOG_DEBUG_RESOLVED_HOST
-	debug: адрес вида %s отрезолвлен в %s
+	debug: Resolved %s to %s
 
 ALOG_DEBUG_BAD_SSTRDUP
-	debug: функция sstrdup() вызвана без параметров (NULL-значение)
+	debug: sstrdup() called with NULL-arg
 
 ALOG_RESET_DAILY
-	очистка дневной статистики
+	resetting daily stats
 
 ALOG_RESETTING_SUNDAY
-	очистка недельной статистики (в Воскресенье)
+	resetting weekly stats (on Sunday)
 
 ALOG_RESETTING_MONDAY
-	очистка недельной статистики (в Понедельник)
+	resetting weekly stats (on Monday)
 
 ALOG_RESETTING_TUESDAY
-	очистка недельной статистики (во Вторник)
+	resetting weekly stats (on Tuesday)
 
 ALOG_RESETTING_WEDNESDAY
-	очистка недельной статистики (в Среду)
+	resetting weekly stats (on Wednesday)
 
 ALOG_RESETTING_THURSDAY
-	очистка недельной статистики (в Четверг)
+	resetting weekly stats (on Thursday)
 
 ALOG_RESETTING_FRIDAY
-	очистка недельной статистики (в Пятницу)
+	resetting weekly stats (on Friday)
 
 ALOG_RESETTING_SATURDAY
-	очистка недельной статистики (в Субботу)
+	resetting weekly stats (on Saturday)
 
 ALOG_RESETTING_MONTHLY
-	очистка месячной статистики 
+	resetting monthly stats
 
 ALOG_TRY_TO_DISPLAY
-	debug: попытка отобразить сообщение %s
+	debug: trying to display message %s
 
 ALOG_DONE_DISPLAY
-	debug: успешно отображено сообщение %s
+	debug: done displaying message %s
 
 ALOG_UKNOWN_USER_MODE
-	debug: неизвестный пользовательский режим %c (в %s)
+	debug: unknown user mode %c (in %s)
 
 ALOG_SWHOIS_ERROR
-	SWHOIS установлен для несуществующего пользователя %s.
+	SWHOIS set for nonexistent user %s.
 
 ALOG_VHOST_FOR
-	debug: %s изменил свой vhost на %s
+	debug: %s changes its vhost to %s
 
 ALOG_REALNAME_FOR
-	debug: %s изменил свое имя на %s
+	debug: %s changes its realname to %s
 
 ALOG_USERNAME_FOR
-	debug: %s изменил свой идент на %s
+	debug: %s changes its username to %s
 
 ALOG_UMODE_NONEXISTANT
-	user: MODE %s для несуществующего пользователя %s: %s
+	user: MODE %s for nonexistent nick %s: %s
 
 ALOG_UNKNWON_MSG
-	debug: неизвестное сообщение от сервера (%s)
+	debug: unknown message from server (%s)
 
 ALOG_TRYING_LOAD_MOD
-	попытка загрузить [%s]
+	trying to load [%s]
 
 ALOG_STATUS
-	статус: [%d]
+	status: [%d]
 
 ALOG_TRYING_UNLOAD_MOD
-	попытка выгрузить [%s]
+	trying to unload [%s]
 
 RESTARTING
-	Перезапуск...
+	Restarting
 
 RESTART_FAILED
-	Перезапуск неудачен
+	Restart failed
 
 SAVING_FFF
-	debug: сохранение FFF-информации на диск
+	debug: Saving FFF information to disk
 
 ALOG_SIGPIPE_WARNING
-	Сервисы статистики организуют вывод backtrace, однако их последующая работа может быть нестабильна.
+	Denora will execute a backtrace, and continue on, however Denora may become unstable
 
 ALOG_NO_STATS_BIN
-	Попытка перезапуска неудачна-- не указан STATS_BIN (перезапустите configure)
+	Restart attempt failed--STATS_BIN not defined (rerun configure)
 
 ALOG_ERR_REHASH_NO_MEM
-	Возникла ошибка во время перезагрузки конфига, недостаточно памяти!
+	Error during the reload of the configuration file, but out of memory!
 
 ALOG_ERR_REHASH
-	Ошибка чтения конфигурационного файла (получен сигнал SIGHUP)
+	Error Reading Configuration File (Received SIGHUP)
 
 BACKTRACE_LINES
-	Backtrace: пошлите отчет, включающий в себя нижеследующие строки
+	Backtrace: report the following lines
 
 BACKTRACE_NOT_HERE
-	Backtrace: не доступен для данной програм. платформы, используйте GDB
+	Backtrace: not available on this platform - use GDB
 
 ALOG_DEBUG_SERVINTRO
-	debug: обнаружен сервер (%s)
+	debug: Server introduced (%s)
 
 ALOG_DEBUG_SERVINTRO_FORM
-	debug: обнаружен сервер (%s) от %s
+	debug: Server introduced (%s) from %s
 
 ALOG_DEBUG_PINGTIME
-	debug: время пинга от %s : %ld = %ld - %ld
+	debug: Ping Time from %s : %ld = %ld - %ld
 
 ALOG_ERR_FINDSERVER
-	debug: Error: функция findserver() вызвана без параметров (NULL-значение)
+	debug: Error: findserver() called with NULL values
 
 ALOG_ERR_FINDSERVERSTATS
-	Error: функция findserverstats() вызвана без параметров (NULL-значение)
+	Error: findserverstats() called with NULL values
 
 ALOG_ERR_FINDSERVERSUID
-	Error: функция findserver_suid() вызвана без параметров (NULL-значение)
+	Error: findserver_suid() called with NULL values
 
 ALOG_ERR_DEL_SERVSTATS
-	Error: функция delete_serverstats() вызвана без параметров (NULL-значение)
+	Error: delete_serverstats() called with NULL values
 
 ALOG_DEL_SERVSTATS_FOR
-	debug: функция delete_serverstats() вызвана с параметрами %s
+	debug: delete_serverstats() called for %s
 
 ALOG_DEL_SERVSTATS_DONE
-	debug: процедура delete_serverstats() успешно завершена
+	debug: delete_serverstats() completed
 
 ALOG_ERR_DEL_SERVER
-	Error: функция delete_server() вызвана без параметров (NULL-значение)
+	Error: delete_server() called with NULL values
 
 ALOG_DEL_SERVER_FOR
-	debug: функция delete_server() вызвана с параметрами %s
+	debug: delete_server() called for %s
 
 ALOG_DEL_SERVER_NOQUIT
-	debug: функция delete_server() очистила список всех пользователей для NOQUIT
+	debug: delete_server() cleared all users for NOQUIT
 
 ALOG_DEL_SERVER_DONE
-	debug: процедура delete_server() успешно завершена
+	debug: delete_server() completed
 
 ALOG_DEBUG_UNKNOWN_VERSION_REPLY
-	debug: функция sql_do_server_version получила неизвестный формат версии
+	debug: sql_do_server_version received unknown version format
 
 ALOG_MOD_TRY_LOAD
-	попытка загрузить [%s]
+	trying to load [%s]
 
 ALOG_MOD_STATUS
-	статус: [%d][%s]
+	status: [%d][%s]
 
 ALOG_MOD_ERROR
-	Ошибка модуля: %s
+	Module error: %s
 
 ALOG_MOD_BE_ONLY_ONE
-	Вы не можете загрузить сразу два модуля протокола.
+	You cannot have 2 protocol modules loaded.
 
 ALOG_MOD_UNLOAD_SELF
-	debug: получен запрос на выгрузку %s
+	debug: %s requested unload...
 
 ALOG_CMD_DISPLAY_START
-	debug: попытка отображения команды %s
+	debug: trying to display command %s
 
 ALOG_CMD_DISPLAY_END
-	debug: успешно выполнено отображение команды %s
+	debug: done displaying command %s
 
 ALOG_CMD_DISPLAY_LIST
-	debug: отображение списка команд для %s
+	debug: Displaying command list for %s
 
 ALOG_MSG_DISPLAY_START
-	debug: попытка отобразить сообщение %s
+	debug: trying to display message %s
 
 ALOG_MSG_DISPLAY_END
-	debug: успешно отображено сообщение %s
+	debug: done displaying message %s
 
 ALOG_MSG_DISPLAY_LIST
-	debug: отображение списка сообщений для %s
+	debug: Displaying message list for %s
 
 ALOG_MOD_CALLBACK_DISPLAY
-	debug: добавлен CallBack модуля: [%s] во время выполнения %ld
+	debug: Added module CallBack: [%s] due to execute at %ld
 
 ALOG_VHOST_NONEXISTANT_USER
-	user: SETHOST/CHGHOST для несуществующего пользователя %s
+	user: SETHOST/CHGHOST for nonexistent user %s
 
 ALOG_CHGNAME_NONEXISTANT_USER
-	user: SETNAME/CHGNAME для несуществующего пользователя %s
+	user: SETNAME/CHGNAME for nonexistent user %s
 
 ALOG_CHGIDENT_NONEXISTANT_USER
-	user: SETNAME/CHGNAME для несуществующего пользователя %s
+	user: SETNAME/CHGNAME for nonexistent user %s
 
 STAT_ADMIN_ALREADY
 	Пользователь %s уже присутствует в списке Администраторов Статистики.

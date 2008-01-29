@@ -256,7 +256,7 @@ void fill_db_ptr(DenoraDBFile * dbptr, int version, int core_version,
     if (!BadPtr(service)) {
         dbptr->service = sstrdup(service);
     } else {
-        dbptr->service = sstrdup(service);
+        dbptr->service = sstrdup("");
     }
 
 #ifndef _WIN32
@@ -264,25 +264,23 @@ void fill_db_ptr(DenoraDBFile * dbptr, int version, int core_version,
         /* path failed just get the file name in there */
         dbptr->filename = sstrdup(filename);
         ircsnprintf(tempbuf, BUFSIZE, "%s.temp", filename);
-        dbptr->temp_name = sstrdup(tempbuf);
     } else {
         ircsnprintf(buf, BUFSIZE, "%s/%s", buffer, filename);
         dbptr->filename = sstrdup(buf);
         ircsnprintf(tempbuf, BUFSIZE, "%s.temp", buf);
-        dbptr->temp_name = sstrdup(tempbuf);
     }
+    dbptr->temp_name = sstrdup(tempbuf);
 #else
     if (failgetcwd) {
         /* path failed just get the file name in there */
         dbptr->filename = sstrdup(filename);
         ircsnprintf(tempbuf, BUFSIZE, "%s.temp", filename);
-        dbptr->temp_name = sstrdup(tempbuf);
     } else {
         ircsnprintf(buf, BUFSIZE, "%s\\%s", buffer, filename);
         dbptr->filename = sstrdup(buf);
         ircsnprintf(tempbuf, BUFSIZE, "%s.temp", buf);
-        dbptr->temp_name = sstrdup(tempbuf);
     }
+    dbptr->temp_name = sstrdup(tempbuf);
 #endif
     return;
 }
