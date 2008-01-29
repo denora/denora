@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="163"
+VERSION_BUILD="166"
 
 # $Log$
+#
+# BUILD : 1.4.0.166 (SVN)
+# BUGS  : N/A
+# NOTES : Updating Changes file. Marked 1.4.0-RC1 and RC2 releases.
 #
 # BUILD : 1.4.0.163 (SVN)
 # BUGS  : N/A
