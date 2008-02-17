@@ -115,10 +115,13 @@ void IRCDModeInit(void)
 {
     ModuleSetUserMode(UMODE_A, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_D, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_J, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_N, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_O, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_P, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_R, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_S, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_T, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_W, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_Z, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_a, IRCD_ENABLE);
@@ -126,9 +129,12 @@ void IRCDModeInit(void)
     ModuleSetUserMode(UMODE_g, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_h, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_i, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_j, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_n, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_o, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_p, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_r, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_t, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_w, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_x, IRCD_ENABLE);
     ModuleUpdateSQLUserMode();
