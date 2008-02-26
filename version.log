@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="171"
+VERSION_BUILD="172"
 
 # $Log$
+#
+# BUILD : 1.4.0.172 (SVN)
+# BUGS  : 489
+# NOTES : Fixed crash on truncated inspircd11 PUSH message
 #
 # BUILD : 1.4.0.171 (SVN)
 # BUGS  : 488

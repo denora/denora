@@ -345,8 +345,6 @@ void moduleAddIRCDMsgs(void)
         }
     }
 
-    m = createMessage("401",       denora_event_null); addCoreMessage(IRCD,m);
-    m = createMessage("402",       denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("436",       denora_event_436); addCoreMessage(IRCD,m);
     m = createMessage("AWAY",      denora_event_away); addCoreMessage(IRCD,m);
     m = createMessage("INVITE",    denora_event_null); addCoreMessage(IRCD,m);

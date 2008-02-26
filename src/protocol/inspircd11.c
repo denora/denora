@@ -277,9 +277,9 @@ int denora_event_push(char *source, int ac, char **av)
     num = myStrGetToken(av[1], ' ', 1);
     av[1] = myStrGetTokenRemainder(av[1], ' ', 3);
 
-    if (!num) {
+    if (!num || !av[1]) {
         alog(LOG_ERROR,
-             "ERROR: Something wicked while handling the PUSH message, i have no numeric (truncated message)");
+             "ERROR: Something wicked while handling the PUSH message (truncated message)");
         return MOD_CONT;
     }
 
