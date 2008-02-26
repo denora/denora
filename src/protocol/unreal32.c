@@ -55,6 +55,7 @@ IRCDVar myIrcd[] = {
      NULL,                      /* Chan modes */
      'f',                       /* flood                     */
      'j',                       /* flood other               */
+     IRCD_DISABLE,              /* join throttle             */
      'x',                       /* vhost                     */
      't',                       /* vhost other               */
      'L',                       /* channek linking           */

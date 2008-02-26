@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="172"
+VERSION_BUILD="173"
 
 # $Log$
+#
+# BUILD : 1.4.0.173 (SVN)
+# BUGS  : N/A
+# NOTES :  Fixed inspircd11 +j/+J mode data not written to sql
 #
 # BUILD : 1.4.0.172 (SVN)
 # BUGS  : 489

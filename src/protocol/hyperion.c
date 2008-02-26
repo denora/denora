@@ -50,6 +50,7 @@ IRCDVar myIrcd[] = {
      NULL,                      /* Channel modes             */
      IRCD_DISABLE,              /* flood                     */
      IRCD_DISABLE,              /* flood other               */
+     IRCD_DISABLE,              /* join throttle             */
      'x',                       /* vhost                     */
      IRCD_DISABLE,              /* vhost other               */
      IRCD_DISABLE,              /* channek linking           */

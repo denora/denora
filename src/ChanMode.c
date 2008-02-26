@@ -639,6 +639,24 @@ void sql_do_chanmodes(char *chan, char **av)
                         /* strcat(db, buf); */
                         strlcat(db, buf, sizeof(db));
                     }
+                } else if (ircd->jointhrottle
+                           && *modes == ircd->jointhrottle) {
+                    SET_SEGV_LOCATION();
+                    if (tmp[9] == 'Y') {
+                        *buf = '\0';
+                        ircsnprintf(buf, BUFSIZE - 1,
+                                    "mode_%s%c_data=\'%s\', ",
+                                    (ircd->jointhrottle <= 90 ? "u" : "l"),
+                                    ircd->jointhrottle, av[argptr++]);
+                        strlcat(db, buf, sizeof(db));
+                    } else {
+                        *buf = '\0';
+                        ircsnprintf(buf, BUFSIZE - 1,
+                                    "mode_%s%c_data=\'\', ",
+                                    (ircd->jointhrottle <= 90 ? "u" : "l"),
+                                    ircd->jointhrottle);
+                        strlcat(db, buf, sizeof(db));
+                    }
                 }
             }
             break;

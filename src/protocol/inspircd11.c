@@ -35,7 +35,7 @@ IRCDVar myIrcd[] = {
      IRCD_ENABLE,               /* NICKIP                       */
      IRCD_ENABLE,               /* VHOST ON NICK                */
      IRCD_ENABLE,               /* +f                           */
-     IRCD_DISABLE,              /* +j                           */
+     IRCD_ENABLE,               /* +j                           */
      IRCD_ENABLE,               /* +L                           */
      CMODE_f,                   /* +f Mode                      */
      CMODE_j,                   /* +j Mode                      */
@@ -56,6 +56,7 @@ IRCDVar myIrcd[] = {
      NULL,
      'f',                       /* flood                        */
      'j',                       /* flood other                  */
+     'J',                       /* join throttle                */
      'x',                       /* vhost                        */
      IRCD_DISABLE,              /* vhost other                  */
      'L',                       /* channek linking              */

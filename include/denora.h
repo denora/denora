@@ -752,6 +752,7 @@ struct ircdvars_ {
 	char *cmodes;
    	int floodchar;
    	int floodchar_alternative;
+   	int jointhrottle;
 	int vhostchar;
 	int vhostchar2;
 	int chanforward;
