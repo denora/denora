@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="173"
+VERSION_BUILD="174"
 
 # $Log$
+#
+# BUILD : 1.4.0.174 (SVN)
+# BUGS  : 485
+# NOTES : Fixed segfault on certain inspircd11 FMODE events
 #
 # BUILD : 1.4.0.173 (SVN)
 # BUGS  : N/A

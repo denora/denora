@@ -353,7 +353,7 @@ void chan_set_modes(Channel * chan, int ac, char **av)
                 av++;
                 cm->setvalue(chan, add ? *av : NULL);
                 SET_SEGV_LOCATION();
-                if (*av) {
+                if (ac > 0 && *av) {
                     send_event(EVENT_CHANNEL_MODE, 4,
                                (add ? EVENT_MODE_ADD : EVENT_MODE_REMOVE),
                                chan->name, modebuf, *av);
