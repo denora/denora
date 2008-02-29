@@ -832,9 +832,9 @@ int denora_event_mode(char *source, int ac, char **av)
     if (ac < 2)
         return MOD_CONT;
     if (*av[0] == '#' || *av[0] == '&') {
-        do_cmode(source, ac, av);
+        do_cmode(av[0], ac, av);
     } else {
-        do_umode(source, ac, av);
+        do_umode(av[0], ac, av);
     }
 
     return MOD_CONT;

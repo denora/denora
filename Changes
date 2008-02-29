@@ -1,6 +1,9 @@
 Denora Version 1.4.0-SVN
 ------------------------
 Provided by Denora Team <dev@denorastats.org> - 2008
+02/29 F Fixed possible segfault on restart                        [ #00]
+02/29 F Fixed MODE not handled correctly in inspircd11            [ #00]
+02/28 A Chan messages from excluded users now counted globally    [ #00]
 02/27 F Fixed segfault on certain inspircd11 FMODE events         [#485]
 02/26 F Fixed inspircd11 +j/+J mode data not written to sql       [ #00]
 02/26 F Fixed crash on truncated inspircd11 PUSH message          [#489]

@@ -258,7 +258,6 @@ int m_privmsg(char *source, char *receiver, char *msg)
 {
     char *s;
     User *u;
-    Exclude *e;
     PrivMsg *p;
 
     if (BadPtr(source) || BadPtr(receiver) || BadPtr(msg)) {
@@ -277,12 +276,9 @@ int m_privmsg(char *source, char *receiver, char *msg)
 
     if (*receiver == '#') {
         if (denora->do_sql && !LargeNet) {
-            e = find_exclude(u->nick, u->server->name);
-            if (!e) {
-                if (stricmp(u->nick, s_StatServ)
-                    || stricmp(u->nick, s_StatServ_alias)) {
-                    do_cstats(u, receiver, msg);
-                }
+            if (stricmp(u->nick, s_StatServ)
+                || stricmp(u->nick, s_StatServ_alias)) {
+                do_cstats(u, receiver, msg);
             }
         }
     } else {

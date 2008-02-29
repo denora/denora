@@ -400,8 +400,8 @@ void chan_set_modes(Channel * chan, int ac, char **av)
         }
     }
 
-    chan->stats->secret = ChanHasMode(chan->name, CMODE_s) ? 1 : 0;
-    chan->stats->private = ChanHasMode(chan->name, CMODE_p) ? 1 : 0;
+    chan->stats->secret = ChanHasMode(chan->name, CMODE_s);
+    chan->stats->private = ChanHasMode(chan->name, CMODE_p);
 }
 
 /*************************************************************************/

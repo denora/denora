@@ -358,7 +358,7 @@ void denora_cmd_part(char *nick, char *chan, const char *fmt, ...)
 {
     va_list args;
     char buf[BUFSIZE];
-    char *v[32];
+    char *v[128];
 
     *buf = '\0';
     if (fmt) {

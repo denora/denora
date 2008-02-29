@@ -284,10 +284,6 @@ static void make_stats(User * u, char *receiver, char *msg)
 
     c = findchan(receiver);
     check_db(u, c);
-    if (u->cstats == 2) {       /* ignore */
-        SET_SEGV_LOCATION();
-        return;
-    }
     SET_SEGV_LOCATION();
     buf = normalizeBuffer(msg); /* remove control letters from message */
     if (BadPtr(buf)) {
@@ -311,13 +307,15 @@ static void make_stats(User * u, char *receiver, char *msg)
     hour = get_hour();
     /* update user SQL */
     /* update user */
-    rdb_query
-        (QUERY_LOW,
-         "UPDATE %s SET letters=letters+%d, words=words+%d, line=line+1, "
-         "actions=actions+%d, smileys=smileys+%d, lastspoke=%i, time%d=time%d+1 "
-         "WHERE (uname=\'%s\' AND (chan=\'global\' OR chan=\'%s\'));",
-         UStatsTable, letters, words, action, smileys, time(NULL), hour,
-         hour, u->sgroup, c->sqlchan);
+    if (u->cstats != 2) {       /* check for ignore */
+        rdb_query
+            (QUERY_LOW,
+             "UPDATE %s SET letters=letters+%d, words=words+%d, line=line+1, "
+             "actions=actions+%d, smileys=smileys+%d, lastspoke=%i, time%d=time%d+1 "
+             "WHERE (uname=\'%s\' AND (chan=\'global\' OR chan=\'%s\'));",
+             UStatsTable, letters, words, action, smileys, time(NULL),
+             hour, hour, u->sgroup, c->sqlchan);
+    }
     SET_SEGV_LOCATION();
 
 /* update chan */
@@ -400,10 +398,10 @@ void count_topics(User * u, Channel * c)
             (QUERY_LOW, "UPDATE %s SET topics=topics+1 "
              "WHERE (uname=\'%s\' AND (chan=\'global\' OR chan=\'%s\'));",
              UStatsTable, u->sgroup, c->sqlchan);
-        rdb_query
-            (QUERY_LOW, "UPDATE %s SET topics=topics+1 WHERE chan=\'%s\';",
-             CStatsTable, c->sqlchan);
     }
+    rdb_query
+        (QUERY_LOW, "UPDATE %s SET topics=topics+1 WHERE chan=\'%s\';",
+         CStatsTable, c->sqlchan);
     SET_SEGV_LOCATION();
 }
 
@@ -434,10 +432,10 @@ void count_modes(User * u, Channel * c)
             (QUERY_LOW, "UPDATE %s SET modes=modes+1 "
              "WHERE (uname=\'%s\' AND (chan=\'global\' OR chan=\'%s\'));",
              UStatsTable, u->sgroup, c->sqlchan);
-        rdb_query
-            (QUERY_LOW, "UPDATE %s SET modes=modes+1 WHERE chan=\'%s\';",
-             CStatsTable, c->sqlchan);
     }
+    rdb_query
+        (QUERY_LOW, "UPDATE %s SET modes=modes+1 WHERE chan=\'%s\';",
+         CStatsTable, c->sqlchan);
     SET_SEGV_LOCATION();
 }
 
