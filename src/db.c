@@ -866,7 +866,8 @@ void db_removefromchans(int nickid)
             rdb_query(QUERY_LOW,
                       "UPDATE %s SET currentusers=currentusers-1 WHERE chanid=%d",
                       ChanTable, chanid);
-            db_checkemptychan(atoi(res[0]));
+            if (!ChanHasMode(chan, ircd->persist_char))
+                db_checkemptychan(atoi(res[0]));
             free(chan);
         }
         SET_SEGV_LOCATION();

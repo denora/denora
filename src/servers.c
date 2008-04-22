@@ -838,7 +838,7 @@ void delete_server(Server * serv, const char *quitreason, int depth)
             s = server_find(serv->slinks[i]);
             if (s) {
                 x = find_server_link(serv, s->name);
-                delete_server(s, quitreason, depth++);
+                delete_server(s, quitreason, (depth + 1));
             } else {
                 alog(LOG_DEBUG, "Can not find server %s", serv->slinks[i]);
             }
@@ -878,8 +878,14 @@ void delete_server(Server * serv, const char *quitreason, int depth)
         if (serv->uplink->slinks_count) {
             i = 0;
             ARRAY_FOREACH(i, serv->uplink->slinks) {
-                free(serv->uplink->slinks[i]);
-                ARRAY_REMOVE(serv->uplink->slinks, i);
+                if (!stricmp(serv->uplink->slinks[i], serv->name)
+                    && (depth == 0)) {
+                    alog(LOG_DEBUG,
+                         "Removed %s from it's parents list of children",
+                         serv->name);
+                    free(serv->uplink->slinks[i]);
+                    ARRAY_REMOVE(serv->uplink->slinks, i);
+                }
             }
         }
     }

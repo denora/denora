@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="175"
+VERSION_BUILD="176"
 
 # $Log$
+#
+# BUILD : 1.4.0.176 (SVN)
+# BUGS  : 481,482,486,493
+# NOTES : Updated Russian language file. Fixes to server squit routine. Fix persistent channels getting deleted on last user part.
 #
 # BUILD : 1.4.0.175 (SVN)
 # BUGS  : N/A
