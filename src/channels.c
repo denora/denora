@@ -701,12 +701,10 @@ void do_p10_burst(char *source, int ac, char **av)
 
     c = findchan(av[0]);
     if (!c) {
-        c = chan_create(av[0]);
+        c = chan_create(av[0], strtol(av[1], NULL, 10));
         db_getchancreate(av[0]);
     }
     if (c) {
-        /* Setting the timestamp */
-        c->creation_time = strtol(av[1], NULL, 10);
         while (pc < ac) {
             switch (*av[pc]) {
                 /* set modes, and extra modes if needed */
@@ -866,7 +864,7 @@ void do_join(const char *source, int ac, char **av)
             user->chans = NULL;
             continue;
         }
-        join_user_update(user, findchan(s), s);
+        join_user_update(user, findchan(s), s, time(NULL));
         if (denora->do_sql) {
             sql_do_join(s, user->nick);
         }
@@ -1108,18 +1106,33 @@ void do_sjoin(const char *source, int ac, char **av)
 {
     Channel *c;
     User *user;
-    char *s, *end, cubuf[7], *end2, *sumodes[6];
+    Server *serv;
+    char *s = NULL;
+    char *end, cubuf[7], *end2, *cumodes[6];
     char *sqlusers = NULL;
-    char *mask;
     int ts = 0;
+    int is_created = 0;
+    int keep_their_modes = 1;
 
     SET_SEGV_LOCATION();
 
-    if (ircd->sjb64 && *av[0] == '!') {
+    serv = findserver(servlist, source);
+
+    if (ircd->sjb64) {
         ts = base64dec_ts(av[0]);
     } else {
         ts = strtoul(av[0], NULL, 10);
     }
+    c = findchan(av[1]);
+    if (c != NULL) {
+        if (c->creation_time == 0 || ts == 0)
+            c->creation_time = 0;
+        else if (c->creation_time > ts) {
+            c->creation_time = ts;
+        } else if (c->creation_time < ts)
+            keep_their_modes = 0;
+    } else
+        is_created = 1;
 
     /* Double check to avoid unknown modes that need parameters */
     if (ac >= 4) {
@@ -1128,10 +1141,9 @@ void do_sjoin(const char *source, int ac, char **av)
             sql_do_sjoin(av[1], sqlusers, &av[2], (ac > 3) ? ac - 3 : 0);
             free(sqlusers);
         }
-        c = findchan(av[1]);
 
         cubuf[0] = '+';
-        sumodes[0] = cubuf;
+        cumodes[0] = cubuf;
 
         /* We make all the users join */
         s = av[ac - 1];         /* Users are always the last element */
@@ -1143,36 +1155,37 @@ void do_sjoin(const char *source, int ac, char **av)
 
             end2 = cubuf + 1;
 
-            if (ircd->sjoinbanchar && *s == ircd->sjoinbanchar) {
-                mask = myStrGetToken(s, ircd->sjoinbanchar, 1);
-                add_ban(c, mask);
-                free(mask);
-                if (!end)
-                    break;
-                s = end + 1;
-                continue;
+
+            if (ircd->sjoinbanchar) {
+                if (*s == ircd->sjoinbanchar && keep_their_modes) {
+                    add_ban(c, myStrGetToken(s, ircd->sjoinbanchar, 1));
+                    if (!end)
+                        break;
+                    s = end + 1;
+                    continue;
+                }
             }
-            if (ircd->except && ircd->sjoinexchar
-                && *s == ircd->sjoinexchar) {
-                mask = myStrGetToken(s, ircd->sjoinexchar, 1);
-                add_exception(c, mask);
-                free(mask);
-                if (!end)
-                    break;
-                s = end + 1;
-                continue;
+            if (ircd->sjoinexchar) {
+                if (*s == ircd->sjoinexchar && keep_their_modes) {
+                    add_exception(c,
+                                  myStrGetToken(s, ircd->sjoinexchar, 1));
+                    if (!end)
+                        break;
+                    s = end + 1;
+                    continue;
+                }
             }
 
-            if (ircd->invitemode && ircd->sjoinivchar
-                && *s == ircd->sjoinivchar) {
-                mask = myStrGetToken(s, ircd->sjoinivchar, 1);
-                add_invite(c, mask);
-                free(mask);
-                if (!end)
-                    break;
-                s = end + 1;
-                continue;
+            if (ircd->sjoinivchar) {
+                if (*s == ircd->sjoinivchar && keep_their_modes) {
+                    add_invite(c, myStrGetToken(s, ircd->sjoinivchar, 1));
+                    if (!end)
+                        break;
+                    s = end + 1;
+                    continue;
+                }
             }
+
             while (csmodes[(int) *s] != 0)
                 *end2++ = csmodes[(int) *s++];
             *end2 = 0;
@@ -1184,14 +1197,14 @@ void do_sjoin(const char *source, int ac, char **av)
                 return;
             }
 
-            c = join_user_update(user, c, av[1]);
+            c = join_user_update(user, c, av[1], ts);
             /* We update user mode on the channel */
-            if (end2 - cubuf > 1) {
+            if (end2 - cubuf > 1 && keep_their_modes) {
                 int i;
 
                 for (i = 1; i < end2 - cubuf; i++)
-                    sumodes[i] = user->nick;
-                chan_set_modes(c, 1 + (end2 - cubuf - 1), sumodes);
+                    cumodes[i] = user->nick;
+                chan_set_modes(c, 1 + (end2 - cubuf - 1), cumodes);
             }
 
             if (!end)
@@ -1200,8 +1213,6 @@ void do_sjoin(const char *source, int ac, char **av)
         }
 
         if (c) {
-            /* Set the timestamp */
-            c->creation_time = ts;
             /* We now update the channel mode. */
             chan_set_modes(c, ac - 3, &av[2]);
             SET_SEGV_LOCATION();
@@ -1216,7 +1227,7 @@ void do_sjoin(const char *source, int ac, char **av)
         }
         c = findchan(av[1]);
         cubuf[0] = '+';
-        sumodes[0] = cubuf;
+        cumodes[0] = cubuf;
 
         /* We make all the users join */
         s = av[2];              /* Users are always the last element */
@@ -1239,7 +1250,7 @@ void do_sjoin(const char *source, int ac, char **av)
                 return;
             }
 
-            c = join_user_update(user, c, av[1]);
+            c = join_user_update(user, c, av[1], ts);
             SET_SEGV_LOCATION();
 
             /* We update user mode on the channel */
@@ -1247,9 +1258,9 @@ void do_sjoin(const char *source, int ac, char **av)
                 int i;
 
                 for (i = 1; i < end2 - cubuf; i++) {
-                    sumodes[i] = user->nick;
+                    cumodes[i] = user->nick;
                 }
-                chan_set_modes(c, 1 + (end2 - cubuf - 1), sumodes);
+                chan_set_modes(c, 1 + (end2 - cubuf - 1), cumodes);
                 SET_SEGV_LOCATION();
             }
 
@@ -1258,21 +1269,18 @@ void do_sjoin(const char *source, int ac, char **av)
             s = end + 1;
         }
 
-        if (c) {
-            c->creation_time = ts;
-        }
     } else if (ac == 3 && ircd->ts6) {
         if (denora->do_sql) {
             sqlusers = sstrdup(source);
             sql_do_sjoin(av[1], sqlusers, &av[2], (ac > 3) ? ac - 3 : 0);
             free(sqlusers);
         }
-        c = findchan(av[1]);
+
         cubuf[0] = '+';
-        sumodes[0] = cubuf;
+        cumodes[0] = cubuf;
 
         /* We make all the users join */
-        s = sstrdup(source);    /* Users are always the last element */
+        s = av[2];              /* Users are always the last element */
 
         while (*s) {
             end = strchr(s, ' ');
@@ -1293,17 +1301,17 @@ void do_sjoin(const char *source, int ac, char **av)
                 return;
             }
 
-            c = join_user_update(user, c, av[1]);
+            c = join_user_update(user, c, av[1], ts);
             SET_SEGV_LOCATION();
 
             /* We update user mode on the channel */
-            if (end2 - cubuf > 1) {
+            if (end2 - cubuf > 1 && keep_their_modes) {
                 int i;
 
                 for (i = 1; i < end2 - cubuf; i++) {
-                    sumodes[i] = user->nick;
+                    cumodes[i] = user->nick;
                 }
-                chan_set_modes(c, 1 + (end2 - cubuf - 1), sumodes);
+                chan_set_modes(c, 1 + (end2 - cubuf - 1), cumodes);
                 SET_SEGV_LOCATION();
             }
 
@@ -1311,11 +1319,6 @@ void do_sjoin(const char *source, int ac, char **av)
                 break;
             s = end + 1;
         }
-
-        if (c) {
-            c->creation_time = ts;
-        }
-        free(s);
     } else if (ac == 2) {
         if (denora->do_sql) {
             sqlusers = sstrdup(source);
@@ -1329,9 +1332,7 @@ void do_sjoin(const char *source, int ac, char **av)
             return;
         }
         SET_SEGV_LOCATION();
-        c = findchan(av[1]);
-        c = join_user_update(user, c, av[1]);
-        c->creation_time = ts;
+        c = join_user_update(user, c, av[1], ts);
     }
 }
 
@@ -1533,7 +1534,7 @@ void chan_adduser2(User * user, Channel * c)
     cs = find_cs(c->name);
 
     if (PartOnEmpty && cs && c->statservon == 0) {
-        denora_cmd_join(s_StatServ, c->name, time(NULL));
+        denora_cmd_join(s_StatServ, c->name, c->creation_time);
         if (AutoOp && AutoMode) {
             ud = find_uid(s_StatServ);
             modes = sstrdup(AutoMode);
@@ -1562,7 +1563,7 @@ void chan_adduser2(User * user, Channel * c)
  *  chan_adduser, but splitted to make it more efficient to use for
  *  SJOINs). 
  */
-Channel *chan_create(char *chan)
+Channel *chan_create(char *chan, time_t ts)
 {
     Channel *c;
     StatsChannel *sc;
@@ -1588,7 +1589,7 @@ Channel *chan_create(char *chan)
     SET_SEGV_LOCATION();
 
     *list = c;
-    c->creation_time = time(NULL);
+    c->creation_time = ts;
     c->cstats = 0;
     sc = findstatschan(c->name);
     if (sc) {
@@ -1785,7 +1786,8 @@ void StatsChannel_delete(StatsChannel * c)
 
 /*************************************************************************/
 
-Channel *join_user_update(User * user, Channel * chan, char *name)
+Channel *join_user_update(User * user, Channel * chan, char *name,
+                          time_t chants)
 {
     struct u_chanlist *c;
 
@@ -1793,7 +1795,7 @@ Channel *join_user_update(User * user, Channel * chan, char *name)
 
     /* If it's a new channel, so we need to create it first. */
     if (!chan) {
-        chan = chan_create(name);
+        chan = chan_create(name, chants);
         /* Second chance failed we got issues */
         if (!chan) {
             return NULL;

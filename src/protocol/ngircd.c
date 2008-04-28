@@ -274,7 +274,7 @@ int denora_event_chaninfo(char *source, int ac, char **av)
         protocol_debug(source, ac, av);
     }
 
-    c = chan_create(av[0]);
+    c = chan_create(av[0], time(NULL));
 
     if (!c) {
         return MOD_CONT;

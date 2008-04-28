@@ -1391,6 +1391,7 @@ void do_p10account(User * user, char *account, int flag)
 {
     int nickid;
     char *sqlaccount = NULL;
+    char *sqlhost = NULL;
     char hhostbuf[255];
 
     if (flag != 1) {
@@ -1445,16 +1446,18 @@ void do_p10account(User * user, char *account, int flag)
 
     if (denora->do_sql) {
         sqlaccount = rdb_escape(account);
+        sqlhost = rdb_escape(user->vhost);
         nickid = db_getnick_unsure(user->sqlnick);
         if (nickid == -1) {
             alog(LOG_NONEXISTANT, "ACCOUNT set for nonexistent user %s",
                  user);
         } else {
             rdb_query(QUERY_LOW,
-                      "UPDATE %s SET account=\'%s\' WHERE nickid=%d",
-                      UserTable, sqlaccount, nickid);
+                      "UPDATE %s SET account=\'%s\', hiddenhostname=\'%s\' WHERE nickid=%d",
+                      UserTable, sqlaccount, sqlhost, nickid);
         }
         free(sqlaccount);
+        free(sqlhost);
     }
 
     SET_SEGV_LOCATION();

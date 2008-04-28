@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="176"
+VERSION_BUILD="177"
 
 # $Log$
+#
+# BUILD : 1.4.0.177 (SVN)
+# BUGS  : 501
+# NOTES : Fixed not updating p10 vhost in sql in some cases. Improved channel TS support. Improved inspircd FJOIN/FMODE support.
 #
 # BUILD : 1.4.0.176 (SVN)
 # BUGS  : 481,482,486,493

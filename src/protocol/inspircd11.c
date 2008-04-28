@@ -848,6 +848,7 @@ int denora_event_fmode(char *source, int ac, char **av)
 {
     char *newav[127];
     int i = 0;
+    Channel *c;
 
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
@@ -855,6 +856,20 @@ int denora_event_fmode(char *source, int ac, char **av)
 
     if (ac < 3)
         return MOD_CONT;
+
+    /* Checking the TS for validity to avoid desyncs */
+    c = findchan(av[0]);
+    if (c->creation_time > strtol(av[1], NULL, 10)) {
+        alog(LOG_DEBUG,
+             "DEBUG: av[1] %d is smaller than c->creation_time %d, so c->creation_time is going to be lowered to %d",
+             av[1], c->creation_time, av[1]);
+        c->creation_time = strtol(av[1], NULL, 10);
+    } else if (c->creation_time < strtol(av[1], NULL, 10)) {
+        alog(LOG_DEBUG,
+             "DEBUG: av[1] %d is bigger than c->creation_time %d, so this FMODE will be ignored.",
+             av[1], c->creation_time);
+        return MOD_CONT;
+    }
 
     /* We need to remove the timestamp, which is av[1] */
     newav[0] = av[0];
@@ -1200,7 +1215,14 @@ int denora_event_notice(char *source, int ac, char **av)
 
 void inspircd_cmd_mode(char *source, char *dest, char *buf)
 {
-    send_cmd(source, "MODE %s %s", dest, buf);
+    Channel *c;
+    if (!buf) {
+        return;
+    }
+
+    c = findchan(dest);
+    send_cmd(source ? source : s_StatServ, "FMODE %s %u %s", dest,
+             (unsigned int) ((c) ? c->creation_time : time(NULL)), buf);
 }
 
 void inspircd_cmd_eob(void)

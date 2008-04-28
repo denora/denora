@@ -1,6 +1,8 @@
 Denora Version 1.4.0-SVN
 ------------------------
 Provided by Denora Team <dev@denorastats.org> - 2008
+04/28 F Improved inspircd FJOIN/FMODE support                     [ #00]
+04/28 A Improved channel TS support                               [ #00]
 02/29 F Fixed possible segfault on restart                        [ #00]
 02/29 F Fixed MODE not handled correctly in inspircd11            [ #00]
 02/28 A Chan messages from excluded users now counted globally    [ #00]
@@ -10,8 +12,9 @@ Provided by Denora Team <dev@denorastats.org> - 2008
 02/17 F Added missing user modes to UltimateIRCd                  [#488]
 
 Provided by Jobe <jobe@mdbnet.co.uk>
+04/28 F Fixed not updating p10 vhost in sql in some cases         [#501] 
 04/22 F Fix persistent channels getting deleted on last user part [#493]
-04/22 F Fixeso server squit routine                       [#481,482,486]
+04/22 F Fixes to server squit routine                     [#481,482,486]
 
 Provided by Kein <kein-of@yandex.ru>
 04/22 U Updated Russian language file                             [ #00]
