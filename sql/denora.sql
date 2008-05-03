@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `ustats` (
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `cstats` (
-  `chan` varchar(32) NOT NULL default '',
+  `chan` varchar(255) NOT NULL default '',
   `type` tinyint(1) unsigned NOT NULL default '0',
   `timeadded` int(10) unsigned default '0',
   `letters` int(10) unsigned default '0',
@@ -275,7 +275,7 @@ CREATE TABLE IF NOT EXISTS `serverstats` (
 DROP TABLE IF EXISTS `chan`;
 CREATE TABLE `chan` (
   `chanid` int(10) unsigned NOT NULL auto_increment,
-  `channel` varchar(33) binary NOT NULL default '',
+  `channel` varchar(255) binary NOT NULL default '',
   `currentusers` mediumint(15) NOT NULL default '0',
   `maxusers` int(15) NOT NULL default '0',
   `maxusertime` int(15) NOT NULL default '0',

@@ -136,9 +136,11 @@ void IRCDModeInit(void)
      * X - xtra op
      * I - no idle
      * W - whois
+     * z - SSL
      */
 
     ModuleSetUserMode(UMODE_a, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_c, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_d, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_f, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_g, IRCD_ENABLE);
@@ -151,7 +153,9 @@ void IRCDModeInit(void)
     ModuleSetUserMode(UMODE_s, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_x, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_w, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_z, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_B, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_C, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_I, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_O, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_R, IRCD_ENABLE);
@@ -274,8 +278,10 @@ int denora_event_nick(char *source, int ac, char **av)
         const char *account = "";
         char *fakehost = NULL;
         char *sethost = NULL;
+        char *hiddenhost = NULL;
+        char *hiddenip = NULL;
         const char *timestamp = "";
-        char hhostbuf[255];
+        char hhostbuf[255] = "";
         int ishidden = 0, isaccount = 0;
 
         s = server_find(source);
@@ -317,6 +323,12 @@ int denora_event_nick(char *source, int ac, char **av)
                 case 'f':
                     fakehost = sstrdup(av[cnt++]);
                     break;
+                case 'c':
+                    hiddenip = sstrdup(av[cnt++]);
+                    break;
+                case 'C':
+                    hiddenhost = sstrdup(av[cnt++]);
+                    break;
                 case 'x':
                     ishidden = 1;
                     break;
@@ -335,15 +347,20 @@ int denora_event_nick(char *source, int ac, char **av)
 
         ipchar = nefarious_nickip(ip);
 
-        if (isaccount && ishidden) {
-            ircsnprintf(hhostbuf, sizeof(account) + sizeof(hhostbuf) + 2,
-                        "%s%s%s", HiddenPrefix, account, HiddenSuffix);
+        if (ishidden) {
+            if (isaccount) {
+                ircsnprintf(hhostbuf,
+                            sizeof(account) + sizeof(hhostbuf) + 2,
+                            "%s%s%s", HiddenPrefix, account, HiddenSuffix);
+            } else if (hiddenhost) {
+                ircsnprintf(hhostbuf, sizeof(hhostbuf) + 3, "%s",
+                            hiddenhost);
+            }
         }
 
         user = do_nick(source, nick, ident, host, (s ? s->name : temp),
                        realname, strtoul(av[2], NULL, 10), 0, ipchar,
-                       (ishidden
-                        && isaccount) ? hhostbuf : NULL, (char *) uid,
+                       (hhostbuf) ? hhostbuf : NULL, (char *) uid,
                        strtoul(av[1], NULL, 10), modes, (char *) account);
 
         if (user) {
@@ -444,12 +461,49 @@ int denora_event_account(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
+int denora_event_mark(char *source, int ac, char **av)
+{
+    User *u;
+
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
+    }
+
+    u = user_find(av[0]);
+    if (!u)
+        return 1;
+
+    if (!strcmp(av[1], "CVERSION") && strlen(av2)) {
+        handle_ctcp_version(u->nick, av[2]);
+    }
+
+    return MOD_CONT;
+}
+
 int denora_event_swhois(char *source, int ac, char **av)
 {
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
     do_swhois(av[0], av[1]);
+    return MOD_CONT;
+}
+
+int denora_event_setident(char *source, int ac, char **av)
+{
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
+    }
+    change_user_username(av[0], av[1]);
+    return MOD_CONT;
+}
+
+int denora_event_setname(char *source, int ac, char **av)
+{
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
+    }
+    change_user_realname(av[0], av[1]);
     return MOD_CONT;
 }
 
@@ -537,6 +591,15 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("FA",       denora_event_fakehost); addCoreMessage(IRCD,m);    
     /* SWHOIS */
     m = createMessage("SW",       denora_event_swhois); addCoreMessage(IRCD,m);    
+    /* MARK */
+    m = createMessage("MK",       denora_event_mark); addCoreMessage(IRCD,m);
+    /* SVSIDENT */
+    m = createMessage("SID",      denora_event_setident); addCoreMessage(IRCD,m);
+    /* SVSINFO */
+    m = createMessage("SI",       denora_event_setname); addCoreMessage(IRCD,m);
+    /* SNO */
+    m = createMessage("SNO",      denora_event_null); addCoreMessage(IRCD,m);
+
 }
 
 /* *INDENT-ON* */

@@ -30,6 +30,7 @@ ADD `mode_ll_data` int(10) NOT NULL default '0';
 -- --------------------------------------------------------
 
 ALTER TABLE `user` ADD `mode_la` enum('Y','N') NOT NULL default 'N',
+ADD `mode_lc` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ld` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lf` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lg` enum('Y','N') NOT NULL default 'N',
@@ -42,7 +43,9 @@ ADD `mode_lr` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ls` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lx` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lw` enum('Y','N') NOT NULL default 'N',
+ADD `mode_lz` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ub` enum('Y','N') NOT NULL default 'N',
+ADD `mode_uc` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ui` enum('Y','N') NOT NULL default 'N',
 ADD `mode_uo` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ur` enum('Y','N') NOT NULL default 'N',

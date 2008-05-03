@@ -1,6 +1,7 @@
 Denora Version 1.4.0-SVN
 ------------------------
 Provided by Denora Team <dev@denorastats.org> - 2008
+05/03 F Fixed SQL problems with ircds with long channel names     [ #00]
 04/28 F Improved inspircd FJOIN/FMODE support                     [ #00]
 04/28 A Improved channel TS support                               [ #00]
 02/29 F Fixed possible segfault on restart                        [ #00]
@@ -18,6 +19,9 @@ Provided by Jobe <jobe@mdbnet.co.uk>
 
 Provided by Kein <kein-of@yandex.ru>
 04/22 U Updated Russian language file                             [ #00]
+
+Provided by OUTsider <outsider@scarynet.org>
+05/03 A Added support for Nefarious 1.2                           [#502]
 
 
 Denora Version 1.4.0-RC2

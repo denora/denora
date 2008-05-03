@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="177"
+VERSION_BUILD="178"
 
 # $Log$
+#
+# BUILD : 1.4.0.178 (SVN)
+# BUGS  : 501
+# NOTES : Fixed SQL problems with ircds with long channel names. Added support for Nefarious 1.2.
 #
 # BUILD : 1.4.0.177 (SVN)
 # BUGS  : 501
