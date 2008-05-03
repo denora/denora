@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="179"
+VERSION_BUILD="180"
 
 # $Log$
+#
+# BUILD : 1.4.0.180 (SVN)
+# BUGS  : 491
+# NOTES : Fixed crash on some kicks for whatever reason. Prevent possible crash in inspircd11 module.
 #
 # BUILD : 1.4.0.179 (SVN)
 # BUGS  : 502

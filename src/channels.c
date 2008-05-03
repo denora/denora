@@ -970,7 +970,7 @@ void do_kick(const char *source, int ac, char **av)
                 user->chans = c->next;
             }
             SET_SEGV_LOCATION();
-            free(c);
+            /* free(c); disabled to fix #491 */
         }
         if ((cs = find_cs(av[0]))) {
             if (!stricmp(s, s_StatServ)) {

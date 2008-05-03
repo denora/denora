@@ -1,6 +1,7 @@
 Denora Version 1.4.0-SVN
 ------------------------
 Provided by Denora Team <dev@denorastats.org> - 2008
+05/03 F Fixed crash on some kicks for whatever reason             [#491]
 05/03 F Fixed SQL problems with ircds with long channel names     [ #00]
 04/28 F Improved inspircd FJOIN/FMODE support                     [ #00]
 04/28 A Improved channel TS support                               [ #00]

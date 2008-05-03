@@ -858,16 +858,21 @@ int denora_event_fmode(char *source, int ac, char **av)
         return MOD_CONT;
 
     /* Checking the TS for validity to avoid desyncs */
-    c = findchan(av[0]);
-    if (c->creation_time > strtol(av[1], NULL, 10)) {
-        alog(LOG_DEBUG,
-             "DEBUG: av[1] %d is smaller than c->creation_time %d, so c->creation_time is going to be lowered to %d",
-             av[1], c->creation_time, av[1]);
-        c->creation_time = strtol(av[1], NULL, 10);
-    } else if (c->creation_time < strtol(av[1], NULL, 10)) {
-        alog(LOG_DEBUG,
-             "DEBUG: av[1] %d is bigger than c->creation_time %d, so this FMODE will be ignored.",
-             av[1], c->creation_time);
+    if (c = findchan(av[0])) {
+        if (c->creation_time > strtol(av[1], NULL, 10)) {
+            alog(LOG_DEBUG,
+                 "DEBUG: av[1] %d < c->creation_time %d, c->creation_time lowered to %d",
+                 av[1], c->creation_time, av[1]);
+            c->creation_time = strtol(av[1], NULL, 10);
+        } else if (c->creation_time < strtol(av[1], NULL, 10)) {
+            alog(LOG_DEBUG,
+                 "DEBUG: av[1] %d > c->creation_time %d, FMODE ignored.",
+                 av[1], c->creation_time);
+            return MOD_CONT;
+        }
+    } else {
+        alog(LOG_DEBUG, "DEBUG: got FMODE for non-existing channel %s",
+             av[0]);
         return MOD_CONT;
     }
 
