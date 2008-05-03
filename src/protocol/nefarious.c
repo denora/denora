@@ -473,7 +473,7 @@ int denora_event_mark(char *source, int ac, char **av)
     if (!u)
         return 1;
 
-    if (!strcmp(av[1], "CVERSION") && strlen(av2)) {
+    if (!strcmp(av[1], "CVERSION") && strlen(av[2])) {
         handle_ctcp_version(u->nick, av[2]);
     }
 

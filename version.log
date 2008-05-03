@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="178"
+VERSION_BUILD="179"
 
 # $Log$
+#
+# BUILD : 1.4.0.179 (SVN)
+# BUGS  : 502
+# NOTES : Last commit was incomplete and broken. Now fixed :)
 #
 # BUILD : 1.4.0.178 (SVN)
 # BUGS  : 501
