@@ -54,7 +54,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* flood other               */
      IRCD_DISABLE,              /* join throttle             */
      'x',                       /* vhost                     */
-     'f',                       /* vhost other               */
+     IRCD_DISABLE,              /* vhost other               */
      IRCD_DISABLE,              /* channel linking           */
      IRCD_ENABLE,               /* p10                       */
      IRCD_DISABLE,              /* TS6                       */
@@ -1213,8 +1213,15 @@ int denora_event_notice(char *source, int ac, char **av)
 int denora_event_fakehost(char *source, int ac, char **av)
 {
     User *ud;
+    char *parv[2];
 
     ud = user_find(av[0]);
+
+    if (ud) {
+        parv[0] = (char *) ud->nick;
+        parv[1] = (char *) "+f";
+        do_umode(ud->nick, 2, parv);
+    }
 
     change_user_host(ud->nick, av[1]);
     return MOD_CONT;
