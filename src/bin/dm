@@ -366,9 +366,12 @@ sub do_put() {
     ($junk, $ver_build) = split('"', $ver_build);
     ($junk, $ver_extra) = split('"', $ver_extra);
 
-    $cver = "$ver_major.$ver_minor.$ver_patch.$ver_build ($ver_extra)";
-    $nver = "$ver_major.$ver_minor.$ver_patch.$ver_revision ($ver_extra)";
-
+    $cver = "$ver_major.$ver_minor.$ver_patch.$ver_build";
+    $nver = "$ver_major.$ver_minor.$ver_patch.$ver_revision";
+    if ($ver_extra) {
+    	$cver = "$cver ($ver_extra)";
+       $nver = "$nver ($ver_extra)";
+    }
     # Greet the developer
     banner();
 

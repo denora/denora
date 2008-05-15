@@ -58,8 +58,11 @@ if (!fso.FileExists(CTRL)) {
         }                                                                                                
     }
     versionLog.close();
-    VERSION = VERSION_MAJOR+"."+VERSION_MINOR+"."+VERSION_PATCH+"."+VERSION_BUILD+" ("+VERSION_EXTRA+")";
-    VERSIONDOTTED = VERSION_MAJOR+"."+VERSION_MINOR+"."+VERSION_PATCH+"."+VERSION_BUILD+" ("+VERSION_EXTRA+")";
+    VERSION = VERSION_MAJOR+"."+VERSION_MINOR+"."+VERSION_PATCH+"."+VERSION_BUILD";
+    if (VERSION_EXTRA) {
+    	VERSION = VERSION+" ("+VERSION_EXTRA+")";
+    }
+    VERSIONDOTTED = VERSION;
 
     if (fso.FileExists('version.h')) {
         versionLog = fso.OpenTextFile("version.h");
