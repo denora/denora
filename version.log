@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="0"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="182"
+VERSION_BUILD="183"
 
 # $Log$
+#
+# BUILD : 1.4.0.183 (SVN)
+# BUGS  : N/A
+# NOTES : Now should compile on 64 bit Windows systems
 #
 # BUILD : 1.4.0.182 (SVN)
 # BUGS  : N/A

@@ -89,7 +89,24 @@ var buildPackages = [
                                                                                                 '/w'
                                                                       	],
 							'installedDrive' : 'C'
-                                        },
+                                        }, 
+										{ 
+										'name' : 'Microsoft Visual Studio 2008 (64bit) (with PSDK 2008)', 
+										'libpaths' : [ 
+										'Program Files (x86)\\Microsoft Visual Studio 9.0\\VC\\Lib', 
+										'Program Files\\Microsoft SDKs\\Windows\\v6.1\\Lib' 
+										], 
+										'incpaths' : [ 
+										'Program Files (x86)\\Microsoft Visual Studio 9.0\\VC\\Include', 
+										'Program Files\\Microsoft SDKs\\Windows\\v6.1\\Include' 
+										], 
+										'nmake' : [ 
+										'Program Files (x86)\\Microsoft Visual Studio 9.0\\VC\\bin', 
+										], 
+										'additional_switches' : [ '/w' ], 
+										'installedDrive' : 'C' 
+										}, 
+                                        
                                         {
                                                         'name' : 'Microsoft Visual Studio 2005 (with PSDK 2003)',
                                                         'libpaths' : [
@@ -107,61 +124,6 @@ var buildPackages = [
                                                         'additional_switches' : [
                                                                                                 '/w'
                                                                       	],
-							'installedDrive' : 'C'
-                                        },
-                                        {                                        
-                                                        'name' : 'Microsoft Visual Studio 2005 (Old PSDK)',
-                                                        'libpaths' : [
-                                                                                'Program Files\\Microsoft Visual Studio 8\\VC\\Lib',
-                                                                                'Program Files\\Microsoft Platform SDK\\Lib'
-                                                                         ],
-                                                        'incpaths' : [
-                                                                                'Program Files\\Microsoft Visual Studio 8\\VC\\Include',
-                                                                                'Program Files\\Microsoft Platform SDK\\Include'
-                                                                         ],
-                                                        'nmake' : [
-                                                                                'Program Files\\Microsoft Platform SDK\\Bin',
-                                                                                ''
-                                                                        ],
-                                                        'additional_switches' : [
-                                                                                                '/w'
-                                                               		],
-							'installedDrive' : 'C'
-                                        },
-                                        
-                                        {
-                                                        'name' : 'Microsoft Visual Studio .NET 2003',
-                                                        'libpaths' : [
-                                                                                'Program Files\\Microsoft Visual Studio .NET 2003\\VC7\\Lib',
-                                                                                'Program Files\\Microsoft Visual Studio .NET 2003\\PlatformSDK\\Lib'
-                                                                         ],
-                                                        'incpaths' : [
-                                                                                'Program Files\\Microsoft Visual Studio .NET 2003\\VC7\\Include',
-                                                                                'Program Files\\Microsoft Visual Studio .NET 2003\\PlatformSDK\\Include'
-                                                                         ],
-                                                        'nmake' : [
-                                                                                'Program Files\\Microsoft Visual Studio .NET 2003\\VC7\\Bin',
-                                                                                ''
-                                                                        ],                                                                    
-                                                        'additional_switches' : false,
-							'installedDrive' : 'C'
-                                        },
-
-                                        {
-                                                        'name' : 'Microsoft Visual Studio 98',
-                                                        'libpaths' : [
-                                                                                'Program Files\\Microsoft Visual Studio\\VC98\\Lib'
-                                                                         ],
-                                                        'incpaths' : [
-                                                                                'Program Files\\Microsoft Visual Studio\\VC98\\Include'
-                                                                         ],
-                                                        'nmake' : [
-                                                                                'Program Files\\Microsoft Visual Studio\\VC98\\Bin',
-                                                                                ''
-                                                                        ],
-                                                        'additional_switches' : [
-                                                                                                 '/QIfist'
-                                                                    	],
 							'installedDrive' : 'C'
                                         }
                                         
