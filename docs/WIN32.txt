@@ -24,9 +24,9 @@ Denora for Windows
             http://www.microsoft.com/express/download/
 
         * Microsoft Windows PlatformSDK:
-            http://www.microsoft.com/downloads/details.aspx?FamilyId=0BAF2B35-C656-4969-ACE8-E4C0C0716ADB&displaylang=en
+            http://www.microsoft.com/downloads/details.aspx?FamilyId=E6E1C3DF-A74F-4207-8586-711EBE331CDC&displaylang=en
 
-            (NOTE: Although this says for Windows Server 2003, it does infact work on all supported
+            (NOTE: Although this says for Windows Server 2008, it does infact work on all supported
             versions of Windows. When installing, you should select the Custom option, and ensure
             that only the top selection, and the bottom selection are checked. This will cut down
             install time dramatically)

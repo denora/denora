@@ -20,7 +20,7 @@ SENDMAIL="/usr/sbin/sendmail"
 REGISTERVERSION="1.4"
 
 # DO NOT CHANGE IF YOU WANT TO REGISTER WITH DENORA
-REGISTRYADDRESS="dev@denorastats.org"
+REGISTRYADDRESS="register@denorastats.org"
 
 ################################################
 # END OF CONFIGURATION

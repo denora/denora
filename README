@@ -69,7 +69,7 @@ TABLE OF CONTENTS
         * Xaf                 <root@sbird.org>             (fr.l)
         * Pieter Bootms       <geniusdex@anope.org>        (nl.l)
         * dotslasher          <dotslasher@staticbox.com>   (nl.l)
-        * Hal9000             <hal9000@denorastats.org>    (it.l, example.it.conf)
+        * Sebastian V.        <hal9000@denorastats.org>    (it.l, example.it.conf)
         * Daniel Arndt        <MaOaM@gmx.org>              (example.de.conf)
         * Alvaro              <agonzal@gmail.com>          (es.l, example.es.conf)
         * illu                <illu@icedslash.org>         (fr.l)
@@ -102,7 +102,7 @@ TABLE OF CONTENTS
         * Hyperion/DancerIRCd
         * Inspircd 1.1.x
         * IRCU 2.10.11 and 2.10.12
-        * Nefarious IRCu 1.0.x
+        * Nefarious IRCu 1.0.x - 1.2.x
         * ngIRCd 0.9.1
         * Plexus IRCd 3.x.x
         * Ratbox 2.0.6
@@ -155,16 +155,18 @@ TABLE OF CONTENTS
 ----------------------
 
     * If you read the documentation carefully, which you also can find on our wiki
-      (http://wiki.denorastats.org/) and didn't find the answer to your question,
-      feel free to post on the website forums or join our IRC channel
+      (http://dev.denorastats.org/wiki/denora) and didn't find the answer to your
+      question, feel free to post on the website forums or join our IRC channel
       (irc.denorastats.org #denora). Be as precise as possible when asking a question,
       because we have no extraordinary powers and can't guess things if they aren't
       provided. The more precise you are, the sooner you'll be likely to get an answer.
 
     * If you think you found a bug, add it to the bug tracking system on our
-      website (http://denorastats.org/mantis/) and - again - be as precise as possible.
-      Also say whether the bug happens always or under what circumstances, and anything
-      that could be useful to track your bug down. If you wrote a patch, send it over.
+      website (http://dev.denorastats.org/projects/denora/issues) and - again - be as
+      precise as possible. Also say whether the bug happens always or under what
+      circumstances, and anything that could be useful to track your bug down.
+      If you wrote a patch, send it over.
 
-    * Support is also available via our forums located at http://denorastats.org/forum/
+    * Support is also available via our forums located at
+      http://dev.denorastats.org/projects/denora/boards
 

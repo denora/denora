@@ -1043,28 +1043,18 @@ int ValidPassword(char *plaintext, char *checkvs)
 {
 #ifdef HAVE_CRYPT
     char *result;
-
     /* Read in the user's password and encrypt it,
        passing the expected password in as the salt. */
     result = crypt(plaintext, checkvs);
-
-    /* Test the result. */
     if (!strcmp(result, checkvs)) {
         return 1;
-        /* gotta make sure that they didn't enter the admin in the config with
-           plain or added stuff before encryption was added */
-    } else if (!strcmp(plaintext, checkvs)) {
-        return 1;
-    } else {
-        return 0;
     }
-#else
+#endif
     if (!strcmp(plaintext, checkvs)) {
         return 1;
     } else {
         return 0;
     }
-#endif
 }
 
 /*************************************************************************/

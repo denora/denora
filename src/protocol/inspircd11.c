@@ -858,7 +858,8 @@ int denora_event_fmode(char *source, int ac, char **av)
         return MOD_CONT;
 
     /* Checking the TS for validity to avoid desyncs */
-    if (c = findchan(av[0])) {
+    c = findchan(av[0]);
+    if (c) {
         if (c->creation_time > strtol(av[1], NULL, 10)) {
             alog(LOG_DEBUG,
                  "DEBUG: av[1] %d < c->creation_time %d, c->creation_time lowered to %d",

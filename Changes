@@ -1,6 +1,7 @@
 Denora Version 1.4.0-SVN
 ------------------------
 Provided by Denora Team <dev@denorastats.org> - 2008
+05/15 A PSDK 2008 support                                         [ #00]
 04/28 A Improved channel TS support                               [ #00]
 02/28 A Chan messages from excluded users now counted globally    [ #00]
 05/06 U Updated GeoIP.dat                                         [ #00]

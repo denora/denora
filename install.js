@@ -72,17 +72,17 @@ var installerQuestions = [
 var buildPackages = [
 
                                         {
-                                                        'name' : 'Microsoft Visual Studio 2008',
+                                                        'name' : 'Microsoft Visual Studio 2008 (with PSDK 2008)',
                                                         'libpaths' : [
                                                                                 'Program Files\\Microsoft Visual Studio 9.0\\VC\\Lib',
-                                                                                'Program Files\\Microsoft Platform SDK for Windows Server 2003 R2\\Lib'
+                                                                                'Program Files\\Microsoft SDKs\\Windows\\v6.1\\Lib'
                                                                          ],
                                                         'incpaths' : [
                                                                                 'Program Files\\Microsoft Visual Studio 9.0\\VC\\Include',
-                                                                                'Program Files\\Microsoft Platform SDK for Windows Server 2003 R2\\Include'
+                                                                                'Program Files\\Microsoft SDKs\\Windows\\v6.1\\Include'
                                                                          ],
                                                         'nmake' : [
-                                                                                'Program Files\\Microsoft Platform SDK for Windows Server 2003 R2\\Bin',
+                                                                                'Program Files\\Microsoft Visual Studio 9.0\\VC\\bin',
                                                                                 ''
                                                                         ],
                                                         'additional_switches' : [
@@ -91,7 +91,7 @@ var buildPackages = [
 							'installedDrive' : 'C'
                                         },
                                         {
-                                                        'name' : 'Microsoft Visual Studio 2005 (New PSDK)',
+                                                        'name' : 'Microsoft Visual Studio 2005 (with PSDK 2003)',
                                                         'libpaths' : [
                                                                                 'Program Files\\Microsoft Visual Studio 8\\VC\\Lib',
                                                                                 'Program Files\\Microsoft Platform SDK for Windows Server 2003 R2\\Lib'
@@ -172,24 +172,24 @@ var buildPackages = [
 						{
 							'name' : 'MySQL 5.1',
 							'libpaths' : [
-									  'Program Files\\MySQL\\MySQL Server 5.1\\Lib\\opt'
+									  'Program Files\\MySQL\\MySQL Server 5.1\\lib\\opt'
 								],
 							'incpaths' : [
-									  'Program Files\\MySQL\\MySQL Server 5.1\\Include'
+									  'Program Files\\MySQL\\MySQL Server 5.1\\include'
 								],
-							'dllfile' : 'Program Files\\MySQL\\MySQL Server 5.1\\bin\\libmySQL.dll',
+							'dllfile' : 'Program Files\\MySQL\\MySQL Server 5.1\\lib\\opt\\\\libmySQL.dll',
 							'installedDrive' : 'C'
 						},
 
                                                 {
                                                         'name' : 'MySQL 5.0',
                                                         'libpaths' : [
-                                                                                'Program Files\\MySQL\\MySQL Server 5.0\\Lib\\opt'
+                                                                                'Program Files\\MySQL\\MySQL Server 5.0\\lib\\opt'
                                                                         ],
                                                         'incpaths' : [
-                                                                                'Program Files\\MySQL\\MySQL Server 5.0\\Include'
+                                                                                'Program Files\\MySQL\\MySQL Server 5.0\\include'
                                                                         ],
-                                                        'dllfile' : 'Program Files\\MySQL\\MySQL Server 5.0\\Bin\\libmysql.dll', 
+                                                        'dllfile' : 'Program Files\\MySQL\\MySQL Server 5.0\\lib\\opt\\libmysql.dll', 
 							'installedDrive' : 'C'
                                                 },
                                                 
@@ -491,7 +491,7 @@ var buildPackages = [
                         WScript.Echo("Some of the build tools were detected on your computer, but the essential PlatformSDK components were missing.");
                         WScript.Echo("You will need to download the PlatformSDK from the URL below, ensuring that the Core Windows files, and Debugging Tools are installed.");
                         WScript.Echo("For more details on installing the PlatformSDK, visit http://denorastats.org\n");
-                        WScript.Echo("PSDK: http://download.microsoft.com/download/a/5/f/a5f0d781-e201-4ab6-8c6a-9bb4efed1e1a/PSDK-x86.exe\n");                        
+                        WScript.Echo("PSDK: http://www.microsoft.com/downloads/details.aspx?FamilyId=E6E1C3DF-A74F-4207-8586-711EBE331CDC&displaylang=en\n");                        
                 }
                 return false;
         }
