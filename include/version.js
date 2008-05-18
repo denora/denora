@@ -58,7 +58,7 @@ if (!fso.FileExists(CTRL)) {
         }                                                                                                
     }
     versionLog.close();
-    VERSION = VERSION_MAJOR+"."+VERSION_MINOR+"."+VERSION_PATCH+"."+VERSION_BUILD";
+    VERSION = VERSION_MAJOR+"."+VERSION_MINOR+"."+VERSION_PATCH+"."+VERSION_BUILD;
     if (VERSION_EXTRA) {
     	VERSION = VERSION+" ("+VERSION_EXTRA+")";
     }
