@@ -155,6 +155,7 @@ Exclude *make_exclude(char *mask)
 
     e = calloc(sizeof(Exclude), 1);
     e->name = sstrdup(mask);
+    e->flag = 1;
     insert_exclude(e);
 
     u = user_find(mask);
