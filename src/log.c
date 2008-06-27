@@ -167,6 +167,9 @@ void alog(int type, const char *fmt, ...)
          || type == LOG_NONEXISTANT) && !denora->debug) {
         return;
     }
+    if ((type == LOG_PROTOCOL) && !denora->protocoldebug) {
+        return;
+    }
     if (type == LOG_SQLDEBUG && !denora->sqldebug) {
         return;
     }

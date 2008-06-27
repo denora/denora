@@ -33,7 +33,7 @@ my $fhint="version.log";
 my $copy="denora";
 my $svnuser="";
 my $svnpath="/usr/bin";
-my $svnroot="svn://denorastats.org/$copy";
+my $svnroot="http://denorastats.org/svn/$copy";
 my $editor="/usr/bin/nano";
 
 # Environment variables SVNBINDIR and SVNROOT override the above 

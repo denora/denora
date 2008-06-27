@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="1"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="186"
+VERSION_BUILD="187"
 
 # $Log$
+#
+# BUILD : 1.4.1.187 (SVN)
+# BUGS  : N/A
+# NOTES : Updated SVN url. Fixed some debug messages showing up in normal operation.
 #
 # BUILD : 1.4.1.186 (SVN)
 # BUGS  : 496
