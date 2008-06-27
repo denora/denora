@@ -217,6 +217,13 @@ if [ "$DBFILE" = "unreal32" ]; then
 	fi
 fi
 
+if [ "$DBFILE" = "nefarious" ]; then
+        $MYSQL -Bs -e "describe user mode_ud" 2> /dev/null | grep -q mode_ud
+        if test "$?" = "1" ; then
+                echo "ALTER TABLE user ADD mode_ud ENUM( 'Y', 'N' ) DEFAULT 'N' NOT NULL AFTER mode_uc;" >> $USQLDB
+        fi
+fi
+
 $MYSQL -Bs -e "describe user lastquitmsg" 2> /dev/null | grep -q lastquitmsg
 if test "$?" = "1" ; then
 	echo "ALTER TABLE user ADD lastquitmsg VARCHAR( 255 ) NOT NULL AFTER lastquit;" >> $USQLDB

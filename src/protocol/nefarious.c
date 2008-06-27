@@ -156,6 +156,7 @@ void IRCDModeInit(void)
     ModuleSetUserMode(UMODE_z, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_B, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_C, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_D, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_I, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_O, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_R, IRCD_ENABLE);

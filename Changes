@@ -1,6 +1,7 @@
 Denora Version 1.4.1-SVN
 ------------------------
 Provided by Denora Team <dev@denorastats.org> - 2008
+06/27 A Added user mode +D to nefarious protocol module           [#504]
 05/31 U Updated svn url in dm script                              [ #00]
 05/31 F Fixed LOG_PROTOCOL showing even with protocoldebug off    [ #00]
 05/19 F Fixed exclude setting wrong flag on db save               [#496]
