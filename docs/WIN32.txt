@@ -34,7 +34,7 @@ Denora for Windows
             In some cases, when compiling Denora, the compiler will complain about it can't find
             windows.h and some other headers. A solution for this is to copy the contents of the
             "include" folder of Microsoft Windows PlatformSDK to the "include" folder of
-            Microsoft Visual C++ 2005 Express Edition. Both can be found in %ProgramFiles%
+            Microsoft Visual C++ 2008 Express Edition. Both can be found in %ProgramFiles%
             folder. 
 
         * MySQL for Windows (only needed if building with MySQL enabled):

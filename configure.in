@@ -126,25 +126,56 @@ else
   DIS_ENCRYPT=""
 fi
 
-x="0";
-DIS_MYSQL="  MySQL Support: NO"
-AC_ARG_WITH(mysql, [ --without-mysql     Do not use MySQL even if we find it],,[ 
-AM_PATH_MYSQLCLIENT(,[
-	AC_DEFINE_UNQUOTED(USE_MYSQL,1,"Use Mysql")
-	AC_DEFINE_UNQUOTED(USE_RDB,1,"Use RDB")
-	AC_CHECK_HEADER(mysql/mysql.h,AC_DEFINE(MYSQL_HEADER_PREFIX,1,"Has mysql/mysql.h"))
-	MYSQL=" mysql.c "
-	AC_SUBST(MYSQL)
-	x="1";
-],)
+DIS_MYSQL="  MySQL: No"
+AC_ARG_WITH(mysql, [  --without-mysql         Do not use MySQL or attempt to find it],,[
+	AC_ARG_WITH(mysqlconfig-path, [  --with-mysqlconfig-path=PATH Complete path to the mysql_config executable],
+	mysql_config_path="$withval", mysql_config_path="")
+	MYSQLCONF=""
+	if test "$mysql_config_path" != ""; then
+		if test -x "$mysql_config_path"; then
+			MYSQLCONF="$mysql_config_path"
+			echo "checking for mysql_config... $MYSQLCONF" >&6
+		fi
+	fi
+	if test "$MYSQLCONF" = ""; then
+		AC_PATH_PROG(MYSQLCONF,mysql_config, "")
+	fi
+	if test "$MYSQLCONF" != ""; then
+		hold_cflags="$CFLAGS"
+		hold_ldflags="$LDFLAGS"
+		if test "$MYSQL_CFLAGS" = ""; then
+			MYSQL_CFLAGS="`$MYSQLCONF --cflags`"
+		fi
+		if test "$MYSQL_LDFLAGS" = ""; then
+			MYSQL_LDFLAGS="`$MYSQLCONF --libs`"
+		fi
+		CFLAGS="$CFLAGS $MYSQL_CFLAGS"
+		LDFLAGS="$LDFLAGS $MYSQL_LDFLAGS"
+		echo $ECHO_N "checking if mysql_config produces valid values... $ECHO_C" >&6
+		AC_TRY_RUN([
+#include <mysql.h>
 
-if test "$x" = "1"; then
-	DENORALIBS="$DENORALIBS$MYSQLCLIENT_LIBS "
-	CFLAGS="$CFLAGS $MYSQLCLIENT_CFLAGS "
-	LDFLAGS="$LDFLAGS $MYSQLCLIENT_LDFLAGS "
-    DIS_MYSQL="  MySQL Support: YES"
-	AC_CHECK_FUNCS(mysql_set_charset_name,AC_DEFINE([HAVE_MYSQL_SET_CHARSET], [1], [MySQL supports charset]))
-fi
+int main()
+{
+	MYSQL *mysql = mysql_init(0);
+	
+	return 0;
+}
+		], ac_cv_mysql_valid=yes, ac_cv_mysql_valid=no)
+		echo $ac_cv_mysql_valid >&6
+		if test "$ac_cv_mysql_valid" = "yes"; then
+			AC_DEFINE_UNQUOTED(USE_MYSQL,1,"Use Mysql")
+			AC_DEFINE_UNQUOTED(USE_RDB,1,"Use RDB")
+			MYSQL=" mysql.c "
+			RDB=" rdb.c "
+			AC_SUBST(MYSQL)
+			AC_SUBST(RDB)
+			 DIS_MYSQL="  MySQL: Yes"
+		else
+			CFLAGS="$hold_cflags"
+			LDFLAGS="$hold_ldflags"
+		fi
+	fi
 ])
 
 AC_ARG_ENABLE(threading,

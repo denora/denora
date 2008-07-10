@@ -112,10 +112,10 @@ Load_Cache () {
     		REGSCRIPT="no"
     	fi
 	if [ "$ENCRYPT" = "" ] ; then
-    		ENCRYPT="no"
+    		ENCRYPT="yes"
     	fi
 	if [ "$THREAD" = "" ] ; then
-    		THREAD="no"
+    		THREAD="yes"
     	fi
     else
         CAN_QUICK="no"
@@ -144,13 +144,13 @@ DATDEST=$HOME/stats
 RUNGROUP=
 UMASK=
 DMEMORY="no"
-ENCRYPT="no"
+ENCRYPT="yes"
 NOCACHE=""
 SHOW_INTRO="yes"
 CAN_QUICK="no"
 REGSCRIPT="no"
 MYSQL="yes"
-THREAD="no"
+THREAD="yes"
 
 ###########################################################################
 # Check out the options

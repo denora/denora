@@ -9,9 +9,14 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="1"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="188"
+VERSION_BUILD="189"
 
 # $Log$
+#
+# BUILD : 1.4.1.189 (SVN)
+# BUGS  : 508
+# NOTES : Updated GeoIP.dat. Updated MySQL libs detection routine. Threads and Crypto libs are now on by default in Config. Changed layout of the Changes file.
+# 
 #
 # BUILD : 1.4.1.188 (SVN)
 # BUGS  : 504
