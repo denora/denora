@@ -22,6 +22,7 @@ use strict;
 use Getopt::Std;
 use Net::FTP;
 use Cwd;
+use POSIX;
 
 ######################################################################
 # Configuration section.
@@ -71,6 +72,7 @@ my (
     $nver,
     $ctrlfile,
     $tmpfile,
+    $datetime,
     @source,
     %opt
 );
@@ -398,12 +400,12 @@ sub do_put() {
 
     # Get developers input for commit
     $tmpfile=".commit";
+    $datetime = strftime "%Y-%m-%d %T", localtime;
     open (OUT, ">$tmpfile") or die ("*** Error! Unable to open $tmpfile file\n");
     print OUT "# Denora commit utility. Please use this template for your commits. 
-# Add Bugzilla bugs separated by spaces. The note part is free form.
-BUILD : $nver
-BUGS  : 
-NOTES : ";
+# Add issue numbers in [#] separated by spaces. Add notes below.
+$datetime $nver $svnuser [#]
+> ";
     close(OUT);
 
     system("$editor $tmpfile");

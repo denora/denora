@@ -2,19 +2,20 @@ Denora v1.4.1-SVN
 -----------------
 
 Additions
-08/06/27 Added user mode +D to nefarious protocol module [closes #504]
+08/06/27 r188 Added user mode +D to nefarious protocol module [closes #504]
 
 Changes
-08/07/10 Updated GeoIP.dat
-08/07/10 Updated MySQL libs detection routine
-08/07/10 Threads and Crypto libs are now on by default in Config [closes #508]
-08/07/10 Changed layout of the Changes file
-08/05/31 Updated svn url in dm script
+08/07/11 r190 Improved version.log entry generation and added rev to Changes
+08/07/10 r189 Updated GeoIP.dat
+08/07/10 r189 Updated MySQL libs detection routine
+08/07/10 r189 Threads and Crypto are now on by default in Config [closes #508]
+08/07/10 r189 Changed layout of the Changes file
+08/05/31 r187 Updated svn url in dm script
 
 Fixes
-08/05/31 Fixed LOG_PROTOCOL showing even with protocoldebug off
-08/05/19 Fixed exclude setting wrong flag on db save [closes #496]
-08/05/18 Fixed compiling on Windows
+08/05/31 r187 Fixed LOG_PROTOCOL showing even with protocoldebug off
+08/05/19 r186 Fixed exclude setting wrong flag on db save [closes #496]
+08/05/18 r185 Fixed compiling on Windows
 
 Removals
 n/a

@@ -9,14 +9,16 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="1"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="189"
+VERSION_BUILD="190"
 
 # $Log$
+#
+# 2008-07-11 08:13:00 1.4.1.190 (SVN) hal9000 [#]
+# > Improved version.log entry generation and added rev to Changes
 #
 # BUILD : 1.4.1.189 (SVN)
 # BUGS  : 508
 # NOTES : Updated GeoIP.dat. Updated MySQL libs detection routine. Threads and Crypto libs are now on by default in Config. Changed layout of the Changes file.
-# 
 #
 # BUILD : 1.4.1.188 (SVN)
 # BUGS  : 504
