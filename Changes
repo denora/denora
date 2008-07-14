@@ -14,6 +14,7 @@ Changes
 08/05/31 r187 Updated svn url in dm script
 
 Fixes
+08/07/14 r192 Fixed corrupt chanstats counts on some systems [closes #507]
 08/05/31 r187 Fixed LOG_PROTOCOL showing even with protocoldebug off
 08/05/19 r186 Fixed exclude setting wrong flag on db save [closes #496]
 08/05/18 r185 Fixed compiling on Windows

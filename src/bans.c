@@ -330,8 +330,14 @@ void p10_gline(char *type, char *source, int ac, char **av)
     } else if (*address == '-') {
         address = myStrGetToken(address, '-', 1);
     }
-    user = myStrGetToken(address, '@', 0);
-    host = myStrGetToken(address, '@', 1);
+
+    if (strstr(address, "@")) {
+        user = myStrGetToken(address, '@', 0);
+        host = myStrGetToken(address, '@', 1);
+    } else {
+        user = sstrdup("*");
+        host = sstrdup(address);
+    }
 
     SET_SEGV_LOCATION();
 

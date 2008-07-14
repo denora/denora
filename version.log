@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="1"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="191"
+VERSION_BUILD="192"
 
 # $Log$
+#
+# 2008-07-14 20:14:27 1.4.1.192 (SVN) hal9000 [#507]
+# > Fixed corrupt chanstats counts on some systems
 #
 # 2008-07-14 19:37:48 1.4.1.191 (SVN) hal9000 [#504]
 # > Added zline/shun/jupe support for p10 ircds

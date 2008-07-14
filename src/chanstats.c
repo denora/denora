@@ -310,8 +310,8 @@ static void make_stats(User * u, char *receiver, char *msg)
     if (u->cstats != 2) {       /* check for ignore */
         rdb_query
             (QUERY_LOW,
-             "UPDATE %s SET letters=letters+%d, words=words+%d, line=line+1, "
-             "actions=actions+%d, smileys=smileys+%d, lastspoke=%i, time%d=time%d+1 "
+             "UPDATE %s SET letters=letters+%ld, words=words+%ld, line=line+1, "
+             "actions=actions+%ld, smileys=smileys+%ld, lastspoke=%i, time%ld=time%ld+1 "
              "WHERE (uname=\'%s\' AND (chan=\'global\' OR chan=\'%s\'));",
              UStatsTable, letters, words, action, smileys, time(NULL),
              hour, hour, u->sgroup, c->sqlchan);
@@ -321,8 +321,8 @@ static void make_stats(User * u, char *receiver, char *msg)
 /* update chan */
     rdb_query
         (QUERY_LOW,
-         "UPDATE %s SET letters=letters+%d, words=words+%d, line=line+1, "
-         "actions=actions+%d, smileys=smileys+%d, lastspoke=%i, time%d=time%d+1 WHERE chan=\'%s\';",
+         "UPDATE %s SET letters=letters+%ld, words=words+%ld, line=line+1, "
+         "actions=actions+%ld, smileys=smileys+%ld, lastspoke=%i, time%ld=time%ld+1 WHERE chan=\'%s\';",
          CStatsTable, letters, words, action, smileys, time(NULL), hour,
          hour, c->sqlchan);
 }
@@ -383,7 +383,7 @@ void count_topics(User * u, Channel * c)
     SET_SEGV_LOCATION();
 
     /*
-     * need to exclude them from being counted if it is from a user whom is to be excluded 
+     * need to exclude them from being counted if it is from a user whom is to be excluded
      */
     if (is_excluded(u)) {
         return;
@@ -419,7 +419,7 @@ void count_modes(User * u, Channel * c)
     SET_SEGV_LOCATION();
 
     /*
-     * need to exclude them from being counted if it is from a user whom is to be excluded 
+     * need to exclude them from being counted if it is from a user whom is to be excluded
      */
     if (is_excluded(u)) {
         return;
