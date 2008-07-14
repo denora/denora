@@ -57,7 +57,8 @@ int denora_event_error(char *source, int ac, char **av);
 int denora_event_notice(char *source, int ac, char **av);
 int denora_event_create(char *source, int ac, char **av);
 int denora_event_pong(char *source, int ac, char **av);
-int denora_event_sgline(char *source, int ac, char **av);
+int denora_event_gline(char *source, int ac, char **av);
+int denora_event_jupe(char *source, int ac, char **av);
 
 int DenoraInit(int argc, char **argv);
 void moduleAddIRCDMsgs(void);

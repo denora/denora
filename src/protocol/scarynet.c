@@ -194,12 +194,12 @@ char *scarynet_nickip(char *host)
 **      parv[6|7] = base64 ip
 **	parv[7|8] = uid
 **      parv[8|9] = info
-** NICK - change 
+** NICK - change
 **      source  = oldnick
 **	parv[0] = new nickname
 **      parv[1] = timestamp
 */
-/* 
+/*
   AB N Trystan 1 1117327797 tslee c-24-2-101-227.hsd1.ut.comcast.net +i AYAmXj ABAAB :Dreams are answers to questions not yet asked
         0      1  2          2      3                                 4 5       6     7
  */
@@ -328,9 +328,9 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("NOTICE",   denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("SERVER",   denora_event_server); addCoreMessage(IRCD,m);
     m = createMessage("PASS",     denora_event_null); addCoreMessage(IRCD,m);
- 
+
     /* let the p10 tokens begin */
-      
+
     /* end of burst */
     m = createMessage("EB",       denora_event_eob); addCoreMessage(IRCD,m);
     /* nick */
@@ -386,7 +386,9 @@ void moduleAddIRCDMsgs(void) {
     /* KILL */
     m = createMessage("D",	  denora_event_kill); addCoreMessage(IRCD,m);
     /* GLINE */
-    m = createMessage("GL",       denora_event_sgline); addCoreMessage(IRCD,m);
+    m = createMessage("GL",       denora_event_gline); addCoreMessage(IRCD,m);
+    /* JUPE */
+    m = createMessage("JU",       denora_event_jupe); addCoreMessage(IRCD,m);
     /* INFO */
     m = createMessage("F",        denora_event_null); addCoreMessage(IRCD,m);
     /* SETTIME */
@@ -407,14 +409,25 @@ void moduleAddIRCDMsgs(void) {
 
 /* *INDENT-ON* */
 
-/* GLINE   : AK GL * +*!*@*.aol.com 864000 :testing */
-/* UNGLINE : AK GL * -*!*@*.aol.com */
-int denora_event_sgline(char *source, int ac, char **av)
+/* <source> GL <targetservermask> [!]<+/-><identmask>@<hostmask> <duration> <timestamp> :<reason>
+ * AVAAC GL * +*@something.fake 5 1214347529 :Some fake gline */
+int denora_event_gline(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug)
+    if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
+    }
+    p10_gline((char *) "G", source, ac, av);
+    return MOD_CONT;
+}
 
-    p10_gline(source, ac, av);
+/* <source> JU <targetservermask> [!]<+/-><jupedservername> <duration> <timestamp> :<reason>
+ * AVAAC JU * +something.fake 5 1214347612 :Some fake jupe */
+int denora_event_jupe(char *source, int ac, char **av)
+{
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
+    }
+    p10_gline((char *) "J", source, ac, av);
     return MOD_CONT;
 }
 

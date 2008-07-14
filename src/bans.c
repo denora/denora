@@ -287,7 +287,7 @@ const char *ban_char_to_action(char *val)
  *
  * @return void - no returend value
  */
-void p10_gline(char *source, int ac, char **av)
+void p10_gline(char *type, char *source, int ac, char **av)
 {
     Server *s = NULL;
     User *u = NULL;
@@ -338,7 +338,7 @@ void p10_gline(char *source, int ac, char **av)
     if (*av[1] == '+') {
         if (ac >= 4) {
             ircsnprintf(buf, BUFSIZE - 1, "%ld", (long int) time(NULL));
-            sql_do_server_bans_add(NULL, user, host, setby, buf, av[2],
+            sql_do_server_bans_add(type, user, host, setby, buf, av[2],
                                    av[3]);
         } else {
             alog(LOG_DEBUG,
@@ -346,7 +346,7 @@ void p10_gline(char *source, int ac, char **av)
                  PRETTY_FUNCTION, ac);
         }
     } else {
-        sql_do_server_bans_remove(NULL, user, host);
+        sql_do_server_bans_remove(type, user, host);
     }
     SET_SEGV_LOCATION();
 
@@ -457,7 +457,7 @@ void sql_do_sgline(char *length, char *mask)
     SET_SEGV_LOCATION();
 
     /*
-     * Do not execute if 
+     * Do not execute if
      * 1. SQL code has been disabled
      * 2. LargeNet is enabled
      * 3. Lenght was not passed
@@ -551,7 +551,7 @@ void sql_do_xline(char *geos, char *reason)
     SET_SEGV_LOCATION();
 
     /*
-     * Do not execute if 
+     * Do not execute if
      * 1. SQL code has been disabled
      * 2. LargeNet is enabled
      */
@@ -612,7 +612,7 @@ void sql_do_unxline(char *geos)
     SET_SEGV_LOCATION();
 
     /*
-     * Do not execute if 
+     * Do not execute if
      * 1. SQL code has been disabled
      * 2. LargeNet is enabled
      * 3. geos was NULL
@@ -675,7 +675,7 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
     SET_SEGV_LOCATION();
 
     /*
-     * Do not execute if 
+     * Do not execute if
      * 1. SQL code has been disabled
      * 2. LargeNet is enabled
      */
@@ -808,14 +808,14 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
 
 /**
  * Parse Unreal Spamfilter messages into SQL
- * 
+ *
  * @param target If Unreal the spamfilter target type
  * @param action is flag value as to what to do if spamfilter is tripped
  * @param setby is the person or server that has set the ban
  * @param expires is the unix timestamp of when the ban should expire or might be 0 for no expire
  * @param setat is the unix timestamp of when the ban was set
  * @param duration is the number of seconds the ban will last
- * @param reason is the reason for the ban 
+ * @param reason is the reason for the ban
  * @param regex is the regular expression for the spam filter
  *
  * @return void - no returend value
@@ -834,7 +834,7 @@ void sql_do_server_spam_add(char *target, char *action,
     SET_SEGV_LOCATION();
 
     /*
-     * Do not execute if 
+     * Do not execute if
      * 1. SQL code has been disabled
      * 2. LargeNet is enabled
      */
@@ -923,7 +923,7 @@ void sql_do_server_bans_remove(char *type, char *user, char *host)
     SET_SEGV_LOCATION();
 
     /*
-     * Do not execute if 
+     * Do not execute if
      * 1. SQL code has been disabled
      * 2. LargeNet is enabled
      */
@@ -982,7 +982,7 @@ void sql_do_server_spam_remove(char *target, char *action, char *regex)
     SET_SEGV_LOCATION();
 
     /*
-     * Do not execute if 
+     * Do not execute if
      * 1. SQL code has been disabled
      * 2. LargeNet is enabled
      * 3. Regex was NULL
@@ -1049,7 +1049,7 @@ int sql_ban_clean(const char *name)
     SET_SEGV_LOCATION();
 
     /*
-     * Do not execute if 
+     * Do not execute if
      * 1. SQL code has been disabled
      * 2. LargeNet is enabled
      */

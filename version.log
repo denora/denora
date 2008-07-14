@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="1"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="190"
+VERSION_BUILD="191"
 
 # $Log$
+#
+# 2008-07-14 19:37:48 1.4.1.191 (SVN) hal9000 [#504]
+# > Added zline/shun/jupe support for p10 ircds
 #
 # 2008-07-11 08:13:00 1.4.1.190 (SVN) hal9000 [#]
 # > Improved version.log entry generation and added rev to Changes

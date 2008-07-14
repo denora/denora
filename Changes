@@ -2,6 +2,7 @@ Denora v1.4.1-SVN
 -----------------
 
 Additions
+08/07/14 r191 Added zline/shun/jupe support for p10 ircds [closes #504]
 08/06/27 r188 Added user mode +D to nefarious protocol module [closes #504]
 
 Changes

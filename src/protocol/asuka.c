@@ -143,7 +143,7 @@ char *asuka_nickip(char *host)
 **      parv[6] = base64 ip
 **	    parv[7] = uid
 **      parv[8] = info
-** NICK - change 
+** NICK - change
 **      source  = oldnick
 **	parv[0] = new nickname
 **      parv[1] = timestamp
@@ -267,13 +267,25 @@ int denora_event_eob(char *source, int ac, char **av)
 
 /*************************************************************************/
 
-/* AK GL * +*!*@*.aol.com 864000 :testing */
-int denora_event_sgline(char *source, int ac, char **av)
+/* <source> GL <targetservermask> [!]<+/-><identmask>@<hostmask> <duration> <timestamp> :<reason>
+ * AVAAC GL * +*@something.fake 5 1214347529 :Some fake gline */
+int denora_event_gline(char *source, int ac, char **av)
 {
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    p10_gline(source, ac, av);
+    p10_gline((char *) "G", source, ac, av);
+    return MOD_CONT;
+}
+
+/* <source> JU <targetservermask> [!]<+/-><jupedservername> <duration> <timestamp> :<reason>
+ * AVAAC JU * +something.fake 5 1214347612 :Some fake jupe */
+int denora_event_jupe(char *source, int ac, char **av)
+{
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
+    }
+    p10_gline((char *) "J", source, ac, av);
     return MOD_CONT;
 }
 
@@ -1074,7 +1086,11 @@ void moduleAddIRCDMsgs(void)
     addCoreMessage(IRCD, m);
 
     /* GLINE */
-    m = createMessage("GL", denora_event_sgline);
+    m = createMessage("GL", denora_event_gline);
+    addCoreMessage(IRCD, m);
+
+    /* GLINE */
+    m = createMessage("JU", denora_event_jupe);
     addCoreMessage(IRCD, m);
 
     /* INFO */

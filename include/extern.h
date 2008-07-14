@@ -7,7 +7,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * $Id$
  *
  */
@@ -62,7 +62,7 @@ E int in_str(char *str, char c);
 /**** bans.c ****/
 
 E const char *ban_char_to_action(char *val);
-E void p10_gline(char *source, int ac, char **av);
+E void p10_gline(char *type, char *source, int ac, char **av);
 E void sql_do_sqline(char *mask, char *reason);
 E int sql_ban_clean(const char *name);
 E void sql_do_sgline(char *length, char *mask);
@@ -837,21 +837,21 @@ E int SpeedTest;
 
 #define SET_SEGV_LOCATION() \
 	segv_location[0]='\0'; \
-	ircsnprintf(segv_location,SEGV_LOCATION_BUFSIZE,"File %s Line %d function %s", __FILE__, __LINE__, PRETTY_FUNCTION); 
+	ircsnprintf(segv_location,SEGV_LOCATION_BUFSIZE,"File %s Line %d function %s", __FILE__, __LINE__, PRETTY_FUNCTION);
 
 #define SET_SEGV_LOCATION_EXTRA(debug_text) \
 	segv_location[0]='\0'; \
-	ircsnprintf(segv_location,SEGV_LOCATION_BUFSIZE,"%s %d %s %s", __FILE__, __LINE__, PRETTY_FUNCTION,(debug_text)); 
+	ircsnprintf(segv_location,SEGV_LOCATION_BUFSIZE,"%s %d %s %s", __FILE__, __LINE__, PRETTY_FUNCTION,(debug_text));
 
 #define SET_START_TIME() \
-	if (SpeedTest) alog(LOG_DEBUG, "Execution Time started at %ld", (long int) time(NULL)); 
+	if (SpeedTest) alog(LOG_DEBUG, "Execution Time started at %ld", (long int) time(NULL));
 #define CHECK_END_TIME() \
-	if (SpeedTest) alog(LOG_DEBUG, "Execution Time ended at %ld", (long int) time(NULL)); 
+	if (SpeedTest) alog(LOG_DEBUG, "Execution Time ended at %ld", (long int) time(NULL));
 
 #define FUNC_SET_START_TIME() \
 		alog(LOG_DEBUG, "Function Execution Time started at %ld (%s)", (long int) time(NULL), PRETTY_FUNCTION);
 #define FUNC_CHECK_END_TIME() \
-		alog(LOG_DEBUG, "Function Execution Time ended at %ld", (long int) time(NULL)); 
+		alog(LOG_DEBUG, "Function Execution Time ended at %ld", (long int) time(NULL));
 
 
 E void do_html(void);

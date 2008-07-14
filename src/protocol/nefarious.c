@@ -249,12 +249,12 @@ char *nefarious_nickip(char *host)
 **      parv[6] = base64 ip
 **	    parv[7] = uid
 **      parv[8] = info
-** NICK - change 
+** NICK - change
 **      source  = oldnick
 **      parv[0] = new nickname
 **      parv[1] = timestamp
 */
-/* 
+/*
   AB N Trystan 1 1117327797 tslee c-24-2-101-227.hsd1.ut.comcast.net +i AYAmXj ABAAB :Dreams are answers to questions not yet asked
         0      1  2          2      3                                 4 5       6     7
  */
@@ -515,9 +515,9 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("NOTICE",   denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("SERVER",   denora_event_server); addCoreMessage(IRCD,m);
     m = createMessage("PASS",     denora_event_null); addCoreMessage(IRCD,m);
- 
+
     /* let the p10 tokens begin */
-      
+
     /* end of burst */
     m = createMessage("EB",       denora_event_eob); addCoreMessage(IRCD,m);
     /* nick */
@@ -573,7 +573,13 @@ void moduleAddIRCDMsgs(void) {
     /* KILL */
     m = createMessage("D",        denora_event_kill); addCoreMessage(IRCD,m);
     /* GLINE */
-    m = createMessage("GL",       denora_event_sgline); addCoreMessage(IRCD,m);
+    m = createMessage("GL",       denora_event_gline); addCoreMessage(IRCD,m);
+    /* SHUN */
+    m = createMessage("SU",       denora_event_shun); addCoreMessage(IRCD,m);
+    /* ZLINE */
+    m = createMessage("ZL",       denora_event_zline); addCoreMessage(IRCD,m);
+    /* JUPE */
+    m = createMessage("JU",       denora_event_jupe); addCoreMessage(IRCD,m);
     /* INFO */
     m = createMessage("F",        denora_event_null); addCoreMessage(IRCD,m);
     /* SETTIME */
@@ -585,13 +591,13 @@ void moduleAddIRCDMsgs(void) {
     /* RPING */
     m = createMessage("RI",       denora_event_null); addCoreMessage(IRCD,m);
     /* SILENCE */
-    m = createMessage("U",        denora_event_null); addCoreMessage(IRCD,m);    
+    m = createMessage("U",        denora_event_null); addCoreMessage(IRCD,m);
     /* End of Burst Acknowledge */
     m = createMessage("EA",       denora_event_null); addCoreMessage(IRCD,m);
     /* FAKEHOST */
-    m = createMessage("FA",       denora_event_fakehost); addCoreMessage(IRCD,m);    
+    m = createMessage("FA",       denora_event_fakehost); addCoreMessage(IRCD,m);
     /* SWHOIS */
-    m = createMessage("SW",       denora_event_swhois); addCoreMessage(IRCD,m);    
+    m = createMessage("SW",       denora_event_swhois); addCoreMessage(IRCD,m);
     /* MARK */
     m = createMessage("MK",       denora_event_mark); addCoreMessage(IRCD,m);
     /* SVSIDENT */
@@ -605,15 +611,50 @@ void moduleAddIRCDMsgs(void) {
 
 /* *INDENT-ON* */
 
-/* AK GL * +*!*@*.aol.com 864000 :testing */
-int denora_event_sgline(char *source, int ac, char **av)
+/* <source> GL <targetservermask> [!]<+/-><identmask>@<hostmask> <duration> <timestamp> :<reason>
+ * AVAAC GL * +*@something.fake 5 1214347529 :Some fake gline */
+int denora_event_gline(char *source, int ac, char **av)
 {
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    p10_gline(source, ac, av);
+    p10_gline((char *) "G", source, ac, av);
     return MOD_CONT;
 }
+
+/* <source> SU <targetservermask> [!]<+/-><identmask>@<hostmask> <duration> <timestamp> :<reason>
+ * AVAAC SU * +*@something.fake 5 1214347562 :Some fake shun */
+int denora_event_shun(char *source, int ac, char **av)
+{
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
+    }
+    p10_gline((char *) "S", source, ac, av);
+    return MOD_CONT;
+}
+
+/* <source> ZL <targetservermask> [!]<+/-><ipmask> <duration> <timestamp> :<reason>
+ * AVAAC ZL * +69.69.69.69 5 1214347639 :Some fake zline */
+int denora_event_zline(char *source, int ac, char **av)
+{
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
+    }
+    p10_gline((char *) "Z", source, ac, av);
+    return MOD_CONT;
+}
+
+/* <source> JU <targetservermask> [!]<+/-><jupedservername> <duration> <timestamp> :<reason>
+ * AVAAC JU * +something.fake 5 1214347612 :Some fake jupe */
+int denora_event_jupe(char *source, int ac, char **av)
+{
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
+    }
+    p10_gline((char *) "J", source, ac, av);
+    return MOD_CONT;
+}
+
 
 void nefarious_cmd_stats(char *sender, const char *letter, char *server)
 {
@@ -1141,7 +1182,7 @@ void nefarious_cmd_eob(void)
 
 void nefarious_cmd_ping(char *server)
 {
-    /* AB G !1115872042.64217 denora.nomadirc.net 1115872042.64217  
+    /* AB G !1115872042.64217 denora.nomadirc.net 1115872042.64217
      * [OUT]: AB RI AL ABAAB 1165972073 45741 :<No client start time>
      * [IN ]: AL RO ScaryNet.Org ABAAB 1165972073 45741 :<No client start time>
      */

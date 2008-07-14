@@ -64,7 +64,8 @@ int denora_event_globops(char *source, int ac, char **av);
 int denora_event_burst(char *source, int ac, char **av);
 int denora_event_create(char *source, int ac, char **av);
 int denora_event_pong(char *source, int ac, char **av);
-int denora_event_sgline(char *source, int ac, char **av);
+int denora_event_gline(char *source, int ac, char **av);
+int denora_event_jupe(char *source, int ac, char **av);
 int denora_event_rping(char *source, int ac, char **av);
 int denora_event_rpong(char *source, int ac, char **av);
 
