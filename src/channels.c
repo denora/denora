@@ -472,7 +472,7 @@ void chan_remove_user_status(Channel * chan, User * user, int16 status)
 
 /* Return the Channel structure corresponding to the named channel, or NULL
  * if the channel was not found.  chan is assumed to be non-NULL and valid
- * (i.e. pointing to a channel name of 2 or more characters). 
+ * (i.e. pointing to a channel name of 2 or more characters).
  */
 Channel *findchan(const char *chan)
 {
@@ -1372,6 +1372,14 @@ void do_cmode(const char *source, int ac, char **av)
         }
     }
 
+    /* :42XAAAAAO TMODE 1106409026 #ircops +b *!*@*.aol.com */
+    if (UseTS6 && ircd->ts6) {
+        if (isdigit(av[0][0])) {
+            ac--;
+            av++;
+        }
+    }
+
     chan = findchan(av[0]);
     if (!chan) {
         alog(LOG_DEBUG, langstr(ALOG_DEBUG_NO_FIND_CHAN), av[0]);
@@ -1488,7 +1496,7 @@ void do_topic(int ac, char **av)
 /* Add/remove a user to/from a channel, creating or deleting the channel as
  * necessary.  If creating the channel, restore mode lock and topic as
  * necessary.  Also check for auto-opping and auto-voicing.
- * Modified, so ignored users won't get any status via services -certus 
+ * Modified, so ignored users won't get any status via services -certus
  */
 void chan_adduser2(User * user, Channel * c)
 {
@@ -1561,7 +1569,7 @@ void chan_adduser2(User * user, Channel * c)
 
 /* This creates the channel structure (was originally in
  *  chan_adduser, but splitted to make it more efficient to use for
- *  SJOINs). 
+ *  SJOINs).
  */
 Channel *chan_create(char *chan, time_t ts)
 {

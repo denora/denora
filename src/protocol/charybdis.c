@@ -27,7 +27,7 @@ IRCDVar myIrcd[] = {
      IRCD_ENABLE,               /* Has exceptions +e         */
      IRCD_DISABLE,              /* vidents                   */
      IRCD_ENABLE,               /* NICKIP                    */
-     IRCD_DISABLE,              /* VHOST ON NICK             */
+     IRCD_ENABLE,               /* VHOST ON NICK             */
      IRCD_DISABLE,              /* +f                        */
      IRCD_ENABLE,               /* +j                        */
      IRCD_DISABLE,              /* +L                        */
@@ -224,7 +224,7 @@ int denora_event_sjoin(char *source, int ac, char **av)
 
 /*
    TS6
- 
+
    av[0] = nick
    av[1] = hop
    av[2] = ts
@@ -281,6 +281,44 @@ int denora_event_nick(char *source, int ac, char **av)
         do_nick((user ? user->nick : source), av[0], NULL, NULL, NULL,
                 NULL, strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0,
                 NULL, NULL);
+    }
+    return MOD_CONT;
+}
+
+/*
+   TS6
+   av[0] = nick
+   av[1] = hop
+   av[2] = ts
+   av[3] = modes
+   av[4] = user
+   av[5] = vhost
+   av[6] = IP
+   av[7] = UID
+   ac[8] = host or *
+   ac[9] = services login
+   av[10] = info
+
+*/
+int denora_event_euid(char *source, int ac, char **av)
+{
+    Server *s;
+    User *user;
+    time_t ts;
+
+    if (UseTS6 && ac == 11) {
+        s = findserver_uid(servlist, source);
+        /* Source is always the server */
+        *source = '\0';
+        ts = strtoul(av[2], NULL, 10);
+        user =
+            do_nick(source, av[0], av[4],
+                    !strcmp(av[8], "*") ? av[5] : av[8], s->name, av[10],
+                    ts, !stricmp(av[0], av[9]) ? ts : 0, 0, av[5], av[7],
+                    0, NULL, NULL);
+        if (user) {
+            denora_set_umode(user, 1, &av[3]);
+        }
     }
     return MOD_CONT;
 }
@@ -344,7 +382,7 @@ int denora_event_436(char *source, int ac, char **av)
 }
 
 /* *INDENT-OFF* */
-void moduleAddIRCDMsgs(void) 
+void moduleAddIRCDMsgs(void)
 {
     Message *m;
 
@@ -398,12 +436,13 @@ void moduleAddIRCDMsgs(void)
     m = createMessage("ADMIN",     denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("ERROR",     denora_event_error); addCoreMessage(IRCD,m);
     m = createMessage("421",       denora_event_null); addCoreMessage(IRCD,m);
-    m = createMessage("ENCAP",     denora_event_encap); addCoreMessage(IRCD,m);    
+    m = createMessage("ENCAP",     denora_event_encap); addCoreMessage(IRCD,m);
     m = createMessage("SID",       denora_event_sid); addCoreMessage(IRCD,m);
     m = createMessage("KLINE",     denora_event_kline); addCoreMessage(IRCD,m);
     m = createMessage("UNKLINE",   denora_event_unkline); addCoreMessage(IRCD,m);
     m = createMessage("XLINE",     denora_event_xline); addCoreMessage(IRCD,m);
     m = createMessage("UNXLINE",   denora_event_unxline); addCoreMessage(IRCD,m);
+	m = createMessage("EUID",      denora_event_euid); addCoreMessage(IRCD,m);
 }
 
 /* *INDENT-ON* */
@@ -492,26 +531,28 @@ void charybdis_cmd_svsinfo(void)
 /* CAPAB */
 /*
   QS     - Can handle quit storm removal
-  EX     - Can do channel +e exemptions 
+  EX     - Can do channel +e exemptions
   CHW    - Can do channel wall @#
-  LL     - Can do lazy links 
-  IE     - Can do invite exceptions 
+  LL     - Can do lazy links
+  IE     - Can do invite exceptions
   EOB    - Can do EOB message
-  KLN    - Can do KLINE message 
-  GLN    - Can do GLINE message 
-  HUB    - This server is a HUB 
+  KLN    - Can do KLINE message
+  GLN    - Can do GLINE message
+  HUB    - This server is a HUB
   UID    - Can do UIDs
   ZIP    - Can do ZIPlinks
-  ENC    - Can do ENCrypted links 
-  KNOCK  -  supports KNOCK 
+  ENC    - Can do ENCrypted links
+  KNOCK  -  supports KNOCK
   TBURST - supports TBURST
   PARA	 - supports invite broadcasting for +p
-  ENCAP	 - ?
+  ENCAP	 - supports message encapsulation
+  SERVICES - supports services-oriented TS6 extensions
+  EUID     - supports EUID and non-ENCAP CHGHOST
 */
 void charybdis_cmd_capab(void)
 {
     send_cmd(NULL,
-             "CAPAB :QS EX CHW IE KLN GLN KNOCK TB UNKLN CLUSTER ENCAP SERVICES RSFNC SAVE");
+             "CAPAB :QS EX CHW IE KLN GLN KNOCK TB UNKLN CLUSTER ENCAP SERVICES EUID");
 }
 
 /* PASS */
@@ -592,13 +633,16 @@ int denora_event_away(char *source, int ac, char **av)
 
 int denora_event_kill(char *source, int ac, char **av)
 {
+    User *u = NULL;
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
     if (ac != 2)
         return MOD_CONT;
 
-    m_kill(source, av[0], av[1]);
+    u = find_byuid(av[0]);
+    m_kill(source, u ? u->nick : av[0], av[1]);
     return MOD_CONT;
 }
 
@@ -629,13 +673,16 @@ void charybdis_cmd_ping(char *server)
              (s ? (s->suid ? s->suid : server) : server));
 }
 
+
 int denora_event_join(char *source, int ac, char **av)
 {
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
     if (ac != 1) {
-        do_sjoin(source, ac, av);
+        /* ignore cmodes in JOIN as per TS6 v8 */
+        do_sjoin(source, ac > 2 ? 2 : ac, av);
+        return MOD_CONT;
     } else {
         do_join(source, ac, av);
     }
@@ -767,6 +814,24 @@ void charybdis_cmd_mode(char *source, char *dest, char *buf)
     }
 }
 
+void charybdis_cmd_tmode(char *source, char *dest, const char *fmt, ...)
+{
+    va_list args;
+    char buf[BUFSIZE];
+    *buf = '\0';
+
+    if (fmt) {
+        va_start(args, fmt);
+        ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
+        va_end(args);
+    }
+    if (!*buf) {
+        return;
+    }
+
+    send_cmd(NULL, "MODE %s %s", dest, buf);
+}
+
 void charybdis_cmd_nick(char *nick, char *name, const char *mode)
 {
     char *nicknumbuf = ts6_uid_retrieve();
@@ -830,7 +895,7 @@ int denora_event_tmode(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    if (*av[1] == '#' || *av[1] == '&') {
+    if (ac > 2 && (*av[1] == '#' || *av[1] == '&')) {
         /* do_cmode() doesn't like a timestamp as the first
          * parameter, so we do this since it wants a string vector --nenolod
          */

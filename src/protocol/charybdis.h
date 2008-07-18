@@ -14,6 +14,7 @@
  *
  */
 
+void charybdis_cmd_tmode(char *source, char *dest, const char *fmt, ...);
 void charybdis_cmd_nick(char *nick, char *name, const char *modes);
 void charybdis_cmd_mode(char *source, char *dest, char *buf);
 void charybdis_cmd_bot_nick(char *nick, char *user, char *host, char *real, char *modes);
@@ -50,6 +51,7 @@ int denora_event_kill(char *source, int ac, char **av);
 int denora_event_mode(char *source, int ac, char **av);
 int denora_event_quit(char *source, int ac, char **av);
 int denora_event_squit(char *source, int ac, char **av);
+int denora_event_euid(char *source, int ac, char **av);
 int denora_event_topic(char *source, int ac, char **av);
 int denora_event_whois(char *source, int ac, char **av);
 int denora_event_part(char *source, int ac, char **av);
