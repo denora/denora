@@ -349,7 +349,7 @@ void p10_gline(char *type, char *source, int ac, char **av)
                                    av[4]);
         } else if (ac == 4) {
             ircsnprintf(buf, BUFSIZE - 1, "%ld", (long int) time(NULL));
-            sprintf(expires, "%d", atoi(av[2]) + time(NULL));
+            sprintf(expires, "%ld", atoi(av[2]) + (long int) time(NULL));
             sql_do_server_bans_add(type, user, host, setby, buf, expires,
                                    av[3]);
         }

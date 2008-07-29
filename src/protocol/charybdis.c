@@ -316,7 +316,7 @@ int denora_event_euid(char *source, int ac, char **av)
             do_nick(source, av[0], av[4],
                     !strcmp(av[8], "*") ? av[5] : av[8], s->name, av[10],
                     ts, !stricmp(av[0], av[9]) ? ts : 0, av[6], av[5],
-                    av[7], av[1], av[3], NULL);
+                    av[7], atoi(av[1]), av[3], NULL);
         if (user) {
             denora_set_umode(user, 1, &av[3]);
         }
