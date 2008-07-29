@@ -296,14 +296,15 @@ void p10_gline(char *type, char *source, int ac, char **av)
     char *host;
     char *address;
     char *setby;
+    char *expires = 0;
 
     *buf = '\0';
 
     SET_SEGV_LOCATION();
 
-    if (ac < 2) {
+    if (ac < 4 || ac > 5) {
         alog(LOG_DEBUG,
-             "debug: %s called with %d needed 2 or more", PRETTY_FUNCTION,
+             "debug: %s called with %d needed 4 or 5", PRETTY_FUNCTION,
              ac);
         return;
     }
@@ -342,14 +343,15 @@ void p10_gline(char *type, char *source, int ac, char **av)
     SET_SEGV_LOCATION();
 
     if (*av[1] == '+') {
-        if (ac >= 4) {
+        if (ac == 5) {
+            sprintf(expires, "%d", atoi(av[2]) + atoi(av[3]));
+            sql_do_server_bans_add(type, user, host, setby, av[3], expires,
+                                   av[4]);
+        } else if (ac == 4) {
             ircsnprintf(buf, BUFSIZE - 1, "%ld", (long int) time(NULL));
-            sql_do_server_bans_add(type, user, host, setby, buf, av[2],
+            sprintf(expires, "%d", atoi(av[2]) + time(NULL));
+            sql_do_server_bans_add(type, user, host, setby, buf, expires,
                                    av[3]);
-        } else {
-            alog(LOG_DEBUG,
-                 "debug: %s called with %d needed 4 or more",
-                 PRETTY_FUNCTION, ac);
         }
     } else {
         sql_do_server_bans_remove(type, user, host);

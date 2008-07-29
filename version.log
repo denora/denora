@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="1"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="193"
+VERSION_BUILD="194"
 
 # $Log$
+#
+# 2008-07-29 21:45:17 1.4.1.194 (SVN) hal9000 [#]
+# > Fixes to recent fixes :)
 #
 # 2008-07-18 12:34:18 1.4.1.193 (SVN) hal9000 [#509]
 # > Fixed various Charybdis issues
