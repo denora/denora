@@ -296,9 +296,10 @@ void p10_gline(char *type, char *source, int ac, char **av)
     char *host;
     char *address;
     char *setby;
-    char *expires = 0;
+    char expires[12];
 
     *buf = '\0';
+    *expires = '\0';
 
     SET_SEGV_LOCATION();
 

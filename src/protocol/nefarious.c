@@ -515,6 +515,7 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("NOTICE",   denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("SERVER",   denora_event_server); addCoreMessage(IRCD,m);
     m = createMessage("PASS",     denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("ALIST",    denora_event_null); addCoreMessage(IRCD,m);
 
     /* let the p10 tokens begin */
 
@@ -606,7 +607,6 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("SI",       denora_event_setname); addCoreMessage(IRCD,m);
     /* SNO */
     m = createMessage("SNO",      denora_event_null); addCoreMessage(IRCD,m);
-
 }
 
 /* *INDENT-ON* */

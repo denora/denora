@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="1"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="195"
+VERSION_BUILD="196"
 
 # $Log$
+#
+# 2008-07-31 22:02:45 1.4.1.196 (SVN) hal9000 [#]
+# >  Sorry Jobe, I am an idiot. This time it should do !
 #
 # 2008-07-29 22:09:48 1.4.1.195 (SVN) hal9000 [#]
 # > Duh! Fixed the fixes of the fixes for good ;)
