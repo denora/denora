@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="1"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="196"
+VERSION_BUILD="197"
 
 # $Log$
+#
+# 2008-08-12 22:42:46 1.4.1.197 (SVN) hal9000 [#510]
+# > Fixed not resetting server connecttime on startup
 #
 # 2008-07-31 22:02:45 1.4.1.196 (SVN) hal9000 [#]
 # >  Sorry Jobe, I am an idiot. This time it should do !

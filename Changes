@@ -14,6 +14,7 @@ Changes
 08/05/31 r187 Updated svn url in dm script
 
 Fixes
+08/08/07 r197 Fixed not resetting server connecttime on startup [closes #510]
 08/07/18 r193 Fixed various Charybdis issues [closes #509]
 08/07/14 r192 Fixed corrupt chanstats counts on some systems [closes #507]
 08/05/31 r187 Fixed LOG_PROTOCOL showing even with protocoldebug off
@@ -28,7 +29,6 @@ Denora Team <dev@denorastats.org>
 
 Contributors
 n/a
-
 
 
 Denora Version 1.4.0

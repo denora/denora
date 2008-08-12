@@ -8,7 +8,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * $Id$
  *
  */
@@ -244,7 +244,7 @@ void sql_motd_store(Server * s)
 /*************************************************************************/
 
 /**
- * This function makes a new Server structure 
+ * This function makes a new Server structure
  * @param server Server Name
  * @return Server Struct
  */
@@ -270,7 +270,7 @@ ServStats *make_servstats(const char *server)
 /*************************************************************************/
 
 /**
- * This function makes a new Server structure 
+ * This function makes a new Server structure
  * @param servernam Server Name
  * @param descript is the server description
  * @param servuplink is the server struct for the uplink
@@ -419,24 +419,12 @@ Server *do_server(const char *source, char *servername, char *hops,
 
         if (ServerCacheTime
             && ((servid = db_checkserver(servername)) != -1)) {
-            /* removed resetting connecttime - denora now assumes you've been connected same as 
-               it last saw the server if its not flagged as offline
-             */
-            if (db_checkserver_online(servername)) {
-                rdb_query
-                    (QUERY_LOW,
-                     "UPDATE %s SET server=\'%s\', hops=\'%s\', comment=\'%s\', linkedto=%d, online=\'Y\', maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld) WHERE servid=%d",
-                     ServerTable, servername, hops, descript, upservid,
-                     serv->ss->maxusers, serv->ss->maxusertime,
-                     serv->ss->lastseen, servid);
-            } else {
-                rdb_query
-                    (QUERY_LOW,
-                     "UPDATE %s SET server=\'%s\', hops=\'%s\', comment=\'%s\', connecttime=NOW(), linkedto=%d, online=\'Y\', maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld) WHERE servid=%d",
-                     ServerTable, servername, hops, descript, upservid,
-                     serv->ss->maxusers, serv->ss->maxusertime,
-                     serv->ss->lastseen, servid);
-            }
+            rdb_query
+                (QUERY_LOW,
+                 "UPDATE %s SET server=\'%s\', hops=\'%s\', comment=\'%s\', connecttime=NOW(), linkedto=%d, online=\'Y\', maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld) WHERE servid=%d",
+                 ServerTable, servername, hops, descript, upservid,
+                 serv->ss->maxusers, serv->ss->maxusertime,
+                 serv->ss->lastseen, servid);
             add = 0;
         }
         if (add) {
@@ -1112,8 +1100,8 @@ void server_set_desc(char *server, char *msg)
 
 /*************************************************************************/
 
-/* Asuka 
-   AB 351 BjAAA u2.10.11.07+asuka(1.2.1). Auska.Nomadirc.net :B96AeEFfIKMpSU 
+/* Asuka
+   AB 351 BjAAA u2.10.11.07+asuka(1.2.1). Auska.Nomadirc.net :B96AeEFfIKMpSU
 
    Viagra
    viagra.nomadirc.net 351 Denora VIAGRA_IRCd 1.3.0 - BETA 7. viagra.nomadirc.net :Ci TS5ow-r[BETA]
@@ -1184,7 +1172,7 @@ void sql_do_server_version(char *server, int ac, char **av)
         tmp2 = myStrGetToken(av[1], ' ', 0);
         temp = sstrdup(tmp2);
         free(tmp2);
-        /* if you have NeoStats mods load they to will respond on VERSION saying they are a 
+        /* if you have NeoStats mods load they to will respond on VERSION saying they are a
            module */
         if (!stricmp(temp, "MODULE")) {
             free(temp);
@@ -1291,7 +1279,7 @@ void do_squit(char *servername)
 /**
  * Handle parsing the CAPAB/PROTOCTL messages
  * @param ac Number of arguments in av
- * @param av Agruments 
+ * @param av Agruments
  * @return void
  */
 void capab_parse(int ac, char **av)

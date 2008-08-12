@@ -1,3 +1,8 @@
+Denora Version 1.4.1
+--------------------
+No changes.
+
+
 Denora Version 1.4.0
 --------------------
 
@@ -15,6 +20,7 @@ CREATE TABLE `admin` (
 ALTER TABLE `server` ADD `lastpingtime` INT( 15 ) NOT NULL AFTER `maxpingtime` ;
 
 ALTER TABLE `user` ADD `lastquitmsg` VARCHAR( 255 ) NOT NULL AFTER `lastquit` ;
+
 
 Denora Version 1.1.0
 --------------------
@@ -135,7 +141,6 @@ CREATE TABLE `serverstats` (
 ) TYPE=MyISAM;
 
 
-
 Denora Version 1.0.0
 -------------------
-
+First release.
