@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="1"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="198"
+VERSION_BUILD="199"
 
 # $Log$
+#
+# 2008-08-13 16:05:56 1.4.1.199 (SVN) hal9000 [#]
+# > Fixed incorrect memory handling in strnrepl. Thanks to w00t from atheme for letting us know.
 #
 # 2008-08-13 09:26:44 1.4.1.198 (SVN) hal9000 [#]
 # > Updated GeoIP.dat

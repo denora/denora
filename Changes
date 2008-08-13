@@ -8,13 +8,13 @@ Additions
 Changes
 08/08/13 r198 Updated GeoIP.dat
 08/07/11 r190 Improved version.log entry generation and added rev to Changes
-08/07/10 r189 Updated GeoIP.dat
 08/07/10 r189 Updated MySQL libs detection routine
 08/07/10 r189 Threads and Crypto are now on by default in Config [closes #508]
 08/07/10 r189 Changed layout of the Changes file
 08/05/31 r187 Updated svn url in dm script
 
 Fixes
+08/08/13 r199 Fixed incorrect memory handling in strnrepl
 08/08/07 r197 Fixed not resetting server connecttime on startup [closes #510]
 08/07/18 r193 Fixed various Charybdis issues [closes #509]
 08/07/14 r192 Fixed corrupt chanstats counts on some systems [closes #507]
