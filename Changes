@@ -6,6 +6,7 @@ Additions
 08/06/27 r188 Added user mode +D to nefarious protocol module [closes #504]
 
 Changes
+08/08/13 r198 Updated GeoIP.dat
 08/07/11 r190 Improved version.log entry generation and added rev to Changes
 08/07/10 r189 Updated GeoIP.dat
 08/07/10 r189 Updated MySQL libs detection routine

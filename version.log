@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="1"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="197"
+VERSION_BUILD="198"
 
 # $Log$
+#
+# 2008-08-13 09:26:44 1.4.1.198 (SVN) hal9000 [#]
+# > Updated GeoIP.dat
 #
 # 2008-08-12 22:42:46 1.4.1.197 (SVN) hal9000 [#510]
 # > Fixed not resetting server connecttime on startup
