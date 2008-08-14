@@ -112,10 +112,10 @@ Load_Cache () {
     		REGSCRIPT="no"
     	fi
 	if [ "$ENCRYPT" = "" ] ; then
-    		ENCRYPT="yes"
+    		ENCRYPT="no"
     	fi
 	if [ "$THREAD" = "" ] ; then
-    		THREAD="yes"
+    		THREAD="no"
     	fi
     else
         CAN_QUICK="no"
@@ -429,7 +429,7 @@ done
 echo ""
 
 ok=0
-DEF=No
+DEF=Yes
 echo "Allow Denora to attempt to build a crypt library so that"
 echo "admin passwords can be encrypted in the config and db files"
 while [ $ok -lt 1 ] ; do
@@ -455,7 +455,7 @@ done
 echo ""
 
 ok=0
-DEF=No
+DEF=Yes
 echo "Allow Denora to attempt to build a threading library so that"
 echo "the code can be multithreaded for speed"
 while [ $ok -lt 1 ] ; do

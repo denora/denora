@@ -214,6 +214,9 @@ void sql_do_nick(User * u)
     int nickid;
     char *username, *account, *host, *vhost, *server, *realname,
         *countryname, *countrycode;
+    char buffer1[1000], buffer2[1000], buffer3[1000], buffer4[1000],
+        buffer5[1000];
+    char bufferQ[(1000 * 5) - 4];
 
     SET_SEGV_LOCATION();
 
@@ -240,34 +243,43 @@ void sql_do_nick(User * u)
 
     if (UserCacheTime && (nickid != -1)) {
         SET_SEGV_LOCATION();
-        rdb_query
-            (QUERY_HIGH,
-             "UPDATE %s SET nick=\'%s\', hopcount=%d, nickip=\'%s\', countrycode=\'%s\', country=\'%s\', realname=\'%s\', hostname=\'%s\', hiddenhostname=\"%s\", username=\'%s\', swhois=\'\', account=\'%s\', connecttime=FROM_UNIXTIME(%d), servid=%d, server=\'%s\', lastquit=NULL, online=\'Y\', away=\'N\', awaymsg=\'\' WHERE nickid=%d",
-             UserTable, u->sqlnick, u->hopcount, u->ip, countrycode,
-             countryname, realname, host, vhost, username, account,
-             u->timestamp, servid, server, nickid);
+        sprintf(buffer1,
+                "UPDATE %s SET nick=\'%s\', hopcount=%d, nickip=\'%s\', countrycode=\'%s\', country=\'%s\', realname=\'%s\', ",
+                UserTable, u->sqlnick, u->hopcount, u->ip, countrycode,
+                countryname, realname);
+        sprintf(buffer2,
+                "hostname=\'%s\', hiddenhostname=\"%s\", username=\'%s\', swhois=\'\', account=\'%s\', connecttime=FROM_UNIXTIME(%d), servid=%d, server=\'%s\', lastquit=NULL, online=\'Y\', away=\'N\', awaymsg=\'\' WHERE nickid=%d",
+                host, vhost, username, account, u->timestamp, servid,
+                server, nickid);
+        sprintf(bufferQ, "%s%s", buffer1, buffer2);
+        rdb_query(QUERY_HIGH, bufferQ);
         sql_reset_usermodes(nickid, NULL);
         add = 0;
     }
     if (add) {
         SET_SEGV_LOCATION();
+        sprintf(buffer1,
+                "INSERT INTO %s (nick, hopcount, nickip, realname, hostname, hiddenhostname, username, swhois, account, connecttime, servid, server, countrycode, country) VALUES(\'%s\',%d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'\',\'%s\'",
+                UserTable, u->sqlnick, u->hopcount, u->ip, realname, host,
+                vhost, username, account);
+        sprintf(buffer2, ",FROM_UNIXTIME(%d),%d", u->timestamp, servid);
+        sprintf(buffer3, ",\'%s\',\'%s\',\'%s\')", server, countrycode,
+                countryname);
         if (KeepUserTable) {
-            rdb_query
-                (QUERY_HIGH,
-                 "INSERT INTO %s (nick,hopcount,nickip,realname,hostname,hiddenhostname,username,swhois,account,connecttime,servid,server,countrycode,country) VALUES(\'%s\',%d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'\',\'%s\',FROM_UNIXTIME(%d),%d,\'%s\',\'%s\',\'%s\') ON DUPLICATE KEY UPDATE nick=\'%s\', hopcount=%d, nickip=\'%s\', realname=\'%s\', hostname=\'%s\', hiddenhostname=\'%s\', username=\'%s\', account=\'%s\', connecttime=FROM_UNIXTIME(%d), servid=%d, server=\'%s\', countrycode=\'%s\', country=\'%s\', lastquit=NULL, online=\'Y\', away=\'N\', awaymsg=\'\'",
-                 UserTable, u->sqlnick, u->hopcount, u->ip, realname,
-                 host, vhost, username, account, u->timestamp, servid,
-                 server, countrycode, countryname, u->sqlnick, u->hopcount,
-                 u->ip, realname, host, vhost, username, account,
-                 u->timestamp, servid, server, countrycode, countryname);
+            sprintf(buffer4,
+                    "ON DUPLICATE KEY UPDATE nick=\'%s\', hopcount=%d, nickip=\'%s\', realname=\'%s\', hostname=\'%s\', hiddenhostname=\'%s\', ",
+                    u->sqlnick, u->hopcount, u->ip, realname, host, vhost);
+            sprintf(buffer5,
+                    "username=\'%s\', account=\'%s\', connecttime=FROM_UNIXTIME(%d), servid=%d, server=\'%s\', countrycode=\'%s\', country=\'%s\', lastquit=NULL, online=\'Y\', away=\'N\', awaymsg=\'\'",
+                    username, account, u->timestamp, servid, server,
+                    countrycode, countryname);
+            sprintf(bufferQ, "%s%s%s%s%s", buffer1, buffer2, buffer3,
+                    buffer4, buffer5);
+            rdb_query(QUERY_HIGH, bufferQ);
             sql_reset_usermodes(0, u->sqlnick);
         } else {
-            rdb_query
-                (QUERY_HIGH,
-                 "INSERT INTO %s (nick, hopcount, nickip, realname, hostname, hiddenhostname, username, swhois, account, connecttime, servid, server, countrycode, country) VALUES(\'%s\',%d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'\',\'%s\',FROM_UNIXTIME(%d),%d,\'%s\',\'%s\',\'%s\')",
-                 UserTable, u->sqlnick, u->hopcount, u->ip, realname,
-                 host, vhost, username, account, u->timestamp, servid,
-                 server, countrycode, countryname);
+            sprintf(bufferQ, "%s%s%s", buffer1, buffer2, buffer3);
+            rdb_query(QUERY_HIGH, bufferQ);
         }
     }
     SET_SEGV_LOCATION();

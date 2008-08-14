@@ -14,6 +14,8 @@ Changes
 08/05/31 r187 Updated svn url in dm script
 
 Fixes
+08/08/14 r200 Fixed Denora crashing on Windows with SQL enabled [closes #435]
+08/08/14 r200 [1] Fixed crypt libraries detection on BSD
 08/08/13 r199 Fixed incorrect memory handling in strnrepl
 08/08/07 r197 Fixed not resetting server connecttime on startup [closes #510]
 08/07/18 r193 Fixed various Charybdis issues [closes #509]
@@ -29,7 +31,7 @@ Developers
 Denora Team <dev@denorastats.org>
 
 Contributors
-n/a
+[1] Jobe <jobe@mdbnet.co.uk>
 
 
 Denora Version 1.4.0

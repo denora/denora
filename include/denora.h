@@ -159,7 +159,7 @@
 /* Include the crypt header file if the system can has it                */
 /*************************************************************************/
 
-#ifdef HAVE_CRYPT
+#ifdef HAVE_CRYPT_H
 #include <crypt.h>
 #endif
 

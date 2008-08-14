@@ -266,6 +266,8 @@ static void make_stats(User * u, char *receiver, char *msg)
     uint32 letters = 0, words = 1, action = 0, smileys = 0, i = 0, hour;
     char *buf;
     Channel *c;
+    char buffer1[1000], buffer2[1000];
+    char bufferQ[(1000 * 2) - 1];
 
     SET_SEGV_LOCATION();
 
@@ -277,8 +279,7 @@ static void make_stats(User * u, char *receiver, char *msg)
         return;
     }
 
-    if (!stricmp(u->nick, s_StatServ)
-        || !stricmp(u->nick, s_StatServ_alias)) {
+    if (!stricmp(u->nick, s_StatServ)) {
         return;
     }
 
@@ -305,26 +306,29 @@ static void make_stats(User * u, char *receiver, char *msg)
     words = words - smileys;    /* do not count smileys as words */
     SET_SEGV_LOCATION();
     hour = get_hour();
+
     /* update user SQL */
     /* update user */
     if (u->cstats != 2) {       /* check for ignore */
-        rdb_query
-            (QUERY_LOW,
-             "UPDATE %s SET letters=letters+%ld, words=words+%ld, line=line+1, "
-             "actions=actions+%ld, smileys=smileys+%ld, lastspoke=%i, time%ld=time%ld+1 "
-             "WHERE (uname=\'%s\' AND (chan=\'global\' OR chan=\'%s\'));",
-             UStatsTable, letters, words, action, smileys, time(NULL),
-             hour, hour, u->sgroup, c->sqlchan);
+        sprintf(buffer1,
+                "UPDATE %s SET letters=letters+%ld, words=words+%ld, line=line+1, actions=actions+%ld, smileys=smileys+%ld, lastspoke=%i, ",
+                UStatsTable, letters, words, action, smileys, time(NULL));
+        sprintf(buffer2,
+                "time%ld=time%ld+1 WHERE (uname=\'%s\' AND (chan=\'global\' OR chan=\'%s\'));",
+                hour, hour, u->sgroup, c->sqlchan);
+        sprintf(bufferQ, "%s%s", buffer1, buffer2);
+        rdb_query(QUERY_LOW, bufferQ);
     }
     SET_SEGV_LOCATION();
 
 /* update chan */
-    rdb_query
-        (QUERY_LOW,
-         "UPDATE %s SET letters=letters+%ld, words=words+%ld, line=line+1, "
-         "actions=actions+%ld, smileys=smileys+%ld, lastspoke=%i, time%ld=time%ld+1 WHERE chan=\'%s\';",
-         CStatsTable, letters, words, action, smileys, time(NULL), hour,
-         hour, c->sqlchan);
+    sprintf(buffer1,
+            "UPDATE %s SET letters=letters+%ld, words=words+%ld, line=line+1, actions=actions+%ld, smileys=smileys+%ld, lastspoke=%i, ",
+            CStatsTable, letters, words, action, smileys, time(NULL));
+    sprintf(buffer2, "time%ld=time%ld+1 WHERE chan=\'%s\';", hour, hour,
+            c->sqlchan);
+    sprintf(bufferQ, "%s%s", buffer1, buffer2);
+    rdb_query(QUERY_LOW, bufferQ);
 }
 
 /*************************************************************************/
