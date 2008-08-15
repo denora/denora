@@ -1,7 +1,9 @@
-Denora v1.4.1-SVN
------------------
+Denora v1.4.1
+-------------
 
 Additions
+08/08/15 r201 Added QUICKSTART documentation for *nix and windows
+08/08/15 r201 [2] Added Windows NSIS installer script
 08/07/14 r191 Added zline/shun/jupe support for p10 ircds [closes #504]
 08/06/27 r188 Added user mode +D to nefarious protocol module [closes #504]
 
@@ -32,6 +34,7 @@ Denora Team <dev@denorastats.org>
 
 Contributors
 [1] Jobe <jobe@mdbnet.co.uk>
+[2] katsklaw <katsklaw@ircmojo.net>
 
 
 Denora Version 1.4.0

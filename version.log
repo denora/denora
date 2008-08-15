@@ -8,15 +8,17 @@
 VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="1"
-VERSION_EXTRA="SVN"
-VERSION_BUILD="200"
+VERSION_EXTRA=""
+VERSION_BUILD="201"
 
 # $Log$
+#
+# 2008-08-15 19:55:53 1.4.1.201 hal9000 [#]
+# > Added Windows installer and quickstart docs. Denora 1.4.1 release :)
 #
 # 2008-08-14 21:56:25 1.4.1.200 (SVN) hal9000 [#435]
 # > Fixed Config not setting crypt and threading properly. Fixed crypt libraries detection on BSD systems. AAAAAND... *DRUMROLL* Fixed Denora crashing on Windows with SQL enabled!!! YAY!!!! (although, this might need some 
 # testing...)
-# 
 #
 # 2008-08-13 16:05:56 1.4.1.199 (SVN) hal9000 [#]
 # > Fixed incorrect memory handling in strnrepl. Thanks to w00t from atheme for letting us know.
