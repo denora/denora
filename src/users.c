@@ -248,10 +248,12 @@ void sql_do_nick(User * u)
                 UserTable, u->sqlnick, u->hopcount, u->ip, countrycode,
                 countryname, realname);
         sprintf(buffer2,
-                "hostname=\'%s\', hiddenhostname=\"%s\", username=\'%s\', swhois=\'\', account=\'%s\', connecttime=FROM_UNIXTIME(%d), servid=%d, server=\'%s\', lastquit=NULL, online=\'Y\', away=\'N\', awaymsg=\'\' WHERE nickid=%d",
-                host, vhost, username, account, u->timestamp, servid,
-                server, nickid);
-        sprintf(bufferQ, "%s%s", buffer1, buffer2);
+                "hostname=\'%s\', hiddenhostname=\"%s\", username=\'%s\', swhois=\'\', account=\'%s\', connecttime=FROM_UNIXTIME(%d), ",
+                host, vhost, username, account, u->timestamp);
+        sprintf(buffer3,
+                "servid=%d, server=\'%s\', lastquit=NULL, online=\'Y\', away=\'N\', awaymsg=\'\' WHERE nickid=%d",
+                servid, server, nickid);
+        sprintf(bufferQ, "%s%s%s", buffer1, buffer2, buffer3);
         rdb_query(QUERY_HIGH, bufferQ);
         sql_reset_usermodes(nickid, NULL);
         add = 0;
@@ -259,12 +261,14 @@ void sql_do_nick(User * u)
     if (add) {
         SET_SEGV_LOCATION();
         sprintf(buffer1,
-                "INSERT INTO %s (nick, hopcount, nickip, realname, hostname, hiddenhostname, username, swhois, account, connecttime, servid, server, countrycode, country) VALUES(\'%s\',%d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'\',\'%s\'",
-                UserTable, u->sqlnick, u->hopcount, u->ip, realname, host,
-                vhost, username, account);
-        sprintf(buffer2, ",FROM_UNIXTIME(%d),%d", u->timestamp, servid);
-        sprintf(buffer3, ",\'%s\',\'%s\',\'%s\')", server, countrycode,
-                countryname);
+                "INSERT INTO %s (nick, hopcount, nickip, realname, hostname, hiddenhostname, username, swhois, account, connecttime, servid, server, countrycode, country) VALUES(\'%s\',%d,\'%s\',\'%s\',",
+                UserTable, u->sqlnick, u->hopcount, u->ip, realname);
+        sprintf(buffer2,
+                "\'%s\',\'%s\',\'%s\',\'\',\'%s\',",
+                host, vhost, username, account);
+        sprintf(buffer3,
+                "FROM_UNIXTIME(%d),%d,\'%s\',\'%s\',\'%s\')",
+                u->timestamp, servid, server, countrycode, countryname);
         if (KeepUserTable) {
             sprintf(buffer4,
                     "ON DUPLICATE KEY UPDATE nick=\'%s\', hopcount=%d, nickip=\'%s\', realname=\'%s\', hostname=\'%s\', hiddenhostname=\'%s\', ",

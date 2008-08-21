@@ -7,11 +7,14 @@
 
 VERSION_MAJOR="1"
 VERSION_MINOR="4"
-VERSION_PATCH="1"
-VERSION_EXTRA=""
-VERSION_BUILD="201"
+VERSION_PATCH="2"
+VERSION_EXTRA="SVN"
+VERSION_BUILD="202"
 
 # $Log$
+#
+# 2008-08-21 08:14:34 1.4.2.202 (SVN) hal9000 [#]
+# > A patch for Kein to try, might fix his windows issue.
 #
 # 2008-08-15 19:55:53 1.4.1.201 hal9000 [#]
 # > Added Windows installer and quickstart docs. Denora 1.4.1 release :)
