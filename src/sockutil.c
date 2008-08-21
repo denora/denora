@@ -574,6 +574,17 @@ int conn(const char *host, int port, const char *lhost, int lport)
             ierr = ERR_GENERAL;
             continue;
         }
+
+        /*
+         * Set SO_REUSEADDR to allow bind() to bind over the top of a lingering (but now unused) socket
+         */
+        int sockopt = 1;
+        if (setsockopt
+            (sock, SOL_SOCKET, SO_REUSEADDR, (char *) &sockopt,
+             sizeof(int)) == -1) {
+            alog(LOG_DEBUG, "couldn't setsockopt() (nonfatal)");
+        }
+
         if (lhost) {
             struct addrinfo lochints, *locres;
 

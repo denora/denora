@@ -72,12 +72,12 @@ int do_set(User * u, int ac, char **av)
         syntax_error(s_StatServ, u, "SET", STAT_SET_SYNTAX);
     } else if (stricmp(option, "LIST") == 0) {
         setindex =
-            (denora->
-             debug ? STAT_SET_LIST_OPTION_ON : STAT_SET_LIST_OPTION_OFF);
+            (denora->debug ? STAT_SET_LIST_OPTION_ON :
+             STAT_SET_LIST_OPTION_OFF);
         notice_lang(s_StatServ, u, setindex, "DEBUG");
         setindex =
-            (denora->
-             do_html ? STAT_SET_LIST_OPTION_ON : STAT_SET_LIST_OPTION_OFF);
+            (denora->do_html ? STAT_SET_LIST_OPTION_ON :
+             STAT_SET_LIST_OPTION_OFF);
         notice_lang(s_StatServ, u, setindex, "HTML");
         setindex =
             (denora->do_sql ? STAT_SET_LIST_OPTION_ON :

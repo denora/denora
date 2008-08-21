@@ -74,8 +74,8 @@ static int do_envinfo(User * u, int ac, char **av)
     notice_lang(s_StatServ, u, STAT_ENVINFO_SQL,
                 denora->do_sql ? langstring(SAY_YES) : langstring(SAY_NO));
     notice_lang(s_StatServ, u, STAT_ENVINFO_HTML,
-                denora->
-                do_html ? langstring(SAY_YES) : langstring(SAY_NO));
+                denora->do_html ? langstring(SAY_YES) :
+                langstring(SAY_NO));
     notice_lang(s_StatServ, u, STAT_ENVINFO_DEBUG,
                 denora->debug ? langstring(SAY_YES) : langstring(SAY_NO));
     /* How many modules loaded */

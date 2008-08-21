@@ -22,6 +22,7 @@ static int findcc(const void *v, const void *cc)
     const TLD *t = (void *) v;
     return (stricmp(t->countrycode, (char *) cc));
 }
+
 int sortusers(const void *v, const void *v2)
 {
     const TLD *t = (void *) v;

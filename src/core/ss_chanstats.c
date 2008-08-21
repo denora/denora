@@ -162,8 +162,8 @@ static int do_chanstats(User * u, int ac, char **av)
                                     ircsnprintf(nickbuf, BUFSIZE, "%s %s",
                                                 nickbuf,
                                                 ((ircd->p10
-                                                  && ud) ? ud->
-                                                 uid : s_StatServ));
+                                                  && ud) ? ud->uid :
+                                                 s_StatServ));
                                 }
                                 (void) *modes++;
                             }
@@ -185,8 +185,8 @@ static int do_chanstats(User * u, int ac, char **av)
                                 ircsnprintf(nickbuf, BUFSIZE, "%s %s",
                                             nickbuf,
                                             ((ircd->p10
-                                              && ud) ? ud->
-                                             uid : s_StatServ));
+                                              && ud) ? ud->uid :
+                                             s_StatServ));
                             }
                             (void) *modes++;
                         }
