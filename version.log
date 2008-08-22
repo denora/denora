@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="2"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="209"
+VERSION_BUILD="210"
 
 # $Log$
+#
+# 2008-08-23 01:22:28 1.4.2.210 (SVN) hal9000 [#]
+# > Removed pointless calculation that could corrupt the words count in chanstats
 #
 # 2008-08-23 00:09:11 1.4.2.209 (SVN) hal9000 [#]
 # > Fixed some compilation warnings

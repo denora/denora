@@ -302,7 +302,6 @@ static void make_stats(User * u, char *receiver, char *msg)
         letters = letters - 7;  /* remove from the counted letters */
         words--;                /* remove from the counted words */
     }
-    words = words - smileys;    /* do not count smileys as words */
     SET_SEGV_LOCATION();
     hour = get_hour();
 
