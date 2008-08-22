@@ -199,7 +199,7 @@ void alog(int type, const char *fmt, ...)
 
     if (!BadPtr(LogChannel) && findchan(LogChannel)) {
         if (type == LOG_NORMAL || type == LOG_NONEXISTANT
-            || type == LOG_FILENAME || type == LOG_ERROR) {
+            || type == LOG_ERROR) {
             privmsg(s_StatServ, LogChannel, "%s", str);
         }
     }

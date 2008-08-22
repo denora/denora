@@ -7,7 +7,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * $Id$
  *
  */
@@ -550,7 +550,7 @@ DENORA_INLINE boolean nickIsServices(char *nick)
 
 /**
  * Determine if we need to send the TOKEN
- * @param token1 
+ * @param token1
  * @param token2
  * @return token to send
  */
@@ -725,7 +725,7 @@ int split_buf(char *buf, char ***argv)
 /*************************************************************************/
 
 /**
- * Generate a P10 ping reply 
+ * Generate a P10 ping reply
  * @param start is the ping time we got
  * @return a valid P10 ping reply format
  */
@@ -1020,7 +1020,7 @@ char *MakePassword(char *plaintext)
     char *password;
     int i;
 
-    /* Generate a (not very) random seed.  
+    /* Generate a (not very) random seed.
        You should do it better than this... */
     seed[0] = time(NULL);
     seed[1] = getpid() ^ (seed[0] >> 14 & 0x30000);
@@ -1030,7 +1030,7 @@ char *MakePassword(char *plaintext)
         salt[3 + i] = seedchars[(seed[i / 5] >> (i % 5) * 6) & 0x3f];
 
     /* Read in the user's password and encrypt it. */
-    password = crypt(plaintext, salt);
+    password = crypt(plaintext, (char *) salt);
     return password;
 #else
     return plaintext;

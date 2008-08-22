@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="2"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="208"
+VERSION_BUILD="209"
 
 # $Log$
+#
+# 2008-08-23 00:09:11 1.4.2.209 (SVN) hal9000 [#]
+# > Fixed some compilation warnings
 #
 # 2008-08-22 23:39:50 1.4.2.208 (SVN) hal9000 [#435]
 # > Finally, the real cause of the Windows problems seems to be found: time_t values need to be casted when passed to SQL queries! I know, I know... need lots of beer now ;)

@@ -1252,4 +1252,8 @@ E void init_cmodes(void);
 E void init_csmodes(void);
 E int ChanHasMode(char *chan, int m);
 
+#ifdef HAVE_CRYPT
+E char *crypt (__const char *__key, __const char *__salt);
+#endif
+
 #endif	/* EXTERN_H */
