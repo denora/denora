@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="2"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="204"
+VERSION_BUILD="205"
 
 # $Log$
+#
+# 2008-08-22 19:57:53 1.4.2.205 (SVN) hal9000 [#]
+# > firstadded was not set for chanstats global channel
 #
 # 2008-08-22 19:28:44 1.4.2.204 (SVN) hal9000 [#507,#435]
 # > Channel logging is now enabled even in debug mode. Further fixes for Windows. Fixed chanstats values screwing up in some cases. Needs testing.
