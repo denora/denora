@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="2"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="205"
+VERSION_BUILD="208"
 
 # $Log$
+#
+# 2008-08-22 23:39:50 1.4.2.208 (SVN) hal9000 [#435]
+# > Finally, the real cause of the Windows problems seems to be found: time_t values need to be casted when passed to SQL queries! I know, I know... need lots of beer now ;)
 #
 # 2008-08-22 19:57:53 1.4.2.205 (SVN) hal9000 [#]
 # > firstadded was not set for chanstats global channel

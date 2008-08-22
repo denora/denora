@@ -421,29 +421,29 @@ Server *do_server(const char *source, char *servername, char *hops,
             && ((servid = db_checkserver(servername)) != -1)) {
             rdb_query
                 (QUERY_LOW,
-                 "UPDATE %s SET server=\'%s\', hops=\'%s\', comment=\'%s\', connecttime=NOW(), linkedto=%d, online=\'Y\', maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%u) WHERE servid=%d",
+                 "UPDATE %s SET server=\'%s\', hops=\'%s\', comment=\'%s\', connecttime=NOW(), linkedto=%d, online=\'Y\', maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld) WHERE servid=%d",
                  ServerTable, servername, hops, descript, upservid,
                  serv->ss->maxusers, serv->ss->maxusertime,
-                 serv->ss->lastseen, servid);
+                 (long int) serv->ss->lastseen, servid);
             add = 0;
         }
         if (add) {
             if (KeepServerTable) {
                 rdb_query
                     (QUERY_LOW,
-                     "INSERT INTO %s (server, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%u))  ON DUPLICATE KEY UPDATE hops=\'%s\', comment=\'%s\', linkedto=%d, connecttime=NOW(), maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld)",
+                     "INSERT INTO %s (server, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld))  ON DUPLICATE KEY UPDATE hops=\'%s\', comment=\'%s\', linkedto=%d, connecttime=NOW(), maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld)",
                      ServerTable, servername, hops, descript, upservid,
                      serv->ss->maxusers, serv->ss->maxusertime,
                      serv->ss->lastseen, hops, descript,
                      db_getserver(sqluplinkserver), serv->ss->maxusers,
-                     serv->ss->maxusertime, serv->ss->lastseen);
+                     serv->ss->maxusertime, (long int) serv->ss->lastseen);
             } else {
                 rdb_query
                     (QUERY_LOW,
-                     "INSERT INTO %s (server, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%u))",
+                     "INSERT INTO %s (server, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld))",
                      ServerTable, servername, hops, descript, upservid,
                      serv->ss->maxusers, serv->ss->maxusertime,
-                     serv->ss->lastseen);
+                     (long int) serv->ss->lastseen);
             }
         }
         free(descript);

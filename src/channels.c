@@ -1470,9 +1470,9 @@ void do_topic(int ac, char **av)
         if (chanid) {
             rdb_query
                 (QUERY_LOW,
-                 "UPDATE %s SET topic=\'%s\', topicauthor=\'%s\', topictime=FROM_UNIXTIME(%u) WHERE chanid=%d",
-                 ChanTable, (topic ? topic : ""), author, c->topic_time,
-                 chanid);
+                 "UPDATE %s SET topic=\'%s\', topicauthor=\'%s\', topictime=FROM_UNIXTIME(%ld) WHERE chanid=%d",
+                 ChanTable, (topic ? topic : ""), author,
+                 (long int) c->topic_time, chanid);
         }
         u = user_find(c->topic_setter);
         if (u && !LargeNet) {

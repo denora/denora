@@ -267,8 +267,6 @@ static void make_stats(User * u, char *receiver, char *msg)
     int i = 0, hour;
     char *buf;
     Channel *c;
-    char buffer1[1000], buffer2[1000];
-    char bufferQ[(1000 * 2) - 1];
 
     SET_SEGV_LOCATION();
 
@@ -311,25 +309,23 @@ static void make_stats(User * u, char *receiver, char *msg)
     /* update user SQL */
     /* update user */
     if (u->cstats != 2) {       /* check for ignore */
-        sprintf(buffer1,
-                "UPDATE %s SET letters=letters+%u, words=words+%u, line=line+1, actions=actions+%u, smileys=smileys+%u, lastspoke=%i, ",
-                UStatsTable, letters, words, action, smileys, time(NULL));
-        sprintf(buffer2,
-                "time%i=time%i+1 WHERE (uname=\'%s\' AND (chan=\'global\' OR chan=\'%s\'));",
-                hour, hour, u->sgroup, c->sqlchan);
-        sprintf(bufferQ, "%s%s", buffer1, buffer2);
-        rdb_query(QUERY_LOW, bufferQ);
+        rdb_query
+            (QUERY_LOW,
+             "UPDATE %s SET letters=letters+%u, words=words+%u, line=line+1, "
+             "actions=actions+%u, smileys=smileys+%u, lastspoke=%ld, time%i=time%i+1 "
+             "WHERE (uname=\'%s\' AND (chan=\'global\' OR chan=\'%s\'));",
+             UStatsTable, letters, words, action, smileys,
+             (long int) time(NULL), hour, hour, u->sgroup, c->sqlchan);
     }
     SET_SEGV_LOCATION();
 
 /* update chan */
-    sprintf(buffer1,
-            "UPDATE %s SET letters=letters+%u, words=words+%u, line=line+1, actions=actions+%u, smileys=smileys+%u, lastspoke=%i, ",
-            CStatsTable, letters, words, action, smileys, time(NULL));
-    sprintf(buffer2, "time%i=time%i+1 WHERE chan=\'%s\';", hour, hour,
-            c->sqlchan);
-    sprintf(bufferQ, "%s%s", buffer1, buffer2);
-    rdb_query(QUERY_LOW, bufferQ);
+    rdb_query
+        (QUERY_LOW,
+         "UPDATE %s SET letters=letters+%u, words=words+%u, line=line+1, "
+         "actions=actions+%u, smileys=smileys+%u, lastspoke=%ld, time%i=time%i+1 WHERE chan=\'%s\';",
+         CStatsTable, letters, words, action, smileys,
+         (long int) time(NULL), hour, hour, c->sqlchan);
 }
 
 /*************************************************************************/
@@ -495,9 +491,8 @@ static int check_db(User * u, Channel * c)
                 for (i = 0; i < 4; i++) {
                     rdb_query
                         (QUERY_LOW,
-                         "INSERT IGNORE INTO %s SET uname=\'%s\', chan=\'global\', type=%i, firstadded=%ld;",
-                         UStatsTable, u->sqlnick, i,
-                         (long int) time(NULL));
+                         "INSERT IGNORE INTO %s SET uname=\'%s\', chan=\'global\', type=%i;",
+                         UStatsTable, u->sqlnick, i);
                 }
                 u->cstats = 1;
                 free(u->sgroup);

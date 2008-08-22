@@ -8,7 +8,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * $Id$
  *
  */
@@ -547,6 +547,7 @@ int conn(const char *host, int port, const char *lhost, int lport)
     int protocol = 0;
     int ierr = 0;
     int e;
+    int sockopt = 1;
     struct addrinfo hints, *res, *ress;
     char portnumb[16];
     char lportnumb[16];
@@ -578,7 +579,7 @@ int conn(const char *host, int port, const char *lhost, int lport)
         /*
          * Set SO_REUSEADDR to allow bind() to bind over the top of a lingering (but now unused) socket
          */
-        int sockopt = 1;
+        sockopt = 1;
         if (setsockopt
             (sock, SOL_SOCKET, SO_REUSEADDR, (char *) &sockopt,
              sizeof(int)) == -1) {
