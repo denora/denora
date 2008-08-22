@@ -263,7 +263,8 @@ void do_cstats(User * u, char *receiver, char *msg)
 
 static void make_stats(User * u, char *receiver, char *msg)
 {
-    uint32 letters = 0, words = 1, action = 0, smileys = 0, i = 0, hour;
+    uint32 letters = 0, words = 1, action = 0, smileys = 0;
+    int i = 0, hour;
     char *buf;
     Channel *c;
     char buffer1[1000], buffer2[1000];
@@ -311,10 +312,10 @@ static void make_stats(User * u, char *receiver, char *msg)
     /* update user */
     if (u->cstats != 2) {       /* check for ignore */
         sprintf(buffer1,
-                "UPDATE %s SET letters=letters+%ld, words=words+%ld, line=line+1, actions=actions+%ld, smileys=smileys+%ld, lastspoke=%i, ",
+                "UPDATE %s SET letters=letters+%u, words=words+%u, line=line+1, actions=actions+%u, smileys=smileys+%u, lastspoke=%i, ",
                 UStatsTable, letters, words, action, smileys, time(NULL));
         sprintf(buffer2,
-                "time%ld=time%ld+1 WHERE (uname=\'%s\' AND (chan=\'global\' OR chan=\'%s\'));",
+                "time%i=time%i+1 WHERE (uname=\'%s\' AND (chan=\'global\' OR chan=\'%s\'));",
                 hour, hour, u->sgroup, c->sqlchan);
         sprintf(bufferQ, "%s%s", buffer1, buffer2);
         rdb_query(QUERY_LOW, bufferQ);
@@ -323,9 +324,9 @@ static void make_stats(User * u, char *receiver, char *msg)
 
 /* update chan */
     sprintf(buffer1,
-            "UPDATE %s SET letters=letters+%ld, words=words+%ld, line=line+1, actions=actions+%ld, smileys=smileys+%ld, lastspoke=%i, ",
+            "UPDATE %s SET letters=letters+%u, words=words+%u, line=line+1, actions=actions+%u, smileys=smileys+%u, lastspoke=%i, ",
             CStatsTable, letters, words, action, smileys, time(NULL));
-    sprintf(buffer2, "time%ld=time%ld+1 WHERE chan=\'%s\';", hour, hour,
+    sprintf(buffer2, "time%i=time%i+1 WHERE chan=\'%s\';", hour, hour,
             c->sqlchan);
     sprintf(bufferQ, "%s%s", buffer1, buffer2);
     rdb_query(QUERY_LOW, bufferQ);

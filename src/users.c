@@ -248,7 +248,7 @@ void sql_do_nick(User * u)
                 UserTable, u->sqlnick, u->hopcount, u->ip, countrycode,
                 countryname, realname);
         sprintf(buffer2,
-                "hostname=\'%s\', hiddenhostname=\"%s\", username=\'%s\', swhois=\'\', account=\'%s\', connecttime=FROM_UNIXTIME(%d), ",
+                "hostname=\'%s\', hiddenhostname=\"%s\", username=\'%s\', swhois=\'\', account=\'%s\', connecttime=FROM_UNIXTIME(%u), ",
                 host, vhost, username, account, u->timestamp);
         sprintf(buffer3,
                 "servid=%d, server=\'%s\', lastquit=NULL, online=\'Y\', away=\'N\', awaymsg=\'\' WHERE nickid=%d",
@@ -267,14 +267,14 @@ void sql_do_nick(User * u)
                 "\'%s\',\'%s\',\'%s\',\'\',\'%s\',",
                 host, vhost, username, account);
         sprintf(buffer3,
-                "FROM_UNIXTIME(%d),%d,\'%s\',\'%s\',\'%s\')",
+                "FROM_UNIXTIME(%u),%d,\'%s\',\'%s\',\'%s\')",
                 u->timestamp, servid, server, countrycode, countryname);
         if (KeepUserTable) {
             sprintf(buffer4,
-                    "ON DUPLICATE KEY UPDATE nick=\'%s\', hopcount=%d, nickip=\'%s\', realname=\'%s\', hostname=\'%s\', hiddenhostname=\'%s\', ",
+                    " ON DUPLICATE KEY UPDATE nick=\'%s\', hopcount=%d, nickip=\'%s\', realname=\'%s\', hostname=\'%s\', hiddenhostname=\'%s\', ",
                     u->sqlnick, u->hopcount, u->ip, realname, host, vhost);
             sprintf(buffer5,
-                    "username=\'%s\', account=\'%s\', connecttime=FROM_UNIXTIME(%d), servid=%d, server=\'%s\', countrycode=\'%s\', country=\'%s\', lastquit=NULL, online=\'Y\', away=\'N\', awaymsg=\'\'",
+                    "username=\'%s\', account=\'%s\', connecttime=FROM_UNIXTIME(%u), servid=%d, server=\'%s\', countrycode=\'%s\', country=\'%s\', lastquit=NULL, online=\'Y\', away=\'N\', awaymsg=\'\'",
                     username, account, u->timestamp, servid, server,
                     countrycode, countryname);
             sprintf(bufferQ, "%s%s%s%s%s", buffer1, buffer2, buffer3,

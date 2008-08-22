@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="2"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="202"
+VERSION_BUILD="204"
 
 # $Log$
+#
+# 2008-08-22 19:28:44 1.4.2.204 (SVN) hal9000 [#507,#435]
+# > Channel logging is now enabled even in debug mode. Further fixes for Windows. Fixed chanstats values screwing up in some cases. Needs testing.
+# 
 #
 # 2008-08-21 17:47:19 1.4.2.202 (SVN) w00t [#]
 # > Set SO_REUSEADDR to avoid bind() throwing an error if the OS has not properly released the bind from the previous instance of Denora.

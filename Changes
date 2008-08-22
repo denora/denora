@@ -1,3 +1,29 @@
+$Id$
+
+Denora v1.4.2-SVN
+-----------------
+
+Additions
+n/a
+
+Changes
+08/08/22 r204 Channel logging is now enabled even in debug mode
+
+Fixes
+08/08/22 r204 Further fixes for Windows [closes #435]
+08/08/22 r204 Fixed chanstats values screwing up in some cases [closes #507]
+08/08/21 r203 Set SO_REUSEADDR to avoid a (harmless) socket bind error
+
+Removals
+n/a
+
+Developers
+Denora Team <dev@denorastats.org>
+
+Contributors
+n/a
+
+
 Denora v1.4.1
 -------------
 

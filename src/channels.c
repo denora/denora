@@ -1470,7 +1470,7 @@ void do_topic(int ac, char **av)
         if (chanid) {
             rdb_query
                 (QUERY_LOW,
-                 "UPDATE %s SET topic=\'%s\', topicauthor=\'%s\', topictime=FROM_UNIXTIME(%d) WHERE chanid=%d",
+                 "UPDATE %s SET topic=\'%s\', topicauthor=\'%s\', topictime=FROM_UNIXTIME(%u) WHERE chanid=%d",
                  ChanTable, (topic ? topic : ""), author, c->topic_time,
                  chanid);
         }

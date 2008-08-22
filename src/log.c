@@ -7,7 +7,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * $Id$
  *
  */
@@ -197,8 +197,9 @@ void alog(int type, const char *fmt, ...)
         fprintf(stderr, "%s %s\n", buf, str);
     }
 
-    if (!BadPtr(LogChannel) && !denora->debug && findchan(LogChannel)) {
-        if (type != LOG_SQLDEBUG || type != LOG_DEBUGSOCK) {
+    if (!BadPtr(LogChannel) && findchan(LogChannel)) {
+        if (type == LOG_NORMAL || type == LOG_NONEXISTANT
+            || type == LOG_FILENAME || type == LOG_ERROR) {
             privmsg(s_StatServ, LogChannel, "%s", str);
         }
     }
