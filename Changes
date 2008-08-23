@@ -7,6 +7,7 @@ Additions
 n/a
 
 Changes
+08/08/22 r214 Fixed exclude command assuming ustats user instead of nick
 08/08/22 r204 Channel logging is now enabled even in debug mode
 
 Fixes

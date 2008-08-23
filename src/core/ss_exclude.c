@@ -72,6 +72,7 @@ static int do_exclude(User * u, int ac, char **av)
     int disp = 1;
     char *name;
     char *ch = NULL;
+    User *u2;
 
     if (ac < 1) {
         notice_lang(s_StatServ, u, STAT_EXCLUDE_SYNTAX);
@@ -102,11 +103,12 @@ static int do_exclude(User * u, int ac, char **av)
             make_exclude(av[1]);
             notice_lang(s_StatServ, u, STAT_EXCLUDE_ADDED, av[1]);
             name = rdb_escape(av[1]);
+            u2 = user_find(av[1]);
             rdb_query(QUERY_LOW, "DELETE FROM %s WHERE uname=\'%s\'",
-                      UStatsTable, name);
+                      UStatsTable, u2 ? u2->sgroup : name);
             rdb_query(QUERY_LOW,
-                      "UPDATE `%s` SET `ignore`=\'Y\' WHERE `uname`=\'%s\' OR `nick`=\'%s\'",
-                      AliasesTable, u->sgroup, name);
+                      "UPDATE `%s` SET `ignore`=\'Y\' WHERE `uname`=\'%s\'",
+                      AliasesTable, u2 ? u2->sgroup : name);
             free(name);
         } else {
             notice_lang(s_StatServ, u, STAT_EXCLUDE_ALREADY, av[1]);
@@ -122,14 +124,15 @@ static int do_exclude(User * u, int ac, char **av)
             u->cstats = 0;
             notice_lang(s_StatServ, u, STAT_EXCLUDE_DELETED, av[1]);
             name = rdb_escape(av[1]);
+            u2 = user_find(av[1]);
             rdb_query(QUERY_LOW,
-                      "UPDATE `%s` SET `ignore`=\'N\' WHERE `uname`=\'%s\' OR `nick`=\'%s\'",
-                      AliasesTable, u->sgroup, name);
+                      "UPDATE `%s` SET `ignore`=\'N\' WHERE `uname`=\'%s\'",
+                      AliasesTable, u2 ? u2->sgroup : name);
             for (i = 0; i < 4; i++) {
                 rdb_query
                     (QUERY_LOW,
                      "INSERT IGNORE INTO %s SET uname=\'%s\', chan=\'global\', type=%i;",
-                     UStatsTable, u->sgroup, i);
+                     UStatsTable, u2 ? u2->sgroup : name, i);
             }
             free(name);
         } else {

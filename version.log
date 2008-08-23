@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="2"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="213"
+VERSION_BUILD="214"
 
 # $Log$
+#
+# 2008-08-23 23:58:55 1.4.2.214 (SVN) hal9000 [#]
+# > Fixed exclude command assuming ustats user instead of nick
 #
 # 2008-08-23 23:15:54 1.4.2.213 (SVN) hal9000 [#]
 # > Fixed global ustats record not created after removed from exclude
