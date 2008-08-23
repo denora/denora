@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="2"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="211"
+VERSION_BUILD="212"
 
 # $Log$
+#
+# 2008-08-23 22:16:48 1.4.2.212 (SVN) hal9000 [#]
+# > Fixed chanstats not re-enabled for users removed from exclude
 #
 # 2008-08-23 21:10:41 1.4.2.211 (SVN) hal9000 [#]
 # > Fixed excluded users being readded to chanstats

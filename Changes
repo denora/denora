@@ -10,6 +10,7 @@ Changes
 08/08/22 r204 Channel logging is now enabled even in debug mode
 
 Fixes
+08/08/23 r212 Fixed chanstats not re-enabled for users removed from exclude
 08/08/23 r211 Fixed excluded users being readded to chanstats
 08/08/23 r210 Removed pointless code that could cause word count to go backwards
 08/08/22 r208 Windows issue finally fixed: time_t need to be casted [closes #435]

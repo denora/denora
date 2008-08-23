@@ -119,6 +119,7 @@ static int do_exclude(User * u, int ac, char **av)
         e = find_exclude(av[1], NULL);
         if (e) {
             del_exclude(e);
+            u->cstats = 0;
             notice_lang(s_StatServ, u, STAT_EXCLUDE_DELETED, av[1]);
             name = rdb_escape(av[1]);
             rdb_query(QUERY_LOW,
