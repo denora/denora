@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="2"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="210"
+VERSION_BUILD="211"
 
 # $Log$
+#
+# 2008-08-23 21:10:41 1.4.2.211 (SVN) hal9000 [#]
+# > Fixed excluded users being readded to chanstats
 #
 # 2008-08-23 01:22:28 1.4.2.210 (SVN) hal9000 [#]
 # > Removed pointless calculation that could corrupt the words count in chanstats

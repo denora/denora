@@ -10,6 +10,8 @@ Changes
 08/08/22 r204 Channel logging is now enabled even in debug mode
 
 Fixes
+08/08/23 r211 Fixed excluded users being readded to chanstats
+08/08/23 r210 Removed pointless code that could cause word count to go backwards
 08/08/22 r208 Windows issue finally fixed: time_t need to be casted [closes #435]
 08/08/22 r207 firstadded was not set for chanstats global channel
 08/08/22 r204 Fixed chanstats values screwing up in some cases [closes #507]

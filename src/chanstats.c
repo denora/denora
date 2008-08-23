@@ -458,7 +458,8 @@ static int check_db(User * u, Channel * c)
             /* User is not +r so he gets ignored */
             u->cstats = 2;
         } else if (UserHasMode(u->nick, UMODE_r) && (u->cstats == 2)) {
-            /* User is +r but is set to ignore, so reset. */
+            /* User is +r but is set to ignore, so reset, since he might
+             * just have identified */
             u->cstats = 0;
         }
     }
@@ -673,6 +674,19 @@ void sumuser(User * u, char *user1, char *user2)
     rdb_query(QUERY_LOW,
               "UPDATE %s SET uname = \'%s\' WHERE uname = \'%s\';",
               AliasesTable, user1_, user2_);
+    /* check for ignore flag. if at least one is found, replicate */
+    rdb_query(QUERY_LOW,
+              "SELECT `ignore` FROM %s WHERE `uname` = \'%s\' AND `ignore`=\'Y\';",
+              AliasesTable, user1_);
+#ifdef USE_MYSQL
+    mysql_res = mysql_store_result(mysql);
+    if (mysql_num_rows(mysql_res) > 0) {
+        rdb_query(QUERY_LOW,
+                  "UPDATE `%s` SET `ignore` = \'Y\' WHERE `uname` = \'%s\';",
+                  AliasesTable, user1_);
+    }
+    mysql_free_result(mysql_res);
+#endif
     while ((u2 = finduser_by_sgroup(user2, user2_))) {
         free(u2->sgroup);
         u2->sgroup = sstrdup(user1_);

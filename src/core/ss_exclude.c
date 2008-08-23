@@ -103,9 +103,10 @@ static int do_exclude(User * u, int ac, char **av)
             notice_lang(s_StatServ, u, STAT_EXCLUDE_ADDED, av[1]);
             name = rdb_escape(av[1]);
             rdb_query(QUERY_LOW, "DELETE FROM %s WHERE uname=\'%s\'",
-                      UStatsTable, av[1]);
-            rdb_query(QUERY_LOW, "DELETE FROM %s WHERE uname=\'%s\'",
-                      AliasesTable, av[1]);
+                      UStatsTable, name);
+            rdb_query(QUERY_LOW,
+                      "UPDATE `%s` SET `ignore`=\'Y\' WHERE `uname`=\'%s\' OR `nick`=\'%s\'",
+                      AliasesTable, u->sgroup, name);
             free(name);
         } else {
             notice_lang(s_StatServ, u, STAT_EXCLUDE_ALREADY, av[1]);
@@ -119,6 +120,11 @@ static int do_exclude(User * u, int ac, char **av)
         if (e) {
             del_exclude(e);
             notice_lang(s_StatServ, u, STAT_EXCLUDE_DELETED, av[1]);
+            name = rdb_escape(av[1]);
+            rdb_query(QUERY_LOW,
+                      "UPDATE `%s` SET `ignore`=\'N\' WHERE `uname`=\'%s\' OR `nick`=\'%s\'",
+                      AliasesTable, u->sgroup, name);
+            free(name);
         } else {
             notice_lang(s_StatServ, u, STAT_EXCLUDE_NOT_FOUND, av[1]);
         }
