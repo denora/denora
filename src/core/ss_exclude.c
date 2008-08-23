@@ -125,6 +125,12 @@ static int do_exclude(User * u, int ac, char **av)
             rdb_query(QUERY_LOW,
                       "UPDATE `%s` SET `ignore`=\'N\' WHERE `uname`=\'%s\' OR `nick`=\'%s\'",
                       AliasesTable, u->sgroup, name);
+            for (i = 0; i < 4; i++) {
+                rdb_query
+                    (QUERY_LOW,
+                     "INSERT IGNORE INTO %s SET uname=\'%s\', chan=\'global\', type=%i;",
+                     UStatsTable, u->sgroup, i);
+            }
             free(name);
         } else {
             notice_lang(s_StatServ, u, STAT_EXCLUDE_NOT_FOUND, av[1]);

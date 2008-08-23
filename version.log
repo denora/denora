@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="2"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="212"
+VERSION_BUILD="213"
 
 # $Log$
+#
+# 2008-08-23 23:15:54 1.4.2.213 (SVN) hal9000 [#]
+# > Fixed global ustats record not created after removed from exclude
 #
 # 2008-08-23 22:16:48 1.4.2.212 (SVN) hal9000 [#]
 # > Fixed chanstats not re-enabled for users removed from exclude
