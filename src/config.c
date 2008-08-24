@@ -1798,7 +1798,7 @@ int initconf(const char *filename, int reload, tConf * conftab)
     }
 
     while (!BadPtr(cur)
-           || ((fgets(line, LINE_MAX, file) != NULL) && ++lnum
+           || ((fgets(line, LINE_MAX + 1, file) != NULL) && ++lnum
                && (cur = line))) {
         cur = check_quote(cur);
         if (BadPtr(cur))
