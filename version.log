@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="2"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="215"
+VERSION_BUILD="216"
 
 # $Log$
+#
+# 2008-08-24 12:40:10 1.4.2.216 (SVN) hal9000 [#]
+# > Fixed crypt failure causing crash on login
 #
 # 2008-08-24 02:31:28 1.4.2.215 (SVN) w00t [#]
 # > Fix a potential race condition in where JOIN can create a channel, blowing away the TS set on it (leading to a desync). Based from my anope patch on bug 926.

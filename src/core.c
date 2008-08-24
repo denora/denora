@@ -1046,7 +1046,7 @@ int ValidPassword(char *plaintext, char *checkvs)
     /* Read in the user's password and encrypt it,
        passing the expected password in as the salt. */
     result = crypt(plaintext, checkvs);
-    if (!strcmp(result, checkvs)) {
+    if (!BadPtr(result) && !strcmp(result, checkvs)) {
         return 1;
     }
 #endif
