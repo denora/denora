@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="2"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="214"
+VERSION_BUILD="215"
 
 # $Log$
+#
+# 2008-08-24 02:31:28 1.4.2.215 (SVN) w00t [#]
+# > Fix a potential race condition in where JOIN can create a channel, blowing away the TS set on it (leading to a desync). Based from my anope patch on bug 926.
 #
 # 2008-08-23 23:58:55 1.4.2.214 (SVN) hal9000 [#]
 # > Fixed exclude command assuming ustats user instead of nick

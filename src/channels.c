@@ -864,7 +864,16 @@ void do_join(const char *source, int ac, char **av)
             user->chans = NULL;
             continue;
         }
-        join_user_update(user, findchan(s), s, time(NULL));
+
+        time_t ts = time(NULL);
+
+        if (ac == 2) {
+            alog(LOG_DEBUG, "debug: recieved a new TS for JOIN: %ld",
+                 (long int) ts);
+            ts = strtoul(av[1], NULL, 10);
+        }
+
+        join_user_update(user, findchan(s), s, ts);
         if (denora->do_sql) {
             sql_do_join(s, user->nick);
         }
