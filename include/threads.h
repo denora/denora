@@ -1,13 +1,13 @@
 /*
  *
- * (C) 2004-2007 Anope Team
+ * (C) 2004-2008 Anope Team
  * Contact us at info@anope.org
  *
  * Please read COPYING and README for furhter details.
  *
  * Based on the original code of Epona by Lara.
- * Based on the original code of Services by Andy Church. 
- * 
+ * Based on the original code of Services by Andy Church.
+ *
  * $Id$
  *
  */
@@ -20,7 +20,7 @@ typedef long deno_thread_t;
 typedef HANDLE deno_mutex_t;
 typedef HANDLE deno_cond_t;
 typedef unsigned 	(__stdcall *deno_thread_start) (void *);
-typedef struct 
+typedef struct
 {
 	deno_thread_start func;
 	void *arg;

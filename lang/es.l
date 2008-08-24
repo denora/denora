@@ -293,7 +293,7 @@ STAT_HELP_ADMIN_CMD
 	    ADMIN       Add/Delete Stats Admins
 	    CHANSTATS   Monitorea canales para conseguir estadisticas
 	    ENVINFO     Muestra information del entorno
-	    EXCLUDE     Excluye a canales, usuarios de las estadisticas
+	    EXCLUDE     Excluye a usuarios de las estadisticas de canales
 	    EXPORT      Exporta datos a XML
 	    HTML        Fuerza la creacion del archivo HTML
 	    MODLOAD     Carga un modulo

@@ -296,7 +296,7 @@ STAT_HELP_ADMIN_CMD
 	    ADMIN       Aggiungi/Rimuovi Amministratori
 	    CHANSTATS   Crea canali monitorati per Stats
 	    ENVINFO     Visualizza informazioni sull'ambiente
-	    EXCLUDE     Escludi utenti o canali da Stats
+	    EXCLUDE     Escludi utenti da chanstats
 	    EXPORT      Esporta dati in XML
 	    HTML        Forza la creazione del file HTML
 	    MODLOAD     Carica un modulo

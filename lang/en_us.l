@@ -294,7 +294,7 @@ STAT_HELP_ADMIN_CMD
 	    ADMIN       Manage Stats Admins
 	    CHANSTATS   Manage Monitored Channels for Stats
 	    ENVINFO     Show environment information
-	    EXCLUDE     Exclude users, channels from stats
+	    EXCLUDE     Exclude users from chanstats
 	    EXPORT      Export data to XML
 	    HTML        Forces to create the HTML file
 	    MODLOAD     Load a module

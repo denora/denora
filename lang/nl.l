@@ -304,7 +304,7 @@ STAT_HELP_ADMIN_CMD
 	    ADMIN       Add/Delete Stats Admins
 	    CHANSTATS   Kanalen in de gaten houden voor statistieken
 	    ENVINFO     Geef omgevingsinformatie weer
-	    EXCLUDE     Sluit gebruikers en kanalen uit van statistieken
+	    EXCLUDE     Sluit gebruikers van chanstats
 	    EXPORT      Exporteer data naar XML
 	    HTML        Exporteer data naar een HTML bestand
 	    MODLOAD     Laad een module

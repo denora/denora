@@ -301,7 +301,7 @@ STAT_HELP_ADMIN_CMD
 	    ADMIN       Ajoute/Supprime des administrateurs
 	    CHANSTATS   Ajoute un salon à monitorer
 	    ENVINFO     Voir les informations sur l'environement
-	    EXCLUDE     Exclus des utilisateurs/salons des stats
+	    EXCLUDE     Exclus des utilisateurs des chanstats
 	    EXPORT      Exporte les données dans un fichier XML
 	    HTML        Force la création du fichier HTML
 	    MODLOAD     Charge un module
