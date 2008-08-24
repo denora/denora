@@ -1057,8 +1057,8 @@ int denora_event_fjoin(char *source, int ac, char **av)
                 strlcpy(prefixandnick + nlen, userv[i],
                         sizeof(prefixandnick) - nlen);
                 /* add the user */
-                strncat(people, prefixandnick, 1024);
-                strncat(people, " ", 1024);
+                strncat(people, prefixandnick, sizeof(people - 1));
+                strncat(people, " ", sizeof(people - 1));
 
                 /* break out of this loop, which will move us to the next user */
                 break;
