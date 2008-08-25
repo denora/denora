@@ -9,14 +9,17 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="2"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="220"
+VERSION_BUILD="222"
 
 # $Log$
 #
-# 2008-08-24 12:27:21 1.4.2.220 (SVN) w00t [#]
+# 2008-08-25 08:21:17 1.4.2.222 (SVN) hal9000 [#]
+# > Fixed a compilation warning and wrong rev in version.log
+#
+# 2008-08-24 12:27:21 1.4.2.221 (SVN) w00t [#]
 # > Fix another potential off-by-one, strncat requires bufsize - 1.
 #
-# 2008-08-24 12:21:20 1.4.2.218 (SVN) w00t [#]
+# 2008-08-24 12:21:20 1.4.2.220 (SVN) w00t [#]
 # > Fix a potential off-by-one in initconf()
 #
 # 2008-08-24 12:53:49 1.4.2.217 (SVN) hal9000 [#]

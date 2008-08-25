@@ -826,6 +826,7 @@ void do_join(const char *source, int ac, char **av)
     User *user;
     char *s, *t;
     struct u_chanlist *c, *nextc;
+    time_t ts;
 
     SET_SEGV_LOCATION();
 
@@ -865,7 +866,7 @@ void do_join(const char *source, int ac, char **av)
             continue;
         }
 
-        time_t ts = time(NULL);
+        ts = time(NULL);
 
         if (ac == 2) {
             alog(LOG_DEBUG, "debug: recieved a new TS for JOIN: %ld",
