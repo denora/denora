@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="2"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="222"
+VERSION_BUILD="223"
 
 # $Log$
+#
+# 2008-08-26 10:45:22 1.4.2.223 (SVN) hal9000 [#]
+# > Fixed wrong logging about weekly/monthly chanstats reset
 #
 # 2008-08-25 08:21:17 1.4.2.222 (SVN) hal9000 [#]
 # > Fixed a compilation warning and wrong rev in version.log

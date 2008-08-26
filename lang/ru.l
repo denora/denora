@@ -1240,26 +1240,8 @@ ALOG_DEBUG_BAD_SSTRDUP
 ALOG_RESET_DAILY
 	resetting daily stats
 
-ALOG_RESETTING_SUNDAY
-	resetting weekly stats (on Sunday)
-
-ALOG_RESETTING_MONDAY
-	resetting weekly stats (on Monday)
-
-ALOG_RESETTING_TUESDAY
-	resetting weekly stats (on Tuesday)
-
-ALOG_RESETTING_WEDNESDAY
-	resetting weekly stats (on Wednesday)
-
-ALOG_RESETTING_THURSDAY
-	resetting weekly stats (on Thursday)
-
-ALOG_RESETTING_FRIDAY
-	resetting weekly stats (on Friday)
-
-ALOG_RESETTING_SATURDAY
-	resetting weekly stats (on Saturday)
+ALOG_RESETTING_WEEKLY
+	resetting weekly stats
 
 ALOG_RESETTING_MONTHLY
 	resetting monthly stats

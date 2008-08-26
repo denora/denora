@@ -1237,26 +1237,8 @@ ALOG_DEBUG_BAD_SSTRDUP
 ALOG_RESET_DAILY
 	Stelle die Täglichen Stats zurück
 
-ALOG_RESETTING_SUNDAY
-	Stelle die Wochen-Stats zurück (am Sonntag)
-
-ALOG_RESETTING_MONDAY
-	Stelle die Wochen-Stats zurück (am Montag)
-
-ALOG_RESETTING_TUESDAY
-	Stelle die Wochen-Stats zurück (am Dienstag)
-
-ALOG_RESETTING_WEDNESDAY
-	Stelle die Wochen-Stats zurück (am Mittwoch)
-
-ALOG_RESETTING_THURSDAY
-	Stelle die Wochen-Stats zurück (am Donnerstag)
-
-ALOG_RESETTING_FRIDAY
-	Stelle die Wochen-Stats zurück (am Freitag)
-
-ALOG_RESETTING_SATURDAY
-	Stelle die Wochen-Stats zurück (am Samstag)
+ALOG_RESETTING_WEEKLY
+	Stelle die Wochen-Stats zurück
 
 ALOG_RESETTING_MONTHLY
 	Stelle die Monats-Stats zurück

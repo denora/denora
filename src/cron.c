@@ -7,7 +7,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * $Id$
  *
  */
@@ -48,48 +48,38 @@ void denora_cron(time_t ts)
 
     if (cron_time.tm_hour == 0) {       /* midnight */
         /* run midnight routines */
-        alog(LOG_NORMAL, langstr(ALOG_RESET_DAILY));
-
         cron_process_events(CRON_MIDNIGHT);
 
         if (cron_time.tm_wday == 0) {   /* sunday midnight */
             /* run weekly routines */
-            alog(LOG_NORMAL, langstr(ALOG_RESETTING_SUNDAY));
             cron_process_events(CRON_WEEKLY_SUNDAY);
         }
         if (cron_time.tm_wday == 1) {   /* monday midnight */
             /* run weekly routines */
-            alog(LOG_NORMAL, langstr(ALOG_RESETTING_MONDAY));
             cron_process_events(CRON_WEEKLY_MONDAY);
         }
         if (cron_time.tm_wday == 2) {   /* tuesday midnight */
             /* run weekly routines */
-            alog(LOG_NORMAL, langstr(ALOG_RESETTING_TUESDAY));
             cron_process_events(CRON_WEEKLY_TUESDAY);
         }
         if (cron_time.tm_wday == 3) {   /* Wednesday midnight */
             /* run weekly routines */
-            alog(LOG_NORMAL, langstr(ALOG_RESETTING_WEDNESDAY));
             cron_process_events(CRON_WEEKLY_WEDNESDAY);
         }
         if (cron_time.tm_wday == 4) {   /* Thursday midnight */
             /* run weekly routines */
-            alog(LOG_NORMAL, langstr(ALOG_RESETTING_THURSDAY));
             cron_process_events(CRON_WEEKLY_THURSDAY);
         }
         if (cron_time.tm_wday == 5) {   /* tuesday midnight */
             /* run weekly routines */
-            alog(LOG_NORMAL, langstr(ALOG_RESETTING_FRIDAY));
             cron_process_events(CRON_WEEKLY_FRIDAY);
         }
         if (cron_time.tm_wday == 6) {   /* Saturday midnight */
             /* run weekly routines */
-            alog(LOG_NORMAL, langstr(ALOG_RESETTING_SATURDAY));
             cron_process_events(CRON_WEEKLY_SATURDAY);
         }
         if (cron_time.tm_mday == 1) {   /* 1st day of month midnight */
             /* run monthly routines */
-            alog(LOG_NORMAL, langstr(ALOG_RESETTING_MONTHLY));
             cron_process_events(CRON_MONTHLY);
         }
         SET_SEGV_LOCATION();

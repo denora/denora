@@ -1242,26 +1242,8 @@ ALOG_DEBUG_BAD_SSTRDUP
 ALOG_RESET_DAILY
 	Remise à zéro des stats journalière
 
-ALOG_RESETTING_SUNDAY
-	Remise à zéro des stats hebdomadaires (le Dimanche)
-
-ALOG_RESETTING_MONDAY
-	Remise à zéro des stats hebdomadaires (le Lundi)
-
-ALOG_RESETTING_TUESDAY
-	Remise à zéro des stats hebdomadaires (le Mardi)
-
-ALOG_RESETTING_WEDNESDAY
-	Remise à zéro des stats hebdomadaires (le Mercredi)
-
-ALOG_RESETTING_THURSDAY
-	Remise à zéro des stats hebdomadaires (le Jeudi)
-
-ALOG_RESETTING_FRIDAY
-	Remise à zéro des stats hebdomadaires (le Vendredi)
-
-ALOG_RESETTING_SATURDAY
-	Remise à zéro des stats hebdomadaires (le Samedi)
+ALOG_RESETTING_WEEKLY
+	Remise à zéro des stats hebdomadaires
 
 ALOG_RESETTING_MONTHLY
 	Remise à zéro des stats mensuelles

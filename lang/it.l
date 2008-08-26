@@ -1233,26 +1233,8 @@ ALOG_DEBUG_BAD_SSTRDUP
 ALOG_RESET_DAILY
 	azzeramento statistiche giornaliere
 
-ALOG_RESETTING_SUNDAY
-	azzeramento statistiche settimanali (di domenica)
-
-ALOG_RESETTING_MONDAY
-	azzeramento statistiche settimanali (di lunedì)
-
-ALOG_RESETTING_TUESDAY
-	azzeramento statistiche settimanali (di martedì)
-
-ALOG_RESETTING_WEDNESDAY
-	azzeramento statistiche settimanali (di mercoledì)
-
-ALOG_RESETTING_THURSDAY
-	azzeramento statistiche settimanali (di giovedì)
-
-ALOG_RESETTING_FRIDAY
-	azzeramento statistiche settimanali (di venerdì)
-
-ALOG_RESETTING_SATURDAY
-	azzeramento statistiche settimanali (di sabato)
+ALOG_RESETTING_WEEKLY
+	azzeramento statistiche settimanali
 
 ALOG_RESETTING_MONTHLY
 	azzeramento statistiche mensili

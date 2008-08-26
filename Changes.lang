@@ -3,10 +3,18 @@ $Id$
 Denora Version 1.4.2
 --------------------
 *** New Strings:
+	ALOG_RESETTING_WEEKLY
 
 *** Mod Strings:
 
 *** Del Strings:
+	ALOG_RESETTING_SUNDAY
+	ALOG_RESETTING_MONDAY
+	ALOG_RESETTING_TUESDAY
+	ALOG_RESETTING_WEDNESDAY
+	ALOG_RESETTING_THURSDAY
+	ALOG_RESETTING_FRIDAY
+	ALOG_RESETTING_SATURDAY
 
 Denora Version 1.4.1
 --------------------

@@ -68,6 +68,7 @@ int chanstats_daily(const char *name)
         return MOD_CONT;
     }
     SET_SEGV_LOCATION();
+    alog(LOG_NORMAL, langstr(ALOG_RESET_DAILY));
     rdb_query
         (QUERY_LOW,
          "UPDATE %s SET letters=0, words=0, line=0, actions=0, smileys=0, "
@@ -97,6 +98,7 @@ int chanstats_weekly(const char *name)
         return MOD_CONT;
     }
     SET_SEGV_LOCATION();
+    alog(LOG_NORMAL, langstr(ALOG_RESETTING_WEEKLY));
     rdb_query
         (QUERY_LOW,
          "UPDATE %s SET letters=0, words=0, line=0, actions=0, smileys=0, "
@@ -139,6 +141,7 @@ int chanstats_month(const char *name)
         return MOD_CONT;
     }
     SET_SEGV_LOCATION();
+    alog(LOG_NORMAL, langstr(ALOG_RESETTING_MONTHLY));
     rdb_query
         (QUERY_LOW,
          "UPDATE %s SET letters=0, words=0, line=0, actions=0, smileys=0, "

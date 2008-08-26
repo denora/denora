@@ -1250,26 +1250,8 @@ ALOG_DEBUG_BAD_SSTRDUP
 ALOG_RESET_DAILY
 	dagelijkste statistieken worden op nul gezet
 
-ALOG_RESETTING_SUNDAY
-	wekelijkse statistieken worden op nul gezet (op zondag)
-
-ALOG_RESETTING_MONDAY
-	wekelijkse statistieken worden op nul gezet (op maandag)
-
-ALOG_RESETTING_TUESDAY
-	wekelijkse statistieken worden op nul gezet (op dinsdag)
-
-ALOG_RESETTING_WEDNESDAY
-	wekelijkse statistieken worden op nul gezet (op woensdag)
-
-ALOG_RESETTING_THURSDAY
-	wekelijkse statistieken worden op nul gezet (op donderdag)
-
-ALOG_RESETTING_FRIDAY
-	wekelijkse statistieken worden op nul gezet (op vrijdag)
-
-ALOG_RESETTING_SATURDAY
-	wekelijkse statistieken worden op nul gezet (op zaterdag)
+ALOG_RESETTING_WEEKLY
+	wekelijkse statistieken worden op nul gezet
 
 ALOG_RESETTING_MONTHLY
 	maandelijkste statistieken worden op nul gezet
