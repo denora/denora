@@ -798,7 +798,7 @@ char *sstrdup(const char *src)
 {
     char *ret = NULL;
 
-    if (!BadPtr(src)) {
+    if (src) {
         if ((ret = (char *) malloc(strlen(src) + 1))) {
             strcpy(ret, src);
         }
