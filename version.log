@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="2"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="223"
+VERSION_BUILD="224"
 
 # $Log$
+#
+# 2008-09-02 11:17:37 1.4.2.224 (SVN) hal9000 [#512]
+# > Fixed crash on invalid nick country name
 #
 # 2008-08-26 10:45:22 1.4.2.223 (SVN) hal9000 [#]
 # > Fixed wrong logging about weekly/monthly chanstats reset

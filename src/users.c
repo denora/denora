@@ -1039,23 +1039,23 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
         if (!LargeNet) {
             country_code = GeoIP_country_code_by_addr(gi, ipchar);
             country_name = GeoIP_country_name_by_addr(gi, ipchar);
-            if (!country_name) {
+            if (BadPtr(country_name)) {
                 if (host && !stricmp("localhost", host)) {
-                    country_name = "localhost";
+                    country_name = sstrdup("localhost");
                 } else {
-                    country_name = "Unknown";
+                    country_name = sstrdup("Unknown");
                 }
             }
-            if (!country_code) {
+            if (BadPtr(country_code)) {
                 if (host && !stricmp("localhost", host)) {
-                    country_code = "local";
+                    country_code = sstrdup("local");
                 } else {
-                    country_code = "??";
+                    country_code = sstrdup("??");
                 }
             }
         } else {
-            country_name = "Unknown";
-            country_code = "??";
+            country_name = sstrdup("Unknown");
+            country_code = sstrdup("??");
         }
         s = server_find(server);
         /* Allocate User structure and fill it in. */

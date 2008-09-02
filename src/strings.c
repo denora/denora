@@ -7,7 +7,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * $Id$
  *
  */
@@ -406,7 +406,7 @@ char *strnrepl(char *s, int32 size, const char *old, const char *new)
  * @param s1 is the first string to check
  * @param s2 is the second string to check
  *
- * @return It returns an integer less than, equal to, or greater than zero if s1 is found, respectively, to be 
+ * @return It returns an integer less than, equal to, or greater than zero if s1 is found, respectively, to be
  *         less than, to match,  or  be greater than s2.
  */
 int stricmp(const char *s1, const char *s2)
@@ -440,7 +440,7 @@ int stricmp(const char *s1, const char *s2)
  * @param s1 is the first string to check
  * @param s2 is the second string to check
  *
- * @return It returns an integer less than, equal to, or greater than zero if s1 is found, respectively, to be 
+ * @return It returns an integer less than, equal to, or greater than zero if s1 is found, respectively, to be
  *         less than, to match,  or  be greater than s2.
  */
 int strnicmp(const char *s1, const char *s2, size_t len)
@@ -472,8 +472,8 @@ int strnicmp(const char *s1, const char *s2, size_t len)
  * @param s is the needle
  * @param accept is the haystack
  *
- * @return  returns the number of characters in the initial segment of s which consist only 
- *          of characters from accept. 
+ * @return  returns the number of characters in the initial segment of s which consist only
+ *          of characters from accept.
  *
  */
 size_t strspn(const char *s, const char *accept)
@@ -798,7 +798,7 @@ char *sstrdup(const char *src)
 {
     char *ret = NULL;
 
-    if (src) {
+    if (!BadPtr(src)) {
         if ((ret = (char *) malloc(strlen(src) + 1))) {
             strcpy(ret, src);
         }
