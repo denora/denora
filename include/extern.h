@@ -781,9 +781,9 @@ E void GeoIPRecord_delete (GeoIPRecord *gir);
 E char *GeoIPDBFileName;
 E const char * GeoIPDBDescription[NUM_DB_TYPES];
 E const char *GeoIPCountryDBFileName;
-E const char GeoIP_country_code[247][3];
-E const char GeoIP_country_code3[247][4];
-E const char * GeoIP_country_name[247];
+E const char GeoIP_country_code[253][3];
+E const char GeoIP_country_code3[253][4];
+E const char * GeoIP_country_name[253];
 
 E TLD *do_tld(char *country, char *code);
 E TLD *findtld(const char *country);

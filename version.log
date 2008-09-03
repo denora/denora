@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="2"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="226"
+VERSION_BUILD="227"
 
 # $Log$
+#
+# 2008-09-03 15:04:47 1.4.2.227 (SVN) hal9000 [#512]
+# > Fixed GeoIP related crash with newer dat files. Updated GeoIP.dat
 #
 # 2008-09-03 11:19:35 1.4.2.226 (SVN) hal9000 [#]
 # > Fixed possible screwup of ctcp/tld overall count in db files
