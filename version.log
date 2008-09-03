@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="2"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="225"
+VERSION_BUILD="226"
 
 # $Log$
+#
+# 2008-09-03 11:19:35 1.4.2.226 (SVN) hal9000 [#]
+# > Fixed possible screwup of ctcp/tld overall count in db files
 #
 # 2008-09-02 11:23:43 1.4.2.225 (SVN) hal9000 [#]
 # > oops! last fix went too far :P

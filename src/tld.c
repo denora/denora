@@ -8,7 +8,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * $Id$
  *
  */
@@ -48,9 +48,11 @@ void tld_update(char *country_code)
 
     if (tn) {
         t = lnode_get(tn);
-        t->count--;
+        if (t->count > 0) {
+            t->count--;
+        }
         rdb_query(QUERY_LOW,
-                  "UPDATE %s SET count=%d, overall=%d WHERE code=\'%s\'",
+                  "UPDATE %s SET count=%u, overall=%u WHERE code=\'%s\'",
                   TLDTable, t->count, t->overall, country_code);
     }
 }
@@ -294,7 +296,7 @@ void save_tld_db(void)
         t = lnode_get(tn);
         new_write_db_entry("ccode", dbptr, "%s", t->countrycode);
         new_write_db_entry("country", dbptr, "%s", t->country);
-        new_write_db_entry("overall", dbptr, "%d", t->overall);
+        new_write_db_entry("overall", dbptr, "%u", t->overall);
         new_write_db_endofblock(dbptr);
         tn = list_next(Thead, tn);
     }

@@ -7,7 +7,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * $Id$
  *
  */
@@ -195,7 +195,7 @@ void save_ctcp_db(void)
             strnrepl(version, BUFSIZE, ":", "¶");
             new_write_db_entry("version", dbptr, "%s", version);
             free(version);
-            new_write_db_entry("count", dbptr, "%d", c->overall);
+            new_write_db_entry("count", dbptr, "%u", c->overall);
             new_write_db_endofblock(dbptr);
         }
         tn = list_next(CTCPhead, tn);
@@ -228,10 +228,12 @@ void ctcp_update(char *version)
     if (!c) {
         return;
     }
-    c->count--;
+    if (c->count > 0) {
+        c->count--;
+    }
     version = rdb_escape(version);
     rdb_query(QUERY_LOW,
-              "UPDATE %s SET count=%d, overall=%d WHERE version=\'%s\'",
+              "UPDATE %s SET count=%u, overall=%u WHERE version=\'%s\'",
               CTCPTable, c->count, c->overall, version);
     SET_SEGV_LOCATION();
     free(version);

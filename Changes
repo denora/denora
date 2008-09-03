@@ -11,6 +11,7 @@ Changes
 08/08/22 r204 Channel logging is now enabled even in debug mode
 
 Fixes
+08/09/03 r226 Fixed possible screwup of ctcp/tld overall count in db files
 08/09/02 r224 Fixed crash on invalid nick country name [closes #512]
 08/08/26 r223 Fixed wrong logging about weekly/monthly chanstats reset
 08/08/24 r221 Fixed some potential off-by-one overflows
