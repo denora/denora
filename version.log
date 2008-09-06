@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="2"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="227"
+VERSION_BUILD="228"
 
 # $Log$
+#
+# 2008-09-06 12:39:01 1.4.2.228 (SVN) hal9000 [#]
+# > Now compiles on 64 bit Windows :)
 #
 # 2008-09-03 15:04:47 1.4.2.227 (SVN) hal9000 [#512]
 # > Fixed GeoIP related crash with newer dat files. Updated GeoIP.dat

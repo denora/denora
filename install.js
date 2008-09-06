@@ -93,15 +93,15 @@ var buildPackages = [
 										{ 
 										'name' : 'Microsoft Visual Studio 2008 (64bit) (with PSDK 2008)', 
 										'libpaths' : [ 
-										'Program Files (x86)\\Microsoft Visual Studio 9.0\\VC\\Lib', 
-										'Program Files\\Microsoft SDKs\\Windows\\v6.1\\Lib' 
+										'Program Files (x86)\\Microsoft Visual Studio 9.0\\VC\\Lib\\amd64', 
+										'Program Files\\Microsoft SDKs\\Windows\\v6.1\\Lib\\x64' 
 										], 
 										'incpaths' : [ 
 										'Program Files (x86)\\Microsoft Visual Studio 9.0\\VC\\Include', 
 										'Program Files\\Microsoft SDKs\\Windows\\v6.1\\Include' 
 										], 
 										'nmake' : [ 
-										'Program Files (x86)\\Microsoft Visual Studio 9.0\\VC\\bin', 
+										'Program Files (x86)\\Microsoft Visual Studio 9.0\\VC\\bin\\amd64', 
 										], 
 										'additional_switches' : [ '/w' ], 
 										'installedDrive' : 'C' 
