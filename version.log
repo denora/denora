@@ -7,11 +7,15 @@
 
 VERSION_MAJOR="1"
 VERSION_MINOR="4"
-VERSION_PATCH="2"
-VERSION_EXTRA=""
-VERSION_BUILD="229"
+VERSION_PATCH="3"
+VERSION_EXTRA="SVN"
+VERSION_BUILD="230"
 
 # $Log$
+#
+# 2008-09-08 17:39:22 1.4.3.230 (SVN) hal9000 [#514]
+# > Fixed parsing issue in inspircd11 fjoin. Fixed issue on empty VERSION inspircd11 message.
+# 
 #
 # 2008-09-08 10:12:08 1.4.2.229 hal9000 [#]
 # > Denora 1.4.2 release!

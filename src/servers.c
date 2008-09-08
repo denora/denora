@@ -1192,7 +1192,7 @@ void sql_do_server_version(char *server, int ac, char **av)
     }
 
     /* inspircd */
-    if (ac == 1) {
+    if (ac == 1 && !BadPtr(av[0])) {
         version = sstrdup(av[0]);
     }
 

@@ -225,7 +225,7 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("NICK",      denora_event_nick); addCoreMessage(IRCD,m);
     m = createMessage("NOTICE",    denora_event_notice); addCoreMessage(IRCD,m);
     m = createMessage("OPERNOTICE",denora_event_null); addCoreMessage(IRCD,m);
-    m = createMessage("OPERQUIT",  denora_event_null); addCoreMessage(IRCD,m);    
+    m = createMessage("OPERQUIT",  denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("OPERTYPE",  denora_event_opertype); addCoreMessage(IRCD,m);
     m = createMessage("PART",      denora_event_part); addCoreMessage(IRCD,m);
     m = createMessage("PASS",      denora_event_null); addCoreMessage(IRCD,m);
@@ -818,7 +818,7 @@ int denora_event_quit(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
-/* 
+/*
  * :irc.mynet.org MODE #opers +bb *!user@spy.com *!person@watching.us
  * :<source server or nickname> MODE <target> <modes and parameters>
  */
@@ -1028,7 +1028,7 @@ int denora_event_fjoin(char *source, int ac, char **av)
 
     *people = '\0';
 
-    /* 
+    /*
      * We need to remove the comma and ignore unknown modes.
      * This code is based on work by w00t for atheme.
      */
@@ -1057,8 +1057,8 @@ int denora_event_fjoin(char *source, int ac, char **av)
                 strlcpy(prefixandnick + nlen, userv[i],
                         sizeof(prefixandnick) - nlen);
                 /* add the user */
-                strncat(people, prefixandnick, sizeof(people - 1));
-                strncat(people, " ", sizeof(people - 1));
+                strncat(people, prefixandnick, sizeof(people) - 1);
+                strncat(people, " ", sizeof(people) - 1);
 
                 /* break out of this loop, which will move us to the next user */
                 break;

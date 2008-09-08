@@ -1,5 +1,28 @@
 $Id$
 
+Denora v1.4.3-SVN
+-----------------
+
+Additions
+n/a
+
+Changes
+n/a
+
+Fixes
+08/09/08 r230 Fixed parsing issue in inspircd11 fjoin [closes #514]
+08/09/08 r230 Fixed issue on empty VERSION inspircd11 message [closes #514]
+
+Removals
+n/a
+
+Developers
+Denora Team <dev@denorastats.org>
+
+Contributors
+n/a
+
+
 Denora v1.4.2
 -------------
 
@@ -7,7 +30,7 @@ Additions
 n/a
 
 Changes
-08/00/03 r227 Updated GeoIP.dat
+08/09/03 r227 Updated GeoIP.dat
 08/08/22 r214 Fixed exclude command assuming ustats user instead of nick
 08/08/22 r204 Channel logging is now enabled even in debug mode
 
