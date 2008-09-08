@@ -92,7 +92,7 @@ const char GeoIP_country_code3[253][4] =
 const char *GeoIP_country_name[253] =
     { "N/A", "Asia/Pacific Region", "Europe", "Andorra",
     "United Arab Emirates", "Afghanistan", "Antigua and Barbuda",
-        "Anguilla", "Albania", "Armenia",
+    "Anguilla", "Albania", "Armenia",
     "Netherlands Antilles",
     "Angola", "Antarctica", "Argentina", "American Samoa", "Austria",
     "Australia", "Aruba", "Azerbaijan", "Bosnia and Herzegovina",
