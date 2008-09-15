@@ -7,7 +7,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * $Id$
  *
  */
@@ -376,7 +376,7 @@ int displayMessageFromHash(char *name)
  * Displays a message list for a given message.
  * Again this is of little use other than debugging.
  * @param m the message to display
- * @return 0 is returned and has no meaning 
+ * @return 0 is returned and has no meaning
  */
 int displayMessage(Message * m)
 {
@@ -609,8 +609,8 @@ Message *createMessage(const char *name,
 
 /*************************************************************************/
 
-/** 
- * find a message in the given table. 
+/**
+ * find a message in the given table.
  * Looks up the message name in the MessageHash given
  * @param msgTable the message table to search for this command, will almost always be IRCD
  * @param name the name of the command were looking for
@@ -768,7 +768,7 @@ int loadCoreModule(Module * m, User * u)
 
     deno_modclearerr();
     m->handle = deno_modopen(m->filename);
-    if ((err = deno_moderr()) != NULL) {
+    if (m->handle == NULL && (err = deno_moderr()) != NULL) {
         alog(LOG_NORMAL, langstr(ALOG_MOD_ERROR), err);
         if (u) {
             notice_lang(s_StatServ, u, STAT_MODULE_LOAD_FAIL, m->name);
@@ -777,10 +777,11 @@ int loadCoreModule(Module * m, User * u)
     }
     deno_modclearerr();
     func = deno_modsym(m->handle, "DenoraInit");
-    if ((err = deno_moderr()) != NULL) {
+    if (!func && (err = deno_moderr()) != NULL) {
         deno_modclose(m->handle);       /* If no DenoraInit - it isnt an Denora Module, close it */
         return MOD_ERR_NOLOAD;
     }
+    deno_modclearerr();
     if (func) {
         version =
             (int (*)()) deno_modsym(m->handle, "getDenoraBuildVersion");
@@ -1169,10 +1170,10 @@ Module *findModule(char *name)
 
 /*************************************************************************/
 
-/** 
+/**
  * Copy the module from the modules folder to the runtime folder.
  * This will prevent module updates while the modules is loaded from
- * triggering a segfault, as the actaul file in use will be in the 
+ * triggering a segfault, as the actaul file in use will be in the
  * runtime folder.
  * @param name the name of the module to copy
  * @param output is the output filename
@@ -1287,7 +1288,7 @@ int loadModule(Module * m, User * u)
     m->filename = sstrdup(buf);
     deno_modclearerr();
     m->handle = deno_modopen(m->filename);
-    if ((err = deno_moderr()) != NULL) {
+    if (m->handle == NULL && (err = deno_moderr()) != NULL) {
         alog(LOG_NORMAL, langstr(ALOG_MOD_ERROR), err);
         if (u) {
             notice_lang(s_StatServ, u, STAT_MODULE_LOAD_FAIL, m->name);
@@ -1296,10 +1297,11 @@ int loadModule(Module * m, User * u)
     }
     deno_modclearerr();
     func = deno_modsym(m->handle, "DenoraInit");
-    if ((err = deno_moderr()) != NULL) {
+    if (!func && (err = deno_moderr()) != NULL) {
         deno_modclose(m->handle);       /* If no DenoraInit - it isnt an Denora Module, close it */
         return MOD_ERR_NOLOAD;
     }
+    deno_modclearerr();
     if (func) {
         version =
             (int (*)()) deno_modsym(m->handle, "getDenoraBuildVersion");
@@ -1404,6 +1406,8 @@ int unloadModule(Module * m, User * u)
     func = deno_modsym(m->handle, "DenoraFini");
     if (func) {
         func();                 /* exec DenoraFini */
+    } else {
+        deno_modclearerr();
     }
 
     if ((deno_modclose(m->handle)) != 0) {
@@ -1430,7 +1434,7 @@ int unloadModule(Module * m, User * u)
 
 /**
  * Prepare a module to be unloaded.
- * Remove all commands and messages this module is providing, and delete 
+ * Remove all commands and messages this module is providing, and delete
  * any callbacks which are still pending.
  * @param m the module to prepare for unload
  * @return MOD_ERR_OK on success
@@ -1647,6 +1651,8 @@ void modules_unload_all(void)
                 mod_current_module_name = mh->m->name;
                 func();         /* exec DenoraFini */
                 mod_current_module_name = NULL;
+            } else {
+                deno_modclearerr();
             }
 
             if ((deno_modclose(mh->m->handle)) != 0)
@@ -1662,8 +1668,8 @@ void modules_unload_all(void)
 
 /*************************************************************************/
 
-/** 
- * Load the ircd protocol module up 
+/**
+ * Load the ircd protocol module up
  **/
 int protocol_module_init(void)
 {
@@ -1738,9 +1744,9 @@ int moduleCount(int all)
 
 /*************************************************************************/
 
-/** 
-    * Search all loaded modules looking for a protocol module. 
-    * @return 1 if one is found. 
+/**
+    * Search all loaded modules looking for a protocol module.
+    * @return 1 if one is found.
     **/
 int protocolModuleLoaded()
 {
@@ -1767,7 +1773,7 @@ int protocolModuleLoaded()
   * This allows modules to request that denora executes one of there functions at a time in the future, without an event to trigger it
   * @param name the name of the callback, this is used for refrence mostly, but is needed it you want to delete this particular callback later on
   * @param when when should the function be executed, this is a time in the future, seconds since 00:00:00 1970-01-01 UTC
-  * @param func the function to be executed when the callback is ran, its format MUST be int func(int argc, char **argv); 
+  * @param func the function to be executed when the callback is ran, its format MUST be int func(int argc, char **argv);
   * @param argc the argument count for the argv paramter
   * @param argv a argument list to be passed to the called function.
   * @return MOD_ERR_OK on success, anything else on fail.
@@ -1971,7 +1977,7 @@ void moduleDelCallback(char *name)
 /**
  * Remove all outstanding module callbacks for the given module.
  * When a module is unloaded, any callbacks it had outstanding must be removed, else when they attempt to execute the func pointer will no longer be valid, and we'll seg.
- * @param mod_name the name of the module we are preping for unload 
+ * @param mod_name the name of the module we are preping for unload
  **/
 void moduleCallBackPrepForUnload(char *mod_name)
 {
@@ -2124,7 +2130,7 @@ MessageHash *next_messagehash(void)
  * Add a message to the MessageHash.
  * @param msgTable the MessageHash we want to add a message to
  * @param m the Message we want to add
- * @param pos the position we want to add the message to, E.G. MOD_HEAD, MOD_TAIL, MOD_UNIQUE 
+ * @param pos the position we want to add the message to, E.G. MOD_HEAD, MOD_TAIL, MOD_UNIQUE
  * @return MOD_ERR_OK on a successful add.
  **/
 

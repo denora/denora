@@ -5,7 +5,7 @@ SetCompressor /SOLID lzma
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "Denora"
-!define PRODUCT_VERSION "1.4.1"
+!define PRODUCT_VERSION "1.4.3"
 !define PRODUCT_PUBLISHER "Denora"
 !define PRODUCT_WEB_SITE "http://denorastats.org/"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\denora.exe"
@@ -47,7 +47,7 @@ SetCompressor /SOLID lzma
 ; MUI end ------
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
-OutFile "Denora-1.4.1.exe"
+OutFile "Denora-1.4.3-x86.exe"
 InstallDir "$PROGRAMFILES\Denora"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
