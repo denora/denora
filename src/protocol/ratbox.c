@@ -274,12 +274,13 @@ int denora_event_nick(char *source, int ac, char **av)
         }
     } else {
         if (ac != 2) {
+            ipchar = host_resolve(av[5]);
             user = do_nick(source, av[0], av[4], av[5], av[6], av[7],
-                           strtoul(av[2], NULL, 10), 0, 0, NULL, NULL,
+                           strtoul(av[2], NULL, 10), 0, ipchar, NULL, NULL,
                            strtoul(av[1], NULL, 10), av[3], NULL);
         } else {
             do_nick(source, av[0], NULL, NULL, NULL, NULL,
-                    strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0,
+                    strtoul(av[1], NULL, 10), 0, 0, NULL, NULL, 0,
                     NULL, NULL);
         }
     }
@@ -332,7 +333,7 @@ int denora_event_436(char *source, int ac, char **av)
 }
 
 /* *INDENT-OFF* */
-void moduleAddIRCDMsgs(void) 
+void moduleAddIRCDMsgs(void)
 {
     Message *m;
 
@@ -380,7 +381,7 @@ void moduleAddIRCDMsgs(void)
     m = createMessage("ADMIN",     denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("ERROR",     denora_event_error); addCoreMessage(IRCD,m);
     m = createMessage("421",       denora_event_null); addCoreMessage(IRCD,m);
-    m = createMessage("ENCAP",     denora_event_encap); addCoreMessage(IRCD,m);    
+    m = createMessage("ENCAP",     denora_event_encap); addCoreMessage(IRCD,m);
     m = createMessage("SID",       denora_event_sid); addCoreMessage(IRCD,m);
     m = createMessage("KLINE",     denora_event_kline); addCoreMessage(IRCD,m);
     m = createMessage("UNKLINE",   denora_event_unkline); addCoreMessage(IRCD,m);
@@ -471,18 +472,18 @@ void ratbox_cmd_svsinfo(void)
 /* CAPAB */
 /*
   QS     - Can handle quit storm removal
-  EX     - Can do channel +e exemptions 
+  EX     - Can do channel +e exemptions
   CHW    - Can do channel wall @#
-  LL     - Can do lazy links 
-  IE     - Can do invite exceptions 
+  LL     - Can do lazy links
+  IE     - Can do invite exceptions
   EOB    - Can do EOB message
-  KLN    - Can do KLINE message 
-  GLN    - Can do GLINE message 
-  HUB    - This server is a HUB 
+  KLN    - Can do KLINE message
+  GLN    - Can do GLINE message
+  HUB    - This server is a HUB
   UID    - Can do UIDs
   ZIP    - Can do ZIPlinks
-  ENC    - Can do ENCrypted links 
-  KNOCK  -  supports KNOCK 
+  ENC    - Can do ENCrypted links
+  KNOCK  -  supports KNOCK
   TBURST - supports TBURST
   PARA	 - supports invite broadcasting for +p
   ENCAP	 - ?
@@ -769,12 +770,12 @@ void ratbox_cmd_mode(char *source, char *dest, char *buf)
 
 void ratbox_cmd_nick(char *nick, char *name, const char *mode)
 {
-    char *nicknumbuf = ts6_uid_retrieve();
+    char *nicknumbuf = NULL;
     if (UseTS6) {
+        nicknumbuf = ts6_uid_retrieve();
         send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
                  (long int) time(NULL), mode, ServiceUser, ServiceHost,
                  nicknumbuf, name);
-
         new_uid(nick, nicknumbuf);
     } else {
         send_cmd(NULL, "NICK %s 1 %ld %s %s %s %s :%s", nick,

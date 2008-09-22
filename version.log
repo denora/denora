@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="231"
+VERSION_BUILD="234"
 
 # $Log$
+#
+# 2008-09-22 15:36:48 1.4.3.234 (SVN) hal9000 [#]
+# > Ratbox now works in normal mode. TS6 fixes coming soon.
 #
 # 2008-09-15 11:00:22 1.4.3.231 (SVN) hal9000 [#515]
 # > Fixed nss problems on FreeBSD systems (thanks Rob)
