@@ -175,7 +175,7 @@ msg "Creating/Refreshing Denora database schema..."
 $MYSQL < "sql/denora.sql"
 if test "$?" = "0" ; then
 	msg2 "done!"
-	msg "Inserting ircd-specific modes... (you can safelly ignore any errors here)"
+	msg "Inserting ircd-specific modes... (you can safely ignore any errors here)"
 	$MYSQL < "sql/$DBFILE.sql"
 	msg2 "done!"
 else

@@ -264,7 +264,7 @@ void do_cstats(User * u, char *receiver, char *msg)
 static void make_stats(User * u, char *receiver, char *msg)
 {
     uint32 letters = 0, words = 1, action = 0, smileys = 0, i = 0;
-    int hour;
+    long int hour;
     char *buf;
     Channel *c;
 

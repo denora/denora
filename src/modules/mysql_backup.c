@@ -26,8 +26,8 @@ int DenoraInit(int argc, char **argv)
     if (denora->debug >= 2) {
         protocol_debug(NULL, argc, argv);
     }
-    moduleAddAuthor("Trystan");
-    moduleAddVersion("1.0");
+    moduleAddAuthor("Denora");
+    moduleAddVersion("1.1");
     moduleSetType(THIRD);
 
     hook = createEventHook(EVENT_DB_BACKUP, do_sql_backup);
@@ -52,136 +52,108 @@ int do_sql_backup(int argc, char **argv)
 {
     char output[BUFSIZE];
 
+    if (!denora->do_sql) {
+        alog(LOG_ERROR, "SQL is disabled, backup stopped");
+        return MOD_STOP;
+    }
+
     if (!stricmp(argv[0], EVENT_STOP)) {
         ircsnprintf(output, BUFSIZE, "%s/backups", STATS_DIR);
         alog(LOG_NORMAL, "Backing up MYSQL tables to '%s'", output);
 
 #ifdef USE_MYSQL
         dbMySQLPrepareForQuery();
-#endif
         rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", UserTable, output);
 
-#ifdef USE_MYSQL
         dbMySQLPrepareForQuery();
-#endif
         rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", ChanBansTable,
                   output);
 
         if (ircd->except) {
-#ifdef USE_MYSQL
             dbMySQLPrepareForQuery();
-#endif
             rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'",
                       ChanExceptTable, output);
         }
-#ifdef USE_MYSQL
+
         dbMySQLPrepareForQuery();
-#endif
         rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", IsOnTable, output);
 
-#ifdef USE_MYSQL
         dbMySQLPrepareForQuery();
-#endif
         rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", ServerTable,
                   output);
 
-#ifdef USE_MYSQL
         dbMySQLPrepareForQuery();
-#endif
         rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", GlineTable,
                   output);
 
-#ifdef USE_MYSQL
         dbMySQLPrepareForQuery();
-#endif
         rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", ChanTable, output);
 
-#ifdef USE_MYSQL
         dbMySQLPrepareForQuery();
-#endif
         rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", MaxValueTable,
                   output);
 
         if (ircd->invitemode) {
-#ifdef USE_MYSQL
             dbMySQLPrepareForQuery();
-#endif
             rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'",
                       ChanInviteTable, output);
         }
-#ifdef USE_MYSQL
+
         dbMySQLPrepareForQuery();
-#endif
         rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", TLDTable, output);
 
-#ifdef USE_MYSQL
         dbMySQLPrepareForQuery();
-#endif
         rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", CTCPTable, output);
 
         if (ircd->sgline_table) {
-#ifdef USE_MYSQL
             dbMySQLPrepareForQuery();
-#endif
             rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", SglineTable,
                       output);
         }
         if (ircd->sqline_table) {
-#ifdef USE_MYSQL
             dbMySQLPrepareForQuery();
-#endif
             rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", SqlineTable,
                       output);
         }
-#ifdef USE_MYSQL
+
         dbMySQLPrepareForQuery();
-#endif
         rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", ChanStatsTable,
                   output);
 
-#ifdef USE_MYSQL
         dbMySQLPrepareForQuery();
-#endif
         rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", ServerStatsTable,
                   output);
 
-#ifdef USE_MYSQL
         dbMySQLPrepareForQuery();
-#endif
         rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", AliasesTable,
                   output);
-#ifdef USE_MYSQL
+
         dbMySQLPrepareForQuery();
-#endif
         rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", CStatsTable,
                   output);
-#ifdef USE_MYSQL
+
         dbMySQLPrepareForQuery();
-#endif
         rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", UStatsTable,
                   output);
-#ifdef USE_MYSQL
+
         dbMySQLPrepareForQuery();
-#endif
         rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", CurrentTable,
                   output);
-#ifdef USE_MYSQL
+
         dbMySQLPrepareForQuery();
-#endif
         rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", StatsTable,
                   output);
+
         if (ircd->spamfilter) {
-#ifdef USE_MYSQL
             dbMySQLPrepareForQuery();
-#endif
             rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", SpamTable,
                       output);
         }
-#ifdef USE_MYSQL
+
         dbMySQLPrepareForQuery();
-#endif
         rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", AdminTable,
                   output);
+#endif
     }
     return MOD_CONT;
 }

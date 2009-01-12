@@ -26,7 +26,7 @@ int DenoraInit(int argc, char **argv)
     if (denora->debug >= 2) {
         protocol_debug(NULL, argc, argv);
     }
-    moduleAddAuthor("Trystan");
+    moduleAddAuthor("Denora");
     moduleAddVersion("1.1");
     moduleSetType(THIRD);
 

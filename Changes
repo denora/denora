@@ -10,6 +10,9 @@ Changes
 n/a
 
 Fixes
+09/01/12 r235 mysql backup module now checks for sql connection [closes #524]
+09/01/12 r235 Fixed chanstats problem on some x64 systems
+08/12/18 r235 P10 UIDs are case sensitive [closes #525]
 08/09/15 r233 [1] Fixed nss problems on FreeBSD systems [closes #515]
 
 Removals

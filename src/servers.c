@@ -729,7 +729,9 @@ Server *findserver_uid(Server * s, const char *name)
     }
 
     alog(LOG_EXTRADEBUG, "debug: findserver_uid(%s)", name);
-    while (s && s->suid && (stricmp(s->suid, name) != 0)) {
+    while (s && s->suid
+           && ((ircd->p10 ? strcmp(s->suid, name) : stricmp(s->suid, name))
+               != 0)) {
         if (s->links) {
             sl = findserver_uid(s->links, name);
             if (sl) {

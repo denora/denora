@@ -9,9 +9,15 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="234"
+VERSION_BUILD="235"
 
 # $Log$
+#
+# 2009-01-12 23:53:25 1.4.3.235 (SVN) hal9000 [#524,#525,#526]
+# > mysql backup module now checks for sql connection
+# > Fixed chanstats problem on some x64 systems
+# > P10 UIDs are case sensitive
+# 
 #
 # 2008-09-22 15:36:48 1.4.3.234 (SVN) hal9000 [#]
 # > Ratbox now works in normal mode. TS6 fixes coming soon.
@@ -21,7 +27,6 @@ VERSION_BUILD="234"
 #
 # 2008-09-08 17:39:22 1.4.3.230 (SVN) hal9000 [#514]
 # > Fixed parsing issue in inspircd11 fjoin. Fixed issue on empty VERSION inspircd11 message.
-# 
 #
 # 2008-09-08 10:12:08 1.4.2.229 hal9000 [#]
 # > Denora 1.4.2 release!
