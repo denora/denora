@@ -7,7 +7,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * $Id$
  *
  */
@@ -80,6 +80,7 @@ void load_admin_db(void)
     char *key, *value;
     int retval = 0;
     Dadmin *x = NULL;
+    Dadmin *a = NULL;
 
     fill_db_ptr(dbptr, 0, ADMIN_VERSION, s_StatServ, AdminDB);
     SET_SEGV_LOCATION();
@@ -123,7 +124,15 @@ void load_admin_db(void)
             SET_SEGV_LOCATION();
 
             if (!stricmp(key, "name")) {
-                x = make_admin(value);
+                a = find_admin_byname(value);
+                if (!a) {
+                    x = make_admin(value);
+                } else {
+                    alog(LOG_ERROR,
+                         "Admin %s from denora.conf overrides the one in admin.db",
+                         value);
+                    return;
+                }
             } else if (!stricmp(key, "password")) {
                 x->passwd = sstrdup(value);
             } else if (!stricmp(key, "host")) {

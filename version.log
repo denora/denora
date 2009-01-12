@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="235"
+VERSION_BUILD="236"
 
 # $Log$
+#
+# 2009-01-13 00:27:14 1.4.3.236 (SVN) hal9000 [#517]
+# > admin from denora.conf now overrides admin.db - needs testing!
 #
 # 2009-01-12 23:53:25 1.4.3.235 (SVN) hal9000 [#524,#525,#526]
 # > mysql backup module now checks for sql connection

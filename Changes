@@ -10,6 +10,7 @@ Changes
 n/a
 
 Fixes
+09/01/13 r236 admin from denora.conf now overrides admin.db [closes #517]
 09/01/12 r235 mysql backup module now checks for sql connection [closes #524]
 09/01/12 r235 Fixed chanstats problem on some x64 systems
 08/12/18 r235 P10 UIDs are case sensitive [closes #525]
