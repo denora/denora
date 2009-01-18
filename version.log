@@ -1,4 +1,4 @@
-# © 2004-2008 Denora Team
+# (c) 2004-2009 Denora Team
 # Contact us at info@denorastats.org
 #
 # Please read COPYING and README for furhter details.
@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="237"
+VERSION_BUILD="238"
 
 # $Log$
+#
+# 2009-01-18 19:33:00 1.4.3.238 (SVN) hal9000 [#]
+# > Updated copyright info in files
 #
 # 2009-01-18 19:24:25 1.4.3.237 (SVN) hal9000 [#]
 # > Updated GeoIP.dat
@@ -24,7 +27,6 @@ VERSION_BUILD="237"
 # > mysql backup module now checks for sql connection
 # > Fixed chanstats problem on some x64 systems
 # > P10 UIDs are case sensitive
-# 
 #
 # 2008-09-22 15:36:48 1.4.3.234 (SVN) hal9000 [#]
 # > Ratbox now works in normal mode. TS6 fixes coming soon.

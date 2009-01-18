@@ -1,5 +1,5 @@
 @echo off
-rem Denora © 2004-2008 Denora Team
+rem Denora (c) 2004-2009 Denora Team
 rem Contact us at info@denorastats.org
 rem
 rem This program is free but copyrighted software;

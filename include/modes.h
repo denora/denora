@@ -1,6 +1,6 @@
 /* Modes Defines
  *
- * © 2004-2008 Denora Team
+ * (c) 2004-2009 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
