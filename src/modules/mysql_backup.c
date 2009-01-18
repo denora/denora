@@ -54,7 +54,7 @@ int do_sql_backup(int argc, char **argv)
 
     if (!denora->do_sql) {
         alog(LOG_ERROR, "SQL is disabled, backup stopped");
-        return MOD_STOP;
+        return MOD_CONT;
     }
 
     if (!stricmp(argv[0], EVENT_STOP)) {

@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="236"
+VERSION_BUILD="237"
 
 # $Log$
+#
+# 2009-01-18 19:24:25 1.4.3.237 (SVN) hal9000 [#]
+# > Updated GeoIP.dat
+# > we dont want the mysql_backup module to unload on sql error
 #
 # 2009-01-13 00:27:14 1.4.3.236 (SVN) hal9000 [#517]
 # > admin from denora.conf now overrides admin.db - needs testing!
