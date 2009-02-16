@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="238"
+VERSION_BUILD="239"
 
 # $Log$
+#
+# 2009-02-16 13:44:35 1.4.3.239 (SVN) hal9000 [#]
+# > Updated GeoIP.dat
 #
 # 2009-01-18 19:33:00 1.4.3.238 (SVN) hal9000 [#]
 # > Updated copyright info in files

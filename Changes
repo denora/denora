@@ -7,7 +7,7 @@ Additions
 n/a
 
 Changes
-09/01/18 r237 Updated GeoIP.dat
+09/02/16 r239 Updated GeoIP.dat
 
 Fixes
 09/01/13 r236 admin from denora.conf now overrides admin.db [closes #517]
