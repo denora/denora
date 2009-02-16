@@ -1,6 +1,6 @@
 /*************************************************************************/
 /* (c) 2004-2009 Denora Team                                             */
-/* Contact us at info@denorastats.org                                       */
+/* Contact us at info@denorastats.org                                    */
 /*                                                                       */
 /* Please read COPYING and README for furhter details.                   */
 /*                                                                       */
@@ -44,5 +44,5 @@
 #define IRC_PLEXUS3    31  /* Plexus IRCd v3                             */
 #define IRC_MUSIRCD    32  /* MusIRCD v2.x                               */
 #define IRC_INSPIRCD11 33  /* Inspircd 1.1.x                             */
-#define IRC_SCARYNET   34  /* ScaryNet 2.10.11.x			 */
-
+#define IRC_SCARYNET   34  /* ScaryNet 2.10.11.x			             */
+#define IRC_INSPIRCD12 35  /* Inspircd 1.2.x                             */
