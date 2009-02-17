@@ -7,6 +7,8 @@ Additions
 n/a
 
 Changes
+09/02/17 r241 Fixed JOIN message handling in Plexus3
+09/02/17 r241 Fixed user and channel modes in Plexus3 protocol
 09/02/16 r239 Updated GeoIP.dat
 
 Fixes

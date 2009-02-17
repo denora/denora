@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="239"
+VERSION_BUILD="241"
 
 # $Log$
+#
+# 2009-02-17 01:12:20 1.4.3.241 (SVN) hal9000 [#]
+# > Fixed JOIN message handling and user+chan modes in Plexus3 protocol
+# > Some first work in the Inspircd 1.2 protocol
 #
 # 2009-02-16 13:44:35 1.4.3.239 (SVN) hal9000 [#]
 # > Updated GeoIP.dat

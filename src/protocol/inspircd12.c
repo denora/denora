@@ -62,7 +62,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* vhost other                  */
      'L',                       /* channek linking              */
      IRCD_DISABLE,              /* p10 protocol                 */
-     IRCD_DISABLE,              /* ts6 protocol                 */
+     IRCD_ENABLE,               /* ts6 protocol                 */
      IRCD_DISABLE,              /* numeric ie.. 350 etc         */
      IRCD_DISABLE,              /* channel mode gagged          */
      IRCD_DISABLE,              /* spamfilter                   */
@@ -205,6 +205,7 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("CHGNAME",   denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("CREDITS",   denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("ELINE",     denora_event_eline); addCoreMessage(IRCD,m);
+    m = createMessage("ENCAP",     denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("ENDBURST",  denora_event_eob); addCoreMessage(IRCD,m);
     m = createMessage("ERROR",     denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("FHOST",     denora_event_fhost); addCoreMessage(IRCD,m);
@@ -223,9 +224,8 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("MODE",      denora_event_mode); addCoreMessage(IRCD,m);
     m = createMessage("MODENOTICE",denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("MOTD",      denora_event_motd); addCoreMessage(IRCD,m);
-    m = createMessage("NICK",      denora_event_nick); addCoreMessage(IRCD,m);
+    m = createMessage("UID",       denora_event_uid); addCoreMessage(IRCD,m);
     m = createMessage("NOTICE",    denora_event_notice); addCoreMessage(IRCD,m);
-    m = createMessage("OPERNOTICE",denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("OPERQUIT",  denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("OPERTYPE",  denora_event_opertype); addCoreMessage(IRCD,m);
     m = createMessage("PART",      denora_event_part); addCoreMessage(IRCD,m);
@@ -253,6 +253,8 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("SVSJOIN",   denora_event_svsjoin); addCoreMessage(IRCD,m);
     m = createMessage("SVSMODE",   denora_event_svsmode); addCoreMessage(IRCD,m);
     m = createMessage("SVSNICK",   denora_event_svsnick); addCoreMessage(IRCD,m);
+    m = createMessage("SVSWATCH",  denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("SVSSILENCE",denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("TOPIC",     denora_event_topic); addCoreMessage(IRCD,m);
     m = createMessage("VERSION",   denora_event_version); addCoreMessage(IRCD,m);
     m = createMessage("WALLOPS",   denora_event_null); addCoreMessage(IRCD,m);
@@ -562,7 +564,7 @@ int denora_event_capab(char *source, int ac, char **av)
 void inspircd_cmd_nick(char *nick, char *name, const char *modes)
 {
     /* :test.chatspike.net NICK 1133519355 Brain synapse.brainbox.winbot.co.uk netadmin.chatspike.net ~brain +xwsioS 10.0.0.2 :Craig Edwards */
-    send_cmd(ServerName, "NICK %ld %s %s %s %s +%s 0.0.0.0 :%s",
+    send_cmd(TS6SID, "UID %ld %s %s %s %s +%s 0.0.0.0 :%s",
              (long int) time(NULL), nick, ServiceHost, ServiceHost,
              ServiceUser, modes, name);
     send_cmd(nick, "OPERTYPE Service");
@@ -571,8 +573,11 @@ void inspircd_cmd_nick(char *nick, char *name, const char *modes)
 void inspircd_cmd_bot_nick(char *nick, char *user, char *host, char *real,
                            char *modes)
 {
-    send_cmd(ServerName, "NICK %ld %s %s %s %s +%s 0.0.0.0 :%s",
-             (long int) time(NULL), nick, host, host, user, modes, real);
+    char *nicknumbuf = ts6_uid_retrieve();
+    send_cmd(ServerName, "UID %s %ld %s %s %s %s 0.0.0.0 %ld +%s :%s",
+             nicknumbuf, (long int) time(NULL), nick, host, host, user,
+             (long int) time(NULL), modes, real);
+    new_uid(nick, nicknumbuf);
     send_cmd(nick, "OPERTYPE Bot");
 }
 
@@ -581,12 +586,12 @@ void inspircd_cmd_notice(char *source, char *dest, char *buf)
     if (!buf) {
         return;
     }
-    send_cmd(source, "NOTICE %s :%s", dest, buf);
+    send_cmd(TS6SID, "NOTICE %s :%s", dest, buf);
 }
 
 void inspircd_cmd_stats(char *sender, const char *letter, char *server)
 {
-    send_cmd(sender, "STATS %s %s", letter, server);
+    send_cmd(TS6SID, "STATS %s %s", letter, server);
 }
 
 void inspircd_cmd_privmsg(char *source, char *dest, char *buf)
@@ -596,12 +601,12 @@ void inspircd_cmd_privmsg(char *source, char *dest, char *buf)
 
 void inspircd_cmd_serv_notice(char *source, char *dest, char *msg)
 {
-    send_cmd(source, "NOTICE $%s :%s", dest, msg);
+    send_cmd(TS6SID, "NOTICE $%s :%s", dest, msg);
 }
 
 void inspircd_cmd_serv_privmsg(char *source, char *dest, char *msg)
 {
-    send_cmd(source, "PRIVMSG $%s :%s", dest, msg);
+    send_cmd(TS6SID, "PRIVMSG $%s :%s", dest, msg);
 }
 
 /* QUIT */
@@ -672,14 +677,14 @@ void inspircd_cmd_pass(char *pass)
 /* SERVER name hop descript */
 void inspircd_cmd_server(char *servname, int hop, char *descript)
 {
-    send_cmd(ServerName, "SERVER %s %s %d :%s", servname, currentpass,
-             hop + 1, descript);
+    send_cmd(NULL, "SERVER %s %s %d %s :%s", servname, currentpass,
+             hop + 1, TS6SID, descript);
 }
 
 /* PONG */
 void inspircd_cmd_pong(char *servname, char *who)
 {
-    send_cmd(servname, "PONG %s", who);
+    send_cmd(TS6SID, "PONG %s", who);
 }
 
 /* JOIN */
@@ -709,7 +714,7 @@ void inspircd_cmd_global(char *source, char *buf)
 /* SQUIT */
 void inspircd_cmd_squit(char *servname, char *message)
 {
-    send_cmd(ServerName, "SQUIT %s :%s", servname, message);
+    send_cmd(TS6SID, "SQUIT %s :%s", servname, message);
 }
 
 void inspircd_cmd_connect(void)
@@ -718,10 +723,10 @@ void inspircd_cmd_connect(void)
         do_server(NULL, ServerName, (char *) "0", ServerDesc, NULL);
 
     inspircd_cmd_capab();
-    send_cmd(NULL, "SERVER %s %s %d :%s", ServerName, RemotePassword, 0,
-             ServerDesc);
+    send_cmd(NULL, "SERVER %s %s %d %s :%s", ServerName, RemotePassword, 0,
+             TS6SID, ServerDesc);
     send_cmd(NULL, "BURST");
-    send_cmd(ServerName,
+    send_cmd(TS6SID,
              "VERSION :Denora-%s %s :%s -- build #%s, compiled %s %s",
              denora->version, ServerName, ircd->name, denora->build,
              denora->date, denora->time);
@@ -1072,61 +1077,58 @@ int denora_event_fjoin(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
-int denora_event_nick(char *source, int ac, char **av)
+/*
+ * [Nov 03 22:09:58.176252 2009] debug: Received: :964 UID 964AAAAAC 1225746297 w00t2 localhost testnet.user w00t 127.0.0.1 1225746302 +iosw +ACGJKLNOQcdfgjklnoqtx :Robin Burchell <w00t@inspircd.org>
+ * 0: uid
+ * 1: ts
+ * 2: nick
+ * 3: host
+ * 4: dhost
+ * 5: ident
+ * 6: ip
+ * 7: signon
+ * 8+: modes and params -- IMPORTANT, some modes (e.g. +s) may have parameters. So don't assume a fixed position of realname!
+ * last: realname
+*/
+
+int denora_event_uid(char *source, int ac, char **av)
 {
     User *user;
-    char *ptr;
-    char buf[BUFSIZE];
-    char *ptr2 = buf;
+    //struct in_addr addy;
+    Server *s = findserver_uid(servlist, source);
+    //uint32 *ad = reinterpret_cast<uint32 *>(&addy);
+    int ts = strtoul(av[1], NULL, 10);
 
     if (denora->protocoldebug)
         protocol_debug(source, ac, av);
 
-    if (ac != 1) {
-        if (ac == 8) {
-            int svid = 0;
-            int ts = strtoul(av[0], NULL, 10);
-            if (strchr(av[5], 'r') != NULL)
-                svid = ts;
-
-            /* Here we should check if av[5] contains +o, and if so remove it,
-             * as this will be handled by OPERTYPE */
-            ptr = av[5];
-            while (ptr && *ptr) {
-                if (*ptr != 'o') {
-                    /* not o, add it to the clean list */
-                    *ptr2 = *ptr;
-                    ptr2++;
-                }
-                /* increment original */
-                ptr++;
-            }
-            *ptr2 = '\0';
-            av[5] = (!strcmp(buf, "++")) ? NULL : buf;
-
-            user = do_nick("", av[1],   /* nick */
-                           av[4],       /* username */
-                           av[2],       /* realhost */
-                           source,      /* server */
-                           av[7],       /* realname */
-                           ts, svid, av[6], av[3], NULL, 1, av[5], NULL);
-        }
-    } else {
-        do_nick(source, av[0], NULL, NULL, NULL, NULL,
-                0, 0, NULL, NULL, NULL, 0, NULL, NULL);
-    }
+    //inet_aton(av[6], &addy);
+    /* User *do_nick(const char *source, char *nick, char *username, char *host,
+       char *server, char *realname, time_t ts, uint32 svid,
+       char *ipchar, char *vhost, char *uid, int hopcount,
+       char *modes, char *account) */
+    user = do_nick("", av[2],   /* nick */
+                   av[5],       /* username */
+                   av[3],       /* realhost */
+                   s->name,     /* server */
+                   av[ac - 1],  /* realname */
+                   ts, 0, av[6], av[4], av[0], 1, av[8], NULL);
+    /*if (user) {
+       ircdproto->ProcessUsermodes(user, 1, &av[8]);
+       //user->chost = av[4];
+       } */
 
     return MOD_CONT;
 }
 
-
-/* EVENT: SERVER */
 /*
- av[0] = inspircd.nomadirc.net
- av[1] = linkpass
- av[2] = 0
- av[3] = Waddle World
-*/
+ * [Nov 04 00:08:46.308435 2009] debug: Received: SERVER irc.inspircd.com pass 0 964 :Testnet Central!
+ * 0: name
+ * 1: pass
+ * 2: hops
+ * 3: numeric
+ * 4: desc
+ */
 int denora_event_server(char *source, int ac, char **av)
 {
     if (denora->protocoldebug) {
@@ -1135,7 +1137,7 @@ int denora_event_server(char *source, int ac, char **av)
     if (!stricmp(av[2], "0")) {
         denora->uplink = sstrdup(av[0]);
     }
-    do_server(source, av[0], av[2], av[3], NULL);
+    do_server(source, av[0], av[2], av[4], av[3]);
     return MOD_CONT;
 }
 
@@ -1188,7 +1190,7 @@ int denora_event_idle(char *source, int ac, char **av)
 
 void inspircd_cmd_ping(char *server)
 {
-    send_cmd(ServerName, "PING %s :%s", ServerName, server);
+    send_cmd(TS6SID, "PING %s :%s", ServerName, server);
 }
 
 void inspircd_cmd_ctcp(char *source, char *dest, char *buf)
@@ -1228,7 +1230,7 @@ void inspircd_cmd_mode(char *source, char *dest, char *buf)
     }
 
     c = findchan(dest);
-    send_cmd(source ? source : s_StatServ, "FMODE %s %u %s", dest,
+    send_cmd(TS6SID, "FMODE %s %u %s", dest,
              (unsigned int) ((c) ? c->creation_time : time(NULL)), buf);
 }
 
@@ -1332,6 +1334,9 @@ int DenoraInit(int argc, char **argv)
     moduleAddVersion
         ("$Id$");
     moduleSetType(PROTOCOL);
+
+    if (Numeric)
+        TS6SID = sstrdup(Numeric);
 
     pmodule_ircd_version("InspIRCd 1.2.x");
     pmodule_ircd_cap(myIrcdcap);

@@ -10,7 +10,7 @@
  *
  * $Id$
  *
- * last tested with PleXusIRCd-2.0.7(20050423_1)
+ * last tested with ??
  *
  */
 
@@ -114,28 +114,34 @@ IRCDCAPAB myIrcdcap[] = {
 
 void IRCDModeInit(void)
 {
+    ModuleSetUserMode(UMODE_C, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_D, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_G, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_N, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_R, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_S, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_W, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_X, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_a, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_b, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_c, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_d, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_f, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_h, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_g, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_i, IRCD_ENABLE);
-    ModuleSetUserMode(UMODE_l, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_k, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_l, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_n, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_o, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_p, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_q, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_r, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_s, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_u, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_w, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_x, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_y, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_z, IRCD_ENABLE);
     ModuleUpdateSQLUserMode();
     CreateChanBanMode(CMODE_b, add_ban, del_ban);
     CreateChanBanMode(CMODE_e, add_exception, del_exception);
@@ -146,9 +152,9 @@ void IRCDModeInit(void)
     CreateChanMode(CMODE_M, NULL, NULL);
     CreateChanMode(CMODE_N, NULL, NULL);
     CreateChanMode(CMODE_O, NULL, NULL);
-    CreateChanMode(CMODE_Q, NULL, NULL);
     CreateChanMode(CMODE_R, NULL, NULL);
     CreateChanMode(CMODE_S, NULL, NULL);
+    CreateChanMode(CMODE_Z, NULL, NULL);
     CreateChanMode(CMODE_c, NULL, NULL);
     CreateChanMode(CMODE_i, NULL, NULL);
     CreateChanMode(CMODE_k, set_key, get_key);
@@ -156,7 +162,6 @@ void IRCDModeInit(void)
     CreateChanMode(CMODE_m, NULL, NULL);
     CreateChanMode(CMODE_n, NULL, NULL);
     CreateChanMode(CMODE_p, NULL, NULL);
-    CreateChanMode(CMODE_r, NULL, NULL);
     CreateChanMode(CMODE_s, NULL, NULL);
     CreateChanMode(CMODE_t, NULL, NULL);
 
@@ -231,7 +236,7 @@ int denora_event_sjoin(char *source, int ac, char **av)
 /*
  do_nick(const char *source, char *nick, char *username, char *host,
               char *server, char *realname, time_t ts, uint32 svid,
-              uint32 ip, char *vhost, char *uid, int hopcount, char *modes)
+              uint32 ip, char *vhost, char *uid, int hopcount, char *modes, char *account)
   NICK Trystan 1 1148214497 +aiow tslee is.my.vhost plexus3.nomadirc.net 0 c-67-186-230-12.hsd1.ut.comcast.net :Dreams are answers to questions not yet asked
          0     1 2           3      4       5         6                  7  8                                    9
 
@@ -322,10 +327,10 @@ int denora_event_436(char *source, int ac, char **av)
 }
 
 /* *INDENT-OFF* */
-void moduleAddIRCDMsgs(void) 
+void moduleAddIRCDMsgs(void)
 {
     Message *m;
-    
+
     if (UseTS6) {
         if (!BadPtr(Numeric)) {
             TS6SID = sstrdup(Numeric);
@@ -538,20 +543,20 @@ void plexus_cmd_svinfo()
 /* CAPAB */
 /*
   QS     - Can handle quit storm removal
-  EX     - Can do channel +e exemptions 
+  EX     - Can do channel +e exemptions
   CHW    - Can do channel wall @#
-  LL     - Can do lazy links 
-  IE     - Can do invite exceptions 
+  LL     - Can do lazy links
+  IE     - Can do invite exceptions
   EOB    - Can do EOB message
-  KLN    - Can do KLINE message 
-  GLN    - Can do GLINE message 
+  KLN    - Can do KLINE message
+  GLN    - Can do GLINE message
   HOPS   - can do half ops (+h)
-  HUB    - This server is a HUB 
-  AOPS   - Can do anon ops (+a) 
+  HUB    - This server is a HUB
+  AOPS   - Can do anon ops (+a)
   UID    - Can do UIDs
   ZIP    - Can do ZIPlinks
-  ENC    - Can do ENCrypted links 
-  KNOCK  -  supports KNOCK 
+  ENC    - Can do ENCrypted links
+  KNOCK  -  supports KNOCK
   TBURST - supports TBURST
   PARA	 - supports invite broadcasting for +p
   ENCAP	 - ?
@@ -720,9 +725,8 @@ int denora_event_join(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    if (ac != 1)
-        return MOD_CONT;
-    do_join(source, ac, av);
+
+    do_sjoin(source, ac > 1 ? 2 : ac, av);
     return MOD_CONT;
 }
 
