@@ -1,5 +1,5 @@
 
-/* InspIRCd 1.1 functions
+/* InspIRCd 1.2 functions
  *
  * (C) 2005-2006 Craig Edwards <brain@inspircd.org>
  * (c) 2004-2009 Denora Team

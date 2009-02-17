@@ -10,7 +10,7 @@
  *
  * $Id$
  *
- * last tested with ??
+ * last tested against hybrid-7.2.3+plexus-3.0.1(20081028_0-520)
  *
  */
 
@@ -238,11 +238,9 @@ int denora_event_sjoin(char *source, int ac, char **av)
               char *server, char *realname, time_t ts, uint32 svid,
               uint32 ip, char *vhost, char *uid, int hopcount, char *modes, char *account)
   NICK Trystan 1 1148214497 +aiow tslee is.my.vhost plexus3.nomadirc.net 0 c-67-186-230-12.hsd1.ut.comcast.net :Dreams are answers to questions not yet asked
-         0     1 2           3      4       5         6                  7  8                                    9
-
-  8AZ UID Trystan 1 1151856964 +aiow tslee c-67-186-230-12.hsd1.ut.comcast.net 67.186.230.12 8AZAAAAAA 0 c-67-186-230-12.hsd1.ut.comcast.net :Dreams are answers to questions not yet asked
-           0      1  2            3  4      5                                    6             7       8    9                                     10
-
+       0       1 2           3    4     5           6                    7 8                                    9
+  666 UID asdasd 1 1234817435 +ix Nesstest 566C206.B53EDE66.1DF57482.IP 66.63.160.250 666AAAAAD 0 66.63.160.250 :JasonX
+          0      1 2           3  4        5                            6             7         8 9              10
 */
 int denora_event_nick(char *source, int ac, char **av)
 {
@@ -261,8 +259,8 @@ int denora_event_nick(char *source, int ac, char **av)
             s = server_find(source);
             /* Source is always the server */
             *source = '\0';
-            user = do_nick(source, av[0], av[4], av[5], s->name, av[10],
-                           strtoul(av[2], NULL, 10), 0, av[6], av[9],
+            user = do_nick(source, av[0], av[4], av[9], s->name, av[10],
+                           strtoul(av[2], NULL, 10), 0, av[6], av[5],
                            av[7], strtoul(av[1], NULL, 10), av[3], NULL);
             if (user) {
                 denora_set_umode(user, 1, &av[3]);
@@ -342,12 +340,14 @@ void moduleAddIRCDMsgs(void)
     }
 
     m = createMessage("436",       denora_event_436); addCoreMessage(IRCD,m);
+    m = createMessage("439",       denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("AWAY",      denora_event_away); addCoreMessage(IRCD,m);
     m = createMessage("INVITE",    denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("JOIN",      denora_event_join); addCoreMessage(IRCD,m);
     m = createMessage("KICK",      denora_event_kick); addCoreMessage(IRCD,m);
     m = createMessage("KILL",      denora_event_kill); addCoreMessage(IRCD,m);
     m = createMessage("MODE",      denora_event_mode); addCoreMessage(IRCD,m);
+    m = createMessage("TMODE",     denora_event_tmode); addCoreMessage(IRCD,m);
     m = createMessage("MOTD",      denora_event_motd); addCoreMessage(IRCD,m);
     m = createMessage("NICK",      denora_event_nick); addCoreMessage(IRCD,m);
     m = createMessage("PONG",      denora_event_pong); addCoreMessage(IRCD,m);
@@ -400,6 +400,7 @@ void moduleAddIRCDMsgs(void)
     m = createMessage("UNXLINE",   denora_event_unxline); addCoreMessage(IRCD,m);
     m = createMessage("UNRXLINE",  denora_event_unxline); addCoreMessage(IRCD,m);
     m = createMessage("UID",       denora_event_nick); addCoreMessage(IRCD,m);
+    m = createMessage("OPERWALL",  denora_event_null); addCoreMessage(IRCD,m);
 }
 
 /* *INDENT-ON* */
@@ -928,6 +929,20 @@ int denora_event_mode(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
+/* 00HAAAAAJ TMODE 1218474093 #oper +a 669AAAAAB */
+int denora_event_tmode(char *source, int ac, char **av)
+{
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
+    }
+    if (ac > 2 && (*av[1] == '#' || *av[1] == '&')) {
+        ac--;
+        av++;
+        do_cmode(source, ac, av);
+    }
+    return MOD_CONT;
+}
+
 /* Event: PROTOCTL */
 int denora_event_capab(char *source, int ac, char **av)
 {
@@ -1038,7 +1053,7 @@ int DenoraInit(int argc, char **argv)
     moduleAddVersion("$Id$");
     moduleSetType(PROTOCOL);
 
-    pmodule_ircd_version("PleXusIRCd 2.0+");
+    pmodule_ircd_version("PleXusIRCd 3.0+");
     pmodule_ircd_cap(myIrcdcap);
     pmodule_ircd_var(myIrcd);
     pmodule_ircd_useTSMode(0);

@@ -9,9 +9,14 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="241"
+VERSION_BUILD="242"
 
 # $Log$
+#
+# 2009-02-17 11:40:07 1.4.3.242 (SVN) hal9000 [#]
+# > Fixed handling of Plexus3 UID message in TS6 mode
+# > Added missing TMODE implementation in Plexus3
+# 
 #
 # 2009-02-17 01:12:20 1.4.3.241 (SVN) hal9000 [#]
 # > Fixed JOIN message handling and user+chan modes in Plexus3 protocol

@@ -7,7 +7,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * $Id$
  *
  */
@@ -65,6 +65,7 @@ int denora_event_vhost(char *source, int ac, char **av);
 int denora_event_tkl(char *source, int ac, char **av);
 int denora_event_eob(char *source, int ac, char **av);
 int denora_event_error(char *source, int ac, char **av);
+int denora_event_tmode(char *source, int ac, char **av);
 int denora_event_pass(char *source, int ac, char **av);
 int denora_event_bmask(char *source, int ac, char **av);
 int denora_event_notice(char *source, int ac, char **av);
