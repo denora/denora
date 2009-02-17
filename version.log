@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="242"
+VERSION_BUILD="243"
 
 # $Log$
+#
+# 2009-02-17 15:32:40 1.4.3.243 (SVN) hal9000 [#]
+# > some fixes to the inspircd12 module for later testing
 #
 # 2009-02-17 11:40:07 1.4.3.242 (SVN) hal9000 [#]
 # > Fixed handling of Plexus3 UID message in TS6 mode
