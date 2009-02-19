@@ -164,6 +164,7 @@ void IRCDModeInit(void)
     CreateChanMode(CMODE_p, NULL, NULL);
     CreateChanMode(CMODE_s, NULL, NULL);
     CreateChanMode(CMODE_t, NULL, NULL);
+    CreateChanMode(CMODE_z, NULL, NULL);
 
     ModuleSetChanUMode('%', 'h', STATUS_HALFOP);
     ModuleSetChanUMode('+', 'v', STATUS_VOICE);
@@ -241,6 +242,12 @@ int denora_event_sjoin(char *source, int ac, char **av)
        0       1 2           3    4     5           6                    7 8                                    9
   666 UID asdasd 1 1234817435 +ix Nesstest 566C206.B53EDE66.1DF57482.IP 66.63.160.250 666AAAAAD 0 66.63.160.250 :JasonX
           0      1 2           3  4        5                            6             7         8 9              10
+
+[Feb 19 04:24:22.531142 2009] debug: Received: :57CAAEV6D NICK Miu :1235017456
+[Feb 19 04:24:22.536789 2009] Source 57CAAEV6D
+[Feb 19 04:24:22.537026 2009] av[0] = Miu
+[Feb 19 04:24:22.537233 2009] av[1] = 1235017456
+[Feb 19 04:24:22.537422 2009] Unknown NICK formatted message please report the following
 */
 int denora_event_nick(char *source, int ac, char **av)
 {
@@ -254,46 +261,61 @@ int denora_event_nick(char *source, int ac, char **av)
     }
     temp = sstrdup(source);
 
-    if (UseTS6) {
-        if (ac == 11) {
-            s = server_find(source);
-            /* Source is always the server */
-            *source = '\0';
-            user = do_nick(source, av[0], av[4], av[9], s->name, av[10],
-                           strtoul(av[2], NULL, 10), 0, av[6], av[5],
-                           av[7], strtoul(av[1], NULL, 10), av[3], NULL);
-            if (user) {
-                denora_set_umode(user, 1, &av[3]);
-            }
-        } else {
-            alog(LOG_DEBUG,
-                 "Unknown NICK formatted message please report the following");
-            protocol_debug(temp, ac, av);
+    if (UseTS6 && ac == 11) {
+        s = server_find(source);
+        /* Source is always the server */
+        *source = '\0';
+        user = do_nick(source, av[0], av[4], av[9], s->name, av[10],
+                       strtoul(av[2], NULL, 10), 0, av[6], av[5],
+                       av[7], strtoul(av[1], NULL, 10), av[3], NULL);
+        if (user) {
+            denora_set_umode(user, 1, &av[3]);
         }
+    } else if (ac == 10) {
+        ipchar = host_resolve(av[8]);
+        user = do_nick(source, av[0], av[4], av[8], av[6], av[9],
+                       strtoul(av[2], NULL, 10),
+                       strtoul(av[7], NULL, 0), ipchar, av[5], NULL,
+                       strtoul(av[1], NULL, 0), av[3], NULL);
+        free(ipchar);
+    } else if (ac == 2) {
+        do_nick(source, av[0], NULL, NULL, NULL, NULL,
+                strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0,
+                NULL, NULL);
     } else {
-        if (ac != 2) {
-            ipchar = host_resolve(av[8]);
-            user = do_nick(source, av[0], av[4], av[8], av[6], av[9],
-                           strtoul(av[2], NULL, 10),
-                           strtoul(av[7], NULL, 0), ipchar, av[5], NULL,
-                           strtoul(av[1], NULL, 0), av[3], NULL);
-            free(ipchar);
-        } else {
-            do_nick(source, av[0], NULL, NULL, NULL, NULL,
-                    strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0,
-                    NULL, NULL);
-        }
+        alog(LOG_DEBUG,
+             "Unknown NICK formatted message please report the following");
+        protocol_debug(temp, ac, av);
     }
     free(temp);
     return MOD_CONT;
 }
 
+/* :42XAAAAAB TOPIC #testchan :test test test */
 int denora_event_topic(char *source, int ac, char **av)
 {
+    char *newav[5];
+    User *u;
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    do_topic(ac, av);
+    if (ac == 2) {
+        u = user_find(source);
+        if (u) {
+            newav[0] = sstrdup(av[0]);
+            newav[1] = sstrdup(u->nick);
+            newav[2] = itostr(time(NULL));
+            newav[3] = sstrdup(av[1]);
+            do_topic(4, newav);
+            free(newav[0]);
+            free(newav[1]);
+            free(newav[3]);
+        }
+
+    } else {
+        do_topic(ac, av);
+    }
     return MOD_CONT;
 }
 
@@ -679,15 +701,18 @@ int denora_event_away(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
+/* 97H KILL 69CAABOR8 :geo.rizon.net!geo.rizon.net!GeoServ!GeoServ (4 joins/parts in #DontJoinItsATrap within 6 seconds.) */
 int denora_event_kill(char *source, int ac, char **av)
 {
+    User *u = NULL;
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
     if (ac != 2)
         return MOD_CONT;
 
-    m_kill(source, av[0], av[1]);
+    u = find_byuid(av[0]);
+    m_kill(source, u ? u->nick : av[0], av[1]);
     return MOD_CONT;
 }
 
@@ -713,7 +738,7 @@ int denora_event_eob(char *source, int ac, char **av)
 
 void plexus_cmd_eob(void)
 {
-    send_cmd(ServerName, "EOB");
+    send_cmd(UseTS6 ? TS6SID : ServerName, "EOB");
 }
 
 void plexus_cmd_ping(char *server)

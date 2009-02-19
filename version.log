@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="243"
+VERSION_BUILD="244"
 
 # $Log$
+#
+# 2009-02-19 09:24:31 1.4.3.244 (SVN) hal9000 [#]
+# > Fixed Plexus3 TOPIC, KILL, NICK, EOB handling and chanmode +z
 #
 # 2009-02-17 15:32:40 1.4.3.243 (SVN) hal9000 [#]
 # > some fixes to the inspircd12 module for later testing
