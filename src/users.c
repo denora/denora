@@ -1101,7 +1101,7 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
         if (!LargeNet) {
             if (CTCPUsers && stricmp(s_StatServ, user->nick)) {
                 if (CTCPUsersEOB) {
-                    if (user->server->sync) {
+                    if (UplinkSynced) {
                         denora_cmd_privmsg(s_StatServ, user->nick,
                                            "\1VERSION\1");
                         send_event(EVENT_SENT_CTCP_VERSION, 1, user->nick);
