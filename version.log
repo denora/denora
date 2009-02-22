@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="250"
+VERSION_BUILD="251"
 
 # $Log$
+#
+# 2009-02-22 18:00:02 1.4.3.251 (SVN) hal9000 [#]
+# > Forgot the fix for outgoing STATS messages :)
 #
 # 2009-02-22 17:57:20 1.4.3.250 (SVN) hal9000 [#527]
 # > Added InspIRCd 1.2 support (needs testing!)

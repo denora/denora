@@ -600,7 +600,9 @@ void inspircd_cmd_notice(char *source, char *dest, char *buf)
 
 void inspircd_cmd_stats(char *sender, const char *letter, char *server)
 {
-    send_cmd(TS6SID, "STATS %s %s", letter, server);
+    Uid *ud = find_uid(sender);
+    send_cmd(UseTS6 ? (ud ? ud->uid : sender) : sender, "STATS %s %s",
+             letter, server);
 }
 
 void inspircd_cmd_privmsg(char *source, char *dest, char *buf)
