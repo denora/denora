@@ -741,6 +741,7 @@ int denora_event_ping(char *source, int ac, char **av)
 
 int denora_event_away(char *source, int ac, char **av)
 {
+    m_away(source, (ac ? av[0] : NULL));
     return MOD_CONT;
 }
 

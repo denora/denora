@@ -705,18 +705,26 @@ void inspircd_cmd_pong(char *servname, char *who)
 /* JOIN */
 void inspircd_cmd_join(char *user, char *channel, time_t chantime)
 {
+    Uid *ud;
+    ud = find_uid(user);
+
     alog(LOG_PROTOCOL, "User %s joins %s at %ld", user, channel,
          (long int) chantime);
-    send_cmd(user, "JOIN %s", channel);
+    send_cmd((UseTS6 ? (ud ? ud->uid : user) : user), "JOIN %s", channel);
 }
 
 /* PART */
 void inspircd_cmd_part(char *nick, char *chan, char *buf)
 {
+    Uid *ud;
+    ud = find_uid(nick);
+
     if (buf) {
-        send_cmd(nick, "PART %s :%s", chan, buf);
+        send_cmd((UseTS6 ? (ud ? ud->uid : nick) : nick), "PART %s :%s",
+                 chan, buf);
     } else {
-        send_cmd(nick, "PART %s :Leaving", chan);
+        send_cmd((UseTS6 ? (ud ? ud->uid : nick) : nick),
+                 "PART %s :Leaving", chan);
     }
 }
 
@@ -735,7 +743,7 @@ void inspircd_cmd_squit(char *servname, char *message)
 void inspircd_cmd_connect(void)
 {
     me_server =
-        do_server(NULL, ServerName, (char *) "0", ServerDesc, NULL);
+        do_server(NULL, ServerName, (char *) "0", ServerDesc, TS6SID);
 
     inspircd_cmd_capab();
     send_cmd(NULL, "SERVER %s %s %d %s :%s", ServerName, RemotePassword, 0,
@@ -762,6 +770,7 @@ int denora_event_ping(char *source, int ac, char **av)
 
 int denora_event_away(char *source, int ac, char **av)
 {
+    m_away(source, (ac ? av[0] : NULL));
     return MOD_CONT;
 }
 
@@ -777,6 +786,7 @@ int denora_event_pong(char *source, int ac, char **av)
 /* Normal RFC style topic: :source TOPIC chan :topic */
 int denora_event_topic(char *source, int ac, char **av)
 {
+    User *u = find_byuid(source);
     char *newav[127];
 
     if (ac < 2) {
@@ -784,19 +794,16 @@ int denora_event_topic(char *source, int ac, char **av)
     }
 
     newav[0] = sstrdup(av[0]);
-    newav[1] = sstrdup(source);
+    newav[1] = sstrdup(u ? u->nick : source);
     newav[2] = itostr(time(NULL));
     newav[3] = sstrdup(av[1]);
     do_topic(4, newav);
-    if (newav[0]) {
+    if (newav[0])
         free(newav[0]);
-    }
-    if (newav[1]) {
+    if (newav[1])
         free(newav[1]);
-    }
-    if (newav[3]) {
+    if (newav[3])
         free(newav[3]);
-    }
     return MOD_CONT;
 }
 
@@ -1022,18 +1029,17 @@ int denora_event_chgident(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
-/* FJOIN is like SJOIN, but not quite. It doesnt sync
- * simple-modes, or bans/excepts.
- */
+/* :131 FJOIN #magirc 1235264068 +nrt :,131AAAA49 ao,00AAAAAAC oq,712AAAAAG */
 int denora_event_fjoin(char *source, int ac, char **av)
 {
-    char *newav[127];
-    char people[1024];
+    char *newav[30];
+    char people[514];
     int i = 0;
+    int j = 0;
     char *userv[256];
     int userc = 0;
     int nlen = 0;
-    char prefixandnick[51];
+    char prefixandnick[60];
 
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
@@ -1044,8 +1050,9 @@ int denora_event_fjoin(char *source, int ac, char **av)
 
     newav[0] = av[1];           /* Timestamp */
     newav[1] = av[0];           /* Channel */
-    newav[2] = (char *) "+";    /* Mode */
-    newav[3] = people;          /* Nickname */
+    for (j = 2; j != ac; j++)
+        newav[j] = av[j];       /* Modes */
+    newav[j] = people;          /* Nicknames */
 
     *people = '\0';
 
@@ -1087,7 +1094,7 @@ int denora_event_fjoin(char *source, int ac, char **av)
         }
     }
 
-    do_sjoin(source, 4, newav);
+    do_sjoin(source, j + 1, newav);
 
     return MOD_CONT;
 }
@@ -1160,12 +1167,15 @@ int denora_event_server(char *source, int ac, char **av)
 
 int denora_event_privmsg(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    User *u = find_byuid(source);
+    Uid *ud = find_nickuid(av[0]);
+
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
     if (ac != 2)
         return MOD_CONT;
-    m_privmsg(source, av[0], av[1]);
+
+    m_privmsg((u ? u->nick : source), (ud ? ud->nick : av[0]), av[1]);
     return MOD_CONT;
 }
 
