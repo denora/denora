@@ -1072,24 +1072,28 @@ int denora_event_fjoin(char *source, int ac, char **av)
              userv[i]);
 
         for (; *userv[i]; userv[i]++) {
-            /* does this char match a known prefix? */
-            if (csmodes[(int) *userv[i]]) {
-                prefixandnick[nlen++] = *userv[i];
+            if (*userv[i] == 'q') {
+                prefixandnick[nlen++] = '~';
                 continue;
-            }
-
-            /* have we reached the end of the prefixes? */
-            if (*userv[i] == ',') {
-                /* yup, skip over the comma */
+            } else if (*userv[i] == 'a') {
+                prefixandnick[nlen++] = '&';
+                continue;
+            } else if (*userv[i] == 'o') {
+                prefixandnick[nlen++] = '@';
+                continue;
+            } else if (*userv[i] == 'h') {
+                prefixandnick[nlen++] = '%';
+                continue;
+            } else if (*userv[i] == 'v') {
+                prefixandnick[nlen++] = '+';
+                continue;
+            } else if (*userv[i] == ',') {
                 userv[i]++;
-
-                /* create nick with prefixes */
+                /* create nick with prefixes and add the user */
                 strlcpy(prefixandnick + nlen, userv[i],
                         sizeof(prefixandnick) - nlen);
-                /* add the user */
                 strncat(people, prefixandnick, sizeof(people) - 1);
                 strncat(people, " ", sizeof(people) - 1);
-
                 /* break out of this loop, which will move us to the next user */
                 break;
             }

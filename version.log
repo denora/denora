@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="251"
+VERSION_BUILD="252"
 
 # $Log$
+#
+# 2009-02-22 20:27:23 1.4.3.252 (SVN) hal9000 [#]
+# > Fixed handling of csmodes in inspircd12 FJOIN
 #
 # 2009-02-22 18:00:02 1.4.3.251 (SVN) hal9000 [#]
 # > Forgot the fix for outgoing STATS messages :)
