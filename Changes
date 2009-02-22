@@ -7,6 +7,10 @@ Additions
 n/a
 
 Changes
+09/02/22 r249 CTCP VERSION is now handled by alias if present
+09/02/16 r239 Updated GeoIP.dat
+
+Fixes
 09/02/22 r247 Fixed sending broken CAPAB message to Plexus3
 09/02/22 r247 Workaround for missing EOB in Charybdis and NGircd
 09/02/19 r244 Fixed Plexus3 TOPIC, KILL, NICK, EOB handling and chanmode +z
@@ -14,9 +18,6 @@ Changes
 09/02/17 r242 Added missing TMODE implementation in Plexus3
 09/02/17 r241 Fixed JOIN message handling in Plexus3
 09/02/17 r241 Fixed user and channel modes in Plexus3 protocol
-09/02/16 r239 Updated GeoIP.dat
-
-Fixes
 09/01/13 r236 admin from denora.conf now overrides admin.db [closes #517]
 09/01/12 r235 mysql backup module now checks for sql connection [closes #524]
 09/01/12 r235 Fixed chanstats problem on some x64 systems

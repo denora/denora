@@ -230,6 +230,8 @@ int denora_event_sjoin(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
+    if (!strcmp(av[2], "0"))
+        av[2] = sstrdup("+");
     do_sjoin(source, ac, av);
     return MOD_CONT;
 }
@@ -423,6 +425,7 @@ void moduleAddIRCDMsgs(void)
     m = createMessage("UNRXLINE",  denora_event_unxline); addCoreMessage(IRCD,m);
     m = createMessage("UID",       denora_event_nick); addCoreMessage(IRCD,m);
     m = createMessage("OPERWALL",  denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("RESV",      denora_event_null); addCoreMessage(IRCD,m);
 }
 
 /* *INDENT-ON* */
@@ -586,8 +589,9 @@ void plexus_cmd_svinfo()
 */
 void plexus_cmd_capab()
 {
+    /*send_cmd(NULL, "CAPAB :TBURST TB KNOCK UNKLN KLN GLN ENCAP CHW IE EX CLUSTER EOB LL QS HUB"); */
     send_cmd(NULL,
-             "CAPAB :TBURST TB KNOCK UNKLN KLN GLN ENCAP CHW IE EX CLUSTER EOB LL QS HUB");
+             "CAPAB :TBURST TB KNOCK UNKLN KLN GLN CHW IE EX CLUSTER EOB LL QS HUB");
 }
 
 
@@ -689,10 +693,6 @@ int denora_event_ping(char *source, int ac, char **av)
     if (ac < 1)
         return MOD_CONT;
     plexus_cmd_pong(ac > 1 ? av[1] : ServerName, av[0]);
-
-    /* Little hack since Plexus appears not to send EOB message */
-    if (!UplinkSynced)
-        update_sync_state(source, SYNC_COMPLETE);
     return MOD_CONT;
 }
 
