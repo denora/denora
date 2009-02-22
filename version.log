@@ -9,9 +9,14 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="244"
+VERSION_BUILD="247"
 
 # $Log$
+#
+# 2009-02-22 09:51:19 1.4.3.247 (SVN) hal9000 [#]
+# > Fixed sending broken CAPAB message to Plexus3
+# > Workaround for missing EOB in Charybdis and NGircd
+# 
 #
 # 2009-02-19 09:24:31 1.4.3.244 (SVN) hal9000 [#]
 # > Fixed Plexus3 TOPIC, KILL, NICK, EOB handling and chanmode +z

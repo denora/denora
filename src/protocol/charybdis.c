@@ -612,6 +612,10 @@ int denora_event_ping(char *source, int ac, char **av)
     if (ac < 1)
         return MOD_CONT;
     charybdis_cmd_pong(ac > 1 ? av[1] : ServerName, av[0]);
+
+    /* Little hack since Charybdis appears not to send EOB message */
+    if (!UplinkSynced)
+        update_sync_state(source, SYNC_COMPLETE);
     return MOD_CONT;
 }
 

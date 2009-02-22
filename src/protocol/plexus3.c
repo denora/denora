@@ -319,11 +319,11 @@ int denora_event_topic(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
+/* irc.dev.cccp-project.net TBURST 1218474093 #oper 1212613221 Celestin :Main L2Thorn Channel */
 int denora_event_tburst(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
     if (ac != 5)
         return MOD_CONT;
 
@@ -587,7 +587,7 @@ void plexus_cmd_svinfo()
 void plexus_cmd_capab()
 {
     send_cmd(NULL,
-             "TBURST TB KNOCK UNKLN KLN GLN ENCAP CHW IE EX CLUSTER EOB LL QS HUB");
+             "CAPAB :TBURST TB KNOCK UNKLN KLN GLN ENCAP CHW IE EX CLUSTER EOB LL QS HUB");
 }
 
 
@@ -691,8 +691,8 @@ int denora_event_ping(char *source, int ac, char **av)
     plexus_cmd_pong(ac > 1 ? av[1] : ServerName, av[0]);
 
     /* Little hack since Plexus appears not to send EOB message */
-	if (!UplinkSynced)
-		update_sync_state(source, SYNC_COMPLETE);
+    if (!UplinkSynced)
+        update_sync_state(source, SYNC_COMPLETE);
     return MOD_CONT;
 }
 

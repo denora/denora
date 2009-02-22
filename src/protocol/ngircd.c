@@ -407,6 +407,10 @@ int denora_event_ping(char *source, int ac, char **av)
         return MOD_CONT;
     }
     ngircd_cmd_pong(ac > 1 ? av[1] : ServerName, av[0]);
+
+    /* Little hack since ngircd appears not to send EOB message */
+    if (!UplinkSynced)
+        update_sync_state(source, SYNC_COMPLETE);
     return MOD_CONT;
 }
 
