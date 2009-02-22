@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="247"
+VERSION_BUILD="248"
 
 # $Log$
+#
+# 2009-02-22 09:55:36 1.4.3.248 (SVN) hal9000 [#]
+# > Some fixes to inspircd12 protocol module. It still has problems though...
 #
 # 2009-02-22 09:51:19 1.4.3.247 (SVN) hal9000 [#]
 # > Fixed sending broken CAPAB message to Plexus3

@@ -585,10 +585,17 @@ void inspircd_cmd_bot_nick(char *nick, char *user, char *host, char *real,
 
 void inspircd_cmd_notice(char *source, char *dest, char *buf)
 {
+    Uid *ud;
+    User *u;
+
     if (!buf) {
         return;
     }
-    send_cmd(TS6SID, "NOTICE %s :%s", dest, buf);
+
+    ud = find_uid(source);
+    u = finduser(dest);
+    send_cmd((UseTS6 ? (ud ? ud->uid : source) : source),
+             "NOTICE %s :%s", (UseTS6 ? (u ? u->uid : dest) : dest), buf);
 }
 
 void inspircd_cmd_stats(char *sender, const char *letter, char *server)
@@ -598,7 +605,13 @@ void inspircd_cmd_stats(char *sender, const char *letter, char *server)
 
 void inspircd_cmd_privmsg(char *source, char *dest, char *buf)
 {
-    send_cmd(source, "PRIVMSG %s :%s", dest, buf);
+    Uid *ud, *ud2;
+
+    ud = find_uid(source);
+    ud2 = find_uid(dest);
+
+    send_cmd((UseTS6 ? (ud ? ud->uid : source) : source), "PRIVMSG %s :%s",
+             (UseTS6 ? (ud2 ? ud2->uid : dest) : dest), buf);
 }
 
 void inspircd_cmd_serv_notice(char *source, char *dest, char *msg)
@@ -1130,6 +1143,8 @@ int denora_event_uid(char *source, int ac, char **av)
  * 2: hops
  * 3: numeric
  * 4: desc
+ * Server *do_server(const char *source, char *servername, char *hops,
+                  char *descript, char *numeric)
  */
 int denora_event_server(char *source, int ac, char **av)
 {
@@ -1212,15 +1227,22 @@ void inspircd_cmd_motd(char *sender, char *server)
     send_cmd(TS6SID, "MOTD %s", server);
 }
 
+/*  Received: :345AAAAA6 NOTICE 9D3AAAAAB :VERSION irssi v0.8.12 - running on Linux i686 */
 int denora_event_notice(char *source, int ac, char **av)
 {
+    User *u = NULL;
+    Uid *ud = NULL;
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
     if (ac != 2) {
         return MOD_CONT;
     }
-    m_notice(source, av[0], av[1]);
+
+    u = find_byuid(source);
+    ud = find_nickuid(av[0]);
+    m_notice((u ? u->nick : source), (ud ? ud->nick : av[0]), av[1]);
     return MOD_CONT;
 }
 
