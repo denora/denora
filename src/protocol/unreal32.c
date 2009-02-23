@@ -313,9 +313,11 @@ char *unreal32_lkill_killer(char *message)
     killer = strtok(buf, " ");
     killer = strtok(NULL, " ");
 
-    return killer;
+    return killer; // possible memleak at this position 
 }
 
+/* 1. unfixed  memleak in this function */
+/* 2. function returns allocated memory. is it free()'d ? */
 char *unreal32_lkill_servername(char *message)
 {
     char *buf, *servername = NULL;
@@ -326,7 +328,7 @@ char *unreal32_lkill_servername(char *message)
     servername[strlen(servername) - 1] = '\0'; /* last bracket removed */
     servername++; /* first bracket removed */
 
-    return servername;
+    return servername; 
 }
 
 char *unreal32_lkill_msg(char *message)
@@ -892,7 +894,7 @@ int denora_event_svsmode(char *source, int ac, char **av)
             newav[1] = sstrdup(tbuf);
             newav[2] = av[2];
             do_svsumode(ac, newav);
-			free(tbuf);
+	    free(tbuf);
             if (newav[1]) {
                 free(newav[1]);
             }

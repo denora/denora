@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="252"
+VERSION_BUILD="253"
 
 # $Log$
+#
+# 2009-02-23 11:03:44 1.4.3.253 (SVN) hal9000 [#]
+# > Applied patch by DukyPyrolator fixing some memleaks
 #
 # 2009-02-22 20:27:23 1.4.3.252 (SVN) hal9000 [#]
 # > Fixed handling of csmodes in inspircd12 FJOIN

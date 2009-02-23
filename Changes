@@ -11,6 +11,7 @@ Changes
 09/02/16 r239 Updated GeoIP.dat
 
 Fixes
+09/02/23 r253 [2] Patch fixing some memleaks
 09/02/22 r250 Added missing AWAY message handling in inspircd11
 09/02/22 r247 Fixed sending broken CAPAB message to Plexus3
 09/02/22 r247 Workaround for missing EOB in Charybdis and NGircd
@@ -33,6 +34,7 @@ Denora Team <dev@denorastats.org>
 
 Contributors
 [1] Rob <rob@anope.org>
+[2] DukePyrolator
 
 
 Denora v1.4.2a

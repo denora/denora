@@ -289,8 +289,11 @@ int denora_event_push(char *source, int ac, char **av)
                   ServerTable, source);
     } else if (!strcmp(num, "372")) {
         s = server_find(source);
-        if (!s)
+        if (!s) {
+            free(num);
+            free(av[1]);
             return MOD_CONT;
+        }
         av[1]++;
         if (ac >= 2) {
             if (s->motd) {
@@ -304,18 +307,23 @@ int denora_event_push(char *source, int ac, char **av)
         }
     } else if (!strcmp(num, "376")) {
         s = server_find(source);
-        if (!s)
+        if (!s) {
+            free(num);
+            free(av[1]);
             return MOD_CONT;
+        }
         sql_motd_store(s);
     } else if (!strcmp(num, "242")) {
         av[1]++;
         sql_do_uptime(source, av[1]);
     } else if (!strcmp(num, "248")) {
         av[2] = myStrGetTokenRemainder(av[1], ' ', 1);
-        av[1] = myStrGetToken(av[1], ' ', 1);
+        av[1] = myStrGetToken(av[1], ' ', 1);   // possible memleak at this location 
         sql_uline(av[2]);
+        if (av[2])
+            free(av[2]);
     }
-
+    free(av[1]);
     return MOD_CONT;
 }
 
@@ -375,6 +383,10 @@ int denora_event_addline(char *source, int ac, char **av)
         host = myStrGetToken(av[1], '@', 1);
         sql_do_server_bans_add(av[0], user, host, av[2], av[3], buf,
                                av[5]);
+        if (user)
+            free(user);
+        if (host)
+            free(host);
     } else if (!stricmp(av[0], "Q")) {
         sql_do_server_bans_add(av[0], (char *) "*", av[1], av[2], av[3],
                                buf, av[5]);
@@ -438,6 +450,10 @@ int denora_event_eline(char *source, int ac, char **av)
     } else {
         sql_do_server_bans_remove((char *) "E", user, host);
     }
+    if (user)
+        free(user);
+    if (host)
+        free(host);
     return MOD_CONT;
 }
 
@@ -554,6 +570,12 @@ int denora_event_capab(char *source, int ac, char **av)
         argv[4] = sstrdup("TLKEXT");
 
         capab_parse(argc, argv);
+
+        free(av[0]);
+        free(av[1]);
+        free(av[2]);
+        free(av[3]);
+        free(av[4]);
     }
     return MOD_CONT;
 }
