@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="253"
+VERSION_BUILD="254"
 
 # $Log$
+#
+# 2009-02-23 21:48:03 1.4.3.254 (SVN) hal9000 [#]
+# > Reverted part of Dukes patch cause it made inspircd go boom... boom badabum, bang, *nucleramelt* oh well 
+# anyway its fixed now
 #
 # 2009-02-23 11:03:44 1.4.3.253 (SVN) hal9000 [#]
 # > Applied patch by DukyPyrolator fixing some memleaks

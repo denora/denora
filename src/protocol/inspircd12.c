@@ -293,8 +293,6 @@ int denora_event_push(char *source, int ac, char **av)
     } else if (!strcmp(num, "372")) {
         s = server_find(source);
         if (!s) {
-            free(num);
-            free(av[1]);
             return MOD_CONT;
         }
         av[1]++;
@@ -311,8 +309,6 @@ int denora_event_push(char *source, int ac, char **av)
     } else if (!strcmp(num, "376")) {
         s = server_find(source);
         if (!s) {
-            free(num);
-            free(av[1]);
             return MOD_CONT;
         }
         sql_motd_store(s);
@@ -321,12 +317,9 @@ int denora_event_push(char *source, int ac, char **av)
         sql_do_uptime(source, av[1]);
     } else if (!strcmp(num, "248")) {
         av[2] = myStrGetTokenRemainder(av[1], ' ', 1);
-        av[1] = myStrGetToken(av[1], ' ', 1);   // possible memleak at this position 
+        av[1] = myStrGetToken(av[1], ' ', 1);   // possible memleak at this position
         sql_uline(av[2]);
-        free(av[2]);
     }
-    free(num);
-    free(av[1]);
     return MOD_CONT;
 }
 
@@ -1150,15 +1143,12 @@ int denora_event_fjoin(char *source, int ac, char **av)
 int denora_event_uid(char *source, int ac, char **av)
 {
     User *user;
-    //struct in_addr addy;
     Server *s = findserver_uid(servlist, source);
-    //uint32 *ad = reinterpret_cast<uint32 *>(&addy);
     int ts = strtoul(av[1], NULL, 10);
 
     if (denora->protocoldebug)
         protocol_debug(source, ac, av);
 
-    //inet_aton(av[6], &addy);
     /* User *do_nick(const char *source, char *nick, char *username, char *host,
        char *server, char *realname, time_t ts, uint32 svid,
        char *ipchar, char *vhost, char *uid, int hopcount,
@@ -1169,10 +1159,6 @@ int denora_event_uid(char *source, int ac, char **av)
                    s->name,     /* server */
                    av[ac - 1],  /* realname */
                    ts, 0, av[6], av[4], av[0], 1, av[8], NULL);
-    /*if (user) {
-       ircdproto->ProcessUsermodes(user, 1, &av[8]);
-       //user->chost = av[4];
-       } */
 
     return MOD_CONT;
 }
