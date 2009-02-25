@@ -7,7 +7,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * $Id$
  *
  */
@@ -759,7 +759,7 @@ void db_removenick_nt(char *nick, char *reason)
                     mysql_free_result(mysql_res);
 
                     /* Deleting user as we got one with a similar mask which is still online */
-                    alog(LOG_EXTRADEBUG,
+                    alog(LOG_DEBUG,
                          "db_removenick_nt(%s): There is %s with similar mask online, so we will delete %s.",
                          nick, newnick, nick);
                     rdb_query(QUERY_LOW, "DELETE FROM %s WHERE nickid=%d",

@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="255"
+VERSION_BUILD="256"
 
 # $Log$
+#
+# 2009-02-25 12:38:25 1.4.3.256 (SVN) hal9000 [#]
+# > Fixed missing NICK handling in inspircd12
+# > Nick tracking no longer removes old nick alias on nick change
 #
 # 2009-02-25 09:52:23 1.4.3.255 (SVN) hal9000 [#]
 # > Fixed segfault on missing chan +f parameter in ircd message

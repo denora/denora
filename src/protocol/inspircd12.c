@@ -225,6 +225,7 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("MODENOTICE",denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("MOTD",      denora_event_motd); addCoreMessage(IRCD,m);
     m = createMessage("UID",       denora_event_uid); addCoreMessage(IRCD,m);
+    m = createMessage("NICK",      denora_event_nick); addCoreMessage(IRCD,m);
     m = createMessage("NOTICE",    denora_event_notice); addCoreMessage(IRCD,m);
     m = createMessage("OPERQUIT",  denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("OPERTYPE",  denora_event_opertype); addCoreMessage(IRCD,m);
@@ -1160,6 +1161,13 @@ int denora_event_uid(char *source, int ac, char **av)
                    av[ac - 1],  /* realname */
                    ts, 0, av[6], av[4], av[0], 1, av[8], NULL);
 
+    return MOD_CONT;
+}
+
+int denora_event_nick(char *source, int ac, char **av)
+{
+    do_nick(source, av[0], NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL,
+            0, NULL, NULL);
     return MOD_CONT;
 }
 

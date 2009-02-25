@@ -313,6 +313,7 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
     int nickid;
 #ifdef USE_MYSQL
     MYSQL_RES *mysql_res;
+    User *u;
 #endif
 
     SET_SEGV_LOCATION();
@@ -359,12 +360,16 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
         }
         mysql_free_result(mysql_res);
     }
-#endif
+
     SET_SEGV_LOCATION();
-    /* we update the alias record */
-    rdb_query(QUERY_LOW,
-              "UPDATE IGNORE %s SET nick=\'%s\' WHERE nick=\'%s\'",
-              AliasesTable, newnick, oldnick);
+    /* we insert a new alias record */
+    u = user_find(oldnick);
+    rdb_query(QUERY_HIGH,
+              "INSERT IGNORE INTO %s (nick, uname) VALUES (\'%s\', \'%s\')",
+              AliasesTable, newnick, (u
+                                      && u->sgroup) ? u->sgroup : newnick);
+#endif
+
     free(newnick);
     free(oldnick);
 }

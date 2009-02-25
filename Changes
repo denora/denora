@@ -11,6 +11,8 @@ Changes
 09/02/16 r239 Updated GeoIP.dat
 
 Fixes
+09/02/26 r256 Fixed missing NICK handling in inspircd12
+09/02/26 r256 Nick tracking no longer removes old nick alias on nick change
 09/02/25 r255 Fixed segfault on missing chan +f parameter in ircd message
 09/02/23 r253 [2] Patch fixing some memleaks
 09/02/22 r250 Added missing AWAY message handling in inspircd11
