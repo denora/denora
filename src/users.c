@@ -315,6 +315,7 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
     MYSQL_RES *mysql_res;
     User *u;
     char *uname = NULL;
+    char *newuname = NULL;
 #endif
 
     SET_SEGV_LOCATION();
@@ -365,6 +366,20 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
     SET_SEGV_LOCATION();
     /* we insert a new alias record */
     u = user_find(oldnick);
+
+    /* if oldnick is +r we check if newnick already has a uname in db */
+    if (NickTracking && UserStatsRegistered && u
+        && UserHasMode(u->nick, UMODE_r)) {
+        rdb_query(QUERY_HIGH, "SELECT uname FROM %s WHERE nick=\'%s\' ",
+                  AliasesTable, newnick);
+        mysql_res = mysql_store_result(mysql);
+        if (mysql_res && mysql_num_rows(mysql_res)) {
+            mysql_row = mysql_fetch_row(mysql_res);
+            newuname = rdb_escape(mysql_row[0]);
+        }
+    }
+
+    /* we get the current sgroup or uname from aliases */
     if (u && u->sgroup) {
         uname = u->sgroup;
     } else {
@@ -377,9 +392,19 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
             uname = rdb_escape(mysql_row[0]);
         }
     }
+
+    /* we insert a new alias record */
     rdb_query(QUERY_HIGH,
-              "INSERT IGNORE INTO %s (nick, uname) VALUES (\'%s\', \'%s\')",
-              AliasesTable, newnick, uname ? uname : newnick);
+              "INSERT INTO %s (nick, uname) VALUES (\'%s\', \'%s\') ON DUPLICATE KEY UPDATE uname=\'%s\'",
+              AliasesTable, newnick, uname ? uname : newnick, newnick,
+              newnick);
+
+    /* merge users if old and new unames differ */
+    if (u && uname && newuname && stricmp(newuname, uname)) {
+        alog(LOG_NORMAL, "Automatically merging %s to %s", uname,
+             newuname);
+        sumuser(u, newuname, uname);
+    }
 #endif
 
     free(newnick);
