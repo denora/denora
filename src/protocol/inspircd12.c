@@ -318,7 +318,7 @@ int denora_event_push(char *source, int ac, char **av)
         sql_do_uptime(source, av[1]);
     } else if (!strcmp(num, "248")) {
         av[2] = myStrGetTokenRemainder(av[1], ' ', 1);
-        av[1] = myStrGetToken(av[1], ' ', 1);   // possible memleak at this position
+        av[1] = myStrGetToken(av[1], ' ', 1);   /* possible memleak at this position */
         sql_uline(av[2]);
     }
     return MOD_CONT;
@@ -1150,10 +1150,18 @@ int denora_event_uid(char *source, int ac, char **av)
     if (denora->protocoldebug)
         protocol_debug(source, ac, av);
 
+    if (!s) {
+        alog(LOG_ERROR,
+             "Server %s not found. Unable to process UID for %s!", source,
+             av[2]);
+        return MOD_CONT;
+    }
+
     /* User *do_nick(const char *source, char *nick, char *username, char *host,
        char *server, char *realname, time_t ts, uint32 svid,
        char *ipchar, char *vhost, char *uid, int hopcount,
        char *modes, char *account) */
+
     user = do_nick("", av[2],   /* nick */
                    av[5],       /* username */
                    av[3],       /* realhost */

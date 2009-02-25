@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="256"
+VERSION_BUILD="257"
 
 # $Log$
+#
+# 2009-02-25 16:39:35 1.4.3.257 (SVN) hal9000 [#]
+# > Avoid crashing when getting an invalid server name on SID (inspircd12)
+# > Improved nick tracking on nick change
 #
 # 2009-02-25 12:38:25 1.4.3.256 (SVN) hal9000 [#]
 # > Fixed missing NICK handling in inspircd12

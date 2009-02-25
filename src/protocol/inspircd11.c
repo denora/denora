@@ -314,7 +314,7 @@ int denora_event_push(char *source, int ac, char **av)
         sql_do_uptime(source, av[1]);
     } else if (!strcmp(num, "248")) {
         av[2] = myStrGetTokenRemainder(av[1], ' ', 1);
-        av[1] = myStrGetToken(av[1], ' ', 1);   // possible memleak at this location
+        av[1] = myStrGetToken(av[1], ' ', 1);   /* possible memleak at this location */
         sql_uline(av[2]);
     }
     return MOD_CONT;

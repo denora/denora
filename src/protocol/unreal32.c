@@ -8,7 +8,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * $Id$
  *
  * last tested with Unreal 3.2.7
@@ -313,7 +313,7 @@ char *unreal32_lkill_killer(char *message)
     killer = strtok(buf, " ");
     killer = strtok(NULL, " ");
 
-    return killer; // possible memleak at this position 
+    return killer; /* possible memleak at this position */
 }
 
 /* 1. unfixed  memleak in this function */
@@ -328,7 +328,7 @@ char *unreal32_lkill_servername(char *message)
     servername[strlen(servername) - 1] = '\0'; /* last bracket removed */
     servername++; /* first bracket removed */
 
-    return servername; 
+    return servername;
 }
 
 char *unreal32_lkill_msg(char *message)
@@ -348,7 +348,7 @@ char *unreal32_lkill_msg(char *message)
 /* PROTOCTL */
 /*
    NICKv2 = Nick Version 2
-   VHP    = Sends hidden host 
+   VHP    = Sends hidden host
    UMODE2 = sends UMODE2 on user modes
    NICKIP = Sends IP on NICK
    TOKEN  = Use tokens to talk
@@ -508,8 +508,8 @@ int denora_event_netinfo(char *source, int ac, char **av)
  * parv[ 6]: expire_at            expire_at (0)  expire_at (0)      expire_at
  * parv[ 7]: set_at               set_at         set_at             set_at
  * parv[ 8]: reason               regex          tkl duration       reason
- * parv[ 9]:                                     tkl reason [A]        
- * parv[10]:                                     regex              
+ * parv[ 9]:                                     tkl reason [A]
+ * parv[10]:                                     regex
  *
 */
 /*
@@ -597,7 +597,7 @@ int denora_event_away(char *source, int ac, char **av)
 **	parv[0] = sender prefix
 **	parv[1] = topic text
 **
-**	For servers using TS: 
+**	For servers using TS:
 **	parv[0] = sender prefix
 **	parv[1] = channel name
 **	parv[2] = topic nickname
@@ -934,8 +934,8 @@ char *unreal32_nickip(char *host)
 **  if NICKIP:
 **      parv[9] = ip
 **      parv[10] = info
-** 
-** NICK - change 
+**
+** NICK - change
 **      source  = oldnick
 **	parv[0] = new nickname
 **      parv[1] = hopcount
@@ -971,10 +971,10 @@ int denora_event_nick(char *source, int ac, char **av)
             ts = strtoul(av[2], NULL, 10);
         }
         if (ac == 7) {
-            /* 
+            /*
                <codemastr> that was a bug that is now fixed in 3.2.1
                <codemastr> in  some instances it would use the non-nickv2 format
-               <codemastr> it's sent when a nick collision occurs 
+               <codemastr> it's sent when a nick collision occurs
                - so we have to leave it around for now -TSL
              */
             ipchar = host_resolve(av[4]);
