@@ -8,7 +8,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * $Id$
  *
  */
@@ -759,7 +759,7 @@ void set_flood(Channel * chan, char *value)
         free(chan->flood);
     }
 
-    chan->flood = (value ? sstrdup(value) : NULL);
+    chan->flood = (!BadPtr(value) ? sstrdup(value) : NULL);
 
     alog(LOG_DEBUG, langstr(ALOG_DEBUG_FLOOD_MODE),
          chan->name, (chan->flood ? chan->flood : langstr(ALOG_NO_FLOOD)));
@@ -779,7 +779,7 @@ void set_flood_alt(Channel * chan, char *value)
         free(chan->flood_alt);
     }
 
-    chan->flood_alt = (value ? sstrdup(value) : NULL);
+    chan->flood_alt = (!BadPtr(value) ? sstrdup(value) : NULL);
 
     alog(LOG_DEBUG,
          "debug: Alternative Flood mode for channel %s set to %s",

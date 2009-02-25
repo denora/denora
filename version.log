@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="254"
+VERSION_BUILD="255"
 
 # $Log$
+#
+# 2009-02-25 09:52:23 1.4.3.255 (SVN) hal9000 [#]
+# > Fixed segfault on missing chan +f parameter in ircd message
 #
 # 2009-02-23 21:48:03 1.4.3.254 (SVN) hal9000 [#]
 # > Reverted part of Dukes patch cause it made inspircd go boom... boom badabum, bang, *nucleramelt* oh well 
