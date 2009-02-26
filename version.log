@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="258"
+VERSION_BUILD="259"
 
 # $Log$
+#
+# 2009-02-26 10:14:51 1.4.3.259 (SVN) hal9000 [#]
+# > Some fixes to yesterdays nick tracking changes. There still remain some problems and it is questionable whether these changes will remain, as there 
+# are some new problems now which are difficult to solve with the current db model. We will see...
 #
 # 2009-02-25 17:25:31 1.4.3.258 (SVN) hal9000 [#]
 # > Improved nick tracking on nick change for +r users. This is experimental and needs testing!

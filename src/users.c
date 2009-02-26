@@ -364,45 +364,59 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
     }
 
     SET_SEGV_LOCATION();
-    /* we insert a new alias record */
+
     u = user_find(oldnick);
 
     /* if oldnick is +r we check if newnick already has a uname in db */
     if (NickTracking && UserStatsRegistered && u
         && UserHasMode(u->nick, UMODE_r)) {
-        rdb_query(QUERY_HIGH, "SELECT uname FROM %s WHERE nick=\'%s\' ",
-                  AliasesTable, newnick);
+        alog(LOG_DEBUG,
+             "We check if newnick %s already has a uname in aliases",
+             newnick);
+        rdb_query(QUERY_HIGH,
+                  "SELECT %s.uname FROM %s, %s WHERE %s.nick=\'%s\' AND %s.uname=%s.uname ",
+                  UStatsTable, AliasesTable, UStatsTable, AliasesTable,
+                  newnick, AliasesTable, UStatsTable);
         mysql_res = mysql_store_result(mysql);
         if (mysql_res && mysql_num_rows(mysql_res)) {
             mysql_row = mysql_fetch_row(mysql_res);
             newuname = rdb_escape(mysql_row[0]);
+            alog(LOG_DEBUG, "Yes indeed, we got newuname %s", newuname);
+        } else {
+            alog(LOG_DEBUG, "No newuname found");
         }
     }
 
     /* we get the current sgroup or uname from aliases */
     if (u && u->sgroup) {
         uname = u->sgroup;
+        alog(LOG_DEBUG, "We will use u->sgroup which is %s", uname);
     } else {
-        rdb_query(QUERY_HIGH,
-                  "SELECT uname FROM %s WHERE nick=\'%s\' ",
+        alog(LOG_DEBUG,
+             "We check if oldnick %s already has a uname in aliases (it should)",
+             oldnick);
+        rdb_query(QUERY_HIGH, "SELECT uname FROM %s WHERE nick=\'%s\' ",
                   AliasesTable, oldnick);
         mysql_res = mysql_store_result(mysql);
         if (mysql_res && mysql_num_rows(mysql_res)) {
             mysql_row = mysql_fetch_row(mysql_res);
             uname = rdb_escape(mysql_row[0]);
+            alog(LOG_DEBUG, "Yes indeed, we got uname %s", uname);
+        } else {
+            alog(LOG_DEBUG, "No uname found");
         }
     }
 
     /* we insert a new alias record */
     rdb_query(QUERY_HIGH,
               "INSERT INTO %s (nick, uname) VALUES (\'%s\', \'%s\') ON DUPLICATE KEY UPDATE uname=\'%s\'",
-              AliasesTable, newnick, uname ? uname : newnick, newnick,
-              newnick);
+              AliasesTable, newnick, uname ? uname : newnick,
+              uname ? uname : newnick);
 
     /* merge users if old and new unames differ */
     if (u && uname && newuname && stricmp(newuname, uname)) {
-        alog(LOG_NORMAL, "Automatically merging %s to %s", uname,
-             newuname);
+        alog(LOG_NORMAL, "Automatically merging stats user %s to %s",
+             uname, newuname);
         sumuser(u, newuname, uname);
     }
 #endif
