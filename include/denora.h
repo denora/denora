@@ -127,12 +127,12 @@
 # include <mysql/mysql_version.h>
 # include <mysql/mysql.h>
 # include <mysql/errmsg.h>
-# include <mysql/mysqld_error.h> 
+# include <mysql/mysqld_error.h>
 #else
 # include <mysql_version.h>
 # include <mysql.h>
 # include <errmsg.h>
-# include <mysqld_error.h> 
+# include <mysqld_error.h>
 #endif
 #ifndef ER_USER_LIMIT_REACHED
 #define ER_USER_LIMIT_REACHED 1226
@@ -273,7 +273,7 @@ typedef enum { false, true } boolean;
 /* Some enum stuff                                                       */
 /*************************************************************************/
 
-typedef enum { 
+typedef enum {
    CORE,        	    /* Core Module                               */
    PROTOCOL,    	    /* IRCD Protocol Module                      */
    THIRD,                   /* Third Party Module                        */
@@ -281,9 +281,9 @@ typedef enum {
    QATESTED                 /* QA Team has checked and cleared it        */
 } MODType;
 
-typedef enum { 
-	MOD_OP_LOAD, 
-	MOD_OP_UNLOAD 
+typedef enum {
+	MOD_OP_LOAD,
+	MOD_OP_UNLOAD
 } ModuleOperation;
 
 /*************************************************************************/
@@ -574,7 +574,7 @@ struct ModuleQueue_ {
 	Module *m;
 	ModuleOperation op;
 	User *u;
-	
+
 	ModuleQueue *next;
 };
 
@@ -735,9 +735,9 @@ struct ircdvars_ {
 	uint32 chan_lmode;	        /* IRCD_CMODE_* for linked channels	 */
 	char *chanmodes;	        /* If the ircd sends CHANMODE in CAPAB this is where we store it */
 	int token;		        /* Does Denora support the tokens for the ircd */
-	int tokencaseless;	        /* IRCD TOKENs are not case senstive 
-                                         * UnrealIRCD is not case senstive, 
-                                     	 *  most IRCD are case senstive 
+	int tokencaseless;	        /* IRCD TOKENs are not case senstive
+                                         * UnrealIRCD is not case senstive,
+                                     	 *  most IRCD are case senstive
 					 */
 	int sjb64;		        /* SJOIN time stamps are encoded in base 64 formatting */
     int invitemode;		        /* IRCD supports Invite exception +I */
@@ -782,7 +782,7 @@ struct ircdvars_ {
 struct ircdcapab_ {
   uint32 noquit;
   uint32 tsmode;
-  uint32 unconnect;  
+  uint32 unconnect;
   uint32 nickip;
   uint32 nsjoin;
   uint32 zip;
@@ -836,7 +836,7 @@ struct metadata_ {
 	char *value;			/* The Value                  */
 	MetaData *next;                  /* The next MetaData record   */
 };
- 
+
 /**************************************************************************/
 /* Server Struct - this is not the stats this is destoried on shutdown    */
 /**************************************************************************/
@@ -854,7 +854,7 @@ struct server_ {
     uint32 uptime;			/* Uptime				  */
     ServStats *ss;			/* Server Stats Struct                    */
     Server *uplink;			/* Uplink Server Struct  		  */
-    time_t lag_time;            
+    time_t lag_time;
     uint32 ping;                        /* ping time                              */
     uint32 lastping;                    /* Last time pinged                       */
     uint32 sqlid;			/* server sql id                          */
@@ -894,7 +894,7 @@ struct serverstats_ {
 	time_t maxpingtime;		/* Largest ping time			*/
 	uint32 totalusersever;          /* Total users ever			*/
 	uint32 splits;			/* Total number of server splits	*/
-	uint32 ircopskills;		
+	uint32 ircopskills;
 	uint32 serverkills;
 	uint32 split_stats;
 	time_t lastseen;
@@ -981,13 +981,14 @@ struct user_ {
 
     int cstats;          	/* used for channelstats - dont modify it */
     char *sgroup;        	/* contains the escaped name of the stats-group */
+    char *lastuname;		/* used for nick tracking */
 
     ModuleData *moduleData;	/* defined for it, it should allow the module Add/Get */
     char *country_code;
     char *country_name;
 
     int isservice;
-    
+
     struct u_chanlist {
         struct u_chanlist *next, *prev;
         Channel *chan;
@@ -1253,7 +1254,7 @@ struct ConfVar
 {
     sConf   *type;
     char    *value;
-    int      loaded;        /* 1 - identified.  
+    int      loaded;        /* 1 - identified.
                              * 2 - variable loaded
                              * 3 - delimited cleared */
 };

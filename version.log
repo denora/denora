@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="259"
+VERSION_BUILD="260"
 
 # $Log$
+#
+# 2009-02-27 11:59:20 1.4.3.260 (SVN) hal9000 [#]
+# > again some nick tracking improvements, getting there...
 #
 # 2009-02-26 10:14:51 1.4.3.259 (SVN) hal9000 [#]
 # > Some fixes to yesterdays nick tracking changes. There still remain some problems and it is questionable whether these changes will remain, as there 

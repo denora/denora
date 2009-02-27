@@ -315,7 +315,6 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
     MYSQL_RES *mysql_res;
     User *u;
     char *uname = NULL;
-    char *newuname = NULL;
 #endif
 
     SET_SEGV_LOCATION();
@@ -367,26 +366,6 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
 
     u = user_find(oldnick);
 
-    /* if oldnick is +r we check if newnick already has a uname in db */
-    if (NickTracking && UserStatsRegistered && u
-        && UserHasMode(u->nick, UMODE_r)) {
-        alog(LOG_DEBUG,
-             "We check if newnick %s already has a uname in aliases",
-             newnick);
-        rdb_query(QUERY_HIGH,
-                  "SELECT %s.uname FROM %s, %s WHERE %s.nick=\'%s\' AND %s.uname=%s.uname ",
-                  UStatsTable, AliasesTable, UStatsTable, AliasesTable,
-                  newnick, AliasesTable, UStatsTable);
-        mysql_res = mysql_store_result(mysql);
-        if (mysql_res && mysql_num_rows(mysql_res)) {
-            mysql_row = mysql_fetch_row(mysql_res);
-            newuname = rdb_escape(mysql_row[0]);
-            alog(LOG_DEBUG, "Yes indeed, we got newuname %s", newuname);
-        } else {
-            alog(LOG_DEBUG, "No newuname found");
-        }
-    }
-
     /* we get the current sgroup or uname from aliases */
     if (u && u->sgroup) {
         uname = u->sgroup;
@@ -412,13 +391,6 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
               "INSERT INTO %s (nick, uname) VALUES (\'%s\', \'%s\') ON DUPLICATE KEY UPDATE uname=\'%s\'",
               AliasesTable, newnick, uname ? uname : newnick,
               uname ? uname : newnick);
-
-    /* merge users if old and new unames differ */
-    if (u && uname && newuname && stricmp(newuname, uname)) {
-        alog(LOG_NORMAL, "Automatically merging stats user %s to %s",
-             uname, newuname);
-        sumuser(u, newuname, uname);
-    }
 #endif
 
     free(newnick);
@@ -1131,6 +1103,7 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
         user->ip = sstrdup(ipchar);
         user->cstats = 0;
         user->sgroup = NULL;
+        user->lastuname = NULL;
         user->language = StatsLanguage;
         user->country_code = sstrdup(country_code);
         user->country_name = sstrdup(country_name);
@@ -1184,6 +1157,7 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
         user->timestamp = ts;
 
         if (stricmp(nick, user->nick)) {
+            user->lastuname = sstrdup(user->sgroup);    /* in case we need to merge later */
             sql_do_nick_chg(nick, user->nick);
             change_user_nick(user, nick);
             alog(LOG_DEBUG, "debug: %s has changed nicks to %s", source,

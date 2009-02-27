@@ -482,6 +482,13 @@ static int check_db(User * u, Channel * c)
                 } else {
                     u->cstats = 1;
                 }
+            } else if (u->sgroup && u->lastuname
+                       && stricmp(u->sgroup, u->lastuname)) {
+                /* user already had a stats user, so we'll take that one */
+                alog(LOG_DEBUG, "Replacing sgroup %s with last used %s",
+                     u->sgroup, u->lastuname);
+                u->sgroup = sstrdup(u->lastuname);
+                free(u->lastuname);
             } else {            /* num_rows = 0 */
                 /* create alias and global */
                 rdb_query(QUERY_LOW,
@@ -526,6 +533,14 @@ static int check_db(User * u, Channel * c)
     }                           /* c->cstats */
     SET_SEGV_LOCATION();
     if (u->cstats != 2) {
+        if (u->lastuname && u->sgroup && stricmp(u->sgroup, u->lastuname)) {
+            alog(LOG_DEBUG,
+                 "sgroup %s and lastuname %s differ, so we merge them",
+                 u->sgroup, u->lastuname);
+            sumuser(u, u->lastuname, u->sgroup);
+            free(u->lastuname);
+            return 1;
+        }
         rdb_query
             (QUERY_HIGH,
              "SELECT uname FROM %s WHERE uname=\'%s\' AND chan=\'%s\';",

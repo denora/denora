@@ -421,17 +421,17 @@ STAT_RELOAD
 ###########################################################################
 
 STAT_STATS_SERVER_COUNT
-	Statistics of servers for %s:	
+	Statistics of servers for %s:
 	Servers actually linked:  %d
 	Maximum of servers connected: %d
 
 STAT_STATS_CHAN_COUNT
-	Statistics of channels for %s:	
+	Statistics of channels for %s:
 	Channels actually used:  %d
 	Maximum of channels created: %d
 
 STAT_STATS_USER_COUNT
-	Statistics of users for %s	
+	Statistics of users for %s:
 	Users actually connected:  %d
 	Maximum of users connected: %d
 
