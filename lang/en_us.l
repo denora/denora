@@ -466,7 +466,7 @@ STAT_SET_SQL_ERROR_DISABLED
 	SQL is not configured for this network. Please edit the
 	configuration file (denora.conf).
 STAT_SET_LIST_OPTION_ON
-	%s is enable
+	%s is enabled
 STAT_SET_LIST_OPTION_OFF
 	%s is disabled
 STAT_SET_HTML_ON

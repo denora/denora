@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="262"
+VERSION_BUILD="263"
 
 # $Log$
+#
+# 2009-03-03 16:11:52 1.4.3.263 (SVN) hal9000 [#529]
+# > Fixed SQL not always working after reinitialization
 #
 # 2009-03-03 15:45:00 1.4.3.262 (SVN) hal9000 [#]
 # > Fixed typo in inspircd12 module (oops!)

@@ -7,7 +7,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -337,7 +337,7 @@ void denora_shutdown(void)
     send_event(EVENT_SHUTDOWN, 1, EVENT_START);
     save_databases();
 
-    /* we are going down time to tell 
+    /* we are going down time to tell
        some internal functions we are dead */
     denora->delayed_quit = 1;
 
@@ -405,7 +405,7 @@ void save_databases()
 
 int main(int ac, char **av)
 {
-    int i;
+    int i, j;
     volatile time_t last_update;
     volatile time_t last_htmlupdate;
     volatile time_t last_server_ping;
@@ -512,33 +512,40 @@ int main(int ac, char **av)
             last_backup_ping = t;
         }
 
-
-        if (SQLPingFreq >= 120) {
-            if (denora->do_sql && (t - last_sql_ping >= SQLPingFreq)) {
+        if (t - last_sql_ping > SQLPingFreq) {
+            if (denora->do_sql) {
 #ifdef USE_MYSQL
                 result = mysql_ping(mysql);
-                if (result) {
-                    if (denora->do_sql) {
-                        denora->do_sql = 0;
-                        if (result == CR_COMMANDS_OUT_OF_SYNC) {
-                            alog(LOG_NORMAL,
-                                 "Commands were executed in an improper order.");
-                        }
-                        if (result == CR_SERVER_GONE_ERROR) {
-                            alog(LOG_NORMAL,
-                                 "The MySQL server has gone away.");
-                        }
-                        if (result == CR_UNKNOWN_ERROR) {
-                            alog(LOG_NORMAL, "An unknown error occurred");
-                        }
+                if (result && denora->do_sql) {
+                    if (result == CR_COMMANDS_OUT_OF_SYNC) {
+                        alog(LOG_ERROR,
+                             "Commands were executed in an improper order.");
                     }
+                    if (result == CR_SERVER_GONE_ERROR) {
+                        alog(LOG_ERROR, "The MySQL server has gone away.");
+                    }
+                    if (result == CR_UNKNOWN_ERROR) {
+                        alog(LOG_ERROR, "An unknown error occurred");
+                    }
+                    alog(LOG_ERROR, "Disabling MySQL due to an error");
+                    denora->do_sql = 0;
+                    SQLDisableDueServerLost = 1;
                 }
 #endif
                 last_sql_ping = t;
             } else if (SQLDisableDueServerLost && SQLRetryOnServerLost) {
-                if (rdb_init()) {
-                    SQLDisableDueServerLost = 0;
+                for (j = 0; j < SqlRetries; j++) {
+                    alog(LOG_NORMAL,
+                         "Trying to reconnect to MySQL server...");
+                    if (rdb_init()) {
+                        SQLDisableDueServerLost = 0;
+                        break;
+                    }
+                    sleep(SqlRetryGap);
                 }
+                alog(LOG_ERROR,
+                     "Giving up trying to reconnect to MySQL server");
+                SQLDisableDueServerLost = 0;
             }
         }
 
@@ -1033,7 +1040,7 @@ int init(int ac, char **av)
     lang_init();
     alog(LOG_DEBUG, "debug: Loaded languages");
 
-    /* call it a hack, need to take a static and turn it global 
+    /* call it a hack, need to take a static and turn it global
        anything else will piss off the compiler.
      */
     initconfsettigs();
@@ -1094,7 +1101,7 @@ int init(int ac, char **av)
     }
 #endif
 
-    /* Since you can rem out whole blocks and segfault 
+    /* Since you can rem out whole blocks and segfault
        denora we run a bad pointer check on variables */
     post_config_check();
 
