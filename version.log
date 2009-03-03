@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="260"
+VERSION_BUILD="261"
 
 # $Log$
+#
+# 2009-03-03 15:29:26 1.4.3.261 (SVN) hal9000 [#]
+# > Have inspircd12 require ts6 and numeric settings
+# > Fixed backtrace on some nick changes (introduced in r260)
 #
 # 2009-02-27 11:59:20 1.4.3.260 (SVN) hal9000 [#]
 # > again some nick tracking improvements, getting there...

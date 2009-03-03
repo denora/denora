@@ -1157,7 +1157,9 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
         user->timestamp = ts;
 
         if (stricmp(nick, user->nick)) {
-            user->lastuname = sstrdup(user->sgroup);    /* in case we need to merge later */
+            if (user->sgroup) {
+                user->lastuname = sstrdup(user->sgroup);        /* in case we need to merge later */
+            }
             sql_do_nick_chg(nick, user->nick);
             change_user_nick(user, nick);
             alog(LOG_DEBUG, "debug: %s has changed nicks to %s", source,

@@ -27,7 +27,7 @@ int parse_directive(Directive * d, char *dir, int ac, char *av[MAXPARAMS],
 /* notes on config.c
  * The parser works on two primary depths - blocks and tokens:
  *
- * block { 
+ * block {
  *      token value;
  *      token "string value";
  *      token 123;               # int value
@@ -615,7 +615,7 @@ int confadd_timeout(cVar * vars[], int lnum)
         } else if (tmp->type && (tmp->type->flag & TIMEFF_SQLFREQ)) {
             tmp->type = NULL;
             SQLPingFreq = dotime(tmp->value);
-            if (SQLPingFreq < 119) {
+            if (SQLPingFreq < 120) {
                 confparse_error(langstring(CONFIG_SQLPING_TO_LOW), lnum);
                 return -1;
             }
@@ -1646,7 +1646,7 @@ static char *parse_block(tConf * conftab, tConf * block, char *cur,
             vars[vnum]->loaded = 1;
         }
         if (item->var & VARTYPE_NONE) {
-            /* we dont need to grab a variable for this type 
+            /* we dont need to grab a variable for this type
              * just look for the closing semicolon, and move on */
             vars[vnum]->loaded = 2;
             if (!skip) {

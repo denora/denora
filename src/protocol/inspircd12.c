@@ -616,15 +616,14 @@ void inspircd_cmd_notice(char *source, char *dest, char *buf)
 
     ud = find_uid(source);
     u = finduser(dest);
-    send_cmd((UseTS6 ? (ud ? ud->uid : source) : source),
-             "NOTICE %s :%s", (UseTS6 ? (u ? u->uid : dest) : dest), buf);
+    send_cmd(ud ? ud->uid : source,
+             "NOTICE %s :%s", u ? u->uid : dest, buf);
 }
 
 void inspircd_cmd_stats(char *sender, const char *letter, char *server)
 {
     Uid *ud = find_uid(sender);
-    send_cmd(UseTS6 ? (ud ? ud->uid : sender) : sender, "STATS %s %s",
-             letter, server);
+    send_cmd(ud ? ud->uid : sender, "STATS %s %s", letter, server);
 }
 
 void inspircd_cmd_privmsg(char *source, char *dest, char *buf)
@@ -634,8 +633,8 @@ void inspircd_cmd_privmsg(char *source, char *dest, char *buf)
     ud = find_uid(source);
     ud2 = find_uid(dest);
 
-    send_cmd((UseTS6 ? (ud ? ud->uid : source) : source), "PRIVMSG %s :%s",
-             (UseTS6 ? (ud2 ? ud2->uid : dest) : dest), buf);
+    send_cmd(ud ? ud->uid : source, "PRIVMSG %s :%s",
+             ud2 ? ud2->uid : dest, buf);
 }
 
 void inspircd_cmd_serv_notice(char *source, char *dest, char *msg)
@@ -734,7 +733,7 @@ void inspircd_cmd_join(char *user, char *channel, time_t chantime)
 
     alog(LOG_PROTOCOL, "User %s joins %s at %ld", user, channel,
          (long int) chantime);
-    send_cmd((UseTS6 ? (ud ? ud->uid : user) : user), "JOIN %s", channel);
+    send_cmd(ud ? ud->uid : user, "JOIN %s", channel);
 }
 
 /* PART */
@@ -744,11 +743,9 @@ void inspircd_cmd_part(char *nick, char *chan, char *buf)
     ud = find_uid(nick);
 
     if (buf) {
-        send_cmd((UseTS6 ? (ud ? ud->uid : nick) : nick), "PART %s :%s",
-                 chan, buf);
+        send_cmd(ud ? ud->uid : nick, "PART %s :%s", chan, buf);
     } else {
-        send_cmd((UseTS6 ? (ud ? ud->uid : nick) : nick),
-                 "PART %s :Leaving", chan);
+        send_cmd(ud ? ud->uid : nick, "PART %s :Leaving", chan);
     }
 }
 
@@ -1405,8 +1402,19 @@ int DenoraInit(int argc, char **argv)
         ("$Id$");
     moduleSetType(PROTOCOL);
 
-    if (Numeric)
+    if (!UseTS6) {
+      alog(LOG_ERROR, "You need to enable TS6 in config for the inspircd12 module to work"):
+        denora->quitting = 1;
+        return MOD_STOP;
+    }
+
+    if (Numeric) {
         TS6SID = sstrdup(Numeric);
+    } else {
+      alog(LOG_ERROR, "You need to specify a valid numeric in config for the inspircd12 module to work"):
+        denora->quitting = 1;
+        return MOD_STOP;
+    }
 
     pmodule_ircd_version("InspIRCd 1.2.x");
     pmodule_ircd_cap(myIrcdcap);
