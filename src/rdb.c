@@ -8,7 +8,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * $Id$
  *
  */
@@ -43,6 +43,7 @@ int rdb_init()
 
 int rdb_close()
 {
+    denora->do_sql = 0;
 #ifdef USE_MYSQL
     if (sqltype == SQL_MYSQL) {
         if (mysql) {

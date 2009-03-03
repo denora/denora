@@ -1403,7 +1403,8 @@ int DenoraInit(int argc, char **argv)
     moduleSetType(PROTOCOL);
 
     if (!UseTS6) {
-      alog(LOG_ERROR, "You need to enable TS6 in config for the inspircd12 module to work"):
+        alog(LOG_ERROR,
+             "You need to enable TS6 in config for the inspircd12 module to work");
         denora->quitting = 1;
         return MOD_STOP;
     }
@@ -1411,7 +1412,8 @@ int DenoraInit(int argc, char **argv)
     if (Numeric) {
         TS6SID = sstrdup(Numeric);
     } else {
-      alog(LOG_ERROR, "You need to specify a valid numeric in config for the inspircd12 module to work"):
+        alog(LOG_ERROR,
+             "You need to specify a valid numeric in config for the inspircd12 module to work");
         denora->quitting = 1;
         return MOD_STOP;
     }

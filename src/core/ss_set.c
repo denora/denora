@@ -93,8 +93,7 @@ int do_set(User * u, int ac, char **av)
                 notice_lang(s_StatServ, u, STAT_SET_SQL_ERROR_INIT);
             }
         } else if (stricmp(setting, "off") == 0) {
-            /* could call rdb_close() but that does nothing - TSL */
-            denora->do_sql = 0;
+            rdb_close();
             notice_lang(s_StatServ, u, STAT_SET_SQL_OFF);
         } else {
             notice_lang(s_StatServ, u, STAT_SET_SQL_ERROR);

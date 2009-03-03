@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="261"
+VERSION_BUILD="262"
 
 # $Log$
+#
+# 2009-03-03 15:45:00 1.4.3.262 (SVN) hal9000 [#]
+# > Fixed typo in inspircd12 module (oops!)
+# > Some little adjustments in mysql stuff
 #
 # 2009-03-03 15:29:26 1.4.3.261 (SVN) hal9000 [#]
 # > Have inspircd12 require ts6 and numeric settings

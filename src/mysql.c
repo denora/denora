@@ -8,7 +8,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * $Id$
  *
  */
@@ -69,7 +69,7 @@ int db_mysql_init()
     SET_SEGV_LOCATION();
 
     /* The following configuration options are required.
-     * If missing disable MySQL to avoid any problems.   
+     * If missing disable MySQL to avoid any problems.
      */
 
     if ((denora->do_sql) && (!SqlName || !SqlUser)) {
@@ -243,6 +243,7 @@ int db_mysql_query(char *sql)
                            "mysql returned errno code: disabling MYSQL");
             denora->do_sql = 0;
             db_mysql_close();
+            SQLDisableDueServerLost = 1;
             break;
         default:
             alog(LOG_ERROR, "MYSQL reported Error Code %d",
