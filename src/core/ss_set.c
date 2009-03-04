@@ -58,6 +58,7 @@ int do_set(User * u, int ac, char **av)
     char *option = NULL;
     char *setting = NULL;
     int setindex;
+    char buf[BUFSIZE];
 
     if (ac >= 2) {
         option = av[0];
