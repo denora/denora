@@ -7,7 +7,7 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
+ *
  * $Id$
  *
  * last tested with UltimateIRCd(Development)-3.1(00).svn($Rev: 897 $)
@@ -53,6 +53,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* flood                     */
      IRCD_DISABLE,              /* flood other               */
      IRCD_DISABLE,              /* join throttle             */
+     IRCD_DISABLE,              /* nick change flood         */
      'x',                       /* vhost                     */
      IRCD_DISABLE,              /* vhost other               */
      'F',                       /* channek linking           */
@@ -205,7 +206,7 @@ char *ultimate3_nickip(char *host)
 **	parv[7] = servicestamp
 **      parv[8] = IP
 **	parv[9] = info
-** NICK - change 
+** NICK - change
 **      source  = oldnick
 **	parv[0] = new nickname
 **      parv[1] = hopcount
@@ -254,7 +255,7 @@ int denora_event_capab(char *source, int ac, char **av)
 
 /*
 ** CLIENT
-**      source  = NULL       
+**      source  = NULL
 **	parv[0] = nickname   Trystan
 **      parv[1] = hopcount   1
 **      parv[2] = timestamp  1090083810
@@ -264,7 +265,7 @@ int denora_event_capab(char *source, int ac, char **av)
 **      parv[6] = hostname   c-24-2-101-227.client.comcast.net
 **      parv[7] = vhost      3223f75b.2b32ee69.client.comcast.net
 **	parv[8] = server     WhiteRose.No.Eu.Shadow-Realm.org
-**      parv[9] = svid       0 
+**      parv[9] = svid       0
 **	parv[10] = ip         402810339
 ** 	parv[11] = info      Dreams are answers to questions not yet asked
 */
@@ -707,11 +708,11 @@ void ultimate3_cmd_squit(char *servname, char *message)
 
 /* Functions that use serval cmd functions */
 /*
- * SVINFO 
- *       parv[0] = sender prefix 
- *       parv[1] = TS_CURRENT for the server 
- *       parv[2] = TS_MIN for the server 
- *       parv[3] = server is standalone or connected to non-TS only 
+ * SVINFO
+ *       parv[0] = sender prefix
+ *       parv[1] = TS_CURRENT for the server
+ *       parv[2] = TS_MIN for the server
+ *       parv[3] = server is standalone or connected to non-TS only
  *       parv[4] = server's idea of UTC time
  */
 void ultimate3_cmd_svinfo(void)
@@ -841,7 +842,7 @@ void moduleAddIRCDCmds() {
     pmodule_cmd_ping(ultimate3_cmd_ping);
 }
 
-int DenoraInit(int argc, char **argv) 
+int DenoraInit(int argc, char **argv)
 {
     if (denora->protocoldebug) {
         protocol_debug(NULL, argc, argv);

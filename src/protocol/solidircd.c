@@ -55,6 +55,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* flood                        */
      'j',                       /* flood other                  */
      IRCD_DISABLE,              /* join throttle                */
+     IRCD_DISABLE,              /* nick change flood            */
      'v',                       /* vhost                        */
      IRCD_DISABLE,              /* vhost other                  */
      IRCD_DISABLE,              /* channek linking              */
@@ -231,7 +232,7 @@ char *solid_nickip(char *host)
 **	parv[7] = servicestamp
 **      parv[8] = IP
 **	parv[9] = info
-** NICK - change 
+** NICK - change
 **      source  = oldnick
 **	parv[0] = new nickname
 **      parv[1] = hopcount
@@ -340,7 +341,7 @@ int denora_event_436(char *source, int ac, char **av)
 }
 
 /* *INDENT-OFF* */
-void moduleAddIRCDMsgs(void) 
+void moduleAddIRCDMsgs(void)
 {
     Message *m;
 
@@ -471,8 +472,8 @@ void solidircd_cmd_join(char *user, char *channel, time_t chantime)
 
 /* SQUIT */
 /*
- *        parv[0] = sender prefix 
- *        parv[1] = server name 
+ *        parv[0] = sender prefix
+ *        parv[1] = server name
  *        parv[2] = comment
 */
 void solidircd_cmd_squit(char *servname, char *message)
@@ -492,11 +493,11 @@ void solidircd_cmd_burst(void)
 }
 
 /*
- * SVINFO 
- *       parv[0] = sender prefix 
- *       parv[1] = TS_CURRENT for the server 
- *       parv[2] = TS_MIN for the server 
- *       parv[3] = server is standalone or connected to non-TS only 
+ * SVINFO
+ *       parv[0] = sender prefix
+ *       parv[1] = TS_CURRENT for the server
+ *       parv[2] = TS_MIN for the server
+ *       parv[3] = server is standalone or connected to non-TS only
  *       parv[4] = server's idea of UTC time
  */
 void solidircd_cmd_svinfo(void)
@@ -564,10 +565,10 @@ int denora_event_privmsg(char *source, int ac, char **av)
 
 /* EVENT : SVINFO */
 /*
- *       parv[0] = sender prefix 
- *       parv[1] = TS_CURRENT for the server 
- *       parv[2] = TS_MIN for the server 
- *       parv[3] = server is standalone or connected to non-TS only 
+ *       parv[0] = sender prefix
+ *       parv[1] = TS_CURRENT for the server
+ *       parv[2] = TS_MIN for the server
+ *       parv[3] = server is standalone or connected to non-TS only
  *       parv[4] = server's idea of UTC time
  */
 int denora_event_svinfo(char *source, int ac, char **av)

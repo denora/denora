@@ -33,11 +33,12 @@ ADD `mode_ur` enum('Y','N') NOT NULL default 'N',
 ADD `mode_us` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ut` enum('Y','N') NOT NULL default 'N',
 ADD `mode_uv` enum('Y','N') NOT NULL default 'N',
-ADD `mode_lf_data` varchar(255) NOT NULL default '',
-ADD `mode_lj_data` varchar(5) NOT NULL default '',
-ADD `mode_lk_data` varchar(23) NOT NULL default '',
+ADD `mode_lf_data` varchar(32) NOT NULL default '',
+ADD `mode_lj_data` varchar(32) NOT NULL default '',
+ADD `mode_lk_data` varchar(32) NOT NULL default '',
 ADD `mode_ll_data` int(10) NOT NULL default '0',
-ADD `mode_ul_data` varchar(33) NOT NULL default '',
+ADD `mode_uf_data` varchar(32) NOT NULL default '',
+ADD `mode_ul_data` varchar(32) NOT NULL default '',
 ADD `mode_uj_data` int(10) NOT NULL default '0';
 
 -- --------------------------------------------------------

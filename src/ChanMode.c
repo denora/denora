@@ -657,6 +657,26 @@ void sql_do_chanmodes(char *chan, char **av)
                                     ircd->jointhrottle);
                         strlcat(db, buf, sizeof(db));
                     }
+                } else if (ircd->nickchgfloodchar
+                           && *modes == ircd->nickchgfloodchar) {
+                    SET_SEGV_LOCATION();
+                    if (tmp[9] == 'Y') {
+                        *buf = '\0';
+                        ircsnprintf(buf, BUFSIZE - 1,
+                                    "mode_%s%c_data=\'%s\', ",
+                                    (ircd->nickchgfloodchar <=
+                                     90 ? "u" : "l"),
+                                    ircd->nickchgfloodchar, av[argptr++]);
+                        strlcat(db, buf, sizeof(db));
+                    } else {
+                        *buf = '\0';
+                        ircsnprintf(buf, BUFSIZE - 1,
+                                    "mode_%s%c_data=\'\', ",
+                                    (ircd->nickchgfloodchar <=
+                                     90 ? "u" : "l"),
+                                    ircd->nickchgfloodchar);
+                        strlcat(db, buf, sizeof(db));
+                    }
                 }
             }
             break;
@@ -732,6 +752,17 @@ char *get_rejoinlock(Channel * chan)
         return NULL;
     }
     return itostr(chan->rejoinlock);
+}
+
+/*************************************************************************/
+
+char *get_nickchgflood(Channel * chan)
+{
+    SET_SEGV_LOCATION();
+    if (!chan) {
+        return NULL;
+    }
+    return chan->nickchgflood;
 }
 
 /*************************************************************************/
@@ -836,6 +867,26 @@ void set_rejoinlock(Channel * chan, char *value)
 
     alog(LOG_DEBUG, "debug: Rejoin lock for channel %s set to %u",
          chan->name, chan->rejoinlock);
+}
+
+/*************************************************************************/
+
+void set_nickchgflood(Channel * chan, char *value)
+{
+    SET_SEGV_LOCATION();
+
+    if (!chan) {
+        return;
+    }
+
+    if (chan->nickchgflood) {
+        free(chan->nickchgflood);
+    }
+
+    chan->nickchgflood = (!BadPtr(value) ? sstrdup(value) : NULL);
+
+    alog(LOG_DEBUG, "debug: Nick change flood for %s set to %s",
+         chan->name, chan->nickchgflood);
 }
 
 /*************************************************************************/

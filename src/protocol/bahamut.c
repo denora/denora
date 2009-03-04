@@ -51,6 +51,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* flood                     */
      'j',                       /* flood other               */
      IRCD_DISABLE,              /* join throttle             */
+     IRCD_DISABLE,              /* nick change flood         */
      IRCD_DISABLE,              /* vhost                     */
      IRCD_DISABLE,              /* vhost other               */
      IRCD_DISABLE,              /* Channel forwarding        */
@@ -229,7 +230,7 @@ char *bahamut_nickip(char *host)
 **	parv[7] = servicestamp
 **      parv[8] = IP
 **	parv[9] = info
-** NICK - change 
+** NICK - change
 **      source  = oldnick
 **	parv[0] = new nickname
 **      parv[1] = hopcount
@@ -296,7 +297,7 @@ int denora_event_436(char *source, int ac, char **av)
 /*************************************************************************/
 
 /* *INDENT-OFF* */
-void moduleAddIRCDMsgs(void) 
+void moduleAddIRCDMsgs(void)
 {
     Message *m;
 
@@ -401,8 +402,8 @@ void bahamut_cmd_ping(char *server)
 
 /* SQUIT */
 /*
- *        parv[0] = sender prefix 
- *        parv[1] = server name 
+ *        parv[0] = sender prefix
+ *        parv[1] = server name
  *        parv[2] = comment
 */
 void bahamut_cmd_squit(char *servname, char *message)
@@ -421,11 +422,11 @@ void bahamut_cmd_pong(char *servname, char *who)
 /*************************************************************************/
 
 /*
- * SVINFO 
- *       parv[0] = sender prefix 
- *       parv[1] = TS_CURRENT for the server 
- *       parv[2] = TS_MIN for the server 
- *       parv[3] = server is standalone or connected to non-TS only 
+ * SVINFO
+ *       parv[0] = sender prefix
+ *       parv[1] = TS_CURRENT for the server
+ *       parv[2] = TS_MIN for the server
+ *       parv[3] = server is standalone or connected to non-TS only
  *       parv[4] = server's idea of UTC time
  */
 void bahamut_cmd_svinfo(void)

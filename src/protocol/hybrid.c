@@ -51,6 +51,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* flood                        */
      IRCD_DISABLE,              /* flood other                  */
      IRCD_DISABLE,              /* join throttle                */
+     IRCD_DISABLE,              /* nick change flood         */
      'h',                       /* vhost                        */
      IRCD_DISABLE,              /* vhost other                  */
      IRCD_DISABLE,              /* channek linking              */
@@ -225,7 +226,7 @@ int denora_event_sjoin(char *source, int ac, char **av)
   7 : time_t ts
   8 : uint32 svid
   9 : uint32 ip
- 10 : char *vhost 
+ 10 : char *vhost
  11 : char *uid
  12 : int hopcount
  13 : char *modes
@@ -511,20 +512,20 @@ void hybrid_cmd_svinfo(void)
 /* CAPAB */
 /*
   QS     - Can handle quit storm removal
-  EX     - Can do channel +e exemptions 
+  EX     - Can do channel +e exemptions
   CHW    - Can do channel wall @#
-  LL     - Can do lazy links 
-  IE     - Can do invite exceptions 
+  LL     - Can do lazy links
+  IE     - Can do invite exceptions
   EOB    - Can do EOB message
-  KLN    - Can do KLINE message 
-  GLN    - Can do GLINE message 
+  KLN    - Can do KLINE message
+  GLN    - Can do GLINE message
   HOPS   - can do half ops (+h)
-  HUB    - This server is a HUB 
-  AOPS   - Can do anon ops (+a) 
+  HUB    - This server is a HUB
+  AOPS   - Can do anon ops (+a)
   UID    - Can do UIDs
   ZIP    - Can do ZIPlinks
-  ENC    - Can do ENCrypted links 
-  KNOCK  -  supports KNOCK 
+  ENC    - Can do ENCrypted links
+  KNOCK  -  supports KNOCK
   TBURST - supports TBURST
   PARA	 - supports invite broadcasting for +p
   ENCAP	 - ?

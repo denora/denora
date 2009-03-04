@@ -4,6 +4,7 @@ Denora v1.4.3-SVN
 -----------------
 
 Additions
+09/03/04 r266 Added support for nick change flood chanmode
 09/02/25 r257 Improved nick tracking on nick change for +r users
 09/02/22 r250 Added InspIRCd 1.2 support [closes #527]
 

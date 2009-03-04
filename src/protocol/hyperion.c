@@ -51,6 +51,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* flood                     */
      IRCD_DISABLE,              /* flood other               */
      IRCD_DISABLE,              /* join throttle             */
+     IRCD_DISABLE,              /* nick change flood         */
      'x',                       /* vhost                     */
      IRCD_DISABLE,              /* vhost other               */
      IRCD_DISABLE,              /* channek linking           */
@@ -230,7 +231,7 @@ int denora_event_sjoin(char *source, int ac, char **av)
   7 : time_t ts
   8 : uint32 svid
   9 : uint32 ip
- 10 : char *vhost 
+ 10 : char *vhost
  11 : char *uid
  12 : int hopcount
  13 : char *modes
@@ -435,7 +436,7 @@ void hyperion_cmd_svinfo(void)
 /*
   QS     - Can handle quit storm removal
   EOB    - Can do EOB message
-  HUB    - This server is a HUB 
+  HUB    - This server is a HUB
   UID    - Can do UIDs
   PARA	 - supports invite broadcasting for +p
 */

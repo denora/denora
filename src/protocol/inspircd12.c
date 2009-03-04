@@ -58,9 +58,10 @@ IRCDVar myIrcd[] = {
      'f',                       /* flood                        */
      'j',                       /* flood other                  */
      'J',                       /* join throttle                */
+     'F',                       /* nick change flood            */
      'x',                       /* vhost                        */
      IRCD_DISABLE,              /* vhost other                  */
-     'L',                       /* channek linking              */
+     'L',                       /* channel linking              */
      IRCD_DISABLE,              /* p10 protocol                 */
      IRCD_ENABLE,               /* ts6 protocol                 */
      IRCD_DISABLE,              /* numeric ie.. 350 etc         */
@@ -150,7 +151,7 @@ void IRCDModeInit(void)
 
     /* Channel Modes */
     CreateChanMode(CMODE_C, NULL, NULL);
-    CreateChanMode(CMODE_F, NULL, NULL);
+    CreateChanMode(CMODE_F, set_nickchgflood, get_nickchgflood);
     CreateChanMode(CMODE_G, NULL, NULL);
     CreateChanMode(CMODE_J, set_rejoinlock, get_rejoinlock);
     CreateChanMode(CMODE_K, NULL, NULL);

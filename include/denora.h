@@ -753,6 +753,7 @@ struct ircdvars_ {
    	int floodchar;
    	int floodchar_alternative;
    	int jointhrottle;
+   	int nickchgfloodchar;
 	int vhostchar;
 	int vhostchar2;
 	int chanforward;
@@ -1091,6 +1092,7 @@ struct channel_ {
     time_t topic_time;			/* When topic was set */
     uint32 limit;			/* 0 if none */
     uint32 rejoinlock;			/* 0 if none */
+    char *nickchgflood;
     char *key;				/* NULL if none */
     char *redirect;			/* +L; NULL if none */
     char *flood;			/* +f; NULL if none */
