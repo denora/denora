@@ -86,9 +86,29 @@ int do_set(User * u, int ac, char **av)
     } else if (!setting) {
         syntax_error(s_StatServ, u, "SET", STAT_SET_SYNTAX);
     } else if (stricmp(option, "SQL") == 0) {
+        if (!u->confadmin) {
+            notice_lang(s_StatServ, u, PERMISSION_DENIED);
+            return MOD_CONT;
+        }
         if (stricmp(setting, "on") == 0) {
             if (rdb_init()) {
                 notice_lang(s_StatServ, u, STAT_SET_SQL_ON);
+                /* we need to restart denora so sql is resynced */
+#ifdef STATS_BIN
+                denora->qmsg = calloc(512 + strlen(u->nick), 1);
+                if (!denora->qmsg) {
+                    ircsnprintf(denora->qmsg, 512,
+                                "RESTART command received, but out of memory!");
+                } else {
+                    ircsnprintf(buf, BUFSIZE,
+                                "RESTART command received from %s",
+                                u->nick);
+                    denora->qmsg = sstrdup(buf);
+                }
+                do_restart_denora();
+#else
+                notice_lang(s_StatServ, u, STAT_CANNOT_RESTART);
+#endif
             } else {
                 notice_lang(s_StatServ, u, STAT_SET_SQL_ERROR_INIT);
             }

@@ -190,6 +190,7 @@ int db_mysql_query(char *sql)
         case CR_CONNECTION_ERROR:
         case CR_UNKNOWN_ERROR:
             for (lcv = 0; lcv < SqlRetries; lcv++) {
+                alog(LOG_NORMAL, "%s, retrying...", mysql_error(mysql));
                 if (db_mysql_open()) {
                     result = mysql_query(mysql, sql);
                     return (result);
@@ -201,7 +202,7 @@ int db_mysql_query(char *sql)
             log_perror("Unable to reconnect to database: %s\n",
                        mysql_error(mysql));
             db_mysql_error(SQL_ERROR, "connect");
-            alog(LOG_NORMAL, "Disabling MYSQL due to problem with server");
+            alog(LOG_ERROR, "Disabling MYSQL due to problem with server");
             denora->do_sql = 0;
             SQLDisableDueServerLost = 1;
             /* Never reached. */

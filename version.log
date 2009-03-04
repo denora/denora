@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="263"
+VERSION_BUILD="264"
 
 # $Log$
+#
+# 2009-03-04 10:20:27 1.4.3.264 (SVN) hal9000 [#529]
+# > Denora now restarts upon successful connection to mysql after server loss and on SET SQL ON command
 #
 # 2009-03-03 16:11:52 1.4.3.263 (SVN) hal9000 [#529]
 # > Fixed SQL not always working after reinitialization

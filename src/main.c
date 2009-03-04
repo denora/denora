@@ -539,6 +539,10 @@ int main(int ac, char **av)
                          "Trying to reconnect to MySQL server...");
                     if (rdb_init()) {
                         SQLDisableDueServerLost = 0;
+                        /* we need to restart denora so sql is resynced */
+                        denora->qmsg =
+                            sstrdup("Restarting to resync SQL database");
+                        do_restart_denora();
                         break;
                     }
                     sleep(SqlRetryGap);
