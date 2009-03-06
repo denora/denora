@@ -459,6 +459,7 @@ void sql_do_chanmodes(char *chan, char **av)
     int nickid;
     char *user;
     int chanid;
+    int is_secret = 0;
 
     chan = rdb_escape(chan);
     chanid = db_getchannel(chan);
@@ -486,6 +487,9 @@ void sql_do_chanmodes(char *chan, char **av)
             tmp[9] = 'N';
             break;
         default:
+            if (*modes == 's') {
+                is_secret = 1;
+            }
             if (!strchr(ircd->cmodes, *modes)) {
                 alog(LOG_DEBUG, langstr(ALOG_DEBUG_UNKNOW_CMODE), *modes);
                 alog(LOG_DEBUG, langstr(ALOG_DEBUG_LAST_LINE), inbuf);
@@ -682,6 +686,10 @@ void sql_do_chanmodes(char *chan, char **av)
             break;
         }
         modes++;
+    }
+    /* sql defaults to Y for +s so we avoid race condition here */
+    if (!is_secret) {
+        strlcat(db, "mode_ls=\'N\', ", sizeof(db));
     }
     if (atleastone) {
         ircsnprintf(&db[strlen(db) - 2], sizeof(db), " WHERE chanid=%d",

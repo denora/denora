@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="266"
+VERSION_BUILD="267"
 
 # $Log$
+#
+# 2009-03-06 15:20:56 1.4.3.267 (SVN) hal9000 [#494]
+# > SQL chans now default to +s to avoid race condition
 #
 # 2009-03-04 21:10:14 1.4.3.266 (SVN) hal9000 [#]
 # > Added support for nick change flood chanmode

@@ -13,6 +13,7 @@ Changes
 09/02/16 r239 Updated GeoIP.dat
 
 Fixes
+09/03/06 r267 SQL chans now default to +s to avoid race condition [closes #494]
 09/03/04 r264 Fixed SQL not always working after reinitialization [closes #529]
 09/03/02 r261 Make inspircd12 module check for TS6 and numeric on load
 09/02/26 r256 Fixed missing NICK handling in inspircd12

@@ -13,7 +13,6 @@
  * $Id$
  *
  * last tested with InspIRCd 1.2.0-RC1
- * BEWARE! this module is under development and might not work yet
  *
  */
 

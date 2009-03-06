@@ -190,8 +190,10 @@ int db_mysql_query(char *sql)
         case CR_CONNECTION_ERROR:
         case CR_UNKNOWN_ERROR:
             for (lcv = 0; lcv < SqlRetries; lcv++) {
-                alog(LOG_NORMAL, "%s, retrying...", mysql_error(mysql));
+                alog(LOG_NORMAL, "%s, trying to reconnect...",
+                     mysql_error(mysql));
                 if (db_mysql_open()) {
+                    alog(LOG_NORMAL, "MySQL connection reestablished");
                     result = mysql_query(mysql, sql);
                     return (result);
                 }
