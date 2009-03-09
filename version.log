@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="267"
+VERSION_BUILD="268"
 
 # $Log$
+#
+# 2009-03-09 16:20:36 1.4.3.268 (SVN) hal9000 [#]
+# > Fixed inspircd12 counting opers twice
 #
 # 2009-03-06 15:20:56 1.4.3.267 (SVN) hal9000 [#494]
 # > SQL chans now default to +s to avoid race condition

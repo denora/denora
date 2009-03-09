@@ -1142,6 +1142,9 @@ int denora_event_uid(char *source, int ac, char **av)
 {
     User *user;
     Server *s = findserver_uid(servlist, source);
+    char *ptr;
+    char buf[BUFSIZE];
+    char *ptr2 = buf;
     int ts = strtoul(av[1], NULL, 10);
 
     if (denora->protocoldebug)
@@ -1154,10 +1157,20 @@ int denora_event_uid(char *source, int ac, char **av)
         return MOD_CONT;
     }
 
-    /* User *do_nick(const char *source, char *nick, char *username, char *host,
-       char *server, char *realname, time_t ts, uint32 svid,
-       char *ipchar, char *vhost, char *uid, int hopcount,
-       char *modes, char *account) */
+    /* Here we should check if av[5] contains +o, and if so remove it,
+     * as this will be handled by OPERTYPE */
+    ptr = av[8];
+    while (ptr && *ptr) {
+        if (*ptr != 'o') {
+            /* not o, add it to the clean list */
+            *ptr2 = *ptr;
+            ptr2++;
+        }
+        /* increment original */
+        ptr++;
+    }
+    *ptr2 = '\0';
+    av[8] = (!strcmp(buf, "++")) ? NULL : buf;
 
     user = do_nick("", av[2],   /* nick */
                    av[5],       /* username */
