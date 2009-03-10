@@ -489,6 +489,7 @@ static int check_db(User * u, Channel * c)
                      u->sgroup, u->lastuname);
                 u->sgroup = sstrdup(u->lastuname);
                 free(u->lastuname);
+                u->lastuname = NULL;
             } else {            /* num_rows = 0 */
                 /* create alias and global */
                 rdb_query(QUERY_LOW,
@@ -539,6 +540,7 @@ static int check_db(User * u, Channel * c)
                  u->sgroup, u->lastuname);
             sumuser(u, u->lastuname, u->sgroup);
             free(u->lastuname);
+            u->lastuname = NULL;
             return 1;
         }
         rdb_query

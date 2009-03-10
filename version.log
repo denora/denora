@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA=""
-VERSION_BUILD="269"
+VERSION_BUILD="270"
 
 # $Log$
+#
+# 2009-03-10 16:20:05 1.4.3.270 hal9000 [#531]
+# > Fixed crash in chanstats
+# > Updated GeoIP.dat to March 2009 release
 #
 # 2009-03-09 22:49:23 1.4.3.269 hal9000 [#]
 # > Denora 1.4.3 release
