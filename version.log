@@ -8,10 +8,15 @@
 VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
-VERSION_EXTRA=""
-VERSION_BUILD="270"
+VERSION_EXTRA="SVN"
+VERSION_BUILD="271"
 
 # $Log$
+#
+# 2009-03-12 13:14:56 1.4.3.271 (SVN) hal9000 [#]
+# > Damn, we still got problems, so no release yet.
+# > Always create ustats global record if not existing
+# > Some GCC 4.3 strict/ansi warning fixes
 #
 # 2009-03-10 16:20:05 1.4.3.270 hal9000 [#531]
 # > Fixed crash in chanstats

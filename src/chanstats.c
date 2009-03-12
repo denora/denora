@@ -499,8 +499,9 @@ static int check_db(User * u, Channel * c)
                 for (i = 0; i < 4; i++) {
                     rdb_query
                         (QUERY_LOW,
-                         "INSERT IGNORE INTO %s SET uname=\'%s\', chan=\'global\', type=%i;",
-                         UStatsTable, u->sqlnick, i);
+                         "INSERT IGNORE INTO %s SET uname=\'%s\', chan=\'global\', type=%i, firstadded=%ld;",
+                         UStatsTable, u->sqlnick, i,
+                         (long int) time(NULL));
                 }
                 u->cstats = 1;
                 free(u->sgroup);
@@ -554,7 +555,11 @@ static int check_db(User * u, Channel * c)
                 for (i = 0; i < 4; i++) {
                     rdb_query
                         (QUERY_LOW,
-                         "INSERT IGNORE INTO %s SET uname=\'%s\', chan=\'%s\', type=%d, firstadded=%ld;",
+                         "INSERT IGNORE INTO %s SET uname=\'%s\', chan=\'global\', type=%i, firstadded=%ld;",
+                         UStatsTable, u->sgroup, i, (long int) time(NULL));
+                    rdb_query
+                        (QUERY_LOW,
+                         "INSERT IGNORE INTO %s SET uname=\'%s\', chan=\'%s\', type=%i, firstadded=%ld;",
                          UStatsTable, u->sgroup, c->sqlchan, i,
                          (long int) time(NULL));
                 }

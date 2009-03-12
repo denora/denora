@@ -13,6 +13,7 @@ Changes
 09/02/22 r249 CTCP VERSION is now handled by alias if present
 
 Fixes
+09/03/12 r271 Always create global ustats record if not existing
 09/03/10 r270 Fixed crash in chanstats [closes #531]
 09/03/09 r268 Fixed inspircd12 counting opers twice
 09/03/06 r267 SQL chans now default to +s to avoid race condition [closes #494]

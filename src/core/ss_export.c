@@ -194,9 +194,7 @@ void xml_export_channels(char *file)
                 bans = calloc(sizeof(char *) * count, 1);
                 for (i = 0; i < count; i++) {
                     bans[i] = sstrdup(c->bans[i]);
-                    for (i = 0; i < count; i++) {
-                        xml_write_tag(ptr, "ban", bans[i]);
-                    }
+                    xml_write_tag(ptr, "ban", bans[i]);
                 }
                 free(bans);
                 xml_write_block_bottom(ptr, "bans");
@@ -209,9 +207,7 @@ void xml_export_channels(char *file)
                 bans = calloc(sizeof(char *) * count, 1);
                 for (i = 0; i < count; i++) {
                     bans[i] = sstrdup(c->excepts[i]);
-                    for (i = 0; i < count; i++) {
-                        xml_write_tag(ptr, "except", bans[i]);
-                    }
+                    xml_write_tag(ptr, "except", bans[i]);
                 }
                 free(bans);
                 xml_write_block_bottom(ptr, "exceptions");
@@ -224,9 +220,7 @@ void xml_export_channels(char *file)
                 bans = calloc(sizeof(char *) * count, 1);
                 for (i = 0; i < count; i++) {
                     bans[i] = sstrdup(c->invite[i]);
-                    for (i = 0; i < count; i++) {
-                        xml_write_tag(ptr, "invite", bans[i]);
-                    }
+                    xml_write_tag(ptr, "invite", bans[i]);
                 }
                 free(bans);
                 xml_write_block_bottom(ptr, "invites");
@@ -743,9 +737,7 @@ void xml_export_all(char *file)
                 bans = calloc(sizeof(char *) * count, 1);
                 for (i = 0; i < count; i++) {
                     bans[i] = sstrdup(c->bans[i]);
-                    for (i = 0; i < count; i++) {
-                        xml_write_tag(ptr, "ban", bans[i]);
-                    }
+                    xml_write_tag(ptr, "ban", bans[i]);
                 }
                 free(bans);
                 xml_write_block_bottom(ptr, "bans");
@@ -758,9 +750,7 @@ void xml_export_all(char *file)
                 bans = calloc(sizeof(char *) * count, 1);
                 for (i = 0; i < count; i++) {
                     bans[i] = sstrdup(c->excepts[i]);
-                    for (i = 0; i < count; i++) {
-                        xml_write_tag(ptr, "except", bans[i]);
-                    }
+                    xml_write_tag(ptr, "except", bans[i]);
                 }
                 free(bans);
                 xml_write_block_bottom(ptr, "exceptions");
@@ -773,9 +763,7 @@ void xml_export_all(char *file)
                 bans = calloc(sizeof(char *) * count, 1);
                 for (i = 0; i < count; i++) {
                     bans[i] = sstrdup(c->invite[i]);
-                    for (i = 0; i < count; i++) {
-                        xml_write_tag(ptr, "invite", bans[i]);
-                    }
+                    xml_write_tag(ptr, "invite", bans[i]);
                 }
                 free(bans);
                 xml_write_block_bottom(ptr, "invites");

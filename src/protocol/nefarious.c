@@ -362,8 +362,8 @@ int denora_event_nick(char *source, int ac, char **av)
 
         user = do_nick(source, nick, ident, host, (s ? s->name : temp),
                        realname, strtoul(av[2], NULL, 10), 0, ipchar,
-                       (hhostbuf) ? hhostbuf : NULL, (char *) uid,
-                       strtoul(av[1], NULL, 10), modes, (char *) account);
+                       hhostbuf, (char *) uid, strtoul(av[1], NULL, 10),
+                       modes, (char *) account);
 
         if (user) {
             if (fakehost || sethost) {

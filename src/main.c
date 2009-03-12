@@ -1180,8 +1180,8 @@ int init(int ac, char **av)
     alog(LOG_NORMAL,
          "Denora %s (IRCd protocol: %s) starting up (options:%s)",
          denora->version,
-         (denora->
-          version_protocol ? denora->version_protocol : "None Set"),
+         (denora->version_protocol ? denora->
+          version_protocol : "None Set"),
          denora->debug ? " debug on" : " debug off");
     denora->start_time = time(NULL);
 
