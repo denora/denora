@@ -443,7 +443,7 @@ void chan_deluser(User * user, Channel * c)
 
     cs = find_cs(c->name);
 
-    if (c->stats->usercount == 1 && cs && PartOnEmpty) {
+    if (c->stats->usercount == 1 && cs && PartOnEmpty && !denora->qmsg) {
         denora_cmd_part(s_StatServ, c->name, "Parting Empty Channel");
         c->statservon = 0;
     } else if (!c->users && !ChanHasMode(c->name, ircd->persist_char)) {
@@ -1559,7 +1559,7 @@ void chan_adduser2(User * user, Channel * c)
     }
     cs = find_cs(c->name);
 
-    if (PartOnEmpty && cs && c->statservon == 0) {
+    if (cs && c->statservon == 0) {
         denora_cmd_join(s_StatServ, c->name, c->creation_time);
         if (AutoOp && AutoMode) {
             ud = find_uid(s_StatServ);

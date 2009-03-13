@@ -8,10 +8,15 @@
 VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
-VERSION_EXTRA="SVN"
-VERSION_BUILD="271"
+VERSION_EXTRA="RC2"
+VERSION_BUILD="272"
 
 # $Log$
+#
+# 2009-03-13 21:20:27 1.4.3.272 (RC2) hal9000 [#]
+# > Fixed autoop not working properly with partonempty disabled
+# > Fixed crash on restart/shutdown with partonempty enabled
+# > Internal RC2 release :)
 #
 # 2009-03-12 13:14:56 1.4.3.271 (SVN) hal9000 [#]
 # > Damn, we still got problems, so no release yet.

@@ -660,35 +660,6 @@ void introduce_user(const char *user)
         }
     }
     SET_SEGV_LOCATION();
-    if (!LargeNet) {
-        if (!PartOnEmpty) {
-            tn = list_first(CStatshead);
-            ud = find_uid(s_StatServ);
-            while (tn != NULL) {
-                cs = lnode_get(tn);
-                denora_cmd_join(s_StatServ, cs->name, time(NULL));
-                if (AutoOp && AutoMode) {
-                    modes = sstrdup(AutoMode);
-                    while (*modes) {
-                        switch (*modes) {
-                        case '+':
-                            break;
-                        case '-':
-                            break;
-                        default:
-                            ircsnprintf(nickbuf, BUFSIZE, "%s %s", nickbuf,
-                                        ((ircd->p10
-                                          && ud) ? ud->uid : s_StatServ));
-                        }
-                        (void) *modes++;
-                    }
-                    denora_cmd_mode(ServerName, cs->name, "%s%s", AutoMode,
-                                    nickbuf);
-                }
-                tn = list_next(CStatshead, tn);
-            }
-        }
-    }
 }
 
 /*************************************************************************/
