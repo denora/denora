@@ -8,10 +8,13 @@
 VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
-VERSION_EXTRA="RC2"
-VERSION_BUILD="274"
+VERSION_EXTRA=""
+VERSION_BUILD="275"
 
 # $Log$
+#
+# 2009-03-15 20:37:15 1.4.3.275 hal9000 [#]
+# > Stable 1.4.3 release. Hopefully for real this time :)
 #
 # 2009-03-15 19:52:09 1.4.3.273 (RC2) hal9000 [#]
 # > Fixed crash on incoming global notice
