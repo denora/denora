@@ -71,7 +71,7 @@ IRCDVar myIrcd[] = {
      NULL,                      /* nickchar                  */
      IRCD_ENABLE,               /* svid                      */
      IRCD_DISABLE,              /* hidden oper               */
-     IRCD_ENABLE,               /* extra warning             */
+     IRCD_DISABLE,              /* extra warning             */
      IRCD_ENABLE,               /* Report sync state         */
      IRCD_DISABLE               /* Persistent channel mode   */
      }

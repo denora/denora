@@ -223,8 +223,7 @@ int m_notice(char *source, char *receiver, char *msg)
         return MOD_CONT;
     }
 
-    if (!stricmp(receiver, s_StatServ)
-        || !stricmp(receiver, s_StatServ_alias)) {
+    if (!stricmp(receiver, s_StatServ) || (s_StatServ_alias && !stricmp(receiver, s_StatServ_alias))) {
         clean = normalizeBuffer(msg);
         doCleanBuffer((char *) clean);
         temp = myStrGetToken(clean, ' ', 0);

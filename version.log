@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="3"
 VERSION_EXTRA="RC2"
-VERSION_BUILD="272"
+VERSION_BUILD="273"
 
 # $Log$
+#
+# 2009-03-15 19:52:09 1.4.3.273 (RC2) hal9000 [#]
+# > Fixed crash on incoming global notice
 #
 # 2009-03-13 21:20:27 1.4.3.272 (RC2) hal9000 [#]
 # > Fixed autoop not working properly with partonempty disabled

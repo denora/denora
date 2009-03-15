@@ -13,6 +13,7 @@ Changes
 09/02/22 r249 CTCP VERSION is now handled by alias if present
 
 Fixes
+09/03/15 r273 Fixed crash on incoming global notice (introduced in r249)
 09/03/13 r272 Fixed autoop not working properly with partonempty disabled
 09/03/13 r272 Fixed crash on restart/shutdown with partonempty enabled
 09/03/12 r271 Always create global ustats record if not existing
