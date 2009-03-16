@@ -7,11 +7,14 @@
 
 VERSION_MAJOR="1"
 VERSION_MINOR="4"
-VERSION_PATCH="3"
-VERSION_EXTRA=""
-VERSION_BUILD="275"
+VERSION_PATCH="4"
+VERSION_EXTRA="SVN"
+VERSION_BUILD="276"
 
 # $Log$
+#
+# 2009-03-16 16:06:47 1.4.4.276 (SVN) hal9000 [#]
+# > Denora 1.4.4 development
 #
 # 2009-03-15 20:37:15 1.4.3.275 hal9000 [#]
 # > Stable 1.4.3 release. Hopefully for real this time :)
