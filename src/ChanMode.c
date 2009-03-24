@@ -349,6 +349,11 @@ void chan_set_modes(Channel * chan, int ac, char **av)
                 RemoveChanMode(chan, modebuf);
 
             if (cm->setvalue) {
+                if (ac <= 0) {
+                    alog(LOG_ERROR, langstr(ALOG_DEBUG_MODE_NO_PARAM),
+                         add ? '+' : '-', mode, chan->name);
+                    continue;
+                }
                 ac--;
                 av++;
                 cm->setvalue(chan, add ? *av : NULL);
@@ -368,7 +373,7 @@ void chan_set_modes(Channel * chan, int ac, char **av)
                            chan->name, modebuf);
             }
         } else if (cbm) {
-            if (ac == 0) {
+            if (ac <= 0) {
                 alog(LOG_ERROR, langstr(ALOG_DEBUG_MODE_NO_PARAM),
                      add ? '+' : '-', mode, chan->name);
                 continue;

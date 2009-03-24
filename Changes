@@ -1,5 +1,27 @@
 $Id$
 
+Denora v1.4.4-SVN
+-----------------
+
+Additions
+n/a
+
+Changes
+n/a
+
+Fixes
+09/03/24 r278 Fixed crash on missing channel mode parameter
+
+Removals
+n/a
+
+Developers
+Denora Team <dev@denorastats.org>
+
+Contributors
+n/a
+
+
 Denora v1.4.3
 -------------
 

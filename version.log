@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="4"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="276"
+VERSION_BUILD="277"
 
 # $Log$
+#
+# 2009-03-24 08:54:33 1.4.4.277 (SVN) hal9000 [#]
+# > Fixed crash on missing channel mode parameter
 #
 # 2009-03-16 16:06:47 1.4.4.276 (SVN) hal9000 [#]
 # > Denora 1.4.4 development
