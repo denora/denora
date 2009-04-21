@@ -40,8 +40,8 @@ int new_open_db_read(DenoraDBFile * dbptr, char **key, char **value)
     }
     SET_SEGV_LOCATION();
     dbptr->db_version =
-        fgetc(dbptr->fptr) << 24 | fgetc(dbptr->
-                                         fptr) << 16 | fgetc(dbptr->fptr)
+        fgetc(dbptr->fptr) << 24 | fgetc(dbptr->fptr) << 16 | fgetc(dbptr->
+                                                                    fptr)
         << 8 | fgetc(dbptr->fptr);
 
     if (ferror(dbptr->fptr)) {

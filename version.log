@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="4"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="279"
+VERSION_BUILD="280"
 
 # $Log$
+#
+# 2009-04-21 11:17:22 1.4.4.280 (SVN) hal9000 [#]
+# > Updated GeoIP.dat
 #
 # 2009-04-21 11:07:38 1.4.4.279 (SVN) hal9000 [#540,#542]
 # > Removed handling of SVSNICK from inspircd modules

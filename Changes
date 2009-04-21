@@ -7,7 +7,7 @@ Additions
 n/a
 
 Changes
-n/a
+09/04/21 r280 Updated GeoIP.dat
 
 Fixes
 09/04/21 r279 Fixed inspircd ADDLINE using wrong timestamp [closes #542] 
