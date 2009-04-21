@@ -252,7 +252,7 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("SVSHOLD",   denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("SVSJOIN",   denora_event_svsjoin); addCoreMessage(IRCD,m);
     m = createMessage("SVSMODE",   denora_event_svsmode); addCoreMessage(IRCD,m);
-    m = createMessage("SVSNICK",   denora_event_svsnick); addCoreMessage(IRCD,m);
+    m = createMessage("SVSNICK",   denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("TOPIC",     denora_event_topic); addCoreMessage(IRCD,m);
     m = createMessage("VERSION",   denora_event_version); addCoreMessage(IRCD,m);
     m = createMessage("WALLOPS",   denora_event_null); addCoreMessage(IRCD,m);
@@ -327,15 +327,6 @@ int denora_event_eob(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
-
-int denora_event_svsnick(char *source, int ac, char **av)
-{
-    do_nick(av[0], av[1], NULL, NULL, NULL,
-            NULL, strtoul(av[2], NULL, 10), 0, NULL, NULL, NULL, 0, NULL,
-            NULL);
-    return MOD_CONT;
-}
-
 int denora_event_sanick(char *source, int ac, char **av)
 {
     do_nick(av[0], av[1], NULL, NULL, NULL,
@@ -362,12 +353,13 @@ int denora_event_svsmode(char *source, int ac, char **av)
 int denora_event_addline(char *source, int ac, char **av)
 {
     char *user, *host;
-    int checkdur;
+    int checkdur, timeset;
     char buf[BUFSIZE];
     checkdur = atoi(av[4]);
+    timeset = atoi(av[3]);
 
     if (checkdur != 0) {
-        ircsnprintf(buf, BUFSIZE, "%ld", (long int) checkdur + time(NULL));
+        ircsnprintf(buf, BUFSIZE, "%ld", (long int) (checkdur + timeset));
     } else {
         ircsnprintf(buf, BUFSIZE, "%ld", (long int) checkdur);
     }

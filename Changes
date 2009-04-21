@@ -10,6 +10,8 @@ Changes
 n/a
 
 Fixes
+09/04/21 r279 Fixed inspircd ADDLINE using wrong timestamp [closes #542] 
+09/04/21 r279 Removed handling of SVSNICK from inspircd modules [closes #540]
 09/03/24 r278 Fixed crash on missing channel mode parameter
 
 Removals

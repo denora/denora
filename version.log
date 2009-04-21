@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="4"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="277"
+VERSION_BUILD="279"
 
 # $Log$
+#
+# 2009-04-21 11:07:38 1.4.4.279 (SVN) hal9000 [#540,#542]
+# > Removed handling of SVSNICK from inspircd modules
+# > Fixed inspircd ADDLINE using wrong timestamp
 #
 # 2009-03-24 08:54:33 1.4.4.277 (SVN) hal9000 [#]
 # > Fixed crash on missing channel mode parameter

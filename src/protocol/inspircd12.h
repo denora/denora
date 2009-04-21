@@ -75,7 +75,6 @@ int denora_event_eline(char *source, int ac, char **av);
 int denora_event_qline(char *source, int ac, char **av);
 int denora_event_zline(char *source, int ac, char **av);
 int denora_event_svsmode(char *source, int ac, char **av);
-int denora_event_svsnick(char *source, int ac, char **av);
 int denora_event_sanick(char *source, int ac, char **av);
 int denora_event_svsjoin(char *source, int ac, char **av);
 int denora_event_eob(char *source, int ac, char **av);
