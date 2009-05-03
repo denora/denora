@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="4"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="283"
+VERSION_BUILD="284"
 
 # $Log$
+#
+# 2009-05-03 23:47:32 1.4.4.284 (SVN) hal9000 [#]
+# > Make ngircd use current time for NICK messages after net burst
 #
 # 2009-05-03 23:35:00 1.4.4.283 (SVN) hal9000 [#]
 # > Fixed ngircd handling of NICK and SERVER messages

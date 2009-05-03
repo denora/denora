@@ -169,8 +169,8 @@ int denora_event_nick(char *source, int ac, char **av)
         s = findserver_uid(servlist, av[4]);
         ipchar = host_resolve(av[3]);
         do_nick("", av[0], av[2], av[3], s ? s->name : source, av[6],
-                0, 0, ipchar, NULL, NULL, strtoul(av[1], NULL, 10), av[5],
-                NULL);
+                UplinkSynced ? time(NULL) : 0, 0, ipchar, NULL, NULL,
+                strtoul(av[1], NULL, 10), av[5], NULL);
         free(ipchar);
     } else {
         do_nick(source, av[0], NULL, NULL, NULL, NULL,
