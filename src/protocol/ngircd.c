@@ -166,7 +166,7 @@ int denora_event_nick(char *source, int ac, char **av)
         protocol_debug(source, ac, av);
     }
     if (ac != 2) {
-        s = server_find(av[4]);
+        s = findserver_uid(servlist, av[4]);
         ipchar = host_resolve(av[3]);
         do_nick("", av[0], av[2], av[3], s ? s->name : source, av[6],
                 0, 0, ipchar, NULL, NULL, strtoul(av[1], NULL, 10), av[5],
@@ -533,10 +533,10 @@ int denora_event_server(char *source, int ac, char **av)
     if (!stricmp(av[1], "1")) {
         *source = '\0';
         denora->uplink = sstrdup(av[0]);
+        do_server(source, av[0], (char *) "0", av[2], av[1]);
+    } else {
         do_server(source, av[0], av[1], av[3], av[2]);
-        return MOD_CONT;
     }
-    do_server(source, av[0], av[1], av[3], av[2]);
     return MOD_CONT;
 }
 

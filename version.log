@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="4"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="282"
+VERSION_BUILD="283"
 
 # $Log$
+#
+# 2009-05-03 23:35:00 1.4.4.283 (SVN) hal9000 [#]
+# > Fixed ngircd handling of NICK and SERVER messages
 #
 # 2009-05-03 22:35:26 1.4.4.282 (SVN) hal9000 [#]
 # > Reverted r267 which broke things on channels without modes
