@@ -457,7 +457,7 @@ int denora_event_pass(char *source, int ac, char **av)
 
 int denora_event_encap(char *source, int ac, char **av)
 {
-    char *newav[2];
+    char *newav[3];
 
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
@@ -480,8 +480,8 @@ int denora_event_encap(char *source, int ac, char **av)
     }
     if (!stricmp(av[1], "SVSMODE")) {
         newav[0] = av[2];
-        newav[1] = av[3];
-        newav[2] = av[4];
+        newav[1] = av[4];
+        newav[2] = av[3];
         denora_event_svsmode(source, 3, newav);
     }
     return MOD_CONT;
@@ -592,7 +592,7 @@ void plexus_cmd_capab()
 {
     /*send_cmd(NULL, "CAPAB :TBURST TB KNOCK UNKLN KLN GLN ENCAP CHW IE EX CLUSTER EOB LL QS HUB"); */
     send_cmd(NULL,
-             "CAPAB :TBURST TB KNOCK UNKLN KLN GLN CHW IE EX CLUSTER EOB LL QS HUB");
+             "CAPAB :TBURST TB KNOCK UNKLN KLN GLN CHW IE EX CLUSTER EOB LL QS HUB ENCAP");
 }
 
 

@@ -139,7 +139,7 @@ int do_set(User * u, int ac, char **av)
             alog(LOG_NORMAL, "Debug mode deactivated");
             denora->debug = 0;
             notice_lang(s_StatServ, u, STAT_SET_DEBUG_OFF);
-        } else if (isdigit(*setting) && atoi(setting) > 0) {
+        } else if (isdigit(*setting) && atoi(setting) <= 2) {
             denora->debug = atoi(setting);
             alog(LOG_NORMAL, "Debug mode activated (level %d)",
                  denora->debug);

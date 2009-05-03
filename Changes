@@ -10,6 +10,8 @@ Changes
 09/04/21 r280 Updated GeoIP.dat
 
 Fixes
+09/05/03 r281 Fixed crash when setting debug 2 with logchan enabled [closes #539]
+09/04/27 r281 Fixed UMODE r change in Plexus3 [closes #543]
 09/04/21 r279 Fixed inspircd ADDLINE using wrong timestamp [closes #542] 
 09/04/21 r279 Removed handling of SVSNICK from inspircd modules [closes #540]
 09/03/24 r278 Fixed crash on missing channel mode parameter

@@ -197,7 +197,7 @@ void alog(int type, const char *fmt, ...)
         fprintf(stderr, "%s %s\n", buf, str);
     }
 
-    if (!BadPtr(LogChannel) && findchan(LogChannel)) {
+    if (!BadPtr(LogChannel) && denora->debug < 2 && findchan(LogChannel)) {
         if (type == LOG_NORMAL || type == LOG_NONEXISTANT
             || type == LOG_ERROR) {
             privmsg(s_StatServ, LogChannel, "%s", str);
