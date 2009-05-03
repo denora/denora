@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="4"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="281"
+VERSION_BUILD="282"
 
 # $Log$
+#
+# 2009-05-03 22:35:26 1.4.4.282 (SVN) hal9000 [#]
+# > Reverted r267 which broke things on channels without modes
 #
 # 2009-05-03 19:37:33 1.4.4.281 (SVN) hal9000 [#539,#543]
 # > Fixed crash when setting debug 2 with logchan enabled

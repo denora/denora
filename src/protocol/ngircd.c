@@ -71,7 +71,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* hidden oper               */
      IRCD_ENABLE,               /* extra warning             */
      IRCD_DISABLE,              /* Report sync state         */
-     IRCD_DISABLE               /* Persistent channel mode   */
+     'P'                        /* Persistent channel mode   */
      }
     ,
 };
@@ -155,35 +155,26 @@ void ngircd_cmd_stats(char *sender, const char *letter, char *server)
 }
 
 /*
-[Aug 11 23:23:32.699696 2005] av[0] = Trystan
-[Aug 11 23:23:32.699954 2005] av[1] = 1
-[Aug 11 23:23:32.700115 2005] av[2] = ~tslee
-[Aug 11 23:23:32.700271 2005] av[3] = c-24-2-101-227.hsd1.ut.comcast.net
-[Aug 11 23:23:32.700432 2005] av[4] = 1
-[Aug 11 23:23:32.700588 2005] av[5] = +io
-[Aug 11 23:23:32.700745 2005] av[6] = Dreams are answers to questions not yet asked
+NICK <nickname> <hopcount> <username> <host> <servertoken> <umode> <realname>
 */
 int denora_event_nick(char *source, int ac, char **av)
 {
-    char *temp;
     char *ipchar = NULL;
+    Server *s;
 
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
     if (ac != 2) {
-        temp = sstrdup(source);
-        *source = '\0';
+        s = server_find(av[4]);
         ipchar = host_resolve(av[3]);
-        do_nick(source, av[0], av[2], av[3], temp, av[6],
+        do_nick("", av[0], av[2], av[3], s ? s->name : source, av[6],
                 0, 0, ipchar, NULL, NULL, strtoul(av[1], NULL, 10), av[5],
                 NULL);
-        free(temp);
         free(ipchar);
     } else {
         do_nick(source, av[0], NULL, NULL, NULL, NULL,
-                strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0, NULL,
-                NULL);
+                0, 0, NULL, NULL, NULL, 0, NULL, NULL);
     }
     return MOD_CONT;
 }
@@ -533,7 +524,7 @@ int denora_event_motd(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
-/* EVENT: SERVER */
+/* SERVER <servername> <hopcount> <token> <info> für die server */
 int denora_event_server(char *source, int ac, char **av)
 {
     if (denora->protocoldebug) {
@@ -542,7 +533,7 @@ int denora_event_server(char *source, int ac, char **av)
     if (!stricmp(av[1], "1")) {
         *source = '\0';
         denora->uplink = sstrdup(av[0]);
-        do_server(source, av[0], av[1], av[2], (char *) "1");
+        do_server(source, av[0], av[1], av[3], av[2]);
         return MOD_CONT;
     }
     do_server(source, av[0], av[1], av[3], av[2]);

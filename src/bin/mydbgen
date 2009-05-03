@@ -302,6 +302,8 @@ fi
 
 echo "ALTER TABLE server CHANGE uptime uptime INT( 15 ) NOT NULL DEFAULT '0';" >> $USQLDB
 
+echo "ALTER TABLE chan CHANGE mode_ls mode_ls ENUM( 'Y', 'N' ) NOT NULL DEFAULT 'Y';" >> $USQLDB
+
 if [  -f "$USQLDB" ] ; then
       msg "Updating your columns... "
       $MYSQL < "$USQLDB"
