@@ -23,7 +23,7 @@
 
 IRCDVar myIrcd[] = {
     {"InspIRCd 1.2.x",          /* ircd name                    */
-     "+ioS",                    /* StatServ mode                */
+     "+io",                     /* StatServ mode                */
      IRCD_ENABLE,               /* Vhost                        */
      IRCD_DISABLE,              /* Supports SGlines             */
      IRCD_DISABLE,              /* sgline sql table             */

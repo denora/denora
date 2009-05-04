@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="4"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="284"
+VERSION_BUILD="285"
 
 # $Log$
+#
+# 2009-05-04 22:14:12 1.4.4.285 (SVN) hal9000 [#545]
+# > Fixed inspircd12 requiring usermode +S
+# > Updated GeoIP.dat
 #
 # 2009-05-03 23:47:32 1.4.4.284 (SVN) hal9000 [#]
 # > Make ngircd use current time for NICK messages after net burst

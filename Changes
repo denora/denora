@@ -7,9 +7,10 @@ Additions
 n/a
 
 Changes
-09/04/21 r280 Updated GeoIP.dat
+09/05/04 r285 Updated GeoIP.dat
 
 Fixes
+09/05/04 r285 Fixed inspircd12 requiring usermode +S [closes #545]
 09/05/03 r283 Fixed ngircd handling of NICK and SERVER messages
 09/05/03 r282 Reverted r267 which broke things on channels without modes
 09/05/03 r281 Fixed crash when setting debug 2 with logchan enabled [closes #539]
