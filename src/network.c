@@ -188,8 +188,9 @@ int getaddrinfo(const char *hostname, const char *servname,
         hp->h_name && hp->h_name[0] && hp->h_addr_list[0]) {
         for (i = 0; hp->h_addr_list[i]; i++)
             if (NULL != (cur = malloc_ai(port, ((struct in_addr *)
-                                                hp->h_addr_list[i])->
-                                         s_addr))) {
+                                                hp->
+                                                h_addr_list[i])->s_addr)))
+            {
                 if (prev) {
                     prev->ai_next = cur;
                 } else {

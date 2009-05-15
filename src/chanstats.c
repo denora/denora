@@ -588,7 +588,7 @@ void sumuser(User * u, char *user1, char *user2)
 #endif
     char *user1_, *user2_;
 
-    if (!denora->do_sql) {
+    if (!denora->do_sql || !strcmp(user1, user2)) {
         return;
     }
 

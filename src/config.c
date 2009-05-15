@@ -1840,11 +1840,10 @@ int initconf(const char *filename, int reload, tConf * conftab)
             if (BadPtr(tok))
                 continue;
 
-            for (block = conftab; block->tok; block++)
-                if (block->tok && tok) {
-                    if (!stricmp(block->tok, tok))
-                        break;
-                }
+            for (block = conftab; block->tok; block++) {
+                if (!BadPtr(block->tok) && !stricmp(block->tok, tok))
+                    break;
+            }
             if (!block->tok) {
                 alog(LOG_DEBUG, "debug: token is %s", tok);
                 confparse_error("Unknown block type", lnum);

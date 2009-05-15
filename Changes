@@ -10,6 +10,8 @@ Changes
 09/05/04 r285 Updated GeoIP.dat
 
 Fixes
+09/05/16 r286 Fixed autoop not working anymore on chanstats add [closes #547]
+09/05/07 r286 Fixed segfault on broken configuration file
 09/05/04 r285 Fixed inspircd12 requiring usermode +S [closes #545]
 09/05/03 r283 Fixed ngircd handling of NICK and SERVER messages
 09/05/03 r282 Reverted r267 which broke things on channels without modes

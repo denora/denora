@@ -660,6 +660,33 @@ void introduce_user(const char *user)
         }
     }
     SET_SEGV_LOCATION();
+    if (!LargeNet) {
+        tn = list_first(CStatshead);
+        ud = find_uid(s_StatServ);
+        while (tn != NULL) {
+            cs = lnode_get(tn);
+            denora_cmd_join(s_StatServ, cs->name, time(NULL));
+            if (AutoOp && AutoMode) {
+                modes = sstrdup(AutoMode);
+                while (*modes) {
+                    switch (*modes) {
+                    case '+':
+                        break;
+                    case '-':
+                        break;
+                    default:
+                        ircsnprintf(nickbuf, BUFSIZE, "%s %s", nickbuf,
+                                    ((ircd->p10
+                                      && ud) ? ud->uid : s_StatServ));
+                    }
+                    (void) *modes++;
+                }
+                denora_cmd_mode(ServerName, cs->name, "%s%s", AutoMode,
+                                nickbuf);
+            }
+            tn = list_next(CStatshead, tn);
+        }
+    }
 }
 
 /*************************************************************************/
@@ -1151,8 +1178,8 @@ int init(int ac, char **av)
     alog(LOG_NORMAL,
          "Denora %s (IRCd protocol: %s) starting up (options:%s)",
          denora->version,
-         (denora->
-          version_protocol ? denora->version_protocol : "None Set"),
+         (denora->version_protocol ? denora->
+          version_protocol : "None Set"),
          denora->debug ? " debug on" : " debug off");
     denora->start_time = time(NULL);
 

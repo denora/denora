@@ -9,9 +9,13 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="4"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="285"
+VERSION_BUILD="286"
 
 # $Log$
+#
+# 2009-05-16 00:14:51 1.4.4.286 (SVN) hal9000 [#547]
+# > Fixed autoop not working anymore on chanstats add
+# > Fixed segfault on broken configuration file
 #
 # 2009-05-04 22:14:12 1.4.4.285 (SVN) hal9000 [#545]
 # > Fixed inspircd12 requiring usermode +S
