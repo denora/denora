@@ -847,6 +847,7 @@ int denora_event_quit(char *source, int ac, char **av)
 int denora_event_mode(char *source, int ac, char **av)
 {
     User *u;
+    Server *s;
     char *sender;
     u = find_byuid(source);
     if (denora->protocoldebug) {
@@ -865,6 +866,9 @@ int denora_event_mode(char *source, int ac, char **av)
     if (*av[0] == '#' || *av[0] == '&') {
         do_cmode(source, ac, av);
     } else {
+        s = server_find(source);
+        if (s)
+            sender = av[0];
         do_umode(sender, ac, av);
     }
     return MOD_CONT;

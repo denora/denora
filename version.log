@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="4"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="286"
+VERSION_BUILD="287"
 
 # $Log$
+#
+# 2009-05-17 13:20:34 1.4.4.287 (SVN) hal9000 [#548]
+# > Fixed nefarious MODE message handling
 #
 # 2009-05-16 00:14:51 1.4.4.286 (SVN) hal9000 [#547]
 # > Fixed autoop not working anymore on chanstats add
