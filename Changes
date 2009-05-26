@@ -10,6 +10,7 @@ Changes
 09/05/04 r285 Updated GeoIP.dat
 
 Fixes
+09/05/26 r289 Fixed weekly cron removing ignored records from chanstats
 09/05/17 r287 [1] Fixed nefarious MODE message handling [closes #548]
 09/05/16 r286 Fixed autoop not working anymore on chanstats add [closes #547]
 09/05/07 r286 Fixed segfault on broken configuration file

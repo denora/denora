@@ -114,12 +114,9 @@ int chanstats_weekly(const char *name)
               "time8=0, time9=0, time10=0, time11=0, time12=0, time13=0, time14=0, "
               "time15=0, time16=0, time17=0, time18=0, time19=0, time20=0, time21=0, "
               "time22=0, time23=0  WHERE type=2;", CStatsTable);
-    rdb_query(QUERY_LOW, "DELETE %s.* FROM %s WHERE lastspoke < %i;",
-              UStatsTable, UStatsTable, (time(NULL) - ClearInActive));
-    rdb_query(QUERY_LOW,
-              "DELETE %s.* FROM %s LEFT JOIN %s ON %s.uname=%s.uname WHERE %s.uname IS NULL;",
-              AliasesTable, AliasesTable, UStatsTable, AliasesTable,
-              UStatsTable, UStatsTable);
+    rdb_query(QUERY_LOW, "DELETE %s.*,%s.* FROM %s,%s WHERE %s.uname = %s.uname AND %s.lastspoke < %i AND %s.ignore = 'N';",
+              UStatsTable, AliasesTable, UStatsTable, AliasesTable, UStatsTable, AliasesTable,
+              UStatsTable, (time(NULL) - ClearInActive), AliasesTable);
     return MOD_CONT;
 }
 
