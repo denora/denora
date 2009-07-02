@@ -608,6 +608,8 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("SI",       denora_event_setname); addCoreMessage(IRCD,m);
     /* SNO */
     m = createMessage("SNO",      denora_event_null); addCoreMessage(IRCD,m);
+    /* PRIVS */
+    m = createMessage("PRIVS",    denora_event_null); addCoreMessage(IRCD,m);
 }
 
 /* *INDENT-ON* */

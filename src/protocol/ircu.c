@@ -397,6 +397,8 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("EA",       denora_event_null); addCoreMessage(IRCD,m);
     /* SILENCE */
     m = createMessage("U",	  denora_event_null); addCoreMessage(IRCD,m);
+    /* PRIVS */
+    m = createMessage("PRIVS",    denora_event_null); addCoreMessage(IRCD,m);
 }
 
 /* *INDENT-ON* */
