@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="4"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="290"
+VERSION_BUILD="291"
 
 # $Log$
+#
+# 2009-07-02 23:06:22 1.4.4.291 (SVN) hal9000 [#555]
+# > Fixed nefarious not adding some exceptions at burst
 #
 # 2009-05-17 13:20:34 1.4.4.287 (SVN) hal9000 [#548]
 # > Fixed nefarious MODE message handling

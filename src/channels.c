@@ -730,7 +730,6 @@ void do_p10_burst(char *source, int ac, char **av)
                 /* set bans and excepts */
             case '%':
                 i = 0;
-                av[pc]++;
                 while ((s = myStrGetToken(av[pc], ' ', i))) {
                     if (strcmp(s, "~") == 0) {
                         except = 1;
@@ -739,7 +738,10 @@ void do_p10_burst(char *source, int ac, char **av)
                         continue;
                     }
                     if (except == 0) {
-                        add_ban(c, s);
+                        if (s[0] == '%')
+                            s++;
+                        if (s[0] != 0)
+                            add_ban(c, s);
                     } else {
                         add_exception(c, s);
                     }
