@@ -7,7 +7,7 @@ Additions
 n/a
 
 Changes
-09/05/04 r285 Updated GeoIP.dat
+09/07/07 r292 Updated GeoIP.dat
 
 Fixes
 09/07/02 r291 []] Fixed nefarious not adding some exceptions at burst [closes #555]

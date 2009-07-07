@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="4"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="291"
+VERSION_BUILD="292"
 
 # $Log$
+#
+# 2009-07-07 12:15:50 1.4.4.292 (SVN) hal9000 [#]
+# > Updated GeoIP.dat
 #
 # 2009-07-02 23:06:22 1.4.4.291 (SVN) hal9000 [#555]
 # > Fixed nefarious not adding some exceptions at burst
