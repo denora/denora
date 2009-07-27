@@ -931,6 +931,15 @@ int denora_event_create(char *source, int ac, char **av)
         protocol_debug(source, ac, av);
     }
     do_join(source, ac, av);
+
+    char *newav[3];
+
+    newav[0] = av[0];
+    newav[1] = "+o";
+    newav[2] = source;
+
+    denora_event_mode(source, 3, newav);
+
     return MOD_CONT;
 }
 

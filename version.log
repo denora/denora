@@ -9,9 +9,12 @@ VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="4"
 VERSION_EXTRA="SVN"
-VERSION_BUILD="292"
+VERSION_BUILD="293"
 
 # $Log$
+#
+# 2009-07-27 15:53:31 1.4.4.293 (SVN) hal9000 [#557]
+# > Fixed first channel users not getting +o on nefarious
 #
 # 2009-07-07 12:15:50 1.4.4.292 (SVN) hal9000 [#]
 # > Updated GeoIP.dat

@@ -10,7 +10,8 @@ Changes
 09/07/07 r292 Updated GeoIP.dat
 
 Fixes
-09/07/02 r291 []] Fixed nefarious not adding some exceptions at burst [closes #555]
+09/07/27 r293 [1] Fixed first channel users not getting +o on nefarious [closes #557]
+09/07/02 r291 [1] Fixed nefarious not adding some exceptions at burst [closes #555]
 09/05/26 r289 Fixed weekly cron removing ignored records from chanstats
 09/05/17 r287 [1] Fixed nefarious MODE message handling [closes #548]
 09/05/16 r286 Fixed autoop not working anymore on chanstats add [closes #547]
