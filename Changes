@@ -26,7 +26,7 @@ Fixes
 09/03/24 r278 Fixed crash on missing channel mode parameter
 
 Removals
-n/a
+09/07/29 r293 Removed dm script and version.log files
 
 Developers
 Denora Team <dev@denorastats.org>

@@ -317,8 +317,6 @@ Section "MainSection" SEC01
   File "C:\Users\Sebastian\Documents\denora\sql\ultimate3.sql"
   File "C:\Users\Sebastian\Documents\denora\sql\unreal32.sql"
   SetOutPath "$INSTDIR"
-  File "C:\Users\Sebastian\Documents\denora\version.log"
-  File "C:\Users\Sebastian\Documents\denora\version.log.old"
   File "C:\Users\Sebastian\Documents\denora\libmysql.dll"
   CreateDirectory "$INSTDIR\data\backups"
   CreateDirectory "$INSTDIR\data\logs"

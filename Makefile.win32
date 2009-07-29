@@ -86,7 +86,7 @@ include\sysconf.h:
 lang\language.h: lang\Makefile lang\index
         cd lang && $(MAKE) language.h && cd ..
 
-include\version.h: version.log include\denora.h $(SRCS)
+include\version.h: version.in include\denora.h $(SRCS)
         cd include && cscript /nologo version.js && cd ..
 
 lang\index:

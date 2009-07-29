@@ -12,7 +12,7 @@
 #
 
 # Grab version information from the version control file.
-CTRL="../version.log"
+CTRL="../version.in"
 if [ -f $CTRL ] ; then
 	. $CTRL
 else

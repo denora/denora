@@ -339,12 +339,12 @@ var buildPackages = [
         // Functions
         
         function FindDenoraVersion() {
-                if (!fso.FileExists('version.log')) {
+                if (!fso.FileExists('version.in')) {
                         denoraVersion = 'Unknown';
                         return;
                 }                               
                 
-                var versionLog = fso.OpenTextFile("version.log");
+                var versionLog = fso.OpenTextFile("version.in");
                 while (!versionLog.atEndOfStream) {
                         var versionLine = versionLog.readline();
                         var thisMatch = versionLine.replace('\n', '');

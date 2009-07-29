@@ -13,7 +13,7 @@
 // $Id: version.js 66 2007-08-14 14:21:33Z drstein $
 //
 
-var CTRL = "../version.log";
+var CTRL = "../version.in";
 var VERSION_MAJOR;
 var VERSION_MINOR;
 var VERSION_PATCH;
