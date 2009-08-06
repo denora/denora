@@ -927,15 +927,15 @@ int denora_event_join(char *source, int ac, char **av)
 /* ABAAA C #ircops 1098031328 */
 int denora_event_create(char *source, int ac, char **av)
 {
+	char *newav[3];
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
     do_join(source, ac, av);
 
-    char *newav[3];
-
     newav[0] = av[0];
-    newav[1] = "+o";
+    newav[1] = sstrdup("+o");
     newav[2] = source;
 
     denora_event_mode(source, 3, newav);
