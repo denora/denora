@@ -868,12 +868,12 @@ void do_join(const char *source, int ac, char **av)
             continue;
         }
 
-        ts = time(NULL);
-
         if (ac == 2) {
-            alog(LOG_DEBUG, "debug: recieved a new TS for JOIN: %ld",
+            alog(LOG_DEBUG, "debug: received a new TS for JOIN: %ld",
                  (long int) ts);
             ts = strtoul(av[1], NULL, 10);
+        } else {
+        	ts = time(NULL);
         }
 
         join_user_update(user, findchan(s), s, ts);
@@ -1026,7 +1026,7 @@ void do_part(const char *source, int ac, char **av)
 
     SET_SEGV_LOCATION();
 
-    if (ac < 1 || ac > 2) {
+    if (ac != 2) {
         return;
     }
 

@@ -46,13 +46,10 @@ void sql_do_usermodes(User * u, char *modes)
     int nickid = 0;
 
     SET_SEGV_LOCATION();
-    nickid = db_getnick(u->sqlnick);
-
-    if (!nickid) {
-        return;
-    }
 
     if (!denora->do_sql) {
+        return;
+    } else if (!nickid = db_getnick(u->sqlnick)) {
         return;
     }
 
