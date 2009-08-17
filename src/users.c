@@ -49,7 +49,7 @@ void sql_do_usermodes(User * u, char *modes)
 
     if (!denora->do_sql) {
         return;
-    } else if (!nickid = db_getnick(u->sqlnick)) {
+    } else if (!(nickid = db_getnick(u->sqlnick))) {
         return;
     }
 
