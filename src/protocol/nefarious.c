@@ -530,6 +530,8 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("RO",       denora_event_pong); addCoreMessage(IRCD,m);
     /* MODE */
     m = createMessage("M",        denora_event_mode); addCoreMessage(IRCD,m);
+    /* OPMODE */
+    m = createMessage("OM",       denora_event_mode); addCoreMessage(IRCD,m);
     /* CREATE */
     m = createMessage("C",        denora_event_create); addCoreMessage(IRCD,m);
     /* JOIN */
@@ -610,6 +612,8 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("SNO",      denora_event_null); addCoreMessage(IRCD,m);
     /* PRIVS */
     m = createMessage("PRIVS",    denora_event_null); addCoreMessage(IRCD,m);
+    /* CLEARMODE */
+    m = createMessage("CM",       denora_event_clearmode); addCoreMessage(IRCD,m);
 }
 
 /* *INDENT-ON* */
@@ -1282,6 +1286,15 @@ int denora_event_fakehost(char *source, int ac, char **av)
     }
 
     change_user_host(ud->nick, av[1]);
+    return MOD_CONT;
+}
+
+int denora_event_clearmode(char *source, int ac, char **av)
+{
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
+    }
+	alog(LOG_ERROR, "The Nefarious CM command is not yet supported by Denora");
     return MOD_CONT;
 }
 
