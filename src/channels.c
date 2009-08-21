@@ -828,7 +828,7 @@ void do_join(const char *source, int ac, char **av)
     User *user;
     char *s, *t;
     struct u_chanlist *c, *nextc;
-    time_t ts;
+    time_t ts = time(NULL);
 
     SET_SEGV_LOCATION();
 
@@ -872,8 +872,6 @@ void do_join(const char *source, int ac, char **av)
             alog(LOG_DEBUG, "debug: received a new TS for JOIN: %ld",
                  (long int) ts);
             ts = strtoul(av[1], NULL, 10);
-        } else {
-        	ts = time(NULL);
         }
 
         join_user_update(user, findchan(s), s, ts);
