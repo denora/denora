@@ -1308,7 +1308,7 @@ void inspircd_cmd_mode(char *source, char *dest, char *buf)
 
 void inspircd_cmd_eob(void)
 {
-    send_cmd(NULL, "ENDBURST");
+    send_cmd(TS6SID, "ENDBURST");
 }
 
 int sjtoken(char *message, char delimiter, char **parv)
