@@ -7,9 +7,10 @@ Additions
 n/a
 
 Changes
-09/08/06 r296 Updated GeoIP.dat
+09/09/03 r304 Updated GeoIP.dat
 
 Fixes
+09/09/03 r305 Denora now warns and exits on missing config for Hybrid [closes #563]
 09/08/24 r303 Fixed inspircd12 not sending ts6sid on ENDBURST
 09/07/27 r293 [1] Fixed first channel users not getting +o on nefarious [closes #557]
 09/07/02 r291 [1] Fixed nefarious not adding some exceptions at burst [closes #555]

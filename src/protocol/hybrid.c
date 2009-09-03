@@ -1006,6 +1006,20 @@ int DenoraInit(int argc, char **argv)
     moduleAddVersion("$Id$");
     moduleSetType(PROTOCOL);
 
+    if (!UseTS6) {
+        alog(LOG_ERROR,
+             "You need to enable TS6 in config for the hybrid module to work");
+        denora->quitting = 1;
+        return MOD_STOP;
+    }
+
+    if (!Numeric) {
+        alog(LOG_ERROR,
+             "You need to specify a valid numeric in config for the hybrid module to work");
+        denora->quitting = 1;
+        return MOD_STOP;
+    }
+
     pmodule_ircd_version("Hybrid IRCd 7.x");
     pmodule_ircd_cap(myIrcdcap);
     pmodule_ircd_var(myIrcd);
