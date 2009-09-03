@@ -350,13 +350,12 @@ int denora_event_nick(char *source, int ac, char **av)
         ipchar = nefarious_nickip(ip);
 
         if (ishidden) {
-            if (isaccount) {
+        	if (hiddenhost) {
+        		ircsnprintf(hhostbuf, sizeof(hhostbuf) + 3, "%s", hiddenhost);
+        	} else if (isaccount) {
                 ircsnprintf(hhostbuf,
                             sizeof(account) + sizeof(hhostbuf) + 2,
                             "%s%s%s", HiddenPrefix, account, HiddenSuffix);
-            } else if (hiddenhost) {
-                ircsnprintf(hhostbuf, sizeof(hhostbuf) + 3, "%s",
-                            hiddenhost);
             }
         }
 
@@ -1291,10 +1290,77 @@ int denora_event_fakehost(char *source, int ac, char **av)
 
 int denora_event_clearmode(char *source, int ac, char **av)
 {
+	Channel *c;
+	char mode, *newav[2];
+	int i;
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-	alog(LOG_ERROR, "The Nefarious CM command is not yet supported by Denora");
+
+    if (ac != 2) {
+    	alog(LOG_ERROR, "Invalid number of arguments passed to denora_event_clearmode");
+    	return MOD_CONT;
+    }
+
+    newav[0] = sstrdup("-");
+    c = findchan(av[0]);
+    if (c) {
+		while ((mode = *av[1]++)) {
+			switch (mode) {
+			case 'b': /* remove all bans */
+				for (i = 0; i < c->bancount; ++i) {
+					if (c->bans[i]) {
+						free(c->bans[i]);
+					} else {
+						alog(LOG_ERROR, langstr(ALOG_BAN_FREE_ERROR), c->name, i);
+					}
+				}
+				if (denora->do_sql) sql_channel_ban(ALL, c, NULL);
+				break;
+			case 'e': /* remove all ban exceptions */
+				for (i = 0; i < c->exceptcount; ++i) {
+					if (c->excepts[i]) {
+						free(c->excepts[i]);
+					} else {
+						alog(LOG_ERROR, langstr(ALOG_EXCEPTION_FREE_ERROR),
+							 c->name, i);
+					}
+				}
+				if (denora->do_sql) sql_channel_exception(ALL, c, NULL);
+				break;
+			case 'o': /* remove all ops */
+				if (denora->do_sql) {
+					rdb_query
+						(QUERY_LOW,
+						 "UPDATE %s SET mode_lo=\'N\' WHERE chanid=%d",
+						 IsOnTable, c->sqlid);
+				}
+				break;
+			case 'h': /* remove all halfops */
+				if (denora->do_sql) {
+					rdb_query
+						(QUERY_LOW,
+						 "UPDATE %s SET mode_lh=\'N\' WHERE chanid=%d",
+						 IsOnTable, c->sqlid);
+				}
+				break;
+			case 'v': /* remove all voices */
+				if (denora->do_sql) {
+					rdb_query
+						(QUERY_LOW,
+						 "UPDATE %s SET mode_lv=\'N\' WHERE chanid=%d",
+						 IsOnTable, c->sqlid);
+				}
+				break;
+			default:
+				newav[0][strlen(newav[0])] = mode;
+			}
+		}
+		/* remove all given modes */
+		chan_set_modes(c, 1, newav);
+    }
+
     return MOD_CONT;
 }
 
