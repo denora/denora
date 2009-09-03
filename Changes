@@ -10,6 +10,7 @@ Changes
 09/09/03 r304 Updated GeoIP.dat
 
 Fixes
+09/09/03 r307 Fixed crash in sumuser if sql query fails [closes #562]
 09/09/03 r306 Implemented nefarious CM mode handling
 09/09/03 r306 [1] Fixed hostname priority in nefarious nick handling
 09/09/03 r305 Denora now warns and exits on missing config for Hybrid [closes #563]

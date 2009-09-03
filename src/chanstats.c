@@ -645,42 +645,44 @@ void sumuser(User * u, char *user1, char *user2)
                  UStatsTable, user2_, chan_, i);
             mysql_res = mysql_store_result(mysql);
             mysql_row = mysql_fetch_row(mysql_res);
-            rdb_query(QUERY_LOW, "UPDATE %s SET letters=letters+%s, words=words+%s, line=line+%s, actions=actions+%s, smileys=smileys+%s, kicks=kicks+%s, kicked=kicked+%s, modes=modes+%s, topics=topics+%s, wasted=wasted+%s WHERE uname=\'%s\' AND chan=\'%s\' AND type=%i;", UStatsTable, mysql_row[0],     /* letters */
-                      mysql_row[1],     /* words */
-                      mysql_row[2],     /* lines */
-                      mysql_row[3],     /* actions */
-                      mysql_row[4],     /* smileys */
-                      mysql_row[5],     /* kicks */
-                      mysql_row[6],     /* kicked */
-                      mysql_row[7],     /* modes */
-                      mysql_row[8],     /* topics */
-                      mysql_row[9],     /* wasted */
-                      user1_, chan_, i);
-            rdb_query(QUERY_LOW, "UPDATE %s SET time0=time0+%s, time1=time1+%s, time2=time2+%s, time3=time3+%s, time4=time4+%s, time5=time5+%s, time6=time6+%s, time7=time7+%s, time8=time8+%s, time9=time9+%s, time10=time10+%s, time11=time11+%s, time12=time12+%s, time13=time13+%s, time14=time14+%s, time15=time15+%s, time16=time16+%s, time17=time17+%s, time18=time18+%s, time19=time19+%s, time20=time20+%s, time21=time21+%s, time22=time22+%s, time23=time23+%s WHERE uname=\'%s\' AND chan=\'%s\' AND type=%i;", UStatsTable, mysql_row[10],        /* time0 */
-                      mysql_row[11],    /* time1 */
-                      mysql_row[12],    /* time2 */
-                      mysql_row[13],    /* time3 */
-                      mysql_row[14],    /* time4 */
-                      mysql_row[15],    /* time5 */
-                      mysql_row[16],    /* time6 */
-                      mysql_row[17],    /* time7 */
-                      mysql_row[18],    /* time8 */
-                      mysql_row[19],    /* time9 */
-                      mysql_row[20],    /* time10 */
-                      mysql_row[21],    /* time11 */
-                      mysql_row[22],    /* time12 */
-                      mysql_row[23],    /* time13 */
-                      mysql_row[24],    /* time14 */
-                      mysql_row[25],    /* time15 */
-                      mysql_row[26],    /* time16 */
-                      mysql_row[27],    /* time17 */
-                      mysql_row[28],    /* time18 */
-                      mysql_row[29],    /* time19 */
-                      mysql_row[30],    /* time20 */
-                      mysql_row[31],    /* time21 */
-                      mysql_row[32],    /* time22 */
-                      mysql_row[33],    /* time23 */
-                      user1_, chan_, i);
+            if (mysql_row != NULL) {
+				rdb_query(QUERY_LOW, "UPDATE %s SET letters=letters+%s, words=words+%s, line=line+%s, actions=actions+%s, smileys=smileys+%s, kicks=kicks+%s, kicked=kicked+%s, modes=modes+%s, topics=topics+%s, wasted=wasted+%s WHERE uname=\'%s\' AND chan=\'%s\' AND type=%i;", UStatsTable, mysql_row[0],     /* letters */
+						  mysql_row[1],     /* words */
+						  mysql_row[2],     /* lines */
+						  mysql_row[3],     /* actions */
+						  mysql_row[4],     /* smileys */
+						  mysql_row[5],     /* kicks */
+						  mysql_row[6],     /* kicked */
+						  mysql_row[7],     /* modes */
+						  mysql_row[8],     /* topics */
+						  mysql_row[9],     /* wasted */
+						  user1_, chan_, i);
+				rdb_query(QUERY_LOW, "UPDATE %s SET time0=time0+%s, time1=time1+%s, time2=time2+%s, time3=time3+%s, time4=time4+%s, time5=time5+%s, time6=time6+%s, time7=time7+%s, time8=time8+%s, time9=time9+%s, time10=time10+%s, time11=time11+%s, time12=time12+%s, time13=time13+%s, time14=time14+%s, time15=time15+%s, time16=time16+%s, time17=time17+%s, time18=time18+%s, time19=time19+%s, time20=time20+%s, time21=time21+%s, time22=time22+%s, time23=time23+%s WHERE uname=\'%s\' AND chan=\'%s\' AND type=%i;", UStatsTable, mysql_row[10],        /* time0 */
+						  mysql_row[11],    /* time1 */
+						  mysql_row[12],    /* time2 */
+						  mysql_row[13],    /* time3 */
+						  mysql_row[14],    /* time4 */
+						  mysql_row[15],    /* time5 */
+						  mysql_row[16],    /* time6 */
+						  mysql_row[17],    /* time7 */
+						  mysql_row[18],    /* time8 */
+						  mysql_row[19],    /* time9 */
+						  mysql_row[20],    /* time10 */
+						  mysql_row[21],    /* time11 */
+						  mysql_row[22],    /* time12 */
+						  mysql_row[23],    /* time13 */
+						  mysql_row[24],    /* time14 */
+						  mysql_row[25],    /* time15 */
+						  mysql_row[26],    /* time16 */
+						  mysql_row[27],    /* time17 */
+						  mysql_row[28],    /* time18 */
+						  mysql_row[29],    /* time19 */
+						  mysql_row[30],    /* time20 */
+						  mysql_row[31],    /* time21 */
+						  mysql_row[32],    /* time22 */
+						  mysql_row[33],    /* time23 */
+						  user1_, chan_, i);
+            }
             mysql_free_result(mysql_res);
         }
         free(chan_);
