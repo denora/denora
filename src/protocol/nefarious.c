@@ -938,7 +938,7 @@ int denora_event_create(char *source, int ac, char **av)
     do_join(source, ac, av);
 
     newav[0] = av[0];
-    newav[1] = sstrdup("+o");
+    newav[1] = (char *) "+o";
     newav[2] = source;
 
     denora_event_mode(source, 3, newav);
@@ -1303,7 +1303,8 @@ int denora_event_clearmode(char *source, int ac, char **av)
     	return MOD_CONT;
     }
 
-    newav[0] = sstrdup("-");
+    newav[0] = av[0];
+    newav[1] = (char *) "-";
     c = findchan(av[0]);
     if (c) {
 		while ((mode = *av[1]++)) {
@@ -1354,11 +1355,13 @@ int denora_event_clearmode(char *source, int ac, char **av)
 				}
 				break;
 			default:
-				newav[0][strlen(newav[0])] = mode;
+				newav[1][strlen(newav[1])] = mode;
 			}
 		}
 		/* remove all given modes */
-		chan_set_modes(c, 1, newav);
+		do_cmode(source, 2, newav);
+		free(newav[0]);
+		free(newav[1]);
     }
 
     return MOD_CONT;
