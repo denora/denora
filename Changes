@@ -31,6 +31,7 @@ Fixes
 09/03/24 r278 Fixed crash on missing channel mode parameter
 
 Removals
+09/09/07 r309 Removed automerge on user quit
 09/07/29 r293 Removed dm script and version.log files
 
 Developers

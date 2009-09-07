@@ -686,6 +686,9 @@ void db_removenick(char *nick, char *reason)
         rdb_query(QUERY_LOW,
                   "UPDATE %s SET online=\'N\', lastquit=NOW(), lastquitmsg=\'%s\', servid=0 WHERE nickid=%d",
                   UserTable, sqlreason, nickid);
+        if (sqlreason) {
+            free(sqlreason);
+        }
     } else {
         rdb_query(QUERY_LOW, "DELETE FROM %s WHERE nickid=%d",
                   UserTable, nickid);
@@ -783,7 +786,7 @@ void db_removenick_nt(char *nick, char *reason)
                         mysql_free_result(mysql_res2);
                     }
                     /* Summing old user to new user, if they differ */
-                    if ((!BadPtr(newuser)) && (!BadPtr(olduser))
+                    /*if ((!BadPtr(newuser)) && (!BadPtr(olduser))
                         && (stricmp(newuser, olduser) != 0)) {
                         alog(LOG_DEBUG,
                              "db_removenick_nt(%s): summing old user %s and new user %s.",
@@ -795,7 +798,7 @@ void db_removenick_nt(char *nick, char *reason)
                         if (newuser) {
                             free(newuser);
                         }
-                    }
+                    }*/
                     if (newnick) {
                         free(newnick);
                     }

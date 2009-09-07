@@ -227,9 +227,7 @@ void sql_do_nick(User * u)
 
     SET_SEGV_LOCATION();
 
-    if (NickTracking == 0) {
-        nickid = db_checknick(u->sqlnick);
-    } else if (LargeNet || !UplinkSynced) {
+    if (NickTracking == 0 || LargeNet || !UplinkSynced) {
         nickid = db_checknick(u->sqlnick);
     } else {
         nickid = db_checknick_nt(u->sqlnick);
@@ -1356,7 +1354,7 @@ void do_quit(const char *source, int ac, char **av)
          (!BadPtr(av[0]) ? av[0] : "Quit"));
 
     if (denora->do_sql) {
-        if (NickTracking == 0) {
+        /*if (NickTracking == 0) {
             db_removenick(user->sqlnick,
                           (!BadPtr(av[0]) ? av[0] : (char *) "Quit"));
         } else if (LargeNet || !UplinkSynced) {
@@ -1365,7 +1363,8 @@ void do_quit(const char *source, int ac, char **av)
         } else {
             db_removenick_nt(user->sqlnick,
                              (!BadPtr(av[0]) ? av[0] : (char *) "Quit"));
-        }
+        }*/
+        db_removenick(user->sqlnick, (!BadPtr(av[0]) ? av[0] : (char *) "Quit"));
         if (UserCacheTime) {
             db_cleanuser();
         }
