@@ -1024,7 +1024,7 @@ void do_part(const char *source, int ac, char **av)
 
     SET_SEGV_LOCATION();
 
-    if (ac != 2) {
+    if (ac < 1) {
         return;
     }
 

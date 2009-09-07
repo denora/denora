@@ -4,13 +4,14 @@ Denora v1.4.4-SVN
 -----------------
 
 Additions
-n/a
+09/09/07 r311 Added support for Nefarious 1.3 in nefarious module [closes #564]
 
 Changes
 09/09/07 r310 Disable nick tracking on NICK if ustatsregistered is enabled
 09/09/03 r304 Updated GeoIP.dat
 
 Fixes
+09/09/07 r312 Fixed channel part not being parsed if reason missing
 09/09/03 r307 Fixed crash in sumuser if sql query fails [closes #562]
 09/09/03 r306 Implemented nefarious CM mode handling
 09/09/03 r306 [1] Fixed hostname priority in nefarious nick handling
