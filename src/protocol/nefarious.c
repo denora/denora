@@ -56,12 +56,12 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* nick change flood         */
      'x',                       /* vhost                     */
      IRCD_DISABLE,              /* vhost other               */
-     IRCD_DISABLE,              /* channel linking           */
+     'L',                       /* channel linking           */
      IRCD_ENABLE,               /* p10                       */
      IRCD_DISABLE,              /* TS6                       */
      IRCD_ENABLE,               /* numeric ie.. 350 etc      */
      IRCD_DISABLE,              /* channel mode gagged       */
-     IRCD_DISABLE,              /* spamfilter                */
+     IRCD_ENABLE,               /* spamfilter                */
      'b',                       /* ban char                  */
      'e',                       /* except char               */
      IRCD_DISABLE,              /* invite char               */
@@ -70,7 +70,7 @@ IRCDVar myIrcd[] = {
      IRCD_ENABLE,               /* uline                     */
      NULL,                      /* nickchar                  */
      IRCD_DISABLE,              /* svid                      */
-     IRCD_DISABLE,              /* hidden oper               */
+     IRCD_ENABLE,               /* hidden oper               */
      IRCD_DISABLE,              /* extra warning             */
      IRCD_ENABLE,               /* Report sync state         */
      'z'                        /* Persistent channel mode   */
@@ -158,6 +158,7 @@ void IRCDModeInit(void)
     ModuleSetUserMode(UMODE_B, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_C, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_D, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_H, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_I, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_O, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_R, IRCD_ENABLE);
@@ -1292,7 +1293,7 @@ int denora_event_clearmode(char *source, int ac, char **av)
 {
 	Channel *c;
 	char mode, *newav[2];
-	int i;
+	int i, p = 1;
 
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
@@ -1304,7 +1305,7 @@ int denora_event_clearmode(char *source, int ac, char **av)
     }
 
     newav[0] = av[0];
-    newav[1] = (char *) "-";
+    newav[1] = sstrdup("-");
     c = findchan(av[0]);
     if (c) {
 		while ((mode = *av[1]++)) {
@@ -1355,13 +1356,11 @@ int denora_event_clearmode(char *source, int ac, char **av)
 				}
 				break;
 			default:
-				newav[1][strlen(newav[1])] = mode;
+				newav[1][p++] = mode;
 			}
 		}
 		/* remove all given modes */
 		do_cmode(source, 2, newav);
-		free(newav[0]);
-		free(newav[1]);
     }
 
     return MOD_CONT;

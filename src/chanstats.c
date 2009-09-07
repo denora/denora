@@ -682,6 +682,8 @@ void sumuser(User * u, char *user1, char *user2)
 						  mysql_row[32],    /* time22 */
 						  mysql_row[33],    /* time23 */
 						  user1_, chan_, i);
+            } else {
+            	alog(LOG_ERROR, "Query for user %s unexpectedly returned no results in sumuser", user2_);
             }
             mysql_free_result(mysql_res);
         }

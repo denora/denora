@@ -59,7 +59,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* nick change flood         */
      'x',                       /* vhost                     */
      't',                       /* vhost other               */
-     'L',                       /* channek linking           */
+     'L',                       /* channel linking           */
      IRCD_DISABLE,              /* p10                       */
      IRCD_DISABLE,              /* ts6                       */
      IRCD_ENABLE,               /* numeric                   */

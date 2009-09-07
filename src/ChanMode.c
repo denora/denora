@@ -549,7 +549,6 @@ void sql_do_chanmodes(char *chan, char **av)
                 atleastone = 1;
                 tmp[5] = ((*modes >= 'a') ? 'l' : 'u');
                 tmp[6] = tolower(*modes);
-                /* strcat(db, tmp); */
                 strlcat(db, tmp, sizeof(db));
                 if (*modes == 'k') {
                     SET_SEGV_LOCATION();
@@ -560,11 +559,9 @@ void sql_do_chanmodes(char *chan, char **av)
                         ircsnprintf(buf, BUFSIZE - 1,
                                     "mode_lk_data=\'%s\', ",
                                     (HidePasswords ? "HIDDEN" : key));
-                        /* strcat(db, buf); */
                         strlcat(db, buf, sizeof(db));
                         free(key);
                     } else {
-                        /* strcat(db, "mode_lk_data=\'\', "); */
                         strlcat(db, "mode_lk_data=\'\', ", sizeof(db));
                         argptr++;       /* mode -k needs a parameter */
                     }
@@ -574,10 +571,8 @@ void sql_do_chanmodes(char *chan, char **av)
                         *buf = '\0';
                         ircsnprintf(buf, BUFSIZE - 1,
                                     "mode_ll_data=\'%s\', ", av[argptr++]);
-                        /* strcat(db, buf); */
                         strlcat(db, buf, sizeof(db));
                     } else {
-                        /* strcat(db, "mode_ll_data=\'\', "); */
                         strlcat(db, "mode_ll_data=\'\', ", sizeof(db));
                     }
                 } else if (ircd->Lmode && *modes == ircd->chanforward) {
@@ -589,7 +584,6 @@ void sql_do_chanmodes(char *chan, char **av)
                                     "mode_%s%c_data=\'%s\', ",
                                     (ircd->chanforward <= 90 ? "u" : "l"),
                                     ircd->chanforward, ch);
-                        /* strcat(db, buf); */
                         strlcat(db, buf, sizeof(db));
                         free(ch);
                     } else {
@@ -598,7 +592,6 @@ void sql_do_chanmodes(char *chan, char **av)
                                     "mode_%s%c_data=\'\', ",
                                     (ircd->chanforward <= 90 ? "u" : "l"),
                                     ircd->chanforward);
-                        /* strcat(db, buf); */
                         strlcat(db, buf, sizeof(db));
                     }
                 } else if (ircd->fmode && ircd->floodchar
@@ -610,7 +603,6 @@ void sql_do_chanmodes(char *chan, char **av)
                                     "mode_%s%c_data=\'%s\', ",
                                     (ircd->floodchar <= 90 ? "u" : "l"),
                                     ircd->floodchar, av[argptr++]);
-                        /* strcat(db, buf); */
                         strlcat(db, buf, sizeof(db));
                     } else {
                         *buf = '\0';
@@ -618,7 +610,6 @@ void sql_do_chanmodes(char *chan, char **av)
                                     "mode_%s%c_data=\'\', ",
                                     (ircd->floodchar <= 90 ? "u" : "l"),
                                     ircd->floodchar);
-                        /* strcat(db, buf); */
                         strlcat(db, buf, sizeof(db));
                     }
                 } else if (ircd->jmode && ircd->floodchar_alternative
@@ -632,7 +623,6 @@ void sql_do_chanmodes(char *chan, char **av)
                                      90 ? "u" : "l"),
                                     ircd->floodchar_alternative,
                                     av[argptr++]);
-                        /* strcat(db, buf); */
                         strlcat(db, buf, sizeof(db));
                     } else {
                         *buf = '\0';
@@ -641,7 +631,6 @@ void sql_do_chanmodes(char *chan, char **av)
                                     (ircd->floodchar_alternative <=
                                      90 ? "u" : "l"),
                                     ircd->floodchar_alternative);
-                        /* strcat(db, buf); */
                         strlcat(db, buf, sizeof(db));
                     }
                 } else if (ircd->jointhrottle
