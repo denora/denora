@@ -127,6 +127,7 @@ int DisableMySQLOPT = 0;
 char *Numeric;
 int LargeNet;
 int UserStatsRegistered = 0;
+int UserStatsExcludeBots = 0;
 
 int UserCacheTime;
 int UserCleanFreq;
