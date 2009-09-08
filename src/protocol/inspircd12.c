@@ -1184,7 +1184,6 @@ int denora_event_nick(char *source, int ac, char **av)
 int denora_event_metadata(char *source, int ac, char **av)
 {
 	User *u;
-    int nickid;
 
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
@@ -1198,16 +1197,11 @@ int denora_event_metadata(char *source, int ac, char **av)
 
     if (u) {
 		if (!stricmp(av[1], "accountname")) {
-			u->account = av[2] ? sstrdup(av[2]) : NULL;
+			u->account = !BadPtr(av[2]) ? sstrdup(av[2]) : NULL;
 		    if (denora->do_sql) {
-		        nickid = db_getnick_unsure(u->sqlnick);
-		        if (nickid == -1) {
-		            alog(LOG_NONEXISTANT, "Nickname %s not existing in sql", u->nick);
-		        } else {
-		            rdb_query(QUERY_LOW,
-		                      "UPDATE %s SET account=\'%s\', WHERE nickid=%d",
-		                      UserTable, av[2] ? rdb_escape(av[2]) : "", nickid);
-		        }
+				rdb_query(QUERY_LOW,
+						  "UPDATE %s SET account=\'%s\', WHERE nickid=%d",
+						  UserTable, av[2] ? rdb_escape(av[2]) : "", u->sqlid);
 		    }
 		}
     } else {
