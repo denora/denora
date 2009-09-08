@@ -460,11 +460,11 @@ static int check_db(User * u, Channel * c)
 		 excluded = 1;
     }
     if (UserStatsRegistered && !excluded) {
-        if (!UserHasMode(u->nick, UMODE_r)) {
-            /* User is not +r so he gets ignored */
-            u->cstats = 2;
-        } else if (UserHasMode(u->nick, UMODE_r) && (u->cstats == 2)) {
-            /* User is +r but is set to ignore, so reset, since he might
+        if (!UserHasMode(u->nick, UMODE_r) && !u->account) {
+        	/* User has no +r nor account so he gets ignored */
+        	u->cstats = 2;
+        } else if ((UserHasMode(u->nick, UMODE_r) || u->account) && (u->cstats == 2)) {
+            /* User is registered but is set to ignore, so reset, since he might
              * just have identified */
             u->cstats = 0;
         }

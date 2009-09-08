@@ -220,7 +220,7 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("JOIN",      denora_event_join); addCoreMessage(IRCD,m);
     m = createMessage("KICK",      denora_event_kick); addCoreMessage(IRCD,m);
     m = createMessage("KILL",      denora_event_kill); addCoreMessage(IRCD,m);
-    m = createMessage("METADATA",  denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("METADATA",  denora_event_metadata); addCoreMessage(IRCD,m);
     m = createMessage("MODE",      denora_event_mode); addCoreMessage(IRCD,m);
     m = createMessage("MODENOTICE",denora_event_null); addCoreMessage(IRCD,m);
     m = createMessage("MOTD",      denora_event_motd); addCoreMessage(IRCD,m);
@@ -1178,6 +1178,38 @@ int denora_event_nick(char *source, int ac, char **av)
 {
     do_nick(source, av[0], NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL,
             0, NULL, NULL);
+    return MOD_CONT;
+}
+
+int denora_event_metadata(char *source, int ac, char **av)
+{
+	User *u;
+    int nickid;
+
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
+    }
+
+    u = find_byuid(source);
+
+    if (u) {
+		if (!strcmp(av[0], "accountname")) {
+			u->account = av[1] ? sstrdup(av[1]) : NULL;
+		    if (denora->do_sql) {
+		        nickid = db_getnick_unsure(u->sqlnick);
+		        if (nickid == -1) {
+		            alog(LOG_NONEXISTANT, "Nickname %s not existing in sql", u->nick);
+		        } else {
+		            rdb_query(QUERY_LOW,
+		                      "UPDATE %s SET account=\'%s\', WHERE nickid=%d",
+		                      UserTable, av[1] ? rdb_escape(av[1]) : "", nickid);
+		        }
+		    }
+		}
+    } else {
+    	alog(LOG_NONEXISTANT, "METADATA for non-existant user %s", source);
+    }
+
     return MOD_CONT;
 }
 

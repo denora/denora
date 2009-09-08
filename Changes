@@ -4,6 +4,8 @@ Denora v1.4.4-SVN
 -----------------
 
 Additions
+09/09/08 r318 Added support for InspIRCd 1.2 METADATA message [closes #566]
+09/09/08 r318 ustatsregistered now also checks for user account [closes #566]
 09/09/08 r314 Added option to exclude +B users from chanstats [closes #546]
 09/09/08 r313 Added chan_clearmodes function to clear given chanmodes
 09/09/07 r311 Added support for Nefarious 1.3 in nefarious module [closes #564]

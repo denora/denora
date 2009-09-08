@@ -54,6 +54,7 @@ int denora_event_whois(char *source, int ac, char **av);
 int denora_event_server(char *source, int ac, char **av);
 int denora_event_nick(char *source, int ac, char **av);
 int denora_event_uid(char *source, int ac, char **av);
+int denora_event_metadata(char *source, int ac, char **av);
 int denora_event_privmsg(char *source, int ac, char **av);
 int denora_event_capab(char *source, int ac, char **av);
 int denora_event_notice(char *source, int ac, char **av);
