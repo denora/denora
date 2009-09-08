@@ -1200,7 +1200,7 @@ int denora_event_metadata(char *source, int ac, char **av)
 			u->account = !BadPtr(av[2]) ? sstrdup(av[2]) : NULL;
 		    if (denora->do_sql) {
 				rdb_query(QUERY_LOW,
-						  "UPDATE %s SET account=\'%s\', WHERE nickid=%d",
+						  "UPDATE %s SET account=\'%s\' WHERE nickid=%d",
 						  UserTable, av[2] ? rdb_escape(av[2]) : "", u->sqlid);
 		    }
 		}
