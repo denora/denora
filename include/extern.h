@@ -309,6 +309,7 @@ E char *Numeric;
 E int LargeNet;
 E int NickTracking;
 E int UserStatsRegistered;
+E int UserStatsExcludeBots;
 E char *TS6SID;
 E char p10id[3];
 E char *TS6UPLINK;

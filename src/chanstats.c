@@ -444,7 +444,7 @@ void count_modes(User * u, Channel * c)
 static int check_db(User * u, Channel * c)
 {
 #ifdef USE_MYSQL
-    int i;
+    int i, excluded;
     MYSQL_RES *mysql_res;
 #endif
     SET_SEGV_LOCATION();
@@ -452,8 +452,14 @@ static int check_db(User * u, Channel * c)
     return 0;
 #else
 
-    /* Check if user has +r */
-    if (UserStatsRegistered == 1) {
+    /* Check if user has +r and/or +B */
+    excluded = 0;
+    if (UserStatsExcludeBots && UserHasMode(u->nick, UMODE_B)) {
+		/* User is a bot so he gets ignored */
+		 u->cstats = 2;
+		 excluded = 1;
+    }
+    if (UserStatsRegistered && !excluded) {
         if (!UserHasMode(u->nick, UMODE_r)) {
             /* User is not +r so he gets ignored */
             u->cstats = 2;

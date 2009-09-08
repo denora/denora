@@ -227,7 +227,7 @@ void sql_do_nick(User * u)
 
     SET_SEGV_LOCATION();
 
-    if (NickTracking == 0 || LargeNet || !UplinkSynced || UserStatsRegistered) {
+    if (LargeNet || !UplinkSynced || UserStatsRegistered) {
         nickid = db_checknick(u->sqlnick);
     } else {
         nickid = db_checknick_nt(u->sqlnick);
