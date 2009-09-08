@@ -159,6 +159,7 @@ E void do_p10_kick(const char *source, int ac, char **av);
 E void do_part(const char *source, int ac, char **av);
 E void do_sjoin(const char *source, int ac, char **av);
 E void do_topic(int ac, char **av);
+E void chan_clearmodes(const char *source, int ac, char **av);
 
 /**** chanstats.c ***/
 

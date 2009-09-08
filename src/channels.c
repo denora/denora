@@ -1509,6 +1509,83 @@ void do_topic(int ac, char **av)
                (c->topic ? c->topic : (char *) ""));
 }
 
+/*
+ * Clears all given modes from a channel
+ * av[0] = channel name
+ * av[1] = modes to be removed
+ */
+void chan_clearmodes(const char *source, int ac, char **av) {
+	Channel *c;
+	char mode, *modebuf, *newav[2];
+	int i, p = 1;
+
+    if (ac != 2) {
+    	alog(LOG_ERROR, "Invalid number of arguments passed to chan_clearmodes");
+    	return;
+    }
+
+	modebuf = sstrdup("-");
+	c = findchan(av[0]);
+	if (c) {
+		while ((mode = *av[1]++)) {
+			switch (mode) {
+			case 'b': /* remove all bans */
+				for (i = 0; i < c->bancount; ++i) {
+					if (c->bans[i]) {
+						free(c->bans[i]);
+					} else {
+						alog(LOG_ERROR, langstr(ALOG_BAN_FREE_ERROR), c->name, i);
+					}
+				}
+				if (denora->do_sql) sql_channel_ban(ALL, c, NULL);
+				break;
+			case 'e': /* remove all ban exceptions */
+				for (i = 0; i < c->exceptcount; ++i) {
+					if (c->excepts[i]) {
+						free(c->excepts[i]);
+					} else {
+						alog(LOG_ERROR, langstr(ALOG_EXCEPTION_FREE_ERROR),
+							 c->name, i);
+					}
+				}
+				if (denora->do_sql) sql_channel_exception(ALL, c, NULL);
+				break;
+			case 'o': /* remove all ops */
+				if (denora->do_sql) {
+					rdb_query
+						(QUERY_LOW,
+						 "UPDATE %s SET mode_lo=\'N\' WHERE chanid=%d",
+						 IsOnTable, c->sqlid);
+				}
+				break;
+			case 'h': /* remove all halfops */
+				if (denora->do_sql) {
+					rdb_query
+						(QUERY_LOW,
+						 "UPDATE %s SET mode_lh=\'N\' WHERE chanid=%d",
+						 IsOnTable, c->sqlid);
+				}
+				break;
+			case 'v': /* remove all voices */
+				if (denora->do_sql) {
+					rdb_query
+						(QUERY_LOW,
+						 "UPDATE %s SET mode_lv=\'N\' WHERE chanid=%d",
+						 IsOnTable, c->sqlid);
+				}
+				break;
+			default:
+				modebuf[p++] = mode;
+			}
+		}
+		/* remove all given modes */
+		newav[0] = av[0];
+		newav[1] = sstrdup(modebuf);
+		SET_SEGV_LOCATION();
+		do_cmode(source, 2, newav);
+	}
+}
+
 /*************************************************************************/
 
 /* Add/remove a user to/from a channel, creating or deleting the channel as
