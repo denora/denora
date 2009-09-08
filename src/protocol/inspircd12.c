@@ -1190,11 +1190,15 @@ int denora_event_metadata(char *source, int ac, char **av)
         protocol_debug(source, ac, av);
     }
 
-    u = find_byuid(source);
+    if (ac < 2) {
+        return MOD_CONT;
+    }
+
+    u = find_byuid(av[0]);
 
     if (u) {
-		if (!stricmp(av[0], "accountname")) {
-			u->account = av[1] ? sstrdup(av[1]) : NULL;
+		if (!stricmp(av[1], "accountname")) {
+			u->account = av[2] ? sstrdup(av[2]) : NULL;
 		    if (denora->do_sql) {
 		        nickid = db_getnick_unsure(u->sqlnick);
 		        if (nickid == -1) {
@@ -1202,12 +1206,12 @@ int denora_event_metadata(char *source, int ac, char **av)
 		        } else {
 		            rdb_query(QUERY_LOW,
 		                      "UPDATE %s SET account=\'%s\', WHERE nickid=%d",
-		                      UserTable, av[1] ? rdb_escape(av[1]) : "", nickid);
+		                      UserTable, av[2] ? rdb_escape(av[2]) : "", nickid);
 		        }
 		    }
 		}
     } else {
-    	alog(LOG_NONEXISTANT, "METADATA for non-existant user %s", source);
+    	alog(LOG_NONEXISTANT, "METADATA for non-existant user %s", av[0]);
     }
 
     return MOD_CONT;
