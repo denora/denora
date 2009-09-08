@@ -507,21 +507,31 @@ int denora_event_quit(char *source, int ac, char **av)
 /* ABAAA M #ircops +v ABAAB */
 int denora_event_mode(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
-        protocol_debug(source, ac, av);
-    }
+    User *u;
+    Server *s;
+    char *sender;
 
-    if (ac < 2) {
-        alog(LOG_DEBUG,
-             "Unknown MODE formatted message please report the following");
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
+
+    if (ac < 2)
         return MOD_CONT;
+
+    u = find_byuid(source);
+
+    if (!u) {
+        sender = source;
+    } else {
+        sender = u->nick;
     }
 
     if (*av[0] == '#' || *av[0] == '&') {
         do_cmode(source, ac, av);
     } else {
-        do_umode(source, ac, av);
+        s = server_find(source);
+        if (s)
+            sender = av[0];
+        do_umode(sender, ac, av);
     }
     return MOD_CONT;
 }
@@ -576,10 +586,20 @@ int denora_event_join(char *source, int ac, char **av)
 /* ABAAA C #ircops 1098031328 */
 int denora_event_create(char *source, int ac, char **av)
 {
+	char *newav[3];
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
+
     do_join(source, ac, av);
+
+    newav[0] = av[0];
+    newav[1] = (char *) "+o";
+    newav[2] = source;
+
+    do_cmode(source, 3, newav);
+
     return MOD_CONT;
 }
 
@@ -1131,6 +1151,10 @@ void moduleAddIRCDMsgs(void)
     /* End of Burst Acknowledge */
     m = createMessage("EA", denora_event_null);
     addCoreMessage(IRCD, m);
+
+    /* PRIVS */
+    m = createMessage("PRIVS", denora_event_null);
+    addCoreMessage(IRCD,m);
 
     /* CLEARMODE */
     m = createMessage("CM", denora_event_clearmode);

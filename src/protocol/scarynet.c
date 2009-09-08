@@ -408,6 +408,8 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("EA",       denora_event_null); addCoreMessage(IRCD,m);
     /* SILENCE */
     m = createMessage("U",	  denora_event_null); addCoreMessage(IRCD,m);
+    /* PRIVS */
+    m = createMessage("PRIVS",    denora_event_null); addCoreMessage(IRCD,m);
     /* CLEARMODE */
     m = createMessage("CM",       denora_event_clearmode); addCoreMessage(IRCD,m);
 }
@@ -691,7 +693,7 @@ int denora_event_mode(char *source, int ac, char **av)
 {
     User *u;
     User *v;
-
+    Server *s;
     char *sender;
     char hhostbuf[255];
 
@@ -712,6 +714,9 @@ int denora_event_mode(char *source, int ac, char **av)
     if (*av[0] == '#' || *av[0] == '&') {
         do_cmode(source, ac, av);
     } else {
+        s = server_find(source);
+        if (s)
+            sender = av[0];
         do_umode(sender, ac, av);
         if (strcmp(av[1], "x") != -1) {
             v = user_find(av[0]);
@@ -776,10 +781,20 @@ int denora_event_join(char *source, int ac, char **av)
 /* ABAAA C #ircops 1098031328 */
 int denora_event_create(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug)
+	char *newav[3];
+
+    if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
+    }
 
     do_join(source, ac, av);
+
+    newav[0] = av[0];
+    newav[1] = (char *) "+o";
+    newav[2] = source;
+
+    do_cmode(source, 3, newav);
+
     return MOD_CONT;
 }
 

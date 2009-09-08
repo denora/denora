@@ -684,7 +684,10 @@ int denora_event_quit(char *source, int ac, char **av)
 int denora_event_mode(char *source, int ac, char **av)
 {
     User *u;
+    User *v;
+    Server *s;
     char *sender;
+    char hhostbuf[255];
 
     if (denora->protocoldebug)
         protocol_debug(source, ac, av);
@@ -703,11 +706,11 @@ int denora_event_mode(char *source, int ac, char **av)
     if (*av[0] == '#' || *av[0] == '&') {
         do_cmode(source, ac, av);
     } else {
+        s = server_find(source);
+        if (s)
+            sender = av[0];
         do_umode(sender, ac, av);
         if (strcmp(av[1], "x") != -1) {
-            User *v;
-            char hhostbuf[255];
-
             v = user_find(av[0]);
             if (v->account) {
                 ircsnprintf(hhostbuf,
@@ -770,10 +773,20 @@ int denora_event_join(char *source, int ac, char **av)
 /* ABAAA C #ircops 1098031328 */
 int denora_event_create(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug)
+	char *newav[3];
+
+    if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
+    }
 
     do_join(source, ac, av);
+
+    newav[0] = av[0];
+    newav[1] = (char *) "+o";
+    newav[2] = source;
+
+    do_cmode(source, 3, newav);
+
     return MOD_CONT;
 }
 

@@ -1194,7 +1194,7 @@ void do_umode(const char *source, int ac, char **av)
         return;
     }
 
-    if (ac < 1) {
+    if (ac < 2) {
         return;
     }
 

@@ -855,19 +855,20 @@ int denora_event_mode(char *source, int ac, char **av)
     User *u;
     Server *s;
     char *sender;
-    u = find_byuid(source);
-    if (denora->protocoldebug) {
+
+    if (denora->protocoldebug)
         protocol_debug(source, ac, av);
-    }
+
+    if (ac < 2)
+        return MOD_CONT;
+
+    u = find_byuid(source);
 
     if (!u) {
         sender = source;
     } else {
         sender = u->nick;
     }
-
-    if (ac < 2)
-        return MOD_CONT;
 
     if (*av[0] == '#' || *av[0] == '&') {
         do_cmode(source, ac, av);
@@ -936,13 +937,14 @@ int denora_event_create(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
+
     do_join(source, ac, av);
 
     newav[0] = av[0];
     newav[1] = (char *) "+o";
     newav[2] = source;
 
-    denora_event_mode(source, 3, newav);
+    do_cmode(source, 3, newav);
 
     return MOD_CONT;
 }
