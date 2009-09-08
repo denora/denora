@@ -1193,7 +1193,7 @@ int denora_event_metadata(char *source, int ac, char **av)
     u = find_byuid(source);
 
     if (u) {
-		if (!strcmp(av[0], "accountname")) {
+		if (!stricmp(av[0], "accountname")) {
 			u->account = av[1] ? sstrdup(av[1]) : NULL;
 		    if (denora->do_sql) {
 		        nickid = db_getnick_unsure(u->sqlnick);

@@ -340,6 +340,8 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("G",        denora_event_ping); addCoreMessage(IRCD,m);
     /* MODE */
     m = createMessage("M",        denora_event_mode); addCoreMessage(IRCD,m);
+    /* OPMODE */
+    m = createMessage("OM",       denora_event_mode); addCoreMessage(IRCD,m);
     /* CREATE */
     m = createMessage("C",        denora_event_create); addCoreMessage(IRCD,m);
     /* JOIN */
@@ -406,6 +408,8 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("EA",       denora_event_null); addCoreMessage(IRCD,m);
     /* SILENCE */
     m = createMessage("U",	  denora_event_null); addCoreMessage(IRCD,m);
+    /* CLEARMODE */
+    m = createMessage("CM",       denora_event_clearmode); addCoreMessage(IRCD,m);
 }
 
 /* *INDENT-ON* */
@@ -1093,6 +1097,16 @@ int denora_event_notice(char *source, int ac, char **av)
             m_notice(user_s->nick, user_r->nick, av[1]);
         }
     }
+    return MOD_CONT;
+}
+
+int denora_event_clearmode(char *source, int ac, char **av)
+{
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
+    }
+
+    chan_clearmodes(source, ac, av);
     return MOD_CONT;
 }
 

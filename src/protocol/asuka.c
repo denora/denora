@@ -951,6 +951,16 @@ int denora_event_notice(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
+int denora_event_clearmode(char *source, int ac, char **av)
+{
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
+    }
+
+    chan_clearmodes(source, ac, av);
+    return MOD_CONT;
+}
+
 /*************************************************************************/
 
 void moduleAddIRCDMsgs(void)
@@ -997,6 +1007,10 @@ void moduleAddIRCDMsgs(void)
     /* MODE */
     m = createMessage("M", denora_event_mode);
     addCoreMessage(IRCD, m);
+
+    /* OPMODE */
+    m = createMessage("OM", denora_event_mode);
+    addCoreMessage(IRCD,m);
 
     /* CREATE */
     m = createMessage("C", denora_event_create);
@@ -1117,6 +1131,10 @@ void moduleAddIRCDMsgs(void)
     /* End of Burst Acknowledge */
     m = createMessage("EA", denora_event_null);
     addCoreMessage(IRCD, m);
+
+    /* CLEARMODE */
+    m = createMessage("CM", denora_event_clearmode);
+    addCoreMessage(IRCD,m);
 }
 
 /*************************************************************************/
