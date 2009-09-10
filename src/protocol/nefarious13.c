@@ -1312,6 +1312,7 @@ int denora_event_spamfilter(char *source, int ac, char **av)
 {
 	User * u;
 	char setby[BUFSIZE];
+	char setat[10];
 
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
@@ -1323,7 +1324,8 @@ int denora_event_spamfilter(char *source, int ac, char **av)
     	/* (char *target, char *action, char *setby, char *expires, char *setat,
             char *duration, char *reason, char *regex) */
     	ircsnprintf(setby, BUFSIZE, "%s!%s@%s", u->nick, u->username, u->vhost ? u->vhost : u->host);
-        sql_do_server_spam_add(av[2], av[3], setby, 0, time(NULL), av[4], av[ac-2], av[ac-1]);
+    	ircsnprintf(setat, 10, "%ld", (long int) time(NULL));
+        sql_do_server_spam_add(av[2], av[3], setby, 0, setat, av[4], av[ac-2], av[ac-1]);
     } else if (!stricmp(av[1], "-")) {
     	/* (char *target, char *action, char *regex) */
         sql_do_server_spam_remove(av[2], av[3], av[ac-1]);
