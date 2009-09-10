@@ -5,7 +5,7 @@ SetCompressor /SOLID lzma
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "Denora"
-!define PRODUCT_VERSION "1.4.3"
+!define PRODUCT_VERSION "1.4.4"
 !define PRODUCT_PUBLISHER "Denora"
 !define PRODUCT_WEB_SITE "http://denorastats.org/"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\denora.exe"
@@ -47,7 +47,7 @@ SetCompressor /SOLID lzma
 ; MUI end ------
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
-OutFile "Denora-1.4.3-x86.exe"
+OutFile "Denora-1.4.4-x86.exe"
 InstallDir "$PROGRAMFILES\Denora"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
@@ -265,6 +265,7 @@ Section "MainSection" SEC01
   File "C:\Users\Sebastian\Documents\denora\data\modules\inspircd12.dll"
   File "C:\Users\Sebastian\Documents\denora\data\modules\ircu.dll"
   File "C:\Users\Sebastian\Documents\denora\data\modules\nefarious.dll"
+  File "C:\Users\Sebastian\Documents\denora\data\modules\nefarious13.dll"  
   File "C:\Users\Sebastian\Documents\denora\data\modules\ngircd.dll"
   File "C:\Users\Sebastian\Documents\denora\data\modules\plexus3.dll"
   File "C:\Users\Sebastian\Documents\denora\data\modules\ratbox.dll"
@@ -309,6 +310,7 @@ Section "MainSection" SEC01
   File "C:\Users\Sebastian\Documents\denora\sql\inspircd12.sql"
   File "C:\Users\Sebastian\Documents\denora\sql\ircu.sql"
   File "C:\Users\Sebastian\Documents\denora\sql\nefarious.sql"
+  File "C:\Users\Sebastian\Documents\denora\sql\nefarious13.sql"  
   File "C:\Users\Sebastian\Documents\denora\sql\ngircd.sql"
   File "C:\Users\Sebastian\Documents\denora\sql\plexus3.sql"
   File "C:\Users\Sebastian\Documents\denora\sql\ratbox.sql"
@@ -366,6 +368,7 @@ Section Uninstall
   Delete "$INSTDIR\sql\plexus3.sql"
   Delete "$INSTDIR\sql\ngircd.sql"
   Delete "$INSTDIR\sql\nefarious.sql"
+  Delete "$INSTDIR\sql\nefarious13.sql"
   Delete "$INSTDIR\sql\ircu.sql"
   Delete "$INSTDIR\sql\inspircd11.sql"
   Delete "$INSTDIR\sql\inspircd12.sql"
@@ -402,6 +405,7 @@ Section Uninstall
   Delete "$INSTDIR\data\modules\plexus3.dll"
   Delete "$INSTDIR\data\modules\ngircd.dll"
   Delete "$INSTDIR\data\modules\nefarious.dll"
+  Delete "$INSTDIR\data\modules\nefarious13.dll"
   Delete "$INSTDIR\data\modules\ircu.dll"
   Delete "$INSTDIR\data\modules\inspircd11.dll"
   Delete "$INSTDIR\data\modules\inspircd12.dll"

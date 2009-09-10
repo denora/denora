@@ -25,6 +25,7 @@ ADD `mode_us` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ut` enum('Y','N') NOT NULL default 'N',
 ADD `mode_uz` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lk_data` varchar(23) NOT NULL default '',
+ADD `mode_ul_data` varchar(33) NOT NULL default '',
 ADD `mode_ll_data` int(10) NOT NULL default '0';
 
 -- --------------------------------------------------------
@@ -47,6 +48,7 @@ ADD `mode_lz` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ub` enum('Y','N') NOT NULL default 'N',
 ADD `mode_uc` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ud` enum('Y','N') NOT NULL default 'N',
+ADD `mode_uh` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ui` enum('Y','N') NOT NULL default 'N',
 ADD `mode_uo` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ur` enum('Y','N') NOT NULL default 'N',

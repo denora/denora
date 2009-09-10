@@ -13,12 +13,12 @@
  */
 
 #include "denora.h"
-#include "nefarious.h"
+#include "nefarious13.h"
 
 int p10nickcnt = 0;
 
 IRCDVar myIrcd[] = {
-    {"Nefarious IRCu 1.0-1.2",  /* ircd name                 */
+    {"Nefarious IRCu 1.3",      /* ircd name                 */
      "+iok",                    /* StatServ mode             */
      IRCD_ENABLE,               /* Vhost                     */
      IRCD_DISABLE,              /* Supports SGlines          */
@@ -56,12 +56,12 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* nick change flood         */
      'x',                       /* vhost                     */
      IRCD_DISABLE,              /* vhost other               */
-     IRCD_DISABLE,              /* channel linking           */
+     'L',                       /* channel linking           */
      IRCD_ENABLE,               /* p10                       */
      IRCD_DISABLE,              /* TS6                       */
      IRCD_ENABLE,               /* numeric ie.. 350 etc      */
      IRCD_DISABLE,              /* channel mode gagged       */
-     IRCD_DISABLE,              /* spamfilter                */
+     IRCD_ENABLE,               /* spamfilter                */
      'b',                       /* ban char                  */
      'e',                       /* except char               */
      IRCD_DISABLE,              /* invite char               */
@@ -70,8 +70,8 @@ IRCDVar myIrcd[] = {
      IRCD_ENABLE,               /* uline                     */
      NULL,                      /* nickchar                  */
      IRCD_DISABLE,              /* svid                      */
-     IRCD_DISABLE,              /* hidden oper               */
-     IRCD_DISABLE,              /* extra warning             */
+     IRCD_ENABLE,               /* hidden oper               */
+     IRCD_ENABLE,               /* extra warning             */
      IRCD_ENABLE,               /* Report sync state         */
      'z'                        /* Persistent channel mode   */
      },
@@ -158,6 +158,7 @@ void IRCDModeInit(void)
     ModuleSetUserMode(UMODE_B, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_C, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_D, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_H, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_I, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_O, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_R, IRCD_ENABLE);
@@ -613,6 +614,8 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("PRIVS",    denora_event_null); addCoreMessage(IRCD,m);
     /* CLEARMODE */
     m = createMessage("CM",       denora_event_clearmode); addCoreMessage(IRCD,m);
+    /* SPAMFILTER */
+    m = createMessage("SF",       denora_event_spamfilter); addCoreMessage(IRCD,m);
 }
 
 /* *INDENT-ON* */
@@ -1300,6 +1303,35 @@ int denora_event_clearmode(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
+/*
+ * IBACj SF IBACj + n S 86400 No_reason_really :^$
+ *          0     1 2 3 4     5                 6
+ */
+
+int denora_event_spamfilter(char *source, int ac, char **av)
+{
+	User * u;
+	char setby[BUFSIZE];
+
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
+    }
+
+    u = user_find(av[0]);
+
+    if (!stricmp(av[1], "+") && u) {
+    	/* (char *target, char *action, char *setby, char *expires, char *setat,
+            char *duration, char *reason, char *regex) */
+    	ircsnprintf(setby, BUFSIZE, "%s!%s@%s", u->nick, u->username, u->vhost ? u->vhost : u->host);
+        sql_do_server_spam_add(av[2], av[3], setby, 0, time(NULL), av[4], av[ac-2], av[ac-1]);
+    } else if (!stricmp(av[1], "-")) {
+    	/* (char *target, char *action, char *regex) */
+        sql_do_server_spam_remove(av[2], av[3], av[ac-1]);
+    }
+
+    return MOD_CONT;
+}
+
 void moduleAddIRCDCmds()
 {
     pmodule_cmd_nick(nefarious_cmd_nick);
@@ -1340,7 +1372,7 @@ int DenoraInit(int argc, char **argv)
         ("$Id$");
     moduleSetType(PROTOCOL);
 
-    pmodule_ircd_version("Nefarious IRCu 1.0-1.2");
+    pmodule_ircd_version("Nefarious IRCu 1.3");
     pmodule_ircd_cap(myIrcdcap);
     pmodule_ircd_var(myIrcd);
     pmodule_ircd_useTSMode(0);
