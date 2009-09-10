@@ -126,6 +126,7 @@ void IRCDModeInit(void)
      * s - marks a user for receipt of server notices;
      * w - user receives wallops;
      * o - operator flag.
+     * q - prevents people who are not in any channels you are on from messaging you
      * d - Deaf & Dumb.  This user will not get any channel traffic. Used for bots.
      * k - This user cannot be kicked, deop'd or /kill'd.  This usermode may only
      *     be set by a server, it may not be set by a user.  This is used by
@@ -135,7 +136,9 @@ void IRCDModeInit(void)
      * R - account only
      * B - bot
      * X - xtra op
+     * H - allows opers to hide "Is An Oper" from their whois messages
      * I - no idle
+     * L - stop autojoins from +L channel modes
      * W - whois
      * z - SSL
      */
@@ -150,6 +153,7 @@ void IRCDModeInit(void)
     ModuleSetUserMode(UMODE_k, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_n, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_o, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_q, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_r, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_s, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_x, IRCD_ENABLE);
@@ -160,6 +164,7 @@ void IRCDModeInit(void)
     ModuleSetUserMode(UMODE_D, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_H, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_I, IRCD_ENABLE);
+    ModuleSetUserMode(UMODE_L, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_O, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_R, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_W, IRCD_ENABLE);
