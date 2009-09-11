@@ -74,6 +74,7 @@ int denora_event_jupe(char *source, int ac, char **av);
 int denora_event_fakehost(char *source, int ac, char **av);
 int denora_event_clearmode(char *source, int ac, char **av);
 int denora_event_spamfilter(char *source, int ac, char **av);
+int denora_event_spamburst(char *source, int ac, char **av);
 void IRCDModeInit(void);
 int DenoraInit(int argc, char **argv);
 void moduleAddIRCDMsgs(void);

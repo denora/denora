@@ -61,7 +61,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* TS6                       */
      IRCD_ENABLE,               /* numeric ie.. 350 etc      */
      IRCD_DISABLE,              /* channel mode gagged       */
-     IRCD_ENABLE,               /* spamfilter                */
+     'C',                       /* spamfilter /stats letter  */
      'b',                       /* ban char                  */
      'e',                       /* except char               */
      IRCD_DISABLE,              /* invite char               */
@@ -621,6 +621,10 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("CM",       denora_event_clearmode); addCoreMessage(IRCD,m);
     /* SPAMFILTER */
     m = createMessage("SF",       denora_event_spamfilter); addCoreMessage(IRCD,m);
+    /* STATS REPLY */
+    m = createMessage("230",      denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("238",      denora_event_null); addCoreMessage(IRCD,m);
+    m = createMessage("239",      denora_event_spamburst); addCoreMessage(IRCD,m);
 }
 
 /* *INDENT-ON* */
@@ -1334,6 +1338,15 @@ int denora_event_spamfilter(char *source, int ac, char **av)
     } else if (!stricmp(av[1], "-")) {
     	/* (char *target, char *action, char *regex) */
         sql_do_server_spam_remove(av[2], av[3], av[ac-1]);
+    }
+
+    return MOD_CONT;
+}
+
+int denora_event_spamburst(char *source, int ac, char **av)
+{
+    if (denora->protocoldebug) {
+        protocol_debug(source, ac, av);
     }
 
     return MOD_CONT;

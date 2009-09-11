@@ -613,6 +613,8 @@ void moduleAddIRCDMsgs(void) {
     m = createMessage("PRIVS",    denora_event_null); addCoreMessage(IRCD,m);
     /* CLEARMODE */
     m = createMessage("CM",       denora_event_clearmode); addCoreMessage(IRCD,m);
+    /* STATS REPLY */
+    m = createMessage("230",      denora_event_null); addCoreMessage(IRCD,m);
 }
 
 /* *INDENT-ON* */

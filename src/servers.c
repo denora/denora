@@ -397,7 +397,9 @@ Server *do_server(const char *source, char *servername, char *hops,
             denora_cmd_stats(s_StatServ, "U", servername);
         }
         if (ircd->spamfilter) {
-            denora_cmd_stats(s_StatServ, "f", servername);
+        	char sbuf[1];
+        	ircsnprintf(sbuf, sizeof(sbuf), "%c", ircd->spamfilter);
+            denora_cmd_stats(s_StatServ, sbuf, servername);
         }
         denora_motd(s_StatServ, servername);
     }
