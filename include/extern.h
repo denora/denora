@@ -61,7 +61,6 @@ E int in_str(char *str, char c);
 
 /**** bans.c ****/
 
-E const char *ban_char_to_action(char *val);
 E void p10_gline(char *type, char *source, int ac, char **av);
 E void sql_do_sqline(char *mask, char *reason);
 E int sql_ban_clean(const char *name);

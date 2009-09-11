@@ -11,6 +11,7 @@ Additions
 09/09/08 r313 Added chan_clearmodes function to clear given chanmodes
 
 Changes
+09/09/11 r328 Spamfilter actions are no longer translated for compatibility
 09/09/11 r327 /stats letter for getting spamfilters now definable
 09/09/07 r310 Disable nick tracking on NICK if ustatsregistered is enabled
 09/09/03 r304 Updated GeoIP.dat
