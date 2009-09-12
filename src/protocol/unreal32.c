@@ -64,7 +64,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* ts6                       */
      IRCD_ENABLE,               /* numeric                   */
      IRCD_DISABLE,              /* gagged                    */
-     'f',                       /* spamfilter /stats letter  */
+     'f',                       /* spamfilter /stats char    */
      'b',                       /* ban char                  */
      'e',                       /* except char               */
      'I',                       /* invite char               */
