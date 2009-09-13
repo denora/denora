@@ -97,6 +97,8 @@ void load_server_db(void)
     char *key, *value;
     int retval = 0;
 
+    alog(LOG_NORMAL, "Loading %s", ServerDB);
+
     fill_db_ptr(dbptr, 0, SERVER_VERSION, s_StatServ, ServerDB);
 
     /* let's remove existing temp files here, because we only load dbs on startup */
@@ -397,7 +399,7 @@ Server *do_server(const char *source, char *servername, char *hops,
             denora_cmd_stats(s_StatServ, "U", servername);
         }
         if (ircd->spamfilter) {
-        	char sbuf[1];
+        	char sbuf[2];
         	ircsnprintf(sbuf, sizeof(sbuf), "%c", ircd->spamfilter);
             denora_cmd_stats(s_StatServ, sbuf, servername);
         }

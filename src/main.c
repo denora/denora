@@ -665,6 +665,7 @@ void introduce_user(const char *user)
         ud = find_uid(s_StatServ);
         while (tn != NULL) {
             cs = lnode_get(tn);
+            alog(LOG_DEBUG, "TESTING: calling denora_cmd_join main.c:669");
             denora_cmd_join(s_StatServ, cs->name, time(NULL));
             if (AutoOp && AutoMode) {
                 modes = sstrdup(AutoMode);
@@ -1233,6 +1234,7 @@ int init(int ac, char **av)
 
     /* And hybrid needs Global joined in the logchan */
     if (!BadPtr(LogChannel)) {
+    	alog(LOG_DEBUG, "TESTING: calling denora_cmd_join main.c:1238");
         denora_cmd_join(s_StatServ, LogChannel, time(NULL));
     }
 

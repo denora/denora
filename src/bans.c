@@ -793,6 +793,7 @@ void sql_do_server_spam_add(char *target, char *action,
 #endif
     char *sqlreason;
     char *sqlregex;
+    char *sqlaction;
     SpamFilter *sf;
 
     SET_SEGV_LOCATION();
@@ -820,6 +821,7 @@ void sql_do_server_spam_add(char *target, char *action,
 
     sqlreason = rdb_escape(reason);
     sqlregex = rdb_escape(regex);
+    sqlaction = rdb_escape(action);
 
     rdb_query(QUERY_HIGH, "SELECT id FROM %s WHERE regex = \'%s\';",
               SpamTable, sqlregex);
@@ -834,14 +836,14 @@ void sql_do_server_spam_add(char *target, char *action,
             rdb_query
                 (QUERY_LOW,
                  "INSERT INTO %s (target, action, setby, expires, setat, duration, reason, regex) VALUES(\'%s\',\'%s\',\'%s\',%ld, %ld,%ld, \'%s\', \'%s\')",
-                 SpamTable, target, action, setby, strtoul(expires, NULL, 10),
+                 SpamTable, target, sqlaction, setby, strtoul(expires, NULL, 10),
                  strtoul(setat, NULL, 10), strtoul(duration, NULL, 10),
                  sqlreason, sqlregex);
         } else {
             rdb_query
                 (QUERY_LOW,
                  "UPDATE %s SET target=\'%s\', action=\'%s\', setby=\'%s\', expires=%ld, setat=%ld, duration=%ld, reason=\'%s\' WHERE regex =\'%s\'",
-                 SpamTable, target, action, setby, strtoul(expires, NULL, 10),
+                 SpamTable, target, sqlaction, setby, strtoul(expires, NULL, 10),
                  strtoul(setat, NULL, 10), strtoul(duration, NULL, 10),
                  sqlreason, sqlregex);
         }
@@ -954,7 +956,7 @@ void sql_do_server_spam_remove(char *target, char *action, char *regex)
 
     SET_SEGV_LOCATION();
 
-    sqlaction = sstrdup(action);    /* copy result into local variable */
+    sqlaction = rdb_escape(action);     /* prepare sql escaped string */
     sqlregex = rdb_escape(regex);       /* prepare sql escaped string */
     sqltarget = rdb_escape(target);     /* prepare sql escaped string */
 

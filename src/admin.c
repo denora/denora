@@ -82,6 +82,8 @@ void load_admin_db(void)
     Dadmin *x = NULL;
     Dadmin *a = NULL;
 
+    alog(LOG_NORMAL, "Loading %s", AdminDB);
+
     fill_db_ptr(dbptr, 0, ADMIN_VERSION, s_StatServ, AdminDB);
     SET_SEGV_LOCATION();
 

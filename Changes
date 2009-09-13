@@ -4,6 +4,7 @@ Denora v1.4.4-SVN
 -----------------
 
 Additions
+09/09/13 r330 Denora now logs when loading db files
 09/09/10 r324 Added support for Nefarious 1.3 (untested) [closes #564]
 09/09/08 r318 Added support for InspIRCd 1.2 METADATA message [closes #566]
 09/09/08 r318 ustatsregistered now also checks for user account [closes #566]
@@ -17,6 +18,7 @@ Changes
 09/09/03 r304 Updated GeoIP.dat
 
 Fixes
+09/09/13 r330 Fixed segfault introduced in r327
 09/09/08 r321 Ported fixes to Nefarious since last release to all P10 ircds
 09/09/08 r319 Added OM/CM support to all p10 ircds
 09/09/07 r312 Fixed channel part not being parsed if reason missing

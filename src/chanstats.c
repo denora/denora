@@ -133,6 +133,8 @@ void load_cs_db(void)
     char *key, *value;
     int retval = 0;
 
+    alog(LOG_NORMAL, "Loading %s", ChannelStatsDB);
+
     fill_db_ptr(dbptr, 0, CS_VERSION, s_StatServ, ChannelStatsDB);
     SET_SEGV_LOCATION();
 

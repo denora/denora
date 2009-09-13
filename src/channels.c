@@ -36,6 +36,8 @@ void load_chan_db(void)
     char *key, *value;
     int retval = 0;
 
+    alog(LOG_NORMAL, "Loading %s", ChannelDB);
+
     fill_db_ptr(dbptr, 0, CHAN_VERSION, s_StatServ, ChannelDB);
     SET_SEGV_LOCATION();
 
@@ -984,6 +986,7 @@ void do_kick(const char *source, int ac, char **av)
         }
         if ((cs = find_cs(av[0]))) {
             if (!stricmp(s, s_StatServ)) {
+            	alog(LOG_DEBUG, "TESTING: calling denora_cmd_join channels.c:989");
                 denora_cmd_join(s_StatServ, av[0], time(NULL));
                 if (AutoOp && AutoMode) {
                     ud = find_uid(s_StatServ);
@@ -1637,6 +1640,7 @@ void chan_adduser2(User * user, Channel * c)
     cs = find_cs(c->name);
 
     if (cs && c->statservon == 0) {
+    	alog(LOG_DEBUG, "TESTING: calling denora_cmd_join channels.c:1643");
         denora_cmd_join(s_StatServ, c->name, c->creation_time);
         if (AutoOp && AutoMode) {
             ud = find_uid(s_StatServ);

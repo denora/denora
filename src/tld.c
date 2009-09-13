@@ -214,6 +214,8 @@ void load_tld_db(void)
     char *tempc = NULL;
     int overall = 0;
 
+    alog(LOG_NORMAL, "Loading %s", TLDDB);
+
     fill_db_ptr(dbptr, 0, TLD_VERSION, s_StatServ, TLDDB);
 
     /* let's remove existing temp files here, because we only load dbs on startup */

@@ -99,6 +99,8 @@ void load_exclude_db(void)
     char *key, *value;
     int retval = 0;
 
+    alog(LOG_NORMAL, "Loading %s", excludeDB);
+
     fill_db_ptr(dbptr, 0, EXCLUDE_VERSION, s_StatServ, excludeDB);
 
     /* let's remove existing temp files here, because we only load dbs on startup */

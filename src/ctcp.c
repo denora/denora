@@ -85,6 +85,8 @@ void load_ctcp_db(void)
     char *version = NULL;
     int tempoverall = 0;
 
+    alog(LOG_NORMAL, "Loading %s", ctcpDB);
+
     fill_db_ptr(dbptr, 0, CTCP_VERSION, s_StatServ, ctcpDB);
     SET_SEGV_LOCATION();
 

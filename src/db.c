@@ -36,6 +36,8 @@ void load_stats_db(void)
     char *key, *value;
     int retval = 0;
 
+    alog(LOG_NORMAL, "Loading %s", statsDB);
+
     fill_db_ptr(dbptr, 0, STATSDB_VERSION, s_StatServ, statsDB);
     SET_SEGV_LOCATION();
 
