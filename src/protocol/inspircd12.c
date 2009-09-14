@@ -761,7 +761,7 @@ void inspircd_cmd_connect(void)
     inspircd_cmd_capab();
     send_cmd(NULL, "SERVER %s %s %d %s :%s", ServerName, RemotePassword, 0,
              TS6SID, ServerDesc);
-    send_cmd(NULL, "BURST");
+    send_cmd(TS6SID, "BURST");
     send_cmd(TS6SID,
              "VERSION :Denora-%s %s :%s -- build #%s, compiled %s %s",
              denora->version, ServerName, ircd->name, denora->build,
