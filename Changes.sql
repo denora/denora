@@ -1,5 +1,10 @@
 $Id$
 
+Denora Version 1.4.5
+--------------------
+No changes.
+
+
 Denora Version 1.4.4
 --------------------
 No changes.

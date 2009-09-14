@@ -1,7 +1,29 @@
 $Id$
 
-Denora v1.4.4-SVN
+Denora v1.4.5-SVN
 -----------------
+
+Additions
+n/a
+
+Changes
+n/a
+
+Fixes
+n/a
+
+Removals
+n/a
+
+Developers
+Denora Team <dev@denorastats.org>
+
+Contributors
+n/a
+
+
+Denora v1.4.4
+-------------
 
 Additions
 09/09/13 r330 Denora now logs when loading db files

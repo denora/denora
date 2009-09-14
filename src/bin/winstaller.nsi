@@ -189,7 +189,6 @@ Section "MainSection" SEC01
   SetOutPath "$INSTDIR\data\bin"
   File "C:\Users\Sebastian\Documents\denora\data\bin\cp-recursive"
   File "C:\Users\Sebastian\Documents\denora\data\bin\denorarc.in"
-  File "C:\Users\Sebastian\Documents\denora\data\bin\dm"
   File "C:\Users\Sebastian\Documents\denora\data\bin\langtool"
   File "C:\Users\Sebastian\Documents\denora\data\bin\mydbgen"
   File "C:\Users\Sebastian\Documents\denora\data\bin\register"
