@@ -1,6 +1,4 @@
-
 /*
- *
  * (c) 2004-2009 Denora Team
  * Contact us at info@denorastats.org
  *
@@ -733,22 +731,27 @@ Server *findserver_uid(Server * s, const char *name)
     }
 
     alog(LOG_EXTRADEBUG, "debug: findserver_uid(%s)", name);
-    while (s && s->suid
-           && ((ircd->p10 ? strcmp(s->suid, name) : stricmp(s->suid, name))
-               != 0)) {
-        if (s->links) {
-            sl = findserver_uid(s->links, name);
-            if (sl) {
-                s = sl;
-            } else {
-                s = s->next;
-            }
+    while (s) {
+        if (s->suid) {
+            if (((ircd->p10 ? strcmp(s->suid, name) : stricmp(s->suid, name)) != 0)) {
+                if (s->links) {
+                    sl = findserver_uid(s->links, name);
+                    if (sl) {
+                       return sl;
+                    } else {
+                        s = s->next;
+                    }
+                } else {
+                    s = s->next;
+                }
+			 } else {
+                return s;
+			 }
         } else {
             s = s->next;
         }
     }
-    alog(LOG_EXTRADEBUG, "debug: findserver_uid(%s) -> %p", name,
-         (void *) s);
+    alog(LOG_EXTRADEBUG, "debug: findserver_uid(%s) -> %p", name, (void *) s);
     return s;
 }
 

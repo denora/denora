@@ -10,7 +10,7 @@ Changes
 n/a
 
 Fixes
-n/a
+09/09/13 r333 [1] Fixed crash with ts6 when network contains a non-ts6 server
 
 Removals
 n/a
@@ -19,7 +19,7 @@ Developers
 Denora Team <dev@denorastats.org>
 
 Contributors
-n/a
+[1] Jeremy <jeremy@ssnet.ca>
 
 
 Denora v1.4.4
