@@ -10,6 +10,7 @@ Changes
 n/a
 
 Fixes
+09/09/13 r336 [1] Fixed issues in the ratbox protocol module
 09/09/13 r333 [1] Fixed crash with ts6 when network contains a non-ts6 server
 
 Removals

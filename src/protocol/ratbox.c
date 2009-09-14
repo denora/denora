@@ -311,12 +311,11 @@ int denora_event_tburst(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    if (ac != 5)
+    if (ac != 4)
         return MOD_CONT;
 
-    av[0] = av[1];
-    av[1] = av[3];
-    av[3] = av[4];
+    av[1] = av[2];
+    av[2] = av[1];
     do_topic(4, av);
     return MOD_CONT;
 }
@@ -627,9 +626,12 @@ int denora_event_join(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    if (ac != 1) {
+    if (ac > 3) {
         do_sjoin(source, ac, av);
         return MOD_CONT;
+    } else if ((ac > 1) && (ac < 4)) {
+        av[0] = av[1];
+        do_join(source, ac, av);
     } else {
         do_join(source, ac, av);
     }
