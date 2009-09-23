@@ -747,9 +747,6 @@ void do_p10_burst(char *source, int ac, char **av)
                     } else {
                         add_exception(c, s);
                     }
-                    if (!BadPtr(s)) {
-						free(s);
-					}
                     i++;
                 }
                 pc++;
