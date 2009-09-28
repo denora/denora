@@ -10,6 +10,7 @@ Changes
 n/a
 
 Fixes
+09/09/28 r345 Fixed sql_do_chanmodes crashing on missing parameters
 09/09/21 r340 Fixed crash on P10 ban burst
 09/09/13 r338 inspircd12 now sends TS6SID on BURST
 09/09/13 r336 [1] Fixed issues in the ratbox protocol module

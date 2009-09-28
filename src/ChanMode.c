@@ -552,7 +552,7 @@ void sql_do_chanmodes(char *chan, char **av)
                 strlcat(db, tmp, sizeof(db));
                 if (*modes == 'k') {
                     SET_SEGV_LOCATION();
-                    if (tmp[9] == 'Y') {
+                    if (tmp[9] == 'Y' && argptr < ac) {
                         char *key;
                         key = rdb_escape(av[argptr++]);
                         *buf = '\0';
@@ -567,7 +567,7 @@ void sql_do_chanmodes(char *chan, char **av)
                     }
                 } else if (*modes == 'l') {
                     SET_SEGV_LOCATION();
-                    if (tmp[9] == 'Y') {
+                    if (tmp[9] == 'Y' && argptr < ac) {
                         *buf = '\0';
                         ircsnprintf(buf, BUFSIZE - 1,
                                     "mode_ll_data=\'%s\', ", av[argptr++]);
@@ -577,7 +577,7 @@ void sql_do_chanmodes(char *chan, char **av)
                     }
                 } else if (ircd->Lmode && *modes == ircd->chanforward) {
                     SET_SEGV_LOCATION();
-                    if (tmp[9] == 'Y') {
+                    if (tmp[9] == 'Y' && argptr < ac) {
                         char *ch = rdb_escape(av[argptr++]);
                         *buf = '\0';
                         ircsnprintf(buf, BUFSIZE - 1,
@@ -597,7 +597,7 @@ void sql_do_chanmodes(char *chan, char **av)
                 } else if (ircd->fmode && ircd->floodchar
                            && *modes == ircd->floodchar) {
                     SET_SEGV_LOCATION();
-                    if (tmp[9] == 'Y') {
+                    if (tmp[9] == 'Y' && argptr < ac) {
                         *buf = '\0';
                         ircsnprintf(buf, BUFSIZE - 1,
                                     "mode_%s%c_data=\'%s\', ",
@@ -615,7 +615,7 @@ void sql_do_chanmodes(char *chan, char **av)
                 } else if (ircd->jmode && ircd->floodchar_alternative
                            && *modes == ircd->floodchar_alternative) {
                     SET_SEGV_LOCATION();
-                    if (tmp[9] == 'Y') {
+                    if (tmp[9] == 'Y' && argptr < ac) {
                         *buf = '\0';
                         ircsnprintf(buf, BUFSIZE - 1,
                                     "mode_%s%c_data=\'%s\', ",
@@ -636,7 +636,7 @@ void sql_do_chanmodes(char *chan, char **av)
                 } else if (ircd->jointhrottle
                            && *modes == ircd->jointhrottle) {
                     SET_SEGV_LOCATION();
-                    if (tmp[9] == 'Y') {
+                    if (tmp[9] == 'Y' && argptr < ac) {
                         *buf = '\0';
                         ircsnprintf(buf, BUFSIZE - 1,
                                     "mode_%s%c_data=\'%s\', ",
@@ -654,7 +654,7 @@ void sql_do_chanmodes(char *chan, char **av)
                 } else if (ircd->nickchgfloodchar
                            && *modes == ircd->nickchgfloodchar) {
                     SET_SEGV_LOCATION();
-                    if (tmp[9] == 'Y') {
+                    if (tmp[9] == 'Y' && argptr < ac) {
                         *buf = '\0';
                         ircsnprintf(buf, BUFSIZE - 1,
                                     "mode_%s%c_data=\'%s\', ",
