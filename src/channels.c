@@ -412,7 +412,7 @@ void sql_do_sjoin(char *chan, char *users, char **modes, int nbmodes)
     chanid = db_getchancreate(chan);
     sql_do_addusers(chanid, users);
     if (nbmodes) {
-        sql_do_chanmodes(chan, modes);
+        sql_do_chanmodes(chan, nbmodes, modes);
     }
 }
 
@@ -1423,7 +1423,7 @@ void do_cmode(const char *source, int ac, char **av)
     chan_set_modes(chan, ac, av);
     SET_SEGV_LOCATION();
     if (denora->do_sql) {
-        sql_do_chanmodes(chan->name, av);
+        sql_do_chanmodes(chan->name, ac, av);
     }
     if ((u = user_find(source))) {
         if (denora->do_sql && !LargeNet) {

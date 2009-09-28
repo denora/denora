@@ -453,7 +453,7 @@ char *chan_get_modes(Channel * chan, int complete)
 /*************************************************************************/
 
 /* adds modes to a given chanid */
-void sql_do_chanmodes(char *chan, char **av)
+void sql_do_chanmodes(char *chan, int ac, char **av)
 {
     int atleastone = 0;
     char db[1000];              /* should be enough for long queries */
@@ -464,7 +464,6 @@ void sql_do_chanmodes(char *chan, char **av)
     int nickid;
     char *user;
     int chanid;
-    int ac = 0;
 
     chan = rdb_escape(chan);
     chanid = db_getchannel(chan);
@@ -475,7 +474,6 @@ void sql_do_chanmodes(char *chan, char **av)
     }
 
     modes = av[0];
-    while (av) ac++;
 
     SET_SEGV_LOCATION();
     ircsnprintf(buf, sizeof(buf), "UPDATE %s SET ", ChanTable);
