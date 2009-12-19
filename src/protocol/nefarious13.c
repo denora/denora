@@ -32,10 +32,10 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* VHOST ON NICK             */
      IRCD_DISABLE,              /* +f                        */
      IRCD_DISABLE,              /* +j                        */
-     IRCD_DISABLE,              /* +L                        */
+     IRCD_ENABLE,               /* +L                        */
      IRCD_DISABLE,              /* +f Mode                   */
      IRCD_DISABLE,              /* +j Mode                   */
-     IRCD_DISABLE,              /* +L Mode                   */
+     CMODE_L,                   /* +L Mode                   */
      NULL,                      /* CAPAB Chan Modes          */
      IRCD_DISABLE,              /* We support TOKENS         */
      IRCD_DISABLE,              /* TOKENS are CASE Sensitive */
