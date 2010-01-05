@@ -1,7 +1,7 @@
 //
 // version.js - Grab version information from the version control file.
 //
-// (c) 2004-2009 Denora Team
+// (c) 2004-2010 Denora Team
 // Contact us at info@denorastats.org
 //
 // This program is free but copyrighted software; see the file COPYING for
@@ -88,7 +88,7 @@ if (!fso.FileExists(CTRL)) {
     
     f.WriteLine("/* Version information for Stats.");
     f.WriteLine(" *");
-    f.WriteLine(" * (c) 2004-2009 Denora Team");
+    f.WriteLine(" * (c) 2004-2010 Denora Team");
     f.WriteLine(" * Contact us at info@denorastats.org");
     f.WriteLine(" *");
     f.WriteLine(" * Please read COPYING and CREDITS for furhter details.");

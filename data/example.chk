@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Crontab script for Denora
-# (c) 2004-2009 Denora Team
+# (c) 2004-2010 Denora Team
 # 
 # To know how to install the crontab, read the INSTALL file.
 # $Id$
