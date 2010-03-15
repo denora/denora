@@ -1160,9 +1160,14 @@ void sql_do_server_version(char *server, int ac, char **av)
         version = sstrdup(buf);
     }
 
-    /* Unreal / P10 */
-    if (ac == 4) {
-        version = sstrdup(av[1]);
+    /* Unreal / P10 / X3 */
+     if (ac == 4) {
+        if (!stricmp(av[1], "x3")) {
+            ircsnprintf(buf, 100, "%s %s", av[1], av[2]);
+            version = sstrdup(buf);
+        } else {
+            version = sstrdup(av[1]);
+        }
     }
 
     /* Anope/Thales respond like so */
