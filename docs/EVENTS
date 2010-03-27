@@ -255,6 +255,7 @@ Denora Internal Events
         A user has left the network. This event is emitted before the internal
         removal is performed, so the user still exists internally.
         Argument 1 - contains the nickname of the user leaving the network.
+        Argument 2 - contains the quit reason
 
     EVENT_USER_JOIN
         A user joined a channel.

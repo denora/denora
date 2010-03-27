@@ -886,15 +886,20 @@ int denora_event_mode(char *source, int ac, char **av)
 int denora_event_kill(char *source, int ac, char **av)
 {
     User *u, *k;
+    char *msg = NULL;
 
     if (denora->protocoldebug)
         protocol_debug(source, ac, av);
     if (ac != 2)
         return MOD_CONT;
 
+    msg = strchr(av[1], '(');
+    msg[strlen(msg) - 1] = '\0';
+    msg++;
+
     u = find_byuid(source);
     k = find_byuid(av[0]);
-    m_kill((u ? u->nick : source), (k ? k->nick : av[0]), av[1]);
+    m_kill((u ? u->nick : source), (k ? k->nick : av[0]), msg);
     return MOD_CONT;
 }
 
@@ -1063,7 +1068,8 @@ char *nefarious_lkill_msg(char *message)
 
     /* Let's get the kill message */
     msg = strchr(message, '(');
-    msg = strchr(message, '(');
+    msg++;
+    msg = strchr(msg, '(');
     msg[strlen(msg) - 2] = '\0';
     msg++;                      /* removes first character '(' */
 

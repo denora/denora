@@ -81,7 +81,7 @@ require("denora.php");
   <td valign=top>denora_is_ulined()</td>
   <td valign=top>Returns true/false if the given server is ulined</td>
   <td>services.nomadirc.net : <?php echo((denora_is_ulined("services.nomadirc.net") ? "U:lined" : "Not U:lined")); ?><br>
-  	  luna.nomadirc.net : <?php echo((denora_is_ulined("luna.nomadirc.net") ? "U:lined" : "Not U:lined")); ?></td></td>
+  	  luna.nomadirc.net : <?php echo((denora_is_ulined("luna.nomadirc.net") ? "U:lined" : "Not U:lined")); ?></td>
  </tr>
 
  <tr>
@@ -225,18 +225,18 @@ require("denora.php");
 </table><br>
 <br>
 
-<a name="lusers">
+<a name="lusers"></a>
 <b>luser example</b><br>
 <?php denora_lusers("luna.nomadirc.net"); ?>
 <br>
 <br>
 
-<a name="whoin">
+<a name="whoin"></a>
 <b>who is in a channel</b><br>
 <?php denora_who_in_channel("#denora"); ?>
 <br>
 
-<a name="list">
+<a name="list"></a>
 <b>Channel List</b><br>
 <?php denora_list_chans(); ?>
 <br>
@@ -244,7 +244,7 @@ require("denora.php");
 <?php denora_server_list(); ?>
 <br>
 
-<a name="motd">
+<a name="motd"></a>
 <b>Server MOTD</b><br>
 <?php echo(denora_server_motd("luna.nomadirc.net")); ?>
 

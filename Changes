@@ -10,7 +10,8 @@ Changes
 n/a
 
 Fixes
-10/03/15 r346 [2] Fixed X3 version reply interpretation
+10/03/27 r353 [2] Fixed Nefarious kill message parsing
+10/03/15 r352 [2] Fixed X3 version reply interpretation
 09/09/28 r345 Fixed sql_do_chanmodes crashing on missing parameters
 09/09/21 r340 Fixed crash on P10 ban burst
 09/09/13 r338 inspircd12 now sends TS6SID on BURST
@@ -25,7 +26,7 @@ Denora Team <dev@denorastats.org>
 
 Contributors
 [1] Jeremy <jeremy@ssnet.ca>
-[2] Jobe
+[2] Jobe <jobe@mdbnet.co.uk>
 
 
 Denora v1.4.4
