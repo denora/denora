@@ -73,7 +73,7 @@ RMVER=`mysql -V |sed 's|,.*||g'`
 
 if [ "$MVER" = "" ]; then
   msg_warning "Your OS:' "$OS"' is not yet fully supported from mydbgen."
-  msg_warning "Please report this to: http://bugtracker.nomadirc.net/ ."
+  msg_warning "Please report this to: http://dev.denorastats.org/ ."
 
 elif [ "$MVER" = "3" ]; then
   msg_warning "Your MySQL version:' "$RMVER"'"
