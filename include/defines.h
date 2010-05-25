@@ -146,9 +146,10 @@
 #define LANG_NL                4       /* Dutch */
 #define LANG_IT                5       /* Italian */
 #define LANG_RU                6       /* Russian */
+#define LANG_PT_BR             7       /* Portuguese */
 
-#define NUM_LANGS              7        /* Number of languages */
-#define USED_LANGS             7        /* Number of languages provided */
+#define NUM_LANGS              8        /* Number of languages */
+#define USED_LANGS             8        /* Number of languages provided */
 
 #define DEF_LANGUAGE    LANG_EN_US
 

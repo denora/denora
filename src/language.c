@@ -28,6 +28,7 @@ static int langorder[NUM_LANGS] = {
     LANG_NL,                    /* Dutch */
     LANG_IT,                    /* Italian */
     LANG_RU,                    /* Russian */
+    LANG_PT_BR,                 /* Portuguese */
 };
 
 /*************************************************************************/
@@ -149,6 +150,7 @@ void lang_init()
     load_lang(LANG_NL, "nl");
     load_lang(LANG_IT, "it");
     load_lang(LANG_RU, "ru");
+    load_lang(LANG_PT_BR, "pt_br");
 
     SET_SEGV_LOCATION();
 
