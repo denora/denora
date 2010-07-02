@@ -7,9 +7,10 @@ Additions
 10/05/25 r355 [3] Added Portuguese language file
 
 Changes
-n/a
+10/07/02 r357 Updated GeoIP.dat
 
 Fixes
+10/07/02 r357 Fixed autoop not working correctly in inspircd 1.2/2.0
 10/03/27 r353 [2] Fixed Nefarious kill message parsing
 10/03/15 r352 [2] Fixed X3 version reply interpretation
 09/09/28 r345 Fixed sql_do_chanmodes crashing on missing parameters

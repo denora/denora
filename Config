@@ -404,7 +404,7 @@ echo ""
 ok=0
 DEF=No
 echo "Allow Denora to attempt to build a dmalloc library and use"
-echo "dmallc memory debuging tools. Should only enable this if"
+echo "dmallc memory debugging tools. Should only enable this if"
 echo "you are attempting to locate memory problems"
 while [ $ok -lt 1 ] ; do
         echo2 "[$DMEMORY] "
