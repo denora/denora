@@ -645,8 +645,6 @@ void introduce_user(const char *user)
     lasttimes[LTSIZE - 1] = time(NULL);
 #undef LTSIZE
 
-    *nickbuf = '\0';
-
     SET_SEGV_LOCATION();
     if (!user || stricmp(user, s_StatServ) == 0) {
         denora_cmd_nick(s_StatServ, desc_StatServ, ircd->statservmode);
@@ -660,7 +658,8 @@ void introduce_user(const char *user)
         }
     }
     SET_SEGV_LOCATION();
-    if (!LargeNet) {
+    /* I think this is not needed, as denora will join with correct ts upon first user join */
+    /*if (!LargeNet) {
         tn = list_first(CStatshead);
         ud = find_uid(s_StatServ);
         while (tn != NULL) {
@@ -668,6 +667,7 @@ void introduce_user(const char *user)
             alog(LOG_DEBUG, "TESTING: calling denora_cmd_join main.c:669");
             denora_cmd_join(s_StatServ, cs->name, time(NULL));
             if (AutoOp && AutoMode) {
+            	*nickbuf = '\0';
                 modes = sstrdup(AutoMode);
                 while (*modes) {
                     switch (*modes) {
@@ -687,7 +687,7 @@ void introduce_user(const char *user)
             }
             tn = list_next(CStatshead, tn);
         }
-    }
+    }*/
 }
 
 /*************************************************************************/

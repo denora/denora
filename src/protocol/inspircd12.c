@@ -1,5 +1,5 @@
 
-/* InspIRCd 1.2 functions
+/* InspIRCd 1.2/2.0 functions
  *
  * (C) 2005-2006 Craig Edwards <brain@inspircd.org>
  * (c) 2004-2010 Denora Team
@@ -12,7 +12,7 @@
  *
  * $Id$
  *
- * last tested with InspIRCd 1.2.0-RC1
+ * last tested with InspIRCd 2.0.0
  *
  */
 
