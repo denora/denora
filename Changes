@@ -11,6 +11,7 @@ Changes
 10/07/02 r357 Updated GeoIP.dat
 
 Fixes
+10/07/03 r359 Do not expect parameter when removing non-ban chanmodes [closes #1170]
 10/07/03 r358 Fixed autoop not working properly on some ircds
 10/03/27 r353 [2] Fixed Nefarious kill message parsing
 10/03/15 r352 [2] Fixed X3 version reply interpretation

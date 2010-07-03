@@ -347,15 +347,16 @@ void chan_set_modes(Channel * chan, int ac, char **av)
                 SetChanMode(chan, modebuf);
             else
                 RemoveChanMode(chan, modebuf);
-
             if (cm->setvalue) {
-                if (ac <= 0) {
+                if (add && ac <= 0) {
                     alog(LOG_ERROR, langstr(ALOG_DEBUG_MODE_NO_PARAM),
                          add ? '+' : '-', mode, chan->name);
                     continue;
                 }
-                ac--;
-                av++;
+                if (add) {
+                	ac--;
+					av++;
+                }
                 cm->setvalue(chan, add ? *av : NULL);
                 SET_SEGV_LOCATION();
                 if (ac > 0 && *av) {
