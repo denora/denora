@@ -214,7 +214,7 @@ void IRCDModeInit(void)
     CreateChanMode(CMODE_t, NULL, NULL);
     CreateChanMode(CMODE_z, NULL, NULL);
     CreateChanMode(CMODE_C, NULL, NULL);
-    CreateChanMode(CMODE_L, NULL, NULL);
+    CreateChanMode(CMODE_L, set_redirect, get_redirect);
     CreateChanMode(CMODE_M, NULL, NULL);
     CreateChanMode(CMODE_N, NULL, NULL);
     CreateChanMode(CMODE_O, NULL, NULL);

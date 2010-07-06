@@ -713,17 +713,21 @@ void do_p10_burst(char *source, int ac, char **av)
             case '+':
                 newav[0] = av[0];
                 newav[1] = av[pc];
-                if (myNumToken(av[pc], 'l') && myNumToken(av[pc], 'k')) {
+                if (myNumToken(av[pc], 'l') && myNumToken(av[pc], 'k') && myNumToken(av[pc], 'L')) {
+					newav[2] = av[pc + 1];
+					newav[3] = av[pc + 2];
+					newav[4] = av[pc + 3];
+					do_cmode(source, 5, newav);
+					pc = pc + 3;
+                } else if ((myNumToken(av[pc], 'l') && myNumToken(av[pc], 'k')) || (myNumToken(av[pc], 'l') && myNumToken(av[pc], 'L')) || (myNumToken(av[pc], 'k') && myNumToken(av[pc], 'L'))) {
                     newav[2] = av[pc + 1];
                     newav[3] = av[pc + 2];
                     do_cmode(source, 4, newav);
-                    pc++;
-                    pc++;
-                } else if (myNumToken(av[pc], 'l')
-                           || myNumToken(av[pc], 'k')) {
+                    pc = pc + 2;
+                } else if (myNumToken(av[pc], 'l') || myNumToken(av[pc], 'k') || myNumToken(av[pc], 'L')) {
                     newav[2] = av[pc + 1];
                     do_cmode(source, 3, newav);
-                    pc++;
+                    pc = pc + 1;
                 } else {
                     do_cmode(source, 2, newav);
                 }
