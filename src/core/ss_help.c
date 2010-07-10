@@ -64,7 +64,7 @@ static int do_help(User * u, int ac, char **av)
         if (is_stats_admin(u))
             notice_help(s_StatServ, u, STAT_HELP_ADMIN_CMD);
 #endif
-        moduleDisplayHelp(5, u);
+        moduleDisplayHelp(1, u);
     } else {
         if (!BadChar(av[0])) {
             mod_help_cmd(s_StatServ, u, STATSERV, av[0]);

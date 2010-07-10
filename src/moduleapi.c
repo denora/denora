@@ -401,6 +401,8 @@ void moduleDisplayHelp(int service, User * u)
         for (modcurrent = MODULE_HASH[idx]; modcurrent;
              modcurrent = modcurrent->next) {
             if ((service == 1) && modcurrent->m->operHelp) {
+                mod_current_module_name = modcurrent->name;
+                mod_current_module = modcurrent->m;
                 if (header_shown == 0) {
                     notice_lang(s_StatServ, u, MODULE_HELP_HEADER);
                     header_shown = 1;

@@ -2637,6 +2637,7 @@ void do_help_cmd(char *service, User * u, Command * c, const char *cmd)
         p2 = cmdcurrent->help_param2;
         p3 = cmdcurrent->help_param3;
         p4 = cmdcurrent->help_param4;
+        mod_current_module_name = cmdcurrent->mod_name;
         if (cmdcurrent->helpmsg_all >= 0) {
             notice_help(service, u, cmdcurrent->helpmsg_all, p1, p2, p3,
                         p4);

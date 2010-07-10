@@ -12,6 +12,7 @@ Changes
 10/07/02 r357 Updated GeoIP.dat
 
 Fixes
+10/07/10 r362 [2] Fixed crash on module help callbacks
 10/07/05 r361 Fixed nefarious13 module missing channel +L support
 10/07/03 r358 Fixed autoop not working properly on some ircds
 10/03/27 r353 [2] Fixed Nefarious kill message parsing
