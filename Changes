@@ -10,6 +10,7 @@ Changes
 10/07/05 r361 do_p10_burst now supports +L channel mode
 10/07/02 r358 inspircd12 module declared compatible with inspircd 2.0
 10/07/02 r357 Updated GeoIP.dat
+10/07/17 r363 Renamed STATS command to STATUS
 
 Fixes
 10/07/10 r362 [2] Fixed crash on module help callbacks

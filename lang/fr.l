@@ -268,12 +268,12 @@ MODULE_HELP_HEADER
 
 STAT_HELP
 	%S commands:
-	    STATS       Afficher les statistiques du réseau
+	    STATUS       Afficher les statistiques du réseau
 	    LOGIN       Vous identifier comme un Administrateur des Stats
 	    LOGOUT      Retirer votre statut d'admin
 
-STAT_HELP_STATS
-	Synthaxe: STATS
+STAT_HELP_STATUS
+	Synthaxe: STATUS
 	
 	Affiche le nombre de serveurs, salons et utilisateurs
 	connectés au réseau actuellement.
@@ -425,29 +425,29 @@ STAT_RELOAD
 
 ###########################################################################
 #
-# STATS messages
+# STATUS messages
 #
 ###########################################################################
 
-STAT_STATS_SERVER_COUNT
+STAT_STATUS_SERVER_COUNT
 	Statistiques des serveurs pour %s:
 	Serveurs actuellement reliés:  %d
 	Maximum de serveurs reliés: %d
 
-STAT_STATS_CHAN_COUNT
+STAT_STATUS_CHAN_COUNT
 	Statistiques des salons pour %s:
 	Salons actuellement utilisés:  %d
 	Maximum de salons créés: %d
 
-STAT_STATS_USER_COUNT
+STAT_STATUS_USER_COUNT
 	Statistiques des utilisateurs pour %s:
 	Utilisateurs actuellement connectés:  %d
 	Maximum d'utilisateurs connectés: %d
 
-STAT_STATS_SYNTAX
-	STATS [SERVERS|CHANNELS|USERS]
+STAT_STATUS_SYNTAX
+	STATUS [SERVERS|CHANNELS|USERS]
 
-STAT_STATS_PAGE
+STAT_STATUS_PAGE
 	Pour plus de stats, visitez %s
 
 # SET responses

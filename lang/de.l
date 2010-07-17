@@ -259,12 +259,12 @@ MODULE_HELP_HEADER
 
 STAT_HELP
 	%S Befehle:
-	    STATS       Zeigt eine Übersicht des Netzwerkes.
+	    STATUS       Zeigt eine Übersicht des Netzwerkes.
 	    LOGIN       Macht dich zum Stats Administrator.
 	    LOGOUT      Melded dich von deinem Administrator-Konto ab.
 
-STAT_HELP_STATS
-	Syntax: STATS
+STAT_HELP_STATUS
+	Syntax: STATUS
 	
 	Zeigt die Anzahl der Server,Channels und Users die 
 	gegenwärtig zum Netzwerk verbunden sind.
@@ -422,29 +422,29 @@ STAT_RELOAD
 
 ###########################################################################
 #
-# STATS messages
+# STATUS messages
 #
 ###########################################################################
 
-STAT_STATS_SERVER_COUNT
+STAT_STATUS_SERVER_COUNT
 	Server Statistiken für %s:
 	Die aktuelle Anzahl verbundener Server: %d
 	Die maximale Anzahl verbundener Server: %d
 
-STAT_STATS_CHAN_COUNT
+STAT_STATUS_CHAN_COUNT
 	Channel Statistiken für %s:
 	Die aktuelle Anzahl benutzter Channels: %d
 	Die maximale Anzahl benutzter Channels: %d
 
-STAT_STATS_USER_COUNT
+STAT_STATUS_USER_COUNT
 	User Statistiken für %s
 	Die aktuelle Anzahl verbundener User: %d
 	Die maximale Anzahl verbundener User: %d
 
-STAT_STATS_SYNTAX
-	STATS [SERVERS|CHANNELS|USERS]
+STAT_STATUS_SYNTAX
+	STATUS [SERVERS|CHANNELS|USERS]
 
-STAT_STATS_PAGE
+STAT_STATUS_PAGE
 	Für mehr Stats: %s
 
 # SET responses

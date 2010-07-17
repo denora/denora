@@ -263,12 +263,12 @@ MODULE_HELP_HEADER
 
 STAT_HELP
 	Список команд %S:
-	    STATS       Показывает статистику сети.
+	    STATUS       Показывает статистику сети.
 	    LOGIN       Идентификация на сервисах статистики.
 	    LOGOUT      Деидентификация на сервисах статистики.
 
-STAT_HELP_STATS
-	Синтаксис: STATS
+STAT_HELP_STATUS
+	Синтаксис: STATUS
 	
 	Выводит статистику о количестве серверов сети, количестве
 	созданных каналов и о количестве пользователей сети.
@@ -420,29 +420,29 @@ STAT_RELOAD
 
 ###########################################################################
 #
-# STATS messages
+# STATUS messages
 #
 ###########################################################################
 
-STAT_STATS_SERVER_COUNT
+STAT_STATUS_SERVER_COUNT
 	Статистика о серверах сети %s:
 	Текущее количество серверов:  %d
 	Максимально прилинковано серверов: %d
 
-STAT_STATS_CHAN_COUNT
+STAT_STATUS_CHAN_COUNT
 	Статистика о каналах сети %s:
 	Текущее количество каналов:  %d
 	Максимально создано каналов: %d
 
-STAT_STATS_USER_COUNT
+STAT_STATUS_USER_COUNT
 	Статистика о пользователях сети %s
 	Текущее кол-во пользователей:  %d
 	Максимальное кол-во пользователей: %d
 
-STAT_STATS_SYNTAX
-	STATS [SERVERS|CHANNELS|USERS]
+STAT_STATUS_SYNTAX
+	STATUS [SERVERS|CHANNELS|USERS]
 
-STAT_STATS_PAGE
+STAT_STATUS_PAGE
 	Для более подробной информации см. %s
 
 # SET responses

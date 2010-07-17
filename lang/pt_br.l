@@ -261,12 +261,12 @@ MODULE_HELP_HEADER
 
 STAT_HELP
 	Comandos do %S:
-	    STATS       Mostra as estat�sticas de sua rede.
+	    STATUS       Mostra as estat�sticas de sua rede.
 	    LOGIN       Loga voc� como administrador.
 	    LOGOUT      Desloga voc� do status de administrador.
 
-STAT_HELP_STATS
-	Sintaxe: STATS
+STAT_HELP_STATUS
+	Sintaxe: STATUS
 	
 	Mostra o n�mero atual de servidores, canais e usu�rios
 	connected to the network.
@@ -413,29 +413,29 @@ STAT_RELOAD
 
 ###########################################################################
 #
-# STATS messages
+# STATUS messages
 #
 ###########################################################################
 
-STAT_STATS_SERVER_COUNT
+STAT_STATUS_SERVER_COUNT
 	Estat�sticas de servidores da %s:
 	Servidores linkados atualmente:  %d
 	M�ximo de servidores linkados: %d
 
-STAT_STATS_CHAN_COUNT
+STAT_STATUS_CHAN_COUNT
 	Estat�sticas canais da %s:
 	Canais sendo usados atualmente:  %d
 	M�ximo de canais criados: %d
 
-STAT_STATS_USER_COUNT
+STAT_STATUS_USER_COUNT
 	Estat�sticas de usu�rios da %s:
 	Usu�rios conectados atualmente:  %d
 	M�ximo de usu�rios conectados: %d
 
-STAT_STATS_SYNTAX
-	STATS [SERVERS|CHANNELS|USERS]
+STAT_STATUS_SYNTAX
+	STATUS [SERVERS|CHANNELS|USERS]
 
-STAT_STATS_PAGE
+STAT_STATUS_PAGE
 	Para mais estat�sticas, visite: %s
 
 # SET responses

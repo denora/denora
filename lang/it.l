@@ -263,12 +263,12 @@ MODULE_HELP_HEADER
 
 STAT_HELP
 	%S comandi:
-	    STATS       Mostra lo stato del network
+	    STATUS       Mostra lo stato del network
 	    LOGIN       Diventa un Amministratore Stats (Stats Admin).
 	    LOGOUT      Esci dal tuo account admin.
 
-STAT_HELP_STATS
-	Sintassi: STATS
+STAT_HELP_STATUS
+	Sintassi: STATUS
 	
 	Mostra il numero attuale di server, canali ed utenti
 	connessi al network.
@@ -418,29 +418,29 @@ STAT_RELOAD
 
 ###########################################################################
 #
-# STATS messages
+# STATUS messages
 #
 ###########################################################################
 
-STAT_STATS_SERVER_COUNT
+STAT_STATUS_SERVER_COUNT
 	Statistiche di server per %s:
 	Server attualmente linkati:  %d
 	Picco dei server connessi: %d
 
-STAT_STATS_CHAN_COUNT
+STAT_STATUS_CHAN_COUNT
 	Statistiche di canali per %s:
 	Canali attualmente utilizzati:  %d
 	Picco dei canali creati: %d
 
-STAT_STATS_USER_COUNT
+STAT_STATUS_USER_COUNT
 	Statistiche di utenti per %s
 	Utenti attualmente connessi:  %d
 	Picco di utenti connessi: %d
 
-STAT_STATS_SYNTAX
-	STATS [SERVERS|CHANNELS|USERS]
+STAT_STATUS_SYNTAX
+	STATUS [SERVERS|CHANNELS|USERS]
 
-STAT_STATS_PAGE
+STAT_STATUS_PAGE
 	Per più statistiche visita %s
 
 # SET responses

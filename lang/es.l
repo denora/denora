@@ -260,12 +260,12 @@ MODULE_HELP_HEADER
 
 STAT_HELP
 	Comandos de %S:
-	    STATS       Muestra el estado de la red
+	    STATUS       Muestra el estado de la red
 	    LOGIN       Te hace un administrador de Stats.
 	    LOGOUT      Finaliza tu sesion de administrador.
 
-STAT_HELP_STATS
-	Sintaxis: STATS
+STAT_HELP_STATUS
+	Sintaxis: STATUS
 	
 	Muestra el numero actual de servidores, canales y usuarios
 	conectados a la red.
@@ -415,29 +415,29 @@ STAT_RELOAD
 
 ###########################################################################
 #
-# STATS messages
+# STATUS messages
 #
 ###########################################################################
 
-STAT_STATS_SERVER_COUNT
+STAT_STATUS_SERVER_COUNT
 	Estadistica de servidores para %s:
 	Servidores actualmente conectados:  %d
 	Maximo de servidores conectados:    %d
 
-STAT_STATS_CHAN_COUNT
+STAT_STATUS_CHAN_COUNT
 	Estadisticas de canales para %s:
 	Canales actualmente usados:  %d
 	Maximo de canales usados:    %d
 
-STAT_STATS_USER_COUNT
+STAT_STATUS_USER_COUNT
 	Estadisticas de usuarios para %s
 	Usuarios actualmente conectados:  %d
 	Maximo de usuarios conectados:    %d
 
-STAT_STATS_SYNTAX
-	STATS [SERVERS|CHANNELS|USERS]
+STAT_STATUS_SYNTAX
+	STATUS [SERVERS|CHANNELS|USERS]
 
-STAT_STATS_PAGE
+STAT_STATUS_PAGE
 	Para mas estadisticas visita %s
 
 # SET responses

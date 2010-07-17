@@ -15,7 +15,7 @@
 
 #include "denora.h"
 
-static int do_stats(User * u, int ac, char **av);
+static int do_status(User * u, int ac, char **av);
 int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
 
@@ -36,8 +36,8 @@ int DenoraInit(int argc, char **argv)
     moduleAddVersion("$Id$");
     moduleSetType(CORE);
 
-    c = createCommand("STATS", do_stats, is_oper, -1, -1, -1,
-                      STAT_HELP_STATS);
+    c = createCommand("STATUS", do_status, is_oper, -1, -1, -1,
+                      STAT_HELP_STATUS);
     moduleAddCommand(STATSERV, c, MOD_UNIQUE);
 
     return MOD_CONT;
@@ -51,9 +51,9 @@ void DenoraFini(void)
 
 }
 
-/* STATS command. */
+/* STATUS command. */
 
-static int do_stats(User * u, int ac, char **av)
+static int do_status(User * u, int ac, char **av)
 {
     char *what = NULL;
 
@@ -64,29 +64,29 @@ static int do_stats(User * u, int ac, char **av)
     SET_SEGV_LOCATION();
 
     if (!what) {
-        notice_lang(s_StatServ, u, STAT_STATS_SERVER_COUNT, NetworkName,
+        notice_lang(s_StatServ, u, STAT_STATUS_SERVER_COUNT, NetworkName,
                     stats->servers, stats->servers_max);
         notice_user(s_StatServ, u, " ");
-        notice_lang(s_StatServ, u, STAT_STATS_CHAN_COUNT, NetworkName,
+        notice_lang(s_StatServ, u, STAT_STATUS_CHAN_COUNT, NetworkName,
                     stats->chans, stats->chans_max);
         notice_user(s_StatServ, u, " ");
-        notice_lang(s_StatServ, u, STAT_STATS_USER_COUNT, NetworkName,
+        notice_lang(s_StatServ, u, STAT_STATUS_USER_COUNT, NetworkName,
                     stats->users, stats->users_max);
         if (StatsPage) {
             notice_user(s_StatServ, u, " ");
-            notice_lang(s_StatServ, u, STAT_STATS_PAGE, StatsPage);
+            notice_lang(s_StatServ, u, STAT_STATUS_PAGE, StatsPage);
         }
     } else if (!stricmp(what, "SERVERS")) {
-        notice_lang(s_StatServ, u, STAT_STATS_SERVER_COUNT, NetworkName,
+        notice_lang(s_StatServ, u, STAT_STATUS_SERVER_COUNT, NetworkName,
                     stats->servers, stats->servers_max);
     } else if (!stricmp(what, "CHANNELS")) {
-        notice_lang(s_StatServ, u, STAT_STATS_CHAN_COUNT, NetworkName,
+        notice_lang(s_StatServ, u, STAT_STATUS_CHAN_COUNT, NetworkName,
                     stats->chans, stats->chans_max);
     } else if (!stricmp(what, "USERS")) {
-        notice_lang(s_StatServ, u, STAT_STATS_USER_COUNT, NetworkName,
+        notice_lang(s_StatServ, u, STAT_STATUS_USER_COUNT, NetworkName,
                     stats->users, stats->users_max);
     } else {
-        syntax_error(s_StatServ, u, "STATS", STAT_STATS_SYNTAX);
+        syntax_error(s_StatServ, u, "STATUS", STAT_STATUS_SYNTAX);
     }
 
     return MOD_CONT;

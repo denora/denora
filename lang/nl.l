@@ -267,12 +267,12 @@ MODULE_HELP_HEADER
 
 STAT_HELP
 	%S commando's:
-	    STATS       Geeft de huidige netwekstatus weer
+	    STATUS       Geeft de huidige netwekstatus weer
 	    LOGIN       Maakt u een Stats beheerder.
 	    LOGOUT      Geef uw beheerdersrechten op.
 
-STAT_HELP_STATS
-	Gebruik: STATS
+STAT_HELP_STATUS
+	Gebruik: STATUS
 	
 	Laat het huidige aantal servers, kanalen, en gebruikers zien
 	dat verbonden is met het netwerk.
@@ -435,29 +435,29 @@ STAT_RELOAD
 
 ###########################################################################
 #
-# STATS messages
+# STATUS messages
 #
 ###########################################################################
 
-STAT_STATS_SERVER_COUNT
+STAT_STATUS_SERVER_COUNT
 	Statistieken van servers voor %s:
 	Servers momenteel verbonden: %d
 	Record aantal verbonden servers: %d
 
-STAT_STATS_CHAN_COUNT
+STAT_STATUS_CHAN_COUNT
 	Statistieken van kanalen voor %s:
 	Kanalen momenteel in gebruik: %d
 	Record aantal gemaakte kanalen: %d
 
-STAT_STATS_USER_COUNT
+STAT_STATUS_USER_COUNT
 	Statistieken van gebruikers voor %s:
 	Gebruikers momenteel verbonden: %d
 	Record aantal verbonden gebruikers: %d
 
-STAT_STATS_SYNTAX
-	STATS [SERVERS|CHANNELS|USERS]
+STAT_STATUS_SYNTAX
+	STATUS [SERVERS|CHANNELS|USERS]
 
-STAT_STATS_PAGE
+STAT_STATUS_PAGE
 	For more stats visit %s
 
 # SET responses

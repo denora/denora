@@ -14,7 +14,7 @@
 include ../../Makefile.inc.win32
 
 SRCS=ss_admin.c ss_chanstats.c ss_core.c ss_envinfo.c ss_exclude.c ss_export.c ss_help.c ss_html.c \
-	ss_login.c ss_modules.c ss_set.c ss_stats.c ss_userdebug.c ss_fantasy_gstats.c \
+	ss_login.c ss_modules.c ss_set.c ss_status.c ss_userdebug.c ss_fantasy_gstats.c \
 	ss_fantasy_gtop10.c ss_fantasy_gtop.c ss_fantasy_help.c ss_fantasy_peak.c \
 	ss_fantasy_stats.c ss_fantasy_top10.c ss_fantasy_top.c xmlrpc_channeldata.c \
 	xmlrpc_channelslist.c xmlrpc_get.c event_motd.c event_uline.c event_229.c event_351.c event_242.c \
