@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `server` (
   PRIMARY KEY  (`servid`),
   UNIQUE KEY `server` (`server`),
   KEY `linkedto` (`linkedto`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY  (`nickid`),
   UNIQUE KEY `nick` (`nick`),
   KEY `servid` (`servid`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `aliases` (
   `uname` varchar(32) NOT NULL default '',
   `ignore` enum('Y','N') NOT NULL default 'N',
   PRIMARY KEY  (`nick`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `ustats` (
   `time22` int(10) unsigned NOT NULL default '0',
   `time23` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY (`uname`, `chan`, `type`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -163,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `cstats` (
   `time22` int(10) unsigned NOT NULL default '0',
   `time23` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY (`chan`, `type`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -197,7 +197,7 @@ CREATE TABLE IF NOT EXISTS `stats` (
   `time_22` int(15) NOT NULL default '0',
   `time_23` int(15) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -231,7 +231,7 @@ CREATE TABLE IF NOT EXISTS `channelstats` (
   `time_22` int(15) NOT NULL default '0',
   `time_23` int(15) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -265,7 +265,7 @@ CREATE TABLE IF NOT EXISTS `serverstats` (
   `time_22` int(15) NOT NULL default '0',
   `time_23` int(15) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 -- The following tables contain volatile data and can
@@ -285,7 +285,7 @@ CREATE TABLE `chan` (
   `kickcount` int(15) NOT NULL default '0',
   PRIMARY KEY  (`chanid`),
   UNIQUE KEY `channel` (`channel`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -295,7 +295,7 @@ CREATE TABLE `chanbans` (
   `chan` varchar(255) NOT NULL default '0',
   `bans` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -305,7 +305,7 @@ CREATE TABLE `chanexcept` (
   `chan` varchar(255) NOT NULL default '',
   `mask` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -315,7 +315,7 @@ CREATE TABLE `chaninvites` (
   `chan` varchar(255) NOT NULL default '',
   `mask` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -325,7 +325,7 @@ CREATE TABLE `chanquiet` (
   `chan` varchar(255) NOT NULL default '',
   `mask` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -334,7 +334,7 @@ CREATE TABLE `current` (
   `type` varchar(255) NOT NULL default '',
   `val` int(15) NOT NULL default '0',
   `time` int(15) NOT NULL default '0'
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 INSERT INTO `current` VALUES ('users', 0, 0);
 INSERT INTO `current` VALUES ('chans', 0, 0);
@@ -350,7 +350,7 @@ CREATE TABLE `maxvalues` (
   `val` int(10) unsigned NOT NULL default '0',
   `time` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`type`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 INSERT INTO `maxvalues` (`type`, `val`, `time`) VALUES ('users', 0, '0000-00-00 00:00:00');
 INSERT INTO `maxvalues` (`type`, `val`, `time`) VALUES ('channels', 0, '0000-00-00 00:00:00');
@@ -370,7 +370,7 @@ CREATE TABLE `ison` (
   `mode_lq` enum('Y','N') NOT NULL default 'N',
   `mode_lv` enum('Y','N') NOT NULL default 'N',
   PRIMARY KEY  (`nickid`,`chanid`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -382,7 +382,7 @@ CREATE TABLE `tld` (
   `count` mediumint(15) NOT NULL default '0',
   `overall` mediumint(15) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -393,7 +393,7 @@ CREATE TABLE `ctcp` (
   `count` mediumint(25) NOT NULL default '0',
   `overall` int(15) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -408,7 +408,7 @@ CREATE TABLE `glines` (
   `expires` int(20) NOT NULL default '0',
   `reason` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -418,7 +418,7 @@ CREATE TABLE `sgline` (
   `mask` varchar(255) NOT NULL default '',
   `reason` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -428,7 +428,7 @@ CREATE TABLE `sqline` (
   `mask` varchar(255) NOT NULL default '',
   `reason` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -444,7 +444,7 @@ CREATE TABLE `spamfilters` (
   `reason` varchar(255) NOT NULL default '',
   `regex` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -458,4 +458,4 @@ CREATE TABLE `admin` (
   `lang` tinyint(2) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `uname` (`uname`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
