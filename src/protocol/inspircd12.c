@@ -1285,7 +1285,11 @@ int denora_event_idle(char *source, int ac, char **av)
 
 void inspircd_cmd_ping(char *server)
 {
-    send_cmd(TS6SID, "PING %s :%s", ServerName, server);
+	Server *s;
+	s = server_find(server);
+	if (s) {
+		send_cmd(TS6SID, "PING %s :%s", TS6SID, s->suid);
+	}
 }
 
 void inspircd_cmd_ctcp(char *source, char *dest, char *buf)

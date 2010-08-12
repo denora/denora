@@ -13,6 +13,7 @@ Changes
 10/07/17 r363 Renamed STATS command to STATUS
 
 Fixes
+10/08/12 r365 inspircd12 now sends proper PING messages
 10/08/12 r364 Fixed SQL schema using TYPE which is deprecated
 10/07/10 r362 [2] Fixed crash on module help callbacks
 10/07/05 r361 Fixed nefarious13 module missing channel +L support
