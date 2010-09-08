@@ -635,9 +635,13 @@ int denora_event_motd(char *source, int ac, char **av)
 
 void asuka_cmd_mode(char *source, char *dest, char *buf)
 {
+    Channel *c;
     alog(LOG_PROTOCOL, "MODE Source %s, dest %s, buf %s", source, dest,
          buf);
-    send_cmd(p10id, "M %s %s %ld", dest, buf, (long int) time(NULL));
+    if ((c = findchan(dest)))
+        send_cmd(p10id, "M %s %s %ld", dest, buf, (long int) c->creation_time);
+    else
+        send_cmd(p10id, "M %s %s", dest, buf);
 }
 
 /*************************************************************************/

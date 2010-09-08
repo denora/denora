@@ -7,12 +7,13 @@ Additions
 10/05/25 r355 [3] Added Portuguese language file
 
 Changes
+10/07/17 r363 Renamed STATS command to STATUS
 10/07/05 r361 do_p10_burst now supports +L channel mode
 10/07/02 r358 inspircd12 module declared compatible with inspircd 2.0
 10/07/02 r357 Updated GeoIP.dat
-10/07/17 r363 Renamed STATS command to STATUS
 
 Fixes
+10/09/08 r366 Fixed P10 MODE not using the correct channel creation timestamp
 10/08/12 r365 inspircd12 now sends proper PING messages
 10/08/12 r364 Fixed SQL schema using TYPE which is deprecated
 10/07/10 r362 [2] Fixed crash on module help callbacks
