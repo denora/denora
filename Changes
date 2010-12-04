@@ -7,7 +7,7 @@ Additions
 10/05/25 r355 [3] Added Portuguese language file
 
 Changes
-10/12/03 r368 Updated GeoIP.dat
+10/12/04 r369 Updated GeoIP.dat
 10/07/17 r363 Renamed STATS command to STATUS
 10/07/05 r361 do_p10_burst now supports +L channel mode
 10/07/02 r358 inspircd12 module declared compatible with inspircd 2.0
