@@ -872,7 +872,7 @@ HTML_NETMAP_TITLE
 	Mapa da rede
 
 HTML_VERSION
-	Powered by <a href="http://denorastats.org/">Denora</a> versao %s %s
+	Powered by <a href="http://www.denorastats.org/">Denora</a> versao %s %s
 
 HTML_MOST_UNWELCOME_TITLE
 	Maiores canais que nao sao bem vindos

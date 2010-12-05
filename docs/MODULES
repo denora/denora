@@ -83,7 +83,7 @@ Denora Modules
     implemented module capabilities. They don't really do much or anything
     useful.
 
-    You can download more useful modules from http://denorastats.org/. Just
+    You can download more useful modules from http://www.denorastats.org/. Just
     grab the module file (usually with a .c extension). Place the module
     file in your modules (src/modules) folder; the same folder that contains
     both ss_uptime.c and example.c module files.

@@ -14,7 +14,7 @@ Denora for Windows
     1) Download the required files:
 
         * Current Denora source:
-            http://denorastats.org/
+            http://www.denorastats.org/
 
 	If you have Visual C++ 6 or greater skip ahead to step 2, else you
         need to download the following free components from Microsoft. Once

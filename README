@@ -7,7 +7,7 @@
 |_____/ \___||_| |_\___/|_|   \__,_|_
 
           Statistics for IRC Networks
-          http://denorastats.org/
+          http://www.denorastats.org/
 
 -----------------
 TABLE OF CONTENTS
@@ -62,7 +62,7 @@ TABLE OF CONTENTS
         * w00t                <w00t@denorastats.org>
         * Klaas Tammling      <obi_wan@denorastats.org>
         * Alexander Maassen   <outsider@denorastats.org>
-	* Matthew Beeching    <jobe@denorastats.org>
+        * Matthew Beeching    <jobe@denorastats.org>
 
     Denora Translations:
 
@@ -116,7 +116,7 @@ TABLE OF CONTENTS
     Denora could also work with some of the deamons derivated by the ones 
     listed above.
 
-    [1] http://denorastats.org/
+    [1] http://www.denorastats.org/
 
 
 3. INSTALLATION
@@ -157,18 +157,17 @@ TABLE OF CONTENTS
 ----------------------
 
     * If you read the documentation carefully, which you also can find on our wiki
-      (http://dev.denorastats.org/wiki/denora) and didn't find the answer to your
+      (http://wiki.denorastats.org/) and didn't find the answer to your
       question, feel free to post on the website forums or join our IRC channel
       (irc.denorastats.org #denora). Be as precise as possible when asking a question,
       because we have no extraordinary powers and can't guess things if they aren't
       provided. The more precise you are, the sooner you'll be likely to get an answer.
 
     * If you think you found a bug, add it to the bug tracking system on our
-      website (http://dev.denorastats.org/projects/denora/issues) and - again - be as
+      website (http://dev.denorastats.org/) and - again - be as
       precise as possible. Also say whether the bug happens always or under what
       circumstances, and anything that could be useful to track your bug down.
       If you wrote a patch, send it over.
 
     * Support is also available via our forums located at
-      http://dev.denorastats.org/projects/denora/boards
-
+      http://forum.denorastats.org/

@@ -256,7 +256,7 @@ var buildPackages = [
         if (!findCompiler()) {
                 WScript.Echo("\nERROR: No suitable build tools were found!");
                 WScript.Echo("Please ensure you have downloaded and installed a version of Visual C++ and/or PlatformSDK.\n");
-                WScript.Echo("For more information on the tools needed to build Denora on Windows, see:\nhttp://denorastats.org\n");
+                WScript.Echo("For more information on the tools needed to build Denora on Windows, see:\nhttp://www.denorastats.org\n");
         }
         else {
                 WScript.Echo("\nBuild tools were found successfully!\n");
@@ -452,7 +452,7 @@ var buildPackages = [
                 if (noPSDK) {
                         WScript.Echo("Some of the build tools were detected on your computer, but the essential PlatformSDK components were missing.");
                         WScript.Echo("You will need to download the PlatformSDK from the URL below, ensuring that the Core Windows files, and Debugging Tools are installed.");
-                        WScript.Echo("For more details on installing the PlatformSDK, visit http://denorastats.org\n");
+                        WScript.Echo("For more details on installing the PlatformSDK, visit http://www.denorastats.org\n");
                         WScript.Echo("PSDK: http://www.microsoft.com/downloads/details.aspx?FamilyId=E6E1C3DF-A74F-4207-8586-711EBE331CDC&displaylang=en\n");                        
                 }
                 return false;

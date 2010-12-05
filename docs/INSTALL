@@ -34,7 +34,7 @@ using for the ircd or a dedicated one will be good enough.
 
 2.1 Quick Install in 10 steps
 -----------------------------
-   1. Download the latest Denora package from http://denorastats.org/
+   1. Download the latest Denora package from http://www.denorastats.org/
    2. Unpack it using the non-root user that will run it later
    3. Change to the Denora directory (cd denora)
    4. Type ./Config and follow instructions on-screen
@@ -55,7 +55,7 @@ just below.
 The very first thing you need to do is to get the Denora package
 (if not already done). You can find it at the following place:
 
-    http://denorastats.org/
+    http://www.denorastats.org/
 
 Next, unpack the package in your home directory, and go into the
 created directory.
@@ -238,5 +238,6 @@ to the user
 5. Dutch
 6. Italian
 7. Russian
+8. Portuguese
 
 -- $Id$

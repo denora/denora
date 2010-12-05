@@ -874,7 +874,7 @@ HTML_NETMAP_TITLE
 	Mapa de la Red
 
 HTML_VERSION
-	Powered by <a href="http://denorastats.org/">Denora</a> version %s %s
+	Powered by <a href="http://www.denorastats.org/">Denora</a> version %s %s
 
 HTML_MOST_UNWELCOME_TITLE
 	Canales peor recibidos

@@ -881,7 +881,7 @@ HTML_NETMAP_TITLE
 	Netzwerk Map
 
 HTML_VERSION
-	Powered by <a href="http://denorastats.org/">Denora</a> version %s %s
+	Powered by <a href="http://www.denorastats.org/">Denora</a> version %s %s
 
 HTML_MOST_UNWELCOME_TITLE
 	Unbeliebte Channels

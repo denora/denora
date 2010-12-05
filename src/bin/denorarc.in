@@ -66,7 +66,7 @@ fi
                 echo "This error has been logged in your Denora Log file"
                 echo "Located in "$LOG""
                 echo "This may help you diagnose the problem"
-                echo "Further help may be available from http://denorastats.org/"
+                echo "Further help may be available from http://www.denorastats.org/"
 		exit 1
 		fi
 		PID=`cat $DENORAPID`
@@ -75,7 +75,7 @@ fi
 		echo "This error has been logged in your Denora Log file"
 		echo "Located in "$LOG""
 		echo "This may help you diagnose the problem"
-		echo "Further help may be available from http://denorastats.org/"
+		echo "Further help may be available from http://www.denorastats.org/"
 		exit 1
 		fi
 
@@ -129,7 +129,7 @@ elif [ "$1" = "help" ] ; then
 		echo "$0 help           Show this help menu"
 		echo "If you need further help please check the /docs/"
 		echo "folder or make use of our extensive online support at"
-		echo "http://denorastats.org/"
+		echo "http://www.denorastats.org/"
 	fi
 	
 else

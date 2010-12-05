@@ -911,7 +911,7 @@ static int parse_options(int ac, char **av)
                         , (denora->flag_sql ? denora->flag_sql : ""),
                         denora->build, denora->date, denora->time);
                 fprintf(stdout,
-                        "Denora IRC Stats (http://denorastats.org/)\n");
+                        "Denora IRC Stats (http://www.denorastats.org/)\n");
                 fprintf(stdout, "Usage ./stats [options] ...\n");
                 fprintf(stdout,
                         "-remote        -remote hostname[:port]\n");
@@ -933,7 +933,7 @@ static int parse_options(int ac, char **av)
 #endif
                 fprintf(stdout, "\n");
                 fprintf(stdout,
-                        "Further support is available from http://denorastats.org/\n");
+                        "Further support is available from http://www.denorastats.org/\n");
                 fprintf(stdout,
                         "Or visit US on IRC at irc.denorastats.org #denora\n");
                 return 0;

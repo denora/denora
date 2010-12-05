@@ -884,7 +884,7 @@ HTML_NETMAP_TITLE
 	Карта сети
 
 HTML_VERSION
-	Статистика предоставлена продуктом <a href="http://denorastats.org/">Denora</a> версии %s %s
+	Статистика предоставлена продуктом <a href="http://www.denorastats.org/">Denora</a> версии %s %s
 
 HTML_MOST_UNWELCOME_TITLE
 	Самые "неприветливые" каналы

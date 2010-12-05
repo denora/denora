@@ -5,7 +5,7 @@ Denora MySQL Support
 
     The MySQL support in Denora allows users to get real time statistics through
     SQL, for example via Web.
-    We suggest you take a look at phpDenora (http://denorastats.org/).
+    We suggest you take a look at phpDenora (http://www.denorastats.org/).
 
 2) Requirements
 
