@@ -1,5 +1,8 @@
 Denora for Windows
------------------
+------------------
+
+PLEASE READ: you only need this if you intend to compile Denora on your own.
+The recommended way to get Denora for Windows is to use our installers, which will install a compiled Denora version for you which is ready to go.
 
 1) Building the Source
 2) Installation

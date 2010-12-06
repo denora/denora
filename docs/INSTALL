@@ -1,6 +1,13 @@
-DENORA INSTALLATION INSTRUCTIONS
--- $Id$
 ================================
+DENORA INSTALLATION INSTRUCTIONS
+================================
+
+***
+PLEASE READ:
+This document is intended for Unix-based systems ONLY.
+To install the Denora binareis on Windows, please see the QUICKSTART.txt file.
+To self-compile Denora on Windows, please see the docs/WIN32.txt file.
+***
 
 Table of contents
 -----------------

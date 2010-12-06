@@ -122,7 +122,8 @@ TABLE OF CONTENTS
 3. INSTALLATION
 ---------------
 
-    See the docs/INSTALL file.
+	For a Quick Start guide on Unix or Windows systems see the QUICKSTART.txt file.
+    See the docs/INSTALL file for detailed instructions for Unix-based systems.
 
 
 4. COMMAND LINE OPTIONS
