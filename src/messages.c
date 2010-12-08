@@ -259,6 +259,7 @@ int m_privmsg(char *source, char *receiver, char *msg)
 {
     char *s;
     User *u;
+    Server *srv;
     PrivMsg *p;
 
     if (BadPtr(source) || BadPtr(receiver) || BadPtr(msg)) {
@@ -268,10 +269,14 @@ int m_privmsg(char *source, char *receiver, char *msg)
     u = user_find(source);
 
     if (!u) {
-        alog(LOG_NONEXISTANT, "%s: user record for %s not found", msg,
-             source);
-        denora_cmd_notice(receiver, source,
-                          getstring(NULL, USER_RECORD_NOT_FOUND));
+    	srv = server_find(source);
+    	/* We just ignore the message if sent from a server (inspircd) */
+    	if (!srv) {
+			alog(LOG_NONEXISTANT, "%s: user record for %s not found", msg,
+				 source);
+			denora_cmd_notice(receiver, source,
+							  getstring(NULL, USER_RECORD_NOT_FOUND));
+    	}
         return MOD_CONT;
     }
 
