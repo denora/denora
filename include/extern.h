@@ -812,11 +812,11 @@ E void send_event(const char *name, int argc, ...);
 E char segv_location[SEGV_LOCATION_BUFSIZE];
 
 #undef PRETTY_FUNCTION
-#ifdef HAVE_PRETTY_FUNCTION
+#if defined(HAVE_PRETTY_FUNCTION)
 #  define PRETTY_FUNCTION	__PRETTY_FUNCTION__
-#elif HAVE_FUNCTION
+#elif defined(HAVE_FUNCTION)
 #  define PRETTY_FUNCTION	__FUNCTION__
-#elif HAVE_FUNC
+#elif defined(HAVE_FUNC)
 #  define PRETTY_FUNCTION	__func__
 #else
 #  define PRETTY_FUNCTION  "unknown"
