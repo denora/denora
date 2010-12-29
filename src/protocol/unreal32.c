@@ -908,11 +908,12 @@ int denora_event_svsmode(char *source, int ac, char **av)
 
 char *unreal32_nickip(char *host)
 {
-    struct in_addr addr;
-    uint32 ip;
-    ip = ntohl(decode_ip(host));
-    addr.s_addr = htonl(ip);
-    return sstrdup(inet_ntoa(addr));
+    char* addr;
+    addr = decode_ip(host);
+
+    alog(LOG_DEBUG, "debug: Decoded base64 %s to %s", host, addr);
+
+    return sstrdup(addr);
 }
 
 /*

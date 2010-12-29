@@ -120,7 +120,7 @@ char *asuka_nickip(char *host)
     struct in_addr addr;
     int decoded;
 
-    decoded = base64toIP(host);
+    decoded = base64toint(host);
     addr.s_addr = ntohl(decoded);
     return sstrdup(inet_ntoa(addr));
 }

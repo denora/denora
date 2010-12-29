@@ -692,9 +692,10 @@ E long base64dec_ts(char *ts);             /* base64 decode time stamp */
 E char *encode_ip(unsigned char *ip);      /* base64 encode IP address */
 E int b64_encode(char *src, size_t srclength, char *target, size_t targsize);
 E int b64_decode(char *src, char *target, size_t targsize);
-E int decode_ip(char *buf);
+E char* decode_ip(char *buf);
 E const char *inttobase64(char *buf, unsigned int v, unsigned int count);
-E unsigned int base64toIP(char *s);
+E unsigned int base64toint(char *s);
+E void base64toip(char* input, char* addr);
 E void buffer_new(struct buffer_st *b);
 E void buffer_add(struct buffer_st *b, char c);
 E void buffer_delete(struct buffer_st *b);

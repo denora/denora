@@ -519,22 +519,22 @@ char *encode_ip(unsigned char *ip)
 
 /*************************************************************************/
 
-int decode_ip(char *buf)
+char* decode_ip(char *buf)
 {
     int len = strlen(buf);
     char targ[25];
-    struct in_addr ia;
 
     SET_SEGV_LOCATION();
 
-    if (len == 8) {             /* IPv4 */
-        b64_decode(buf, targ, 25);
-        ia = *(struct in_addr *) targ;
-        SET_SEGV_LOCATION();
-        return ia.s_addr;
-    } else {                    /* IPv6 or Error */
+    b64_decode(buf, targ, 25);
+
+    if (len == 24) {               /* IPv6 */
+        static char result[64];
+        return (char *)inet_ntop(AF_INET6, targ, result, 64);
+    } else if (len == 8)             /* IPv4 */
+        return (char *)inet_ntoa(*(struct in_addr *)targ);
+    else                           /* Error */
         return 0;
-    }
 }
 
 /*************************************************************************/
@@ -684,7 +684,7 @@ const char *inttobase64(char *buf, unsigned int v, unsigned int count)
 
 /*************************************************************************/
 
-unsigned int base64toIP(char *s)
+unsigned int base64toint(char *s)
 {
     unsigned int i = convert2n[(unsigned char) *s++];
     while (*s) {
@@ -693,3 +693,38 @@ unsigned int base64toIP(char *s)
     }
     return i;
 }
+
+/** Decode an IP address from base64.
+ * @param[in] input Input buffer to decode.
+ * @param[out] addr IP address structure to populate.
+ */
+void base64toip(char* input, char* addr)
+{
+  uint16 addrint[8];
+  if (strlen(input) == 6) {
+    unsigned int in = base64toint(input);
+    /* An all-zero address should stay that way. */
+    if (in) {
+      addrint[0] = htons(in >> 16);
+      addrint[1] = htons(in & 65535);
+    }
+    inet_ntop(AF_INET, &addrint, addr, INET6_ADDRSTRLEN);
+  } else {
+    unsigned int pos = 0;
+    do {
+      if (*input == '_') {
+        unsigned int left;
+        for (left = (25 - strlen(input)) / 3 - pos; left; left--)
+          addrint[pos++] = 0;
+        input++;
+      } else {
+        unsigned short accum = convert2n[(unsigned char)*input++];
+        accum = (accum << 6) | convert2n[(unsigned char)*input++];
+        accum = (accum << 6) | convert2n[(unsigned char)*input++];
+        addrint[pos++] = ntohs(accum);
+      }
+    } while (pos < 8);
+    inet_ntop(AF_INET6, &addrint, addr, INET6_ADDRSTRLEN);
+  }
+}
+
