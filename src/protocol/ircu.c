@@ -95,7 +95,7 @@ IRCDCAPAB myIrcdcap[] = {
      0,                         /* UID          */
      0,                         /* KNOCK        */
      0,                         /* CLIENT       */
-     0,                         /* IPV6         */
+     1,                         /* IPV6         */
      0,                         /* SSJ5         */
      0,                         /* SN2          */
      0,                         /* TOKEN        */
@@ -158,8 +158,6 @@ void IRCDModeInit(void)
 
 char *ircu_nickip(char *host)
 {
-    struct in_addr addr;
-    int decoded;
     char ipaddr[INET6_ADDRSTRLEN];
 
     base64toip(host, (char *)&ipaddr);

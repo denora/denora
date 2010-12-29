@@ -101,7 +101,7 @@ IRCDCAPAB myIrcdcap[] = {
      0,                         /* UID          */
      0,                         /* KNOCK        */
      0,                         /* CLIENT       */
-     0,                         /* IPV6         */
+     CAPAB_IPV6,                /* IPV6         */
      0,                         /* SSJ5         */
      0,                         /* SN2          */
      CAPAB_TOKEN,               /* TOKEN        */
