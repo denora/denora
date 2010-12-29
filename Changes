@@ -9,6 +9,7 @@ Additions
 10/05/25 r355 [3] Added Portuguese language file
 
 Changes
+10/12/29 r376 Updated GeoIP API to v1.4.6
 10/12/04 r369 Updated GeoIP.dat
 10/07/17 r363 Renamed STATS command to STATUS
 10/07/05 r361 do_p10_burst now supports +L channel mode

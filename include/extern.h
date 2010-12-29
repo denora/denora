@@ -775,20 +775,6 @@ E int denora_set_mod_current_buffer(int ac, char **av);
 E void do_restart_denora(void);
 E void sql_do_uptime(char *source, char *uptime);
 
-E GeoIPRecord * GeoIP_record_by_addr (GeoIP* gi, const char *addr);
-E GeoIPRecord * GeoIP_record_by_name (GeoIP* gi, const char *host);
-E int GeoIP_record_id_by_addr (GeoIP* gi, const char *addr);
-E int GeoIP_init_record_iter (GeoIP* gi);
-E int GeoIP_next_record (GeoIP* gi, GeoIPRecord **gir, int *record_iter);
-E void GeoIPRecord_delete (GeoIPRecord *gir);
-
-E char *GeoIPDBFileName;
-E const char * GeoIPDBDescription[NUM_DB_TYPES];
-E const char *GeoIPCountryDBFileName;
-E const char GeoIP_country_code[253][3];
-E const char GeoIP_country_code3[253][4];
-E const char * GeoIP_country_name[253];
-
 E TLD *do_tld(char *country, char *code);
 E TLD *findtld(const char *country);
 E void load_tld_db(void);
