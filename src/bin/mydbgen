@@ -55,7 +55,7 @@ echo -e "\033[1;31m>> WARNING:\033[1;0m \033[1;1m$*\033[1;0m" >&2
 
 ## don't start if we can't find mysql
 if ! `which mysql 2>/dev/null >/dev/null`; then
-        msg_error "HEH! Cannot find mysql in your PATH!!.. abording.."
+        msg_error "HEH! Cannot find mysql in your PATH!!.. aborting.."
         exit 0
 fi
 
