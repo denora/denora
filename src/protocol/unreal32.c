@@ -1036,7 +1036,9 @@ int denora_event_server(char *source, int ac, char **av)
     }
 
     if (!stricmp(av[1], "1")) {
-        denora->uplink = sstrdup(av[0]);
+    	if (!denora->uplink) {
+    		denora->uplink = sstrdup(av[0]);
+    	}
         vl = myStrGetToken(av[2], ' ', 0);
         numeric = myStrGetToken(vl, '-', 2);
         desc = myStrGetTokenRemainder(av[2], ' ', 1);
