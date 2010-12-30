@@ -376,6 +376,9 @@ void denora_shutdown(void)
     if (gi) {
         GeoIP_delete(gi);
     }
+    if (gi_v6) {
+        GeoIP_delete(gi_v6);
+    }
     close_log();
     lang_destory();
 }
@@ -441,6 +444,7 @@ int main(int ac, char **av)
     adns_init(&adns, adns_if_noenv, 0);
 #endif
     gi = GeoIP_new(GEOIP_STANDARD);
+    gi_v6 = GeoIP_open_type(GEOIP_COUNTRY_EDITION_V6, GEOIP_STANDARD);
 
     UplinkSynced = 0;
     denora->debug = 0;

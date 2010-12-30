@@ -25,6 +25,7 @@ static int unext_index;
 static int uidnext_index;
 User *new_user(const char *nick);
 GeoIP *gi;
+GeoIP *gi_v6;
 
 /*************************************************************************/
 
@@ -1054,31 +1055,33 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
     Server *s;
     const char *country_code;
     const char *country_name;
+    int country_id;
     TLD *tld;
 
     SET_SEGV_LOCATION();
 
     if (!*source) {
         if (!LargeNet) {
-            country_code = GeoIP_country_code_by_addr(gi, ipchar);
-            country_name = GeoIP_country_name_by_addr(gi, ipchar);
-            if (BadPtr(country_name)) {
-                if (host && !stricmp("localhost", host)) {
-                    country_name = sstrdup("localhost");
-                } else {
-                    country_name = sstrdup("Unknown");
-                }
+            if (strstr(ipchar,":") != NULL) {
+                country_id = GeoIP_id_by_addr_v6(gi_v6, ipchar);
+            } else {
+                country_id = GeoIP_id_by_addr(gi, ipchar);
             }
-            if (BadPtr(country_code)) {
+            country_code = GeoIP_code_by_id(country_id);
+            country_name = GeoIP_name_by_id(country_id);
+
+            if (country_id == 0) {
                 if (host && !stricmp("localhost", host)) {
-                    country_code = sstrdup("local");
+                    country_name = "localhost";
+                    country_code = "local";
                 } else {
-                    country_code = sstrdup("??");
+                    country_name = "Unknown";
+                    country_code = "??";
                 }
             }
         } else {
-            country_name = sstrdup("Unknown");
-            country_code = sstrdup("??");
+            country_name = "Unknown";
+            country_code = "??";
         }
         s = server_find(server);
         /* Allocate User structure and fill it in. */

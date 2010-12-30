@@ -919,6 +919,7 @@ int fileno(FILE *stream);
 E adns_state adns;
 #endif
 E GeoIP *gi;
+E GeoIP *gi_v6;
 
 E void extsock_init(char *lhost, int lport);
 E void extsock_process(void);
