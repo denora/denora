@@ -45,9 +45,9 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* SJOIN except char         */
      IRCD_DISABLE,              /* SJOIN invite char         */
      IRCD_ENABLE,               /* umode for vhost           */
-     IRCD_ENABLE,               /* owner                     */
-     IRCD_ENABLE,               /* protect                   */
-     IRCD_ENABLE,               /* halfop                    */
+     IRCD_DISABLE,              /* owner                     */
+     IRCD_DISABLE,              /* protect                   */
+     IRCD_DISABLE,              /* halfop                    */
      NULL,                      /* User modes                */
      NULL,                      /* Channel modes             */
      IRCD_DISABLE,              /* flood                     */
@@ -129,6 +129,7 @@ void IRCDModeInit(void)
     ModuleSetUserMode(UMODE_w, IRCD_ENABLE);    /* Wallops */
     ModuleSetUserMode(UMODE_x, IRCD_ENABLE);    /* Hidden Host */
     ModuleSetUserMode(UMODE_B, IRCD_ENABLE);    /* Authorized Bot */
+    ModuleSetUserMode(UMODE_C, IRCD_ENABLE);    /* Common Channels */
     ModuleSetUserMode(UMODE_H, IRCD_ENABLE);    /* Oper Help */
     ModuleSetUserMode(UMODE_O, IRCD_ENABLE);    /* Global Operator */
     ModuleSetUserMode(UMODE_R, IRCD_ENABLE);    /* Registered Only */
@@ -149,7 +150,7 @@ void IRCDModeInit(void)
     CreateChanMode(CMODE_c, NULL, NULL);        /* No Colours */
     CreateChanMode(CMODE_i, NULL, NULL);        /* Invite Only */
     CreateChanMode(CMODE_k, set_key, get_key);  /* Keyed */
-    CreateChanMode(CMODE_l, set_limit, get_limit);      /* Invite Only */
+    CreateChanMode(CMODE_l, set_limit, get_limit);      /* Limit */
     CreateChanMode(CMODE_m, NULL, NULL);        /* Moderated */
     CreateChanMode(CMODE_n, NULL, NULL);        /* No external messages */
     CreateChanMode(CMODE_p, NULL, NULL);        /* Private */
@@ -159,11 +160,8 @@ void IRCDModeInit(void)
     CreateChanMode(CMODE_u, NULL, NULL);        /* No Quitmessages */
 
     /* Channel User Modes */
-    ModuleSetChanUMode('%', 'h', STATUS_HALFOP);        /* Halfop */
-    ModuleSetChanUMode('*', 'q', STATUS_OWNER); /* Owner */
     ModuleSetChanUMode('+', 'v', STATUS_VOICE); /* Voice */
     ModuleSetChanUMode('@', 'o', STATUS_OP);    /* Operator */
-    ModuleSetChanUMode('~', 'a', STATUS_PROTECTED);     /* Admin */
     ModuleUpdateSQLChanMode();
 }
 
@@ -1166,10 +1164,10 @@ int DenoraInit(int argc, char **argv)
     }
 
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id: scarynet.c 64 2007-05-08 16:48:13Z outsider $");
+    moduleAddVersion("$Id: scarynet.c 64 2010-12-30 04:52:13Z outsider $");
     moduleSetType(PROTOCOL);
 
-    pmodule_ircd_version("ScaryNet IRCu 2.10.11");
+    pmodule_ircd_version("ScaryNet IRCu 2.10.12");
     pmodule_ircd_cap(myIrcdcap);
     pmodule_ircd_var(myIrcd);
     pmodule_ircd_useTSMode(0);

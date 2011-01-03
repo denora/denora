@@ -17,7 +17,7 @@ Changes
 10/07/02 r358 inspircd12 module declared compatible with inspircd 2.0
 
 Fixes
-10/29/30 r378 [4] Fixed overwriting uplink in unreal32 on incorrect server messages [closes #1145]
+10/29/30 r381 [4] Updated scarynet module to take advantage of IRCu 2.10.12
 10/12/29 r374 [2] Removed 2 redundant variables and updated ircdcapab for IPv6
 10/12/08 r372 Ignore PRIVMSG messages sent directly from ircds [closes #1186]
 10/09/08 r366 Fixed P10 MODE not using the correct channel creation timestamp
