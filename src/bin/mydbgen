@@ -224,6 +224,13 @@ if [ "$DBFILE" = "nefarious" ]; then
         fi
 fi
 
+if [ "$DBFILE" = "scarynet" ]; then
+        $MYSQL -Bs -e "describe user mode_uc" 2> /dev/null | grep -q mode_uc
+        if test "$?" = "1" ; then
+                echo "ALTER TABLE user ADD mode_uc ENUM( 'Y', 'N' ) DEFAULT 'N' NOT NULL AFTER mode_ub;" >> $USQLDB
+        fi
+fi
+
 $MYSQL -Bs -e "describe user lastquitmsg" 2> /dev/null | grep -q lastquitmsg
 if test "$?" = "1" ; then
 	echo "ALTER TABLE user ADD lastquitmsg VARCHAR( 255 ) NOT NULL AFTER lastquit;" >> $USQLDB
