@@ -155,7 +155,7 @@ SERVICE_OFFLINE
 	%s ist derzeit nicht verfügbar, bitte versuche es später noch einmal.
 
 SQL_DISABLED
-	Du kannst das Befehl nicht benutzen, SQL ist ausgeschaltet.
+	Du kannst diesen Befehl nicht benutzen, SQL ist ausgeschaltet.
 
 STATS_UPTIME_DHMS
 	Die Stats laufen seit %d Tagen, %02d:%02d:%02d
@@ -261,18 +261,18 @@ STAT_HELP
 	%S Befehle:
 	    STATUS       Zeigt eine Übersicht des Netzwerkes.
 	    LOGIN       Macht dich zum Stats Administrator.
-	    LOGOUT      Melded dich von deinem Administrator-Konto ab.
+	    LOGOUT      Meldet dich von deinem Administrator-Konto ab.
 
 STAT_HELP_STATUS
 	Syntax: STATUS
 	
-	Zeigt die Anzahl der Server,Channels und Users die 
+	Zeigt die Anzahl der Server, Channels und Benutzer, die 
 	gegenwärtig zum Netzwerk verbunden sind.
 
 STAT_HELP_SHUTDOWN
 	Syntax: SHUTDOWN
 	
-	Denora wird mit dieses Befehl beendet und die
+	Denora wird mit diesem Befehl beendet und die
 	Datenbanken werden gespeichert.
 	
 	Beschränkt auf Stats Administratoren.
@@ -280,7 +280,7 @@ STAT_HELP_SHUTDOWN
 STAT_HELP_RESTART
 	Syntax: RESTART
 	
-	Denora wird mit dieses Befehl restartet.
+	Denora wird mit diesem Befehl restartet.
 	(beendet und sofort wieder gestartet).
 	
 	Beschränkt auf Stats Administratoren.
@@ -298,7 +298,7 @@ STAT_HELP_ADMIN_CMD
 	    CHANSTATS   Überwacht Channels für verschiedene Statistiken
 	    ENVINFO     Zeigt Informationen zur Umgebung von Denora
 	    EXCLUDE     Schließ Users von Channelstats aus
-	    EXPORT      Exportiert die daten zu XML
+	    EXPORT      Exportiert die Daten zu XML
 	    HTML        Erstellt die HTML Datei
 	    MODLOAD     Lädt ein Modul
 	    MODUNLOAD   Entlädt ein Modul
@@ -342,7 +342,7 @@ STAT_HELP_MODLIST
 STAT_HELP_EXCLUDE
 	Syntax: EXCLUDE {ADD|DEL|LIST} Ziel
 	
-	Schließt den angegebenen Ziel vom Stats aus
+	Schließt das angegebenen Ziel von Stats aus
 	
 	Beschränkt auf Stats Administratoren.
 
@@ -350,7 +350,7 @@ STAT_HELP_EXPORT
 	Syntax: EXPORT was
 	
 	Exportiert Daten zu XML. Die Option was
-	kann nur : channels,users,tld,servers,
+	kann nur : channels, users, tld, servers,
 	stats oder all sein.
 	
 	Beschränkt auf Stats Administratoren.
@@ -358,7 +358,7 @@ STAT_HELP_EXPORT
 STAT_HELP_HTML
 	Syntax: HTML
 	
-	Erzwingt die HTML Datei Erstellung 
+	Erzwingt die Erstellung der HTML Datei.
 
 
 STAT_HELP_USERDEBUG
@@ -372,12 +372,12 @@ STAT_HELP_USERDEBUG
 STAT_HELP_LOGIN
 	Syntax: LOGIN Name Passwort
 	
-	Mach dich zum Stats Administrator.
+	Macht Dich zum Stats Administrator.
 
 STAT_HELP_LOGOUT
 	Syntax: LOGOUT
 	
-	Damit kannst Du dich von dein Administrator-Konto abmelden.
+	Damit kannst Du Dich aus Deinem Administrator-Konto abmelden.
 
 STAT_HELP_SET
 	Syntax: SET OPTION [ON|OFF]
@@ -537,10 +537,10 @@ STAT_CHANSTATS_DEL_SYNTAX
 	CHANSTATS DEL Channel
 
 STAT_CHANSTATS_CHAN_DEL
-	Lösche %s von der Channel-Stats Überwachachung.
+	Lösche %s von der Channel-Stats Überwachung.
 
 STAT_CHANSTATS_CHAN_NOTFOUND
-	%s wurde in der Channel-Stats Überwachachung nicht gefunden.
+	%s wurde in der Channel-Stats Überwachung nicht gefunden.
 
 STATS_CHANSTATS_PART
 	%s wird nicht mehr überwacht.
@@ -558,7 +558,7 @@ STATS_CHANSTATS_FANTASY_OFF
 	Fantasy Befehle für %s sind jetzt ausgeschaltet
 
 STATS_CHANSTATS_FANTASY_NOTICE
-	Fantasy wird in %s Notice zu den Benutzer senden
+	Fantasy wird in %s Notices an die Benutzer senden
 
 STATS_CHANSTATS_SUMUSER_SYNTAX
 	CHANSTATS SUMUSER Benutzer1 Benutzer2
@@ -629,19 +629,19 @@ STATS_HELP_CHANNEL_3
 	%stop    :   Die top 3  User vom gegenwärtigen Channel
 
 STATS_HELP_CHANNEL_4
-	%sgtop10 :   Die top 10 User von den ganzen Netzwerk
+	%sgtop10 :   Die top 10 User vom ganzen Netzwerk
 
 STATS_HELP_CHANNEL_5
-	%sgtop   :   Die top 3  User von den ganzen Netzwerk
+	%sgtop   :   Die top 3  User vom ganzen Netzwerk
 
 STATS_HELP_CHANNEL_6
-	%sstats  :   Benutzer Statistiken von den Channel
+	%sstats  :   Benutzer Statistiken vom Channel
 
 STATS_HELP_CHANNEL_7
-	%sgstats :   Benutzer Statistiken von den ganzen Netzwerk
+	%sgstats :   Benutzer Statistiken vom ganzen Netzwerk
 
 STATS_HELP_CHANNEL_8
-	%speak   :   Benutzer-Spitze von aktuellen Channel
+	%speak   :   Benutzer-Spitze vom aktuellen Channel
 
 STATS_TOP10_CHANNEL
 	Top 10 von %s
@@ -650,10 +650,10 @@ STATS_TOP_CHANNEL
 	Top 3 von %s
 
 STATS_TOP10_NETWORK
-	Top 10 von Network
+	Top 10 vom Netzwerk
 
 STATS_TOP_NETWORK
-	Top 3 von Network
+	Top 3 vom Netzwerk
 
 STATS_USER_NETWORK
 	Netzwerkstats für %s
@@ -794,7 +794,7 @@ HTML_SERVER_DETAIL_CURPING
 	<tr><td>Aktueller Ping</td><td colspan = 2>%ld</td></tr>
 
 HTML_SERVER_DETAIL_TOTALUSERSEVER
-	 <tr><td>Gesamter Anzhal verbundener Benutzer:</td><td colspan = 2>%ld</td></tr>
+	 <tr><td>Gesamte Anzahl verbundener Benutzer:</td><td colspan = 2>%ld</td></tr>
 
 HTML_SERVER_DETAIL_HIGHESTPING
 	<tr><td>Höchster Ping</td><td>%ld</td><td>at [%s]</td></tr>
@@ -839,7 +839,7 @@ HTML_CHAN_TOP10_KICKS_HEADER
 	<table border = 0><tr><th>Channel</th><th>Total Kicks</th></tr>
 
 HTML_CHAN_TOP10_KICKS_FOOTER
-	</table>(*) zeigt die momentan aktivster Channels an
+	</table>(*) zeigt die momentan aktivsten Channels an
 
 HTML_CHAN_TOP10_KICKS_CONTENT
 	<tr><td>%s </td><td align=right>%ld</td></tr>
@@ -905,16 +905,16 @@ STATS_ADMIN_LOGOUT
 	%s ist kein Stats Administrator mehr.
 
 SHUTDOWN_SAVING_DB
-	Aktualisiere die Datenbanken und schalte ab , bittte warten.
+	Aktualisiere die Datenbanken und schalte ab, bittte warten.
 
 CANNOT_OPEN_LOG
 	Warnung: Kann die LogDatei %s nicht öffnen.
 
 GLOBAL_LOAD_MOD
-	%s hat den Modul %s geladen.
+	%s hat das Modul %s geladen.
 
 GLOBAL_UNLOAD_MOD
-	%s hat den Modul %s entladen.
+	%s hat das Modul %s entladen.
 
 GLOBAL_FATAL_ERROR
 	FATALER FEHLER! %s: %s
@@ -986,7 +986,7 @@ CONFIG_ERROR_POSTIVE_VALUE
 	Ein positiver Wert wird erwartet
 
 CONFIG_SQL_USER_ERROR
-	 Fehlerhafte user Definition im sql block
+	Fehlerhafte user Definition im sql block
 
 CONFIG_SQL_NAME_ERROR
 	Fehlerhafte name Definition im sql block
@@ -1031,16 +1031,16 @@ CONFIG_NETINFO_NAME_ERROR
 	Fehlerhafte name Definition im netinfo block
 
 CONFIG_FILENAME_PID_ERROR
-	Fehlerhafte pid definition im files block
+	Fehlerhafte pid Definition im files block
 
 CONFIG_FILENAME_MOTD_ERROR
 	Fehlerhafte motd Definition im files block
 
 CONFIG_FILENAME_CHANDB_ERROR
-	 Fehlerhafte ChannelDB definition im files block
+	Fehlerhafte ChannelDB Definition im files block
 
 CONFIG_FILENAME_CTCP_ERROR
-	Fehlerhafte CtcpDB definition im files block
+	Fehlerhafte CtcpDB Definition im files block
 
 CONFIG_FILENAME_SERVER_ERROR
 	Fehlerhafte ServerDB Definition im files block
@@ -1094,25 +1094,25 @@ ALOG_DEBUG_LAST_LINE
 	Debug: Die letzte Zeile ist %s
 
 ALOG_DEBUG_REPORT_AT
-	Debug: Bitte berichten Sie das zu dem bugtracker : http://bugtracker.nomadirc.net
+	Debug: Bitte melde das im Bugtracker : http://bugs.anope.org
 
 ALOG_DEBUG_NONEXISTANT_USER_JOIN
-	Channel: Join von nicht vorhandenen User %s  Channel ID %d
+	Channel: Join vom nicht vorhandenen User %s  Channel ID %d
 
 ALOG_DEBUG_CHANGE_MODE_CHAN
 	Debug: Ändere Modes in %s zu %s
 
 ALOG_DEBUG_BAD_CHAN_MODE
-	Debug: Mißgebildete Mode entdeckt in %s.
+	Debug: Unbekannter Mode entdeckt in %s.
 
 ALOG_DEBUG_MODE_NO_PARAM
 	Channel: Mode %c%c ohne Parameter (?) für Channel %s
 
 ALOG_DEBUG_FINDCHAN_BAD
-	Fehler: findchan() bennant mit NULL Wert
+	Fehler: findchan() aufgerufen mit Parameter NULL
 
 ALOG_DEBUG_FINDSTATCHAN_BAD
-	Fehler: findstatschan() bennant mit NULL Wert
+	Fehler: findstatschan() aufgerufen mit Parameter NULL
 
 ALOG_DEBUG_SJOIN_NONEXISTANT
 	User: SJOIN für nicht vorhandenen Benutzer %s in %s
@@ -1130,7 +1130,7 @@ ALOG_DEBUG_KICKED
 	Debug: kicke %s von %s
 
 ALOG_DEBUG_PART_NONEXISTANT
-	User: PART von nicht vorhandenen Benutzer %s: %s
+	User: PART von nicht vorhandenem Benutzer %s: %s
 
 ALOG_DEBUG_PART
 	Debug: %s verläßt %s
@@ -1139,7 +1139,7 @@ ALOG_DEBUG_PART_BUG
 	User: BUG parting %s: Channel gefunden aber c->chan ist NULL
 
 ALOG_NON_TS_MODE
-	TSMODE an aber MODE hat kein gültigen TS
+	TSMODE an aber MODE hat keinen gültigen TS
 
 ALOG_DEBUG_NO_FIND_CHAN
 	Debug: Kann Channel %s nicht finden
@@ -1148,10 +1148,10 @@ ALOG_DEBUG_TOPIC_TS
 	Debug: Kodierter TOPIC TS %s umgewandelt zu %d
 
 ALOG_TOPIC_NONEXISTANT
-	Channel: TOPIC %s von nicht vorhandenen Channel %s
+	Channel: TOPIC %s von nicht vorhandenem Channel %s
 
 ALOG_ADD_BAN_BAD
-	Debug: add_ban bennant mit NULL Wert
+	Debug: add_ban aufgerufen mit Parameter NULL
 
 ALOG_ADD_BAN_ADDED
 	Debug: Ban %s zu Channel %s addiert
@@ -1422,10 +1422,10 @@ STAT_HELP_ADMIN
 	
 	Der ADMIN DEL Befehl löscht den angegebenen Stats Admin
 	
-	Der ADMIN SETPASS Befehl erlaubt es dass passwort eines admins
+	Der ADMIN SETPASS Befehl erlaubt es das Passwort eines Admins
 	zu ändern
 	
-	Der ADMIN SHOW Befehl zeigt informationen zum angegebenen
+	Der ADMIN SHOW Befehl zeigt Informationen zum angegebenen
 	Admin an
 	
 	Der ADMIN LIST Befehl listet alle konfigurierten Admins
