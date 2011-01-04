@@ -513,7 +513,7 @@ STAT_CHANSTATS_CHAN_ADDED
 	%s is now set to be monitored for channel stats.
 
 STAT_CHANSTATS_CHAN_LARGENET
-	LargeNet is enabled you can not added new channels.
+	LargeNet is enabled you can not add new channels.
 
 STAT_CHANSTATS_LOGCHAN
 	LogChannel can not be added to channel stats
