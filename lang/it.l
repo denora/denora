@@ -1,6 +1,6 @@
 # Italian language file.
 #
-# Denora (c) 2004-2010 Denora Team
+# Denora (c) 2004-2011 Denora Team
 # Contact us at dev@denorastats.org
 #
 # Italian translation (c) 2005-2007 Hal9000 (hal9000@denorastats.org)

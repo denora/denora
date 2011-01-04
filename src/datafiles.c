@@ -1,7 +1,7 @@
 
 /* Database file handling routines.
  *
- * (c) 2004-2010 Denora Team
+ * (c) 2004-2011 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.

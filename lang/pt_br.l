@@ -1,6 +1,6 @@
 # Brazil Portugu�s language file.
 #
-# Denora (c) 2004-2010 Denora Team
+# Denora (c) 2004-2011 Denora Team
 # Contact us at dev@denorastats.org
 #
 # This program is free but copyrighted software; see the file COPYING for

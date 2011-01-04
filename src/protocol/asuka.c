@@ -1,6 +1,6 @@
 /*************************************************************************/
 /* Asuka P10 ircd Protocol                                               */
-/* (c) 2004-2010 Denora Team                                             */
+/* (c) 2004-2011 Denora Team                                             */
 /* Contact us at info@denorastats.org                                       */
 /*                                                                       */
 /* Please read COPYING and README for furhter details.                   */
