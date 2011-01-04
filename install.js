@@ -10,7 +10,7 @@
 // Based on the original code of Anope by Anope Team.
 // Based on the original code of Thales by Lucas.
 //
-// $Id: install.js 66 2007-08-14 14:21:33Z drstein $
+// $Id$
 //
 
 var denoraVersion = "Unknown";

@@ -9,7 +9,7 @@
 # Based on the original code of Anope by Anope Team.
 # Based on the original code of Thales by Lucas.
 #
-# $Id: ru.l 30 2008-01-27 18:21:22Z Kein $
+# $Id$
 # Charaster set is cp1251
 #
 # When translating this file to another language, keep in mind that the

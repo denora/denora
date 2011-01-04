@@ -1,6 +1,6 @@
 dnl Macro file
 dnl
-dnl Denora (c) 2004-2010 Nomad Dev Team
+dnl Denora (c) 2004-2011 Nomad Dev Team
 dnl Contact us at info@denorastats.org
 dnl
 dnl This program is free but copyrighted software; see the file COPYING for

@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: scarynet.c 692 2006-09-04 16:48:13Z trystan $
+ * $Id$
  *
  */
 
@@ -1164,7 +1164,7 @@ int DenoraInit(int argc, char **argv)
     }
 
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id: scarynet.c 64 2010-12-30 04:52:13Z outsider $");
+    moduleAddVersion("$Id$");
     moduleSetType(PROTOCOL);
 
     pmodule_ircd_version("ScaryNet IRCu 2.10.12");
