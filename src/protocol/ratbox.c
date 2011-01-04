@@ -706,16 +706,10 @@ int denora_event_server(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    if (!stricmp(av[1], "1")) {
+    if (!denora->uplink) {
         denora->uplink = sstrdup(av[0]);
-        if (UseTS6 && TS6UPLINK) {
-            do_server(source, av[0], av[1], av[2], TS6UPLINK);
-        } else {
-            do_server(source, av[0], av[1], av[2], NULL);
-        }
-    } else {
-        do_server(source, av[0], av[1], av[2], NULL);
     }
+    do_server(source, av[0], av[1], av[2], (!stricmp(av[1], "1") && UseTS6 && TS6UPLINK ? TS6UPLINK : NULL));
     return MOD_CONT;
 }
 

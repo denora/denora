@@ -530,9 +530,11 @@ int denora_event_server(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
+    if (!denora->uplink) {
+        denora->uplink = sstrdup(av[0]);
+    }
     if (!stricmp(av[1], "1")) {
         *source = '\0';
-        denora->uplink = sstrdup(av[0]);
         do_server(source, av[0], (char *) "0", av[2], av[1]);
     } else {
         do_server(source, av[0], av[1], av[3], av[2]);

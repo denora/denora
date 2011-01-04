@@ -772,14 +772,11 @@ int denora_event_server(char *source, int ac, char **av)
         protocol_debug(source, ac, av);
     }
     strlcpy(uplinknum, av[5], sizeof(uplinknum));
-
-    if (!stricmp(av[1], "1")) {
+    if (!denora->uplink) {
         denora->uplink = sstrdup(av[0]);
-        do_server(source, av[0], av[1], av[7], uplinknum);
-    } else {
-        s = server_find(source);
-        do_server((s ? s->name : source), av[0], av[1], av[7], uplinknum);
     }
+    s = server_find(source);
+    do_server((s ? s->name : source), av[0], av[1], av[7], uplinknum);
     return MOD_CONT;
 }
 
