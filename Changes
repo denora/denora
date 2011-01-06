@@ -10,6 +10,7 @@ Additions
 10/05/25 r355 [3] Added Portuguese language file
 
 Changes
+11/01/06 r390 Updated IPv6 GeoIP database
 11/01/04 r388 [4] Cleanup in protocols and assuming first SERVER to be uplink
 11/01/03 r385 Updated IPv4 GeoIP database
 11/07/04 r383 Updated german language file
