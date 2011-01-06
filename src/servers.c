@@ -1172,8 +1172,11 @@ void sql_do_server_version(char *server, int ac, char **av)
 
     /* Anope/Thales respond like so */
     /* QuakeIRCD uses 6 */
+    /* X3 (versions as of 1.8) */
     if (ac == 5 || ac == 6) {
-        if ((denora_get_ircd() == IRC_ULTIMATE3) && (ac == 6)) {
+        if (!stricmp(av[1], "x3") && ac == 5) {
+            ircsnprintf(buf, 100, "%s %s %s", av[1], av[2], av[3]);
+        } else if ((denora_get_ircd() == IRC_ULTIMATE3) && (ac == 6)) {
             ircsnprintf(buf, 100, "%s %s %s", av[1], av[2], av[3]);
         } else {
             ircsnprintf(buf, 100, "%s %s", av[1], av[2]);
