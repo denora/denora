@@ -26,8 +26,8 @@ The recommended way to get Denora for Windows is to use our installers, which wi
         * Microsoft Visual C++ 2010 Express Edition:
             http://www.microsoft.com/express/download/
 
-        * Microsoft Windows SDK:
-        	http://www.microsoft.com/downloads/en/details.aspx?FamilyID=c17ba869-9671-4330-a63e-1fd44e0e2505&displaylang=en
+        * Microsoft Windows SDK 7.1:
+        	http://www.microsoft.com/downloads/en/details.aspx?FamilyID=35AEDA01-421D-4BA5-B44B-543DC8C33A20
 
             (NOTE: Although this says for Windows 7, it does infact work on all supported
             versions of Windows. When installing, you should select the Custom option, and ensure
@@ -40,7 +40,7 @@ The recommended way to get Denora for Windows is to use our installers, which wi
             Microsoft Visual C++ 2008 Express Edition. Both can be found in the %ProgramFiles%
             folder. 
 
-        * MySQL for Windows (only needed if building with MySQL enabled):
+        * MySQL 5.5 for Windows (only needed if building with MySQL enabled):
             http://dev.mysql.com/
             
             (NOTE: Please download the full 32 bit version and ensure to select the Client C API developer component to be installed)

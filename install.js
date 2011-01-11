@@ -56,17 +56,17 @@ var installerQuestions = [{
 	}
 }, ];
 var buildPackages = [{
-	'name': 'Microsoft Visual Studio 2010 (with Windows SDK 7.0)',
-	'libpaths': ['Program Files\\Microsoft Visual Studio 10.0\\VC\\lib', 'Program Files\\Microsoft SDKs\\Windows\\v7.0A\\Lib'],
-	'incpaths': ['Program Files\\Microsoft Visual Studio 10.0\\VC\\include', 'Program Files\\Microsoft SDKs\\Windows\\v7.0A\\Include'],
+	'name': 'Microsoft Visual Studio 2010 (with Windows SDK 7.1)',
+	'libpaths': ['Program Files\\Microsoft Visual Studio 10.0\\VC\\lib', 'Program Files\\Microsoft SDKs\\Windows\\v7.1\\Lib'],
+	'incpaths': ['Program Files\\Microsoft Visual Studio 10.0\\VC\\include', 'Program Files\\Microsoft SDKs\\Windows\\v7.1\\Include'],
 	'nmake': ['Program Files\\Microsoft Visual Studio 10.0\\VC\\bin', ''],
 	'additional_switches': ['/w'],
 	'installedDrive': 'C'
 },
 {
-	'name': 'Microsoft Visual Studio 2010 (with Windows SDK 7.0)',
-	'libpaths': ['Program Files (x86)\\Microsoft Visual Studio 10.0\\VC\\lib', 'Program Files (x86)\\Microsoft SDKs\\Windows\\v7.0A\\Lib'],
-	'incpaths': ['Program Files (x86)\\Microsoft Visual Studio 10.0\\VC\\include', 'Program Files (x86)\\Microsoft SDKs\\Windows\\v7.0A\\Include'],
+	'name': 'Microsoft Visual Studio 2010 (with Windows SDK 7.1)',
+	'libpaths': ['Program Files (x86)\\Microsoft Visual Studio 10.0\\VC\\lib', 'Program Files\\Microsoft SDKs\\Windows\\v7.1\\Lib'],
+	'incpaths': ['Program Files (x86)\\Microsoft Visual Studio 10.0\\VC\\include', 'Program Files\\Microsoft SDKs\\Windows\\v7.1\\Include'],
 	'nmake': ['Program Files (x86)\\Microsoft Visual Studio 10.0\\VC\\bin', ''],
 	'additional_switches': ['/w'],
 	'installedDrive': 'C'
@@ -387,7 +387,7 @@ function findCompiler() {
 			WScript.Echo("ERROR: Cannot find a copy of nmake.exe...\n");
 			WScript.Echo("In order to compile Denora, you need a working copy of nmake.exe on your system.");
 			WScript.Echo("It is available in the Windows SDK which can be freely downloaded from Microsoft.\n");
-			WScript.Echo("http://www.microsoft.com/downloads/en/details.aspx?FamilyID=c17ba869-9671-4330-a63e-1fd44e0e2505&displaylang=en\n");
+			WScript.Echo("http://www.microsoft.com/downloads/en/details.aspx?FamilyID=35AEDA01-421D-4BA5-B44B-543DC8C33A20\n");
 			break;
 		}
 		WScript.Echo("SUCCESS: " + thisPack.name + " was found, and is complete!");
@@ -399,7 +399,7 @@ function findCompiler() {
 		WScript.Echo("Some of the build tools were detected on your computer, but the essential Windows SDK components were missing.");
 		WScript.Echo("You will need to download the Windows SDK from the URL below, ensuring that the Core Windows files, and Debugging Tools are installed.");
 		WScript.Echo("For more details on installing the Windows SDK, visit http://www.denorastats.org\n");
-		WScript.Echo("WinSDK: http://www.microsoft.com/downloads/en/details.aspx?FamilyID=c17ba869-9671-4330-a63e-1fd44e0e2505&displaylang=en\n");
+		WScript.Echo("WinSDK: http://www.microsoft.com/downloads/en/details.aspx?FamilyID=35AEDA01-421D-4BA5-B44B-543DC8C33A20\n");
 	}
 	return false;
 }

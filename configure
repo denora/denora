@@ -576,8 +576,8 @@ SHELL=${CONFIG_SHELL-/bin/sh}
 # Identity of this package.
 PACKAGE_NAME='denora'
 PACKAGE_TARNAME='denora'
-PACKAGE_VERSION='1.4.0'
-PACKAGE_STRING='denora 1.4.0'
+PACKAGE_VERSION='1.4.5'
+PACKAGE_STRING='denora 1.4.5'
 PACKAGE_BUGREPORT='info@denorastats.org'
 
 ac_default_prefix=~/stats
