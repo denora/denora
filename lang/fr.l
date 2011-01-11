@@ -1099,7 +1099,7 @@ ALOG_DEBUG_LAST_LINE
 	debug: la dernière ligne est %s
 
 ALOG_DEBUG_REPORT_AT
-	debug: veuillez reporter cette erreur sur le bugtracker au http://bugtracker.nomadirc.net
+	debug: veuillez reporter cette erreur sur le bugtracker au http://bugs.anope.org
 
 ALOG_DEBUG_NONEXISTANT_USER_JOIN
 	Canal: reception d'un join pour l'utilisateur %s non existant sur le canal ID %s

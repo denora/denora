@@ -1107,7 +1107,7 @@ ALOG_DEBUG_LAST_LINE
 	foutopsporing: laatste regel is %s
 
 ALOG_DEBUG_REPORT_AT
-	foutopsporing: rapporteer deze in de bugtracker op http://bugtracker.nomadirc.net
+	foutopsporing: rapporteer deze in de bugtracker op http://bugs.anope.org
 
 ALOG_DEBUG_NONEXISTANT_USER_JOIN
 	kanaal: join ontvangen voor niet-bestaande gebruiker %s op kanaal ID %d
