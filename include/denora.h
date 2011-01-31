@@ -81,15 +81,7 @@
 /*************************************************************************/
 
 #ifdef _WIN32
- #ifdef MSVS2005
-  #include "os/win32vs2005.h"
- #else
-  #if defined(__MINGW32__)
-   #include "os/mingw.h"
-  #else
-   #include "os/win32.h"
-  #endif
- #endif
+ #include "os/win32.h"
 #else
 #if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) || defined(__NetBSD__)
  #include "os/bsd.h"

@@ -121,7 +121,7 @@ char *log_gettimestamp(void)
     static char tbuf[256];
 
     time(&t);
-#ifdef MSVS2005
+#ifdef _WIN32
     localtime_s(&tm, &t);
 #else
     tm = *localtime(&t);
@@ -218,13 +218,13 @@ void log_perror(const char *fmt, ...)
     int errno_save = errno;
     char str[BUFSIZE];
     char *buf;
-#ifdef MSVS2005
+#ifdef _WIN32
     char errbuf[256];
 #else
     char *errbuf;
 #endif
 
-#ifdef MSVS2005
+#ifdef _WIN32
     strerror_s(errbuf, sizeof(errbuf), errno_save);
 #else
     errbuf = strerror(errno_save);
@@ -263,13 +263,13 @@ void fatal(const char *fmt, ...)
     char *buf;
     char buf2[4096];
     int errno_save = errno;
-#ifdef MSVS2005
+#ifdef _WIN32
     char errbuf[256];
 #else
     char *errbuf;
 #endif
 
-#ifdef MSVS2005
+#ifdef _WIN32
     strerror_s(errbuf, sizeof(errbuf), errno_save);
 #else
     errbuf = strerror(errno_save);
@@ -306,13 +306,13 @@ void fatal_perror(const char *fmt, ...)
     va_list args;
     char *buf, buf2[4096];
     int errno_save = errno;
-#ifdef MSVS2005
+#ifdef _WIN32
     char errbuf[256];
 #else
     char *errbuf;
 #endif
 
-#ifdef MSVS2005
+#ifdef _WIN32
     strerror_s(errbuf, sizeof(errbuf), errno_save);
 #else
     errbuf = strerror(errno_save);

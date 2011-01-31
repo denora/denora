@@ -325,7 +325,7 @@ static void remove_backups(void)
 
     time(&t);
     t -= (60 * 60 * 24 * KeepBackupsFor);
-#ifdef MSVS2005
+#ifdef _WIN32
     localtime_s(&tm, &t);
 #else
     tm = *localtime(&t);
@@ -454,7 +454,7 @@ void ModuleRemoveBackups(char *dbname)
 
     time(&t);
     t -= (60 * 60 * 24 * KeepBackupsFor);
-#ifdef MSVS2005
+#ifdef _WIN32
     localtime_s(&tm, &t);
 #else
     tm = *localtime(&t);

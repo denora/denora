@@ -883,7 +883,7 @@ int get_hour(void)
 
     SET_SEGV_LOCATION();
     now = time(NULL);
-#ifdef MSVS2005
+#ifdef _WIN32
     localtime_s(&t, &now);
 #else
     t = *localtime(&now);

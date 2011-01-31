@@ -82,7 +82,7 @@ void html_dailystats(FILE * ptr)
     SET_SEGV_LOCATION();
     if (ptr) {
         fprintf(ptr, "%s", getstring(NULL, HTML_DAILY_HEADER));
-#ifdef MSVS2005
+#ifdef _WIN32
         localtime_s(&tm, &stats->daily_users_time);
 #else
         tm = *localtime(&stats->daily_users_time);
@@ -93,7 +93,7 @@ void html_dailystats(FILE * ptr)
                  timebuf);
         dfprintf(ptr, getstring(NULL, HTML_DAILY_CHAN),
                  stats->daily_chans);
-#ifdef MSVS2005
+#ifdef _WIN32
         localtime_s(&tm, &stats->daily_opers_time);
 #else
         tm = *localtime(&stats->daily_opers_time);
@@ -102,7 +102,7 @@ void html_dailystats(FILE * ptr)
                       STRFTIME_DATE_TIME_FORMAT, &tm);
         dfprintf(ptr, getstring(NULL, HTML_DAILY_OPERS),
                  stats->daily_opers, timebuf);
-#ifdef MSVS2005
+#ifdef _WIN32
         localtime_s(&tm, &stats->daily_servers_time);
 #else
         tm = *localtime(&stats->daily_servers_time);

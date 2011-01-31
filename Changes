@@ -40,7 +40,7 @@ Fixes
 09/09/13 r333 [1] Fixed crash with ts6 when network contains a non-ts6 server
 
 Removals
-n/a
+11/01/31 r398 Removed support for VS2003 and VS2005
 
 Developers
 Denora Team <dev@denorastats.org>

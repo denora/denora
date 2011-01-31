@@ -868,7 +868,7 @@ int moduleCopyCoreFile(char *name, char *output)
     char *srcop;
     char buffer[_MAX_PATH];
     char win32filename[MAXPATHLEN];
-#ifdef MSVS2005
+#ifdef _WIN32
     errno_t err;
 #endif
 
@@ -1186,7 +1186,7 @@ int moduleCopyFile(char *name, char *output)
     FILE *source, *target;
     int srcfp;
     char input[4096];
-#ifdef MSVS2005
+#ifdef _WIN32
     errno_t err;
 #endif
 #ifdef _WIN32

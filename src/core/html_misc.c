@@ -131,7 +131,7 @@ void html_credits(FILE * ptr)
     time_t ts;
     ts = time(NULL);
 
-#ifdef MSVS2005
+#ifdef _WIN32
     localtime_s(&tm, &ts);
 #else
     tm = *localtime(&ts);

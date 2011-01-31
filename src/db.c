@@ -1525,7 +1525,7 @@ int chans_hourly(const char *name)
 
     ts = time(NULL);
 
-#ifdef MSVS2005
+#ifdef _WIN32
     localtime_s(&mytime, &ts);
 #else
     mytime = *localtime(&ts);
@@ -1582,7 +1582,7 @@ int servers_hourly(const char *name)
 #endif
 
     ts = time(NULL);
-#ifdef MSVS2005
+#ifdef _WIN32
     localtime_s(&mytime, &ts);
 #else
     mytime = *localtime(&ts);
@@ -1639,7 +1639,7 @@ int users_hourly(const char *name)
 #endif
 
     ts = time(NULL);
-#ifdef MSVS2005
+#ifdef _WIN32
     localtime_s(&mytime, &ts);
 #else
     mytime = *localtime(&ts);

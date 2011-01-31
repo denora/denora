@@ -47,11 +47,11 @@ DENORA_INLINE int FileRename(char *fileName, char *newfilename)
 DENORA_INLINE FILE *FileOpen(char *file, const char *mode)
 {
     FILE *ptr;
-#ifdef MSVS2005
+#ifdef _WIN32
     errno_t err;
 #endif
 
-#ifdef MSVS2005
+#ifdef _WIN32
     if ((err = fopen_s(&ptr, file, mode)) != 0) {
 #else
     if ((ptr = fopen(file, mode)) == NULL) {

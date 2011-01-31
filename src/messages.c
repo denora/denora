@@ -150,7 +150,7 @@ int m_time(char *source, int ac, char **av)
     }
 
     time(&t);
-#ifdef MSVS2005
+#ifdef _WIN32
     localtime_s(&tm, &t);
 #else
     tm = *localtime(&t);

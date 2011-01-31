@@ -95,7 +95,7 @@ void html_server_details(FILE * ptr)
                      s->name, s->name);
             if (s->split_stats) {
                 if (s->lastseen) {
-#ifdef MSVS2005
+#ifdef _WIN32
                     localtime_s(&tm, &s->lastseen);
 #else
                     tm = *localtime(&s->lastseen);
@@ -107,7 +107,7 @@ void html_server_details(FILE * ptr)
                              timebuf);
                 }
             } else {
-#ifdef MSVS2005
+#ifdef _WIN32
                 localtime_s(&tm, &s->maxusertime);
 #else
                 tm = *localtime(&s->maxusertime);
@@ -117,7 +117,7 @@ void html_server_details(FILE * ptr)
                 dfprintf(ptr, langstring(HTML_SERVER_DETAIL_USERS),
                          s->currentusers, 0, s->maxusers, timebuf);
 
-#ifdef MSVS2005
+#ifdef _WIN32
                 localtime_s(&tm, &s->maxopertime);
 #else
                 tm = *localtime(&s->maxopertime);
@@ -135,7 +135,7 @@ void html_server_details(FILE * ptr)
             dfprintf(ptr, langstring(HTML_SERVER_DETAIL_SERVERKILLS),
                      s->serverkills);
             if (s->highestping) {
-#ifdef MSVS2005
+#ifdef _WIN32
                 localtime_s(&tm, &s->maxpingtime);
 #else
                 tm = *localtime(&s->maxpingtime);

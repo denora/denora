@@ -86,14 +86,6 @@ var buildPackages = [{
 	'nmake': ['Program Files (x86)\\Microsoft Visual Studio 9.0\\VC\\bin', ],
 	'additional_switches': ['/w'],
 	'installedDrive': 'C'
-},
-{
-	'name': 'Microsoft Visual Studio 2005 (with PSDK 2003)',
-	'libpaths': ['Program Files\\Microsoft Visual Studio 8\\VC\\Lib', 'Program Files\\Microsoft Platform SDK for Windows Server 2003 R2\\Lib'],
-	'incpaths': ['Program Files\\Microsoft Visual Studio 8\\VC\\Include', 'Program Files\\Microsoft Platform SDK for Windows Server 2003 R2\\Include'],
-	'nmake': ['Program Files\\Microsoft Platform SDK for Windows Server 2003 R2\\Bin', ''],
-	'additional_switches': ['/w'],
-	'installedDrive': 'C'
 }];
 var mysqlVersions = [{
 	'name': 'MySQL 5.5',

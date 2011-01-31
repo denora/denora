@@ -83,7 +83,7 @@ static int do_userdebug(User * u, int ac, char **av)
         notice(s_StatServ, u->nick, "Host Resolves to %s",
                host_resolve(u2->host));
 
-#ifdef MSVS2005
+#ifdef _WIN32
         localtime_s(&tm, &u2->my_signon);
 #else
         tm = *localtime(&u2->my_signon);
@@ -91,7 +91,7 @@ static int do_userdebug(User * u, int ac, char **av)
         strftime(buf, sizeof(buf) - 1, MYTIME, &tm);
         notice(s_StatServ, u->nick, "Sign On At : %s", buf);
 
-#ifdef MSVS2005
+#ifdef _WIN32
         localtime_s(&tm, &u2->timestamp);
 #else
         tm = *localtime(&u2->timestamp);

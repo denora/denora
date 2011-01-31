@@ -553,7 +553,7 @@ char *xmlrpc_write_header(int length)
     *buf = '\0';
 
     ts = time(NULL);
-#ifdef MSVS2005
+#ifdef _WIN32
     localtime_s(&tm, &ts);
 #else
     tm = *localtime(&ts);
@@ -902,7 +902,7 @@ char *xmlrpc_time2date(char *buf, time_t t)
 
     *buf = '\0';
     if (t) {
-#ifdef MSVS2005
+#ifdef _WIN32
         localtime_s(&tm, &t);
 #else
         tm = *localtime(&t);

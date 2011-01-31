@@ -237,7 +237,7 @@ int do_modinfo(User * u, int ac, char **av)
     }
     m = findModule(av[0]);
     if (m) {
-#ifdef MSVS2005
+#ifdef _WIN32
         localtime_s(&tm, &m->time);
 #else
         tm = *localtime(&m->time);

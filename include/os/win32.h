@@ -1,4 +1,4 @@
-/* Hacks for Windows Visual Studio 2003
+/* Hacks for Windows Visual Studio 2008/2010
  *
  * (c) 2004-2011 Denora Team
  * Contact us at info@denorastats.org
@@ -31,18 +31,33 @@
 #define bzero(buf, size)	memset(buf, 0, size)
 #define strcasecmp		stricmp
 #define sleep(x)		Sleep(x*1000)
-#define snprintf _snprintf
-#define vsnprintf _vsnprintf
 
-/* because MS va_start can come in two flavors */
-#define ANSI
+#define snprintf sprintf_s
+#define vsnprintf vsprintf_s
 
-#ifdef __WINS__
-#ifndef BKCHECK
-#define BKCHECK
-  extern "C" void __pfnBkCheck() {}
-#endif
-#endif
+char *win32_vs2005_next_token;
+
+#undef strtok
+#define strtok(a, b) strtok_s(a, b, &win32_vs2005_next_token)
+
+/*
+  Message: 'The POSIX name for this item is deprecated. Instead,
+  use the ISO C++ conformant
+*/
+#undef stricmp
+#define stricmp _stricmp
+
+#undef strnicmp
+#define strnicmp _strnicmp
+
+#undef isatty
+#define isatty _isatty
+
+#undef close
+#define close(f) _close(f)
+
+#undef fileno
+#define fileno(f) _fileno(f)
 
 #undef unlink
 #define unlink(f) DeleteFile(f)
@@ -50,11 +65,20 @@
 #undef chmod
 #define chmod(f, p) _chmod(f, p)
 
-#define READ_PERM _S_IWRITE
+#undef chdir
+#define chdir(d) _chdir(d)
 
+#undef getpid
+#define getpid _getpid
+
+#define READ_PERM _S_IWRITE
 #define FILE_READ "rb"
 #define FILE_WRITE "wb"
 #define FILE_APPEND "a"
+
+
+/* because MS va_start can come in two flavors */
+#define ANSI
 
 #define ENOPROTOOPT WSAENOPROTOOPT
 
@@ -91,4 +115,3 @@ typedef   signed __int32  int32_t;
 typedef unsigned __int32 uint32;
 typedef unsigned __int32 u_int32_t;
 typedef unsigned __int8 u_int8_t;
-

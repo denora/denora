@@ -32,7 +32,7 @@ void denora_cron(time_t ts)
     static struct tm cron_time;
 
     /* so it should run at least every few mins (PING) */
-#ifdef MSVS2005
+#ifdef _WIN32
     localtime_s(&cron_time, &ts);
 #else
     cron_time = *localtime(&ts);

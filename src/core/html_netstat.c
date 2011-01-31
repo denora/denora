@@ -80,7 +80,7 @@ void html_netstats(FILE * ptr)
     if (ptr) {
         SET_SEGV_LOCATION();
         fprintf(ptr, "%s", getstring(NULL, HTML_NETSTATS_HEADER));
-#ifdef MSVS2005
+#ifdef _WIN32
         localtime_s(&tm, &stats->users_max_time);
 #else
         tm = *localtime(&stats->users_max_time);
@@ -90,7 +90,7 @@ void html_netstats(FILE * ptr)
         dfprintf(ptr, getstring(NULL, HTML_NETSTATS_USERS), stats->users,
                  stats->users_max, timebuf);
         SET_SEGV_LOCATION();
-#ifdef MSVS2005
+#ifdef _WIN32
         localtime_s(&tm, &stats->chans_max_time);
 #else
         tm = *localtime(&stats->chans_max_time);
@@ -99,7 +99,7 @@ void html_netstats(FILE * ptr)
                       STRFTIME_DATE_TIME_FORMAT, &tm);
         dfprintf(ptr, getstring(NULL, HTML_NETSTATS_CHANS), stats->chans,
                  stats->chans_max, timebuf);
-#ifdef MSVS2005
+#ifdef _WIN32
         localtime_s(&tm, &stats->opers_max_time);
 #else
         tm = *localtime(&stats->opers_max_time);
@@ -109,7 +109,7 @@ void html_netstats(FILE * ptr)
                       STRFTIME_DATE_TIME_FORMAT, &tm);
         dfprintf(ptr, getstring(NULL, HTML_NETSTATS_OPERS), stats->opers,
                  stats->opers_max, timebuf);
-#ifdef MSVS2005
+#ifdef _WIN32
         localtime_s(&tm, &stats->servers_max_time);
 #else
         tm = *localtime(&stats->servers_max_time);

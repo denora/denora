@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     char buf[1024];
     int i = 0;
 
-#ifdef MSVS2005
+#ifdef _WIN32
     errno_t err;
 #endif
 
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 
     /* Build the index file */
     if (!strcmp(argv[1], "index")) {
-#ifndef MSVS2005
+#ifndef _WIN32
         fd = fopen("en_us.l", "rb");
         fdout = fopen("index", "wb");
         if (!fd || !fdout) {
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
     }
     /* Build the language.h file */
     else if (!strcmp(argv[1], "language.h")) {
-#ifndef MSVS2005
+#ifndef _WIN32
         fd = fopen("index", "r");
         fdout = fopen("language.h", "wb");
         if (!fd || !fdout) {

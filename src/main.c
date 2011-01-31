@@ -418,7 +418,7 @@ int main(int ac, char **av)
 #ifdef USE_MYSQL
     int result;
 #endif
-#ifdef MSVS2005
+#ifdef _WIN32
     char errbuf[256];
 #else
     char *errbuf;
@@ -594,7 +594,7 @@ int main(int ac, char **av)
             int errno_save = errno;
             denora->qmsg = calloc(BUFSIZE, 1);
             if (denora->qmsg) {
-#ifdef MSVS2005
+#ifdef _WIN32
                 strerror_s(errbuf, sizeof(errbuf), errno_save);
 #else
                 errbuf = strerror(errno_save);
@@ -997,7 +997,7 @@ int init(int ac, char **av)
     int i;
     int openlog_failed = 0, openlog_errno = 0;
     int started_from_term = isatty(0) && isatty(1) && isatty(2);
-#ifdef MSVS2005
+#ifdef _WIN32
     char errbuf[256];
 #else
     char *errbuf;
@@ -1018,7 +1018,7 @@ int init(int ac, char **av)
 
     /* Chdir to Denora data directory. */
     if (chdir(denora->dir) < 0) {
-#ifdef MSVS2005
+#ifdef _WIN32
         strerror_s(errbuf, sizeof(errbuf), errno);
 #else
         errbuf = strerror(errno);
@@ -1031,7 +1031,7 @@ int init(int ac, char **av)
     if (open_log() < 0) {
         openlog_errno = errno;
         if (started_from_term) {
-#ifdef MSVS2005
+#ifdef _WIN32
             strerror_s(errbuf, sizeof(errbuf), errno);
 #else
             errbuf = strerror(errno);
@@ -1225,7 +1225,7 @@ int init(int ac, char **av)
 
     /* Announce a logfile error if there was one */
     if (openlog_failed) {
-#ifdef MSVS2005
+#ifdef _WIN32
         strerror_s(errbuf, sizeof(errbuf), openlog_errno);
 #else
         errbuf = strerror(openlog_errno);
