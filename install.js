@@ -266,7 +266,7 @@ if (!findCompiler()) {
 	f.WriteLine("MAKE=nmake -f Makefile.win32");
 	f.WriteLine("BASE_CFLAGS=$(VC6) /O2 /MD $(INCFLAGS)");
 	f.WriteLine("RC_FLAGS=" + path_line_rc);
-	f.WriteLine("LIBS=user32.lib wsock32.lib advapi32.lib /NODEFAULTLIB:libcmtd.lib");
+	f.WriteLine("LIBS=user32.lib wsock32.lib ws2_32.lib advapi32.lib /NODEFAULTLIB:libcmtd.lib");
 	f.WriteLine("LFLAGS=$(LIBPATH)");
 	for (x in installerQuestions) {
 		var thisQuestion = installerQuestions[x];
