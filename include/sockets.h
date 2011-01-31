@@ -37,6 +37,11 @@ typedef int					deno_socklen_t;
 #define SOCKERR_EAGAIN          WSAEPROCLIM
 #define SOCKERR_ENOBUFS         WSAENOBUFS
 
+#define INET6_ADDRSTRLEN        46
+#define HAVE_GETADDRINFO
+#define HAVE_GAI_STRERROR
+#define HAVE_FREEADDRINFO
+
 #else
 
 typedef	int				deno_socket_t;
@@ -58,7 +63,6 @@ typedef	socklen_t		deno_socklen_t;
 #define SOCKERR_EMSGSIZE        EMSGSIZE
 #define SOCKERR_EAGAIN          EAGAIN
 #define SOCKERR_ENOBUFS         ENOBUFS
-#endif
 
 #ifndef EAI_NODATA
 #define EAI_NODATA	1
@@ -157,4 +161,4 @@ struct sockaddr_in6 {
 #endif
 
 #endif
-
+#endif

@@ -20,6 +20,7 @@
 #include <direct.h>
 #include <io.h>
 #include <winsock2.h>
+#include <ws2tcpip.h>
 #include <windows.h>
 
 #define popen			_popen
