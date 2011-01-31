@@ -18,6 +18,7 @@
 #include <sys/time.h>
 
 #include <netdb.h>
+#include <sys/mman.h>
 #ifdef HAVE_NETINETIN
 #include <netinet/in.h>
 #endif

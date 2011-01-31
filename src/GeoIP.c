@@ -33,13 +33,6 @@ static geoipv6_t IPV6_NULL;
 #define WORLD_OFFSET 1353
 #define FIPS_RANGE 360
 
-#define CHECK_ERR(err, msg) { \
-		if (err != Z_OK) { \
-				fprintf(stderr, "%s error: %d\n", msg, err); \
-				exit(1); \
-		} \
-}
-
 const char GeoIP_country_code[253][3] = { "--","AP","EU","AD","AE","AF","AG","AI","AL","AM","AN",
 	"AO","AQ","AR","AS","AT","AU","AW","AZ","BA","BB",
 	"BD","BE","BF","BG","BH","BI","BJ","BM","BN","BO",

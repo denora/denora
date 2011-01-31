@@ -23,6 +23,8 @@
 
 #if defined(_WIN32)
 #define FILETIME_TO_USEC(ft) (((unsigned __int64) ft.dwHighDateTime << 32 | ft.dwLowDateTime) / 10)
+#else
+#define GETHOSTBYNAME_R_RETURNS_INT 1
 #endif /* !defined(_WIN32) */
 
 #define SEGMENT_RECORD_LENGTH 3

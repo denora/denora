@@ -4,7 +4,7 @@ Denora v1.4.5-SVN
 -----------------
 
 Additions
-11/01/11 r391 Win32 compilation: added support for VS 2010, WinSDK 7.0 and MySQL 5.5
+11/01/11 r391 Win32 compilation: added support for VS 2010, WinSDK 7.1 and MySQL 5.5
 10/12/30 r379 [4] Added GeoIP IPv6 support
 10/12/29 r374 [2] Added support for user IPv6 addresses with scarynet
 10/12/29 r373 [2] Added support for user IPv6 addresses with ircu and unrealircd
