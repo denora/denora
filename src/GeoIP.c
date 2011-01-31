@@ -18,34 +18,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "GeoIP.h"
+#include "denora.h"
 
 static geoipv6_t IPV6_NULL;
-
-#if !defined(_WIN32)
-#include <netdb.h>
-#include <sys/mman.h>
-#endif /* !defined(_WIN32) */
-
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
-#include <sys/types.h> /* for fstat */
-#include <sys/stat.h>	/* for fstat */
-
-#ifdef HAVE_GETTIMEOFDAY
-#include <sys/time.h> /* for gettimeofday */
-#endif
-
-#ifdef HAVE_STDINT_H
-#include <stdint.h>     /* For uint32_t */
-#endif
-
-#ifndef        INADDR_NONE
-#define        INADDR_NONE     -1
-#endif
 
 #define COUNTRY_BEGIN 16776960
 #define STATE_BEGIN_REV0 16700000
