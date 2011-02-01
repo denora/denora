@@ -225,7 +225,6 @@ Section "MainSection" SEC01
   File "C:\Users\Sebastian\Documents\denora\denora.exe"
   CreateDirectory "$SMPROGRAMS\Denora Stats"
   CreateShortCut "$SMPROGRAMS\Denora Stats\Denora.lnk" "$INSTDIR\denora.exe"
-  File "C:\Users\Sebastian\Documents\denora\denora.exe.manifest"
   SetOutPath "$INSTDIR\docs"
   File "C:\Users\Sebastian\Documents\denora\docs\COMMANDS"
   File "C:\Users\Sebastian\Documents\denora\docs\COPYING"
