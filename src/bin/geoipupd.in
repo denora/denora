@@ -1,8 +1,6 @@
 #!/bin/sh
 #
 # GeoIP update script for Denora Stats.
-# Usage: add a line like this to your crontab:
-# 10 3 5 * * /home/denora/stats/geoipupd >/dev/null 2>&1
 #
 # (c) 2011 Denora Team
 # Contact us at info@denorastats.org
@@ -13,9 +11,18 @@
 # $Id$
 #
 
-rm -f @DATDEST@/GeoIP*.dat
-wget -q http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz -O @DATDEST@/GeoIP.dat.gz
-wget -q http://geolite.maxmind.com/download/geoip/database/GeoIPv6.dat.gz -O @DATDEST@/GeoIPv6.dat.gz
-gzip -qd @DATDEST@/GeoIP.dat.gz
-gzip -qd @DATDEST@/GeoIPv6.dat.gz
-@BINDEST@/denorarc rehash
+# Usage: add a line like this to your crontab:
+# 10 3 5 * * /home/denora/stats/geoipupd >/dev/null 2>&1
+
+DENORARC="@BINDEST@/denorarc"
+DENORADATA="@DATDEST@"
+
+if `wget -q -N http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz -O $DENORADATA/GeoIP.dat.gz`; then
+      gzip -q -c $DENORADATA/GeoIP.dat.gz > $DENORADATA/GeoIP.dat
+fi
+
+if `wget -q -N http://geolite.maxmind.com/download/geoip/database/GeoIPv6.dat.gz -O $DENORADATA/GeoIPv6.dat.gz`; then
+      gzip -q -c $DENORADATA/GeoIPv6.dat.gz > $DENORADATA/GeoIPv6.dat
+fi
+
+$DENORARC rehash
