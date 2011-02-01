@@ -286,6 +286,15 @@ VOIDSIG signal_rehash(int signum)
             }
             merge_confs();
         }
+        /* Reload GeoIP db files */
+        if (gi) {
+			GeoIP_delete(gi);
+		}
+		if (gi_v6) {
+			GeoIP_delete(gi_v6);
+		}
+	    gi = GeoIP_new(GEOIP_STANDARD);
+	    gi_v6 = GeoIP_open_type(GEOIP_COUNTRY_EDITION_V6, GEOIP_STANDARD);
 #ifdef	POSIX_SIGNALS
         act.sa_handler = signal_rehash;
         act.sa_flags = 0;
