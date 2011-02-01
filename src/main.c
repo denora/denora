@@ -443,6 +443,9 @@ int main(int ac, char **av)
 #ifndef _WIN32
     adns_init(&adns, adns_if_noenv, 0);
 #endif
+#ifdef STATS_DIR
+    GeoIP_setup_custom_directory(STATS_DIR);
+#endif
     gi = GeoIP_new(GEOIP_STANDARD);
     gi_v6 = GeoIP_open_type(GEOIP_COUNTRY_EDITION_V6, GEOIP_STANDARD);
 

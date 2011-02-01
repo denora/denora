@@ -234,13 +234,7 @@ char *_GeoIP_full_path_to(const char *file_name) {
 	if (custom_directory == NULL){
 #if !defined(_WIN32)
 		memset(path, 0, sizeof(char) * 1024);
-/* DenoraCustomization */
-#ifdef STATS_DIR
-		snprintf(path, sizeof(char) * 1024 - 1, "%s/%s", STATS_DIR, file_name);
-#else
 		snprintf(path, sizeof(char) * 1024 - 1, "%s", file_name);
-#endif
-/* /DenoraCustomization */
 #else
 		char buf[MAX_PATH], *p, *q = NULL;
 		memset(buf, 0, sizeof(buf));
