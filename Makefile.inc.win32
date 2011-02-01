@@ -4,7 +4,7 @@
 VC6=/w 
 LIBPATH=/LIBPATH:"C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\lib" /LIBPATH:"C:\Program Files\Microsoft SDKs\Windows\v7.1\Lib" 
 INCFLAGS=/I "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include" /I "C:\Program Files\Microsoft SDKs\Windows\v7.1\Include" 
-VERSION=1.4.5.398 SVN
+VERSION=1.4.5.402 SVN
 PROGRAM=denora.exe
 BINDEST=bin
 DATDEST=data

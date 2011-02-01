@@ -158,7 +158,7 @@ distclean:
 	(cd lang ; ${MAKE} distclean )
 	(cd include ; ${MAKE} distclean )
 	(cd src ; ${MAKE} distclean )
-	rm -f config.log config.status config.cache Makefile install-sh src/bin/denorarc
+	rm -f config.log config.status config.cache Makefile install-sh src/bin/denorarc src/bin/geoipupd
 
 recompile:
 	cp config.cache config.bak

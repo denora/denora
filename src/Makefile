@@ -125,6 +125,7 @@ install: stats
 	test -d ${BINDEST} || mkdir ${BINDEST}
 	$(INSTALL) stats $(BINDEST)/stats
 	$(INSTALL) bin/denorarc $(BINDEST)/denorarc
+	$(INSTALL) bin/geoipupd $(BINDEST)/geoipupd
 	(cd ../lang ; $(MAKE) install)
 	$(CP) ../data/* $(DATDEST)
 	$(INSTALL) bin/mydbgen $(DATDEST)/mydbgen

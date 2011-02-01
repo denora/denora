@@ -962,6 +962,7 @@ AC_SUBST(LDFLAGS)
 AC_CONFIG_FILES(		\
 	Makefile		\
 	src/bin/denorarc	\
+	src/bin/geoipupd	\
 )
 
 AC_OUTPUT
