@@ -909,7 +909,11 @@ int denora_event_svsmode(char *source, int ac, char **av)
 char *unreal32_nickip(char *host)
 {
     char* addr;
-    addr = decode_ip(host);
+
+    if (strcmp(host, "*") == 0)
+        addr = "0.0.0.0";
+    else
+        addr = decode_ip(host);
 
     alog(LOG_DEBUG, "debug: Decoded base64 %s to %s", host, addr);
 

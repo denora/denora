@@ -24,6 +24,7 @@ Changes
 10/07/02 r358 inspircd12 module declared compatible with inspircd 2.0
 
 Fixes
+11/02/02 r405 [2] Fix for crash when parsing * for NICKIP in unreal32
 11/01/06 r389 [2] Fixed X3 version reply interpretation (again)
 10/12/29 r374 [2] Removed 2 redundant variables and updated ircdcapab for IPv6
 10/12/08 r372 Ignore PRIVMSG messages sent directly from ircds [closes #1186]
