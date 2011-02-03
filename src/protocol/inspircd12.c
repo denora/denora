@@ -369,11 +369,7 @@ int denora_event_addline(char *source, int ac, char **av)
 
     if (!stricmp(av[0], "G") || !stricmp(av[0], "E")) {
         user = myStrGetToken(av[1], '@', 0);
-        host = myStrGetToken(av[1], '@', 1);
-        /* workaround an inspircd bug */
-        if (!host) {
-        	host = myStrGetToken(av[1], '@', 2);
-        }
+        host = myStrGetToken(av[1], '@', myNumToken(av[1], '@') - 1);
         sql_do_server_bans_add(av[0], user, host, av[2], av[3], buf,
                                av[5]);
         if (user)
