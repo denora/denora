@@ -370,6 +370,10 @@ int denora_event_addline(char *source, int ac, char **av)
     if (!stricmp(av[0], "G") || !stricmp(av[0], "E")) {
         user = myStrGetToken(av[1], '@', 0);
         host = myStrGetToken(av[1], '@', 1);
+        /* workaround an inspircd bug */
+        if (!host) {
+        	host = myStrGetToken(av[1], '@', 2);
+        }
         sql_do_server_bans_add(av[0], user, host, av[2], av[3], buf,
                                av[5]);
         if (user)
@@ -1306,7 +1310,7 @@ void inspircd_cmd_version(char *server)
 
 void inspircd_cmd_motd(char *sender, char *server)
 {
-    send_cmd(TS6SID, "MOTD %s", server);
+    send_cmd(sender, "MOTD %s", server);
 }
 
 /*  Received: :345AAAAA6 NOTICE 9D3AAAAAB :VERSION irssi v0.8.12 - running on Linux i686 */
