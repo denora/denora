@@ -1310,7 +1310,8 @@ void inspircd_cmd_version(char *server)
 
 void inspircd_cmd_motd(char *sender, char *server)
 {
-    send_cmd(sender, "MOTD %s", server);
+	Uid *ud = find_uid(sender);
+    send_cmd(ud ? ud->uid : sender, "MOTD %s", server);
 }
 
 /*  Received: :345AAAAA6 NOTICE 9D3AAAAAB :VERSION irssi v0.8.12 - running on Linux i686 */
