@@ -1,7 +1,7 @@
 $Id$
 
-Denora v1.4.5-SVN
------------------
+Denora v1.4.5
+-------------
 
 Additions
 11/01/02 r402 Added cron script to automatically update GeoIP db files monthly
