@@ -836,6 +836,7 @@ int denora_event_quit(char *source, int ac, char **av)
 {
     char *killer = NULL;
     char *msg = NULL;
+    User *u;
 
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
@@ -849,11 +850,12 @@ int denora_event_quit(char *source, int ac, char **av)
     } else {
         killer = inspircd12_lkill_killer(av[0]);
         msg = inspircd12_lkill_msg(av[0]);
+        u = user_find(av[0]);
 
         if (killer)
-            m_kill(killer, source, msg);
+            m_kill(killer, u ? u->nick : source, msg);
         else
-            m_kill(source, source, msg);
+            m_kill(source, u ? u->nick : source, msg);
     }
 
     return MOD_CONT;
@@ -936,13 +938,16 @@ int denora_event_fmode(char *source, int ac, char **av)
 
 int denora_event_kill(char *source, int ac, char **av)
 {
+	User *u;
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
     if (ac != 2)
         return MOD_CONT;
 
-    m_kill(source, av[0], av[1]);
+    u = user_find(av[0]);
+    m_kill(source, u ? u->nick : av[0], av[1]);
     return MOD_CONT;
 }
 

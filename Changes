@@ -24,6 +24,7 @@ Changes
 10/07/02 r358 inspircd12 module declared compatible with inspircd 2.0
 
 Fixes
+11/02/07 r411 Fixed KILL parsing in inspircd12 module
 11/02/03 r407 Fixed MOTD request not being sent out correctly in inspircd12 [closes #1242]
 11/02/03 r407 Fixed handling of bogus ADDLINE messages from inspircd12
 11/02/02 r405 [2] Fix for crash when parsing * for NICKIP in unreal32
