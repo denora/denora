@@ -23,6 +23,7 @@
 #include <ws2tcpip.h>
 #include <windows.h>
 
+#define _WIN32_WINNT 0x0502
 #define popen			_popen
 #define pclose			_pclose
 #define ftruncate		_chsize

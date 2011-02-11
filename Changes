@@ -10,6 +10,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+11/02/11 r417 Fixed Denora not running on Windows XP/2003 anymore
 11/02/11 r416 Scarynet module was not compiled on windows
 
 Removals
