@@ -47,3 +47,4 @@
 #define IRC_SCARYNET    34  /* ScaryNet 2.10.11.x			             */
 #define IRC_INSPIRCD12  35  /* Inspircd 1.2.x                            */
 #define IRC_NEFARIOUS13 36  /* Nefarious IRCu 1.3                        */
+#define IRC_IRCDRIZON   37  /* ircd-rizon 3.0.1+ */

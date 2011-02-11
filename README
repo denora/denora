@@ -97,20 +97,14 @@ TABLE OF CONTENTS
 
     Denora currently works with the following IRCds:
 
-        * Asuka IRCu
         * Bahamut 1.4 and 1.8
         * Charybdis 1.0 - 3.x
-        * Hybrid IRCd 7.0
-        * Hyperion/DancerIRCd
         * Inspircd 1.1.x - 2.0.x
-        * IRCU 2.10.11 and 2.10.12
+        * IRCU 2.10.11 - 2.10.12
+        * ircd-rizon 3.x.x
         * Nefarious IRCu 1.0.x - 1.3.x
-        * ngIRCd 0.9.1
-        * Plexus IRCd 3.x.x
         * Ratbox 2.0.6
-        * ScaryNet IRCu 2.10.11
-        * Solid IRCd 3.5.6 or later
-        * Ultimate 3.0.0 alpha26 or later
+        * ScaryNet IRCu 2.10.11 - 2.10.12
         * Unreal 3.2 beta19 or later
 
     Denora could also work with some of the deamons derivated by the ones 

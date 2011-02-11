@@ -4,16 +4,22 @@ Denora v1.4.6-SVN
 -------------
 
 Additions
-n/a
+11/02/11 r416 Added support for ircd-rizon
 
 Changes
-n/a
+11/02/11 r416 Updated Windows installer
 
 Fixes
-n/a
+11/02/11 r416 Scarynet module was not compiled on windows
 
 Removals
-n/a
+11/02/11 r416 Removed support for Asuka ircd
+11/02/11 r416 Removed support for Hybrid ircd
+11/02/11 r416 Removed support for Hyperion ircd
+11/02/11 r416 Removed support for ngircd
+11/02/11 r416 Removed support for Plexus3 ircd
+11/02/11 r416 Removed support for Solidircd
+11/02/11 r416 Removed support for Ultimate3 ircd
 
 Developers
 Denora Team <dev@denorastats.org>
