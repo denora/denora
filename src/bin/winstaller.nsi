@@ -210,7 +210,6 @@ Section "MainSection" SEC01
   File "C:\Users\Sebastian\Documents\denora\data\modules\inspircd12.dll"
   File "C:\Users\Sebastian\Documents\denora\data\modules\ircu.dll"
   File "C:\Users\Sebastian\Documents\denora\data\modules\ircdrizon.dll"
-  File "C:\Users\Sebastian\Documents\denora\data\modules\nefarious.dll"
   File "C:\Users\Sebastian\Documents\denora\data\modules\nefarious13.dll"  
   File "C:\Users\Sebastian\Documents\denora\data\modules\ratbox.dll"
   File "C:\Users\Sebastian\Documents\denora\data\modules\ss_uptime.dll"
