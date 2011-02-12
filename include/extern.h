@@ -762,7 +762,7 @@ E void sql_do_nick(User *u);
 E void sql_do_sdesc(char *user, char *msg);
 E void server_set_desc(char *server, char *msg);
 E void do_swhois(char *user, char *msg);
-E void do_account(User *user, char *account, int flag);
+E void do_account(User * user, char *account);
 E void do_p10account(User *user, char *account, int flag);
 E void sql_do_nick_chg(char *newnick, char *oldnick);
 E void sql_do_addusers(int chanid, char *users);

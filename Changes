@@ -12,6 +12,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+11/02/12 r422 Fixed compile errors
 11/02/12 r421 Fixed memleaks and crashbug in do_p10account
 11/02/11 r417 Fixed Denora not running on Windows XP/2003 anymore
 11/02/11 r416 Scarynet module was not compiled on windows

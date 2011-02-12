@@ -150,7 +150,7 @@ geoipv6_t _GeoIP_lookupaddress_v6 (const char *host);
 
 #if defined(_WIN32)
 /* http://www.mail-archive.com/users@ipv6.org/msg02107.html */
-static const char * _GeoIP_inet_ntop(int af, const void *src, char *dst, socklen_t cnt)
+const char * _GeoIP_inet_ntop(int af, const void *src, char *dst, socklen_t cnt)
 {
         if (af == AF_INET)
         {
@@ -203,7 +203,7 @@ static int _GeoIP_inet_pton(int af, const char *src, void *dst)
 static int _GeoIP_inet_pton(int af, const char *src, void *dst) {
   return inet_pton(af, src, dst);
 }
-static const char * _GeoIP_inet_ntop(int af, const void *src, char *dst, socklen_t cnt) {
+const char * _GeoIP_inet_ntop(int af, const void *src, char *dst, socklen_t cnt) {
   return inet_ntop(af, src, dst, cnt);
 }
 
