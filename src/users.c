@@ -1410,7 +1410,7 @@ void do_kill(char *nick, char *msg)
 }
 
 /*************************************************************************/
-/* Used by charybdis for now
+/* Used by TS6 ircds
  * Received: :00Z ENCAP * SU 002AAACOV :Pryan
  * Received: :00Z ENCAP * SU :002AAACOV
  */
@@ -1418,8 +1418,6 @@ void do_account(User * user, char *account)
 {
     int nickid;
     char *sqlaccount = NULL;
-    char *sqlhost = NULL;
-    char hhostbuf[255];
 
     SET_SEGV_LOCATION();
 
@@ -1428,48 +1426,31 @@ void do_account(User * user, char *account)
         return;
     }
 
-    if (account) {
-        alog(LOG_DEBUG, "debug: account %s set on %s", account,
-             user->nick);
-        user->account = sstrdup(account);
-        ircsnprintf(hhostbuf, sizeof(account) + sizeof(hhostbuf) + 2,
-                    "%s%s%s", HiddenPrefix, account, HiddenSuffix);
+    if (user->account) {
+		free(user->account);
+	}
 
-        if (!user->vhost && UserHasMode(user->nick, UMODE_x)) {
-            alog(LOG_DEBUG, "debug: setting vhost %s on %s", hhostbuf,
-                 user->nick);
-            user->vhost = sstrdup(hhostbuf);
+    nickid = db_getnick_unsure(user->sqlnick);
+
+    if (account) {
+        alog(LOG_DEBUG, "debug: account %s set on %s", account, user->nick);
+        user->account = sstrdup(account);
+        if (denora->do_sql && nickid != -1) {
+        	sqlaccount = rdb_escape(account);
+        	rdb_query(QUERY_LOW,
+        	          "UPDATE %s SET account=\'%s\', WHERE nickid=%d",
+        	           UserTable, sqlaccount, nickid);
+        	free(sqlaccount);
         }
     } else {
         alog(LOG_DEBUG, "debug: account removed from %s", user->nick);
-        free(user->account);
         user->account = NULL;
-
-        if (user->vhost) {
-            alog(LOG_DEBUG, "debug: removing vhost from %s", user->nick);
-            free(user->vhost);
-            user->vhost = NULL;
-        }
+        if (denora->do_sql && nickid != -1) {
+			rdb_query(QUERY_LOW,
+					  "UPDATE %s SET account=\'\', WHERE nickid=%d",
+					   UserTable, nickid);
+		}
     }
-
-    SET_SEGV_LOCATION();
-
-    if (denora->do_sql) {
-        sqlaccount = rdb_escape(account);
-        sqlhost = rdb_escape(user->vhost);
-        nickid = db_getnick_unsure(user->sqlnick);
-        if (nickid == -1) {
-            alog(LOG_NONEXISTANT, "ACCOUNT set for nonexistent user %s", user);
-        } else {
-            rdb_query(QUERY_LOW,
-                      "UPDATE %s SET account=\'%s\', hiddenhostname=\'%s\' WHERE nickid=%d",
-                      UserTable, sqlaccount, sqlhost, nickid);
-        }
-        free(sqlaccount);
-        free(sqlhost);
-    }
-
-    SET_SEGV_LOCATION();
 }
 
 /**
@@ -1516,7 +1497,9 @@ void do_p10account(User * user, char *account, int flag)
         }
     } else if (flag == 1) {
         alog(LOG_DEBUG, "debug: account removed from %s", user->nick);
-        free(user->account);
+        if (user->account) {
+        	free(user->account);
+        }
         user->account = NULL;
 
         if (user->vhost) {
@@ -1526,8 +1509,12 @@ void do_p10account(User * user, char *account, int flag)
     } else if (flag == 2) {
         alog(LOG_DEBUG, "debug: account %s renaming on %s", account,
              user->nick);
-        free(user->account);
-        free(user->vhost);
+        if (user->account) {
+        	free(user->account);
+        }
+        if (user->vhost) {
+        	free(user->vhost);
+        }
         user->vhost = NULL;
         user->account = sstrdup(account);
         ircsnprintf(hhostbuf, sizeof(account) + sizeof(hhostbuf) + 2,
