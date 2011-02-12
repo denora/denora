@@ -451,6 +451,8 @@ void moduleAddIRCDMsgs(void)
 
 int denora_event_encap(char *source, int ac, char **av)
 {
+	User *u = NULL;
+
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
@@ -460,6 +462,10 @@ int denora_event_encap(char *source, int ac, char **av)
     if (!stricmp(av[1], "CHGHOST")) {
         change_user_host(av[2], av[3]);
     }
+    if (!stricmp(av[1], "SU")) {
+    	u = find_byuid(av[2]);
+		do_account(u, (ac > 3) ? av[3] : NULL);
+	}
     return MOD_CONT;
 }
 

@@ -1410,6 +1410,67 @@ void do_kill(char *nick, char *msg)
 }
 
 /*************************************************************************/
+/* Used by charybdis for now
+ * Received: :00Z ENCAP * SU 002AAACOV :Pryan
+ * Received: :00Z ENCAP * SU :002AAACOV
+ */
+void do_account(User * user, char *account)
+{
+    int nickid;
+    char *sqlaccount = NULL;
+    char *sqlhost = NULL;
+    char hhostbuf[255];
+
+    SET_SEGV_LOCATION();
+
+    if (!user) {
+        alog(LOG_NONEXISTANT, "debug: ACCOUNT %s on nonexistent nick", account);
+        return;
+    }
+
+    if (account) {
+        alog(LOG_DEBUG, "debug: account %s set on %s", account,
+             user->nick);
+        user->account = sstrdup(account);
+        ircsnprintf(hhostbuf, sizeof(account) + sizeof(hhostbuf) + 2,
+                    "%s%s%s", HiddenPrefix, account, HiddenSuffix);
+
+        if (!user->vhost && UserHasMode(user->nick, UMODE_x)) {
+            alog(LOG_DEBUG, "debug: setting vhost %s on %s", hhostbuf,
+                 user->nick);
+            user->vhost = sstrdup(hhostbuf);
+        }
+    } else {
+        alog(LOG_DEBUG, "debug: account removed from %s", user->nick);
+        free(user->account);
+        user->account = NULL;
+
+        if (user->vhost) {
+            alog(LOG_DEBUG, "debug: removing vhost from %s", user->nick);
+            free(user->vhost);
+            user->vhost = NULL;
+        }
+    }
+
+    SET_SEGV_LOCATION();
+
+    if (denora->do_sql) {
+        sqlaccount = rdb_escape(account);
+        sqlhost = rdb_escape(user->vhost);
+        nickid = db_getnick_unsure(user->sqlnick);
+        if (nickid == -1) {
+            alog(LOG_NONEXISTANT, "ACCOUNT set for nonexistent user %s", user);
+        } else {
+            rdb_query(QUERY_LOW,
+                      "UPDATE %s SET account=\'%s\', hiddenhostname=\'%s\' WHERE nickid=%d",
+                      UserTable, sqlaccount, sqlhost, nickid);
+        }
+        free(sqlaccount);
+        free(sqlhost);
+    }
+
+    SET_SEGV_LOCATION();
+}
 
 /**
  * Handle ACCOUNT messages from the ircd (p10 only)
@@ -1437,8 +1498,7 @@ void do_p10account(User * user, char *account, int flag)
     SET_SEGV_LOCATION();
 
     if (!user) {
-        alog(LOG_NONEXISTANT, "debug: ACCOUNT %s on nonexistent nick: %s",
-             account, user->nick);
+        alog(LOG_NONEXISTANT, "debug: ACCOUNT %s on nonexistent nick", account);
         return;
     }
 
@@ -1456,15 +1516,19 @@ void do_p10account(User * user, char *account, int flag)
         }
     } else if (flag == 1) {
         alog(LOG_DEBUG, "debug: account removed from %s", user->nick);
+        free(user->account);
         user->account = NULL;
 
         if (user->vhost) {
             alog(LOG_DEBUG, "debug: removing vhost from %s", user->nick);
-            user->vhost = NULL;
+            free(user->vhost);
         }
     } else if (flag == 2) {
         alog(LOG_DEBUG, "debug: account %s renaming on %s", account,
              user->nick);
+        free(user->account);
+        free(user->vhost);
+        user->vhost = NULL;
         user->account = sstrdup(account);
         ircsnprintf(hhostbuf, sizeof(account) + sizeof(hhostbuf) + 2,
                     "%s%s%s", HiddenPrefix, account, HiddenSuffix);
