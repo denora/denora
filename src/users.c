@@ -1438,7 +1438,7 @@ void do_account(User * user, char *account)
         if (denora->do_sql && nickid != -1) {
         	sqlaccount = rdb_escape(account);
         	rdb_query(QUERY_LOW,
-        	          "UPDATE %s SET account=\'%s\', WHERE nickid=%d",
+        	          "UPDATE %s SET account=\'%s\' WHERE nickid=%d",
         	           UserTable, sqlaccount, nickid);
         	free(sqlaccount);
         }
@@ -1447,7 +1447,7 @@ void do_account(User * user, char *account)
         user->account = NULL;
         if (denora->do_sql && nickid != -1) {
 			rdb_query(QUERY_LOW,
-					  "UPDATE %s SET account=\'\', WHERE nickid=%d",
+					  "UPDATE %s SET account=\'\' WHERE nickid=%d",
 					   UserTable, nickid);
 		}
     }

@@ -13,6 +13,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+11/02/13 r426 Fixed erroneous ','s in SQL queries in do_account()
 11/02/12 r424 Fixed support for accounts on Charybdis at burst (oops)
 11/02/12 r422 Fixed compile errors
 11/02/12 r421 Fixed memleaks and crashbug in do_p10account
