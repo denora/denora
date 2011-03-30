@@ -165,7 +165,7 @@ int denora_event_nick(char *source, int ac, char **av)
     if (denora->protocoldebug) {
         protocol_debug(source, ac, av);
     }
-    if (ac != 2) {
+    if (ac != 1) {
         s = findserver_uid(servlist, av[4]);
         ipchar = host_resolve(av[3]);
         do_nick("", av[0], av[2], av[3], s ? s->name : source, av[6],
