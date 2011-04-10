@@ -39,4 +39,5 @@ ADD `mode_lw` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lz` enum('Y','N') NOT NULL default 'N',
 ADD `mode_uq` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ur` enum('Y','N') NOT NULL default 'N',
+ADD `mode_uz` enum('Y','N') NOT NULL default 'N',
 ADD `mode_us` enum('Y','N') NOT NULL default 'N';

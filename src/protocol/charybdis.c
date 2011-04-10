@@ -125,6 +125,7 @@ void IRCDModeInit(void)
     ModuleSetUserMode(UMODE_s, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_w, IRCD_ENABLE);
     ModuleSetUserMode(UMODE_z, IRCD_ENABLE);
+    MoudleSetUserMode(UMODE_Z, IRCD_ENABLE);
     ModuleUpdateSQLUserMode();
     CreateChanBanMode(CMODE_b, add_ban, del_ban);
     CreateChanBanMode(CMODE_e, add_exception, del_exception);

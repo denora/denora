@@ -9,10 +9,13 @@ Additions
 11/02/11 r416 Added support for ircd-rizon
 
 Changes
+10/04/11 r428 documented the -protocoldebug option in the -help output
+10/04/11 r428 made denora accept options that start with --
 11/02/11 r419 Updated Denora icon
 11/02/11 r416 Updated Windows installer
 
 Fixes
+10/04/11 r429 Fixed unknown user mode Z in charybdis protocol
 11/03/30 r427 Fixed crash on nickchange in ngircd protocol (#1257)
 11/02/13 r426 Fixed erroneous ','s in SQL queries in do_account()
 11/02/12 r424 Fixed support for accounts on Charybdis at burst (oops)
