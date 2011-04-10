@@ -264,9 +264,6 @@ int denora_event_nick(char *source, int ac, char **av)
         user = do_nick(source, av[0], av[4], av[5], av[6], av[7],
                        strtoul(av[2], NULL, 10), 0, ipchar, NULL, av[7],
                        strtoul(av[1], NULL, 10), av[3], NULL);
-        if (user) {
-            denora_set_umode(user, 1, &av[3]);
-        }
         free(ipchar);
 
     } else if (ac == 9) {
@@ -321,9 +318,6 @@ int denora_event_euid(char *source, int ac, char **av)
                     av[7], atoi(av[1]), av[3], av[9]);
         if (!strcmp(av[9], "*"))
             do_account(user, av[9]);
-        if (user) {
-            denora_set_umode(user, 1, &av[3]);
-        }
     }
     return MOD_CONT;
 }
