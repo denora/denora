@@ -787,6 +787,8 @@ static int parse_options(int ac, char **av)
         s = av[i];
         if (*s == '-') {
             s++;
+            if (*s == '-')
+                s++;
             value = myStrGetToken(s, '=', 0);
             extra = myStrGetToken(s, '=', 1);
 
@@ -930,6 +932,7 @@ static int parse_options(int ac, char **av)
                 fprintf(stdout, "-debug         -debug\n");
                 fprintf(stdout, "-nofork        -nofork\n");
                 fprintf(stdout, "-sql           -sql\n");
+                fprintf(stdout, "-protocoldebug -protocoldebug\n");
                 fprintf(stdout, "-socketdebug   -socketdebug\n");
                 fprintf(stdout, "-version       -version\n");
                 fprintf(stdout, "-help          -help\n");
