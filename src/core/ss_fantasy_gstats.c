@@ -66,7 +66,7 @@ void DenoraFini(void)
 int do_fantasy(int argc, char **argv)
 {
     User *u;
-    char *chan;
+    char *chan, *target, *sqltarget;
 #ifdef USE_MYSQL
     MYSQL_RES *mysql_res;
 #endif
@@ -75,20 +75,38 @@ int do_fantasy(int argc, char **argv)
     if (argc < 3)
         return MOD_CONT;
 
+    if (!denora->do_sql) {
+        return MOD_CONT;
+    }
+
     if (stricmp(argv[0], "gstats") == 0) {
-        u = finduser(argv[1]);
-        if (!denora->do_sql) {
-            return MOD_CONT;
+        if (argc == 3) {
+                u = finduser(argv[1]);
+                if (!u->sgroup) {
+                        return MOD_CONT;
+                }
+                target = u->nick;
+                sqltarget = sstrddup(u->sgroup);
+        } else {
+                target = strtok(argv[3], " ");
+                sqltarget = rdb_escape(target);
+                rdb_query(QUERY_HIGH, "SELECT uname FROM %s WHERE nick=\'%s\' ", AliasesTable, sqltarget);
+#ifdef USE_MYSQL
+                mysql_res = mysql_store_result(mysql);
+                if (mysql_res && mysql_num_rows(mysql_res)) {
+                        mysql_row = mysql_fetch_row(mysql_res);
+                        free(sqltarget);
+                        sqltarget = rdb_escape(mysql_row[0]);
+                } else {
+                        free(sqltarget);
+                        return MOD_CONT;
+                }
+#endif
         }
-        if (!u->sgroup) {
-            return MOD_CONT;
-        }
-        chan = rdb_escape(argv[2]);
         cs = find_cs(argv[2]);
-        rdb_query
-            (QUERY_HIGH,
-             "SELECT * FROM %s WHERE chan=\'global\' AND type=0 AND uname=\'%s\';",
-             UStatsTable, u->sgroup);
+        rdb_query(QUERY_HIGH, "SELECT * FROM %s WHERE chan=\'global\' AND type=0 AND uname=\'%s\';",
+             UStatsTable, sqltarget);
+        free(sqltarget);
 #ifdef USE_MYSQL
         mysql_res = mysql_store_result(mysql);
         if (mysql_num_rows(mysql_res) > 0) {
@@ -96,7 +114,7 @@ int do_fantasy(int argc, char **argv)
             while ((mysql_row = mysql_fetch_row(mysql_res)) != NULL) {
                 if (cs->flags & CS_NOTICE) {
                     notice_lang(s_StatServ, u, STATS_USER_NETWORK,
-                                u->nick);
+                                target);
                     notice_lang(s_StatServ, u, STATS_MESSAGE_ONE,
                                 mysql_row[3], mysql_row[4],
                                 mysql_row[5], mysql_row[7], mysql_row[6]);
@@ -104,7 +122,7 @@ int do_fantasy(int argc, char **argv)
                     denora_cmd_privmsg(s_StatServ, argv[2],
                                        getstring(NULL,
                                                  STATS_USER_NETWORK),
-                                       u->nick);
+                                       target);
                     denora_cmd_privmsg(s_StatServ, argv[2],
                                        getstring(NULL,
                                                  STATS_MESSAGE_ONE),
