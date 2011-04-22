@@ -86,7 +86,7 @@ int do_fantasy(int argc, char **argv)
                         return MOD_CONT;
                 }
                 target = u->nick;
-                sqltarget = sstrddup(u->sgroup);
+                sqltarget = sstrdup(u->sgroup);
         } else {
                 target = strtok(argv[3], " ");
                 sqltarget = rdb_escape(target);
