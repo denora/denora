@@ -76,11 +76,11 @@ int do_fantasy(int argc, char **argv)
     }
 
     if (stricmp(argv[0], "stats") == 0) {
+        if (!(u = finduser(argv[1])))
+                return MOD_CONT;
         if (argc == 3) {
-                u = finduser(argv[1]);
-                if (!u->sgroup) {
+                if (!u->sgroup)
                         return MOD_CONT;
-                }
                 target = u->nick;
                 sqltarget = sstrdup(u->sgroup);
         } else {
