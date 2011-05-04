@@ -139,8 +139,8 @@ Denora Internal Events
     an example on how to do this.
 
 
-	EVENT_CHAN_PRIVMSG
-		Sent when a PRIVMSG is received in a channel
+    EVENT_CHAN_PRIVMSG
+        Sent when a PRIVMSG is received in a channel
         Argument 1 - Sender
         Argument 2 - Channel
         Argument 3 - Message
@@ -151,9 +151,9 @@ Denora Internal Events
         Argument 2 - New Nick
 
     EVENT_CHANNEL_MODE
-		This event is sent when a changed mode is changed or updated. 
-		Argument 1 - EVENT_MODE_ADD or EVENT_MODE_REMOVE
-		Arugment 2 - Channel
+        This event is sent when a changed mode is changed or updated. 
+        Argument 1 - EVENT_MODE_ADD or EVENT_MODE_REMOVE
+        Arugment 2 - Channel
         Argument 3 - Mode
         Argument 4 - extra data not always sent
 
@@ -186,18 +186,18 @@ Denora Internal Events
         The argument is either EVENT_START or EVENT_STOP, to indicate if it's
         emitted before or after the saving routines.
 
-	EVENT_FANTASY
-		This event is sent when a user in a chanstats channel uses a ! command
+    EVENT_FANTASY
+        This event is sent when a user in a chanstats channel uses a ! command
         Argument 1 - Fantasy Command
         Argument 2 - User sending command
-		Argument 3 - Channel
-		Argument 4 - Parameters (not always sent)
+        Argument 3 - Channel
+        Argument 4 - Parameters (not always sent)
 
-	EVENT_GLOBAL_KILL
-		This event is sent when a ircop kills off a user from the network
+    EVENT_GLOBAL_KILL
+        This event is sent when a ircop kills off a user from the network
         Argument 1 - Person who set it
         Argument 2 - Person whom was affected
-		Argument 3 - Reason
+        Argument 3 - Reason
 
     EVENT_NEWNICK
         A new user has been introduced on the network.
@@ -211,25 +211,25 @@ Denora Internal Events
         This event is emitted before the stats are being reloaded.
         Argument 1 - EVENT_START or EVENT_STOP
 
-   EVENT_SENT_CTCP_VERSION
-       The core has sent a request for the client to respond to ctcp version, since
-       clients can ignore this request, the event EVENT_CTCP_VERSION may never be
-       triggered.
-       Argument 1 - Nick
+    EVENT_SENT_CTCP_VERSION
+        The core has sent a request for the client to respond to ctcp version, since
+        clients can ignore this request, the event EVENT_CTCP_VERSION may never be
+        triggered.
+        Argument 1 - Nick
 
-	EVENT_SERVER
-	   A new server has been introduced to Denora.
-       Argument 1 - server name
+    EVENT_SERVER
+        A new server has been introduced to Denora.
+        Argument 1 - server name
 
-	EVENT_JUPE_SERVER
-	   A new jupe server has been introduced to Denora.
-       Argument 1 - server name
+    EVENT_JUPE_SERVER
+        A new jupe server has been introduced to Denora.
+        Argument 1 - server name
 
-	EVENT_SERVER_KILL
-		This event is sent when a server kills off a user from the network
+    EVENT_SERVER_KILL
+        This event is sent when a server kills off a user from the network
         Argument 1 - Server who set it
         Argument 2 - Person whom was affected
-		Argument 3 - Reason
+        Argument 3 - Reason
 
     EVENT_SHUTDOWN
         This event is emitted when Denora is being shut down.
@@ -239,10 +239,10 @@ Denora Internal Events
         up has been done already, and the SQUIT has been sent; the only thing
         done after emitting the event is closing the socket to the uplink hub.
 
-   EVENT_SQUIT
-       This event is sent when Denora received a SQUIT or is SQUITing itself
-       Argument 1 - Server Name
-       Argument 2 - Message
+    EVENT_SQUIT
+        This event is sent when Denora received a SQUIT or is SQUITing itself
+        Argument 1 - Server Name
+        Argument 2 - Message
 
     EVENT_SIGNAL
         This event is emitted when Denora is quitting because of a signal it
@@ -262,10 +262,10 @@ Denora Internal Events
         Argument 1 - Users Nick
         Argument 2 - Channel Name
 
-	EVENT_USER_MODE
-		This event is sent when a users mode is changed or updated. 
-		Argument 1 - EVENT_MODE_ADD or EVENT_MODE_REMOVE
-		Arugment 2 - Nick
+    EVENT_USER_MODE
+        This event is sent when a users mode is changed or updated. 
+        Argument 1 - EVENT_MODE_ADD or EVENT_MODE_REMOVE
+        Arugment 2 - Nick
         Argument 3 - Mode
         Argument 4 - extra data not always sent
 
@@ -275,14 +275,11 @@ Denora Internal Events
         Argument 2 - Channel Name
         Argument 3 - Part Message (optional)
 
-	EVENT_UPLINK_SYNC_COMPLETE
-		The uplink server has completed syncing
+    EVENT_UPLINK_SYNC_COMPLETE
+        The uplink server has completed syncing
         Argument 1 - server name
 
-	EVENT_SERVER_SYNC_COMPLETE
-		This server has finisehd syncing
-	    Arguement 1 - Server name
-
-
-
+    EVENT_SERVER_SYNC_COMPLETE
+        This server has finisehd syncing
+        Arguement 1 - Server name
 

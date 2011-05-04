@@ -10,6 +10,7 @@ Additions
 11/02/11 r416 Added support for ircd-rizon
 
 Changes
+11/05/04 r435 Fixed formatting of docs/EVENTS
 11/04/10 r428 documented the -protocoldebug option in the -help output
 11/04/10 r428 made denora accept options that start with --
 11/02/11 r419 Updated Denora icon
