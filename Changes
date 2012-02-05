@@ -17,6 +17,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+12/02/05 r436 Fixed ADMIN ADD command ignoring supplied host mask
 11/04/10 r431 Fixed duplicate call to denora_set_umode() in ircdrizon protocol
 11/04/10 r430 Fixed duplicate call to denora_set_umode() in charybdis protocol
 11/04/10 r429 Fixed unknown user mode Z in charybdis protocol

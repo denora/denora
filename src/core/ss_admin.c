@@ -93,6 +93,7 @@ static int do_admin(User * u, int ac, char **av)
                 a->hosts[0] = sstrdup("*@*");
                 a->language = StatsLanguage;
             } else if (ac <= 4) {
+                a->hosts[0] = sstrdup(av[3]);
                 a->language = StatsLanguage;
             } else {
                 a->hosts[0] = sstrdup(av[3]);
