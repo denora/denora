@@ -1,6 +1,6 @@
 /* HTML Top 10 Channel
  *
- * (c) 2004-2011 Denora Team
+ * (c) 2004-2012 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
