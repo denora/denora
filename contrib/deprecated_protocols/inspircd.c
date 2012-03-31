@@ -10,7 +10,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id$
+ * 
  *
  * Following modules loaded during testing
  * <module name="m_chanprotect.so">
@@ -998,7 +998,7 @@ int DenoraInit(int argc, char **argv)
         protocol_debug(NULL, argc, argv);
     }
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id$");
+    moduleAddVersion("");
     moduleSetType(PROTOCOL);
 
     pmodule_ircd_version("InspIRCd 1.0 Beta 6+");

@@ -1,6 +1,6 @@
 dnl Macro file
 dnl
-dnl Denora (c) 2004-2011 Nomad Dev Team
+dnl Denora (c) 2004-2012 Nomad Dev Team
 dnl Contact us at info@denorastats.org
 dnl
 dnl This program is free but copyrighted software; see the file COPYING for
@@ -9,7 +9,7 @@ dnl
 dnl Based on the original code of Anope by Anope Team.
 dnl Based on the original code of Thales by Lucas.
 dnl
-dnl $Id$
+dnl 
 dnl
 dnl Check the size of several types and define a valid int16_t and int32_t.
 dnl
@@ -61,7 +61,7 @@ AC_CHECK_TYPE(uint64_t, unsigned long long)
 ])
 
 dnl # Configure paths for mysql-client, GPLv2
-dnl #$Id$
+dnl #
 dnl #ken restivo modified 2001/08/04 to remove NULLs and use 0, in case NULL undefined.
 dnl # Markus Fischer <[EMAIL PROTECTED]>,  23.9.1999
 dnl # URL : http://josefine.ben.tuwien.ac.at/~mfischer/m4/mysql-client.m4

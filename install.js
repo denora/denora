@@ -1,7 +1,7 @@
 //
 // install.js - Windows Configuration
 //
-// (c) 2004-2011 Denora Team
+// (c) 2004-2012 Denora Team
 // Contact us at info@denorastats.org
 //
 // This program is free but copyrighted software; see the file COPYING for
@@ -10,7 +10,7 @@
 // Based on the original code of Anope by Anope Team.
 // Based on the original code of Thales by Lucas.
 //
-// $Id$
+// 
 //
 var denoraVersion = "Unknown";
 var denoraShortVersion = "Unknown";

@@ -1,6 +1,5 @@
-$Id$
 
-Denora v1.4.6-SVN
+Denora v1.4.6-git
 -------------
 
 Additions
@@ -10,6 +9,7 @@ Additions
 11/02/11 r416 Added support for ircd-rizon
 
 Changes
+12/03/31 Updated GeoIP databases
 11/05/04 r435 Fixed formatting of docs/EVENTS
 11/04/10 r428 documented the -protocoldebug option in the -help output
 11/04/10 r428 made denora accept options that start with --
@@ -17,6 +17,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+12/03/31 Fixed grammar errors (#1260)
 12/02/05 r436 Fixed ADMIN ADD command ignoring supplied host mask
 11/04/10 r431 Fixed duplicate call to denora_set_umode() in ircdrizon protocol
 11/04/10 r430 Fixed duplicate call to denora_set_umode() in charybdis protocol

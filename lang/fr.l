@@ -1,6 +1,6 @@
 # French language file.
 #
-# Denora (c) 2004-2011 Denora Team
+# Denora (c) 2004-2012 Denora Team
 # Contact us at dev@denorastats.org
 #
 # This program is free but copyrighted software; see the file COPYING for
@@ -9,7 +9,7 @@
 # Based on the original code of Anope by Anope Team.
 # Based on the original code of Thales by Lucas.
 #
-# $Id$
+# 
 #
 # French tracution by XaF
 # Traduction Française par XaF

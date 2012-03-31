@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id$
+ * 
  *
  * last tested against Hybrid6/PTlink6.19.4 (20050827_0)
  *
@@ -796,7 +796,7 @@ int DenoraInit(int argc, char **argv)
     }
 
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id$");
+    moduleAddVersion("");
     moduleSetType(PROTOCOL);
 
 

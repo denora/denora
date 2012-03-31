@@ -11,7 +11,7 @@
  *     E-mail: <achurch@achurch.org>
  * Parts written by Andrew Kempe and others.
  *
- * $Id$
+ * 
  *
  */
 

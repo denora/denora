@@ -1,32 +1,35 @@
-$Id$
-
-Denora Version 1.4.5
---------------------
-No changes.
+-- Denora Version 1.4.6
+-- --------------------
+-- No changes.
 
 
-Denora Version 1.4.4
---------------------
-No changes.
+-- Denora Version 1.4.5
+-- --------------------
+-- No changes.
 
 
-Denora Version 1.4.3
---------------------
-No changes.
+-- Denora Version 1.4.4
+-- --------------------
+-- No changes.
 
 
-Denora Version 1.4.2
---------------------
-No changes.
+-- Denora Version 1.4.3
+-- --------------------
+-- No changes.
 
 
-Denora Version 1.4.1
---------------------
-No changes.
+-- Denora Version 1.4.2
+-- --------------------
+-- No changes.
 
 
-Denora Version 1.4.0
---------------------
+-- Denora Version 1.4.1
+-- --------------------
+-- No changes.
+
+
+-- Denora Version 1.4.0
+-- --------------------
 
 CREATE TABLE `admin` (
   `id` tinyint(3) unsigned NOT NULL auto_increment,
@@ -44,10 +47,10 @@ ALTER TABLE `server` ADD `lastpingtime` INT( 15 ) NOT NULL AFTER `maxpingtime` ;
 ALTER TABLE `user` ADD `lastquitmsg` VARCHAR( 255 ) NOT NULL AFTER `lastquit` ;
 
 
-Denora Version 1.1.0
---------------------
+-- Denora Version 1.1.0
+-- --------------------
 
-  /* this query is for ircds with +f flood modes */
+  -- this query is for ircds with +f flood modes
   ALTER TABLE `chan` CHANGE `mode_lf_data` `mode_lf_data` VARCHAR( 255 ) NOT NULL 
 
   ALTER TABLE `server` ADD `opers` INT( 15 ) NOT NULL;
@@ -163,6 +166,6 @@ CREATE TABLE `serverstats` (
 ) TYPE=MyISAM;
 
 
-Denora Version 1.0.0
--------------------
-First release.
+-- Denora Version 1.0.0
+-- -------------------
+-- First release.

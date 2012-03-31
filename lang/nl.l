@@ -1,6 +1,6 @@
 # Dutch language file.
 #
-# Denora (c) 2004-2011 Denora Team
+# Denora (c) 2004-2012 Denora Team
 # Contact us at dev@denorastats.org
 #
 # Dutch translation (c) 2005 Pieter Bootms
@@ -14,7 +14,7 @@
 # Based on the original code of Anope by Anope Team.
 # Based on the original code of Thales by Lucas.
 #
-# $Id$
+# 
 #
 # When translating this file to another language, keep in mind that the
 # order of parameters for sprintf() is fixed in the source code, so your

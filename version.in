@@ -3,10 +3,9 @@
 #
 # Please read COPYING and README for furhter details.
 #
-# $Id$
 
 VERSION_MAJOR="1"
 VERSION_MINOR="4"
 VERSION_PATCH="6"
-VERSION_EXTRA="SVN"
+VERSION_EXTRA="git"
 VERSION_BUILD="436"

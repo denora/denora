@@ -10,7 +10,7 @@
  * Based on the original code of Thales by Lucas.
  * Based on code from Thilo Schulz.
  *
- * $Id$
+ * 
  *
  */
 

@@ -8,7 +8,7 @@
 /* Based on the original code of Anope by Anope Team.                    */
 /* Based on the original code of Thales by Lucas.                        */
 /*                                                                       */
-/* $Id$                      */
+/*                       */
 /*                                                                       */
 /*************************************************************************/
 
@@ -1277,7 +1277,7 @@ int DenoraInit(int argc, char **argv)
     }
     /* Actual module code stuff */
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id$");
+    moduleAddVersion("");
     moduleSetType(PROTOCOL);
     /* protocol version and name that we support */
     pmodule_ircd_version("Asuka 1.2.1");

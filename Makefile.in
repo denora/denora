@@ -1,6 +1,6 @@
 # Makefile for Denora.
 #
-# (c) 2004-2011 Denora Team
+# (c) 2004-2012 Denora Team
 # Contact us at info@denorastats.org
 #
 # Please read COPYING and README for further details.
@@ -8,7 +8,7 @@
 # Based on the original code of Anope by Anope Team.
 # Based on the original code of Thales by Lucas.
 #
-# $Id$
+# 
 #  
 
 CC=@CC@

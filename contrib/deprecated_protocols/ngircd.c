@@ -1,6 +1,6 @@
 /* Next Generation IRC Server IRCD functions
  *
- * (c) 2004-2011 Denora Team
+ * (c) 2004-2012 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -683,7 +683,7 @@ int DenoraInit(int argc, char **argv)
     }
 
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id$");
+    moduleAddVersion("");
     moduleSetType(PROTOCOL);
     pmodule_ircd_version("Next Generation IRC Server");
     pmodule_ircd_cap(myIrcdcap);

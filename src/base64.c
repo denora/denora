@@ -10,7 +10,7 @@
  * Based on the original code of Unreal IRCD
  * Based on the original code of NeoStats
  * 
- * $Id$
+ * 
  *
  */
 

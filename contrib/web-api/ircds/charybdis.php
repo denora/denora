@@ -1,5 +1,5 @@
 <?php
-// $Id$
+// 
 
 $ircd = array('supports_hidden_ops' => 0,
 			  'hidden_op_mode' => '',

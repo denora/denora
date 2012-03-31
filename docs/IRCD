@@ -1,6 +1,6 @@
 ============================================================================
 How To Add IRCd Support to Denora                                     v1.0
--- $Id$
+-- 
 ============================================================================
 
 1) Introduction
@@ -351,7 +351,7 @@ come to the last bit of code that needs to be dealt with and that is the init
 function of your IRCD Module. The DenoraInit has some key variables setup
 
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id$");
+    moduleAddVersion("");
     moduleSetType(PROTOCOL);
     pmodule_ircd_version("QuakeIRCD");
     pmodule_ircd_cap(myIrcdcap);
@@ -370,7 +370,7 @@ function of your IRCD Module. The DenoraInit has some key variables setup
 moduleAddAuthor, allows you to set your name as the author of the module
 this is displayed when viewing the module list.
 
-moduleAddVersion, we recommend setting this to $Id$ when impoted to our
+moduleAddVersion, we recommend setting this to  when impoted to our
 svn it will get the above formatted version, this is best for debugging 
 problems that might come up
 

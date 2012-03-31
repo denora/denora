@@ -680,7 +680,7 @@ int DenoraInit(int argc, char **argv)
     }
 
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id$");
+    moduleAddVersion("");
     moduleSetType(PROTOCOL);
     pmodule_ircd_version("Sorcery IRCD");
     pmodule_ircd_cap(myIrcdcap);

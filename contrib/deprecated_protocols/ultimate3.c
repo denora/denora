@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id$
+ * 
  *
  * last tested with UltimateIRCd(Development)-3.1(00).svn($Rev: 897 $)
  *
@@ -851,7 +851,7 @@ int DenoraInit(int argc, char **argv)
         return MOD_STOP;
     }
     moduleAddAuthor("Denora");
-    moduleAddVersion("$Id$");
+    moduleAddVersion("");
     moduleSetType(PROTOCOL);
 
     pmodule_ircd_version("UltimateIRCd 3.0.0.a26+");

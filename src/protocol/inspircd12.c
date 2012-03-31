@@ -10,7 +10,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id$
+ * 
  *
  * last tested with InspIRCd 2.0.0
  *
@@ -1444,7 +1444,7 @@ int DenoraInit(int argc, char **argv)
 
     moduleAddAuthor("Denora");
     moduleAddVersion
-        ("$Id$");
+        ("");
     moduleSetType(PROTOCOL);
 
     if (!UseTS6) {

@@ -1,6 +1,6 @@
 dnl autoconf.in for Stats.
 dnl
-dnl Denora (c) 2004-2011 Denora Team
+dnl Denora (c) 2004-2012 Denora Team
 dnl Contact us at info@denorastats.org
 
 dnl This program is free but copyrighted software; see the file COPYING for
@@ -11,7 +11,7 @@ dnl Based heavily on the Anope configure.in script.
 AC_INIT(denora, 1.4.5, info@denorastats.org)
 
 dnl Sneaky way to get an id into the configure script.
-AC_COPYRIGHT([$Id$])
+AC_COPYRIGHT([])
 
 if test $# = 0; then
 	echo "You might want to run ./Config or provide some parameters to this script."
