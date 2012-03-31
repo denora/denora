@@ -44,7 +44,7 @@ int DenoraInit(int argc, char **argv)
     status = moduleAddMessage(m, MOD_HEAD);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 372 [%d][%s]", status,
+             "Error Occurred setting message for 372 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -52,7 +52,7 @@ int DenoraInit(int argc, char **argv)
     status = moduleAddMessage(m, MOD_HEAD);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 375 [%d][%s]", status,
+             "Error Occurred setting message for 375 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -60,7 +60,7 @@ int DenoraInit(int argc, char **argv)
     status = moduleAddMessage(m, MOD_HEAD);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 376 [%d][%s]", status,
+             "Error Occurred setting message for 376 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
     return MOD_CONT;

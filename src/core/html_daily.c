@@ -43,7 +43,7 @@ int DenoraInit(int argc, char **argv)
     status = addHTMLTag(h);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for !DAILYSTATS! [%d][%s]",
+             "Error Occurred setting message for !DAILYSTATS! [%d][%s]",
              status, ModuleGetErrStr(status));
     }
 
@@ -51,7 +51,7 @@ int DenoraInit(int argc, char **argv)
     status = addHTMLTag(h);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for !DAILYSTATSTITLE! [%d][%s]",
+             "Error Occurred setting message for !DAILYSTATSTITLE! [%d][%s]",
              status, ModuleGetErrStr(status));
     }
 

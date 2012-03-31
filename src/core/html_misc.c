@@ -46,7 +46,7 @@ int DenoraInit(int argc, char **argv)
     status = addHTMLTag(h);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for !VERSION! [%d][%s]",
+             "Error Occurred setting message for !VERSION! [%d][%s]",
              status, ModuleGetErrStr(status));
     }
 
@@ -54,14 +54,14 @@ int DenoraInit(int argc, char **argv)
     status = addHTMLTag(h);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for !TITLE! [%d][%s]",
+             "Error Occurred setting message for !TITLE! [%d][%s]",
              status, ModuleGetErrStr(status));
     }
     h = createHTMLtag("!HTMLLANG!", html_lang);
     status = addHTMLTag(h);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for !HTMLLANG! [%d][%s]",
+             "Error Occurred setting message for !HTMLLANG! [%d][%s]",
              status, ModuleGetErrStr(status));
     }
 
@@ -69,7 +69,7 @@ int DenoraInit(int argc, char **argv)
     status = addHTMLTag(h);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for !CREDITS! [%d][%s]",
+             "Error Occurred setting message for !CREDITS! [%d][%s]",
              status, ModuleGetErrStr(status));
     }
 
@@ -77,7 +77,7 @@ int DenoraInit(int argc, char **argv)
     status = addHTMLTag(h);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for !NETSTATSTITLE! [%d][%s]",
+             "Error Occurred setting message for !NETSTATSTITLE! [%d][%s]",
              status, ModuleGetErrStr(status));
     }
 

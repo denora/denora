@@ -45,7 +45,7 @@ int DenoraInit(int argc, char **argv)
     status = addHTMLTag(h);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for !TOP10KICKS! [%d][%s]",
+             "Error Occurred setting message for !TOP10KICKS! [%d][%s]",
              status, ModuleGetErrStr(status));
     }
 
@@ -53,7 +53,7 @@ int DenoraInit(int argc, char **argv)
     status = addHTMLTag(h);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for !TOP10KICKSTITLE! [%d][%s]",
+             "Error Occurred setting message for !TOP10KICKSTITLE! [%d][%s]",
              status, ModuleGetErrStr(status));
     }
 
@@ -61,7 +61,7 @@ int DenoraInit(int argc, char **argv)
     status = addHTMLTag(h);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for !MOSTKICKTITLE! [%d][%s]",
+             "Error Occurred setting message for !MOSTKICKTITLE! [%d][%s]",
              status, ModuleGetErrStr(status));
     }
 

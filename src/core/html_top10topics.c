@@ -45,7 +45,7 @@ int DenoraInit(int argc, char **argv)
     status = addHTMLTag(h);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for !TOP10TOPICS! [%d][%s]",
+             "Error Occurred setting message for !TOP10TOPICS! [%d][%s]",
              status, ModuleGetErrStr(status));
     }
 
@@ -53,7 +53,7 @@ int DenoraInit(int argc, char **argv)
     status = addHTMLTag(h);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for !TOP10TOPICSTITLE! [%d][%s]",
+             "Error Occurred setting message for !TOP10TOPICSTITLE! [%d][%s]",
              status, ModuleGetErrStr(status));
     }
 
@@ -61,7 +61,7 @@ int DenoraInit(int argc, char **argv)
     status = addHTMLTag(h);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for !MOSTTOPICTITLE! [%d][%s]",
+             "Error Occurred setting message for !MOSTTOPICTITLE! [%d][%s]",
              status, ModuleGetErrStr(status));
     }
 

@@ -43,7 +43,7 @@ int DenoraInit(int argc, char **argv)
     status = moduleAddMessage(m, MOD_HEAD);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 229 [%d][%s]", status,
+             "Error Occurred setting message for 229 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
     if (ircd->spamfilter) {

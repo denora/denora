@@ -43,7 +43,7 @@ int DenoraInit(int argc, char **argv)
     status = addHTMLTag(h);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for !NETSTATS! [%d][%s]",
+             "Error Occurred setting message for !NETSTATS! [%d][%s]",
              status, ModuleGetErrStr(status));
     }
 
@@ -51,7 +51,7 @@ int DenoraInit(int argc, char **argv)
     status = addHTMLTag(h);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for !CURNETSTATSTITLE! [%d][%s]",
+             "Error Occurred setting message for !CURNETSTATSTITLE! [%d][%s]",
              status, ModuleGetErrStr(status));
     }
 

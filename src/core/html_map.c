@@ -43,7 +43,7 @@ int DenoraInit(int argc, char **argv)
     status = addHTMLTag(h);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for !MAP! [%d][%s]", status,
+             "Error Occurred setting message for !MAP! [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -51,7 +51,7 @@ int DenoraInit(int argc, char **argv)
     status = addHTMLTag(h);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for !NETMAPTITLE! [%d][%s]",
+             "Error Occurred setting message for !NETMAPTITLE! [%d][%s]",
              status, ModuleGetErrStr(status));
     }
 

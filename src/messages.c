@@ -480,7 +480,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for STATS [%d][%s]", status,
+             "Error Occurred setting message for STATS [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -488,7 +488,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for TIME [%d][%s]", status,
+             "Error Occurred setting message for TIME [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -496,7 +496,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for VERSION [%d][%s]",
+             "Error Occurred setting message for VERSION [%d][%s]",
              status, ModuleGetErrStr(status));
     }
 
@@ -504,7 +504,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 005 [%d][%s]", status,
+             "Error Occurred setting message for 005 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -512,7 +512,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 020 [%d][%s]", status,
+             "Error Occurred setting message for 020 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -520,7 +520,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 105 [%d][%s]", status,
+             "Error Occurred setting message for 105 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -528,7 +528,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 216 [%d][%s]", status,
+             "Error Occurred setting message for 216 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -536,7 +536,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 217 [%d][%s]", status,
+             "Error Occurred setting message for 217 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -544,7 +544,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 219 [%d][%s]", status,
+             "Error Occurred setting message for 219 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -553,7 +553,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 223 [%d][%s]", status,
+             "Error Occurred setting message for 223 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -561,7 +561,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 244 [%d][%s]", status,
+             "Error Occurred setting message for 244 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -569,7 +569,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 249 [%d][%s]", status,
+             "Error Occurred setting message for 249 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -577,7 +577,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 250 [%d][%s]", status,
+             "Error Occurred setting message for 250 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -585,7 +585,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 263 [%d][%s]", status,
+             "Error Occurred setting message for 263 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -593,7 +593,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 304 [%d][%s]", status,
+             "Error Occurred setting message for 304 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -601,7 +601,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 401 [%d][%s]", status,
+             "Error Occurred setting message for 401 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -609,7 +609,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 402 [%d][%s]", status,
+             "Error Occurred setting message for 402 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -617,7 +617,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 422 [%d][%s]", status,
+             "Error Occurred setting message for 422 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -625,7 +625,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 451 [%d][%s]", status,
+             "Error Occurred setting message for 451 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -633,7 +633,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 461 [%d][%s]", status,
+             "Error Occurred setting message for 461 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -641,7 +641,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 481 [%d][%s]", status,
+             "Error Occurred setting message for 481 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -649,7 +649,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 482 [%d][%s]", status,
+             "Error Occurred setting message for 482 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -657,7 +657,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 503 [%d][%s]", status,
+             "Error Occurred setting message for 503 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -666,7 +666,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 771 [%d][%s]", status,
+             "Error Occurred setting message for 771 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -674,7 +674,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 773 [%d][%s]", status,
+             "Error Occurred setting message for 773 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 
@@ -682,7 +682,7 @@ void moduleAddMsgs(void)
     status = addCoreMessage(IRCD, m);
     if (status != MOD_ERR_OK) {
         alog(LOG_NORMAL,
-             "Error Occurried setting message for 774 [%d][%s]", status,
+             "Error Occurred setting message for 774 [%d][%s]", status,
              ModuleGetErrStr(status));
     }
 }
