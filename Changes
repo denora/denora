@@ -17,6 +17,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+12/04/06 [1] Fixed geoipupd script breaking geoip (#1406)
 12/03/31 Fixed grammar errors (#1260)
 12/02/05 r436 Fixed ADMIN ADD command ignoring supplied host mask
 11/04/10 r431 Fixed duplicate call to denora_set_umode() in ircdrizon protocol
@@ -44,7 +45,7 @@ Developers
 Denora Team <dev@denorastats.org>
 
 Contributors
-n/a
+[1] Conti <sojugarden@gmail.com>
 
 
 Denora v1.4.5
