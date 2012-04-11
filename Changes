@@ -9,6 +9,7 @@ Additions
 11/02/11 r416 Added support for ircd-rizon
 
 Changes
+12/04/11 Added 'cron' function to denorarc for crontab usage 
 12/04/11 Updated ScaryNet protocol
 12/03/31 Updated GeoIP databases
 11/05/04 r435 Fixed formatting of docs/EVENTS

@@ -108,6 +108,16 @@ elif [ "$1" = "rehash" ] ; then
 	echo "Saving Databases and Rehashing Configuration"
 	kill -1 `cat $DENORAPID`
 
+elif [ "$1" = "cron" ] ; then
+	if [ -f $DENORAPID ] ; then
+		PID=`cat $DENORAPID`
+		if [ `ps auxw | grep $DENOPROG | grep $PID | grep -v -c grep` = 1 ] ; then
+			exit
+		fi
+		rm -f $DENORAPID
+	fi
+	$DENOPROG
+
 elif [ "$1" = "version" ] ; then
 	$DENOPROG -version
 
@@ -125,6 +135,7 @@ elif [ "$1" = "help" ] ; then
 		echo "$0 status         Show Denora's Status"
 		echo "$0 restart        Restart Denora (Databases will be saved)"
 		echo "$0 rehash         Rehash Configuration and Save Databases"
+		echo "$0 cron           Start denora if not running (usefull for crontab)"
 		echo "$0 version        Return Denora Version and Build Information"
 		echo "$0 help           Show this help menu"
 		echo "If you need further help please check the /docs/"
@@ -134,5 +145,5 @@ elif [ "$1" = "help" ] ; then
 	
 else
 	echo "Denora Remote Control ($DRCVERSION)"
-	echo "Usage: $0 [start|stop|status|restart|rehash|version|help]"
+	echo "Usage: $0 [start|stop|status|restart|rehash|cron|version|help]"
 fi
