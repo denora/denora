@@ -40,7 +40,7 @@ IRCDVar myIrcd[] = {
      IRCD_DISABLE,              /* We support TOKENS         */
      IRCD_DISABLE,              /* TOKENS are CASE Sensitive */
      IRCD_DISABLE,              /* TIME STAMPS are BASE64    */
-     IRCD_ENABLE,               /* +I support                */
+     IRCD_DISABLE,               /* +I support                */
      IRCD_DISABLE,              /* SJOIN ban char            */
      IRCD_DISABLE,              /* SJOIN except char         */
      IRCD_DISABLE,              /* SJOIN invite char         */
@@ -133,19 +133,16 @@ void IRCDModeInit(void)
     ModuleSetUserMode(UMODE_H, IRCD_ENABLE);    /* Oper Help */
     ModuleSetUserMode(UMODE_O, IRCD_ENABLE);    /* Global Operator */
     ModuleSetUserMode(UMODE_R, IRCD_ENABLE);    /* Registered Only */
-    ModuleSetUserMode(UMODE_T, IRCD_ENABLE);    /* TOR User */
-    ModuleSetUserMode(UMODE_W, IRCD_ENABLE);    /* CGI User */
+    ModuleSetUserMode(UMODE_W, IRCD_ENABLE);    /* WebIRC User */
     ModuleUpdateSQLUserMode();
 
     /* Channel List Modes */
     CreateChanBanMode(CMODE_b, add_ban, del_ban);       /* Ban */
-    CreateChanBanMode(CMODE_I, add_invite, del_invite); /* Permanent Invites */
 
     /* Channel Modes */
     CreateChanMode(CMODE_C, NULL, NULL);        /* No CTCP */
     CreateChanMode(CMODE_D, NULL, NULL);        /* Delayed Join */
     CreateChanMode(CMODE_O, NULL, NULL);        /* Oper Only */
-    CreateChanMode(CMODE_T, NULL, NULL);        /* No TOR users */
     CreateChanMode(CMODE_N, NULL, NULL);        /* No Notices */
     CreateChanMode(CMODE_c, NULL, NULL);        /* No Colours */
     CreateChanMode(CMODE_i, NULL, NULL);        /* Invite Only */
