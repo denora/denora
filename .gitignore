@@ -2,6 +2,7 @@
 config.cache
 config.log
 config.status
+config.bak
 include/language.h
 include/sysconf.h
 include/version.h
@@ -18,9 +19,16 @@ lang/nl
 lang/pt_br
 lang/ru
 Makefile
+src/*.o
+src/stats
 src/bin/denorarc
 src/bin/geoipupd
+src/core/*.o
+src/core/*.so
 src/core/Makefile.inc
+src/modules/*.o
+src/modules/*.so
 src/modules/Makefile.inc
+src/protocol/*.o
+src/protocol/*.so
 src/protocol/Makefile.inc
-src/stats
