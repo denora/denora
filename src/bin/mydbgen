@@ -302,6 +302,22 @@ if test "$?" = "1" ; then
      echo "ALTER TABLE server ADD maxopertime INT( 15 ) NOT NULL;" >> $USQLDB
 fi
 
+$MYSQL -Bs -e "describe server country" 2> /dev/null | grep -q country 
+if test "$?" = "1" ; then
+     echo "ALTER TABLE server ADD country VARCHAR( 255 ) NOT NULL DEFAULT '' AFTER server;" >> $USQLDB
+fi
+
+$MYSQL -Bs -e "describe server countrycode" 2> /dev/null | grep -q countrycode 
+if test "$?" = "1" ; then
+     echo "ALTER TABLE server ADD countrycode VARCHAR( 3 ) NOT NULL DEFAULT '' AFTER country;" >> $USQLDB
+fi
+
+$MYSQL -Bs -e "describe server maxopertime" 2> /dev/null | grep -q maxopertime
+if test "$?" = "1" ; then
+     echo "ALTER TABLE server ADD maxopertime INT( 15 ) NOT NULL;" >> $USQLDB
+fi
+
+
 $MYSQL -Bs -e "describe ustats firstadded" 2> /dev/null | grep -q firstadded
 if test "$?" = "1" ; then
      echo "ALTER TABLE ustats ADD firstadded INT( 10 ) NOT NULL AFTER lastspoke;" >> $USQLDB
