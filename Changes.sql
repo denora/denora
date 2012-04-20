@@ -1,6 +1,7 @@
--- Denora Version 1.4.6
+-- Denora Version 1.5.0
 -- --------------------
--- No changes.
+ALTER TABLE server ADD country VARCHAR( 255 ) NOT NULL DEFAULT '' AFTER server;
+ALTER TABLE server ADD countrycode VARCHAR( 3 ) NOT NULL DEFAULT '' AFTER country;
 
 
 -- Denora Version 1.4.5
