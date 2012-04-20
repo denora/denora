@@ -838,6 +838,8 @@ struct server_ {
     Server *next, *prev;
 
     char *name;				/* Server name 			          */
+    char *country;                      /* Server country                         */
+    char *countrycode;                  /* Server country code                    */
     uint16 hops;		        /* Hops between services and server 	  */
     char *desc;			        /* Server description 			  */
     uint16 flags;			/* Some info flags			  */

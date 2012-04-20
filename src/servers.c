@@ -282,6 +282,9 @@ Server *make_server(const char *servername, char *descript,
 {
     Server *serv;
     ServStats *ss;
+    const char *country_name;
+    const char *country_code;
+    int country_id = 0;
 
     serv = calloc(sizeof(Server), 1);
     serv->name = sstrdup(servername);
@@ -323,6 +326,24 @@ Server *make_server(const char *servername, char *descript,
     }
     if (!serv->ss->maxusertime) {
         serv->ss->maxusertime = time(NULL);
+    }
+    if (!serv->country || !serv->countrycode) {
+        if (!LargeNet) {
+            country_id = GeoIP_id_by_name(gi, servername);
+            if (country_id == 0)
+                country_id = GeoIP_id_by_name_v6(gi, servername);
+
+            country_name = GeoIP_name_by_id(country_id);
+            country_code = GeoIP_code_by_id(country_id);
+        }
+
+	if (country_id == 0) {
+            country_name = "Unknown";
+            country_code = "??";
+        }
+   
+        serv->country = country_name;
+        serv->countrycode = country_code;
     }
     SET_SEGV_LOCATION();
 
@@ -433,8 +454,8 @@ Server *do_server(const char *source, char *servername, char *hops,
             if (KeepServerTable) {
                 rdb_query
                     (QUERY_LOW,
-                     "INSERT INTO %s (server, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld))  ON DUPLICATE KEY UPDATE hops=\'%s\', comment=\'%s\', linkedto=%d, connecttime=NOW(), maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld)",
-                     ServerTable, servername, hops, descript, upservid,
+                     "INSERT INTO %s (server, country, countrycode, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld))  ON DUPLICATE KEY UPDATE hops=\'%s\', comment=\'%s\', linkedto=%d, connecttime=NOW(), maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld)",
+                     ServerTable, servername, serv->country, serv->countrycode, hops, descript, upservid,
                      serv->ss->maxusers, serv->ss->maxusertime,
                      serv->ss->lastseen, hops, descript,
                      db_getserver(sqluplinkserver), serv->ss->maxusers,
@@ -442,8 +463,8 @@ Server *do_server(const char *source, char *servername, char *hops,
             } else {
                 rdb_query
                     (QUERY_LOW,
-                     "INSERT INTO %s (server, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld))",
-                     ServerTable, servername, hops, descript, upservid,
+                     "INSERT INTO %s (server, country, countrycode, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld))",
+                     ServerTable, servername, serv->country, serv->countrycode, hops, descript, upservid,
                      serv->ss->maxusers, serv->ss->maxusertime,
                      (long int) serv->ss->lastseen);
             }

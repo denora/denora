@@ -1274,7 +1274,7 @@ GeoIPRegion * GeoIP_region_by_name_v6 (GeoIP* gi, const char *name) {
                return 0;
        }
 
-        ipnum = _GeoIP_lookupaddress_v6(name);
+       ipnum = _GeoIP_lookupaddress_v6(name);
        if (__GEOIP_V6_IS_NULL(ipnum))
                return 0;
        return _get_region_v6(gi, ipnum);

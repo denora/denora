@@ -34,6 +34,8 @@ CREATE TABLE IF NOT EXISTS `server` (
   `opers` int(15) NOT NULL default '0',
   `maxopers` int(15) NOT NULL default '0',
   `maxopertime` int(15) NOT NULL default '0',
+  `countrycode` varchar(255) NOT NULL default '',
+  `country` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`servid`),
   UNIQUE KEY `server` (`server`),
   KEY `linkedto` (`linkedto`)
