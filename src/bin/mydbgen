@@ -326,6 +326,7 @@ fi
 echo "ALTER TABLE server CHANGE uptime uptime INT( 15 ) NOT NULL DEFAULT '0';" >> $USQLDB
 
 echo "ALTER TABLE chan CHANGE mode_ls mode_ls ENUM( 'Y', 'N' ) NOT NULL DEFAULT 'N';" >> $USQLDB
+echo "ALTER TABLE chan CHANGE channel channel VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';"  >> $USQLDB
 
 if [  -f "$USQLDB" ] ; then
       msg "Updating your columns... "

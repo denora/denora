@@ -117,10 +117,14 @@ static int do_chanstats(User * u, int ac, char **av)
                     return MOD_CONT;
                 }
             }
+            c = findchan(cmd2);
+            if (!c) {
+                notice_lang(s_StatServ, u, STAT_CHANSTATS_NOT_VALID_CHAN);
+                return MOD_CONT;
+            }
             if (!(cs = find_cs(cmd2))) {
                 cs = makecs(cmd2);
                 save_cs_db();
-                sqlchan = rdb_escape(cmd2);
                 if (CSDefFlag) {
                     if (CSDefFlag == 1) {
                         cs->flags |= CS_FANTASY;
@@ -132,67 +136,40 @@ static int do_chanstats(User * u, int ac, char **av)
                 }
 
                 rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chan=\'%s\'",
-                          CStatsTable, sqlchan);
+                          CStatsTable, c->sqlchan);
                 rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chan=\'%s\'",
-                          UStatsTable, sqlchan);
+                          UStatsTable, c->sqlchan);
                 cs->timeadded = time(NULL);
                 for (i = 0; i < 4; i++) {
                     rdb_query
                         (QUERY_LOW,
                          "INSERT INTO %s SET chan=\'%s\', type=%i, timeadded=%ld;",
-                         CStatsTable, sqlchan, i, cs->timeadded);
+                         CStatsTable, c->sqlchan, i, cs->timeadded);
                 }
                 notice_lang(s_StatServ, u, STAT_CHANSTATS_CHAN_ADDED,
                             cmd2);
 
                 ud = find_uid(s_StatServ);
-                if (PartOnEmpty) {
-                    c = findchan(cmd2);
-                    if (c) {
-                        denora_cmd_join(s_StatServ, cs->name, time(NULL));
-                        if (AutoOp && AutoMode) {
-                            modes = sstrdup(AutoMode);
-                            while (*modes) {
-                                switch (*modes) {
-                                case '+':
-                                    break;
-                                case '-':
-                                    break;
-                                default:
-                                    ircsnprintf(nickbuf, BUFSIZE, "%s %s",
-                                                nickbuf,
-                                                ((ircd->p10
-                                                  && ud) ? ud->uid :
-                                                 s_StatServ));
-                                }
-                                (void) *modes++;
-                            }
-                            denora_cmd_mode(ServerName, cs->name, "%s%s",
-                                            AutoMode, nickbuf);
+                denora_cmd_join(s_StatServ, cs->name, time(NULL));
+                if (AutoOp && AutoMode) {
+                    modes = sstrdup(AutoMode);
+                    while (*modes) {
+                        switch (*modes) {
+                        case '+':
+                            break;
+                        case '-':
+                            break;
+                        default:
+                            ircsnprintf(nickbuf, BUFSIZE, "%s %s",
+                                        nickbuf,
+                                        ((ircd->p10
+                                          && ud) ? ud->uid :
+                                         s_StatServ));
                         }
+                        (void) *modes++;
                     }
-                } else {
-                    denora_cmd_join(s_StatServ, cs->name, time(NULL));
-                    if (AutoOp && AutoMode) {
-                        modes = sstrdup(AutoMode);
-                        while (*modes) {
-                            switch (*modes) {
-                            case '+':
-                                break;
-                            case '-':
-                                break;
-                            default:
-                                ircsnprintf(nickbuf, BUFSIZE, "%s %s",
-                                            nickbuf,
-                                            ((ircd->p10
-                                              && ud) ? ud->uid :
-                                             s_StatServ));
-                            }
-                            (void) *modes++;
-                        }
-                        denora_cmd_mode(ServerName, cs->name, "%s%s",
-                                        AutoMode, nickbuf);
-                    }
+                    denora_cmd_mode(ServerName, cs->name, "%s%s",
+                                    AutoMode, nickbuf);
                 }
                 free(sqlchan);
             } else {

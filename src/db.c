@@ -1016,7 +1016,9 @@ int db_getchannel(char *chan)
     if (!chan)
         return -1;
 
+/*
     strtolwr(chan);
+*/
     SET_SEGV_LOCATION();
 
     c = findchan(chan);
@@ -1090,7 +1092,9 @@ int db_getchannel_users(char *chan)
 #endif
 
     SET_SEGV_LOCATION();
+/*
     strtolwr(chan);
+*/
 
     if (!denora->do_sql) {
         return -1;
@@ -1131,7 +1135,9 @@ int db_getchancreate(char *chan)
 #endif
 
     SET_SEGV_LOCATION();
+/*
     strtolwr(chan);
+*/
 
     c = findchan(chan);
 
@@ -1149,7 +1155,9 @@ int db_getchancreate(char *chan)
     if (!denora->do_sql) {
         return -1;
     }
+/*
     strtolwr(channel);
+*/
     rdb_query(QUERY_HIGH, "SELECT chanid FROM %s WHERE channel=\'%s\'",
               ChanTable, channel);
 #ifdef USE_MYSQL
@@ -1165,7 +1173,15 @@ int db_getchancreate(char *chan)
         rdb_query(QUERY_HIGH, "INSERT INTO %s (channel) VALUES (\'%s\')",
                   ChanTable, channel);
         res = rdb_insertid();
+    } else {
+        // We update the channel name in case casing has changed
+        rdb_query(QUERY_LOW, "UPDATE %s SET channel = \'%s\' WHERE chanid = %d",
+                  ChanTable, channel, res);
     }
+    rdb_query(QUERY_LOW, "UPDATE %s SET chan = \'%s\' WHERE chan = \'%s\'",
+              CStatsTable, channel, channel);
+    rdb_query(QUERY_LOW, "UPDATE %s SET chan = \'%s\' WHERE chan = \'%s\'",
+              UStatsTable, channel, channel);
     SET_SEGV_LOCATION();
     if (c && res) {
         c->sqlid = res;

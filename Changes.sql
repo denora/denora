@@ -2,6 +2,7 @@
 -- --------------------
 ALTER TABLE server ADD country VARCHAR( 255 ) NOT NULL DEFAULT '' AFTER server;
 ALTER TABLE server ADD countrycode VARCHAR( 3 ) NOT NULL DEFAULT '' AFTER country;
+ALTER TABLE  `chan` CHANGE  `channel`  `channel` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT  '';
 
 
 -- Denora Version 1.4.5
