@@ -277,7 +277,7 @@ CREATE TABLE IF NOT EXISTS `serverstats` (
 DROP TABLE IF EXISTS `chan`;
 CREATE TABLE `chan` (
   `chanid` int(10) unsigned NOT NULL auto_increment,
-  `channel` varchar(255) binary NOT NULL default '',
+  `channel` varchar(255) NOT NULL default '',
   `currentusers` mediumint(15) NOT NULL default '0',
   `maxusers` int(15) NOT NULL default '0',
   `maxusertime` int(15) NOT NULL default '0',
