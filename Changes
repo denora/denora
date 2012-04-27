@@ -10,6 +10,7 @@ Additions
 11/02/11 r416 Added support for ircd-rizon
 
 Changes
+12/04/25 Channel names no longer forced to lowercase (#1403)
 12/04/24 Updated GeoIP databases
 12/04/11 Added 'cron' function to denorarc for crontab usage 
 12/04/11 Updated ScaryNet protocol
