@@ -229,6 +229,10 @@ if [ "$DBFILE" = "scarynet" ]; then
         if test "$?" = "1" ; then
                 echo "ALTER TABLE user ADD mode_uc ENUM( 'Y', 'N' ) DEFAULT 'N' NOT NULL AFTER mode_ub;" >> $USQLDB
         fi
+        $MYSQL -Bs -e "describe chan mode_ur" 2> /dev/null | grep -q mode_ur
+        if test "$?" = "1" ; then
+                echo "ALTER TABLE chan ADD mode_ur ENUM( 'Y', 'N' ) DEFAULT 'N' NOT NULL AFTER mode_lr;" >> $USQLDB
+        fi
 fi
 
 $MYSQL -Bs -e "describe user lastquitmsg" 2> /dev/null | grep -q lastquitmsg

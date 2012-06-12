@@ -152,6 +152,7 @@ void IRCDModeInit(void)
     CreateChanMode(CMODE_n, NULL, NULL);        /* No external messages */
     CreateChanMode(CMODE_p, NULL, NULL);        /* Private */
     CreateChanMode(CMODE_r, NULL, NULL);        /* Registered Only */
+    CreateChanMode(CMODE_R, NULL, NULL);	/* Registered */
     CreateChanMode(CMODE_s, NULL, NULL);        /* Secret */
     CreateChanMode(CMODE_t, NULL, NULL);        /* Topic only changeable by ops */
     CreateChanMode(CMODE_u, NULL, NULL);        /* No Quitmessages */
@@ -622,6 +623,8 @@ int denora_event_account(char *source, int ac, char **av)
 
 int denora_event_topic(char *source, int ac, char **av)
 {
+    Server *s;
+    User *u;
     char *newav[5];
 
     if (denora->protocoldebug)
@@ -630,10 +633,13 @@ int denora_event_topic(char *source, int ac, char **av)
     if (ac < 4)
         return MOD_CONT;
 
-    newav[0] = av[0];
-    newav[1] = av[1];
-    newav[2] = av[ac - 2];
-    newav[3] = av[ac - 1];
+    u = find_byuid(source);
+    s = server_find(source);
+
+    newav[0] = av[0]; /* channel */
+    newav[1] = (u ? u->nick : (s ? s->name : "Unknown")); /* topic setter */
+    newav[2] = av[1]; /* ts */
+    newav[3] = av[ac - 1]; /* topic */
     newav[4] = '\0';
 
     do_topic(4, newav);
