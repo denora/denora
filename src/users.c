@@ -24,8 +24,8 @@ static int next_index;
 static int unext_index;
 static int uidnext_index;
 User *new_user(const char *nick);
-GeoIP *gi;
-GeoIP *gi_v6;
+GeoIP *gidb;
+GeoIP *gidb_v6;
 
 /*************************************************************************/
 
@@ -279,17 +279,26 @@ void sql_do_nick(User * u)
     }
     SET_SEGV_LOCATION();
 
-    free(username);
-    free(host);
-    free(server);
+    if (username)
+        free(username);
+    if (host)
+        free(host);
+    if (server)
+        free(server);
+    if (account)
+        free(account);
+
     SET_SEGV_LOCATION();
 
-    if (ircd->vhost) {
+    if (ircd->vhost)
         free(vhost);
-    }
-    free(realname);
-    free(countrycode);
-    free(countryname);
+    if (realname)
+        free(realname);
+    if (countrycode)
+        free(countrycode);
+    if (countryname)
+        free(countryname);
+
     SET_SEGV_LOCATION();
 }
 
@@ -380,6 +389,7 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
         } else {
             alog(LOG_DEBUG, "No uname found");
         }
+        mysql_free_result(mysql_res);
     }
 
     /* we insert a new alias record */
@@ -388,9 +398,12 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
               AliasesTable, newnick, uname ? uname : newnick,
               uname ? uname : newnick);
 #endif
-
-    free(newnick);
-    free(oldnick);
+    if (newnick)
+        free(newnick);
+    if (oldnick)
+        free(oldnick);
+    if (uname)
+        free(uname);
 }
 
 /*************************************************************************/
@@ -1063,9 +1076,9 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
     if (!*source) {
         if (!LargeNet) {
             if (strstr(ipchar,":") != NULL) {
-                country_id = GeoIP_id_by_addr_v6(gi_v6, ipchar);
+                country_id = GeoIP_id_by_addr_v6(gidb_v6, ipchar);
             } else {
-                country_id = GeoIP_id_by_addr(gi, ipchar);
+                country_id = GeoIP_id_by_addr(gidb, ipchar);
             }
             country_code = GeoIP_code_by_id(country_id);
             country_name = GeoIP_name_by_id(country_id);

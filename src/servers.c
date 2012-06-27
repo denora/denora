@@ -329,9 +329,9 @@ Server *make_server(const char *servername, char *descript,
     }
     if (!serv->country || !serv->countrycode) {
         if (!LargeNet) {
-            country_id = GeoIP_id_by_name(gi, servername);
+            country_id = GeoIP_id_by_name(gidb, servername);
             if (country_id == 0)
-                country_id = GeoIP_id_by_name_v6(gi, servername);
+                country_id = GeoIP_id_by_name_v6(gidb_v6, servername);
 
             country_name = GeoIP_name_by_id(country_id);
             country_code = GeoIP_code_by_id(country_id);
@@ -342,8 +342,8 @@ Server *make_server(const char *servername, char *descript,
             country_code = "??";
         }
    
-        serv->country = country_name;
-        serv->countrycode = country_code;
+        serv->country = (char *)country_name;
+        serv->countrycode = (char *)country_code;
     }
     SET_SEGV_LOCATION();
 

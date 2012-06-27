@@ -324,20 +324,20 @@ int denora_event_push(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
-int denora_event_eob(char *source, int ac, char **av)
+int denora_event_eob(__attribute__((unused))char *source, __attribute__((unused))int ac, __attribute__((unused))char **av)
 {
     update_sync_state(denora->uplink, SYNC_COMPLETE);
     return MOD_CONT;
 }
 
-int denora_event_sanick(char *source, int ac, char **av)
+int denora_event_sanick(__attribute__((unused))char *source, __attribute__((unused))int ac, char **av)
 {
     do_nick(av[0], av[1], NULL, NULL, NULL,
             NULL, (int) time(NULL), 0, NULL, NULL, NULL, 0, NULL, NULL);
     return MOD_CONT;
 }
 
-int denora_event_svsmode(char *source, int ac, char **av)
+int denora_event_svsmode(__attribute__((unused))char *source, __attribute__((unused))int ac, char **av)
 {
     denora_event_mode(av[0], 2, av);
     return MOD_CONT;
@@ -353,7 +353,7 @@ int denora_event_svsmode(char *source, int ac, char **av)
 [Dec 30 16:03:09.301270 2005] av[5] = Reserved For Services
 
 */
-int denora_event_addline(char *source, int ac, char **av)
+int denora_event_addline(__attribute__((unused))char *source, __attribute__((unused))int ac, char **av)
 {
     char *user, *host;
     int checkdur, timeset;
@@ -496,7 +496,7 @@ int denora_event_qline(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
-int denora_event_ftopic(char *source, int ac, char **av)
+int denora_event_ftopic(__attribute__((unused))char *source, int ac, char **av)
 {
     /* :source FTOPIC channel ts setby :topic */
     char *temp;
@@ -519,7 +519,7 @@ int denora_event_version(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
-int denora_event_opertype(char *source, int ac, char **av)
+int denora_event_opertype(char *source, __attribute__((unused))int ac, __attribute__((unused))char **av)
 {
     /* opertype is equivalent to mode +o because servers
        dont do this directly */
@@ -531,7 +531,7 @@ int denora_event_opertype(char *source, int ac, char **av)
 
 int has_globopsmod = 0;
 /* Event: PROTOCTL */
-int denora_event_capab(char *source, int ac, char **av)
+int denora_event_capab(__attribute__((unused))char *source, __attribute__((unused))int ac, char **av)
 {
     int argc = 5;
     char *argv[5];
@@ -629,12 +629,12 @@ void inspircd_cmd_privmsg(char *source, char *dest, char *buf)
              ud2 ? ud2->uid : dest, buf);
 }
 
-void inspircd_cmd_serv_notice(char *source, char *dest, char *msg)
+void inspircd_cmd_serv_notice(__attribute__((unused))char *source, char *dest, char *msg)
 {
     send_cmd(TS6SID, "NOTICE $%s :%s", dest, msg);
 }
 
-void inspircd_cmd_serv_privmsg(char *source, char *dest, char *msg)
+void inspircd_cmd_serv_privmsg(__attribute__((unused))char *source, char *dest, char *msg)
 {
     send_cmd(TS6SID, "PRIVMSG $%s :%s", dest, msg);
 }
@@ -712,7 +712,7 @@ void inspircd_cmd_server(char *servname, int hop, char *descript)
 }
 
 /* PONG */
-void inspircd_cmd_pong(char *servname, char *who)
+void inspircd_cmd_pong(__attribute__((unused))char *servname, char *who)
 {
     send_cmd(TS6SID, "PONG %s", who);
 }
@@ -1179,7 +1179,7 @@ int denora_event_uid(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
-int denora_event_nick(char *source, int ac, char **av)
+int denora_event_nick(char *source, __attribute__((unused))int ac, char **av)
 {
     do_nick(source, av[0], NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL,
             0, NULL, NULL);
@@ -1302,7 +1302,7 @@ void inspircd_cmd_ctcp(char *source, char *dest, char *buf)
     send_cmd(source, "NOTICE %s :\1%s \1", dest, buf);
 }
 
-void inspircd_cmd_version(char *server)
+void inspircd_cmd_version(__attribute__((unused))char *server)
 {
     /* TODO: InspIRCd sends you all servers version strings as they burst.
      * These can be cached, rather than having to request them.
@@ -1334,7 +1334,7 @@ int denora_event_notice(char *source, int ac, char **av)
     return MOD_CONT;
 }
 
-void inspircd_cmd_mode(char *source, char *dest, char *buf)
+void inspircd_cmd_mode(__attribute__((unused))char *source, char *dest, char *buf)
 {
     Channel *c;
     if (!buf) {

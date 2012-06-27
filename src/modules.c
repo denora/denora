@@ -783,8 +783,7 @@ int loadCoreModule(Module * m, User * u)
     }
     deno_modclearerr();
     if (func) {
-        version =
-            (int (*)()) deno_modsym(m->handle, "getDenoraBuildVersion");
+        version = deno_modsym(m->handle, "getDenoraBuildVersion");
         if (version) {
             if (version() >= VERSION_BUILD) {
                 alog(LOG_DEBUG,
@@ -1303,8 +1302,7 @@ int loadModule(Module * m, User * u)
     }
     deno_modclearerr();
     if (func) {
-        version =
-            (int (*)()) deno_modsym(m->handle, "getDenoraBuildVersion");
+        version = deno_modsym(m->handle, "getDenoraBuildVersion");
         if (version) {
             if (version() >= VERSION_BUILD) {
                 alog(LOG_DEBUG,

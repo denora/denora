@@ -528,12 +528,13 @@ char* decode_ip(char *buf)
 
     b64_decode(buf, targ, 25);
 
-    if (len == 24) {               /* IPv6 */
-        static char result[64];
-        return (char *)_GeoIP_inet_ntop(AF_INET6, targ, result, 64);
-    } else if (len == 8)             /* IPv4 */
-        return (char *)inet_ntoa(*(struct in_addr *)targ);
-    else                           /* Error */
+    if (len == 24) {              /* IPv6 */
+        static char result[INET6_ADDRSTRLEN];
+        return (char *)inet_ntop(AF_INET6, (const struct in6_addr *)targ, result, INET6_ADDRSTRLEN);
+    } else if (len == 8) {        /* IPv4 */
+        static char result[INET_ADDRSTRLEN];
+        return (char *)inet_ntop(AF_INET, (const struct in_addr *)targ, result, INET_ADDRSTRLEN);
+    } else                        /* Error */
         return 0;
 }
 

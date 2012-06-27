@@ -1890,7 +1890,7 @@ void chan_delete(Channel * c)
 
 /*************************************************************************/
 
-void StatsChannel_delete(StatsChannel * c)
+void StatsChannel_delete(__attribute__((unused))StatsChannel * c)
 {
 }
 

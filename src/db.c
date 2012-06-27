@@ -478,7 +478,6 @@ int db_checknick_nt(char *nick)
         rdb_query(QUERY_HIGH,
                   "SELECT nickid,nick FROM %s WHERE (username=\'%s\' AND REVERSE(hostname) LIKE \'%s%%\' AND online=\'N\') OR nick=\'%s\' ORDER BY connecttime DESC",
                   UserTable, username, queryhost, u->sqlnick);
-
 #ifdef USE_MYSQL
         mysql_res = mysql_store_result(mysql);
         if (mysql_res) {
@@ -515,13 +514,17 @@ int db_checknick_nt(char *nick)
         } else {
             nickid = -1;
         }
-        if (username) {
-            free(username);
-        }
-        if (host) {
-            free(host);
-        }
 #endif
+	/* For some reason this fails */
+        /*
+        if (queryhost)
+            free(queryhost);
+        */
+        if (username)
+            free(username);
+        if (host)
+            free(host);
+
         return nickid;
     } else {
         rdb_query(QUERY_HIGH, "SELECT nickid FROM %s WHERE nick=\'%s\'",
@@ -729,7 +732,6 @@ void db_removenick_nt(char *nick, char *reason)
 
     u = user_find(nick);
 
-
     SET_SEGV_LOCATION();
 
     if (!denora->do_sql) {
@@ -754,6 +756,12 @@ void db_removenick_nt(char *nick, char *reason)
             rdb_query(QUERY_HIGH,
                       "SELECT nick FROM %s WHERE username=\'%s\' AND REVERSE(hostname) LIKE \'%s%%\' AND online=\'Y\' AND nick != \'%s\' ORDER BY connecttime DESC",
                       UserTable, username, queryhost, u->sqlnick);
+            if (queryhost)
+                free(queryhost);
+            if (username)
+                free(username);
+            if (host)
+                free(host);
 #ifdef USE_MYSQL
             mysql_res = mysql_store_result(mysql);
             if (mysql_res) {
@@ -794,29 +802,19 @@ void db_removenick_nt(char *nick, char *reason)
                              "db_removenick_nt(%s): summing old user %s and new user %s.",
                              nick, olduser, newuser);
                         sumuser(u, olduser, newuser);
-                        if (olduser) {
-                            free(olduser);
-                        }
-                        if (newuser) {
-                            free(newuser);
-                        }
                     }*/
-                    if (newnick) {
+                    if (newnick)
                         free(newnick);
-                    }
-
+                    if (olduser)
+                        free(olduser);
+                    if (newuser)
+                        free(newuser);
                 } else {
                     mysql_free_result(mysql_res);
                     rdb_query(QUERY_LOW,
                               "UPDATE %s SET online=\'N\', lastquit=NOW(), lastquitmsg=\'%s\', servid=0 WHERE nickid=%d",
                               UserTable, sqlreason, nickid);
                 }
-            }
-            if (username) {
-                free(username);
-            }
-            if (host) {
-                free(host);
             }
             SET_SEGV_LOCATION();
 #endif
@@ -1174,7 +1172,7 @@ int db_getchancreate(char *chan)
                   ChanTable, channel);
         res = rdb_insertid();
     } else {
-        // We update the channel name in case casing has changed
+        /* We update the channel name in case casing has changed */
         rdb_query(QUERY_LOW, "UPDATE %s SET channel = \'%s\' WHERE chanid = %d",
                   ChanTable, channel, res);
     }

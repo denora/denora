@@ -77,7 +77,7 @@ void DenoraFini(void)
 /*************************************************************************/
 
 
-int denora_event_376(char *source, int ac, char **av)
+int denora_event_376(char *source, __attribute__((unused))int ac, __attribute__((unused))char **av)
 {
     Server *s;
     s = server_find(source);

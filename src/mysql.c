@@ -308,6 +308,9 @@ char *db_mysql_hidepass(char *sql)
     slen = strlen(sql);
     pos = (slen - strlen(buf)) + 4;
 
+    if (buf)
+        free(buf);
+
     hidden = sstrdup(sql);
     for (i = pos; i < slen; i++) {
         if (hidden[i] != ')') {

@@ -24,13 +24,9 @@ VOIDSIG signal_die(int signum);
 char segv_location[SEGV_LOCATION_BUFSIZE];
 
 #if !defined(HAVE_STRSIGNAL)
+define strsignal(int sig) get_signame(int sig);
+#elsif !defined(strsignal) and (!defined(__CYGWIN__) || (__FreeBSD__) || (__OpenBSD__))
 char *strsignal(int sig);
-#endif
-
-#if !defined(strsignal)
-#if !defined(__CYGWIN__) || (__FreeBSD__) || (__OpenBSD__)
-char *strsignal(int sig);
-#endif
 #endif
 
 int sigpipecount;
@@ -287,14 +283,12 @@ VOIDSIG signal_rehash(int signum)
             merge_confs();
         }
         /* Reload GeoIP db files */
-        if (gi) {
-			GeoIP_delete(gi);
-		}
-		if (gi_v6) {
-			GeoIP_delete(gi_v6);
-		}
-	    gi = GeoIP_new(GEOIP_STANDARD);
-	    gi_v6 = GeoIP_open_type(GEOIP_COUNTRY_EDITION_V6, GEOIP_STANDARD);
+        if (gidb)
+            GeoIP_delete(gidb);
+	if (gidb_v6)
+            GeoIP_delete(gidb_v6);
+        gidb = GeoIP_new(GEOIP_STANDARD);
+        gidb_v6 = GeoIP_open_type(GEOIP_COUNTRY_EDITION_V6, GEOIP_STANDARD);
 #ifdef	POSIX_SIGNALS
         act.sa_handler = signal_rehash;
         act.sa_flags = 0;

@@ -911,7 +911,7 @@ char *unreal32_nickip(char *host)
     char* addr;
 
     if (strcmp(host, "*") == 0)
-        addr = "0.0.0.0";
+        addr = (char *)"0.0.0.0";
     else
         addr = decode_ip(host);
 

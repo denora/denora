@@ -373,11 +373,11 @@ void denora_shutdown(void)
 #ifndef _WIN32
     adns_finish(adns);
 #endif
-    if (gi) {
-        GeoIP_delete(gi);
+    if (gidb) {
+        GeoIP_delete(gidb);
     }
-    if (gi_v6) {
-        GeoIP_delete(gi_v6);
+    if (gidb_v6) {
+        GeoIP_delete(gidb_v6);
     }
     close_log();
     lang_destory();
@@ -444,10 +444,10 @@ int main(int ac, char **av)
     adns_init(&adns, adns_if_noenv, 0);
 #endif
 #ifdef STATS_DIR
-    GeoIP_setup_custom_directory(STATS_DIR);
+    GeoIP_setup_custom_directory((char *)STATS_DIR);
 #endif
-    gi = GeoIP_new(GEOIP_STANDARD);
-    gi_v6 = GeoIP_open_type(GEOIP_COUNTRY_EDITION_V6, GEOIP_STANDARD);
+    gidb = GeoIP_new(GEOIP_STANDARD);
+    gidb_v6 = GeoIP_open_type(GEOIP_COUNTRY_EDITION_V6, GEOIP_STANDARD);
 
     UplinkSynced = 0;
     denora->debug = 0;
@@ -587,7 +587,7 @@ int main(int ac, char **av)
         }
 
         waiting = 1;
-        i = (long int) sgets2(inbuf, sizeof(inbuf), servsock);
+        i = sgets2(inbuf, sizeof(inbuf), servsock);
         waiting = 0;
         if ((i > 0) || (i < (-1))) {
             SET_START_TIME();
@@ -636,12 +636,15 @@ int main(int ac, char **av)
 
 void introduce_user(const char *user)
 {
+    /* Disabled the following lines to make compiler more happy in strict mode */
+    /*
     ChannelStats *cs;
     lnode_t *tn;
     Uid *ud;
 
     char *modes;
     char nickbuf[BUFSIZE];
+    */
 
     /* Watch out for infinite loops... */
 #define LTSIZE 20
@@ -666,7 +669,8 @@ void introduce_user(const char *user)
     }
     SET_SEGV_LOCATION();
     /* I think this is not needed, as denora will join with correct ts upon first user join */
-    /*if (!LargeNet) {
+    /*
+    if (!LargeNet) {
         tn = list_first(CStatshead);
         ud = find_uid(s_StatServ);
         while (tn != NULL) {
@@ -694,7 +698,8 @@ void introduce_user(const char *user)
             }
             tn = list_next(CStatshead, tn);
         }
-    }*/
+    }
+    */
 }
 
 /*************************************************************************/

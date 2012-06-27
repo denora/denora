@@ -418,7 +418,7 @@ void adns_checkconsistency(adns_state ads, adns_query qu)
     }										\
   } while(0)
 
-static void checkc_query_alloc(adns_state ads, adns_query qu)
+static void checkc_query_alloc(__attribute__((unused))adns_state ads, adns_query qu)
 {
     allocnode *an;
 
@@ -694,7 +694,7 @@ adns_status adns__mkquery(adns_state ads, vbuf * vb, int *id_r,
 adns_status adns__mkquery_frdgram(adns_state ads, vbuf * vb, int *id_r,
                                   const byte * qd_dgram, int qd_dglen,
                                   int qd_begin, adns_rrtype type,
-                                  adns_queryflags flags)
+                                  __attribute__((unused))adns_queryflags flags)
 {
     byte *rqp;
     findlabel_state afls;
@@ -730,7 +730,7 @@ adns_status adns__mkquery_frdgram(adns_state ads, vbuf * vb, int *id_r,
     return adns_s_ok;
 }
 
-void adns__querysend_tcp(adns_query qu, struct timeval now)
+void adns__querysend_tcp(adns_query qu, __attribute__((unused))struct timeval now)
 {
     byte length[2];
 #ifndef WIN32
@@ -1043,7 +1043,7 @@ static void inter_maxtoabs(struct timeval **tv_io, struct timeval *tvbuf,
     inter_maxto(tv_io, tvbuf, maxtime);
 }
 
-static void timeouts_queue(adns_state ads, int act, struct timeval **tv_io,
+static void timeouts_queue(__attribute__((unused))adns_state ads, int act, struct timeval **tv_io,
                            struct timeval *tvbuf, struct timeval now,
                            struct query_queue *queue)
 {
@@ -1425,7 +1425,7 @@ int adns_processwriteable(adns_state ads, deno_socket_t fd,
 }
 
 int adns_processexceptional(adns_state ads, deno_socket_t fd,
-                            const struct timeval *now)
+                            __attribute__((unused))const struct timeval *now)
 {
     adns__consistency(ads, 0, cc_entex);
     switch (ads->tcpstate) {
@@ -1606,7 +1606,7 @@ int adns_processany(adns_state ads)
     return 0;
 }
 
-void adns__autosys(adns_state ads, struct timeval now)
+void adns__autosys(adns_state ads, __attribute__((unused))struct timeval now)
 {
     if (ads->iflags & adns_if_noautosys)
         return;
@@ -2347,7 +2347,7 @@ static adns_status pa_mx_raw(const parseinfo * pai, int cbyte, int max,
     return adns_s_ok;
 }
 
-static int di_mx_raw(adns_state ads, const void *datap_a,
+static int di_mx_raw(__attribute__((unused))adns_state ads, const void *datap_a,
                      const void *datap_b)
 {
     const adns_rr_intstr *ap = datap_a, *bp = datap_b;
@@ -2797,7 +2797,7 @@ static adns_status cs_soa(vbuf * vb, const void *datap)
 
 /*************************************************************************/
 
-static void mf_flat(adns_query qu, void *adata)
+static void mf_flat(__attribute__((unused))adns_query qu, __attribute__((unused))void *adata)
 {
 }
 
@@ -2915,9 +2915,9 @@ static adns_query query_alloc(adns_state ads, const typeinfo * typei,
     return qu;
 }
 
-static void query_submit(adns_state ads, adns_query qu,
-                         const typeinfo * typei, vbuf * qumsg_vb, int id,
-                         adns_queryflags flags, struct timeval now)
+static void query_submit(__attribute__((unused))adns_state ads, adns_query qu,
+                         __attribute__((unused))const typeinfo * typei, vbuf * qumsg_vb, int id,
+                         __attribute__((unused))adns_queryflags flags, struct timeval now)
 {
     /* Fills in the query message in for a previously-allocated query,
      * and submits it.  Cannot fail.  Takes over the memory for qumsg_vb.
@@ -3977,7 +3977,7 @@ static void ccf_nameserver(adns_state ads, const char *fn, int lno,
     addserver(ads, ia);
 }
 
-static void ccf_search(adns_state ads, const char *fn, int lno,
+static void ccf_search(adns_state ads, __attribute__((unused))const char *fn, __attribute__((unused))int lno,
                        const char *buf)
 {
     const char *bufp, *word;
@@ -4152,8 +4152,9 @@ static void ccf_options(adns_state ads, const char *fn, int lno,
     }
 }
 
-static void ccf_clearnss(adns_state ads, const char *fn, int lno,
-                         const char *buf)
+static void ccf_clearnss(adns_state ads, __attribute__((unused))const char *fn,
+                         __attribute__((unused))int lno,
+                         __attribute__((unused))const char *buf)
 {
     ads->nservers = 0;
 }
@@ -4287,7 +4288,7 @@ static void readconfiggeneric(adns_state ads, const char *filename,
     }
 }
 
-static const char *instrum_getenv(adns_state ads, const char *envvar)
+static const char *instrum_getenv(__attribute__((unused))adns_state ads, const char *envvar)
 {
     const char *value;
 
@@ -4704,8 +4705,8 @@ adns_status adns__parse_domain(adns_state ads, int serv, adns_query qu,
 
 /*************************************************************************/
 
-adns_status adns__parse_domain_more(findlabel_state * afls, adns_state ads,
-                                    adns_query qu, vbuf * vb,
+adns_status adns__parse_domain_more(findlabel_state * afls, __attribute__((unused))adns_state ads,
+                                    __attribute__((unused))adns_query qu, vbuf * vb,
                                     parsedomain_flags flags,
                                     const byte * dgram)
 {

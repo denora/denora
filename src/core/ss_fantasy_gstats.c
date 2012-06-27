@@ -66,7 +66,7 @@ void DenoraFini(void)
 int do_fantasy(int argc, char **argv)
 {
     User *u;
-    char *chan, *target, *sqltarget;
+    char *target, *sqltarget;
 #ifdef USE_MYSQL
     MYSQL_RES *mysql_res;
 #endif

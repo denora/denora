@@ -44,7 +44,7 @@ void DenoraFini(void)
 
 }
 
-int db_optimize(const char *name)
+int db_optimize(__attribute__((unused))const char *name)
 {
     char tables[512] = "\0";
 

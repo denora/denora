@@ -181,9 +181,6 @@ E int strnicmp(const char *s1, const char *s2, size_t len);
 E char *StrReverse(char *t);
 
 char *sstrndup(const char *s, size_t n);
-#if !defined(HAVE_STRNDUP)
-E char *strndup(const char *s, size_t n);
-#endif
 #if !defined(HAVE_STRSPN)
 E size_t strspn(const char *s, const char *accept);
 #endif
@@ -921,8 +918,8 @@ int fileno(FILE *stream);
 #ifndef _WIN32
 E adns_state adns;
 #endif
-E GeoIP *gi;
-E GeoIP *gi_v6;
+E GeoIP *gidb;
+E GeoIP *gidb_v6;
 
 E void extsock_init(char *lhost, int lport);
 E void extsock_process(void);

@@ -51,7 +51,7 @@ int QueueEntryInit(void)
 
 /*************************************************************************/
 
-void queue_unlock(void *arg)
+void queue_unlock(__attribute__((unused))void *arg)
 {
 #ifdef USE_THREADS
     alog(LOG_DEBUG, "debug: Thread %ld: Unlocking queue mutex",
@@ -95,7 +95,7 @@ void queue_signal(void)
 
 /*************************************************************************/
 
-void *queue_thread_main(void *arg)
+void *queue_thread_main(__attribute__((unused))void *arg)
 {
 #ifdef USE_THREADS
     while (1) {

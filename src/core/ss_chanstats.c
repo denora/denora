@@ -171,7 +171,6 @@ static int do_chanstats(User * u, int ac, char **av)
                     denora_cmd_mode(ServerName, cs->name, "%s%s",
                                     AutoMode, nickbuf);
                 }
-                free(sqlchan);
             } else {
                 notice_lang(s_StatServ, u, STAT_CHANSTATS_CHAN_ALREADY,
                             cmd2);

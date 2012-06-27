@@ -213,7 +213,7 @@ void save_ctcp_db(void)
 
 /*************************************************************************/
 
-int del_ctcpver(CTCPVerStats * c)
+int del_ctcpver(__attribute__((unused))CTCPVerStats * c)
 {
     return 0;
 }

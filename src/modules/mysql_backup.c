@@ -18,6 +18,7 @@
 int do_sql_backup(int argc, char **argv);
 int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
+void do_mysql_backup(char *table, char *output);
 
 int DenoraInit(int argc, char **argv)
 {
@@ -26,6 +27,7 @@ int DenoraInit(int argc, char **argv)
     if (denora->debug >= 2) {
         protocol_debug(NULL, argc, argv);
     }
+
     moduleAddAuthor("Denora");
     moduleAddVersion("1.1");
     moduleSetType(THIRD);
@@ -48,112 +50,68 @@ void DenoraFini(void)
 
 }
 
-int do_sql_backup(int argc, char **argv)
+int do_sql_backup(__attribute__((unused))int argc, char **argv)
 {
+    int i;
     char output[BUFSIZE];
+    char *table[18];
 
     if (!denora->do_sql) {
         alog(LOG_ERROR, "SQL is disabled, backup stopped");
         return MOD_CONT;
     }
 
+#ifdef USE_MYSQL
+    table[0] = UserTable;
+    table[1] = ChanBansTable;
+    table[2] = IsOnTable;
+    table[3] = ServerTable;
+    table[4] = GlineTable;
+    table[5] = ChanTable;
+    table[6] = MaxValueTable;
+    table[7] = TLDTable;
+    table[8] = CTCPTable;
+    table[9] = ChanStatsTable;
+    table[10] = ServerStatsTable;
+    table[11] = AliasesTable;
+    table[12] = CStatsTable;
+    table[13] = UStatsTable;
+    table[14] = CurrentTable;
+    table[15] = StatsTable;
+    table[16] = SpamTable;
+    table[17] = AdminTable;
+
     if (!stricmp(argv[0], EVENT_STOP)) {
         ircsnprintf(output, BUFSIZE, "%s/backups", STATS_DIR);
         alog(LOG_NORMAL, "Backing up MYSQL tables to '%s'", output);
 
-#ifdef USE_MYSQL
-        dbMySQLPrepareForQuery();
-        rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", UserTable, output);
+        for (i=0;i<18;i++)
+            do_mysql_backup(table[i], output);
 
-        dbMySQLPrepareForQuery();
-        rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", ChanBansTable,
-                  output);
+        if (ircd->except)
+            do_mysql_backup(ChanExceptTable, output);
 
-        if (ircd->except) {
-            dbMySQLPrepareForQuery();
-            rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'",
-                      ChanExceptTable, output);
-        }
+        if (ircd->invitemode)
+            do_mysql_backup(ChanInviteTable, output);
 
-        dbMySQLPrepareForQuery();
-        rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", IsOnTable, output);
+        if (ircd->sgline_table)
+            do_mysql_backup(SglineTable, output);
 
-        dbMySQLPrepareForQuery();
-        rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", ServerTable,
-                  output);
+        if (ircd->sqline_table)
+            do_mysql_backup(SqlineTable, output);
 
-        dbMySQLPrepareForQuery();
-        rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", GlineTable,
-                  output);
-
-        dbMySQLPrepareForQuery();
-        rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", ChanTable, output);
-
-        dbMySQLPrepareForQuery();
-        rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", MaxValueTable,
-                  output);
-
-        if (ircd->invitemode) {
-            dbMySQLPrepareForQuery();
-            rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'",
-                      ChanInviteTable, output);
-        }
-
-        dbMySQLPrepareForQuery();
-        rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", TLDTable, output);
-
-        dbMySQLPrepareForQuery();
-        rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", CTCPTable, output);
-
-        if (ircd->sgline_table) {
-            dbMySQLPrepareForQuery();
-            rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", SglineTable,
-                      output);
-        }
-        if (ircd->sqline_table) {
-            dbMySQLPrepareForQuery();
-            rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", SqlineTable,
-                      output);
-        }
-
-        dbMySQLPrepareForQuery();
-        rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", ChanStatsTable,
-                  output);
-
-        dbMySQLPrepareForQuery();
-        rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", ServerStatsTable,
-                  output);
-
-        dbMySQLPrepareForQuery();
-        rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", AliasesTable,
-                  output);
-
-        dbMySQLPrepareForQuery();
-        rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", CStatsTable,
-                  output);
-
-        dbMySQLPrepareForQuery();
-        rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", UStatsTable,
-                  output);
-
-        dbMySQLPrepareForQuery();
-        rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", CurrentTable,
-                  output);
-
-        dbMySQLPrepareForQuery();
-        rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", StatsTable,
-                  output);
-
-        if (ircd->spamfilter) {
-            dbMySQLPrepareForQuery();
-            rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", SpamTable,
-                      output);
-        }
-
-        dbMySQLPrepareForQuery();
-        rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", AdminTable,
-                  output);
-#endif
+        if (ircd->spamfilter)
+            do_mysql_backup(SpamTable, output);
     }
+#endif
     return MOD_CONT;
 }
+
+#ifdef USE_MYSQL 
+void do_mysql_backup(char *table, char *output)
+{
+    dbMySQLPrepareForQuery();
+    rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", table, output);
+    alog(LOG_NORMAL, "Backing up %s to '%s'", table, output);
+}
+#endif

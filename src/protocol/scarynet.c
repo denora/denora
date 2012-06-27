@@ -637,7 +637,7 @@ int denora_event_topic(char *source, int ac, char **av)
     s = server_find(source);
 
     newav[0] = av[0]; /* channel */
-    newav[1] = (u ? u->nick : (s ? s->name : "Unknown")); /* topic setter */
+    newav[1] = (u ? (char *)u->nick : (s ? (char *)s->name : (char *)"Unknown")); /* topic setter */
     newav[2] = av[1]; /* ts */
     newav[3] = av[ac - 1]; /* topic */
     newav[4] = '\0';

@@ -20,12 +20,12 @@
 
 typedef HMODULE deno_module_t;
 
-#define deno_modopen(file)			LoadLibrary(file)
+#define deno_modopen(file)		LoadLibrary(file)
 /* deno_moderr in modules.c */
-#define deno_modsym(file, symbol)	(void *)GetProcAddress(file, symbol)
-#define deno_modclose(file)			FreeLibrary(file) ? 0 : 1
-#define deno_modclearerr()			SetLastError(0)
-#define MODULE_EXT					".dll"
+#define deno_modsym(handle, symbol)	(void *)GetProcAddress(handle, symbol)
+#define deno_modclose(handle)		FreeLibrary(handle) ? 0 : 1
+#define deno_modclearerr()		SetLastError(0)
+#define MODULE_EXT			".dll"
 
 #else
 
@@ -33,16 +33,16 @@ typedef HMODULE deno_module_t;
 typedef void *	deno_module_t;
 
 #ifdef HAS_RTLD_LOCAL
-#define deno_modopen(file)			dlopen(file, RTLD_LAZY|RTLD_LOCAL)
+#define deno_modopen(file)		dlopen(file, RTLD_LAZY|RTLD_LOCAL)
 #else
-#define deno_modopen(file) 			dlopen(file, RTLD_LAZY)
+#define deno_modopen(file) 		dlopen(file, RTLD_LAZY)
 #endif
 
-#define deno_moderr()				dlerror()
-#define deno_modsym(file, symbol)	dlsym(file, DL_PREFIX symbol)
-#define deno_modclose(file)			dlclose(file)
-#define deno_modclearerr()			errno = 0
-#define MODULE_EXT					".so"
+#define deno_moderr()			dlerror()
+#define deno_modsym(handle, symbol)	dlsym(handle, DL_PREFIX symbol)
+#define deno_modclose(handle)		dlclose(handle)
+#define deno_modclearerr()		errno = 0
+#define MODULE_EXT			".so"
 
 #endif
 

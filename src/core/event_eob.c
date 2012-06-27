@@ -64,7 +64,7 @@ void DenoraFini(void)
 
 /*************************************************************************/
 
-int denora_event_synccomplete(int ac, char **av)
+int denora_event_synccomplete(__attribute__((unused))int ac, __attribute__((unused))char **av)
 {
     TLD *t;
     lnode_t *tn;
