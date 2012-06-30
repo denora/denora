@@ -11,6 +11,7 @@ Additions
 11/02/11 r416 Added support for ircd-rizon
 
 Changes
+12/06/29 Undone a few changes as I might see issues
 12/06/27 Commented out a little more at src/db.c
 12/06/27 Bumped to 1.5.0-git-501
 12/06/26 Use inet_ntop for decode_ip function

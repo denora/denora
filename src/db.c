@@ -779,8 +779,6 @@ void db_removenick_nt(char *nick, char *reason)
                               UserTable, nickid);
 
                     /* Getting uname of the old and new users */
-                    /* We don't care at the moment, since the code is only needed for currently commented out code */
-                    /*
                     rdb_query(QUERY_LOW,
                               "SELECT nick, uname FROM %s WHERE nick=\'%s\' OR nick=\'%s\'",
                               AliasesTable, newnick, u->sqlnick);
@@ -797,7 +795,6 @@ void db_removenick_nt(char *nick, char *reason)
                         }
                         mysql_free_result(mysql_res2);
                     }
-                    */
 
                     /* Summing old user to new user, if they differ */
                     /*
@@ -810,10 +807,12 @@ void db_removenick_nt(char *nick, char *reason)
                     }*/
                     if (newnick)
                         free(newnick);
+/* Commented out for testing
                     if (olduser)
                         free(olduser);
                     if (newuser)
                         free(newuser);
+*/
                 } else {
                     mysql_free_result(mysql_res);
                     rdb_query(QUERY_LOW,
