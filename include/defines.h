@@ -277,13 +277,13 @@
 		} \
 }
 
-/* 
+/*
    kinda of a hack as CYGWIN runs root as 18
    but in there we really don't care to stop them
    as they are windows users under a hybrid shell
    this should be left here for any other OS that
    might decide to make root id something other
-   then 0 
+   then 0
 */
 #define ROOT_UID 0
 
@@ -463,7 +463,7 @@
 #  define timercmp(tvp, uvp, cmp) (((tvp)->tv_sec cmp (uvp)->tv_sec) || ((tvp)->tv_sec == (uvp)->tv_sec && ((tvp)->tv_usec cmp (uvp)->tv_usec)))
 #endif
 #ifndef timerclear
-#	define timerclear(tvp)  (tvp)->tv_sec = (tvp)->tv_usec = 0 
+#	define timerclear(tvp)  (tvp)->tv_sec = (tvp)->tv_usec = 0
 #endif
 #endif
 

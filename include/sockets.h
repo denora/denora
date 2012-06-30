@@ -7,8 +7,8 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
- * 
+ *
+ *
  *
  */
 
@@ -90,7 +90,8 @@ typedef	socklen_t		deno_socklen_t;
 #endif
 
 #if !defined(HAVE_STRUCT_ADDRINFO)
-struct addrinfo {
+struct addrinfo
+{
 	int	ai_flags;		/* AI_PASSIVE, AI_CANONNAME */
 	int	ai_family;		/* PF_xxx */
 	int	ai_socktype;		/* SOCK_xxx */
@@ -103,7 +104,7 @@ struct addrinfo {
 #endif /* !HAVE_STRUCT_ADDRINFO */
 
 #if !defined(HAVE_GETADDRINFO)
-int getaddrinfo(const char *hostname, const char *servname, 
+int getaddrinfo(const char *hostname, const char *servname,
                 const struct addrinfo *hints, struct addrinfo **res);
 #endif /* !HAVE_GETADDRINFO */
 
@@ -126,11 +127,12 @@ void freeaddrinfo(struct addrinfo *ai);
 #define	_SS_PAD2SIZE	(_SS_MAXSIZE - (sizeof(u_short) + \
 					_SS_PAD1SIZE + _SS_ALIGNSIZE))
 
-struct sockaddr_storage {
-  u_short	ss_family;
-  char		__ss_pad1[_SS_PAD1SIZE];
-  int			__ss_align;
-  char		__ss_pad2[_SS_PAD2SIZE];
+struct sockaddr_storage
+{
+	u_short	ss_family;
+	char		__ss_pad1[_SS_PAD1SIZE];
+	int			__ss_align;
+	char		__ss_pad2[_SS_PAD2SIZE];
 };
 #endif /* !HAVE_STRUCT_SOCKADDR_STORAGE */
 
@@ -141,14 +143,16 @@ struct sockaddr_storage {
 #endif /* !IN6_IS_ADDR_LOOPBACK */
 
 #ifndef HAVE_STRUCT_IN6_ADDR
-struct in6_addr {
+struct in6_addr
+{
 	u_int8_t		s6_addr[16];
 };
 #endif /* !HAVE_STRUCT_IN6_ADDR */
 
 #if !defined(HAVE_STRUCT_SOCKADDR_IN6)
-struct sockaddr_in6 {
-   unsigned short sin6_family;
+struct sockaddr_in6
+{
+	unsigned short sin6_family;
 	u_int16_t sin6_port;
 	u_int32_t sin6_flowinfo;
 	struct in6_addr sin6_addr;

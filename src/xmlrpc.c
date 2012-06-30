@@ -8,8 +8,8 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
- * 
+ *
+ *
  *
  */
 #include "denora.h"
@@ -25,14 +25,14 @@ char *xmlrpc_user_struct(User * u);
 /*************************************************************************/
 
 /**
- * Allow modules to get the last xmlrpc error code 
+ * Allow modules to get the last xmlrpc error code
  *
  * @return The xmlrpc error code
  *
  */
 int xmlrpc_getlast_error(void)
 {
-    return (!xmlrpc_error_code ? 0 : xmlrpc_error_code);
+	return (!xmlrpc_error_code ? 0 : xmlrpc_error_code);
 }
 
 /*************************************************************************/
@@ -47,71 +47,90 @@ int xmlrpc_getlast_error(void)
  */
 void xmlrpc_process(deno_socket_t socket_fd, char *buffer)
 {
-    int retVal = 0;
-    XMLRPCCmd *xcurrent = NULL;
-    XMLRPCCmd *xml;
-    char *tmp;
-    int ac = 0;
-    char **av;
-    char *name = NULL;
+	int retVal = 0;
+	XMLRPCCmd *xcurrent = NULL;
+	XMLRPCCmd *xml;
+	char *tmp;
+	int ac = 0;
+	char **av;
+	char *name = NULL;
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    tmp = xmlrpc_parse(buffer);
-    if (tmp) {
-        name = xmlrpc_method(tmp);
-        if (name) {
-            xml = findXMLCommand(XMLRPCCMD, name);
-            if (xml) {
-                ac = xmlrpc_split_buf(tmp, &av);
-                if (ac >= 1) {
-                    if (xml->func) {
-                        retVal = xml->func(socket_fd, ac, av);
-                        if (retVal == MOD_CONT) {
-                            xcurrent = xml->next;
-                            while (xcurrent && xcurrent->func
-                                   && retVal == MOD_CONT) {
-                                retVal = xcurrent->func(socket_fd, ac, av);
-                                xcurrent = xcurrent->next;
-                            }
-                        } else {
-                            xmlrpc_error_code = -7;
-                            xmlrpc_generic_error(socket_fd,
-                                                 xmlrpc_error_code,
-                                                 "XMLRPC error: First eligible function returned XMLRPC_STOP");
-                        }
-                    } else {
-                        xmlrpc_error_code = -6;
-                        xmlrpc_generic_error(socket_fd, xmlrpc_error_code,
-                                             "XMLRPC error: Method [%s] has no registered function",
-                                             name);
-                    }
-                } else {
-                    xmlrpc_error_code = -5;
-                    xmlrpc_generic_error(socket_fd, xmlrpc_error_code,
-                                         "XMLRPC error: No arguments provided");
-                }
-            } else {
-                xmlrpc_error_code = -4;
-                xmlrpc_generic_error(socket_fd, xmlrpc_error_code,
-                                     "XMLRPC error: Unknown routine called [%s]",
-                                     name);
-            }
-            free(name);
-        } else {
-            xmlrpc_error_code = -3;
-            xmlrpc_generic_error(socket_fd, xmlrpc_error_code,
-                                 "XMLRPC error: Missing methodRequest or methodName.");
-        }
-        free(tmp);
-    } else {
-        xmlrpc_error_code = -2;
-        xmlrpc_generic_error(socket_fd, xmlrpc_error_code,
-                             "XMLRPC error: Invalid document end at line 1");
-    }
-    SET_SEGV_LOCATION();
-    if (ac)
-        free(av);
+	tmp = xmlrpc_parse(buffer);
+	if (tmp)
+	{
+		name = xmlrpc_method(tmp);
+		if (name)
+		{
+			xml = findXMLCommand(XMLRPCCMD, name);
+			if (xml)
+			{
+				ac = xmlrpc_split_buf(tmp, &av);
+				if (ac >= 1)
+				{
+					if (xml->func)
+					{
+						retVal = xml->func(socket_fd, ac, av);
+						if (retVal == MOD_CONT)
+						{
+							xcurrent = xml->next;
+							while (xcurrent && xcurrent->func
+							        && retVal == MOD_CONT)
+							{
+								retVal = xcurrent->func(socket_fd, ac, av);
+								xcurrent = xcurrent->next;
+							}
+						}
+						else
+						{
+							xmlrpc_error_code = -7;
+							xmlrpc_generic_error(socket_fd,
+							                     xmlrpc_error_code,
+							                     "XMLRPC error: First eligible function returned XMLRPC_STOP");
+						}
+					}
+					else
+					{
+						xmlrpc_error_code = -6;
+						xmlrpc_generic_error(socket_fd, xmlrpc_error_code,
+						                     "XMLRPC error: Method [%s] has no registered function",
+						                     name);
+					}
+				}
+				else
+				{
+					xmlrpc_error_code = -5;
+					xmlrpc_generic_error(socket_fd, xmlrpc_error_code,
+					                     "XMLRPC error: No arguments provided");
+				}
+			}
+			else
+			{
+				xmlrpc_error_code = -4;
+				xmlrpc_generic_error(socket_fd, xmlrpc_error_code,
+				                     "XMLRPC error: Unknown routine called [%s]",
+				                     name);
+			}
+			free(name);
+		}
+		else
+		{
+			xmlrpc_error_code = -3;
+			xmlrpc_generic_error(socket_fd, xmlrpc_error_code,
+			                     "XMLRPC error: Missing methodRequest or methodName.");
+		}
+		free(tmp);
+	}
+	else
+	{
+		xmlrpc_error_code = -2;
+		xmlrpc_generic_error(socket_fd, xmlrpc_error_code,
+		                     "XMLRPC error: Invalid document end at line 1");
+	}
+	SET_SEGV_LOCATION();
+	if (ac)
+		free(av);
 }
 
 /*************************************************************************/
@@ -126,22 +145,24 @@ void xmlrpc_process(deno_socket_t socket_fd, char *buffer)
  */
 XMLRPCCmd *createXMLCommand(const char *name,
                             int (*func) (deno_socket_t fd, int ac,
-                                         char **av))
+                                    char **av))
 {
-    XMLRPCCmd *xml = NULL;
-    if (!func) {
-        return NULL;
-    }
-    SET_SEGV_LOCATION();
+	XMLRPCCmd *xml = NULL;
+	if (!func)
+	{
+		return NULL;
+	}
+	SET_SEGV_LOCATION();
 
-    if ((xml = malloc(sizeof(XMLRPCCmd))) == NULL) {
-        fatal("Out of memory!");
-    }
-    xml->name = sstrdup(name);
-    xml->func = func;
-    xml->next = NULL;
-    xml->mod_name = NULL;
-    return xml;
+	if ((xml = malloc(sizeof(XMLRPCCmd))) == NULL)
+	{
+		fatal("Out of memory!");
+	}
+	xml->name = sstrdup(name);
+	xml->func = func;
+	xml->next = NULL;
+	xml->mod_name = NULL;
+	return xml;
 }
 
 /*************************************************************************/
@@ -156,28 +177,31 @@ XMLRPCCmd *createXMLCommand(const char *name,
  */
 XMLRPCCmd *findXMLCommand(XMLRPCCmdHash * xmlrpctable[], const char *name)
 {
-    int idx;
-    XMLRPCCmdHash *xcurrent = NULL;
-    if (!xmlrpctable || !name) {
-        return NULL;
-    }
-    SET_SEGV_LOCATION();
+	int idx;
+	XMLRPCCmdHash *xcurrent = NULL;
+	if (!xmlrpctable || !name)
+	{
+		return NULL;
+	}
+	SET_SEGV_LOCATION();
 
-    idx = CMD_HASH(name);
+	idx = CMD_HASH(name);
 
-    for (xcurrent = xmlrpctable[idx]; xcurrent; xcurrent = xcurrent->next) {
-        if (stricmp(name, xcurrent->name) == 0) {
-            return xcurrent->xml;
-        }
-    }
-    return NULL;
+	for (xcurrent = xmlrpctable[idx]; xcurrent; xcurrent = xcurrent->next)
+	{
+		if (stricmp(name, xcurrent->name) == 0)
+		{
+			return xcurrent->xml;
+		}
+	}
+	return NULL;
 }
 
 /*************************************************************************/
 
 /**
  * Add XMLRPC function to the xmlrpc command table
- * 
+ *
  * Possible return codes are
  * - MOD_ERR_PARAMS : parameters were NULL
  * - MOD_ERR_OK     : everything went okay
@@ -189,51 +213,55 @@ XMLRPCCmd *findXMLCommand(XMLRPCCmdHash * xmlrpctable[], const char *name)
  */
 int addXMLCommand(XMLRPCCmdHash * xmlrpctable[], XMLRPCCmd * xml)
 {
-    /* We can assume both param's have been checked by this point.. */
-    int idx = 0;
-    XMLRPCCmdHash *xcurrent = NULL;
-    XMLRPCCmdHash *newHash = NULL;
-    XMLRPCCmdHash *lastHash = NULL;
+	/* We can assume both param's have been checked by this point.. */
+	int idx = 0;
+	XMLRPCCmdHash *xcurrent = NULL;
+	XMLRPCCmdHash *newHash = NULL;
+	XMLRPCCmdHash *lastHash = NULL;
 
-    if (!xmlrpctable || !xml) {
-        return MOD_ERR_PARAMS;
-    }
-    SET_SEGV_LOCATION();
+	if (!xmlrpctable || !xml)
+	{
+		return MOD_ERR_PARAMS;
+	}
+	SET_SEGV_LOCATION();
 
-    idx = CMD_HASH(xml->name);
+	idx = CMD_HASH(xml->name);
 
-    for (xcurrent = xmlrpctable[idx]; xcurrent; xcurrent = xcurrent->next) {
-        if (stricmp(xml->name, xcurrent->name) == 0) {
-            xml->next = xcurrent->xml;
-            xcurrent->xml = xml;
-            alog(LOG_DEBUG,
-                 "debug: existing XMLRPC: (0x%p), new msg (0x%p) (%s)",
-                 (void *) xml->next, (void *) xml, xml->name);
-            return MOD_ERR_OK;
-        }
-        lastHash = xcurrent;
-    }
+	for (xcurrent = xmlrpctable[idx]; xcurrent; xcurrent = xcurrent->next)
+	{
+		if (stricmp(xml->name, xcurrent->name) == 0)
+		{
+			xml->next = xcurrent->xml;
+			xcurrent->xml = xml;
+			alog(LOG_DEBUG,
+			     "debug: existing XMLRPC: (0x%p), new msg (0x%p) (%s)",
+			     (void *) xml->next, (void *) xml, xml->name);
+			return MOD_ERR_OK;
+		}
+		lastHash = xcurrent;
+	}
 
-    if ((newHash = malloc(sizeof(XMLRPCCmdHash))) == NULL) {
-        fatal("Out of memory");
-    }
-    newHash->next = NULL;
-    newHash->name = sstrdup(xml->name);
-    newHash->xml = xml;
-    SET_SEGV_LOCATION();
+	if ((newHash = malloc(sizeof(XMLRPCCmdHash))) == NULL)
+	{
+		fatal("Out of memory");
+	}
+	newHash->next = NULL;
+	newHash->name = sstrdup(xml->name);
+	newHash->xml = xml;
+	SET_SEGV_LOCATION();
 
-    if (lastHash == NULL)
-        xmlrpctable[idx] = newHash;
-    else
-        lastHash->next = newHash;
-    return MOD_ERR_OK;
+	if (lastHash == NULL)
+		xmlrpctable[idx] = newHash;
+	else
+		lastHash->next = newHash;
+	return MOD_ERR_OK;
 }
 
 /*************************************************************************/
 
 /**
  * Destory a xmlrpc method, freeing its memory.
- * 
+ *
  * Possible return codes are
  * - MOD_ERR_PARAMS : parameters were NULL
  * - MOD_ERR_OK     : everything went okay
@@ -244,28 +272,31 @@ int addXMLCommand(XMLRPCCmdHash * xmlrpctable[], XMLRPCCmd * xml)
  */
 int destroyXMLRPCCommand(XMLRPCCmd * xml)
 {
-    if (!xml) {
-        return MOD_ERR_PARAMS;
-    }
-    SET_SEGV_LOCATION();
+	if (!xml)
+	{
+		return MOD_ERR_PARAMS;
+	}
+	SET_SEGV_LOCATION();
 
-    if (xml->name) {
-        free(xml->name);
-    }
-    xml->func = NULL;
-    if (xml->mod_name) {
-        free(xml->mod_name);
-    }
-    xml->next = NULL;
-    free(xml);
-    return MOD_ERR_OK;
+	if (xml->name)
+	{
+		free(xml->name);
+	}
+	xml->func = NULL;
+	if (xml->mod_name)
+	{
+		free(xml->mod_name);
+	}
+	xml->next = NULL;
+	free(xml);
+	return MOD_ERR_OK;
 }
 
 /*************************************************************************/
 
 /**
  * Delete a xmlrpc method, freeing its memory.
- * 
+ *
  * Possible return codes are
  * - MOD_ERR_PARAMS  : parameters were NULL
  * - MOD_ERR_OK      : everything went okay
@@ -280,76 +311,98 @@ int destroyXMLRPCCommand(XMLRPCCmd * xml)
 int delXMLRPCCommand(XMLRPCCmdHash * xmlrpctable[], XMLRPCCmd * xml,
                      char *mod_name)
 {
-    int idx = 0;
-    XMLRPCCmdHash *xcurrent = NULL;
-    XMLRPCCmdHash *lastHash = NULL;
-    XMLRPCCmd *tail = NULL, *last = NULL;
+	int idx = 0;
+	XMLRPCCmdHash *xcurrent = NULL;
+	XMLRPCCmdHash *lastHash = NULL;
+	XMLRPCCmd *tail = NULL, *last = NULL;
 
-    if (!xml || !xmlrpctable) {
-        return MOD_ERR_PARAMS;
-    }
-    SET_SEGV_LOCATION();
+	if (!xml || !xmlrpctable)
+	{
+		return MOD_ERR_PARAMS;
+	}
+	SET_SEGV_LOCATION();
 
-    idx = CMD_HASH(xml->name);
+	idx = CMD_HASH(xml->name);
 
-    for (xcurrent = xmlrpctable[idx]; xcurrent; xcurrent = xcurrent->next) {
-        if (stricmp(xml->name, xcurrent->name) == 0) {
-            if (!lastHash) {
-                tail = xcurrent->xml;
-                if (tail->next) {
-                    while (tail) {
-                        if (mod_name && tail->mod_name
-                            && (stricmp(mod_name, tail->mod_name) == 0)) {
-                            if (last) {
-                                last->next = tail->next;
-                            } else {
-                                xcurrent->xml = tail->next;
-                            }
-                            return MOD_ERR_OK;
-                        }
-                        last = tail;
-                        tail = tail->next;
-                    }
-                } else {
-                    xmlrpctable[idx] = xcurrent->next;
-                    free(xcurrent->name);
-                    return MOD_ERR_OK;
-                }
-            } else {
-                tail = current->xml;
-                if (tail->next) {
-                    while (tail) {
-                        if (mod_name && tail->mod_name
-                            && (stricmp(mod_name, tail->mod_name) == 0)) {
-                            if (last) {
-                                last->next = tail->next;
-                            } else {
-                                xcurrent->xml = tail->next;
-                            }
-                            return MOD_ERR_OK;
-                        }
-                        last = tail;
-                        tail = tail->next;
-                    }
-                } else {
-                    lastHash->next = xcurrent->next;
-                    free(xcurrent->name);
-                    return MOD_ERR_OK;
-                }
-            }
-        }
-        lastHash = xcurrent;
-    }
-    SET_SEGV_LOCATION();
+	for (xcurrent = xmlrpctable[idx]; xcurrent; xcurrent = xcurrent->next)
+	{
+		if (stricmp(xml->name, xcurrent->name) == 0)
+		{
+			if (!lastHash)
+			{
+				tail = xcurrent->xml;
+				if (tail->next)
+				{
+					while (tail)
+					{
+						if (mod_name && tail->mod_name
+						        && (stricmp(mod_name, tail->mod_name) == 0))
+						{
+							if (last)
+							{
+								last->next = tail->next;
+							}
+							else
+							{
+								xcurrent->xml = tail->next;
+							}
+							return MOD_ERR_OK;
+						}
+						last = tail;
+						tail = tail->next;
+					}
+				}
+				else
+				{
+					xmlrpctable[idx] = xcurrent->next;
+					free(xcurrent->name);
+					return MOD_ERR_OK;
+				}
+			}
+			else
+			{
+				tail = current->xml;
+				if (tail->next)
+				{
+					while (tail)
+					{
+						if (mod_name && tail->mod_name
+						        && (stricmp(mod_name, tail->mod_name) == 0))
+						{
+							if (last)
+							{
+								last->next = tail->next;
+							}
+							else
+							{
+								xcurrent->xml = tail->next;
+							}
+							return MOD_ERR_OK;
+						}
+						last = tail;
+						tail = tail->next;
+					}
+				}
+				else
+				{
+					lastHash->next = xcurrent->next;
+					free(xcurrent->name);
+					return MOD_ERR_OK;
+				}
+			}
+		}
+		lastHash = xcurrent;
+	}
+	SET_SEGV_LOCATION();
 
-    return MOD_ERR_OK;
+	return MOD_ERR_OK;
 }
 
 /*************************************************************************/
 
 /**
  * Allow module to delete a xmlrpc method.
- * 
+ *
  * Possible return codes are
  * - MOD_ERR_UNKNOWN : Unknown module name
  * - MOD_ERR_NOEXIST : method not found
@@ -360,33 +413,37 @@ int delXMLRPCCommand(XMLRPCCmdHash * xmlrpctable[], XMLRPCCmd * xml,
  */
 int moduleXMLRPCDel(const char *name)
 {
-    XMLRPCCmd *xml;
-    int status;
+	XMLRPCCmd *xml;
+	int status;
 
-    if (!mod_current_module) {
-        return MOD_ERR_UNKNOWN;
-    }
-    if (!name) {
-        return MOD_ERR_PARAMS;
-    }
-    xml = findXMLCommand(XMLRPCCMD, name);
-    if (!xml) {
-        return MOD_ERR_NOEXIST;
-    }
-    SET_SEGV_LOCATION();
+	if (!mod_current_module)
+	{
+		return MOD_ERR_UNKNOWN;
+	}
+	if (!name)
+	{
+		return MOD_ERR_PARAMS;
+	}
+	xml = findXMLCommand(XMLRPCCMD, name);
+	if (!xml)
+	{
+		return MOD_ERR_NOEXIST;
+	}
+	SET_SEGV_LOCATION();
 
-    status = delXMLRPCCommand(XMLRPCCMD, xml, mod_current_module->name);
-    if (denora->debug) {
-        displayXMLRPCFromHash(xml->name);
-    }
-    return status;
+	status = delXMLRPCCommand(XMLRPCCMD, xml, mod_current_module->name);
+	if (denora->debug)
+	{
+		displayXMLRPCFromHash(xml->name);
+	}
+	return status;
 }
 
 /*************************************************************************/
 
 /**
  * Allow module to add a xmlrpc method.
- * 
+ *
  * Possible return codes are
  * - MOD_ERR_UNKNOWN : Unknown module name
  * - MOD_ERR_PARAM   : Not enough parameters
@@ -397,38 +454,43 @@ int moduleXMLRPCDel(const char *name)
  */
 int moduleAddXMLRPCcmd(XMLRPCCmd * xml)
 {
-    int status;
+	int status;
 
-    if (!xml) {
-        return MOD_ERR_PARAMS;
-    }
-    SET_SEGV_LOCATION();
+	if (!xml)
+	{
+		return MOD_ERR_PARAMS;
+	}
+	SET_SEGV_LOCATION();
 
-    if ((mod_current_module_name) && (!mod_current_module)) {
-        mod_current_module = findModule(mod_current_module_name);
-    }
+	if ((mod_current_module_name) && (!mod_current_module))
+	{
+		mod_current_module = findModule(mod_current_module_name);
+	}
 
-    if (!mod_current_module) {
-        return MOD_ERR_UNKNOWN;
-    }                           /* shouldnt happen */
-    xml->core = 0;
-    if (!xml->mod_name) {
-        xml->mod_name = sstrdup(mod_current_module->name);
-    }
-    SET_SEGV_LOCATION();
+	if (!mod_current_module)
+	{
+		return MOD_ERR_UNKNOWN;
+	}                           /* shouldnt happen */
+	xml->core = 0;
+	if (!xml->mod_name)
+	{
+		xml->mod_name = sstrdup(mod_current_module->name);
+	}
+	SET_SEGV_LOCATION();
 
-    status = addXMLCommand(XMLRPCCMD, xml);
-    if (denora->debug) {
-        displayXMLRPCFromHash(xml->name);
-    }
-    return status;
+	status = addXMLCommand(XMLRPCCMD, xml);
+	if (denora->debug)
+	{
+		displayXMLRPCFromHash(xml->name);
+	}
+	return status;
 }
 
 /*************************************************************************/
 
 /**
  * Allow core to add a xmlrpc method.
- * 
+ *
  * Possible return codes are
  * - MOD_ERR_PARAM   : Not enough parameters
  *
@@ -439,13 +501,14 @@ int moduleAddXMLRPCcmd(XMLRPCCmd * xml)
  */
 int addCoreXMLRPCCmd(XMLRPCCmdHash * xmlrpctable[], XMLRPCCmd * xml)
 {
-    if (!xmlrpctable || !xml) {
-        return MOD_ERR_PARAMS;
-    }
-    SET_SEGV_LOCATION();
+	if (!xmlrpctable || !xml)
+	{
+		return MOD_ERR_PARAMS;
+	}
+	SET_SEGV_LOCATION();
 
-    xml->core = 1;
-    return addXMLCommand(xmlrpctable, xml);
+	xml->core = 1;
+	return addXMLCommand(xmlrpctable, xml);
 }
 
 /*************************************************************************/
@@ -459,31 +522,35 @@ int addCoreXMLRPCCmd(XMLRPCCmdHash * xmlrpctable[], XMLRPCCmd * xml)
  */
 void displayXMLRPCFromHash(char *name)
 {
-    XMLRPCCmdHash *xcurrent = NULL;
-    int idx = 0;
-    int found = 0;
+	XMLRPCCmdHash *xcurrent = NULL;
+	int idx = 0;
+	int found = 0;
 
-    if (!name) {
-        return;
-    }
+	if (!name)
+	{
+		return;
+	}
 
-    idx = CMD_HASH(name);
+	idx = CMD_HASH(name);
 
-    alog(LOG_EXTRADEBUG, langstr(ALOG_TRY_TO_DISPLAY), name);
-    SET_SEGV_LOCATION();
+	alog(LOG_EXTRADEBUG, langstr(ALOG_TRY_TO_DISPLAY), name);
+	SET_SEGV_LOCATION();
 
-    for (xcurrent = XMLRPCCMD[idx]; xcurrent; xcurrent = xcurrent->next) {
-        if (stricmp(name, xcurrent->name) == 0) {
-            displayXMLRPCcmd(xcurrent->xml);
-            found = 1;
-        }
-    }
-    if (!found) {
-        alog(LOG_EXTRADEBUG, "%s was unable to find %s", PRETTY_FUNCTION,
-             name);
-    }
-    alog(LOG_EXTRADEBUG, langstr(ALOG_DONE_DISPLAY), name);
-    return;
+	for (xcurrent = XMLRPCCMD[idx]; xcurrent; xcurrent = xcurrent->next)
+	{
+		if (stricmp(name, xcurrent->name) == 0)
+		{
+			displayXMLRPCcmd(xcurrent->xml);
+			found = 1;
+		}
+	}
+	if (!found)
+	{
+		alog(LOG_EXTRADEBUG, "%s was unable to find %s", PRETTY_FUNCTION,
+		     name);
+	}
+	alog(LOG_EXTRADEBUG, langstr(ALOG_DONE_DISPLAY), name);
+	return;
 }
 
 /*************************************************************************/
@@ -497,29 +564,31 @@ void displayXMLRPCFromHash(char *name)
  */
 void displayXMLRPCcmd(XMLRPCCmd * xml)
 {
-    XMLRPCCmd *msg = NULL;
-    int i = 0;
+	XMLRPCCmd *msg = NULL;
+	int i = 0;
 
-    if (!xml) {
-        return;
-    }
+	if (!xml)
+	{
+		return;
+	}
 
-    alog(LOG_EXTRADEBUG, "debug: Displaying message list for %s",
-         xml->name);
-    for (msg = xml; msg; msg = msg->next) {
-        alog(LOG_DEBUG, "%d: 0x%p", ++i, (void *) msg);
-    }
-    SET_SEGV_LOCATION();
+	alog(LOG_EXTRADEBUG, "debug: Displaying message list for %s",
+	     xml->name);
+	for (msg = xml; msg; msg = msg->next)
+	{
+		alog(LOG_DEBUG, "%d: 0x%p", ++i, (void *) msg);
+	}
+	SET_SEGV_LOCATION();
 
-    alog(LOG_EXTRADEBUG, "debug: end");
-    return;
+	alog(LOG_EXTRADEBUG, "debug: end");
+	return;
 }
 
 /*************************************************************************/
 
 /**
  * Register a XMLRPC Method without need to create or add.
- * 
+ *
  * @param name is the xmlrpc method name
  * @param func is the xmlrpc function
  * @return int result code.
@@ -529,43 +598,43 @@ int xmlrpc_register_method(const char *name,
                            int (*func) (deno_socket_t fd, int ac,
                                         char **av))
 {
-    XMLRPCCmd *xml;
-    xml = createXMLCommand(name, func);
-    return addXMLCommand(XMLRPCCMD, xml);
+	XMLRPCCmd *xml;
+	xml = createXMLCommand(name, func);
+	return addXMLCommand(XMLRPCCMD, xml);
 }
 
 /*************************************************************************/
 
 /**
  * Write out a valid xmlrpc header
- * 
+ *
  * @param length is the size in bytes that the xmlrpc message is taking up
  * @return xmlrpc header, note this must be free'd
  *
  */
 char *xmlrpc_write_header(int length)
 {
-    char buf[XMLRPC_BUFSIZE];
-    time_t ts;
-    char timebuf[64];
-    struct tm tm;
+	char buf[XMLRPC_BUFSIZE];
+	time_t ts;
+	char timebuf[64];
+	struct tm tm;
 
-    *buf = '\0';
+	*buf = '\0';
 
-    ts = time(NULL);
+	ts = time(NULL);
 #ifdef _WIN32
-    localtime_s(&tm, &ts);
+	localtime_s(&tm, &ts);
 #else
-    tm = *localtime(&ts);
+	tm = *localtime(&ts);
 #endif
-    strftime(timebuf, XMLRPC_BUFSIZE - 1, "%Y-%m-%d %H:%M:%S", &tm);
+	strftime(timebuf, XMLRPC_BUFSIZE - 1, "%Y-%m-%d %H:%M:%S", &tm);
 
-    ircsnprintf(buf, XMLRPC_BUFSIZE,
-                "HTTP/1.1 200 OK\n\rConnection: close\n\r"
-                "Content-Length: %d\n\r" "Content-Type: text/xml\n\r"
-                "Date: %s\n\r" "Server: Denora %s\r\n\r\n", length,
-                timebuf, denora->version);
-    return sstrdup(buf);
+	ircsnprintf(buf, XMLRPC_BUFSIZE,
+	            "HTTP/1.1 200 OK\n\rConnection: close\n\r"
+	            "Content-Length: %d\n\r" "Content-Type: text/xml\n\r"
+	            "Date: %s\n\r" "Server: Denora %s\r\n\r\n", length,
+	            timebuf, denora->version);
+	return sstrdup(buf);
 }
 
 /*************************************************************************/
@@ -578,21 +647,22 @@ char *xmlrpc_write_header(int length)
  */
 char *xmlrpc_parse(char *buffer)
 {
-    char *tmp = NULL;
+	char *tmp = NULL;
 
-    /*
-       Okay since the buffer could contain 
-       HTTP header information, lets break
-       off at the point that the <?xml?> starts
-     */
-    tmp = strstr(buffer, "<?xml");
+	/*
+	   Okay since the buffer could contain
+	   HTTP header information, lets break
+	   off at the point that the <?xml?> starts
+	 */
+	tmp = strstr(buffer, "<?xml");
 
-    /* check if its xml doc */
-    if (tmp) {
-        /* get all the odd characters out of the data */
-        return normalizeBuffer(tmp);
-    }
-    return NULL;
+	/* check if its xml doc */
+	if (tmp)
+	{
+		/* get all the odd characters out of the data */
+		return normalizeBuffer(tmp);
+	}
+	return NULL;
 }
 
 /*************************************************************************/
@@ -606,59 +676,77 @@ char *xmlrpc_parse(char *buffer)
  */
 int xmlrpc_split_buf(char *buffer, char ***argv)
 {
-    int ac = 0;
-    int argvsize = 8;
-    char *xdata, *str;
-    char *str2 = NULL;
-    char *nexttag = NULL;
-    char *temp = NULL;
-    char *final;
-    int tagtype = 0;
+	int ac = 0;
+	int argvsize = 8;
+	char *xdata, *str;
+	char *str2 = NULL;
+	char *nexttag = NULL;
+	char *temp = NULL;
+	char *final;
+	int tagtype = 0;
 
-    *argv = calloc(sizeof(char *) * argvsize, 1);
-    while ((xdata = strstr(buffer, "<value>"))) {
-        if (xdata) {
-            temp = myStrGetToken(xdata, '<', 2);
-            if (temp) {
-                nexttag = myStrGetToken(temp, '>', 0);
-                if (nexttag) {
-                    /* strings */
-                    if (!stricmp("string", nexttag)) {
-                        tagtype = 1;
-                    } else if (!stricmp("base64", nexttag)) {
-                        tagtype = 2;
-                    } else {
-                        tagtype = 0;
-                    }
-                    free(nexttag);
-                }
-            }
-            str = myStrGetToken(xdata, '>', 2);
-            str2 = myStrGetTokenRemainder(xdata, '>', 2);
-            if (str) {
-                final = myStrGetToken(str, '<', 0);
-                if (final) {
-                    if (tagtype == 1) {
-                        (*argv)[ac++] = xmlrpc_decode_string(final);
-                    } else if (tagtype == 2) {
-                        (*argv)[ac++] = xmlrpc_decode64(final);
-                    } else {
-                        (*argv)[ac++] = final;
-                    }
-                    free(final);
-                }
-                free(str);
-                if (temp) {
-                    free(temp);
-                }
-            }                   /* str */
-        }                       /* data */
-        buffer = str2;
-    }                           /* while */
-    if (str2) {
-        free(str2);
-    }
-    return ac;
+	*argv = calloc(sizeof(char *) * argvsize, 1);
+	while ((xdata = strstr(buffer, "<value>")))
+	{
+		if (xdata)
+		{
+			temp = myStrGetToken(xdata, '<', 2);
+			if (temp)
+			{
+				nexttag = myStrGetToken(temp, '>', 0);
+				if (nexttag)
+				{
+					/* strings */
+					if (!stricmp("string", nexttag))
+					{
+						tagtype = 1;
+					}
+					else if (!stricmp("base64", nexttag))
+					{
+						tagtype = 2;
+					}
+					else
+					{
+						tagtype = 0;
+					}
+					free(nexttag);
+				}
+			}
+			str = myStrGetToken(xdata, '>', 2);
+			str2 = myStrGetTokenRemainder(xdata, '>', 2);
+			if (str)
+			{
+				final = myStrGetToken(str, '<', 0);
+				if (final)
+				{
+					if (tagtype == 1)
+					{
+						(*argv)[ac++] = xmlrpc_decode_string(final);
+					}
+					else if (tagtype == 2)
+					{
+						(*argv)[ac++] = xmlrpc_decode64(final);
+					}
+					else
+					{
+						(*argv)[ac++] = final;
+					}
+					free(final);
+				}
+				free(str);
+				if (temp)
+				{
+					free(temp);
+				}
+			}                   /* str */
+		}                       /* data */
+		buffer = str2;
+	}                           /* while */
+	if (str2)
+	{
+		free(str2);
+	}
+	return ac;
 }
 
 /*************************************************************************/
@@ -671,30 +759,33 @@ int xmlrpc_split_buf(char *buffer, char ***argv)
  */
 char *xmlrpc_method(char *buffer)
 {
-    char *xdata;
-    char *tmp, *tmp2;
-    char *s;
+	char *xdata;
+	char *tmp, *tmp2;
+	char *s;
 
-    xdata = stristr(buffer, (char *) "<methodname>");
-    if (xdata) {
-        tmp = myStrGetToken(xdata, '>', 1);
-        if (tmp) {
-            tmp2 = myStrGetToken(tmp, '<', 0);
-            free(tmp);
-            if (tmp2) {
-                s = sstrdup(tmp2);
-                free(tmp2);
-                return s;
-            }
-        }
-    }
-    return NULL;
+	xdata = stristr(buffer, (char *) "<methodname>");
+	if (xdata)
+	{
+		tmp = myStrGetToken(xdata, '>', 1);
+		if (tmp)
+		{
+			tmp2 = myStrGetToken(tmp, '<', 0);
+			free(tmp);
+			if (tmp2)
+			{
+				s = sstrdup(tmp2);
+				free(tmp2);
+				return s;
+			}
+		}
+	}
+	return NULL;
 }
 
 /*************************************************************************/
 
 /**
- * Print out a generic xmlrpc error message back to the socket. This is a 
+ * Print out a generic xmlrpc error message back to the socket. This is a
  * simple way to write a correct and valid xmlrpc message
  *
  * @param socket_fd is the socket to send to
@@ -706,41 +797,44 @@ char *xmlrpc_method(char *buffer)
 void xmlrpc_generic_error(deno_socket_t socket_fd, int code,
                           const char *string, ...)
 {
-    char buf[XMLRPC_BUFSIZE], buf2[XMLRPC_BUFSIZE];
-    char fbuf[XMLRPC_BUFSIZE];
-    char *header;
-    char *encoded;
-    int len;
-    va_list va;
+	char buf[XMLRPC_BUFSIZE], buf2[XMLRPC_BUFSIZE];
+	char fbuf[XMLRPC_BUFSIZE];
+	char *header;
+	char *encoded;
+	int len;
+	va_list va;
 
-    va_start(va, string);
-    ircvsnprintf(fbuf, sizeof(fbuf), string, va);
-    va_end(va);
+	va_start(va, string);
+	ircvsnprintf(fbuf, sizeof(fbuf), string, va);
+	va_end(va);
 
-    encoded = char_encode(fbuf);
+	encoded = char_encode(fbuf);
 
-    ircsnprintf(buf, XMLRPC_BUFSIZE,
-                "<?xml version=\"1.0\"?>\r\n <methodResponse>\n\r  <fault>\n\r   <value>\n\r    <struct>\n\r     <member>\n\r      <name>faultCode</name>\n\r      <value><int>%d</int></value>\n\r     </member>\n\r     <member>\n\r      <name>faultString</name>\n\r      <value><string>%s</string></value>\n\r     </member>\n\r    </struct>\n\r   </value>\r\n  </fault>\r\n </methodResponse>",
-                code, encoded);
+	ircsnprintf(buf, XMLRPC_BUFSIZE,
+	            "<?xml version=\"1.0\"?>\r\n <methodResponse>\n\r  <fault>\n\r   <value>\n\r    <struct>\n\r     <member>\n\r      <name>faultCode</name>\n\r      <value><int>%d</int></value>\n\r     </member>\n\r     <member>\n\r      <name>faultString</name>\n\r      <value><string>%s</string></value>\n\r     </member>\n\r    </struct>\n\r   </value>\r\n  </fault>\r\n </methodResponse>",
+	            code, encoded);
 
-    free(encoded);
+	free(encoded);
 
-    len = strlen(buf);
+	len = strlen(buf);
 
-    if (xmlrpc.httpheader) {
-        header = xmlrpc_write_header(len);
-        strlcpy(buf2, header, XMLRPC_BUFSIZE);
-        strlcat(buf2, buf, XMLRPC_BUFSIZE);
-        len += strlen(header);
-        free(header);
-        alog(LOG_DEBUG, "XMLRPC Send: %s", buf2);
-        buffered_write(socket_fd, buf2, len);
-    } else {
-        alog(LOG_DEBUG, "XMLRPC Send: %s", buf);
-        buffered_write(socket_fd, buf, len);
-    }
+	if (xmlrpc.httpheader)
+	{
+		header = xmlrpc_write_header(len);
+		strlcpy(buf2, header, XMLRPC_BUFSIZE);
+		strlcat(buf2, buf, XMLRPC_BUFSIZE);
+		len += strlen(header);
+		free(header);
+		alog(LOG_DEBUG, "XMLRPC Send: %s", buf2);
+		buffered_write(socket_fd, buf2, len);
+	}
+	else
+	{
+		alog(LOG_DEBUG, "XMLRPC Send: %s", buf);
+		buffered_write(socket_fd, buf, len);
+	}
 
-    xml_encode = 0;
+	xml_encode = 0;
 }
 
 /*************************************************************************/
@@ -763,41 +857,53 @@ void xmlrpc_generic_error(deno_socket_t socket_fd, int code,
  */
 int xmlrpc_set_options(int type, const char *value)
 {
-    if (type == XMLRPC_HTTP_HEADER) {
-        if (!stricmp(value, XMLRPC_ON)) {
-            xmlrpc.httpheader = 1;
-        }
-        if (!stricmp(value, XMLRPC_OFF)) {
-            xmlrpc.httpheader = 0;
-        }
-        return 1;
-    } else if (type == XMLRPC_ENCODE) {
-        if (value) {
-            xmlrpc.encode = sstrdup(value);
-            return 1;
-        }
-    } else if (type == XMLRPC_INTTAG) {
-        if (!stricmp(value, XMLRPC_I4)) {
-            xmlrpc.inttagstart = sstrdup("<i4>");
-            xmlrpc.inttagend = sstrdup("</i4>");
-            return 1;
-        }
-        if (!stricmp(value, XMLRPC_INT)) {
-            xmlrpc.inttagstart = sstrdup("<int>");
-            xmlrpc.inttagend = sstrdup("</int>");
-            return 1;
-        }
-    } else {
-        alog(LOG_DEBUG, "xmlrpc_set_options called with unknown type %d",
-             type);
-    }
-    return 0;
+	if (type == XMLRPC_HTTP_HEADER)
+	{
+		if (!stricmp(value, XMLRPC_ON))
+		{
+			xmlrpc.httpheader = 1;
+		}
+		if (!stricmp(value, XMLRPC_OFF))
+		{
+			xmlrpc.httpheader = 0;
+		}
+		return 1;
+	}
+	else if (type == XMLRPC_ENCODE)
+	{
+		if (value)
+		{
+			xmlrpc.encode = sstrdup(value);
+			return 1;
+		}
+	}
+	else if (type == XMLRPC_INTTAG)
+	{
+		if (!stricmp(value, XMLRPC_I4))
+		{
+			xmlrpc.inttagstart = sstrdup("<i4>");
+			xmlrpc.inttagend = sstrdup("</i4>");
+			return 1;
+		}
+		if (!stricmp(value, XMLRPC_INT))
+		{
+			xmlrpc.inttagstart = sstrdup("<int>");
+			xmlrpc.inttagend = sstrdup("</int>");
+			return 1;
+		}
+	}
+	else
+	{
+		alog(LOG_DEBUG, "xmlrpc_set_options called with unknown type %d",
+		     type);
+	}
+	return 0;
 }
 
 /*************************************************************************/
 
 /**
- * Send back to a socket the xmlrpc data 
+ * Send back to a socket the xmlrpc data
  *
  * @param socket_fd is the socket to send to
  * @param argc is the argument count that will follow
@@ -806,83 +912,94 @@ int xmlrpc_set_options(int type, const char *value)
  */
 void xmlrpc_send(deno_socket_t socket_fd, int argc, ...)
 {
-    va_list va;
-    char *a;
-    int idx = 0;
-    char *s = NULL;
-    int len;
-    char buf[XMLRPC_BUFSIZE];
-    char buf2[XMLRPC_BUFSIZE];
-    char *header;
+	va_list va;
+	char *a;
+	int idx = 0;
+	char *s = NULL;
+	int len;
+	char buf[XMLRPC_BUFSIZE];
+	char buf2[XMLRPC_BUFSIZE];
+	char *header;
 
-    *buf = '\0';
-    *buf2 = '\0';
+	*buf = '\0';
+	*buf2 = '\0';
 
-    va_start(va, argc);
-    for (idx = 0; idx < argc; idx++) {
-        a = va_arg(va, char *);
-        if (!s) {
-            ircsnprintf(buf, XMLRPC_BUFSIZE,
-                        " <param>\r\n  <value>\r\n   %s\r\n  </value>\r\n </param>",
-                        a);
-            s = sstrdup(buf);
-        } else {
-            ircsnprintf(buf, XMLRPC_BUFSIZE,
-                        "%s\r\n <param>\r\n  <value>\r\n   %s\r\n  </value>\r\n </param>",
-                        s, a);
-            free(s);
-            s = sstrdup(buf);
-        }
-    }
-    va_end(va);
+	va_start(va, argc);
+	for (idx = 0; idx < argc; idx++)
+	{
+		a = va_arg(va, char *);
+		if (!s)
+		{
+			ircsnprintf(buf, XMLRPC_BUFSIZE,
+			            " <param>\r\n  <value>\r\n   %s\r\n  </value>\r\n </param>",
+			            a);
+			s = sstrdup(buf);
+		}
+		else
+		{
+			ircsnprintf(buf, XMLRPC_BUFSIZE,
+			            "%s\r\n <param>\r\n  <value>\r\n   %s\r\n  </value>\r\n </param>",
+			            s, a);
+			free(s);
+			s = sstrdup(buf);
+		}
+	}
+	va_end(va);
 
-    if (xmlrpc.encode) {
-        ircsnprintf(buf, XMLRPC_BUFSIZE,
-                    "<?xml version=\"1.0\" encoding=\"%s\" ?>\r\n<methodResponse>\r\n<params>\r\n%s\r\n</params>\r\n</methodResponse>",
-                    xmlrpc.encode, s);
-    } else {
-        ircsnprintf(buf, XMLRPC_BUFSIZE,
-                    "<?xml version=\"1.0\"?>\r\n<methodResponse>\r\n<params>\r\n%s\r\n</params>\r\n</methodResponse>",
-                    s);
-    }
-    len = strlen(buf);
+	if (xmlrpc.encode)
+	{
+		ircsnprintf(buf, XMLRPC_BUFSIZE,
+		            "<?xml version=\"1.0\" encoding=\"%s\" ?>\r\n<methodResponse>\r\n<params>\r\n%s\r\n</params>\r\n</methodResponse>",
+		            xmlrpc.encode, s);
+	}
+	else
+	{
+		ircsnprintf(buf, XMLRPC_BUFSIZE,
+		            "<?xml version=\"1.0\"?>\r\n<methodResponse>\r\n<params>\r\n%s\r\n</params>\r\n</methodResponse>",
+		            s);
+	}
+	len = strlen(buf);
 
-    if (xmlrpc.httpheader) {
-        header = xmlrpc_write_header(len);
-        ircsnprintf(buf2, XMLRPC_BUFSIZE, "%s%s", header, buf);
-        free(header);
-        len = strlen(buf2);
-        buffered_write(socket_fd, buf2, len);
-        xmlrpc.httpheader = 1;
-    } else {
-        buffered_write(socket_fd, buf, len);
-    }
-    if (xmlrpc.encode) {
-        free(xmlrpc.encode);
-        xmlrpc.encode = NULL;
-    }
-    free(s);
+	if (xmlrpc.httpheader)
+	{
+		header = xmlrpc_write_header(len);
+		ircsnprintf(buf2, XMLRPC_BUFSIZE, "%s%s", header, buf);
+		free(header);
+		len = strlen(buf2);
+		buffered_write(socket_fd, buf2, len);
+		xmlrpc.httpheader = 1;
+	}
+	else
+	{
+		buffered_write(socket_fd, buf, len);
+	}
+	if (xmlrpc.encode)
+	{
+		free(xmlrpc.encode);
+		xmlrpc.encode = NULL;
+	}
+	free(s);
 }
 
 /*************************************************************************/
 
 /**
  * Print out user struct for xmlrpc
- * 
+ *
  * @param u is the struct to print
  * @return the struct in xmlrpc data format
  *
  */
 char *xmlrpc_user_struct(User * u)
 {
-    char buf[BUFSIZE];
-    *buf = '\0';
+	char buf[BUFSIZE];
+	*buf = '\0';
 
-    ircsnprintf(buf, BUFSIZE,
-                "<struct>\r\n <member>\r\n  <name>nick</name>\r\r  <value><string>%s</string></value>\r\n </member>\r\n"
-                " <member>\r\n  <name>username</name>\r\n  <value><string>%s</string></value>\r\n </member>\n\r</struct>",
-                u->nick, u->username);
-    return sstrdup(buf);
+	ircsnprintf(buf, BUFSIZE,
+	            "<struct>\r\n <member>\r\n  <name>nick</name>\r\r  <value><string>%s</string></value>\r\n </member>\r\n"
+	            " <member>\r\n  <name>username</name>\r\n  <value><string>%s</string></value>\r\n </member>\n\r</struct>",
+	            u->nick, u->username);
+	return sstrdup(buf);
 }
 
 /*************************************************************************/
@@ -897,24 +1014,27 @@ char *xmlrpc_user_struct(User * u)
  */
 char *xmlrpc_time2date(char *buf, time_t t)
 {
-    char timebuf[XMLRPC_BUFSIZE];
-    struct tm tm;
+	char timebuf[XMLRPC_BUFSIZE];
+	struct tm tm;
 
-    *buf = '\0';
-    if (t) {
+	*buf = '\0';
+	if (t)
+	{
 #ifdef _WIN32
-        localtime_s(&tm, &t);
+		localtime_s(&tm, &t);
 #else
-        tm = *localtime(&t);
+		tm = *localtime(&t);
 #endif
-        /* <dateTime.iso8601>20011003T08:53:38</dateTime.iso8601> */
-        strftime(timebuf, XMLRPC_BUFSIZE - 1, XMLRPC_DATETIME_FORMAT, &tm);
-        ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s>%s</%s>",
-                    XMLRPC_DATETIME_TAG, timebuf, XMLRPC_DATETIME_TAG);
-    } else {
-        ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s/>", XMLRPC_DATETIME_TAG);
-    }
-    return buf;
+		/* <dateTime.iso8601>20011003T08:53:38</dateTime.iso8601> */
+		strftime(timebuf, XMLRPC_BUFSIZE - 1, XMLRPC_DATETIME_FORMAT, &tm);
+		ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s>%s</%s>",
+		            XMLRPC_DATETIME_TAG, timebuf, XMLRPC_DATETIME_TAG);
+	}
+	else
+	{
+		ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s/>", XMLRPC_DATETIME_TAG);
+	}
+	return buf;
 }
 
 /*************************************************************************/
@@ -929,24 +1049,29 @@ char *xmlrpc_time2date(char *buf, time_t t)
  */
 char *xmlrpc_integer(char *buf, int value)
 {
-    *buf = '\0';
+	*buf = '\0';
 
-    if (!xmlrpc.inttagstart || !xmlrpc.inttagend) {
-        ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s>%d</%s>", XMLRPC_I4_TAG,
-                    value, XMLRPC_I4_TAG);
-    } else {
-        ircsnprintf(buf, XMLRPC_BUFSIZE, "%s%d%s", xmlrpc.inttagstart,
-                    value, xmlrpc.inttagend);
-        if (xmlrpc.inttagend) {
-            free(xmlrpc.inttagend);
-            xmlrpc.inttagend = NULL;
-        }
-        if (xmlrpc.inttagstart) {
-            free(xmlrpc.inttagstart);
-            xmlrpc.inttagstart = NULL;
-        }
-    }
-    return buf;
+	if (!xmlrpc.inttagstart || !xmlrpc.inttagend)
+	{
+		ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s>%d</%s>", XMLRPC_I4_TAG,
+		            value, XMLRPC_I4_TAG);
+	}
+	else
+	{
+		ircsnprintf(buf, XMLRPC_BUFSIZE, "%s%d%s", xmlrpc.inttagstart,
+		            value, xmlrpc.inttagend);
+		if (xmlrpc.inttagend)
+		{
+			free(xmlrpc.inttagend);
+			xmlrpc.inttagend = NULL;
+		}
+		if (xmlrpc.inttagstart)
+		{
+			free(xmlrpc.inttagstart);
+			xmlrpc.inttagstart = NULL;
+		}
+	}
+	return buf;
 }
 
 /*************************************************************************/
@@ -961,18 +1086,21 @@ char *xmlrpc_integer(char *buf, int value)
  */
 char *xmlrpc_string(char *buf, char *value)
 {
-    char *encoded;
-    *buf = '\0';
+	char *encoded;
+	*buf = '\0';
 
-    if (value) {
-        encoded = char_encode(value);
-        ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s>%s</%s>", XMLRPC_STRING_TAG,
-                    encoded, XMLRPC_STRING_TAG);
-        free(encoded);
-    } else {
-        ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s/>", XMLRPC_STRING_TAG);
-    }
-    return buf;
+	if (value)
+	{
+		encoded = char_encode(value);
+		ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s>%s</%s>", XMLRPC_STRING_TAG,
+		            encoded, XMLRPC_STRING_TAG);
+		free(encoded);
+	}
+	else
+	{
+		ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s/>", XMLRPC_STRING_TAG);
+	}
+	return buf;
 }
 
 /*************************************************************************/
@@ -987,10 +1115,10 @@ char *xmlrpc_string(char *buf, char *value)
  */
 char *xmlrpc_boolean(char *buf, int value)
 {
-    *buf = '\0';
-    ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s>%d</%s>", XMLRPC_BOOLEAN_TAG,
-                (value ? 1 : 0), XMLRPC_BOOLEAN_TAG);
-    return buf;
+	*buf = '\0';
+	ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s>%d</%s>", XMLRPC_BOOLEAN_TAG,
+	            (value ? 1 : 0), XMLRPC_BOOLEAN_TAG);
+	return buf;
 }
 
 /*************************************************************************/
@@ -1005,17 +1133,20 @@ char *xmlrpc_boolean(char *buf, int value)
  */
 char *xmlrpc_base64(char *buf, char *value)
 {
-    struct buffer_st b64buf;
+	struct buffer_st b64buf;
 
-    if (value) {
-        base64_encode(&b64buf, value, strlen(value));
-        ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s>%s</%s>", XMLRPC_BASE64_TAG,
-                    b64buf.data, XMLRPC_BASE64_TAG);
-        buffer_delete(&b64buf);
-    } else {
-        ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s/>", XMLRPC_BASE64_TAG);
-    }
-    return buf;
+	if (value)
+	{
+		base64_encode(&b64buf, value, strlen(value));
+		ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s>%s</%s>", XMLRPC_BASE64_TAG,
+		            b64buf.data, XMLRPC_BASE64_TAG);
+		buffer_delete(&b64buf);
+	}
+	else
+	{
+		ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s/>", XMLRPC_BASE64_TAG);
+	}
+	return buf;
 }
 
 /*************************************************************************/
@@ -1029,12 +1160,12 @@ char *xmlrpc_base64(char *buf, char *value)
  */
 char *xmlrpc_decode64(char *value)
 {
-    char *retval;
-    struct buffer_st buf;
-    base64_decode(&buf, value, strlen(value));
-    retval = sstrdup(buf.data);
-    buffer_delete(&buf);
-    return retval;
+	char *retval;
+	struct buffer_st buf;
+	base64_decode(&buf, value, strlen(value));
+	retval = sstrdup(buf.data);
+	buffer_delete(&buf);
+	return retval;
 }
 
 /*************************************************************************/
@@ -1049,10 +1180,10 @@ char *xmlrpc_decode64(char *value)
  */
 char *xmlrpc_double(char *buf, double value)
 {
-    *buf = '\0';
-    ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s>%g</%s>", XMLRPC_DOUBLE_TAG,
-                value, XMLRPC_DOUBLE_TAG);
-    return buf;
+	*buf = '\0';
+	ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s>%g</%s>", XMLRPC_DOUBLE_TAG,
+	            value, XMLRPC_DOUBLE_TAG);
+	return buf;
 }
 
 /*************************************************************************/
@@ -1068,34 +1199,38 @@ char *xmlrpc_double(char *buf, double value)
  */
 char *xmlrpc_array(int argc, ...)
 {
-    va_list va;
-    char *a;
-    int idx = 0;
-    char *s = NULL;
-    int len;
-    char buf[XMLRPC_BUFSIZE];
+	va_list va;
+	char *a;
+	int idx = 0;
+	char *s = NULL;
+	int len;
+	char buf[XMLRPC_BUFSIZE];
 
-    va_start(va, argc);
-    for (idx = 0; idx < argc; idx++) {
-        a = va_arg(va, char *);
-        if (!s) {
-            ircsnprintf(buf, XMLRPC_BUFSIZE, "   <value>%s</value>", a);
-            s = sstrdup(buf);
-        } else {
-            ircsnprintf(buf, XMLRPC_BUFSIZE,
-                        "%s\r\n     <value>%s</value>", s, a);
-            free(s);
-            s = sstrdup(buf);
-        }
-    }
-    va_end(va);
+	va_start(va, argc);
+	for (idx = 0; idx < argc; idx++)
+	{
+		a = va_arg(va, char *);
+		if (!s)
+		{
+			ircsnprintf(buf, XMLRPC_BUFSIZE, "   <value>%s</value>", a);
+			s = sstrdup(buf);
+		}
+		else
+		{
+			ircsnprintf(buf, XMLRPC_BUFSIZE,
+			            "%s\r\n     <value>%s</value>", s, a);
+			free(s);
+			s = sstrdup(buf);
+		}
+	}
+	va_end(va);
 
-    ircsnprintf(buf, XMLRPC_BUFSIZE,
-                "<array>\r\n    <data>\r\n  %s\r\n    </data>\r\n   </array>",
-                s);
-    len = strlen(buf);
-    free(s);
-    return sstrdup(buf);
+	ircsnprintf(buf, XMLRPC_BUFSIZE,
+	            "<array>\r\n    <data>\r\n  %s\r\n    </data>\r\n   </array>",
+	            s);
+	len = strlen(buf);
+	free(s);
+	return sstrdup(buf);
 }
 
 /*************************************************************************/
@@ -1108,36 +1243,43 @@ char *xmlrpc_array(int argc, ...)
  */
 XMLRPCCmd *first_xmlrpccmd(void)
 {
-    next_index = 0;
+	next_index = 0;
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    while (next_index < 1024 && current == NULL)
-        current = XMLRPCCMD[next_index++];
-    if (current) {
-        return current->xml;
-    } else {
-        return NULL;
-    }
+	while (next_index < 1024 && current == NULL)
+		current = XMLRPCCMD[next_index++];
+	if (current)
+	{
+		return current->xml;
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 /*************************************************************************/
 
 XMLRPCCmd *next_xmlrpccmd(void)
 {
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (current)
-        current = current->next;
-    if (!current && next_index < 1024) {
-        while (next_index < 1024 && current == NULL)
-            current = XMLRPCCMD[next_index++];
-    }
-    if (current) {
-        return current->xml;
-    } else {
-        return NULL;
-    }
+	if (current)
+		current = current->next;
+	if (!current && next_index < 1024)
+	{
+		while (next_index < 1024 && current == NULL)
+			current = XMLRPCCMD[next_index++];
+	}
+	if (current)
+	{
+		return current->xml;
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 /*************************************************************************/
@@ -1150,32 +1292,36 @@ XMLRPCCmd *next_xmlrpccmd(void)
  */
 XMLRPCCmdHash *first_xmlrpchash(void)
 {
-    next_index = 0;
+	next_index = 0;
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    while (next_index < 1024 && current == NULL)
-        current = XMLRPCCMD[next_index++];
-    return current;
+	while (next_index < 1024 && current == NULL)
+		current = XMLRPCCMD[next_index++];
+	return current;
 }
 
 /*************************************************************************/
 
 XMLRPCCmdHash *next_xmlrpchash(void)
 {
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (current)
-        current = current->next;
-    if (!current && next_index < 1024) {
-        while (next_index < 1024 && current == NULL)
-            current = XMLRPCCMD[next_index++];
-    }
-    if (current) {
-        return current;
-    } else {
-        return NULL;
-    }
+	if (current)
+		current = current->next;
+	if (!current && next_index < 1024)
+	{
+		while (next_index < 1024 && current == NULL)
+			current = XMLRPCCMD[next_index++];
+	}
+	if (current)
+	{
+		return current;
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 /*************************************************************************/
@@ -1190,18 +1336,20 @@ XMLRPCCmdHash *next_xmlrpchash(void)
  */
 int destroyxmlrpchash(XMLRPCCmdHash * xh)
 {
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (!xh) {
-        return MOD_ERR_PARAMS;
-    }
-    if (xh->name) {
-        free(xh->name);
-    }
-    xh->xml = NULL;
-    xh->next = NULL;
-    free(xh);
-    return MOD_ERR_OK;
+	if (!xh)
+	{
+		return MOD_ERR_PARAMS;
+	}
+	if (xh->name)
+	{
+		free(xh->name);
+	}
+	xh->xml = NULL;
+	xh->next = NULL;
+	free(xh);
+	return MOD_ERR_OK;
 }
 
 /*************************************************************************/
@@ -1216,32 +1364,34 @@ int destroyxmlrpchash(XMLRPCCmdHash * xh)
  */
 char *xmlrpc_decode_string(char *buf)
 {
-    int count;
-    int i;
-    char *token, *temp;
-    char *temptoken;
-    char buf2[12];
-    char buf3[12];
+	int count;
+	int i;
+	char *token, *temp;
+	char *temptoken;
+	char buf2[12];
+	char buf3[12];
 
-    strnrepl(buf, BUFSIZE, "&gt;", ">");
-    strnrepl(buf, BUFSIZE, "&lt;", "<");
-    strnrepl(buf, BUFSIZE, "&quot;", "\"");
-    strnrepl(buf, BUFSIZE, "&amp;", "&");
+	strnrepl(buf, BUFSIZE, "&gt;", ">");
+	strnrepl(buf, BUFSIZE, "&lt;", "<");
+	strnrepl(buf, BUFSIZE, "&quot;", "\"");
+	strnrepl(buf, BUFSIZE, "&amp;", "&");
 
-    temp = sstrdup(buf);
-    count = myNumToken(temp, '&');
-    for (i = 1; i <= count; i++) {
-        token = myStrGetToken(temp, '&', i);
-        if (token && *token == '#') {
-            temptoken = strtok((token + 1), ";");
-            ircsnprintf(buf2, 12, "%c", atoi(temptoken));
-            ircsnprintf(buf3, 12, "&%s;", token);
-            strnrepl(buf, XMLRPC_BUFSIZE, buf3, buf2);
-            free(token);
-        }
-    }
-    free(temp);
-    return buf;
+	temp = sstrdup(buf);
+	count = myNumToken(temp, '&');
+	for (i = 1; i <= count; i++)
+	{
+		token = myStrGetToken(temp, '&', i);
+		if (token && *token == '#')
+		{
+			temptoken = strtok((token + 1), ";");
+			ircsnprintf(buf2, 12, "%c", atoi(temptoken));
+			ircsnprintf(buf3, 12, "&%s;", token);
+			strnrepl(buf, XMLRPC_BUFSIZE, buf3, buf2);
+			free(token);
+		}
+	}
+	free(temp);
+	return buf;
 }
 
 /*************************************************************************/

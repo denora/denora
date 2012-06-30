@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * 
+ *
  *
  */
 /*************************************************************************/
@@ -27,20 +27,21 @@ void DenoraFini(void);
  **/
 int DenoraInit(int argc, char **argv)
 {
-    Command *c;
+	Command *c;
 
-    if (denora->debug >= 2) {
-        protocol_debug(NULL, argc, argv);
-    }
-    moduleAddAuthor("Denora");
-    moduleAddVersion("");
-    moduleSetType(CORE);
+	if (denora->debug >= 2)
+	{
+		protocol_debug(NULL, argc, argv);
+	}
+	moduleAddAuthor("Denora");
+	moduleAddVersion("");
+	moduleSetType(CORE);
 
-    c = createCommand("STATUS", do_status, is_oper, -1, -1, -1,
-                      STAT_HELP_STATUS);
-    moduleAddCommand(STATSERV, c, MOD_UNIQUE);
+	c = createCommand("STATUS", do_status, is_oper, -1, -1, -1,
+	                  STAT_HELP_STATUS);
+	moduleAddCommand(STATSERV, c, MOD_UNIQUE);
 
-    return MOD_CONT;
+	return MOD_CONT;
 }
 
 /**
@@ -55,39 +56,50 @@ void DenoraFini(void)
 
 static int do_status(User * u, int ac, char **av)
 {
-    char *what = NULL;
+	char *what = NULL;
 
-    if (ac >= 1) {
-        what = av[0];
-    }
+	if (ac >= 1)
+	{
+		what = av[0];
+	}
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (!what) {
-        notice_lang(s_StatServ, u, STAT_STATUS_SERVER_COUNT, NetworkName,
-                    stats->servers, stats->servers_max);
-        notice_user(s_StatServ, u, " ");
-        notice_lang(s_StatServ, u, STAT_STATUS_CHAN_COUNT, NetworkName,
-                    stats->chans, stats->chans_max);
-        notice_user(s_StatServ, u, " ");
-        notice_lang(s_StatServ, u, STAT_STATUS_USER_COUNT, NetworkName,
-                    stats->users, stats->users_max);
-        if (StatsPage) {
-            notice_user(s_StatServ, u, " ");
-            notice_lang(s_StatServ, u, STAT_STATUS_PAGE, StatsPage);
-        }
-    } else if (!stricmp(what, "SERVERS")) {
-        notice_lang(s_StatServ, u, STAT_STATUS_SERVER_COUNT, NetworkName,
-                    stats->servers, stats->servers_max);
-    } else if (!stricmp(what, "CHANNELS")) {
-        notice_lang(s_StatServ, u, STAT_STATUS_CHAN_COUNT, NetworkName,
-                    stats->chans, stats->chans_max);
-    } else if (!stricmp(what, "USERS")) {
-        notice_lang(s_StatServ, u, STAT_STATUS_USER_COUNT, NetworkName,
-                    stats->users, stats->users_max);
-    } else {
-        syntax_error(s_StatServ, u, "STATUS", STAT_STATUS_SYNTAX);
-    }
+	if (!what)
+	{
+		notice_lang(s_StatServ, u, STAT_STATUS_SERVER_COUNT, NetworkName,
+		            stats->servers, stats->servers_max);
+		notice_user(s_StatServ, u, " ");
+		notice_lang(s_StatServ, u, STAT_STATUS_CHAN_COUNT, NetworkName,
+		            stats->chans, stats->chans_max);
+		notice_user(s_StatServ, u, " ");
+		notice_lang(s_StatServ, u, STAT_STATUS_USER_COUNT, NetworkName,
+		            stats->users, stats->users_max);
+		if (StatsPage)
+		{
+			notice_user(s_StatServ, u, " ");
+			notice_lang(s_StatServ, u, STAT_STATUS_PAGE, StatsPage);
+		}
+	}
+	else if (!stricmp(what, "SERVERS"))
+	{
+		notice_lang(s_StatServ, u, STAT_STATUS_SERVER_COUNT, NetworkName,
+		            stats->servers, stats->servers_max);
+	}
+	else if (!stricmp(what, "CHANNELS"))
+	{
+		notice_lang(s_StatServ, u, STAT_STATUS_CHAN_COUNT, NetworkName,
+		            stats->chans, stats->chans_max);
+	}
+	else if (!stricmp(what, "USERS"))
+	{
+		notice_lang(s_StatServ, u, STAT_STATUS_USER_COUNT, NetworkName,
+		            stats->users, stats->users_max);
+	}
+	else
+	{
+		syntax_error(s_StatServ, u, "STATUS", STAT_STATUS_SYNTAX);
+	}
 
-    return MOD_CONT;
+	return MOD_CONT;
 }

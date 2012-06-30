@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * 
+ *
  *
  */
 /*************************************************************************/
@@ -27,30 +27,34 @@ void DenoraFini(void);
  **/
 int DenoraInit(int argc, char **argv)
 {
-    EvtHook *hook;
+	EvtHook *hook;
 
-    if (denora->debug >= 2) {
-        protocol_debug(NULL, argc, argv);
-    }
+	if (denora->debug >= 2)
+	{
+		protocol_debug(NULL, argc, argv);
+	}
 
-    moduleAddAuthor("Denora");
-    moduleAddVersion
-        ("");
-    moduleSetType(CORE);
+	moduleAddAuthor("Denora");
+	moduleAddVersion
+	("");
+	moduleSetType(CORE);
 
-    hook =
-        createEventHook(EVENT_UPLINK_SYNC_COMPLETE,
-                        denora_event_synccomplete);
-    moduleAddEventHook(hook);
+	hook =
+	    createEventHook(EVENT_UPLINK_SYNC_COMPLETE,
+	                    denora_event_synccomplete);
+	moduleAddEventHook(hook);
 
 #ifdef USE_MYSQL
-    if (ircd->syncstate) {
-        return MOD_CONT;
-    } else {
-        return MOD_STOP;
-    }
+	if (ircd->syncstate)
+	{
+		return MOD_CONT;
+	}
+	else
+	{
+		return MOD_STOP;
+	}
 #else
-    return MOD_STOP;
+	return MOD_STOP;
 #endif
 }
 
@@ -66,19 +70,20 @@ void DenoraFini(void)
 
 int denora_event_synccomplete(__attribute__((unused))int ac, __attribute__((unused))char **av)
 {
-    TLD *t;
-    lnode_t *tn;
+	TLD *t;
+	lnode_t *tn;
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    tn = list_first(Thead);
-    while (tn != NULL) {
-        t = lnode_get(tn);
-        sql_do_tld(UPDATE, t->countrycode, t->country, t->count,
-                   t->overall);
-        tn = list_next(Thead, tn);
-    }
-    return MOD_CONT;
+	tn = list_first(Thead);
+	while (tn != NULL)
+	{
+		t = lnode_get(tn);
+		sql_do_tld(UPDATE, t->countrycode, t->country, t->count,
+		           t->overall);
+		tn = list_next(Thead, tn);
+	}
+	return MOD_CONT;
 }
 
 /*************************************************************************/

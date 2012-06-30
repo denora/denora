@@ -7,8 +7,8 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
- * 
+ *
+ *
  *
  */
 
@@ -18,7 +18,7 @@ IRCDProto ircdproto;
 IRCDModes ircd_modes;
 
 /**
- * Globals we want from the protocol file 
+ * Globals we want from the protocol file
  **/
 IRCDVar *ircd;
 IRCDCAPAB *ircdcap;
@@ -36,27 +36,27 @@ uint32 irc_var;
  */
 void initIrcdProto(void)
 {
-    ircdproto.ircd_set_mod_current_buffer = NULL;
-    ircdproto.ircd_cmd_nick = NULL;
-    ircdproto.ircd_cmd_mode = NULL;
-    ircdproto.ircd_cmd_bot_nick = NULL;
-    ircdproto.ircd_cmd_notice = NULL;
-    ircdproto.ircd_cmd_privmsg = NULL;
-    ircdproto.ircd_cmd_serv_notice = NULL;
-    ircdproto.ircd_cmd_serv_privmsg = NULL;
-    ircdproto.ircd_cmd_quit = NULL;
-    ircdproto.ircd_cmd_pong = NULL;
-    ircdproto.ircd_cmd_join = NULL;
-    ircdproto.ircd_cmd_part = NULL;
-    ircdproto.ircd_cmd_global = NULL;
-    ircdproto.ircd_cmd_squit = NULL;
-    ircdproto.ircd_cmd_connect = NULL;
-    ircdproto.ircd_cmd_eob = NULL;
-    ircdproto.ircd_cmd_ctcp = NULL;
-    ircdproto.ircd_cmd_version = NULL;
-    ircdproto.ircd_cmd_stats = NULL;
-    ircdproto.ircd_cmd_motd = NULL;
-    ircdproto.ircd_cmd_ping = NULL;
+	ircdproto.ircd_set_mod_current_buffer = NULL;
+	ircdproto.ircd_cmd_nick = NULL;
+	ircdproto.ircd_cmd_mode = NULL;
+	ircdproto.ircd_cmd_bot_nick = NULL;
+	ircdproto.ircd_cmd_notice = NULL;
+	ircdproto.ircd_cmd_privmsg = NULL;
+	ircdproto.ircd_cmd_serv_notice = NULL;
+	ircdproto.ircd_cmd_serv_privmsg = NULL;
+	ircdproto.ircd_cmd_quit = NULL;
+	ircdproto.ircd_cmd_pong = NULL;
+	ircdproto.ircd_cmd_join = NULL;
+	ircdproto.ircd_cmd_part = NULL;
+	ircdproto.ircd_cmd_global = NULL;
+	ircdproto.ircd_cmd_squit = NULL;
+	ircdproto.ircd_cmd_connect = NULL;
+	ircdproto.ircd_cmd_eob = NULL;
+	ircdproto.ircd_cmd_ctcp = NULL;
+	ircdproto.ircd_cmd_version = NULL;
+	ircdproto.ircd_cmd_stats = NULL;
+	ircdproto.ircd_cmd_motd = NULL;
+	ircdproto.ircd_cmd_ping = NULL;
 }
 
 /*************************************************************************/
@@ -69,11 +69,12 @@ void initIrcdProto(void)
  */
 int denora_set_mod_current_buffer(int ac, char **av)
 {
-    if (ircdproto.ircd_set_mod_current_buffer) {
-        ircdproto.ircd_set_mod_current_buffer(ac, av);
-        return 1;
-    }
-    return 0;
+	if (ircdproto.ircd_set_mod_current_buffer)
+	{
+		ircdproto.ircd_set_mod_current_buffer(ac, av);
+		return 1;
+	}
+	return 0;
 }
 
 /*************************************************************************/
@@ -88,11 +89,13 @@ int denora_set_mod_current_buffer(int ac, char **av)
  */
 void denora_motd(char *sender, char *server)
 {
-    if (ircdproto.ircd_cmd_motd) {
-        if (sender && server) {
-            ircdproto.ircd_cmd_motd(sender, server);
-        }
-    }
+	if (ircdproto.ircd_cmd_motd)
+	{
+		if (sender && server)
+		{
+			ircdproto.ircd_cmd_motd(sender, server);
+		}
+	}
 }
 
 /*************************************************************************/
@@ -106,65 +109,75 @@ void denora_motd(char *sender, char *server)
  */
 void denora_cmd_ping(char *server)
 {
-    if (ircdproto.ircd_cmd_ping) {
-        if (server) {
-            ircdproto.ircd_cmd_ping(server);
-        }
-    }
+	if (ircdproto.ircd_cmd_ping)
+	{
+		if (server)
+		{
+			ircdproto.ircd_cmd_ping(server);
+		}
+	}
 }
 
 /*************************************************************************/
 
 void denora_cmd_nick(char *nick, char *name, const char *modes)
 {
-    char buf[BUFSIZE];
-    Uid *ud = NULL;
-    User *u;
-    char *ipchar;
+	char buf[BUFSIZE];
+	Uid *ud = NULL;
+	User *u;
+	char *ipchar;
 
-    *buf = '\0';
+	*buf = '\0';
 
-    ircdproto.ircd_cmd_nick(nick, name, modes);
+	ircdproto.ircd_cmd_nick(nick, name, modes);
 
-    ipchar = host_resolve(ServiceHost);
+	ipchar = host_resolve(ServiceHost);
 
-    if (ircd->p10) {
-        ud = find_uid(nick);
-        u = do_nick(buf, nick, ServiceUser, ServiceHost,
-                    ServerName, name, time(NULL), 0, ipchar, ServiceHost,
-                    (ud ? ud->uid : NULL), 1, (char *) modes, NULL);
-    } else if (ircd->ts6 && UseTS6 && Numeric) {
-        ud = find_uid(nick);
-        u = do_nick(buf, nick, ServiceUser, ServiceHost,
-                    ServerName, name, time(NULL), 0, ipchar, ServiceHost,
-                    (ud ? ud->uid : NULL), 1, (char *) modes, NULL);
-    } else {
-        u = do_nick(buf, nick, ServiceUser, ServiceHost,
-                    ServerName, name, time(NULL), 0, ipchar, ServiceHost,
-                    NULL, 1, (char *) modes, NULL);
-    }
-    free(ipchar);
-    if (u) {
-        u->isservice++;
-        if (!is_excluded(u)) {
-            make_exclude(u->nick);
-        }
-    }
+	if (ircd->p10)
+	{
+		ud = find_uid(nick);
+		u = do_nick(buf, nick, ServiceUser, ServiceHost,
+		            ServerName, name, time(NULL), 0, ipchar, ServiceHost,
+		            (ud ? ud->uid : NULL), 1, (char *) modes, NULL);
+	}
+	else if (ircd->ts6 && UseTS6 && Numeric)
+	{
+		ud = find_uid(nick);
+		u = do_nick(buf, nick, ServiceUser, ServiceHost,
+		            ServerName, name, time(NULL), 0, ipchar, ServiceHost,
+		            (ud ? ud->uid : NULL), 1, (char *) modes, NULL);
+	}
+	else
+	{
+		u = do_nick(buf, nick, ServiceUser, ServiceHost,
+		            ServerName, name, time(NULL), 0, ipchar, ServiceHost,
+		            NULL, 1, (char *) modes, NULL);
+	}
+	free(ipchar);
+	if (u)
+	{
+		u->isservice++;
+		if (!is_excluded(u))
+		{
+			make_exclude(u->nick);
+		}
+	}
 }
 
 /*************************************************************************/
 
 void denora_cmd_mode(char *source, char *dest, const char *fmt, ...)
 {
-    va_list args;
-    char buf[BUFSIZE];
-    *buf = '\0';
-    if (fmt) {
-        va_start(args, fmt);
-        ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
-        va_end(args);
-    }
-    ircdproto.ircd_cmd_mode(source, dest, buf);
+	va_list args;
+	char buf[BUFSIZE];
+	*buf = '\0';
+	if (fmt)
+	{
+		va_start(args, fmt);
+		ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
+		va_end(args);
+	}
+	ircdproto.ircd_cmd_mode(source, dest, buf);
 }
 
 /*************************************************************************/
@@ -172,234 +185,259 @@ void denora_cmd_mode(char *source, char *dest, const char *fmt, ...)
 void denora_cmd_bot_nick(char *nick, char *user, char *host, char *real,
                          char *modes)
 {
-    char buf[BUFSIZE];
-    Uid *ud = NULL;
-    User *u;
-    char *ipchar;
+	char buf[BUFSIZE];
+	Uid *ud = NULL;
+	User *u;
+	char *ipchar;
 
-    *buf = '\0';
+	*buf = '\0';
 
-    ipchar = host_resolve(ServiceHost);
+	ipchar = host_resolve(ServiceHost);
 
-    ircdproto.ircd_cmd_bot_nick(nick, user, host, real, modes);
+	ircdproto.ircd_cmd_bot_nick(nick, user, host, real, modes);
 
-    if (ircd->p10) {
-        ud = find_uid(nick);
-        u = do_nick(buf, nick, user, host,
-                    ServerName, real, time(NULL), 0, ipchar, host,
-                    (ud ? ud->uid : NULL), 1, modes, NULL);
-    } else if (ircd->ts6 && UseTS6 && Numeric) {
-        ud = find_uid(nick);
-        u = do_nick(buf, nick, user, host,
-                    ServerName, real, time(NULL), 0, ipchar, host,
-                    (ud ? ud->uid : NULL), 1, modes, NULL);
-    } else {
-        u = do_nick(buf, nick, user, host,
-                    ServerName, real, time(NULL), 0, ipchar, host,
-                    NULL, 1, modes, NULL);
-    }
-    if (u) {
-        u->isservice++;
-        if (!is_excluded(u)) {
-            make_exclude(u->nick);
-        }
-    }
-    free(ipchar);
+	if (ircd->p10)
+	{
+		ud = find_uid(nick);
+		u = do_nick(buf, nick, user, host,
+		            ServerName, real, time(NULL), 0, ipchar, host,
+		            (ud ? ud->uid : NULL), 1, modes, NULL);
+	}
+	else if (ircd->ts6 && UseTS6 && Numeric)
+	{
+		ud = find_uid(nick);
+		u = do_nick(buf, nick, user, host,
+		            ServerName, real, time(NULL), 0, ipchar, host,
+		            (ud ? ud->uid : NULL), 1, modes, NULL);
+	}
+	else
+	{
+		u = do_nick(buf, nick, user, host,
+		            ServerName, real, time(NULL), 0, ipchar, host,
+		            NULL, 1, modes, NULL);
+	}
+	if (u)
+	{
+		u->isservice++;
+		if (!is_excluded(u))
+		{
+			make_exclude(u->nick);
+		}
+	}
+	free(ipchar);
 }
 
 /*************************************************************************/
 
 void denora_cmd_notice(char *source, char *dest, const char *fmt, ...)
 {
-    va_list args;
-    char buf[BUFSIZE];
+	va_list args;
+	char buf[BUFSIZE];
 
-    *buf = '\0';
-    if (fmt) {
-        va_start(args, fmt);
-        ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
-        va_end(args);
-    } else {
-        return;
-    }
-    ircdproto.ircd_cmd_notice(source, dest, buf);
+	*buf = '\0';
+	if (fmt)
+	{
+		va_start(args, fmt);
+		ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
+		va_end(args);
+	}
+	else
+	{
+		return;
+	}
+	ircdproto.ircd_cmd_notice(source, dest, buf);
 }
 
 /*************************************************************************/
 
 void denora_cmd_action(char *source, char *dest, const char *fmt, ...)
 {
-    va_list args;
-    char buf[BUFSIZE];
-    char actionbuf[BUFSIZE];
+	va_list args;
+	char buf[BUFSIZE];
+	char actionbuf[BUFSIZE];
 
-    *buf = '\0';
-    *actionbuf = '\0';
+	*buf = '\0';
+	*actionbuf = '\0';
 
-    if (fmt) {
-        va_start(args, fmt);
-        ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
-        va_end(args);
-    } else {
-        return;
-    }
+	if (fmt)
+	{
+		va_start(args, fmt);
+		ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
+		va_end(args);
+	}
+	else
+	{
+		return;
+	}
 
-    ircsnprintf(actionbuf, BUFSIZE - 1, "%cACTION %s %c", 1, buf, 1);
-    ircdproto.ircd_cmd_privmsg(source, dest, actionbuf);
+	ircsnprintf(actionbuf, BUFSIZE - 1, "%cACTION %s %c", 1, buf, 1);
+	ircdproto.ircd_cmd_privmsg(source, dest, actionbuf);
 }
 
 /*************************************************************************/
 
 void denora_cmd_notice2(char *source, char *dest, char *msg)
 {
-    ircdproto.ircd_cmd_notice(source, dest, msg);
+	ircdproto.ircd_cmd_notice(source, dest, msg);
 }
 
 /*************************************************************************/
 
 void denora_cmd_privmsg(char *source, char *dest, const char *fmt, ...)
 {
-    va_list args;
-    char buf[BUFSIZE];
+	va_list args;
+	char buf[BUFSIZE];
 
-    *buf = '\0';
+	*buf = '\0';
 
-    if (!source || !*source || !dest || !*dest) {
-        return;
-    }
+	if (!source || !*source || !dest || !*dest)
+	{
+		return;
+	}
 
-    if (fmt) {
-        va_start(args, fmt);
-        ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
-        va_end(args);
-    }
-    ircdproto.ircd_cmd_privmsg(source, dest, buf);
+	if (fmt)
+	{
+		va_start(args, fmt);
+		ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
+		va_end(args);
+	}
+	ircdproto.ircd_cmd_privmsg(source, dest, buf);
 }
 
 /*************************************************************************/
 
 void denora_cmd_privmsg2(char *source, char *dest, char *msg)
 {
-    ircdproto.ircd_cmd_privmsg(source, dest, msg);
+	ircdproto.ircd_cmd_privmsg(source, dest, msg);
 }
 
 /*************************************************************************/
 
 void denora_cmd_serv_notice(char *source, char *dest, char *msg)
 {
-    ircdproto.ircd_cmd_serv_notice(source, dest, msg);
+	ircdproto.ircd_cmd_serv_notice(source, dest, msg);
 }
 
 /*************************************************************************/
 
 void denora_cmd_serv_privmsg(char *source, char *dest, char *msg)
 {
-    ircdproto.ircd_cmd_serv_privmsg(source, dest, msg);
+	ircdproto.ircd_cmd_serv_privmsg(source, dest, msg);
 }
 
 /*************************************************************************/
 
 void denora_cmd_quit(char *source, const char *fmt, ...)
 {
-    va_list args;
-    char buf[BUFSIZE];
-    *buf = '\0';
-    if (fmt) {
-        va_start(args, fmt);
-        ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
-        va_end(args);
-    }
-    ircdproto.ircd_cmd_quit(source, buf);
+	va_list args;
+	char buf[BUFSIZE];
+	*buf = '\0';
+	if (fmt)
+	{
+		va_start(args, fmt);
+		ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
+		va_end(args);
+	}
+	ircdproto.ircd_cmd_quit(source, buf);
 }
 
 /*************************************************************************/
 
 void denora_cmd_pong(char *servname, char *who)
 {
-    ircdproto.ircd_cmd_pong(servname, who);
+	ircdproto.ircd_cmd_pong(servname, who);
 }
 
 /*************************************************************************/
 
 void denora_cmd_join(char *user, char *channel, time_t chantime)
 {
-    char *v[32];
-    int i = 2;
+	char *v[32];
+	int i = 2;
 
-    if (!BadChanName(channel)) {
-        ircdproto.ircd_cmd_join(user, channel, chantime);
-        v[0] = channel;         /* channel */
-        if (!LargeNet) {
-            do_join(user, 1, v);
-        }
-        if (AutoOp) {
-            v[1] = sstrdup(AutoMode);
-            while (*v[1]) {
-                switch (*v[1]) {
-                case '+':
-                    break;
-                case '-':
-                    break;
-                default:
-                    v[i++] = sstrdup(user);
-                    break;
-                }
-                v[1]++;
-            }
-            v[1] = sstrdup(AutoMode);
-            do_cmode(user, i, v);
-        }
-    }
+	if (!BadChanName(channel))
+	{
+		ircdproto.ircd_cmd_join(user, channel, chantime);
+		v[0] = channel;         /* channel */
+		if (!LargeNet)
+		{
+			do_join(user, 1, v);
+		}
+		if (AutoOp)
+		{
+			v[1] = sstrdup(AutoMode);
+			while (*v[1])
+			{
+				switch (*v[1])
+				{
+					case '+':
+						break;
+					case '-':
+						break;
+					default:
+						v[i++] = sstrdup(user);
+						break;
+				}
+				v[1]++;
+			}
+			v[1] = sstrdup(AutoMode);
+			do_cmode(user, i, v);
+		}
+	}
 }
 
 /*************************************************************************/
 
 void denora_cmd_part(char *nick, char *chan, const char *fmt, ...)
 {
-    va_list args;
-    char buf[BUFSIZE];
-    char *v[128];
+	va_list args;
+	char buf[BUFSIZE];
+	char *v[128];
 
-    *buf = '\0';
-    if (fmt) {
-        va_start(args, fmt);
-        ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
-        va_end(args);
-    }
-    if (!nick || !chan) {
-        return;
-    }
-    v[0] = sstrdup(chan);
-    v[1] = sstrdup(buf);
-    ircdproto.ircd_cmd_part(nick, chan, buf);
-    do_part(nick, 2, v);
-    free(v[0]);
-    free(v[1]);
+	*buf = '\0';
+	if (fmt)
+	{
+		va_start(args, fmt);
+		ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
+		va_end(args);
+	}
+	if (!nick || !chan)
+	{
+		return;
+	}
+	v[0] = sstrdup(chan);
+	v[1] = sstrdup(buf);
+	ircdproto.ircd_cmd_part(nick, chan, buf);
+	do_part(nick, 2, v);
+	free(v[0]);
+	free(v[1]);
 }
 
 /*************************************************************************/
 
 void denora_cmd_global(char *source, const char *fmt, ...)
 {
-    va_list args;
-    char buf[BUFSIZE];
-    *buf = '\0';
-    if (fmt) {
-        va_start(args, fmt);
-        ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
-        va_end(args);
-    }
-    ircdproto.ircd_cmd_global((source ? source : ServerName), buf);
+	va_list args;
+	char buf[BUFSIZE];
+	*buf = '\0';
+	if (fmt)
+	{
+		va_start(args, fmt);
+		ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
+		va_end(args);
+	}
+	ircdproto.ircd_cmd_global((source ? source : ServerName), buf);
 }
 
 /*************************************************************************/
 
 void denora_cmd_squit(char *servname, char *message)
 {
-    if (!servname || !message) {
-        return;
-    }
-    ircdproto.ircd_cmd_squit(servname, message);
+	if (!servname || !message)
+	{
+		return;
+	}
+	ircdproto.ircd_cmd_squit(servname, message);
 }
 
 /*************************************************************************/
@@ -412,16 +450,17 @@ void denora_cmd_squit(char *servname, char *message)
  */
 void denora_cmd_connect(void)
 {
-    if (ircdproto.ircd_cmd_connect) {
-        ircdproto.ircd_cmd_connect();
-    }
+	if (ircdproto.ircd_cmd_connect)
+	{
+		ircdproto.ircd_cmd_connect();
+	}
 }
 
 /*************************************************************************/
 
 void denora_cmd_stats(char *sender, const char *letter, char *server)
 {
-    ircdproto.ircd_cmd_stats(sender, letter, server);
+	ircdproto.ircd_cmd_stats(sender, letter, server);
 }
 
 /*************************************************************************/
@@ -434,9 +473,10 @@ void denora_cmd_stats(char *sender, const char *letter, char *server)
  */
 void denora_cmd_eob(void)
 {
-    if (ircdproto.ircd_cmd_eob) {
-        ircdproto.ircd_cmd_eob();
-    }
+	if (ircdproto.ircd_cmd_eob)
+	{
+		ircdproto.ircd_cmd_eob();
+	}
 }
 
 /*************************************************************************/
@@ -450,32 +490,35 @@ void denora_cmd_eob(void)
  */
 void denora_cmd_version(char *server)
 {
-    if (ircdproto.ircd_cmd_version) {
-        if (server) {
-            ircdproto.ircd_cmd_version(server);
-        }
-    }
+	if (ircdproto.ircd_cmd_version)
+	{
+		if (server)
+		{
+			ircdproto.ircd_cmd_version(server);
+		}
+	}
 }
 
 /*************************************************************************/
 
 void denora_cmd_ctcp(char *source, char *dest, const char *fmt, ...)
 {
-    va_list args;
-    char buf[BUFSIZE];
-    char *s;
+	va_list args;
+	char buf[BUFSIZE];
+	char *s;
 
-    *buf = '\0';
-    if (fmt) {
-        va_start(args, fmt);
-        ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
-        va_end(args);
-    }
+	*buf = '\0';
+	if (fmt)
+	{
+		va_start(args, fmt);
+		ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
+		va_end(args);
+	}
 
-    s = normalizeBuffer(buf);
+	s = normalizeBuffer(buf);
 
-    ircdproto.ircd_cmd_ctcp(source, dest, s);
-    free(s);
+	ircdproto.ircd_cmd_ctcp(source, dest, s);
+	free(s);
 }
 
 /*************************************************************************/
@@ -490,9 +533,10 @@ void denora_cmd_ctcp(char *source, char *dest, const char *fmt, ...)
 void
 pmodule_cmd_nick(void (*func) (char *nick, char *name, const char *modes))
 {
-    if (func) {
-        ircdproto.ircd_cmd_nick = func;
-    }
+	if (func)
+	{
+		ircdproto.ircd_cmd_nick = func;
+	}
 }
 
 /*************************************************************************/
@@ -506,9 +550,10 @@ pmodule_cmd_nick(void (*func) (char *nick, char *name, const char *modes))
  */
 void pmodule_cmd_version(void (*func) (char *server))
 {
-    if (func) {
-        ircdproto.ircd_cmd_version = func;
-    }
+	if (func)
+	{
+		ircdproto.ircd_cmd_version = func;
+	}
 }
 
 /*************************************************************************/
@@ -522,16 +567,16 @@ void pmodule_cmd_version(void (*func) (char *server))
  */
 void pmodule_cmd_mode(void (*func) (char *source, char *dest, char *buf))
 {
-    ircdproto.ircd_cmd_mode = func;
+	ircdproto.ircd_cmd_mode = func;
 }
 
 /*************************************************************************/
 
 void pmodule_cmd_bot_nick(void (*func)
-                           (char *nick, char *user, char *host, char *real,
-                            char *modes))
+                          (char *nick, char *user, char *host, char *real,
+                           char *modes))
 {
-    ircdproto.ircd_cmd_bot_nick = func;
+	ircdproto.ircd_cmd_bot_nick = func;
 }
 
 /*************************************************************************/
@@ -545,16 +590,17 @@ void pmodule_cmd_bot_nick(void (*func)
  */
 void pmodule_cmd_notice(void (*func) (char *source, char *dest, char *buf))
 {
-    if (func) {
-        ircdproto.ircd_cmd_notice = func;
-    }
+	if (func)
+	{
+		ircdproto.ircd_cmd_notice = func;
+	}
 }
 
 /*************************************************************************/
 
 void pmodule_set_mod_current_buffer(void (*func) (int ac, char **av))
 {
-    ircdproto.ircd_set_mod_current_buffer = func;
+	ircdproto.ircd_set_mod_current_buffer = func;
 }
 
 /*************************************************************************/
@@ -569,9 +615,10 @@ void pmodule_set_mod_current_buffer(void (*func) (int ac, char **av))
 void
 pmodule_cmd_privmsg(void (*func) (char *source, char *dest, char *buf))
 {
-    if (func) {
-        ircdproto.ircd_cmd_privmsg = func;
-    }
+	if (func)
+	{
+		ircdproto.ircd_cmd_privmsg = func;
+	}
 }
 
 /*************************************************************************/
@@ -579,15 +626,15 @@ pmodule_cmd_privmsg(void (*func) (char *source, char *dest, char *buf))
 void
 pmodule_cmd_serv_notice(void (*func) (char *source, char *dest, char *msg))
 {
-    ircdproto.ircd_cmd_serv_notice = func;
+	ircdproto.ircd_cmd_serv_notice = func;
 }
 
 /*************************************************************************/
 
 void pmodule_cmd_serv_privmsg(void (*func)
-                               (char *source, char *dest, char *msg))
+                              (char *source, char *dest, char *msg))
 {
-    ircdproto.ircd_cmd_serv_privmsg = func;
+	ircdproto.ircd_cmd_serv_privmsg = func;
 }
 
 /*************************************************************************/
@@ -601,9 +648,10 @@ void pmodule_cmd_serv_privmsg(void (*func)
  */
 void pmodule_cmd_ping(void (*func) (char *server))
 {
-    if (func) {
-        ircdproto.ircd_cmd_ping = func;
-    }
+	if (func)
+	{
+		ircdproto.ircd_cmd_ping = func;
+	}
 }
 
 /*************************************************************************/
@@ -617,23 +665,24 @@ void pmodule_cmd_ping(void (*func) (char *server))
  */
 void pmodule_cmd_motd(void (*func) (char *sender, char *server))
 {
-    if (func) {
-        ircdproto.ircd_cmd_motd = func;
-    }
+	if (func)
+	{
+		ircdproto.ircd_cmd_motd = func;
+	}
 }
 
 /*************************************************************************/
 
 void pmodule_cmd_quit(void (*func) (char *source, char *buf))
 {
-    ircdproto.ircd_cmd_quit = func;
+	ircdproto.ircd_cmd_quit = func;
 }
 
 /*************************************************************************/
 
 void pmodule_cmd_pong(void (*func) (char *servname, char *who))
 {
-    ircdproto.ircd_cmd_pong = func;
+	ircdproto.ircd_cmd_pong = func;
 }
 
 /*************************************************************************/
@@ -641,106 +690,106 @@ void pmodule_cmd_pong(void (*func) (char *servname, char *who))
 void
 pmodule_cmd_join(void (*func) (char *user, char *channel, time_t chantime))
 {
-    ircdproto.ircd_cmd_join = func;
+	ircdproto.ircd_cmd_join = func;
 }
 
 /*************************************************************************/
 
 void pmodule_cmd_part(void (*func) (char *nick, char *chan, char *buf))
 {
-    ircdproto.ircd_cmd_part = func;
+	ircdproto.ircd_cmd_part = func;
 }
 
 /*************************************************************************/
 
 void pmodule_cmd_global(void (*func) (char *source, char *buf))
 {
-    ircdproto.ircd_cmd_global = func;
+	ircdproto.ircd_cmd_global = func;
 }
 
 /*************************************************************************/
 
 void pmodule_cmd_squit(void (*func) (char *servname, char *message))
 {
-    ircdproto.ircd_cmd_squit = func;
+	ircdproto.ircd_cmd_squit = func;
 }
 
 /*************************************************************************/
 
 void pmodule_cmd_stats(void (*func)
-                        (char *sender, const char *letter, char *server))
+                       (char *sender, const char *letter, char *server))
 {
-    ircdproto.ircd_cmd_stats = func;
+	ircdproto.ircd_cmd_stats = func;
 }
 
 /*************************************************************************/
 
 void pmodule_cmd_connect(void (*func) (void))
 {
-    ircdproto.ircd_cmd_connect = func;
+	ircdproto.ircd_cmd_connect = func;
 }
 
 /*************************************************************************/
 
 void pmodule_cmd_ctcp(void (*func) (char *source, char *dest, char *buf))
 {
-    ircdproto.ircd_cmd_ctcp = func;
+	ircdproto.ircd_cmd_ctcp = func;
 }
 
 /*************************************************************************/
 
 void pmodule_cmd_eob(void (*func) (void))
 {
-    ircdproto.ircd_cmd_eob = func;
+	ircdproto.ircd_cmd_eob = func;
 }
 
 /*************************************************************************/
 
 void pmodule_ircd_var(IRCDVar * ircdvar)
 {
-    ircd = ircdvar;
+	ircd = ircdvar;
 }
 
 /*************************************************************************/
 
 void pmodule_ircd_cap(IRCDCAPAB * cap)
 {
-    ircdcap = cap;
+	ircdcap = cap;
 }
 
 /*************************************************************************/
 
 void pmodule_ircd_version(const char *version)
 {
-    denora->version_protocol = sstrdup(version);
+	denora->version_protocol = sstrdup(version);
 }
 
 /*************************************************************************/
 
 void pmodule_ircd_useTSMode(int use)
 {
-    UseTSMODE = use;
+	UseTSMODE = use;
 }
 
 /*************************************************************************/
 
 void pmodule_oper_umode(int mode)
 {
-    ircd_modes.user_oper = mode;
+	ircd_modes.user_oper = mode;
 }
 
 /*************************************************************************/
 
 int denora_get_oper_mode()
 {
-    return ircd_modes.user_oper;
+	return ircd_modes.user_oper;
 }
 
 /*************************************************************************/
 
 void pmodule_irc_var(uint32 mode)
 {
-    ircd_modes.ircd_var = mode;
+	ircd_modes.ircd_var = mode;
 }
 
 /*************************************************************************/
@@ -753,11 +802,14 @@ void pmodule_irc_var(uint32 mode)
  */
 uint32 denora_get_ircd()
 {
-    if (ircd_modes.ircd_var) {
-        return ircd_modes.ircd_var;
-    } else {
-        return IRC_OTHER;
-    }
+	if (ircd_modes.ircd_var)
+	{
+		return ircd_modes.ircd_var;
+	}
+	else
+	{
+		return IRC_OTHER;
+	}
 }
 
 /*************************************************************************/

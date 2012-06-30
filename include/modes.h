@@ -8,12 +8,12 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * 
+ *
  *
  */
 
 /* Okay this is done so that people can do
-   if (denora_umode(UMODE_r)) { 
+   if (denora_umode(UMODE_r)) {
 
    }
 */

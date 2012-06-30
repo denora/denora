@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * 
+ *
  *
  */
 /*************************************************************************/
@@ -28,36 +28,39 @@ void DenoraFini(void);
  **/
 int DenoraInit(int argc, char **argv)
 {
-    Message *m;
-    int status;
+	Message *m;
+	int status;
 
-    if (denora->debug >= 2) {
-        protocol_debug(NULL, argc, argv);
-    }
-    moduleAddAuthor("Denora");
-    moduleAddVersion
-        ("");
-    moduleSetType(CORE);
+	if (denora->debug >= 2)
+	{
+		protocol_debug(NULL, argc, argv);
+	}
+	moduleAddAuthor("Denora");
+	moduleAddVersion
+	("");
+	moduleSetType(CORE);
 
-    /* 246 is SolidIRC's U:line */
-    m = createMessage("246", denora_event_246);
-    status = moduleAddMessage(m, MOD_HEAD);
-    if (status != MOD_ERR_OK) {
-        alog(LOG_NORMAL,
-             "Error Occurred setting message for 246 [%d][%s]", status,
-             ModuleGetErrStr(status));
-    }
+	/* 246 is SolidIRC's U:line */
+	m = createMessage("246", denora_event_246);
+	status = moduleAddMessage(m, MOD_HEAD);
+	if (status != MOD_ERR_OK)
+	{
+		alog(LOG_NORMAL,
+		     "Error Occurred setting message for 246 [%d][%s]", status,
+		     ModuleGetErrStr(status));
+	}
 
-    /* Most everyone else uses 248 */
-    m = createMessage("248", denora_event_248);
-    status = moduleAddMessage(m, MOD_HEAD);
-    if (status != MOD_ERR_OK) {
-        alog(LOG_NORMAL,
-             "Error Occurred setting message for 248 [%d][%s]", status,
-             ModuleGetErrStr(status));
-    }
+	/* Most everyone else uses 248 */
+	m = createMessage("248", denora_event_248);
+	status = moduleAddMessage(m, MOD_HEAD);
+	if (status != MOD_ERR_OK)
+	{
+		alog(LOG_NORMAL,
+		     "Error Occurred setting message for 248 [%d][%s]", status,
+		     ModuleGetErrStr(status));
+	}
 
-    return MOD_CONT;
+	return MOD_CONT;
 }
 
 /**
@@ -82,28 +85,41 @@ void DenoraFini(void)
  */
 int denora_event_246(char *source, int ac, char **av)
 {
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (denora->protocoldebug) {
-        protocol_debug(source, ac, av);
-    }
+	if (denora->protocoldebug)
+	{
+		protocol_debug(source, ac, av);
+	}
 
-    if (ac >= 3) {
-        if (denora_get_ircd() == IRC_SOLIDIRCD) {
-            sql_uline(av[4]);
-        } else if (denora_get_ircd() == IRC_VIAGRA) {
-            sql_uline(av[2]);
-        } else if (denora_get_ircd() == IRC_BAHAMUT) {
-            sql_uline(av[4]);
-        } else if (denora_get_ircd() == IRC_FQIRCD) {
-            sql_uline(av[4]);
-        } else if (denora_get_ircd() == IRC_ULTIMATE3) {
-            sql_uline(av[2]);
-        } else if (denora_get_ircd() == IRC_LIQUIDIRCD) {
-            sql_uline(av[2]);
-        }
-    }
-    return MOD_CONT;
+	if (ac >= 3)
+	{
+		if (denora_get_ircd() == IRC_SOLIDIRCD)
+		{
+			sql_uline(av[4]);
+		}
+		else if (denora_get_ircd() == IRC_VIAGRA)
+		{
+			sql_uline(av[2]);
+		}
+		else if (denora_get_ircd() == IRC_BAHAMUT)
+		{
+			sql_uline(av[4]);
+		}
+		else if (denora_get_ircd() == IRC_FQIRCD)
+		{
+			sql_uline(av[4]);
+		}
+		else if (denora_get_ircd() == IRC_ULTIMATE3)
+		{
+			sql_uline(av[2]);
+		}
+		else if (denora_get_ircd() == IRC_LIQUIDIRCD)
+		{
+			sql_uline(av[2]);
+		}
+	}
+	return MOD_CONT;
 }
 
 /*************************************************************************/
@@ -120,14 +136,16 @@ int denora_event_246(char *source, int ac, char **av)
  */
 int denora_event_248(char *source, int ac, char **av)
 {
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (denora->protocoldebug) {
-        protocol_debug(source, ac, av);
-    }
+	if (denora->protocoldebug)
+	{
+		protocol_debug(source, ac, av);
+	}
 
-    if (ac >= 3) {
-        sql_uline(av[2]);
-    }
-    return MOD_CONT;
+	if (ac >= 3)
+	{
+		sql_uline(av[2]);
+	}
+	return MOD_CONT;
 }

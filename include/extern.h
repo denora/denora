@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * 
+ *
  *
  */
 
@@ -23,11 +23,11 @@ E DenoraVar denora[];
 
 E void init_bans(void);
 E Gline *new_Gline(char *user, char *host, char *setby, char *setat,
-                 char *expires, char *reason);
+                   char *expires, char *reason);
 E Zline *new_Zline(char *user, char *host, char *setby, char *setat,
-                 char *expires, char *reason);
+                   char *expires, char *reason);
 E Qline *new_Qline(char *user, char *host, char *setby, char *setat,
-                 char *expires, char *reason);
+                   char *expires, char *reason);
 E Gline *findGline(const char *host);
 E Zline *findZline(const char *host);
 E Qline *findQline(const char *host);
@@ -461,14 +461,14 @@ E int split_buf(char *buf, char ***argv);
 E void process(void);
 
 E void send_cmd(const char *source, const char *fmt, ...)
-	FORMAT(printf,2,3);
+FORMAT(printf,2,3);
 E void vsend_cmd(const char *source, const char *fmt, va_list args)
-	FORMAT(printf,2,0);
+FORMAT(printf,2,0);
 
 E void notice_server(char *source, Server * s, char *fmt, ...)
-	FORMAT(printf,3,4);
+FORMAT(printf,3,4);
 E void notice_user(char *source, User *u, const char *fmt, ...)
-	FORMAT(printf,3,4);
+FORMAT(printf,3,4);
 
 E void notice_list(char *source, char *dest, char **text);
 E void notice_lang(char *source, User *dest, int message, ...);
@@ -576,7 +576,7 @@ E void change_user_username(char *source, char *username);
 E void change_user_realname(char *source, char *realname);
 
 E User *do_nick(const char *source, char *nick, char *username, char *host,
-              char *server, char *realname, time_t ts, uint32 svid, char *ip, char *vhost, char *uid, int hopcount, char *modes, char *account);
+                char *server, char *realname, time_t ts, uint32 svid, char *ip, char *vhost, char *uid, int hopcount, char *modes, char *account);
 
 E void do_umode(const char *source, int ac, char **av);
 E void do_svsumode(int ac, char **av);
@@ -752,8 +752,8 @@ E void sql_do_server_version(char *server, int ac, char **av);
 E void sql_do_server_bans_remove(char *type, char *user, char *host);
 E void sql_do_server_bans_add(char *type, char *user, char *host, char *setby, char *setat, char *expires, char *reason);
 E void sql_do_server_spam_add(char *target, char *action,
-                            char *setby, char *expires, char *setat, char *duration,
-                            char *reason, char *regex);
+                              char *setby, char *expires, char *setat, char *duration,
+                              char *reason, char *regex);
 E void sql_do_server_spam_remove(char *target, char *action, char *regex);
 E void sql_do_nick(User *u);
 E void sql_do_sdesc(char *user, char *msg);
@@ -906,7 +906,7 @@ E int mod_current_op;
 E char *mod_current_buffer;
 
 E void sql_do_tld(int type, char *code, char *country, int count,
-                int overall);
+                  int overall);
 E void delete_tld(TLD * t);
 
 #ifdef __STRICT_ANSI__
@@ -936,7 +936,7 @@ E void xmlrpc_generic_error(deno_socket_t socket_fd, int code, const char *strin
 E void xmlrpc_process(deno_socket_t socket_fd, char *buffer);
 E int xmlrpc_split_buf(char *buffer, char ***av);
 E XMLRPCCmd *createXMLCommand(const char *name,
-                           int (*func) (deno_socket_t fd, int ac, char **av));
+                              int (*func) (deno_socket_t fd, int ac, char **av));
 E int addXMLCommand(XMLRPCCmdHash * hookEvtTable[], XMLRPCCmd * xml);
 E int destroyXMLRPCCommand(XMLRPCCmd * xml);
 E int destroyxmlrpchash(XMLRPCCmdHash * mh);
@@ -945,7 +945,7 @@ E XMLRPCCmdHash *first_xmlrpchash(void);
 E XMLRPCCmd *first_xmlrpccmd(void);
 E XMLRPCCmd *next_xmlrpccmd(void);
 E int delXMLRPCCommand(XMLRPCCmdHash * msgEvtTable[], XMLRPCCmd * xml,
-                 char *mod_name);
+                       char *mod_name);
 E void displayXMLRPCcmd(XMLRPCCmd * xml);
 E int extsock_val_clnt(struct in_addr iaddr);
 E void extsock_close(void);
@@ -1226,8 +1226,8 @@ E SpamFilter *findSpamFilter(const char *regex);
 E void fini_SpamFilter(void);
 E void init_spamfilter(void);
 E SpamFilter *new_SpamFilter(char *target, char *action,
-                            char *setby, char *expires, char *setat,
-                            char *duration, char *reason, char *regex);
+                             char *setby, char *expires, char *setat,
+                             char *duration, char *reason, char *regex);
 
 E ChanMode *FindChanMode(char *name);
 E ChanMode *CreateChanMode(int mode, void (*setvalue) (Channel *chan, char *value), char * (*getvalue) (Channel *chan));

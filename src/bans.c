@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * 
+ *
  *
  */
 
@@ -16,20 +16,20 @@
 
 static int find_gline(const void *v, const void *cc)
 {
-    const Gline *t = (void *) v;
-    return (stricmp(t->host, (char *) cc));
+	const Gline *t = (void *) v;
+	return (stricmp(t->host, (char *) cc));
 }
 
 static int find_zline(const void *v, const void *cc)
 {
-    const Zline *t = (void *) v;
-    return (stricmp(t->host, (char *) cc));
+	const Zline *t = (void *) v;
+	return (stricmp(t->host, (char *) cc));
 }
 
 static int find_qline(const void *v, const void *cc)
 {
-    const Qline *t = (void *) v;
-    return (stricmp(t->host, (char *) cc));
+	const Qline *t = (void *) v;
+	return (stricmp(t->host, (char *) cc));
 }
 
 list_t *Glinehead;
@@ -40,22 +40,22 @@ list_t *Zlinehead;
 
 void init_bans(void)
 {
-    Gline *g;
-    Zline *z;
-    Qline *q;
-    SET_SEGV_LOCATION();
+	Gline *g;
+	Zline *z;
+	Qline *q;
+	SET_SEGV_LOCATION();
 
-    Glinehead = list_create(-1);
-    g = malloc(sizeof(Gline));
-    bzero(g, sizeof(Gline));
+	Glinehead = list_create(-1);
+	g = malloc(sizeof(Gline));
+	bzero(g, sizeof(Gline));
 
-    Zlinehead = list_create(-1);
-    z = malloc(sizeof(Zline));
-    bzero(z, sizeof(Zline));
+	Zlinehead = list_create(-1);
+	z = malloc(sizeof(Zline));
+	bzero(z, sizeof(Zline));
 
-    Qlinehead = list_create(-1);
-    q = malloc(sizeof(Qline));
-    bzero(q, sizeof(Qline));
+	Qlinehead = list_create(-1);
+	q = malloc(sizeof(Qline));
+	bzero(q, sizeof(Qline));
 
 }
 
@@ -64,25 +64,28 @@ void init_bans(void)
 Gline *new_Gline(char *user, char *host, char *setby, char *setat,
                  char *expires, char *reason)
 {
-    lnode_t *tn;
-    Gline *g = NULL;
-    SET_SEGV_LOCATION();
+	lnode_t *tn;
+	Gline *g = NULL;
+	SET_SEGV_LOCATION();
 
-    tn = list_find(Glinehead, host, find_gline);
-    if (tn) {
-        g = lnode_get(tn);
-    } else {
-        g = malloc(sizeof(Gline));
-        g->host = sstrdup(host);
-        g->user = sstrdup(user);
-        g->setby = sstrdup(setby);
-        g->expires = strtoul(expires, NULL, 10);
-        g->setat = strtoul(setat, NULL, 10);
-        g->reason = sstrdup(reason);
-        tn = lnode_create(g);
-        list_append(Glinehead, tn);
-    }
-    return g;
+	tn = list_find(Glinehead, host, find_gline);
+	if (tn)
+	{
+		g = lnode_get(tn);
+	}
+	else
+	{
+		g = malloc(sizeof(Gline));
+		g->host = sstrdup(host);
+		g->user = sstrdup(user);
+		g->setby = sstrdup(setby);
+		g->expires = strtoul(expires, NULL, 10);
+		g->setat = strtoul(setat, NULL, 10);
+		g->reason = sstrdup(reason);
+		tn = lnode_create(g);
+		list_append(Glinehead, tn);
+	}
+	return g;
 }
 
 /*************************************************************************/
@@ -90,25 +93,28 @@ Gline *new_Gline(char *user, char *host, char *setby, char *setat,
 Zline *new_Zline(char *user, char *host, char *setby, char *setat,
                  char *expires, char *reason)
 {
-    lnode_t *tn;
-    Zline *z = NULL;
-    SET_SEGV_LOCATION();
+	lnode_t *tn;
+	Zline *z = NULL;
+	SET_SEGV_LOCATION();
 
-    tn = list_find(Zlinehead, host, find_zline);
-    if (tn) {
-        z = lnode_get(tn);
-    } else {
-        z = malloc(sizeof(Gline));
-        z->host = sstrdup(host);
-        z->user = sstrdup(user);
-        z->setby = sstrdup(setby);
-        z->expires = strtoul(expires, NULL, 10);
-        z->setat = strtoul(setat, NULL, 10);
-        z->reason = sstrdup(reason);
-        tn = lnode_create(z);
-        list_append(Zlinehead, tn);
-    }
-    return z;
+	tn = list_find(Zlinehead, host, find_zline);
+	if (tn)
+	{
+		z = lnode_get(tn);
+	}
+	else
+	{
+		z = malloc(sizeof(Gline));
+		z->host = sstrdup(host);
+		z->user = sstrdup(user);
+		z->setby = sstrdup(setby);
+		z->expires = strtoul(expires, NULL, 10);
+		z->setat = strtoul(setat, NULL, 10);
+		z->reason = sstrdup(reason);
+		tn = lnode_create(z);
+		list_append(Zlinehead, tn);
+	}
+	return z;
 }
 
 /*************************************************************************/
@@ -116,119 +122,134 @@ Zline *new_Zline(char *user, char *host, char *setby, char *setat,
 Qline *new_Qline(char *user, char *host, char *setby, char *setat,
                  char *expires, char *reason)
 {
-    lnode_t *tn;
-    Qline *q = NULL;
-    SET_SEGV_LOCATION();
+	lnode_t *tn;
+	Qline *q = NULL;
+	SET_SEGV_LOCATION();
 
-    tn = list_find(Qlinehead, host, find_qline);
-    if (tn) {
-        q = lnode_get(tn);
-    } else {
-        q = malloc(sizeof(Gline));
-        q->host = sstrdup(host);
-        q->user = sstrdup(user);
-        q->setby = sstrdup(setby);
-        q->expires = strtoul(expires, NULL, 10);
-        q->setat = strtoul(setat, NULL, 10);
-        q->reason = sstrdup(reason);
-        tn = lnode_create(q);
-        list_append(Qlinehead, tn);
-    }
-    return q;
+	tn = list_find(Qlinehead, host, find_qline);
+	if (tn)
+	{
+		q = lnode_get(tn);
+	}
+	else
+	{
+		q = malloc(sizeof(Gline));
+		q->host = sstrdup(host);
+		q->user = sstrdup(user);
+		q->setby = sstrdup(setby);
+		q->expires = strtoul(expires, NULL, 10);
+		q->setat = strtoul(setat, NULL, 10);
+		q->reason = sstrdup(reason);
+		tn = lnode_create(q);
+		list_append(Qlinehead, tn);
+	}
+	return q;
 }
 
 /*************************************************************************/
 
 Gline *findGline(const char *host)
 {
-    lnode_t *tn;
-    Gline *t = NULL;
+	lnode_t *tn;
+	Gline *t = NULL;
 
-    tn = list_find(Glinehead, host, find_gline);
-    if (tn) {
-        t = lnode_get(tn);
-        return t;
-    } else {
-        return NULL;
-    }
+	tn = list_find(Glinehead, host, find_gline);
+	if (tn)
+	{
+		t = lnode_get(tn);
+		return t;
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 /*************************************************************************/
 
 Zline *findZline(const char *host)
 {
-    lnode_t *tn;
-    Zline *t = NULL;
+	lnode_t *tn;
+	Zline *t = NULL;
 
-    tn = list_find(Zlinehead, host, find_zline);
-    if (tn) {
-        t = lnode_get(tn);
-        return t;
-    } else {
-        return NULL;
-    }
+	tn = list_find(Zlinehead, host, find_zline);
+	if (tn)
+	{
+		t = lnode_get(tn);
+		return t;
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 /*************************************************************************/
 
 Qline *findQline(const char *host)
 {
-    lnode_t *tn;
-    Qline *t = NULL;
+	lnode_t *tn;
+	Qline *t = NULL;
 
-    tn = list_find(Qlinehead, host, find_qline);
-    if (tn) {
-        t = lnode_get(tn);
-        return t;
-    } else {
-        return NULL;
-    }
+	tn = list_find(Qlinehead, host, find_qline);
+	if (tn)
+	{
+		t = lnode_get(tn);
+		return t;
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 /*************************************************************************/
 
 void fini_bans(void)
 {
-    Gline *g;
-    Qline *q;
-    Zline *z;
-    lnode_t *tn;
+	Gline *g;
+	Qline *q;
+	Zline *z;
+	lnode_t *tn;
 
-    tn = list_first(Glinehead);
-    while (tn != NULL) {
-        g = lnode_get(tn);
-        free(g->user);
-        free(g->host);
-        free(g->setby);
-        free(g->reason);
-        free(g);
-        tn = list_next(Glinehead, tn);
-    }
-    list_destroy_nodes(Glinehead);
+	tn = list_first(Glinehead);
+	while (tn != NULL)
+	{
+		g = lnode_get(tn);
+		free(g->user);
+		free(g->host);
+		free(g->setby);
+		free(g->reason);
+		free(g);
+		tn = list_next(Glinehead, tn);
+	}
+	list_destroy_nodes(Glinehead);
 
-    tn = list_first(Zlinehead);
-    while (tn != NULL) {
-        z = lnode_get(tn);
-        free(z->user);
-        free(z->host);
-        free(z->setby);
-        free(z->reason);
-        free(z);
-        tn = list_next(Zlinehead, tn);
-    }
-    list_destroy_nodes(Zlinehead);
+	tn = list_first(Zlinehead);
+	while (tn != NULL)
+	{
+		z = lnode_get(tn);
+		free(z->user);
+		free(z->host);
+		free(z->setby);
+		free(z->reason);
+		free(z);
+		tn = list_next(Zlinehead, tn);
+	}
+	list_destroy_nodes(Zlinehead);
 
-    tn = list_first(Qlinehead);
-    while (tn != NULL) {
-        q = lnode_get(tn);
-        free(q->user);
-        free(q->host);
-        free(q->setby);
-        free(q->reason);
-        free(q);
-        tn = list_next(Qlinehead, tn);
-    }
-    list_destroy_nodes(Qlinehead);
+	tn = list_first(Qlinehead);
+	while (tn != NULL)
+	{
+		q = lnode_get(tn);
+		free(q->user);
+		free(q->host);
+		free(q->setby);
+		free(q->reason);
+		free(q);
+		tn = list_next(Qlinehead, tn);
+	}
+	list_destroy_nodes(Qlinehead);
 }
 
 /*************************************************************************/
@@ -244,88 +265,111 @@ void fini_bans(void)
  */
 void p10_gline(char *type, char *source, int ac, char **av)
 {
-    Server *s = NULL;
-    User *u = NULL;
-    char buf[BUFSIZE];
-    char *user;
-    char *host;
-    char *address;
-    char *setby;
-    char expires[12];
+	Server *s = NULL;
+	User *u = NULL;
+	char buf[BUFSIZE];
+	char *user;
+	char *host;
+	char *address;
+	char *setby;
+	char expires[12];
 
-    *buf = '\0';
-    *expires = '\0';
+	*buf = '\0';
+	*expires = '\0';
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (ac < 4 || ac > 5) {
-        alog(LOG_DEBUG,
-             "debug: %s called with %d needed 4 or 5", PRETTY_FUNCTION,
-             ac);
-        return;
-    }
+	if (ac < 4 || ac > 5)
+	{
+		alog(LOG_DEBUG,
+		     "debug: %s called with %d needed 4 or 5", PRETTY_FUNCTION,
+		     ac);
+		return;
+	}
 
-    if (source) {
-        s = server_find(source);
-        if (!s) {
-            u = user_find(source);
-        }
-    }
-    if (s) {
-        setby = s->name;
-    } else if (u) {
-        setby = u->sqlnick;
-    } else {
-        setby = source;
-    }
+	if (source)
+	{
+		s = server_find(source);
+		if (!s)
+		{
+			u = user_find(source);
+		}
+	}
+	if (s)
+	{
+		setby = s->name;
+	}
+	else if (u)
+	{
+		setby = u->sqlnick;
+	}
+	else
+	{
+		setby = source;
+	}
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    address = (*av[1] == '!') ? myStrGetToken(av[1], '!', 1) : av[1];
-    if (*address == '+') {
-        address = myStrGetToken(address, '+', 1);
-    } else if (*address == '-') {
-        address = myStrGetToken(address, '-', 1);
-    }
+	address = (*av[1] == '!') ? myStrGetToken(av[1], '!', 1) : av[1];
+	if (*address == '+')
+	{
+		address = myStrGetToken(address, '+', 1);
+	}
+	else if (*address == '-')
+	{
+		address = myStrGetToken(address, '-', 1);
+	}
 
-    if (strstr(address, "@")) {
-        user = myStrGetToken(address, '@', 0);
-        host = myStrGetToken(address, '@', 1);
-    } else {
-        user = sstrdup("*");
-        host = sstrdup(address);
-    }
+	if (strstr(address, "@"))
+	{
+		user = myStrGetToken(address, '@', 0);
+		host = myStrGetToken(address, '@', 1);
+	}
+	else
+	{
+		user = sstrdup("*");
+		host = sstrdup(address);
+	}
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (*av[1] == '+') {
-        if (ac == 5) {
-            sprintf(expires, "%d", atoi(av[2]) + atoi(av[3]));
-            sql_do_server_bans_add(type, user, host, setby, av[3], expires,
-                                   av[4]);
-        } else if (ac == 4) {
-            ircsnprintf(buf, BUFSIZE - 1, "%ld", (long int) time(NULL));
-            sprintf(expires, "%ld", atoi(av[2]) + (long int) time(NULL));
-            sql_do_server_bans_add(type, user, host, setby, buf, expires,
-                                   av[3]);
-        }
-    } else {
-        sql_do_server_bans_remove(type, user, host);
-    }
-    SET_SEGV_LOCATION();
+	if (*av[1] == '+')
+	{
+		if (ac == 5)
+		{
+			sprintf(expires, "%d", atoi(av[2]) + atoi(av[3]));
+			sql_do_server_bans_add(type, user, host, setby, av[3], expires,
+			                       av[4]);
+		}
+		else if (ac == 4)
+		{
+			ircsnprintf(buf, BUFSIZE - 1, "%ld", (long int) time(NULL));
+			sprintf(expires, "%ld", atoi(av[2]) + (long int) time(NULL));
+			sql_do_server_bans_add(type, user, host, setby, buf, expires,
+			                       av[3]);
+		}
+	}
+	else
+	{
+		sql_do_server_bans_remove(type, user, host);
+	}
+	SET_SEGV_LOCATION();
 
-    /*
-     * Free the data that was allocated
-     */
-    if (address) {
-        free(address);
-    }
-    if (user) {
-        free(user);
-    }
-    if (host) {
-        free(host);
-    }
+	/*
+	 * Free the data that was allocated
+	 */
+	if (address)
+	{
+		free(address);
+	}
+	if (user)
+	{
+		free(user);
+	}
+	if (host)
+	{
+		free(host);
+	}
 }
 
 /*************************************************************************/
@@ -341,60 +385,67 @@ void p10_gline(char *type, char *source, int ac, char **av)
 void sql_do_sqline(char *mask, char *reason)
 {
 #ifdef USE_MYSQL
-    MYSQL_RES *mysql_res;
+	MYSQL_RES *mysql_res;
 #endif
-    char *sqlmask;
-    char *sqlreason;
+	char *sqlmask;
+	char *sqlreason;
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    /* Do not execute if
-     * SQL is disabled
-     * LargeNet is enabled
-     * Mask as not passed as a varaible
-     * Reason was not passed as a variable
-     */
-    if (!denora->do_sql || LargeNet || BadPtr(mask) || BadPtr(reason)) {
-        return;
-    }
+	/* Do not execute if
+	 * SQL is disabled
+	 * LargeNet is enabled
+	 * Mask as not passed as a varaible
+	 * Reason was not passed as a variable
+	 */
+	if (!denora->do_sql || LargeNet || BadPtr(mask) || BadPtr(reason))
+	{
+		return;
+	}
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    sqlmask = rdb_escape(mask);
-    sqlreason = rdb_escape(reason);
+	sqlmask = rdb_escape(mask);
+	sqlreason = rdb_escape(reason);
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    rdb_query
-        (QUERY_HIGH, "SELECT mask FROM %s WHERE mask = \'%s\';",
-         SqlineTable, sqlmask);
+	rdb_query
+	(QUERY_HIGH, "SELECT mask FROM %s WHERE mask = \'%s\';",
+	 SqlineTable, sqlmask);
 #ifdef USE_MYSQL
-    mysql_res = mysql_store_result(mysql);
-    if (mysql_res) {
-        if (mysql_num_rows(mysql_res) == 0) {
-            rdb_query
-                (QUERY_LOW,
-                 "INSERT INTO %s (mask, reason) values('%s', '%s')",
-                 SqlineTable, sqlmask, sqlreason);
-        } else {
-            rdb_query(QUERY_LOW,
-                      "UPDATE %s SET reason=\'%s\' WHERE mask=\'%s\'",
-                      SqlineTable, sqlreason, sqlmask);
-        }
-        mysql_free_result(mysql_res);
-    }
+	mysql_res = mysql_store_result(mysql);
+	if (mysql_res)
+	{
+		if (mysql_num_rows(mysql_res) == 0)
+		{
+			rdb_query
+			(QUERY_LOW,
+			 "INSERT INTO %s (mask, reason) values('%s', '%s')",
+			 SqlineTable, sqlmask, sqlreason);
+		}
+		else
+		{
+			rdb_query(QUERY_LOW,
+			          "UPDATE %s SET reason=\'%s\' WHERE mask=\'%s\'",
+			          SqlineTable, sqlreason, sqlmask);
+		}
+		mysql_free_result(mysql_res);
+	}
 #endif
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    /*
-     * Free the data that was allocated
-     */
-    if (sqlmask) {
-        free(sqlmask);
-    }
-    if (sqlreason) {
-        free(sqlreason);
-    }
+	/*
+	 * Free the data that was allocated
+	 */
+	if (sqlmask)
+	{
+		free(sqlmask);
+	}
+	if (sqlreason)
+	{
+		free(sqlreason);
+	}
 }
 
 /*************************************************************************/
@@ -410,89 +461,100 @@ void sql_do_sqline(char *mask, char *reason)
  */
 void sql_do_sgline(char *length, char *mask)
 {
-    long int len;               /* length when converted to integer */
-    char *reason;               /* reason for sgline                */
-    char *sqlmask;              /* sql escaped mask                 */
-    char *sqlreason;            /* sql escaped reason               */
-    int errsave;
+	long int len;               /* length when converted to integer */
+	char *reason;               /* reason for sgline                */
+	char *sqlmask;              /* sql escaped mask                 */
+	char *sqlreason;            /* sql escaped reason               */
+	int errsave;
 #ifdef USE_MYSQL
-    MYSQL_RES *mysql_res;
+	MYSQL_RES *mysql_res;
 #endif
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    /*
-     * Do not execute if
-     * 1. SQL code has been disabled
-     * 2. LargeNet is enabled
-     * 3. Lenght was not passed
-     * 4. Mask was not passed
-     */
-    if (!denora->do_sql || LargeNet || !length || !mask) {
-        return;
-    }
+	/*
+	 * Do not execute if
+	 * 1. SQL code has been disabled
+	 * 2. LargeNet is enabled
+	 * 3. Lenght was not passed
+	 * 4. Mask was not passed
+	 */
+	if (!denora->do_sql || LargeNet || !length || !mask)
+	{
+		return;
+	}
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    errsave = errno;            /* temp copy the variable so we can reset the error state */
-    errno = 0;                  /* make the errno 0 so we don't report wrong errors */
+	errsave = errno;            /* temp copy the variable so we can reset the error state */
+	errno = 0;                  /* make the errno 0 so we don't report wrong errors */
 
-    len = strtol(length, NULL, 10);
-    /*
-     * Check error state, to see if we were overflowed
-     */
-    if (errno == ERANGE) {
-        alog(LOG_DEBUG, "%s strtol() set errno to ERANGE possible %s",
-             PRETTY_FUNCTION,
-             (len == LONG_MAX ? "overflow" : "underflow"));
-    }
-    errno = errsave;
+	len = strtol(length, NULL, 10);
+	/*
+	 * Check error state, to see if we were overflowed
+	 */
+	if (errno == ERANGE)
+	{
+		alog(LOG_DEBUG, "%s strtol() set errno to ERANGE possible %s",
+		     PRETTY_FUNCTION,
+		     (len == LONG_MAX ? "overflow" : "underflow"));
+	}
+	errno = errsave;
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (((int) strlen(mask) > len) && (mask[len]) == ':') {
-        mask[len] = '\0';
-        reason = mask + len + 1;
-    } else {
-        return;
-    }
+	if (((int) strlen(mask) > len) && (mask[len]) == ':')
+	{
+		mask[len] = '\0';
+		reason = mask + len + 1;
+	}
+	else
+	{
+		return;
+	}
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    sqlmask = rdb_escape(mask);
-    sqlreason = rdb_escape(reason);
+	sqlmask = rdb_escape(mask);
+	sqlreason = rdb_escape(reason);
 
-    rdb_query
-        (QUERY_HIGH, "SELECT mask FROM %s WHERE mask = \'%s\';",
-         SglineTable, sqlmask);
+	rdb_query
+	(QUERY_HIGH, "SELECT mask FROM %s WHERE mask = \'%s\';",
+	 SglineTable, sqlmask);
 
 #ifdef USE_MYSQL
-    mysql_res = mysql_store_result(mysql);
-    if (mysql_res) {
-        if (mysql_num_rows(mysql_res) == 0) {
-            rdb_query
-                (QUERY_LOW,
-                 "INSERT INTO %s (mask, reason) values('%s', '%s')",
-                 SglineTable, sqlmask, sqlreason);
-        } else {
-            rdb_query(QUERY_LOW,
-                      "UPDATE %s SET reason=\'%s\' WHERE mask=\'%s\'",
-                      SglineTable, sqlreason, sqlmask);
-        }
-        mysql_free_result(mysql_res);
-    }
+	mysql_res = mysql_store_result(mysql);
+	if (mysql_res)
+	{
+		if (mysql_num_rows(mysql_res) == 0)
+		{
+			rdb_query
+			(QUERY_LOW,
+			 "INSERT INTO %s (mask, reason) values('%s', '%s')",
+			 SglineTable, sqlmask, sqlreason);
+		}
+		else
+		{
+			rdb_query(QUERY_LOW,
+			          "UPDATE %s SET reason=\'%s\' WHERE mask=\'%s\'",
+			          SglineTable, sqlreason, sqlmask);
+		}
+		mysql_free_result(mysql_res);
+	}
 #endif
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    /*
-     * Free the data that was allocated
-     */
-    if (sqlmask) {
-        free(sqlmask);
-    }
-    if (sqlreason) {
-        free(sqlreason);
-    }
-    return;
+	/*
+	 * Free the data that was allocated
+	 */
+	if (sqlmask)
+	{
+		free(sqlmask);
+	}
+	if (sqlreason)
+	{
+		free(sqlreason);
+	}
+	return;
 }
 
 /*************************************************************************/
@@ -507,59 +569,66 @@ void sql_do_sgline(char *length, char *mask)
  */
 void sql_do_xline(char *geos, char *reason)
 {
-    char *sqlgeos;
-    char *sqlreason;
+	char *sqlgeos;
+	char *sqlreason;
 #ifdef USE_MYSQL
-    MYSQL_RES *mysql_res;
+	MYSQL_RES *mysql_res;
 #endif
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    /*
-     * Do not execute if
-     * 1. SQL code has been disabled
-     * 2. LargeNet is enabled
-     */
-    if (!denora->do_sql || LargeNet) {
-        return;
-    }
+	/*
+	 * Do not execute if
+	 * 1. SQL code has been disabled
+	 * 2. LargeNet is enabled
+	 */
+	if (!denora->do_sql || LargeNet)
+	{
+		return;
+	}
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    sqlgeos = rdb_escape(geos);
-    sqlreason = rdb_escape(reason);
+	sqlgeos = rdb_escape(geos);
+	sqlreason = rdb_escape(reason);
 
-    rdb_query
-        (QUERY_HIGH, "SELECT mask FROM %s WHERE mask = \'%s\';",
-         SglineTable, sqlgeos);
+	rdb_query
+	(QUERY_HIGH, "SELECT mask FROM %s WHERE mask = \'%s\';",
+	 SglineTable, sqlgeos);
 
 #ifdef USE_MYSQL
-    mysql_res = mysql_store_result(mysql);
-    if (mysql_res) {
-        if (mysql_num_rows(mysql_res) == 0) {
-            rdb_query
-                (QUERY_LOW,
-                 "INSERT INTO %s (mask, reason) values('%s', '%s')",
-                 SglineTable, sqlgeos, sqlreason);
-        } else {
-            rdb_query(QUERY_LOW,
-                      "UPDATE %s SET reason=\'%s\' WHERE mask=\'%s\'",
-                      SglineTable, sqlreason, sqlgeos);
-        }
-        mysql_free_result(mysql_res);
-    }
+	mysql_res = mysql_store_result(mysql);
+	if (mysql_res)
+	{
+		if (mysql_num_rows(mysql_res) == 0)
+		{
+			rdb_query
+			(QUERY_LOW,
+			 "INSERT INTO %s (mask, reason) values('%s', '%s')",
+			 SglineTable, sqlgeos, sqlreason);
+		}
+		else
+		{
+			rdb_query(QUERY_LOW,
+			          "UPDATE %s SET reason=\'%s\' WHERE mask=\'%s\'",
+			          SglineTable, sqlreason, sqlgeos);
+		}
+		mysql_free_result(mysql_res);
+	}
 #endif
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    /*
-     * Free the data that was allocated
-     */
-    if (sqlgeos) {
-        free(sqlgeos);
-    }
-    if (sqlreason) {
-        free(sqlreason);
-    }
-    return;
+	/*
+	 * Free the data that was allocated
+	 */
+	if (sqlgeos)
+	{
+		free(sqlgeos);
+	}
+	if (sqlreason)
+	{
+		free(sqlreason);
+	}
+	return;
 }
 
 /*************************************************************************/
@@ -571,34 +640,36 @@ void sql_do_xline(char *geos, char *reason)
  */
 void sql_do_unxline(char *geos)
 {
-    char *sqlgeos;
+	char *sqlgeos;
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    /*
-     * Do not execute if
-     * 1. SQL code has been disabled
-     * 2. LargeNet is enabled
-     * 3. geos was NULL
-     */
-    if (!denora->do_sql || LargeNet || !geos) {
-        return;
-    }
-    SET_SEGV_LOCATION();
+	/*
+	 * Do not execute if
+	 * 1. SQL code has been disabled
+	 * 2. LargeNet is enabled
+	 * 3. geos was NULL
+	 */
+	if (!denora->do_sql || LargeNet || !geos)
+	{
+		return;
+	}
+	SET_SEGV_LOCATION();
 
-    sqlgeos = rdb_escape(geos);
-    rdb_query(QUERY_LOW, "DELETE FROM %s WHERE mask=\'%s\'", SglineTable,
-              sqlgeos);
+	sqlgeos = rdb_escape(geos);
+	rdb_query(QUERY_LOW, "DELETE FROM %s WHERE mask=\'%s\'", SglineTable,
+	          sqlgeos);
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    /*
-     * Free the data that was allocated
-     */
-    if (sqlgeos) {
-        free(sqlgeos);
-    }
-    return;
+	/*
+	 * Free the data that was allocated
+	 */
+	if (sqlgeos)
+	{
+		free(sqlgeos);
+	}
+	return;
 }
 
 /*************************************************************************/
@@ -624,148 +695,181 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
                             char *reason)
 {
 #ifdef USE_MYSQL
-    MYSQL_RES *mysql_res;
+	MYSQL_RES *mysql_res;
 #endif
-    char *sqluser;
-    char *sqlhost;
-    int checkdur = 0;
-    int expire = 0;
-    uint32 setattime = 0;
-    Gline *g;
-    Qline *q;
-    Zline *z;
+	char *sqluser;
+	char *sqlhost;
+	int checkdur = 0;
+	int expire = 0;
+	uint32 setattime = 0;
+	Gline *g;
+	Qline *q;
+	Zline *z;
 
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    /*
-     * Do not execute if
-     * 1. SQL code has been disabled
-     * 2. LargeNet is enabled
-     */
-    if (!denora->do_sql || LargeNet) {
-        return;
-    }
-    if (!stricmp(type, "G")) {
-        g = findGline(host);
-        if (g) {
-            if (g->setat == (int32) strtoul(setat, NULL, 10)
-                && g->expires == (int32) strtoul(expires, NULL, 10)) {
-                return;
-            }
-        } else {
-            new_Gline(user, host, setby, setat, expires, reason);
-        }
-    }
+	/*
+	 * Do not execute if
+	 * 1. SQL code has been disabled
+	 * 2. LargeNet is enabled
+	 */
+	if (!denora->do_sql || LargeNet)
+	{
+		return;
+	}
+	if (!stricmp(type, "G"))
+	{
+		g = findGline(host);
+		if (g)
+		{
+			if (g->setat == (int32) strtoul(setat, NULL, 10)
+			        && g->expires == (int32) strtoul(expires, NULL, 10))
+			{
+				return;
+			}
+		}
+		else
+		{
+			new_Gline(user, host, setby, setat, expires, reason);
+		}
+	}
 
-    if (!stricmp(type, "Q")) {
-        q = findQline(host);
-        if (q) {
-            if (q->setat == (int32) strtoul(setat, NULL, 10)
-                && q->expires == (int32) strtoul(expires, NULL, 10)) {
-                return;
-            }
-        } else {
-            new_Qline(user, host, setby, setat, expires, reason);
-        }
-    }
+	if (!stricmp(type, "Q"))
+	{
+		q = findQline(host);
+		if (q)
+		{
+			if (q->setat == (int32) strtoul(setat, NULL, 10)
+			        && q->expires == (int32) strtoul(expires, NULL, 10))
+			{
+				return;
+			}
+		}
+		else
+		{
+			new_Qline(user, host, setby, setat, expires, reason);
+		}
+	}
 
-    if (!stricmp(type, "Z")) {
-        z = findZline(host);
-        if (z) {
-            if (z->setat == (int32) strtoul(setat, NULL, 10)
-                && z->expires == (int32) strtoul(expires, NULL, 10)) {
-                return;
-            }
-        } else {
-            new_Zline(user, host, setby, setat, expires, reason);
-        }
-    }
+	if (!stricmp(type, "Z"))
+	{
+		z = findZline(host);
+		if (z)
+		{
+			if (z->setat == (int32) strtoul(setat, NULL, 10)
+			        && z->expires == (int32) strtoul(expires, NULL, 10))
+			{
+				return;
+			}
+		}
+		else
+		{
+			new_Zline(user, host, setby, setat, expires, reason);
+		}
+	}
 
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    reason = rdb_escape(reason);
-    sqluser = rdb_escape(user);
-    sqlhost = rdb_escape(host);
+	reason = rdb_escape(reason);
+	sqluser = rdb_escape(user);
+	sqlhost = rdb_escape(host);
 
-    if (type) {
-        rdb_query
-            (QUERY_HIGH,
-             "SELECT id FROM %s WHERE type = \'%s\' and user=\'%s\' and host=\'%s\';",
-             GlineTable, type, sqluser, sqlhost);
+	if (type)
+	{
+		rdb_query
+		(QUERY_HIGH,
+		 "SELECT id FROM %s WHERE type = \'%s\' and user=\'%s\' and host=\'%s\';",
+		 GlineTable, type, sqluser, sqlhost);
 #ifdef USE_MYSQL
-        SET_SEGV_LOCATION();
-        mysql_res = mysql_store_result(mysql);
-        if (mysql_res) {
-            if (mysql_num_rows(mysql_res) == 0) {
-                rdb_query
-                    (QUERY_LOW,
-                     "INSERT INTO %s (type, user, host, setby, setat, expires, reason) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',%ld,%ld,\'%s\')",
-                     GlineTable, type, sqluser, sqlhost, setby,
-                     strtoul(setat, NULL, 10), strtoul(expires, NULL, 10),
-                     reason);
-            } else {
-                rdb_query
-                    (QUERY_LOW,
-                     "UPDATE %s SET setat=%ld, expires=%ld, reason=\'%s\' WHERE type = \'%s\' and user=\'%s\' and host=\'%s\'",
-                     GlineTable, strtoul(setat, NULL, 10), strtoul(expires,
-                                                                   NULL,
-                                                                   10),
-                     reason, type, sqluser, sqlhost);
-            }
-            mysql_free_result(mysql_res);
-        }
+		SET_SEGV_LOCATION();
+		mysql_res = mysql_store_result(mysql);
+		if (mysql_res)
+		{
+			if (mysql_num_rows(mysql_res) == 0)
+			{
+				rdb_query
+				(QUERY_LOW,
+				 "INSERT INTO %s (type, user, host, setby, setat, expires, reason) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',%ld,%ld,\'%s\')",
+				 GlineTable, type, sqluser, sqlhost, setby,
+				 strtoul(setat, NULL, 10), strtoul(expires, NULL, 10),
+				 reason);
+			}
+			else
+			{
+				rdb_query
+				(QUERY_LOW,
+				 "UPDATE %s SET setat=%ld, expires=%ld, reason=\'%s\' WHERE type = \'%s\' and user=\'%s\' and host=\'%s\'",
+				 GlineTable, strtoul(setat, NULL, 10), strtoul(expires,
+				         NULL,
+				         10),
+				 reason, type, sqluser, sqlhost);
+			}
+			mysql_free_result(mysql_res);
+		}
 #endif
-    } else {
-        SET_SEGV_LOCATION();
+	}
+	else
+	{
+		SET_SEGV_LOCATION();
 
-        rdb_query(QUERY_HIGH,
-                  "SELECT id FROM %s WHERE user=\'%s\' and host=\'%s\';",
-                  GlineTable, sqluser, sqlhost);
+		rdb_query(QUERY_HIGH,
+		          "SELECT id FROM %s WHERE user=\'%s\' and host=\'%s\';",
+		          GlineTable, sqluser, sqlhost);
 
-        checkdur = strtoul(expires, NULL, 10);
-        setattime = strtoul(setat, NULL, 10);
-        if (checkdur != 0) {
-            expire = checkdur + setattime;
-        } else {
-            expire = checkdur;
-        }
+		checkdur = strtoul(expires, NULL, 10);
+		setattime = strtoul(setat, NULL, 10);
+		if (checkdur != 0)
+		{
+			expire = checkdur + setattime;
+		}
+		else
+		{
+			expire = checkdur;
+		}
 #ifdef USE_MYSQL
-        mysql_res = mysql_store_result(mysql);
-        if (mysql_res) {
-            if (mysql_num_rows(mysql_res) == 0) {
-                rdb_query
-                    (QUERY_LOW,
-                     "INSERT INTO %s (user, host, setby, setat, expires, reason) VALUES(\'%s\',\'%s\',\'%s\',%ld,%ld,\'%s\')",
-                     GlineTable, sqluser, sqlhost, setby, setattime,
-                     expire, reason);
-            } else {
-                rdb_query
-                    (QUERY_LOW,
-                     "UPDATE %s SET setat=%ld, expires=%ld, reason=\'%s\' WHERE user=\'%s\' and host=\'%s\'",
-                     GlineTable, setattime, expire, reason, sqluser,
-                     sqlhost);
-            }
-            mysql_free_result(mysql_res);
-        }
+		mysql_res = mysql_store_result(mysql);
+		if (mysql_res)
+		{
+			if (mysql_num_rows(mysql_res) == 0)
+			{
+				rdb_query
+				(QUERY_LOW,
+				 "INSERT INTO %s (user, host, setby, setat, expires, reason) VALUES(\'%s\',\'%s\',\'%s\',%ld,%ld,\'%s\')",
+				 GlineTable, sqluser, sqlhost, setby, setattime,
+				 expire, reason);
+			}
+			else
+			{
+				rdb_query
+				(QUERY_LOW,
+				 "UPDATE %s SET setat=%ld, expires=%ld, reason=\'%s\' WHERE user=\'%s\' and host=\'%s\'",
+				 GlineTable, setattime, expire, reason, sqluser,
+				 sqlhost);
+			}
+			mysql_free_result(mysql_res);
+		}
 #endif
-    }
-    SET_SEGV_LOCATION();
+	}
+	SET_SEGV_LOCATION();
 
-    /*
-     * Free the data that was allocated
-     */
-    if (reason) {
-        free(reason);
-    }
-    if (sqluser) {
-        free(sqluser);
-    }
-    if (sqlhost) {
-        free(sqlhost);
-    }
-    return;
+	/*
+	 * Free the data that was allocated
+	 */
+	if (reason)
+	{
+		free(reason);
+	}
+	if (sqluser)
+	{
+		free(sqluser);
+	}
+	if (sqlhost)
+	{
+		free(sqlhost);
+	}
+	return;
 }
 
 /*************************************************************************/
@@ -789,79 +893,90 @@ void sql_do_server_spam_add(char *target, char *action,
                             char *duration, char *reason, char *regex)
 {
 #ifdef USE_MYSQL
-    MYSQL_RES *mysql_res;
+	MYSQL_RES *mysql_res;
 #endif
-    char *sqlreason;
-    char *sqlregex;
-    char *sqlaction;
-    SpamFilter *sf;
+	char *sqlreason;
+	char *sqlregex;
+	char *sqlaction;
+	SpamFilter *sf;
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    /*
-     * Do not execute if
-     * 1. SQL code has been disabled
-     * 2. LargeNet is enabled
-     */
-    if (!denora->do_sql || LargeNet) {
-        return;
-    }
-    sf = findSpamFilter(regex);
-    if (sf) {
-        if (sf->duration == (int32) strtoul(duration, NULL, 10)
-            && sf->setat == (int32) strtoul(setat, NULL, 10)) {
-            return;
-        }
-    } else {
-        new_SpamFilter(target, action, setby, expires, setat, duration,
-                       reason, regex);
-    }
+	/*
+	 * Do not execute if
+	 * 1. SQL code has been disabled
+	 * 2. LargeNet is enabled
+	 */
+	if (!denora->do_sql || LargeNet)
+	{
+		return;
+	}
+	sf = findSpamFilter(regex);
+	if (sf)
+	{
+		if (sf->duration == (int32) strtoul(duration, NULL, 10)
+		        && sf->setat == (int32) strtoul(setat, NULL, 10))
+		{
+			return;
+		}
+	}
+	else
+	{
+		new_SpamFilter(target, action, setby, expires, setat, duration,
+		               reason, regex);
+	}
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    sqlreason = rdb_escape(reason);
-    sqlregex = rdb_escape(regex);
-    sqlaction = rdb_escape(action);
+	sqlreason = rdb_escape(reason);
+	sqlregex = rdb_escape(regex);
+	sqlaction = rdb_escape(action);
 
-    rdb_query(QUERY_HIGH, "SELECT id FROM %s WHERE regex = \'%s\';",
-              SpamTable, sqlregex);
+	rdb_query(QUERY_HIGH, "SELECT id FROM %s WHERE regex = \'%s\';",
+	          SpamTable, sqlregex);
 
 #ifdef USE_MYSQL
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    mysql_res = mysql_store_result(mysql);
-    if (mysql_res) {
-        if (mysql_num_rows(mysql_res) == 0) {
-            rdb_query
-                (QUERY_LOW,
-                 "INSERT INTO %s (target, action, setby, expires, setat, duration, reason, regex) VALUES(\'%s\',\'%s\',\'%s\',%ld, %ld,%ld, \'%s\', \'%s\')",
-                 SpamTable, target, sqlaction, setby, strtoul(expires, NULL, 10),
-                 strtoul(setat, NULL, 10), strtoul(duration, NULL, 10),
-                 sqlreason, sqlregex);
-        } else {
-            rdb_query
-                (QUERY_LOW,
-                 "UPDATE %s SET target=\'%s\', action=\'%s\', setby=\'%s\', expires=%ld, setat=%ld, duration=%ld, reason=\'%s\' WHERE regex =\'%s\'",
-                 SpamTable, target, sqlaction, setby, strtoul(expires, NULL, 10),
-                 strtoul(setat, NULL, 10), strtoul(duration, NULL, 10),
-                 sqlreason, sqlregex);
-        }
-        mysql_free_result(mysql_res);
-    }
+	mysql_res = mysql_store_result(mysql);
+	if (mysql_res)
+	{
+		if (mysql_num_rows(mysql_res) == 0)
+		{
+			rdb_query
+			(QUERY_LOW,
+			 "INSERT INTO %s (target, action, setby, expires, setat, duration, reason, regex) VALUES(\'%s\',\'%s\',\'%s\',%ld, %ld,%ld, \'%s\', \'%s\')",
+			 SpamTable, target, sqlaction, setby, strtoul(expires, NULL, 10),
+			 strtoul(setat, NULL, 10), strtoul(duration, NULL, 10),
+			 sqlreason, sqlregex);
+		}
+		else
+		{
+			rdb_query
+			(QUERY_LOW,
+			 "UPDATE %s SET target=\'%s\', action=\'%s\', setby=\'%s\', expires=%ld, setat=%ld, duration=%ld, reason=\'%s\' WHERE regex =\'%s\'",
+			 SpamTable, target, sqlaction, setby, strtoul(expires, NULL, 10),
+			 strtoul(setat, NULL, 10), strtoul(duration, NULL, 10),
+			 sqlreason, sqlregex);
+		}
+		mysql_free_result(mysql_res);
+	}
 #endif
-    /*
-     * Free the data that was allocated
-     */
-    SET_SEGV_LOCATION();
+	/*
+	 * Free the data that was allocated
+	 */
+	SET_SEGV_LOCATION();
 
-    if (sqlreason) {
-        free(sqlreason);
-    }
-    if (sqlregex) {
-        free(sqlregex);
-    }
-    return;
+	if (sqlreason)
+	{
+		free(sqlreason);
+	}
+	if (sqlregex)
+	{
+		free(sqlregex);
+	}
+	return;
 }
 
 /*************************************************************************/
@@ -878,49 +993,55 @@ void sql_do_server_spam_add(char *target, char *action,
  */
 void sql_do_server_bans_remove(char *type, char *user, char *host)
 {
-    char *sqluser;
-    char *sqlhost;
+	char *sqluser;
+	char *sqlhost;
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    /*
-     * Do not execute if
-     * 1. SQL code has been disabled
-     * 2. LargeNet is enabled
-     */
-    if (!denora->do_sql || LargeNet) {
-        return;
-    }
+	/*
+	 * Do not execute if
+	 * 1. SQL code has been disabled
+	 * 2. LargeNet is enabled
+	 */
+	if (!denora->do_sql || LargeNet)
+	{
+		return;
+	}
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    sqluser = rdb_escape(user);
-    sqlhost = rdb_escape(host);
+	sqluser = rdb_escape(user);
+	sqlhost = rdb_escape(host);
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (type) {
-        rdb_query
-            (QUERY_LOW,
-             "DELETE FROM %s WHERE type=\'%s\' and user=\'%s\' and host=\'%s\'",
-             GlineTable, type, sqluser, sqlhost);
-    } else {
-        rdb_query
-            (QUERY_LOW, "DELETE FROM %s WHERE user=\'%s\' and host=\'%s\'",
-             GlineTable, sqluser, sqlhost);
-    }
-    SET_SEGV_LOCATION();
+	if (type)
+	{
+		rdb_query
+		(QUERY_LOW,
+		 "DELETE FROM %s WHERE type=\'%s\' and user=\'%s\' and host=\'%s\'",
+		 GlineTable, type, sqluser, sqlhost);
+	}
+	else
+	{
+		rdb_query
+		(QUERY_LOW, "DELETE FROM %s WHERE user=\'%s\' and host=\'%s\'",
+		 GlineTable, sqluser, sqlhost);
+	}
+	SET_SEGV_LOCATION();
 
-    /*
-     * Free the data that was allocated
-     */
-    if (sqluser) {
-        free(sqluser);
-    }
-    if (sqlhost) {
-        free(sqlhost);
-    }
-    return;
+	/*
+	 * Free the data that was allocated
+	 */
+	if (sqluser)
+	{
+		free(sqluser);
+	}
+	if (sqlhost)
+	{
+		free(sqlhost);
+	}
+	return;
 }
 
 /*************************************************************************/
@@ -936,58 +1057,62 @@ void sql_do_server_bans_remove(char *type, char *user, char *host)
  */
 void sql_do_server_spam_remove(char *target, char *action, char *regex)
 {
-    char *sqlregex;             /* local variable to store regex from rdb_escape */
-    char *sqlaction;            /* local variable to store action from sstrdup */
-    char *sqltarget;            /* local variable to store target from rdb_escape */
+	char *sqlregex;             /* local variable to store regex from rdb_escape */
+	char *sqlaction;            /* local variable to store action from sstrdup */
+	char *sqltarget;            /* local variable to store target from rdb_escape */
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    /*
-     * Do not execute if
-     * 1. SQL code has been disabled
-     * 2. LargeNet is enabled
-     * 3. Regex was NULL
-     * 4. Action was NULL
-     * 5. Target was NULL
-     */
-    if (!denora->do_sql || LargeNet || !regex || !action || !target) {
-        return;
-    }
+	/*
+	 * Do not execute if
+	 * 1. SQL code has been disabled
+	 * 2. LargeNet is enabled
+	 * 3. Regex was NULL
+	 * 4. Action was NULL
+	 * 5. Target was NULL
+	 */
+	if (!denora->do_sql || LargeNet || !regex || !action || !target)
+	{
+		return;
+	}
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    sqlaction = rdb_escape(action);     /* prepare sql escaped string */
-    sqlregex = rdb_escape(regex);       /* prepare sql escaped string */
-    sqltarget = rdb_escape(target);     /* prepare sql escaped string */
+	sqlaction = rdb_escape(action);     /* prepare sql escaped string */
+	sqlregex = rdb_escape(regex);       /* prepare sql escaped string */
+	sqltarget = rdb_escape(target);     /* prepare sql escaped string */
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    /*
-     * Query the spam table and remove bans that match the following
-     * 1. Target
-     * 2. Action text
-     * 3. Regex
-     */
-    rdb_query
-        (QUERY_LOW,
-         "DELETE FROM %s WHERE target=\'%s\' and action=\'%s\' and regex=\'%s'",
-         SpamTable, sqltarget, sqlaction, sqlregex);
+	/*
+	 * Query the spam table and remove bans that match the following
+	 * 1. Target
+	 * 2. Action text
+	 * 3. Regex
+	 */
+	rdb_query
+	(QUERY_LOW,
+	 "DELETE FROM %s WHERE target=\'%s\' and action=\'%s\' and regex=\'%s'",
+	 SpamTable, sqltarget, sqlaction, sqlregex);
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    /*
-     * Free the data that was allocated
-     */
-    if (sqlregex) {
-        free(sqlregex);
-    }
-    if (sqlaction) {
-        free(sqlaction);
-    }
-    if (sqltarget) {
-        free(sqltarget);
-    }
-    return;
+	/*
+	 * Free the data that was allocated
+	 */
+	if (sqlregex)
+	{
+		free(sqlregex);
+	}
+	if (sqlaction)
+	{
+		free(sqlaction);
+	}
+	if (sqltarget)
+	{
+		free(sqltarget);
+	}
+	return;
 }
 
 /*************************************************************************/
@@ -1002,55 +1127,57 @@ void sql_do_server_spam_remove(char *target, char *action, char *regex)
  */
 int sql_ban_clean(const char *name)
 {
-    /*
-     * Prevent compiler warnings that this variable is not used
-     */
-    USE_VAR(name);
+	/*
+	 * Prevent compiler warnings that this variable is not used
+	 */
+	USE_VAR(name);
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    /*
-     * Do not execute if
-     * 1. SQL code has been disabled
-     * 2. LargeNet is enabled
-     */
-    if (!denora->do_sql || LargeNet) {
-        return MOD_CONT;
-    }
+	/*
+	 * Do not execute if
+	 * 1. SQL code has been disabled
+	 * 2. LargeNet is enabled
+	 */
+	if (!denora->do_sql || LargeNet)
+	{
+		return MOD_CONT;
+	}
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    /*
-     * Query the gline table and remove bans that the expiration is
-     * 1. Not 0 (ie.. no expire)
-     * 2. Less then the current time
-     */
-    rdb_query(QUERY_LOW,
-              "DELETE FROM %s WHERE expires !=0 AND expires < %ld",
-              GlineTable, time(NULL));
+	/*
+	 * Query the gline table and remove bans that the expiration is
+	 * 1. Not 0 (ie.. no expire)
+	 * 2. Less then the current time
+	 */
+	rdb_query(QUERY_LOW,
+	          "DELETE FROM %s WHERE expires !=0 AND expires < %ld",
+	          GlineTable, time(NULL));
 
-    /*
-     * Check if the ircd supports spamfilter and if so we should clean that
-     * up as well
-     */
-    SET_SEGV_LOCATION();
+	/*
+	 * Check if the ircd supports spamfilter and if so we should clean that
+	 * up as well
+	 */
+	SET_SEGV_LOCATION();
 
-    if (ircd->spamfilter) {
-        /*
-         * Query the spamfilter table and remove bans that the expiration is
-         * 1. Not 0 (ie.. no expire)
-         * 2. Less then the current time
-         */
-        rdb_query(QUERY_LOW,
-                  "DELETE FROM %s WHERE expires !=0 AND expires < %ld",
-                  SpamTable, time(NULL));
-    }
-    SET_SEGV_LOCATION();
+	if (ircd->spamfilter)
+	{
+		/*
+		 * Query the spamfilter table and remove bans that the expiration is
+		 * 1. Not 0 (ie.. no expire)
+		 * 2. Less then the current time
+		 */
+		rdb_query(QUERY_LOW,
+		          "DELETE FROM %s WHERE expires !=0 AND expires < %ld",
+		          SpamTable, time(NULL));
+	}
+	SET_SEGV_LOCATION();
 
-    /*
-     * return MOD_CONT when we are all done.
-     */
-    return MOD_CONT;
+	/*
+	 * return MOD_CONT when we are all done.
+	 */
+	return MOD_CONT;
 }
 
 /*************************************************************************/

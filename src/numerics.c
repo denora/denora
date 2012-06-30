@@ -8,8 +8,8 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
- * 
+ *
+ *
  *
  */
 
@@ -27,11 +27,12 @@
  */
 void denora_cmd_372(char *source, char *msg)
 {
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (ircd->numerics) {
-        denora_cmd_numeric(source, 372, ":- %s", msg);
-    }
+	if (ircd->numerics)
+	{
+		denora_cmd_numeric(source, 372, ":- %s", msg);
+	}
 }
 
 /*************************************************************************/
@@ -45,11 +46,12 @@ void denora_cmd_372(char *source, char *msg)
  */
 void denora_cmd_422(char *source)
 {
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (ircd->numerics) {
-        denora_cmd_numeric(source, 422, ":MOTD file not found!");
-    }
+	if (ircd->numerics)
+	{
+		denora_cmd_numeric(source, 422, ":MOTD file not found!");
+	}
 }
 
 /*************************************************************************/
@@ -63,14 +65,15 @@ void denora_cmd_422(char *source)
  */
 void denora_cmd_351(char *source)
 {
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (ircd->numerics) {
-        denora_cmd_numeric(source, 351,
-                           "Denora-%s %s :%s -- build #%s, compiled %s %s",
-                           denora->version, ServerName, ircd->name,
-                           denora->build, denora->date, denora->time);
-    }
+	if (ircd->numerics)
+	{
+		denora_cmd_numeric(source, 351,
+		                   "Denora-%s %s :%s -- build #%s, compiled %s %s",
+		                   denora->version, ServerName, ircd->name,
+		                   denora->build, denora->date, denora->time);
+	}
 }
 
 /*************************************************************************/
@@ -84,12 +87,13 @@ void denora_cmd_351(char *source)
  */
 void denora_cmd_375(char *source)
 {
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (ircd->numerics) {
-        denora_cmd_numeric(source, 375, ":- %s Message of the Day",
-                           ServerName);
-    }
+	if (ircd->numerics)
+	{
+		denora_cmd_numeric(source, 375, ":- %s Message of the Day",
+		                   ServerName);
+	}
 }
 
 /*************************************************************************/
@@ -103,11 +107,12 @@ void denora_cmd_375(char *source)
  */
 void denora_cmd_376(char *source)
 {
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (ircd->numerics) {
-        denora_cmd_numeric(source, 376, ":End of /MOTD command.");
-    }
+	if (ircd->numerics)
+	{
+		denora_cmd_numeric(source, 376, ":End of /MOTD command.");
+	}
 }
 
 /*************************************************************************/
@@ -122,14 +127,16 @@ void denora_cmd_376(char *source)
  */
 void denora_cmd_391(char *source, char *timestr)
 {
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (!timestr) {
-        return;
-    }
-    if (ircd->numerics) {
-        denora_cmd_numeric(source, 391, "%s :%s", ServerName, timestr);
-    }
+	if (!timestr)
+	{
+		return;
+	}
+	if (ircd->numerics)
+	{
+		denora_cmd_numeric(source, 391, "%s :%s", ServerName, timestr);
+	}
 }
 
 /*************************************************************************/
@@ -144,20 +151,25 @@ void denora_cmd_391(char *source, char *timestr)
  */
 void denora_cmd_219(char *source, char *letter)
 {
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (!source) {
-        return;
-    }
+	if (!source)
+	{
+		return;
+	}
 
-    if (ircd->numerics) {
-        if (letter) {
-            denora_cmd_numeric(source, 219, "%c :End of /STATS report.",
-                               *letter);
-        } else {
-            denora_cmd_numeric(source, 219, "l :End of /STATS report.");
-        }
-    }
+	if (ircd->numerics)
+	{
+		if (letter)
+		{
+			denora_cmd_numeric(source, 219, "%c :End of /STATS report.",
+			                   *letter);
+		}
+		else
+		{
+			denora_cmd_numeric(source, 219, "l :End of /STATS report.");
+		}
+	}
 }
 
 /*************************************************************************/
@@ -172,14 +184,16 @@ void denora_cmd_219(char *source, char *letter)
  */
 void denora_cmd_401(char *source, char *who)
 {
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (!source || !who) {
-        return;
-    }
-    if (ircd->numerics) {
-        denora_cmd_numeric(source, 401, "%s :No such service.", who);
-    }
+	if (!source || !who)
+	{
+		return;
+	}
+	if (ircd->numerics)
+	{
+		denora_cmd_numeric(source, 401, "%s :No such service.", who);
+	}
 }
 
 /*************************************************************************/
@@ -194,14 +208,16 @@ void denora_cmd_401(char *source, char *who)
  */
 void denora_cmd_318(char *source, char *who)
 {
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (!source || !who) {
-        return;
-    }
-    if (ircd->numerics) {
-        denora_cmd_numeric(source, 318, "%s :End of /WHOIS list.", who);
-    }
+	if (!source || !who)
+	{
+		return;
+	}
+	if (ircd->numerics)
+	{
+		denora_cmd_numeric(source, 318, "%s :End of /WHOIS list.", who);
+	}
 }
 
 /*************************************************************************/
@@ -218,33 +234,40 @@ void denora_cmd_318(char *source, char *who)
  */
 void denora_cmd_numeric(char *source, int numeric, const char *fmt, ...)
 {
-    va_list args;
-    User *u;
-    char buf[BUFSIZE];
-    *buf = '\0';
+	va_list args;
+	User *u;
+	char buf[BUFSIZE];
+	*buf = '\0';
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (fmt) {
-        va_start(args, fmt);
-        ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
-        va_end(args);
-    }
+	if (fmt)
+	{
+		va_start(args, fmt);
+		ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
+		va_end(args);
+	}
 
-    u = finduser(source);
+	u = finduser(source);
 
-    if (ircd->numerics) {
-        if (ircd->p10) {
-            send_cmd(p10id, "%d %s %s", numeric, (u ? u->uid : source),
-                     buf);
-        } else if (ircd->ts6 && UseTS6) {
-            send_cmd((TS6SID ? TS6SID : ServerName), "%d %s %s", numeric,
-                     (UseTS6 ? (u ? u->uid : source) : source), buf);
-        } else {
-            send_cmd(ServerName, "%d %s %s", numeric,
-                     (u ? u->nick : source), buf);
-        }
-    }
+	if (ircd->numerics)
+	{
+		if (ircd->p10)
+		{
+			send_cmd(p10id, "%d %s %s", numeric, (u ? u->uid : source),
+			         buf);
+		}
+		else if (ircd->ts6 && UseTS6)
+		{
+			send_cmd((TS6SID ? TS6SID : ServerName), "%d %s %s", numeric,
+			         (UseTS6 ? (u ? u->uid : source) : source), buf);
+		}
+		else
+		{
+			send_cmd(ServerName, "%d %s %s", numeric,
+			         (u ? u->nick : source), buf);
+		}
+	}
 }
 
 /*************************************************************************/

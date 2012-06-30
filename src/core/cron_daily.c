@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * 
+ *
  *
  */
 /*************************************************************************/
@@ -27,20 +27,21 @@ void DenoraFini(void);
  **/
 int DenoraInit(int argc, char **argv)
 {
-    CronEvent *evt;
+	CronEvent *evt;
 
-    if (denora->debug >= 2) {
-        protocol_debug(NULL, argc, argv);
-    }
-    moduleAddAuthor("Denora");
-    moduleAddVersion
-        ("");
-    moduleSetType(CORE);
+	if (denora->debug >= 2)
+	{
+		protocol_debug(NULL, argc, argv);
+	}
+	moduleAddAuthor("Denora");
+	moduleAddVersion
+	("");
+	moduleSetType(CORE);
 
-    evt = createCronEvent(CRON_MIDNIGHT, users_daily);
-    moduleAddCronEvent(evt);
+	evt = createCronEvent(CRON_MIDNIGHT, users_daily);
+	moduleAddCronEvent(evt);
 
-    return MOD_CONT;
+	return MOD_CONT;
 }
 
 /**
@@ -55,20 +56,21 @@ void DenoraFini(void)
 
 int users_daily(const char *name)
 {
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (name) {
-        stats->daily_users = stats->users;
-        stats->daily_users_time = time(NULL);
-        stats->daily_opers = stats->opers;
-        stats->daily_opers_time = time(NULL);
-        stats->daily_servers = stats->servers;
-        stats->daily_servers_time = time(NULL);
-        stats->daily_chans = stats->chans;
-        stats->daily_chans_time = time(NULL);
-    }
+	if (name)
+	{
+		stats->daily_users = stats->users;
+		stats->daily_users_time = time(NULL);
+		stats->daily_opers = stats->opers;
+		stats->daily_opers_time = time(NULL);
+		stats->daily_servers = stats->servers;
+		stats->daily_servers_time = time(NULL);
+		stats->daily_chans = stats->chans;
+		stats->daily_chans_time = time(NULL);
+	}
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    return MOD_CONT;
+	return MOD_CONT;
 }

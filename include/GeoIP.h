@@ -38,9 +38,10 @@ typedef struct in6_addr geoipv6_t;
 
 #define GEOIP_CHKBIT_V6(bit,ptr) (ptr[((127UL - bit) >> 3)] & (1UL << (~(127 - bit) & 7)))
 
-typedef struct GeoIPTag {
-  FILE *GeoIPDatabase;
-  char *file_path;
+typedef struct GeoIPTag
+{
+	FILE *GeoIPDatabase;
+	char *file_path;
 	unsigned char *cache;
 	unsigned char *index_cache;
 	unsigned int *databaseSegments;
@@ -56,17 +57,20 @@ typedef struct GeoIPTag {
 } GeoIP;
 
 
-typedef enum {
+typedef enum
+{
 	GEOIP_CHARSET_ISO_8859_1 = 0,
 	GEOIP_CHARSET_UTF8       = 1
 } GeoIPCharset;
 
-typedef struct GeoIPRegionTag {
+typedef struct GeoIPRegionTag
+{
 	char country_code[3];
 	char region[3];
 } GeoIPRegion;
 
-typedef enum {
+typedef enum
+{
 	GEOIP_STANDARD = 0,
 	GEOIP_MEMORY_CACHE = 1,
 	GEOIP_CHECK_CACHE = 2,
@@ -74,7 +78,8 @@ typedef enum {
 	GEOIP_MMAP_CACHE = 8
 } GeoIPOptions;
 
-typedef enum {
+typedef enum
+{
 	GEOIP_COUNTRY_EDITION     = 1,
 	GEOIP_REGION_EDITION_REV0 = 7,
 	GEOIP_CITY_EDITION_REV0   = 6,
@@ -89,13 +94,15 @@ typedef enum {
 	GEOIP_COUNTRY_EDITION_V6  = 12
 } GeoIPDBTypes;
 
-typedef enum {
+typedef enum
+{
 	GEOIP_ANON_PROXY = 1,
 	GEOIP_HTTP_X_FORWARDED_FOR_PROXY = 2,
 	GEOIP_HTTP_CLIENT_IP_PROXY = 3
 } GeoIPProxyTypes;
 
-typedef enum {
+typedef enum
+{
 	GEOIP_UNKNOWN_SPEED = 0,
 	GEOIP_DIALUP_SPEED = 1,
 	GEOIP_CABLEDSL_SPEED = 2,

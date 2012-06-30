@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * 
+ *
  *
  */
 /*************************************************************************/
@@ -27,25 +27,27 @@ void DenoraFini(void);
  **/
 int DenoraInit(int argc, char **argv)
 {
-    Message *m;
-    int status;
+	Message *m;
+	int status;
 
-    if (denora->debug >= 2) {
-        protocol_debug(NULL, argc, argv);
-    }
-    moduleAddAuthor("Denora");
-    moduleAddVersion
-        ("");
-    moduleSetType(CORE);
+	if (denora->debug >= 2)
+	{
+		protocol_debug(NULL, argc, argv);
+	}
+	moduleAddAuthor("Denora");
+	moduleAddVersion
+	("");
+	moduleSetType(CORE);
 
-    m = createMessage("242", denora_event_242);
-    status = moduleAddMessage(m, MOD_HEAD);
-    if (status != MOD_ERR_OK) {
-        alog(LOG_NORMAL,
-             "Error Occurred setting message for 242 [%d][%s]", status,
-             ModuleGetErrStr(status));
-    }
-    return MOD_CONT;
+	m = createMessage("242", denora_event_242);
+	status = moduleAddMessage(m, MOD_HEAD);
+	if (status != MOD_ERR_OK)
+	{
+		alog(LOG_NORMAL,
+		     "Error Occurred setting message for 242 [%d][%s]", status,
+		     ModuleGetErrStr(status));
+	}
+	return MOD_CONT;
 }
 
 /**
@@ -70,11 +72,13 @@ void DenoraFini(void)
  */
 int denora_event_242(char *source, int ac, char **av)
 {
-    if (denora->protocoldebug) {
-        protocol_debug(source, ac, av);
-    }
-    if (ac >= 2) {
-        sql_do_uptime(source, av[1]);
-    }
-    return MOD_CONT;
+	if (denora->protocoldebug)
+	{
+		protocol_debug(source, ac, av);
+	}
+	if (ac >= 2)
+	{
+		sql_do_uptime(source, av[1]);
+	}
+	return MOD_CONT;
 }

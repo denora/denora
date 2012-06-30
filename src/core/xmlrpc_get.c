@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * 
+ *
  *
  */
 /*************************************************************************/
@@ -21,24 +21,26 @@ void DenoraFini(void);
 
 int DenoraInit(int argc, char **argv)
 {
-    XMLRPCCmd *xml;
+	XMLRPCCmd *xml;
 
-    if (denora->debug >= 2) {
-        protocol_debug(NULL, argc, argv);
-    }
-    moduleAddAuthor("Denora");
-    moduleAddVersion
-        ("");
-    moduleSetType(CORE);
+	if (denora->debug >= 2)
+	{
+		protocol_debug(NULL, argc, argv);
+	}
+	moduleAddAuthor("Denora");
+	moduleAddVersion
+	("");
+	moduleSetType(CORE);
 
-    if (!XMLRPC_Enable) {
-        return MOD_STOP;
-    }
+	if (!XMLRPC_Enable)
+	{
+		return MOD_STOP;
+	}
 
-    xml = createXMLCommand("denora.getstat", xmlrpc_getstat);
-    moduleAddXMLRPCcmd(xml);
+	xml = createXMLCommand("denora.getstat", xmlrpc_getstat);
+	moduleAddXMLRPCcmd(xml);
 
-    return MOD_CONT;
+	return MOD_CONT;
 }
 
 /**
@@ -51,20 +53,26 @@ void DenoraFini(void)
 
 int xmlrpc_getstat(deno_socket_t xmlsocket, int ac, char **av)
 {
-    char buf[BUFSIZE];
-    *buf = '\0';
+	char buf[BUFSIZE];
+	*buf = '\0';
 
-    if (denora->debug >= 2) {
-        protocol_debug(NULL, ac, av);
-    }
+	if (denora->debug >= 2)
+	{
+		protocol_debug(NULL, ac, av);
+	}
 
-    if (!stricmp(av[0], "users")) {
-        ircsnprintf(buf, BUFSIZE, "<i4>%ld</i4>", (long int) stats->users);
-    } else if (!stricmp(av[0], "chans")) {
-        ircsnprintf(buf, BUFSIZE, "<i4>%ld</i4>", (long int) stats->chans);
-    } else {
-        ircsnprintf(buf, BUFSIZE, "<i4>%ld</i4>", (long int) stats->users);
-    }
-    xmlrpc_send(xmlsocket, 1, buf);
-    return MOD_CONT;
+	if (!stricmp(av[0], "users"))
+	{
+		ircsnprintf(buf, BUFSIZE, "<i4>%ld</i4>", (long int) stats->users);
+	}
+	else if (!stricmp(av[0], "chans"))
+	{
+		ircsnprintf(buf, BUFSIZE, "<i4>%ld</i4>", (long int) stats->chans);
+	}
+	else
+	{
+		ircsnprintf(buf, BUFSIZE, "<i4>%ld</i4>", (long int) stats->users);
+	}
+	xmlrpc_send(xmlsocket, 1, buf);
+	return MOD_CONT;
 }

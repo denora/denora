@@ -9,7 +9,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * 
+ *
  *
  */
 
@@ -42,13 +42,16 @@ static int lastchar = EOF;
  */
 int32 read_buffer_len()
 {
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (read_bufend >= read_curpos) {
-        return read_bufend - read_curpos;
-    } else {
-        return (read_bufend + NET_BUFSIZE) - read_curpos;
-    }
+	if (read_bufend >= read_curpos)
+	{
+		return read_bufend - read_curpos;
+	}
+	else
+	{
+		return (read_bufend + NET_BUFSIZE) - read_curpos;
+	}
 }
 
 /*************************************************************************/
@@ -62,70 +65,75 @@ int32 read_buffer_len()
  */
 static int buffered_read(deno_socket_t fd, char *buf, int len)
 {
-    int nread, left = len;
-    fd_set fds;
-    struct timeval tv = { 0, 0 };
-    int errno_save = deno_sockgeterr();
+	int nread, left = len;
+	fd_set fds;
+	struct timeval tv = { 0, 0 };
+	int errno_save = deno_sockgeterr();
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (fd < 0) {
-        deno_sockseterr(SOCKERR_EBADF);
-        return -1;
-    }
-    while (left > 0) {
-        struct timeval *tvptr = (read_bufend == read_curpos ? NULL : &tv);
-        FD_ZERO(&fds);
-        FD_SET(fd, &fds);
-        while (read_bufend != read_curpos - 1
-               && !(read_curpos == read_netbuf
-                    && read_bufend == read_buftop - 1)
-               && select(fd + 1, &fds, 0, 0, tvptr) == 1) {
-            int maxread;
-            tvptr = &tv;        /* don't wait next time */
-            if (read_bufend < read_curpos)      /* wrapped around? */
-                maxread = (read_curpos - 1) - read_bufend;
-            else if (read_curpos == read_netbuf)
-                maxread = read_buftop - read_bufend - 1;
-            else
-                maxread = read_buftop - read_bufend;
-            nread = deno_sockread(fd, read_bufend, maxread);
-            errno_save = deno_sockgeterr();
-            alog(LOG_DEBUGSOCK, "debug: buffered_read wanted %d, got %d",
-                 maxread, nread);
-            if (nread <= 0)
-                break;
-            read_bufend += nread;
-            if (read_bufend == read_buftop)
-                read_bufend = read_netbuf;
-        }
-        if (read_curpos == read_bufend) /* No more data on socket */
-            break;
-        /* See if we can gobble up the rest of the buffer. */
-        if (read_curpos + left >= read_buftop && read_bufend < read_curpos) {
-            nread = read_buftop - read_curpos;
-            memcpy(buf, read_curpos, nread);
-            buf += nread;
-            left -= nread;
-            read_curpos = read_netbuf;
-        }
-        /* Now everything we need is in a single chunk at read_curpos. */
-        if (read_bufend > read_curpos && read_bufend - read_curpos < left)
-            nread = read_bufend - read_curpos;
-        else
-            nread = left;
-        if (nread) {
-            memcpy(buf, read_curpos, nread);
-            buf += nread;
-            left -= nread;
-            read_curpos += nread;
-        }
-    }
-    total_read += len - left;
-    alog(LOG_DEBUGSOCK, "debug: buffered_read(%d,%p,%d) returning %d",
-         fd, buf, len, len - left);
-    deno_sockseterr(errno_save);
-    return len - left;
+	if (fd < 0)
+	{
+		deno_sockseterr(SOCKERR_EBADF);
+		return -1;
+	}
+	while (left > 0)
+	{
+		struct timeval *tvptr = (read_bufend == read_curpos ? NULL : &tv);
+		FD_ZERO(&fds);
+		FD_SET(fd, &fds);
+		while (read_bufend != read_curpos - 1
+		        && !(read_curpos == read_netbuf
+		             && read_bufend == read_buftop - 1)
+		        && select(fd + 1, &fds, 0, 0, tvptr) == 1)
+		{
+			int maxread;
+			tvptr = &tv;        /* don't wait next time */
+			if (read_bufend < read_curpos)      /* wrapped around? */
+				maxread = (read_curpos - 1) - read_bufend;
+			else if (read_curpos == read_netbuf)
+				maxread = read_buftop - read_bufend - 1;
+			else
+				maxread = read_buftop - read_bufend;
+			nread = deno_sockread(fd, read_bufend, maxread);
+			errno_save = deno_sockgeterr();
+			alog(LOG_DEBUGSOCK, "debug: buffered_read wanted %d, got %d",
+			     maxread, nread);
+			if (nread <= 0)
+				break;
+			read_bufend += nread;
+			if (read_bufend == read_buftop)
+				read_bufend = read_netbuf;
+		}
+		if (read_curpos == read_bufend) /* No more data on socket */
+			break;
+		/* See if we can gobble up the rest of the buffer. */
+		if (read_curpos + left >= read_buftop && read_bufend < read_curpos)
+		{
+			nread = read_buftop - read_curpos;
+			memcpy(buf, read_curpos, nread);
+			buf += nread;
+			left -= nread;
+			read_curpos = read_netbuf;
+		}
+		/* Now everything we need is in a single chunk at read_curpos. */
+		if (read_bufend > read_curpos && read_bufend - read_curpos < left)
+			nread = read_bufend - read_curpos;
+		else
+			nread = left;
+		if (nread)
+		{
+			memcpy(buf, read_curpos, nread);
+			buf += nread;
+			left -= nread;
+			read_curpos += nread;
+		}
+	}
+	total_read += len - left;
+	alog(LOG_DEBUGSOCK, "debug: buffered_read(%d,%p,%d) returning %d",
+	     fd, buf, len, len - left);
+	deno_sockseterr(errno_save);
+	return len - left;
 }
 
 /*************************************************************************/
@@ -138,54 +146,57 @@ static int buffered_read(deno_socket_t fd, char *buf, int len)
  */
 static int buffered_read_one(deno_socket_t fd)
 {
-    int nread;
-    fd_set fds;
-    struct timeval tv = { 0, 0 };
-    char c;
-    struct timeval *tvptr = (read_bufend == read_curpos ? NULL : &tv);
-    int errno_save = deno_sockgeterr();
+	int nread;
+	fd_set fds;
+	struct timeval tv = { 0, 0 };
+	char c;
+	struct timeval *tvptr = (read_bufend == read_curpos ? NULL : &tv);
+	int errno_save = deno_sockgeterr();
 
-    if (fd < 0) {
-        deno_sockseterr(SOCKERR_EBADF);
-        return -1;
-    }
-    FD_ZERO(&fds);
-    FD_SET(fd, &fds);
-    while (read_bufend != read_curpos - 1
-           && !(read_curpos == read_netbuf
-                && read_bufend == read_buftop - 1)
-           && select(fd + 1, &fds, 0, 0, tvptr) == 1) {
-        int maxread;
-        tvptr = &tv;            /* don't wait next time */
-        if (read_bufend < read_curpos)  /* wrapped around? */
-            maxread = (read_curpos - 1) - read_bufend;
-        else if (read_curpos == read_netbuf)
-            maxread = read_buftop - read_bufend - 1;
-        else
-            maxread = read_buftop - read_bufend;
-        nread = deno_sockread(fd, read_bufend, maxread);
-        errno_save = deno_sockgeterr();
-        alog(LOG_DEBUGSOCK, "debug: buffered_read_one wanted %d, got %d",
-             maxread, nread);
-        if (nread <= 0)
-            break;
-        read_bufend += nread;
-        if (read_bufend == read_buftop)
-            read_bufend = read_netbuf;
-    }
-    if (read_curpos == read_bufend) {   /* No more data on socket */
-        alog(LOG_DEBUGSOCK, "debug: buffered_read_one(%d) returning %d",
-             fd, EOF);
-        deno_sockseterr(errno_save);
-        return EOF;
-    }
-    c = *read_curpos++;
-    if (read_curpos == read_buftop)
-        read_curpos = read_netbuf;
-    total_read++;
-    alog(LOG_DEBUGSOCK, "debug: buffered_read_one(%d) returning %d", fd,
-         c);
-    return (int) c & 0xFF;
+	if (fd < 0)
+	{
+		deno_sockseterr(SOCKERR_EBADF);
+		return -1;
+	}
+	FD_ZERO(&fds);
+	FD_SET(fd, &fds);
+	while (read_bufend != read_curpos - 1
+	        && !(read_curpos == read_netbuf
+	             && read_bufend == read_buftop - 1)
+	        && select(fd + 1, &fds, 0, 0, tvptr) == 1)
+	{
+		int maxread;
+		tvptr = &tv;            /* don't wait next time */
+		if (read_bufend < read_curpos)  /* wrapped around? */
+			maxread = (read_curpos - 1) - read_bufend;
+		else if (read_curpos == read_netbuf)
+			maxread = read_buftop - read_bufend - 1;
+		else
+			maxread = read_buftop - read_bufend;
+		nread = deno_sockread(fd, read_bufend, maxread);
+		errno_save = deno_sockgeterr();
+		alog(LOG_DEBUGSOCK, "debug: buffered_read_one wanted %d, got %d",
+		     maxread, nread);
+		if (nread <= 0)
+			break;
+		read_bufend += nread;
+		if (read_bufend == read_buftop)
+			read_bufend = read_netbuf;
+	}
+	if (read_curpos == read_bufend)     /* No more data on socket */
+	{
+		alog(LOG_DEBUGSOCK, "debug: buffered_read_one(%d) returning %d",
+		     fd, EOF);
+		deno_sockseterr(errno_save);
+		return EOF;
+	}
+	c = *read_curpos++;
+	if (read_curpos == read_buftop)
+		read_curpos = read_netbuf;
+	total_read++;
+	alog(LOG_DEBUGSOCK, "debug: buffered_read_one(%d) returning %d", fd,
+	     c);
+	return (int) c & 0xFF;
 }
 
 /*************************************************************************/
@@ -196,11 +207,14 @@ static int buffered_read_one(deno_socket_t fd)
  */
 int32 write_buffer_len()
 {
-    if (write_bufend >= write_curpos) {
-        return write_bufend - write_curpos;
-    } else {
-        return (write_bufend + NET_BUFSIZE) - write_curpos;
-    }
+	if (write_bufend >= write_curpos)
+	{
+		return write_bufend - write_curpos;
+	}
+	else
+	{
+		return (write_bufend + NET_BUFSIZE) - write_curpos;
+	}
 }
 
 /*************************************************************************/
@@ -213,54 +227,63 @@ int32 write_buffer_len()
  */
 static int flush_write_buffer(int wait)
 {
-    fd_set fds;
-    struct timeval tv = { 0, 0 };
+	fd_set fds;
+	struct timeval tv = { 0, 0 };
 #ifndef _WIN32
-    void (*oldsig) (int);
+	void (*oldsig) (int);
 #endif
 
-    int errno_save = deno_sockgeterr();
+	int errno_save = deno_sockgeterr();
 
-    if (write_bufend == write_curpos || write_fd == -1)
-        return 0;
-    FD_ZERO(&fds);
-    FD_SET(write_fd, &fds);
-    if (select(write_fd + 1, 0, &fds, 0, wait ? NULL : &tv) == 1) {
-        int maxwrite, nwritten;
-        if (write_curpos > write_bufend) {      /* wrapped around? */
-            maxwrite = write_buftop - write_curpos;
-        } else if (write_bufend == write_netbuf) {
-            maxwrite = write_buftop - write_curpos - 1;
-        } else {
-            maxwrite = write_bufend - write_curpos;
-        }
+	if (write_bufend == write_curpos || write_fd == -1)
+		return 0;
+	FD_ZERO(&fds);
+	FD_SET(write_fd, &fds);
+	if (select(write_fd + 1, 0, &fds, 0, wait ? NULL : &tv) == 1)
+	{
+		int maxwrite, nwritten;
+		if (write_curpos > write_bufend)        /* wrapped around? */
+		{
+			maxwrite = write_buftop - write_curpos;
+		}
+		else if (write_bufend == write_netbuf)
+		{
+			maxwrite = write_buftop - write_curpos - 1;
+		}
+		else
+		{
+			maxwrite = write_bufend - write_curpos;
+		}
 #ifndef _WIN32
-        oldsig = signal(SIGPIPE, SIG_IGN);
-        if (oldsig == SIG_ERR) {
-            alog(LOG_DEBUG,
-                 "debug: Warning: Couldn't set SIGPIPE signal to be ignored");
-        }
+		oldsig = signal(SIGPIPE, SIG_IGN);
+		if (oldsig == SIG_ERR)
+		{
+			alog(LOG_DEBUG,
+			     "debug: Warning: Couldn't set SIGPIPE signal to be ignored");
+		}
 #endif
-        nwritten = deno_sockwrite(write_fd, write_curpos, maxwrite);
+		nwritten = deno_sockwrite(write_fd, write_curpos, maxwrite);
 #ifndef _WIN32
-        if (signal(SIGPIPE, oldsig) == SIG_ERR) {
-            alog(LOG_DEBUG,
-                 "debug: Warning: Couldn't reset SIGPIPE signal to previous value");
-        }
+		if (signal(SIGPIPE, oldsig) == SIG_ERR)
+		{
+			alog(LOG_DEBUG,
+			     "debug: Warning: Couldn't reset SIGPIPE signal to previous value");
+		}
 #endif
-        errno_save = deno_sockgeterr();
-        alog(LOG_DEBUGSOCK, "debug: flush_write_buffer wanted %d, got %d",
-             maxwrite, nwritten);
-        if (nwritten > 0) {
-            write_curpos += nwritten;
-            if (write_curpos == write_buftop)
-                write_curpos = write_netbuf;
-            total_written += nwritten;
-            return nwritten;
-        }
-    }
-    deno_sockseterr(errno_save);
-    return 0;
+		errno_save = deno_sockgeterr();
+		alog(LOG_DEBUGSOCK, "debug: flush_write_buffer wanted %d, got %d",
+		     maxwrite, nwritten);
+		if (nwritten > 0)
+		{
+			write_curpos += nwritten;
+			if (write_curpos == write_buftop)
+				write_curpos = write_netbuf;
+			total_written += nwritten;
+			return nwritten;
+		}
+	}
+	deno_sockseterr(errno_save);
+	return 0;
 }
 
 /*************************************************************************/
@@ -274,68 +297,75 @@ static int flush_write_buffer(int wait)
  */
 int buffered_write(deno_socket_t fd, char *buf, int len)
 {
-    int nwritten, left = len;
-    int errno_save = deno_sockgeterr();
+	int nwritten, left = len;
+	int errno_save = deno_sockgeterr();
 
-    if (fd < 0) {
-        deno_sockseterr(SOCKERR_EBADF);
-        return -1;
-    }
-    write_fd = fd;
+	if (fd < 0)
+	{
+		deno_sockseterr(SOCKERR_EBADF);
+		return -1;
+	}
+	write_fd = fd;
 
-    if (BadPtr(buf)) {
-        return len;
-    }
+	if (BadPtr(buf))
+	{
+		return len;
+	}
 
-    while (left > 0) {
+	while (left > 0)
+	{
 
-        /* Don't try putting anything in the buffer if it's full. */
-        if (write_curpos != write_bufend + 1 &&
-            (write_curpos != write_netbuf
-             || write_bufend != write_buftop - 1)) {
-            /* See if we need to write up to the end of the buffer. */
-            if (write_bufend + left >= write_buftop
-                && write_curpos <= write_bufend) {
-                nwritten = write_buftop - write_bufend;
-                memcpy(write_bufend, buf, nwritten);
-                buf += nwritten;
-                left -= nwritten;
-                write_bufend = write_netbuf;
-            }
-            /* Now we can copy a single chunk to write_bufend. */
-            if (write_curpos > write_bufend
-                && write_curpos - write_bufend - 1 < left)
-                nwritten = write_curpos - write_bufend - 1;
-            else
-                nwritten = left;
-            if (nwritten) {
-                memcpy(write_bufend, buf, nwritten);
-                buf += nwritten;
-                left -= nwritten;
-                write_bufend += nwritten;
-            }
-        }
+		/* Don't try putting anything in the buffer if it's full. */
+		if (write_curpos != write_bufend + 1 &&
+		        (write_curpos != write_netbuf
+		         || write_bufend != write_buftop - 1))
+		{
+			/* See if we need to write up to the end of the buffer. */
+			if (write_bufend + left >= write_buftop
+			        && write_curpos <= write_bufend)
+			{
+				nwritten = write_buftop - write_bufend;
+				memcpy(write_bufend, buf, nwritten);
+				buf += nwritten;
+				left -= nwritten;
+				write_bufend = write_netbuf;
+			}
+			/* Now we can copy a single chunk to write_bufend. */
+			if (write_curpos > write_bufend
+			        && write_curpos - write_bufend - 1 < left)
+				nwritten = write_curpos - write_bufend - 1;
+			else
+				nwritten = left;
+			if (nwritten)
+			{
+				memcpy(write_bufend, buf, nwritten);
+				buf += nwritten;
+				left -= nwritten;
+				write_bufend += nwritten;
+			}
+		}
 
-        /* Now write to the socket as much as we can. */
-        if (write_curpos == write_bufend + 1 ||
-            (write_curpos == write_netbuf
-             && write_bufend == write_buftop - 1))
-            flush_write_buffer(1);
-        else
-            flush_write_buffer(0);
-        errno_save = deno_sockgeterr();
-        if (write_curpos == write_bufend + 1 ||
-            (write_curpos == write_netbuf
-             && write_bufend == write_buftop - 1)) {
-            /* Write failed on full buffer */
-            break;
-        }
-    }
+		/* Now write to the socket as much as we can. */
+		if (write_curpos == write_bufend + 1 ||
+		        (write_curpos == write_netbuf
+		         && write_bufend == write_buftop - 1))
+			flush_write_buffer(1);
+		else
+			flush_write_buffer(0);
+		errno_save = deno_sockgeterr();
+		if (write_curpos == write_bufend + 1 ||
+		        (write_curpos == write_netbuf
+		         && write_bufend == write_buftop - 1))
+		{
+			/* Write failed on full buffer */
+			break;
+		}
+	}
 
-    alog(LOG_DEBUGSOCK, "debug: buffered_write(%d,%p,%d) returning %d",
-         fd, buf, len, len - left);
-    deno_sockseterr(errno_save);
-    return len - left;
+	alog(LOG_DEBUGSOCK, "debug: buffered_write(%d,%p,%d) returning %d",
+	     fd, buf, len, len - left);
+	deno_sockseterr(errno_save);
+	return len - left;
 }
 
 
@@ -348,14 +378,15 @@ int buffered_write(deno_socket_t fd, char *buf, int len)
  */
 int sgetc(deno_socket_t s)
 {
-    int c;
+	int c;
 
-    if (lastchar != EOF) {
-        c = lastchar;
-        lastchar = EOF;
-        return c;
-    }
-    return buffered_read_one(s);
+	if (lastchar != EOF)
+	{
+		c = lastchar;
+		lastchar = EOF;
+		return c;
+	}
+	return buffered_read_one(s);
 }
 
 /*************************************************************************/
@@ -367,7 +398,7 @@ int sgetc(deno_socket_t s)
  */
 int sungetc(int c)
 {
-    return lastchar = c;
+	return lastchar = c;
 }
 
 /*************************************************************************/
@@ -382,32 +413,33 @@ int sungetc(int c)
  */
 char *sgets(char *buf, int len, deno_socket_t s)
 {
-    int c = 0;
-    struct timeval tv;
-    fd_set fds;
-    char *ptr = buf;
+	int c = 0;
+	struct timeval tv;
+	fd_set fds;
+	char *ptr = buf;
 
-    flush_write_buffer(0);
+	flush_write_buffer(0);
 
-    if (len == 0)
-        return NULL;
-    FD_SET(s, &fds);
-    tv.tv_sec = ReadTimeout;
-    tv.tv_usec = 0;
-    while (read_buffer_len() == 0 &&
-           (c = select(s + 1, &fds, NULL, NULL, &tv)) < 0) {
-        if (deno_sockgeterr() != SOCKERR_EINTR)
-            break;
-        flush_write_buffer(0);
-    }
-    if (read_buffer_len() == 0 && c == 0)
-        return (char *) -1;
-    c = sgetc(s);
-    while (--len && (*ptr++ = c) != '\n' && (c = sgetc(s)) >= 0);
-    if (c < 0)
-        return NULL;
-    *ptr = 0;
-    return buf;
+	if (len == 0)
+		return NULL;
+	FD_SET(s, &fds);
+	tv.tv_sec = ReadTimeout;
+	tv.tv_usec = 0;
+	while (read_buffer_len() == 0 &&
+	        (c = select(s + 1, &fds, NULL, NULL, &tv)) < 0)
+	{
+		if (deno_sockgeterr() != SOCKERR_EINTR)
+			break;
+		flush_write_buffer(0);
+	}
+	if (read_buffer_len() == 0 && c == 0)
+		return (char *) -1;
+	c = sgetc(s);
+	while (--len && (*ptr++ = c) != '\n' && (c = sgetc(s)) >= 0);
+	if (c < 0)
+		return NULL;
+	*ptr = 0;
+	return buf;
 }
 
 /*************************************************************************/
@@ -422,16 +454,16 @@ char *sgets(char *buf, int len, deno_socket_t s)
  */
 char *sgets2(char *buf, int len, deno_socket_t s)
 {
-    char *str = sgets(buf, len, s);
+	char *str = sgets(buf, len, s);
 
-    if (!str || str == (char *) -1)
-        return str;
-    str = buf + strlen(buf) - 1;
-    if (*str == '\n')
-        *str-- = 0;
-    if (*str == '\r')
-        *str = 0;
-    return buf;
+	if (!str || str == (char *) -1)
+		return str;
+	str = buf + strlen(buf) - 1;
+	if (*str == '\n')
+		*str-- = 0;
+	if (*str == '\r')
+		*str = 0;
+	return buf;
 }
 
 /*************************************************************************/
@@ -446,7 +478,7 @@ char *sgets2(char *buf, int len, deno_socket_t s)
  */
 int sread(deno_socket_t s, char *buf, int len)
 {
-    return buffered_read(s, buf, len);
+	return buffered_read(s, buf, len);
 }
 
 /*************************************************************************/
@@ -459,7 +491,7 @@ int sread(deno_socket_t s, char *buf, int len)
  */
 int sputs(char *str, deno_socket_t s)
 {
-    return buffered_write(s, str, strlen(str));
+	return buffered_write(s, str, strlen(str));
 }
 
 /*************************************************************************/
@@ -473,15 +505,15 @@ int sputs(char *str, deno_socket_t s)
  */
 int sockprintf(deno_socket_t s, const char *fmt, ...)
 {
-    va_list args;
-    char buf[16384];            /* Really huge, to try and avoid truncation */
-    int value;
+	va_list args;
+	char buf[16384];            /* Really huge, to try and avoid truncation */
+	int value;
 
-    va_start(args, fmt);
-    value =
-        buffered_write(s, buf, ircvsnprintf(buf, sizeof(buf), fmt, args));
-    va_end(args);
-    return value;
+	va_start(args, fmt);
+	value =
+	    buffered_write(s, buf, ircvsnprintf(buf, sizeof(buf), fmt, args));
+	va_end(args);
+	return value;
 }
 
 /*************************************************************************/
@@ -496,18 +528,19 @@ int sockprintf(deno_socket_t s, const char *fmt, ...)
  */
 char *pack_ip(const char *ipaddr)
 {
-    static char ipbuf[4];
-    int tmp[4], i;
+	static char ipbuf[4];
+	int tmp[4], i;
 
-    if (sscanf(ipaddr, "%d.%d.%d.%d", &tmp[0], &tmp[1], &tmp[2], &tmp[3])
-        != 4)
-        return NULL;
-    for (i = 0; i < 4; i++) {
-        if (tmp[i] < 0 || tmp[i] > 255)
-            return NULL;
-        ipbuf[i] = tmp[i];
-    }
-    return ipbuf;
+	if (sscanf(ipaddr, "%d.%d.%d.%d", &tmp[0], &tmp[1], &tmp[2], &tmp[3])
+	        != 4)
+		return NULL;
+	for (i = 0; i < 4; i++)
+	{
+		if (tmp[i] < 0 || tmp[i] > 255)
+			return NULL;
+		ipbuf[i] = tmp[i];
+	}
+	return ipbuf;
 }
 
 #endif
@@ -521,7 +554,7 @@ char *pack_ip(const char *ipaddr)
 
 /* error codes used in functions below */
 #define ERR_GENERAL	-1      /* could not open a new descriptor or an invalid
-                                   value for the protocol was specified */
+value for the protocol was specified */
 #define	ERR_BIND	-2      /* call to bind() failed */
 #define	ERR_LISTEN	-3      /* call to listen() failed */
 #define	ERR_CONNECT	-4      /* call to connect() failed */
@@ -543,100 +576,115 @@ char *pack_ip(const char *ipaddr)
 int conn(const char *host, int port, const char *lhost, int lport)
 {
 
-    int sock = -1;
-    int protocol = 0;
-    int ierr = 0;
-    int e;
-    int sockopt = 1;
-    struct addrinfo hints, *res, *ress;
-    char portnumb[16];
-    char lportnumb[16];
-    char *portval;
+	int sock = -1;
+	int protocol = 0;
+	int ierr = 0;
+	int e;
+	int sockopt = 1;
+	struct addrinfo hints, *res, *ress;
+	char portnumb[16];
+	char lportnumb[16];
+	char *portval;
 
-    ircsprintf(portnumb, "%d", port);
-    memset(&hints, 0, sizeof(hints));
+	ircsprintf(portnumb, "%d", port);
+	memset(&hints, 0, sizeof(hints));
 #ifdef RFC2553BIS
 #ifdef AI_ADDRCONFIG
-    hints.ai_flags = AI_ADDRCONFIG;
+	hints.ai_flags = AI_ADDRCONFIG;
 #endif
 #endif
-    hints.ai_socktype =
-        (protocol == PROTOCOL_TCP) ? SOCK_STREAM : SOCK_DGRAM;
-    if ((e = getaddrinfo(host, portnumb, &hints, &ress))) {
-        errno = -1;
-        fatal("getaddrinfo(%s, %s): %s (%d)", host, portnumb,
-              gai_strerror(e), e);
-        return ERR_RESOLV;
-    }
-    for (res = ress; res; res = res->ai_next) {
-        if ((sock =
-             socket(res->ai_family, res->ai_socktype,
-                    res->ai_protocol)) < 0) {
-            ierr = ERR_GENERAL;
-            continue;
-        }
+	hints.ai_socktype =
+	    (protocol == PROTOCOL_TCP) ? SOCK_STREAM : SOCK_DGRAM;
+	if ((e = getaddrinfo(host, portnumb, &hints, &ress)))
+	{
+		errno = -1;
+		fatal("getaddrinfo(%s, %s): %s (%d)", host, portnumb,
+		      gai_strerror(e), e);
+		return ERR_RESOLV;
+	}
+	for (res = ress; res; res = res->ai_next)
+	{
+		if ((sock =
+		            socket(res->ai_family, res->ai_socktype,
+		                   res->ai_protocol)) < 0)
+		{
+			ierr = ERR_GENERAL;
+			continue;
+		}
 
-        /*
-         * Set SO_REUSEADDR to allow bind() to bind over the top of a lingering (but now unused) socket
-         */
-        sockopt = 1;
-        if (setsockopt
-            (sock, SOL_SOCKET, SO_REUSEADDR, (char *) &sockopt,
-             sizeof(int)) == -1) {
-            alog(LOG_DEBUG, "couldn't setsockopt() (nonfatal)");
-        }
+		/*
+		 * Set SO_REUSEADDR to allow bind() to bind over the top of a lingering (but now unused) socket
+		 */
+		sockopt = 1;
+		if (setsockopt
+		        (sock, SOL_SOCKET, SO_REUSEADDR, (char *) &sockopt,
+		         sizeof(int)) == -1)
+		{
+			alog(LOG_DEBUG, "couldn't setsockopt() (nonfatal)");
+		}
 
-        if (lhost) {
-            struct addrinfo lochints, *locres;
+		if (lhost)
+		{
+			struct addrinfo lochints, *locres;
 
-            /* Doing this bind is bad news unless you are sure that
-             * the hostname is valid.  This is not true for
-             * me at home, since i dynamic-ip it. */
-            memset(&lochints, 0, sizeof(lochints));
-            lochints.ai_family = res->ai_family;
-            lochints.ai_socktype = res->ai_socktype;
-            lochints.ai_flags = AI_PASSIVE;
-            if (lport) {
-                ircsprintf(lportnumb, "%d", lport);
-                portval = sstrdup(lportnumb);
-            } else {
-                portval = sstrdup("0");
-            }
-            if ((e = getaddrinfo(lhost, portval, &lochints, &locres))) {
-                if (res->ai_next) {
-                    close(sock);
-                    continue;
-                } else {
-                    close(sock);
-                    fatal("getaddrinfo(%s, %s): %s (%d)", lhost, portval,
-                          gai_strerror(e), e);
-                    return ERR_RESOLV;
-                }
-            }
-            if (bind(sock, locres->ai_addr, locres->ai_addrlen)) {
-                int errno_save = deno_sockgeterr();
-                deno_sockclose(sock);
-                deno_sockseterr(errno_save);
-                freeaddrinfo(locres);
-                return -1;
-            }
-            freeaddrinfo(locres);
-        }
-        if (connect(sock, res->ai_addr, res->ai_addrlen) < 0) {
-            int errno_save = deno_sockgeterr();
-            deno_sockclose(sock);
-            deno_sockseterr(errno_save);
-            return -1;
-        }
-        ierr = 0;
-        break;
-    }
-    freeaddrinfo(ress);
-    if (ierr < 0) {
-        close(sock);
-        return ierr;
-    }
-    return sock;
+			/* Doing this bind is bad news unless you are sure that
+			 * the hostname is valid.  This is not true for
+			 * me at home, since i dynamic-ip it. */
+			memset(&lochints, 0, sizeof(lochints));
+			lochints.ai_family = res->ai_family;
+			lochints.ai_socktype = res->ai_socktype;
+			lochints.ai_flags = AI_PASSIVE;
+			if (lport)
+			{
+				ircsprintf(lportnumb, "%d", lport);
+				portval = sstrdup(lportnumb);
+			}
+			else
+			{
+				portval = sstrdup("0");
+			}
+			if ((e = getaddrinfo(lhost, portval, &lochints, &locres)))
+			{
+				if (res->ai_next)
+				{
+					close(sock);
+					continue;
+				}
+				else
+				{
+					close(sock);
+					fatal("getaddrinfo(%s, %s): %s (%d)", lhost, portval,
+					      gai_strerror(e), e);
+					return ERR_RESOLV;
+				}
+			}
+			if (bind(sock, locres->ai_addr, locres->ai_addrlen))
+			{
+				int errno_save = deno_sockgeterr();
+				deno_sockclose(sock);
+				deno_sockseterr(errno_save);
+				freeaddrinfo(locres);
+				return -1;
+			}
+			freeaddrinfo(locres);
+		}
+		if (connect(sock, res->ai_addr, res->ai_addrlen) < 0)
+		{
+			int errno_save = deno_sockgeterr();
+			deno_sockclose(sock);
+			deno_sockseterr(errno_save);
+			return -1;
+		}
+		ierr = 0;
+		break;
+	}
+	freeaddrinfo(ress);
+	if (ierr < 0)
+	{
+		close(sock);
+		return ierr;
+	}
+	return sock;
 }
 
 /*************************************************************************/
@@ -648,6 +696,6 @@ int conn(const char *host, int port, const char *lhost, int lport)
  */
 void disconn(deno_socket_t s)
 {
-    shutdown(s, 2);
-    deno_sockclose(s);
+	shutdown(s, 2);
+	deno_sockclose(s);
 }

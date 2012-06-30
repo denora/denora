@@ -7,8 +7,8 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
- * 
+ *
+ *
  *
  */
 
@@ -23,21 +23,22 @@
  **/
 void moduleCleanStruct(ModuleData ** moduleData)
 {
-    ModuleData *modcurrent = *moduleData;
-    ModuleData *next = NULL;
+	ModuleData *modcurrent = *moduleData;
+	ModuleData *next = NULL;
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    while (modcurrent) {
-        next = modcurrent->next;
-        free(modcurrent->moduleName);
-        free(modcurrent->key);
-        free(modcurrent->value);
-        modcurrent->next = NULL;
-        free(modcurrent);
-        modcurrent = next;
-    }
-    *moduleData = NULL;
+	while (modcurrent)
+	{
+		next = modcurrent->next;
+		free(modcurrent->moduleName);
+		free(modcurrent->key);
+		free(modcurrent->value);
+		modcurrent->next = NULL;
+		free(modcurrent);
+		modcurrent = next;
+	}
+	*moduleData = NULL;
 }
 
 /*************************************************************************/
@@ -51,18 +52,19 @@ void moduleCleanStruct(ModuleData ** moduleData)
  **/
 int moduleDataDebug(ModuleData ** md)
 {
-    ModuleData *modcurrent = NULL;
-    alog(LOG_DEBUG, "debug: Dumping module data....");
+	ModuleData *modcurrent = NULL;
+	alog(LOG_DEBUG, "debug: Dumping module data....");
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    for (modcurrent = *md; modcurrent; modcurrent = modcurrent->next) {
-        alog(LOG_DEBUG, "debug: Module: [%s]", modcurrent->moduleName);
-        alog(LOG_DEBUG, "debug: Key [%s]\tValue [%s]", modcurrent->key,
-             modcurrent->value);
-    }
-    alog(LOG_DEBUG, "debug: End of module data dump");
-    return 0;
+	for (modcurrent = *md; modcurrent; modcurrent = modcurrent->next)
+	{
+		alog(LOG_DEBUG, "debug: Module: [%s]", modcurrent->moduleName);
+		alog(LOG_DEBUG, "debug: Key [%s]\tValue [%s]", modcurrent->key,
+		     modcurrent->value);
+	}
+	alog(LOG_DEBUG, "debug: End of module data dump");
+	return 0;
 }
 
 /*************************************************************************/
@@ -77,52 +79,60 @@ int moduleDataDebug(ModuleData ** md)
  **/
 int moduleAddData(ModuleData ** md, char *key, char *value)
 {
-    char *mod_name = sstrdup(mod_current_module_name);
-    ModuleData *newData = NULL;
-    ModuleData *tmp = *md;
+	char *mod_name = sstrdup(mod_current_module_name);
+	ModuleData *newData = NULL;
+	ModuleData *tmp = *md;
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (!key || !value) {
-        alog(LOG_DEBUG,
-             "debug: A module tried to use ModuleAddData() with one ore more NULL arguments... returning");
-        do_backtrace(0);
-        free(mod_name);
-        return MOD_ERR_PARAMS;
-    }
+	if (!key || !value)
+	{
+		alog(LOG_DEBUG,
+		     "debug: A module tried to use ModuleAddData() with one ore more NULL arguments... returning");
+		do_backtrace(0);
+		free(mod_name);
+		return MOD_ERR_PARAMS;
+	}
 
-    if (mod_current_module_name == NULL) {
-        alog(LOG_DEBUG,
-             "debug: moduleAddData() called with mod_current_module_name being NULL");
-        if (denora->debug) {
-            do_backtrace(0);
-        }
-    }
+	if (mod_current_module_name == NULL)
+	{
+		alog(LOG_DEBUG,
+		     "debug: moduleAddData() called with mod_current_module_name being NULL");
+		if (denora->debug)
+		{
+			do_backtrace(0);
+		}
+	}
 
-    moduleDelData(md, key);     /* Remove any existing module data for this module with the same key */
+	moduleDelData(md, key);     /* Remove any existing module data for this module with the same key */
 
-    newData = malloc(sizeof(ModuleData));
-    if (!newData) {
-        free(mod_name);
-        return MOD_ERR_MEMORY;
-    }
+	newData = malloc(sizeof(ModuleData));
+	if (!newData)
+	{
+		free(mod_name);
+		return MOD_ERR_MEMORY;
+	}
 
-    newData->moduleName = sstrdup(mod_name);
-    newData->key = sstrdup(key);
-    newData->value = sstrdup(value);
-    if (tmp) {
-        newData->next = tmp;
-    } else {
-        newData->next = NULL;
-    }
-    *md = newData;
+	newData->moduleName = sstrdup(mod_name);
+	newData->key = sstrdup(key);
+	newData->value = sstrdup(value);
+	if (tmp)
+	{
+		newData->next = tmp;
+	}
+	else
+	{
+		newData->next = NULL;
+	}
+	*md = newData;
 
-    free(mod_name);
+	free(mod_name);
 
-    if (denora->debug) {
-        moduleDataDebug(md);
-    }
-    return MOD_ERR_OK;
+	if (denora->debug)
+	{
+		moduleDataDebug(md);
+	}
+	return MOD_ERR_OK;
 }
 
 /*************************************************************************/
@@ -132,37 +142,41 @@ int moduleAddData(ModuleData ** md, char *key, char *value)
  * This allows module coders to retrive any data they have previuosly stored in any given struct
  * @param md The module data for the struct to be used
  * @param key The key to find the data for
- * @return the value paired to the given key will be returned, or NULL 
+ * @return the value paired to the given key will be returned, or NULL
  **/
 char *moduleGetData(ModuleData ** md, char *key)
 {
 
-    char *mod_name = sstrdup(mod_current_module_name);
-    ModuleData *modcurrent = *md;
+	char *mod_name = sstrdup(mod_current_module_name);
+	ModuleData *modcurrent = *md;
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    alog(LOG_DEBUG, "debug: moduleGetData %p : key %s", (void *) md, key);
-    alog(LOG_DEBUG, "debug: Current Module %s", mod_name);
+	alog(LOG_DEBUG, "debug: moduleGetData %p : key %s", (void *) md, key);
+	alog(LOG_DEBUG, "debug: Current Module %s", mod_name);
 
-    if (mod_current_module_name == NULL) {
-        alog(LOG_DEBUG,
-             "moduleGetData() called with mod_current_module_name being NULL");
-        if (denora->debug) {
-            do_backtrace(0);
-        }
-    }
+	if (mod_current_module_name == NULL)
+	{
+		alog(LOG_DEBUG,
+		     "moduleGetData() called with mod_current_module_name being NULL");
+		if (denora->debug)
+		{
+			do_backtrace(0);
+		}
+	}
 
-    while (modcurrent) {
-        if ((stricmp(modcurrent->moduleName, mod_name) == 0)
-            && (stricmp(modcurrent->key, key) == 0)) {
-            free(mod_name);
-            return sstrdup(modcurrent->value);
-        }
-        modcurrent = modcurrent->next;
-    }
-    free(mod_name);
-    return NULL;
+	while (modcurrent)
+	{
+		if ((stricmp(modcurrent->moduleName, mod_name) == 0)
+		        && (stricmp(modcurrent->key, key) == 0))
+		{
+			free(mod_name);
+			return sstrdup(modcurrent->value);
+		}
+		modcurrent = modcurrent->next;
+	}
+	free(mod_name);
+	return NULL;
 }
 
 /*************************************************************************/
@@ -175,90 +189,109 @@ char *moduleGetData(ModuleData ** md, char *key)
  **/
 void moduleDelData(ModuleData ** md, char *key)
 {
-    char *mod_name = sstrdup(mod_current_module_name);
-    ModuleData *modcurrent = *md;
-    ModuleData *prev = NULL;
-    ModuleData *next = NULL;
+	char *mod_name = sstrdup(mod_current_module_name);
+	ModuleData *modcurrent = *md;
+	ModuleData *prev = NULL;
+	ModuleData *next = NULL;
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (mod_current_module_name == NULL) {
-        alog(LOG_DEBUG,
-             "debug: moduleDelData() called with mod_current_module_name being NULL");
-        if (denora->debug) {
-            do_backtrace(0);
-        }
-    }
+	if (mod_current_module_name == NULL)
+	{
+		alog(LOG_DEBUG,
+		     "debug: moduleDelData() called with mod_current_module_name being NULL");
+		if (denora->debug)
+		{
+			do_backtrace(0);
+		}
+	}
 
-    if (key) {
-        while (modcurrent) {
-            next = modcurrent->next;
-            if ((stricmp(modcurrent->moduleName, mod_name) == 0)
-                && (stricmp(modcurrent->key, key) == 0)) {
-                if (prev) {
-                    prev->next = modcurrent->next;
-                } else {
-                    *md = modcurrent->next;
-                }
-                free(modcurrent->moduleName);
-                free(modcurrent->key);
-                free(modcurrent->value);
-                modcurrent->next = NULL;
-                free(modcurrent);
-            } else {
-                prev = modcurrent;
-            }
-            prev = modcurrent;
-            modcurrent = next;
-        }
-    }
-    free(mod_name);
+	if (key)
+	{
+		while (modcurrent)
+		{
+			next = modcurrent->next;
+			if ((stricmp(modcurrent->moduleName, mod_name) == 0)
+			        && (stricmp(modcurrent->key, key) == 0))
+			{
+				if (prev)
+				{
+					prev->next = modcurrent->next;
+				}
+				else
+				{
+					*md = modcurrent->next;
+				}
+				free(modcurrent->moduleName);
+				free(modcurrent->key);
+				free(modcurrent->value);
+				modcurrent->next = NULL;
+				free(modcurrent);
+			}
+			else
+			{
+				prev = modcurrent;
+			}
+			prev = modcurrent;
+			modcurrent = next;
+		}
+	}
+	free(mod_name);
 }
 
 /*************************************************************************/
 
 /**
  * This will remove all data for a particular module from existing structs.
- * Its primary use is modulePrepForUnload() however, based on past expericance with module coders wanting to 
+ * Its primary use is modulePrepForUnload() however, based on past expericance with module coders wanting to
  * do just about anything and everything, its safe to use from inside the module.
  * @param md The module data for the struct to be used
  **/
 void moduleDelAllData(ModuleData ** md)
 {
-    char *mod_name = sstrdup(mod_current_module_name);
-    ModuleData *modcurrent = *md;
-    ModuleData *prev = NULL;
-    ModuleData *next = NULL;
+	char *mod_name = sstrdup(mod_current_module_name);
+	ModuleData *modcurrent = *md;
+	ModuleData *prev = NULL;
+	ModuleData *next = NULL;
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (mod_current_module_name == NULL) {
-        alog(LOG_DEBUG,
-             "debug: moduleDelAllData() called with mod_current_module_name being NULL");
-        if (denora->debug) {
-            do_backtrace(0);
-        }
-    }
+	if (mod_current_module_name == NULL)
+	{
+		alog(LOG_DEBUG,
+		     "debug: moduleDelAllData() called with mod_current_module_name being NULL");
+		if (denora->debug)
+		{
+			do_backtrace(0);
+		}
+	}
 
-    while (modcurrent) {
-        next = modcurrent->next;
-        if ((stricmp(modcurrent->moduleName, mod_name) == 0)) {
-            if (prev) {
-                prev->next = modcurrent->next;
-            } else {
-                *md = modcurrent->next;
-            }
-            free(modcurrent->moduleName);
-            free(modcurrent->key);
-            free(modcurrent->value);
-            modcurrent->next = NULL;
-            free(modcurrent);
-        } else {
-            prev = modcurrent;
-        }
-        modcurrent = next;
-    }
-    free(mod_name);
+	while (modcurrent)
+	{
+		next = modcurrent->next;
+		if ((stricmp(modcurrent->moduleName, mod_name) == 0))
+		{
+			if (prev)
+			{
+				prev->next = modcurrent->next;
+			}
+			else
+			{
+				*md = modcurrent->next;
+			}
+			free(modcurrent->moduleName);
+			free(modcurrent->key);
+			free(modcurrent->value);
+			modcurrent->next = NULL;
+			free(modcurrent);
+		}
+		else
+		{
+			prev = modcurrent;
+		}
+		modcurrent = next;
+	}
+	free(mod_name);
 }
 
 /*************************************************************************/
@@ -269,26 +302,30 @@ void moduleDelAllData(ModuleData ** md)
  **/
 void moduleDelAllDataMod(Module * m)
 {
-    boolean freeme = false;
-    int i;
-    User *user;
+	boolean freeme = false;
+	int i;
+	User *user;
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (!mod_current_module_name) {
-        mod_current_module_name = sstrdup(m->name);
-        freeme = true;
-    }
+	if (!mod_current_module_name)
+	{
+		mod_current_module_name = sstrdup(m->name);
+		freeme = true;
+	}
 
-    for (i = 0; i < 1024; i++) {
-        /* Remove the users */
-        for (user = userlist[i]; user; user = user->next) {
-            moduleDelAllData(&user->moduleData);
-        }
-    }
+	for (i = 0; i < 1024; i++)
+	{
+		/* Remove the users */
+		for (user = userlist[i]; user; user = user->next)
+		{
+			moduleDelAllData(&user->moduleData);
+		}
+	}
 
-    if (freeme) {
-        free(mod_current_module_name);
-        mod_current_module_name = NULL;
-    }
+	if (freeme)
+	{
+		free(mod_current_module_name);
+		mod_current_module_name = NULL;
+	}
 }

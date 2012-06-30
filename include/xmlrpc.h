@@ -56,26 +56,29 @@ typedef struct XMLRPCCmdHash_ XMLRPCCmdHash;
 
 E XMLRPCCmdHash *XMLRPCCMD[MAX_CMD_HASH];
 
-typedef struct xmlrpc_settings {
+typedef struct xmlrpc_settings
+{
 	char *(*setbuffer)(char *buffer, int len);
 	char *encode;
-    int httpheader;
-    char *inttagstart;
+	int httpheader;
+	char *inttagstart;
 	char *inttagend;
 } XMLRPCSet;
 
-struct XMLRPCCmd_ {
-    int (*func)(deno_socket_t socketid, int ac, char **av);
+struct XMLRPCCmd_
+{
+	int (*func)(deno_socket_t socketid, int ac, char **av);
 	char *name;
-    int core;
-    char *mod_name;
-    XMLRPCCmd *next;
+	int core;
+	char *mod_name;
+	XMLRPCCmd *next;
 };
 
-struct XMLRPCCmdHash_ {
-        char *name;
-        XMLRPCCmd *xml;
-        XMLRPCCmdHash *next;
+struct XMLRPCCmdHash_
+{
+	char *name;
+	XMLRPCCmd *xml;
+	XMLRPCCmdHash *next;
 };
 
 

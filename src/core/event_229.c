@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * 
+ *
  *
  */
 /*************************************************************************/
@@ -27,30 +27,35 @@ void DenoraFini(void);
  **/
 int DenoraInit(int argc, char **argv)
 {
-    Message *m;
-    int status;
+	Message *m;
+	int status;
 
-    if (denora->debug >= 2) {
-        protocol_debug(NULL, argc, argv);
-    }
-    moduleAddAuthor("Denora");
-    moduleAddVersion
-        ("");
-    moduleSetType(CORE);
+	if (denora->debug >= 2)
+	{
+		protocol_debug(NULL, argc, argv);
+	}
+	moduleAddAuthor("Denora");
+	moduleAddVersion
+	("");
+	moduleSetType(CORE);
 
-    /* spam filter */
-    m = createMessage("229", denora_event_229);
-    status = moduleAddMessage(m, MOD_HEAD);
-    if (status != MOD_ERR_OK) {
-        alog(LOG_NORMAL,
-             "Error Occurred setting message for 229 [%d][%s]", status,
-             ModuleGetErrStr(status));
-    }
-    if (ircd->spamfilter) {
-        return MOD_CONT;
-    } else {
-        return MOD_STOP;
-    }
+	/* spam filter */
+	m = createMessage("229", denora_event_229);
+	status = moduleAddMessage(m, MOD_HEAD);
+	if (status != MOD_ERR_OK)
+	{
+		alog(LOG_NORMAL,
+		     "Error Occurred setting message for 229 [%d][%s]", status,
+		     ModuleGetErrStr(status));
+	}
+	if (ircd->spamfilter)
+	{
+		return MOD_CONT;
+	}
+	else
+	{
+		return MOD_STOP;
+	}
 }
 
 /**
@@ -88,13 +93,15 @@ void DenoraFini(void)
  */
 int denora_event_229(char *source, int ac, char **av)
 {
-    SET_SEGV_LOCATION();
-    if (denora->protocoldebug) {
-        protocol_debug(source, ac, av);
-    }
-    if (!stricmp("f", av[1])) {
-        sql_do_server_spam_add(av[2], av[3], av[8], av[4], av[5], av[6],
-                               av[7], av[9]);
-    }
-    return MOD_CONT;
+	SET_SEGV_LOCATION();
+	if (denora->protocoldebug)
+	{
+		protocol_debug(source, ac, av);
+	}
+	if (!stricmp("f", av[1]))
+	{
+		sql_do_server_spam_add(av[2], av[3], av[8], av[4], av[5], av[6],
+		                       av[7], av[9]);
+	}
+	return MOD_CONT;
 }

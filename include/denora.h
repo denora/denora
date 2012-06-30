@@ -16,8 +16,8 @@
 /*************************************************************************/
 
 #include "sysconf.h"             /* Include auto generated header which  */
-                                 /* describes the users system this file */
-                                 /* is created by running configure      */
+/* describes the users system this file */
+/* is created by running configure      */
 
 #ifdef __sun                     /* If the system reports as Sun OS      */
 #include "os/sun.h"              /* include hacks for the Sun OS         */
@@ -81,16 +81,16 @@
 /*************************************************************************/
 
 #ifdef _WIN32
- #include "os/win32.h"
+#include "os/win32.h"
 #else
 #if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) || defined(__NetBSD__)
- #include "os/bsd.h"
+#include "os/bsd.h"
 #else
- #if defined(__CYGWIN__)
-  #include "os/cygwin.h"
- #else
-  #include "os/linux.h"
- #endif
+#if defined(__CYGWIN__)
+#include "os/cygwin.h"
+#else
+#include "os/linux.h"
+#endif
 #endif
 #endif
 #ifdef _AIX
@@ -102,9 +102,9 @@
 /*************************************************************************/
 
 #ifdef USE_THREADS
- #ifndef _WIN32                    /* Non Win32                          */
- #include <pthread.h>              /* Include pthread header             */
- #endif                            /* end if                             */
+#ifndef _WIN32                    /* Non Win32                          */
+#include <pthread.h>              /* Include pthread header             */
+#endif                            /* end if                             */
 #include "threads.h"               /* our common threading header        */
 #endif
 
@@ -231,17 +231,17 @@
 /*************************************************************************/
 
 #ifndef _WIN32
- #if defined(__CYGWIN__)
-   #define E __declspec(dllexport)
- #else
-  #define E extern
- #endif
+#if defined(__CYGWIN__)
+#define E __declspec(dllexport)
 #else
- #ifndef MODULE_COMPILE
-  #define E extern __declspec(dllexport)
- #else
-  #define E extern __declspec(dllimport)
- #endif
+#define E extern
+#endif
+#else
+#ifndef MODULE_COMPILE
+#define E extern __declspec(dllexport)
+#else
+#define E extern __declspec(dllimport)
+#endif
 #endif
 
 /*************************************************************************/
@@ -265,15 +265,17 @@ typedef enum { false, true } boolean;
 /* Some enum stuff                                                       */
 /*************************************************************************/
 
-typedef enum {
-   CORE,        	    /* Core Module                               */
-   PROTOCOL,    	    /* IRCD Protocol Module                      */
-   THIRD,                   /* Third Party Module                        */
-   SUPPORTED,               /* Supported (included module)               */
-   QATESTED                 /* QA Team has checked and cleared it        */
+typedef enum
+{
+	CORE,        	    /* Core Module                               */
+	PROTOCOL,    	    /* IRCD Protocol Module                      */
+	THIRD,                   /* Third Party Module                        */
+	SUPPORTED,               /* Supported (included module)               */
+	QATESTED                 /* QA Team has checked and cleared it        */
 } MODType;
 
-typedef enum {
+typedef enum
+{
 	MOD_OP_LOAD,
 	MOD_OP_UNLOAD
 } ModuleOperation;
@@ -357,189 +359,204 @@ typedef struct zline_ Zline;
 /* Command Struct                                                        */
 /*************************************************************************/
 
-struct Command_ {
-    char *name;
-    int (*routine)(User *u, int ac, char **av);
-    int (*has_priv)(User *u);	/* Returns 1 if user may use command, else 0 */
+struct Command_
+{
+	char *name;
+	int (*routine)(User *u, int ac, char **av);
+	int (*has_priv)(User *u);	/* Returns 1 if user may use command, else 0 */
 
-    int helpmsg_all;	/* Displayed to all users; -1 = no message */
-    int helpmsg_reg;	/* Displayed to regular users only */
-    int helpmsg_admin;	/* Displayed to Stats admins only */
+	int helpmsg_all;	/* Displayed to all users; -1 = no message */
+	int helpmsg_reg;	/* Displayed to regular users only */
+	int helpmsg_admin;	/* Displayed to Stats admins only */
 	int helpmsg_oper;
 
-    char *help_param1;
-    char *help_param2;
-    char *help_param3;
-    char *help_param4;
+	char *help_param1;
+	char *help_param2;
+	char *help_param3;
+	char *help_param4;
 
-    /* Module related stuff */
-    int core;           /* Can this command be deleted? */
-    char *mod_name;	/* Name of the module who owns us, NULL for core's  */
-    char *service;	/* Service we provide this command for */
-    int (*all_help)(User *u);
-    int (*regular_help)(User *u);
-    int (*admin_help)(User *u);
+	/* Module related stuff */
+	int core;           /* Can this command be deleted? */
+	char *mod_name;	/* Name of the module who owns us, NULL for core's  */
+	char *service;	/* Service we provide this command for */
+	int (*all_help)(User *u);
+	int (*regular_help)(User *u);
+	int (*admin_help)(User *u);
 
-    Command *next;	/* Next command responsible for the same command */
+	Command *next;	/* Next command responsible for the same command */
 };
 
 /*************************************************************************/
 /* Command Hash                                                          */
 /*************************************************************************/
 
-struct CommandHash_ {
-        char *name;	/* Name of the command */
-        Command *c;	/* Actual command */
-        CommandHash *next; /* Next command */
+struct CommandHash_
+{
+	char *name;	/* Name of the command */
+	Command *c;	/* Actual command */
+	CommandHash *next; /* Next command */
 };
 
 /*************************************************************************/
 /* SpamFilter                                                            */
 /*************************************************************************/
 
-struct spamfilter_ {
-		char *regex;
-		char *target;
-		char *action;
-		char *setby;
-		char *expires;
-		int32 setat;
-		int32 duration;
-		char *reason;
+struct spamfilter_
+{
+	char *regex;
+	char *target;
+	char *action;
+	char *setby;
+	char *expires;
+	int32 setat;
+	int32 duration;
+	char *reason;
 };
 
 /*************************************************************************/
 /* Gline                                                                 */
 /*************************************************************************/
 
-struct gline_ {
-		char *user;
-		char *host;
-		char *setby;
-		int32 expires;
-		int32 setat;
-		char *reason;
+struct gline_
+{
+	char *user;
+	char *host;
+	char *setby;
+	int32 expires;
+	int32 setat;
+	char *reason;
 };
 
 /*************************************************************************/
 /* Qline                                                                 */
 /*************************************************************************/
 
-struct qline_ {
-		char *user;
-		char *host;
-		char *setby;
-		int32 expires;
-		int32 setat;
-		char *reason;
+struct qline_
+{
+	char *user;
+	char *host;
+	char *setby;
+	int32 expires;
+	int32 setat;
+	char *reason;
 };
 
 /*************************************************************************/
 /* Zline                                                                 */
 /*************************************************************************/
 
-struct zline_ {
-		char *user;
-		char *host;
-		char *setby;
-		int32 expires;
-		int32 setat;
-		char *reason;
+struct zline_
+{
+	char *user;
+	char *host;
+	char *setby;
+	int32 expires;
+	int32 setat;
+	char *reason;
 };
 
 /*************************************************************************/
 /* Message Struct                                                        */
 /*************************************************************************/
 
-struct Message_ {
-    char *name;
-    int (*func)(char *source, int ac, char **av);
-    int core;
-    char *mod_name;
-    Message *next;
+struct Message_
+{
+	char *name;
+	int (*func)(char *source, int ac, char **av);
+	int core;
+	char *mod_name;
+	Message *next;
 };
 
 /*************************************************************************/
 /* Message Hash                                                          */
 /*************************************************************************/
 
-struct MessageHash_ {
-        char *name;
-        Message *m;
-        MessageHash *next;
+struct MessageHash_
+{
+	char *name;
+	Message *m;
+	MessageHash *next;
 };
 
 /*************************************************************************/
 /* Event Message Struct                                                  */
 /*************************************************************************/
 
-struct EvtMessage_ {
-    char *name;
-    int (*func)(char *source, int ac, char **av);
-    int core;
-    char *mod_name;
-    EvtMessage *next;
+struct EvtMessage_
+{
+	char *name;
+	int (*func)(char *source, int ac, char **av);
+	int core;
+	char *mod_name;
+	EvtMessage *next;
 };
 
 /*************************************************************************/
 /* Event Message Hash                                                    */
 /*************************************************************************/
 
-struct EvtMessageHash_ {
-        char *name;
-        EvtMessage *evm;
-        EvtMessageHash *next;
+struct EvtMessageHash_
+{
+	char *name;
+	EvtMessage *evm;
+	EvtMessageHash *next;
 };
 
 /*************************************************************************/
 /* Event Hook Struct                                                     */
 /*************************************************************************/
 
-struct EvtHook_ {
-    int (*func)(int argc, char **argv);
-    int core;
+struct EvtHook_
+{
+	int (*func)(int argc, char **argv);
+	int core;
 	char *name;
-    char *mod_name;
-    EvtHook *next;
+	char *mod_name;
+	EvtHook *next;
 };
 
 /*************************************************************************/
 /* Event Hook Hash                                                       */
 /*************************************************************************/
 
-struct EvtHookHash_ {
-        char *name;
-        EvtHook *evh;
-        EvtHookHash *next;
+struct EvtHookHash_
+{
+	char *name;
+	EvtHook *evh;
+	EvtHookHash *next;
 };
 
 /*************************************************************************/
 /* Cron Event                                                            */
 /*************************************************************************/
 
-struct CronEvent_ {
-    int (*func)(const char *name);
+struct CronEvent_
+{
+	int (*func)(const char *name);
 	char *name;
-    int core;
-    char *mod_name;
-    CronEvent *next;
+	int core;
+	char *mod_name;
+	CronEvent *next;
 };
 
 /*************************************************************************/
 /* Cron Event Hash                                                       */
 /*************************************************************************/
 
-struct CronEventHash_ {
-        char *name;
-        CronEvent *evh;
-        CronEventHash *next;
+struct CronEventHash_
+{
+	char *name;
+	CronEvent *evh;
+	CronEventHash *next;
 };
 
 /*************************************************************************/
 /* Module Call back stuff                                                */
 /*************************************************************************/
 
-struct ModuleCallBack_ {
+struct ModuleCallBack_
+{
 	char *name;
 	char *owner_name;
 	time_t when;
@@ -553,16 +570,18 @@ struct ModuleCallBack_ {
 /* Module Language                                                       */
 /*************************************************************************/
 
-struct ModuleLang_ {
-    int argc;
-    char **argv;
+struct ModuleLang_
+{
+	int argc;
+	char **argv;
 };
 
 /*************************************************************************/
 /* Module Queue - shows how to load/unload modules                       */
 /*************************************************************************/
 
-struct ModuleQueue_ {
+struct ModuleQueue_
+{
 	Module *m;
 	ModuleOperation op;
 	User *u;
@@ -574,7 +593,8 @@ struct ModuleQueue_ {
 /* Module Struct - contains module data                                  */
 /*************************************************************************/
 
-struct Module_ {
+struct Module_
+{
 	char *name;
 	char *filename;
 	void *handle;
@@ -592,55 +612,60 @@ struct Module_ {
 /* Module Hash Struct - contains list of all modules                     */
 /*************************************************************************/
 
-struct ModuleHash_ {
-        char *name;
-        Module *m;
-        ModuleHash *next;
+struct ModuleHash_
+{
+	char *name;
+	Module *m;
+	ModuleHash *next;
 };
 
 /*************************************************************************/
 /* Server Bans (not currently used)                                      */
 /*************************************************************************/
 
-struct serverbans_ {
-  ServerBans *next, *prev;
-  char *type;
-  char *user;
-  char *host;
-  char *setby;
-  char *setat;
-  char *expires;
-  char *reason;
+struct serverbans_
+{
+	ServerBans *next, *prev;
+	char *type;
+	char *user;
+	char *host;
+	char *setby;
+	char *setat;
+	char *expires;
+	char *reason;
 };
 
 /*************************************************************************/
 /* UID struct - needed for P10/TS6 ircds to track our internal UIDs      */
 /*************************************************************************/
 
-struct uid_ {
-    Uid *next, *prev;
-    char nick[NICKMAX];
-    char *uid;
+struct uid_
+{
+	Uid *next, *prev;
+	char nick[NICKMAX];
+	char *uid;
 };
 
 /*************************************************************************/
 /* Database struct                                                       */
 /*************************************************************************/
 
-struct db_file_ {
-    FILE *fptr;              /* Pointer to the opened file               */
-    int db_version;          /* The db version of the datafiles          */
-    int core_db_version;     /* The current db version of this source    */
-    char *service;       	 /* StatServ/etc.                            */
-    char *filename;  		 /* Filename of the database                 */
-    char *temp_name; 		 /* Temp filename of the database            */
+struct db_file_
+{
+	FILE *fptr;              /* Pointer to the opened file               */
+	int db_version;          /* The db version of the datafiles          */
+	int core_db_version;     /* The current db version of this source    */
+	char *service;       	 /* StatServ/etc.                            */
+	char *filename;  		 /* Filename of the database                 */
+	char *temp_name; 		 /* Temp filename of the database            */
 };
 
 /*************************************************************************/
 /* Denora operation struct                                               */
 /*************************************************************************/
 
-struct denoravars_ {
+struct denoravars_
+{
 	const char *dir;
 	const char *logname;
 	const char *config;
@@ -673,7 +698,8 @@ struct denoravars_ {
 /* Statiscal Data Numbers Struct                                         */
 /*************************************************************************/
 
-struct statvars_ {
+struct statvars_
+{
 	uint32 users;
 	uint32 opers;
 	uint32 chans;
@@ -706,7 +732,8 @@ struct statvars_ {
 /* IRCD Protocol struct                                                  */
 /*************************************************************************/
 
-struct ircdvars_ {
+struct ircdvars_
+{
 	const char *name;				/* Name of the IRCD        			 */
 	const char *statservmode;		/* Mode used by StatServ   			 */
 	int vhost;		        /* IRCD supports vhost		         */
@@ -732,20 +759,20 @@ struct ircdvars_ {
                                      	 *  most IRCD are case senstive
 					 */
 	int sjb64;		        /* SJOIN time stamps are encoded in base 64 formatting */
-    int invitemode;		        /* IRCD supports Invite exception +I */
-   	int sjoinbanchar;			/* SJOIN bans use this char          */
-   	int sjoinexchar;			/* SJOIN expection use this char     */
-   	int sjoinivchar;			/* SJOIN Invite use this char        */
+	int invitemode;		        /* IRCD supports Invite exception +I */
+	int sjoinbanchar;			/* SJOIN bans use this char          */
+	int sjoinexchar;			/* SJOIN expection use this char     */
+	int sjoinivchar;			/* SJOIN Invite use this char        */
 	uint32 vhostmode;	        /* IRCD_UMODE_* for Vhost            */
 	int owner;
 	int protect;
 	int halfop;
 	char *usermodes;
 	char *cmodes;
-   	int floodchar;
-   	int floodchar_alternative;
-   	int jointhrottle;
-   	int nickchgfloodchar;
+	int floodchar;
+	int floodchar_alternative;
+	int jointhrottle;
+	int nickchgfloodchar;
 	int vhostchar;
 	int vhostchar2;
 	int chanforward;
@@ -772,38 +799,39 @@ struct ircdvars_ {
 /* IRCD Capabilities struct                                              */
 /*************************************************************************/
 
-struct ircdcapab_ {
-  uint32 noquit;
-  uint32 tsmode;
-  uint32 unconnect;
-  uint32 nickip;
-  uint32 nsjoin;
-  uint32 zip;
-  uint32 burst;
-  uint32 ts5;
-  uint32 ts3;
-  uint32 dkey;
-  uint32 pt4;
-  uint32 scs;
-  uint32 qs;
-  uint32 uid;
-  uint32 knock;
-  uint32 client;
-  uint32 ipv6;
-  uint32 ssj5;
-  uint32 sn2;
-  uint32 token;
-  uint32 vhost;
-  uint32 ssj3;
-  uint32 nick2;
-  uint32 umode2;
-  uint32 vl;
-  uint32 tlkext;
-  uint32 dodkey;
-  uint32 dozip;
-  uint32 chanmodes;
-  uint32 sjb64;
-  uint32 nickchars;
+struct ircdcapab_
+{
+	uint32 noquit;
+	uint32 tsmode;
+	uint32 unconnect;
+	uint32 nickip;
+	uint32 nsjoin;
+	uint32 zip;
+	uint32 burst;
+	uint32 ts5;
+	uint32 ts3;
+	uint32 dkey;
+	uint32 pt4;
+	uint32 scs;
+	uint32 qs;
+	uint32 uid;
+	uint32 knock;
+	uint32 client;
+	uint32 ipv6;
+	uint32 ssj5;
+	uint32 sn2;
+	uint32 token;
+	uint32 vhost;
+	uint32 ssj3;
+	uint32 nick2;
+	uint32 umode2;
+	uint32 vl;
+	uint32 tlkext;
+	uint32 dodkey;
+	uint32 dozip;
+	uint32 chanmodes;
+	uint32 sjb64;
+	uint32 nickchars;
 };
 
 /**************************************************************************/
@@ -811,7 +839,8 @@ struct ircdcapab_ {
 /* Data from existing structs                                             */
 /**************************************************************************/
 
-struct ModuleData_ {
+struct ModuleData_
+{
 	char *moduleName;		/* Which module we belong to  */
 	char *key;			/* The key                    */
 	char *value;			/* The Value                  */
@@ -823,7 +852,8 @@ struct ModuleData_ {
 /* Data independent of a struct                                           */
 /**************************************************************************/
 
-struct metadata_ {
+struct metadata_
+{
 	int flags;			/* Private or Public          */
 	char *key;			/* The key                    */
 	char *value;			/* The Value                  */
@@ -834,29 +864,30 @@ struct metadata_ {
 /* Server Struct - this is not the stats this is destoried on shutdown    */
 /**************************************************************************/
 
-struct server_ {
-    Server *next, *prev;
+struct server_
+{
+	Server *next, *prev;
 
-    char *name;				/* Server name 			          */
-    char *country;                      /* Server country                         */
-    char *countrycode;                  /* Server country code                    */
-    uint16 hops;		        /* Hops between services and server 	  */
-    char *desc;			        /* Server description 			  */
-    uint16 flags;			/* Some info flags			  */
-    char *suid;				/* Server Universal ID		     	  */
-    int sync;	        		/* Whether is synced or not	          */
-    char *version;			/* Version 				  */
-    uint32 uptime;			/* Uptime				  */
-    ServStats *ss;			/* Server Stats Struct                    */
-    Server *uplink;			/* Uplink Server Struct  		  */
-    time_t lag_time;
-    uint32 ping;                        /* ping time                              */
-    uint32 lastping;                    /* Last time pinged                       */
-    uint32 sqlid;			/* server sql id                          */
-    Server *links;		        /* Linked list head for linked servers 	  */
-    int uline;                          /* Server is ulined                       */
-    ModuleData *moduleData;		/* Module Data                            */
-    char **slinks;                      /* Array of Server Links                  */
+	char *name;				/* Server name 			          */
+	char *country;                      /* Server country                         */
+	char *countrycode;                  /* Server country code                    */
+	uint16 hops;		        /* Hops between services and server 	  */
+	char *desc;			        /* Server description 			  */
+	uint16 flags;			/* Some info flags			  */
+	char *suid;				/* Server Universal ID		     	  */
+	int sync;	        		/* Whether is synced or not	          */
+	char *version;			/* Version 				  */
+	uint32 uptime;			/* Uptime				  */
+	ServStats *ss;			/* Server Stats Struct                    */
+	Server *uplink;			/* Uplink Server Struct  		  */
+	time_t lag_time;
+	uint32 ping;                        /* ping time                              */
+	uint32 lastping;                    /* Last time pinged                       */
+	uint32 sqlid;			/* server sql id                          */
+	Server *links;		        /* Linked list head for linked servers 	  */
+	int uline;                          /* Server is ulined                       */
+	ModuleData *moduleData;		/* Module Data                            */
+	char **slinks;                      /* Array of Server Links                  */
 	int slinks_count;
 	char *motd;
 };
@@ -865,7 +896,8 @@ struct server_ {
 /* Capab Info - used so we can check stuff quicker with less lines        */
 /**************************************************************************/
 
-struct capabinfo_ {
+struct capabinfo_
+{
 	const char *token;
 	uint32 flag;
 };
@@ -874,11 +906,12 @@ struct capabinfo_ {
 /* Server Statisical Struct                                               */
 /**************************************************************************/
 
-struct serverstats_ {
+struct serverstats_
+{
 	ServStats *next, *prev;
 
-    	char name[NICKMAX];		/* Server name 				*/
-    	uint32 uptime;			/* Uptime				*/
+	char name[NICKMAX];		/* Server name 				*/
+	uint32 uptime;			/* Uptime				*/
 	uint32 currentusers; 	        /* Curretn Users 			*/
 	uint32 maxusers;		/* Max Users				*/
 	uint32 opers;			/* Current Opers			*/
@@ -900,223 +933,241 @@ struct serverstats_ {
 /* Top Level Domain Statisical Struct                                     */
 /**************************************************************************/
 
-struct tld_ {
-    TLD *next, *prev;
+struct tld_
+{
+	TLD *next, *prev;
 
-    char *country;
-    char countrycode[NICKMAX];
-    uint32 count;
-    uint32 overall;
-    ModuleData *moduleData;
+	char *country;
+	char countrycode[NICKMAX];
+	uint32 count;
+	uint32 overall;
+	ModuleData *moduleData;
 };
 
 /**************************************************************************/
 /* Temp Struct used for sorting                                           */
 /**************************************************************************/
 
-typedef struct {
-   char name[BUFSIZE];
-   int count;
+typedef struct
+{
+	char name[BUFSIZE];
+	int count;
 } temp_data;
 
 /**************************************************************************/
 /* CTCP Statisical Struct                                                 */
 /**************************************************************************/
 
-struct ctcpverstats_ {
-    CTCPVerStats *next, *prev;
-    CTCPVerStats *nextsort, *prevsort;
+struct ctcpverstats_
+{
+	CTCPVerStats *next, *prev;
+	CTCPVerStats *nextsort, *prevsort;
 
-    char *version;
-    uint32 count;
-    uint32 overall;
-    ModuleData *moduleData;
+	char *version;
+	uint32 count;
+	uint32 overall;
+	ModuleData *moduleData;
 };
 
 /*************************************************************************/
 
-struct exclude_ {
-    Exclude *next, *prev;
+struct exclude_
+{
+	Exclude *next, *prev;
 
-    char *name;
-    uint32 flag;
+	char *name;
+	uint32 flag;
 };
 
 /**************************************************************************/
 /* User Struct                                                            */
 /**************************************************************************/
 
-struct user_ {
-    User *next, *prev;
-    char nick[NICKMAX];
-    char *username;             /* User's real ident		*/
-    char *host;                 /* User's real hostname 	*/
-    char *vhost;        	/* User's virtual hostname      */
-    char *vident;       	/* User's virtual ident 	*/
-    char *realname;		/* Realname 			*/
-    Server *server;	        /* Server struct user is on     */
-    char *ip;			/* User's resolved IP           */
-    time_t timestamp;	        /* Timestamp of the nick 	*/
-    time_t my_signon;	        /* When did _we_ see the user?  */
-    uint32 svid;		/* Services ID 			*/
-    uint32 mode;		/* See below 			*/
-    char *uid;			/* Univeral ID			*/
-    char *account;		/* P10 Account                  */
-    uint16 language;
-    uint16 admin;
-    uint16 confadmin;   	/* if admin is from configfile */
-    char *ctcp;
-    int sqlid;			/* mysql id number */
-    char *sqlnick;
-    char *swhois;
-    int hopcount;
+struct user_
+{
+	User *next, *prev;
+	char nick[NICKMAX];
+	char *username;             /* User's real ident		*/
+	char *host;                 /* User's real hostname 	*/
+	char *vhost;        	/* User's virtual hostname      */
+	char *vident;       	/* User's virtual ident 	*/
+	char *realname;		/* Realname 			*/
+	Server *server;	        /* Server struct user is on     */
+	char *ip;			/* User's resolved IP           */
+	time_t timestamp;	        /* Timestamp of the nick 	*/
+	time_t my_signon;	        /* When did _we_ see the user?  */
+	uint32 svid;		/* Services ID 			*/
+	uint32 mode;		/* See below 			*/
+	char *uid;			/* Univeral ID			*/
+	char *account;		/* P10 Account                  */
+	uint16 language;
+	uint16 admin;
+	uint16 confadmin;   	/* if admin is from configfile */
+	char *ctcp;
+	int sqlid;			/* mysql id number */
+	char *sqlnick;
+	char *swhois;
+	int hopcount;
 
-    int isaway;
-    char *awaymsg;
+	int isaway;
+	char *awaymsg;
 
-    int cstats;          	/* used for channelstats - dont modify it */
-    char *sgroup;        	/* contains the escaped name of the stats-group */
-    char *lastuname;		/* used for nick tracking */
+	int cstats;          	/* used for channelstats - dont modify it */
+	char *sgroup;        	/* contains the escaped name of the stats-group */
+	char *lastuname;		/* used for nick tracking */
 
-    ModuleData *moduleData;	/* defined for it, it should allow the module Add/Get */
-    char *country_code;
-    char *country_name;
+	ModuleData *moduleData;	/* defined for it, it should allow the module Add/Get */
+	char *country_code;
+	char *country_name;
 
-    int isservice;
+	int isservice;
 
-    struct u_chanlist {
-        struct u_chanlist *next, *prev;
-        Channel *chan;
-        int16 status;    	/* Associated flags; see CSTATUS_* below. */
-    } *chans;            	/* Channels user has joined */
+	struct u_chanlist
+	{
+		struct u_chanlist *next, *prev;
+		Channel *chan;
+		int16 status;    	/* Associated flags; see CSTATUS_* below. */
+	} *chans;            	/* Channels user has joined */
 
-    struct u_modes {
-        struct u_modes *next, *prev;
-        char *mode;
-    } *modes;
+	struct u_modes
+	{
+		struct u_modes *next, *prev;
+		char *mode;
+	} *modes;
 };
 
 /*************************************************************************/
 
-struct usermode_ {
+struct usermode_
+{
 	UserMode *next, *prev;
-    char *mode;
+	char *mode;
 	int extra;
-    void (*set) (int ac, char **av);
+	void (*set) (int ac, char **av);
 };
 
-struct usermodehash_ {
+struct usermodehash_
+{
 	UserModeHash *next, *prev;
-    char *mode;
+	char *mode;
 	UserMode *m;
 };
 
 /*************************************************************************/
 
-struct chanmode_ {
+struct chanmode_
+{
 	ChanMode *next, *prev;
-    char *mode;
-    void (*setvalue) (Channel *chan, char *value);
+	char *mode;
+	void (*setvalue) (Channel *chan, char *value);
 	char * (*getvalue) 		(Channel *chan);
 };
 
-struct chanmodehash_ {
+struct chanmodehash_
+{
 	ChanModeHash *next, *prev;
-    char *mode;
+	char *mode;
 	ChanMode *cm;
 };
 
 /*************************************************************************/
 
-struct chanbanmode_ {
-    ChanBanMode *next, *prev;
-    char *mode;
+struct chanbanmode_
+{
+	ChanBanMode *next, *prev;
+	char *mode;
 	void (*addmask) (Channel *chan, char *mask);
 	void (*delmask) (Channel *chan, char *mask);
 };
 
-struct chanbanmodehash_ {
-    ChanBanModeHash *next, *prev;
-    char *mode;
-    ChanBanMode *cbm;
+struct chanbanmodehash_
+{
+	ChanBanModeHash *next, *prev;
+	char *mode;
+	ChanBanMode *cbm;
 };
 
 /*************************************************************************/
 
-struct chanstats_ {
-    ChannelStats *next, *prev;
-    char *name;
-    uint32 flags;
+struct chanstats_
+{
+	ChannelStats *next, *prev;
+	char *name;
+	uint32 flags;
 	uint32 timeadded;
 };
 
 /*************************************************************************/
 
-struct statschan_ {
-    StatsChannel *next, *prev;
-    StatsChannel *nextsort, *prevsort;
-    char name[CHANMAX];
-    uint32 kickcount;
-    time_t kickcounttime;
-    uint32 joincounter;
-    time_t joincounttime;
-    uint32 topic_count;
-    time_t topiccounttime;
-    uint16 usercount;
-    uint16 maxusercount;
-    time_t maxusertime;
-    int in_use;
-    uint32 partcount;
-    time_t partcounttime;
-    uint32 modecount;
-    time_t modecounttime;
-    int secret;
-    int private;
-    ModuleData *moduleData;
+struct statschan_
+{
+	StatsChannel *next, *prev;
+	StatsChannel *nextsort, *prevsort;
+	char name[CHANMAX];
+	uint32 kickcount;
+	time_t kickcounttime;
+	uint32 joincounter;
+	time_t joincounttime;
+	uint32 topic_count;
+	time_t topiccounttime;
+	uint16 usercount;
+	uint16 maxusercount;
+	time_t maxusertime;
+	int in_use;
+	uint32 partcount;
+	time_t partcounttime;
+	uint32 modecount;
+	time_t modecounttime;
+	int secret;
+	int private;
+	ModuleData *moduleData;
 };
 
 /*************************************************************************/
 
-struct channel_ {
-    Channel *next, *prev;
-    char name[CHANMAX];
-    time_t creation_time;		/* When channel was created */
-    char *topic;
-    char topic_setter[NICKMAX];		/* Who set the topic */
-    time_t topic_time;			/* When topic was set */
-    uint32 limit;			/* 0 if none */
-    uint32 rejoinlock;			/* 0 if none */
-    char *nickchgflood;
-    char *key;				/* NULL if none */
-    char *redirect;			/* +L; NULL if none */
-    char *flood;			/* +f; NULL if none */
-    char *flood_alt;
-    int32 bancount, bansize;
-    char **bans;
-    int32 exceptcount, exceptsize;
-    char **excepts;
-    int32 invitecount, invitesize;
-    char **invite;
-    int32 quietcount, quietsize;
-    char **quiet;
-    char *sqlchan;
-    struct c_userlist {
+struct channel_
+{
+	Channel *next, *prev;
+	char name[CHANMAX];
+	time_t creation_time;		/* When channel was created */
+	char *topic;
+	char topic_setter[NICKMAX];		/* Who set the topic */
+	time_t topic_time;			/* When topic was set */
+	uint32 limit;			/* 0 if none */
+	uint32 rejoinlock;			/* 0 if none */
+	char *nickchgflood;
+	char *key;				/* NULL if none */
+	char *redirect;			/* +L; NULL if none */
+	char *flood;			/* +f; NULL if none */
+	char *flood_alt;
+	int32 bancount, bansize;
+	char **bans;
+	int32 exceptcount, exceptsize;
+	char **excepts;
+	int32 invitecount, invitesize;
+	char **invite;
+	int32 quietcount, quietsize;
+	char **quiet;
+	char *sqlchan;
+	struct c_userlist
+	{
 		struct c_userlist *next, *prev;
 		User *user;
-    } *users;
-    StatsChannel *stats;
-    int cstats;          /* used for channelstats - dont modify it */
-    int sqlid;
-    int statservon;
+	} *users;
+	StatsChannel *stats;
+	int cstats;          /* used for channelstats - dont modify it */
+	int sqlid;
+	int statservon;
 
-    time_t server_modetime;		/* Time of last server MODE */
-    int16 server_modecount;		/* Number of server MODEs this second */
-    ModuleData *moduleData;
+	time_t server_modetime;		/* Time of last server MODE */
+	int16 server_modecount;		/* Number of server MODEs this second */
+	ModuleData *moduleData;
 
-    struct c_modes {
-        struct c_modes *next, *prev;
-        char *mode;
-    } *modes;
+	struct c_modes
+	{
+		struct c_modes *next, *prev;
+		char *mode;
+	} *modes;
 };
 
 /* Configuration structures */
@@ -1125,30 +1176,32 @@ struct dadmin_
 {
 	Dadmin *prev, *next;
 
-    char *hosts[MAXHOSTS+1];
-    char *passwd;
-    char *name;
-    uint16 language;
-    int   legal;
+	char *hosts[MAXHOSTS+1];
+	char *passwd;
+	char *name;
+	uint16 language;
+	int   legal;
 	int   configfile;    /* Admin was loaded by the config file  */
 };
 
 struct Conf_Modules
 {
-    char *autoload[128];
-    char *delayed[128];
+	char *autoload[128];
+	char *delayed[128];
 };
 
 /**************************************************************************/
 /* Privmsg Handlers                                                       */
 /**************************************************************************/
 
-struct PrivMsgHandler_ {
+struct PrivMsgHandler_
+{
 	char *service;
 	void (*handler) (User * u, char *buf);
 };
 
-struct PrivMsgHash_ {
+struct PrivMsgHash_
+{
 	char *service;
 	PrivMsg *p;
 	PrivMsgHash *next;
@@ -1158,12 +1211,14 @@ struct PrivMsgHash_ {
 /* HTML Tag struct                                                        */
 /**************************************************************************/
 
-struct htmltag_ {
+struct htmltag_
+{
 	char *tag;
 	void (*handler) (FILE *ptr);
 };
 
-struct htmlhash_ {
+struct htmlhash_
+{
 	char *tag;
 	HTMLTag *h;
 	HTMLHash *next;
@@ -1175,53 +1230,57 @@ struct htmlhash_ {
  * protocol modules register the command they want touse for function X with our set
  * functions, we then call the correct function for the anope_ commands.
  **/
-typedef struct ircd_proto_ {
+typedef struct ircd_proto_
+{
 	void (*ircd_set_mod_current_buffer)(int ac, char **av);
-    void (*ircd_cmd_nick)(char *nick, char *name, const char *modes);
+	void (*ircd_cmd_nick)(char *nick, char *name, const char *modes);
 	void (*ircd_cmd_bot_nick) (char *nick, char *user, char *host, char *real, char *modes);
-    void (*ircd_cmd_mode)(char *source, char *dest, char *buf);
-    void (*ircd_cmd_notice)(char *source, char *dest, char *buf);
-    void (*ircd_cmd_privmsg)(char *source, char *dest, char *buf);
-    void (*ircd_cmd_serv_notice)(char *source, char *dest, char *msg);
-    void (*ircd_cmd_serv_privmsg)(char *source, char *dest, char *msg);
-    void (*ircd_cmd_quit)(char *source, char *buf);
-    void (*ircd_cmd_pong)(char *servname, char *who);
-    void (*ircd_cmd_join)(char *user, char *channel, time_t chantime);
-    void (*ircd_cmd_part)(char *nick, char *chan, char *buf);
-    void (*ircd_cmd_global)(char *source, char *buf);
-    void (*ircd_cmd_squit)(char *servname, char *message);
-    void (*ircd_cmd_connect)(void);
-    void (*ircd_cmd_ctcp)(char *source, char *dest, char *buf);
-    void (*ircd_cmd_eob)(void);
-    void (*ircd_cmd_version)(char *server);
-    void (*ircd_cmd_stats)(char *sender, const char *letter, char *server);
-    void (*ircd_cmd_motd)(char *sender, char *server);
-    void (*ircd_cmd_ping)(char *server);
+	void (*ircd_cmd_mode)(char *source, char *dest, char *buf);
+	void (*ircd_cmd_notice)(char *source, char *dest, char *buf);
+	void (*ircd_cmd_privmsg)(char *source, char *dest, char *buf);
+	void (*ircd_cmd_serv_notice)(char *source, char *dest, char *msg);
+	void (*ircd_cmd_serv_privmsg)(char *source, char *dest, char *msg);
+	void (*ircd_cmd_quit)(char *source, char *buf);
+	void (*ircd_cmd_pong)(char *servname, char *who);
+	void (*ircd_cmd_join)(char *user, char *channel, time_t chantime);
+	void (*ircd_cmd_part)(char *nick, char *chan, char *buf);
+	void (*ircd_cmd_global)(char *source, char *buf);
+	void (*ircd_cmd_squit)(char *servname, char *message);
+	void (*ircd_cmd_connect)(void);
+	void (*ircd_cmd_ctcp)(char *source, char *dest, char *buf);
+	void (*ircd_cmd_eob)(void);
+	void (*ircd_cmd_version)(char *server);
+	void (*ircd_cmd_stats)(char *sender, const char *letter, char *server);
+	void (*ircd_cmd_motd)(char *sender, char *server);
+	void (*ircd_cmd_ping)(char *server);
 } IRCDProto;
 
-typedef struct ircd_modes_ {
-        int user_oper;
-		uint32 ircd_var;
+typedef struct ircd_modes_
+{
+	int user_oper;
+	uint32 ircd_var;
 } IRCDModes;
 
 /**************************************************************************/
 /* Base64 struct data                                                     */
 /**************************************************************************/
 
-struct buffer_st {
-  char *data;
-  int length;
-  char *ptr;
-  int offset;
+struct buffer_st
+{
+	char *data;
+	int length;
+	char *ptr;
+	int offset;
 };
 
 /**************************************************************************/
 /* First In / First Out Queue                                             */
 /**************************************************************************/
 
-struct queueentry_ {
-   char *msg;
-   QueueEntry *link;
+struct queueentry_
+{
+	char *msg;
+	QueueEntry *link;
 };
 
 /**************************************************************************/
@@ -1231,26 +1290,26 @@ struct queueentry_ {
 /* top level conf options */
 struct TopConf
 {
-    const char *tok;        		   /* our token string             */
-    unsigned int flag;      	           /* our token flag               */
-    unsigned int nest;                     /* tokens we allow to nest here */
-    sConf *subtok;          	           /* sub-tokens allowed in here   */
-    int (*func) (cVar * vars[], int lnum); /* function to call to add this */
+	const char *tok;        		   /* our token string             */
+	unsigned int flag;      	           /* our token flag               */
+	unsigned int nest;                     /* tokens we allow to nest here */
+	sConf *subtok;          	           /* sub-tokens allowed in here   */
+	int (*func) (cVar * vars[], int lnum); /* function to call to add this */
 };
 
 /* sub-token options */
 struct SubConf
 {
-    const char *tok;        /* our token string             */
-    unsigned long flag;     /* our token flag               */
-    unsigned int var;       /* our variable type            */
+	const char *tok;        /* our token string             */
+	unsigned long flag;     /* our token flag               */
+	unsigned int var;       /* our variable type            */
 };
 
 struct ConfVar
 {
-    sConf   *type;
-    char    *value;
-    int      loaded;        /* 1 - identified.
+	sConf   *type;
+	char    *value;
+	int      loaded;        /* 1 - identified.
                              * 2 - variable loaded
                              * 3 - delimited cleared */
 };
@@ -1263,13 +1322,15 @@ struct ConfVar
 
 /* Configuration directives */
 
-typedef struct {
-    const char *name;
-    struct {
-        int type;               /* PARAM_* below */
-        int flags;              /* Same */
-        void *ptr;              /* Pointer to where to store the value */
-    } params[MAXPARAMS];
+typedef struct
+{
+	const char *name;
+	struct
+	{
+		int type;               /* PARAM_* below */
+		int flags;              /* Same */
+		void *ptr;              /* Pointer to where to store the value */
+	} params[MAXPARAMS];
 } Directive;
 
 #define PARAM_NONE	0
@@ -1280,7 +1341,7 @@ typedef struct {
 #define PARAM_TIME	5
 #define PARAM_STRING_ARRAY 6    /* Array of string */
 #define PARAM_SET	-1      /* Not a real parameter; just set the
-                                 *    given integer variable to 1 */
+*    given integer variable to 1 */
 /* Flags: */
 #define PARAM_OPTIONAL	0x01
 #define PARAM_FULLONLY	0x02    /* Directive only allowed if !STREAMLINED */

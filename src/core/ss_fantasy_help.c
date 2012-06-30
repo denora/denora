@@ -7,8 +7,8 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
- * 
+ *
+ *
  *
  */
 
@@ -28,21 +28,22 @@ void DenoraFini(void);
  **/
 int DenoraInit(int argc, char **argv)
 {
-    EvtHook *hook;
+	EvtHook *hook;
 
-    if (denora->debug >= 2) {
-        protocol_debug(NULL, argc, argv);
-    }
+	if (denora->debug >= 2)
+	{
+		protocol_debug(NULL, argc, argv);
+	}
 
-    moduleAddAuthor("Denora");
-    moduleAddVersion
-        ("");
-    moduleSetType(CORE);
+	moduleAddAuthor("Denora");
+	moduleAddVersion
+	("");
+	moduleSetType(CORE);
 
-    hook = createEventHook(EVENT_FANTASY, do_fantasy);
-    moduleAddEventHook(hook);
+	hook = createEventHook(EVENT_FANTASY, do_fantasy);
+	moduleAddEventHook(hook);
 
-    return MOD_CONT;
+	return MOD_CONT;
 }
 
 /**
@@ -61,25 +62,27 @@ void DenoraFini(void)
  **/
 int do_fantasy(int argc, char **argv)
 {
-    User *u;
-    if (argc < 3)
-        return MOD_CONT;
+	User *u;
+	if (argc < 3)
+		return MOD_CONT;
 
-    if (!denora->do_sql) {
-        return MOD_CONT;
-    }
+	if (!denora->do_sql)
+	{
+		return MOD_CONT;
+	}
 
-    if (stricmp(argv[0], "help") == 0) {
-        u = finduser(argv[1]);
-        notice_lang(s_StatServ, u, STATS_HELP_CHANNEL_1);
-        notice_lang(s_StatServ, u, STATS_HELP_CHANNEL_2, ChanStatsTrigger);
-        notice_lang(s_StatServ, u, STATS_HELP_CHANNEL_3, ChanStatsTrigger);
-        notice_lang(s_StatServ, u, STATS_HELP_CHANNEL_4, ChanStatsTrigger);
-        notice_lang(s_StatServ, u, STATS_HELP_CHANNEL_5, ChanStatsTrigger);
-        notice_lang(s_StatServ, u, STATS_HELP_CHANNEL_6, ChanStatsTrigger);
-        notice_lang(s_StatServ, u, STATS_HELP_CHANNEL_7, ChanStatsTrigger);
-        notice_lang(s_StatServ, u, STATS_HELP_CHANNEL_8, ChanStatsTrigger);
-    }
+	if (stricmp(argv[0], "help") == 0)
+	{
+		u = finduser(argv[1]);
+		notice_lang(s_StatServ, u, STATS_HELP_CHANNEL_1);
+		notice_lang(s_StatServ, u, STATS_HELP_CHANNEL_2, ChanStatsTrigger);
+		notice_lang(s_StatServ, u, STATS_HELP_CHANNEL_3, ChanStatsTrigger);
+		notice_lang(s_StatServ, u, STATS_HELP_CHANNEL_4, ChanStatsTrigger);
+		notice_lang(s_StatServ, u, STATS_HELP_CHANNEL_5, ChanStatsTrigger);
+		notice_lang(s_StatServ, u, STATS_HELP_CHANNEL_6, ChanStatsTrigger);
+		notice_lang(s_StatServ, u, STATS_HELP_CHANNEL_7, ChanStatsTrigger);
+		notice_lang(s_StatServ, u, STATS_HELP_CHANNEL_8, ChanStatsTrigger);
+	}
 
-    return MOD_CONT;
+	return MOD_CONT;
 }

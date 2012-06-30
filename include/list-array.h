@@ -6,12 +6,12 @@
  *
  * Please read COPYING and README for furhter details.
  *
- * Based on the original code of 
+ * Based on the original code of
  * IRC Services is copyright (c) 1996-2006 Andrew Church.
  *     E-mail: <achurch@achurch.org>
  * Parts written by Andrew Kempe and others.
  *
- * 
+ *
  *
  */
 

@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * 
+ *
  *
  */
 /*************************************************************************/
@@ -27,20 +27,21 @@ void DenoraFini(void);
  **/
 int DenoraInit(int argc, char **argv)
 {
-    Command *c;
+	Command *c;
 
-    if (denora->debug >= 2) {
-        protocol_debug(NULL, argc, argv);
-    }
-    moduleAddAuthor("Denora");
-    moduleAddVersion("");
-    moduleSetType(CORE);
+	if (denora->debug >= 2)
+	{
+		protocol_debug(NULL, argc, argv);
+	}
+	moduleAddAuthor("Denora");
+	moduleAddVersion("");
+	moduleSetType(CORE);
 
-    c = createCommand("HTML", do_htmlexport, is_stats_admin, -1, -1, -1,
-                      STAT_HELP_HTML);
-    moduleAddCommand(STATSERV, c, MOD_UNIQUE);
+	c = createCommand("HTML", do_htmlexport, is_stats_admin, -1, -1, -1,
+	                  STAT_HELP_HTML);
+	moduleAddCommand(STATSERV, c, MOD_UNIQUE);
 
-    return MOD_CONT;
+	return MOD_CONT;
 }
 
 /**
@@ -53,10 +54,11 @@ void DenoraFini(void)
 
 static int do_htmlexport(User * u, int ac, char **av)
 {
-    if (denora->protocoldebug) {
-        protocol_debug(NULL, ac, av);
-    }
-    do_html();
-    notice_lang(s_StatServ, u, STATS_HTML_EXPORTED);
-    return MOD_CONT;
+	if (denora->protocoldebug)
+	{
+		protocol_debug(NULL, ac, av);
+	}
+	do_html();
+	notice_lang(s_StatServ, u, STATS_HTML_EXPORTED);
+	return MOD_CONT;
 }

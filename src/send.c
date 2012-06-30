@@ -8,8 +8,8 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
- * 
+ *
+ *
  *
  */
 
@@ -27,15 +27,16 @@
  */
 void send_cmd(const char *source, const char *fmt, ...)
 {
-    va_list args;
+	va_list args;
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (fmt && !denora->quitting) {
-        va_start(args, fmt);
-        vsend_cmd(source, fmt, args);
-        va_end(args);
-    }
+	if (fmt && !denora->quitting)
+	{
+		va_start(args, fmt);
+		vsend_cmd(source, fmt, args);
+		va_end(args);
+	}
 }
 
 /*************************************************************************/
@@ -49,31 +50,38 @@ void send_cmd(const char *source, const char *fmt, ...)
  */
 void vsend_cmd(const char *source, const char *fmt, va_list args)
 {
-    char buf[BUFSIZE];
-    *buf = '\0';
+	char buf[BUFSIZE];
+	*buf = '\0';
 
-    SET_SEGV_LOCATION();
-    total_sendmsg++;
+	SET_SEGV_LOCATION();
+	total_sendmsg++;
 
-    if (!BadPtr(fmt)) {
-        ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
+	if (!BadPtr(fmt))
+	{
+		ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
 
-        if (source) {
-            if (ircd->p10) {
-                sockprintf(servsock, "%s %s\r\n", source, buf);
-                eventprintf("%s %s", source, buf);
-                alog(LOG_DEBUG, "debug: Sent: %s %s", source, buf);
-            } else {
-                sockprintf(servsock, ":%s %s\r\n", source, buf);
-                eventprintf(":%s %s", source, buf);
-                alog(LOG_DEBUG, "debug: Sent: :%s %s", source, buf);
-            }
-        } else {
-            sockprintf(servsock, "%s\r\n", buf);
-            eventprintf("%s", buf);
-            alog(LOG_DEBUG, "debug: Sent: %s", buf);
-        }
-    }
+		if (source)
+		{
+			if (ircd->p10)
+			{
+				sockprintf(servsock, "%s %s\r\n", source, buf);
+				eventprintf("%s %s", source, buf);
+				alog(LOG_DEBUG, "debug: Sent: %s %s", source, buf);
+			}
+			else
+			{
+				sockprintf(servsock, ":%s %s\r\n", source, buf);
+				eventprintf(":%s %s", source, buf);
+				alog(LOG_DEBUG, "debug: Sent: :%s %s", source, buf);
+			}
+		}
+		else
+		{
+			sockprintf(servsock, "%s\r\n", buf);
+			eventprintf("%s", buf);
+			alog(LOG_DEBUG, "debug: Sent: %s", buf);
+		}
+	}
 }
 
 /*************************************************************************/
@@ -88,19 +96,20 @@ void vsend_cmd(const char *source, const char *fmt, va_list args)
  */
 void notice_server(char *source, Server * s, char *fmt, ...)
 {
-    va_list args;
-    char buf[BUFSIZE];
-    *buf = '\0';
+	va_list args;
+	char buf[BUFSIZE];
+	*buf = '\0';
 
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (fmt) {
-        va_start(args, fmt);
-        ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
-        va_end(args);
+	if (fmt)
+	{
+		va_start(args, fmt);
+		ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
+		va_end(args);
 
-        denora_cmd_serv_notice(source, s->name, buf);
-    }
+		denora_cmd_serv_notice(source, s->name, buf);
+	}
 }
 
 /*************************************************************************/
@@ -115,17 +124,18 @@ void notice_server(char *source, Server * s, char *fmt, ...)
  */
 void notice_user(char *source, User * u, const char *fmt, ...)
 {
-    va_list args;
-    char buf[BUFSIZE];
-    *buf = '\0';
+	va_list args;
+	char buf[BUFSIZE];
+	*buf = '\0';
 
-    if (fmt) {
-        va_start(args, fmt);
-        ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
-        va_end(args);
+	if (fmt)
+	{
+		va_start(args, fmt);
+		ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
+		va_end(args);
 
-        denora_cmd_notice(source, u->nick, buf);
-    }
+		denora_cmd_notice(source, u->nick, buf);
+	}
 }
 
 /*************************************************************************/
@@ -139,18 +149,22 @@ void notice_user(char *source, User * u, const char *fmt, ...)
  */
 void notice_list(char *source, char *dest, char **text)
 {
-    while (*text) {
-        /* Have to kludge around an ircII bug here: if a notice includes
-         * no text, it is ignored, so we replace blank lines by lines
-         * with a single space.
-         */
-        if (**text) {
-            denora_cmd_notice(source, dest, *text);
-        } else {
-            denora_cmd_notice(source, dest, " ");
-        }
-        text++;
-    }
+	while (*text)
+	{
+		/* Have to kludge around an ircII bug here: if a notice includes
+		 * no text, it is ignored, so we replace blank lines by lines
+		 * with a single space.
+		 */
+		if (**text)
+		{
+			denora_cmd_notice(source, dest, *text);
+		}
+		else
+		{
+			denora_cmd_notice(source, dest, " ");
+		}
+		text++;
+	}
 }
 
 /*************************************************************************/
@@ -165,30 +179,32 @@ void notice_list(char *source, char *dest, char **text)
  */
 void notice_lang(char *source, User * dest, int message, ...)
 {
-    va_list args;
-    char buf[4096];             /* because messages can be really big */
-    char *s, *t;
-    const char *fmt;
-    if (!dest || !message) {
-        return;
-    }
-    va_start(args, message);
-    SET_SEGV_LOCATION();
-    fmt = getstring(dest, message);
-    if (!fmt)
-        return;
-    memset(buf, 0, 4096);
-    SET_SEGV_LOCATION();
-    ircvsnprintf(buf, sizeof(buf), fmt, args);
-    va_end(args);
-    s = buf;
-    while (*s) {
-        t = s;
-        s += strcspn(s, "\n");
-        if (*s)
-            *s++ = 0;
-        denora_cmd_notice(source, dest->nick, "%s", *t ? t : " ");
-    }
+	va_list args;
+	char buf[4096];             /* because messages can be really big */
+	char *s, *t;
+	const char *fmt;
+	if (!dest || !message)
+	{
+		return;
+	}
+	va_start(args, message);
+	SET_SEGV_LOCATION();
+	fmt = getstring(dest, message);
+	if (!fmt)
+		return;
+	memset(buf, 0, 4096);
+	SET_SEGV_LOCATION();
+	ircvsnprintf(buf, sizeof(buf), fmt, args);
+	va_end(args);
+	s = buf;
+	while (*s)
+	{
+		t = s;
+		s += strcspn(s, "\n");
+		if (*s)
+			*s++ = 0;
+		denora_cmd_notice(source, dest->nick, "%s", *t ? t : " ");
+	}
 
 }
 
@@ -206,34 +222,37 @@ void notice_lang(char *source, User * dest, int message, ...)
  */
 void notice_help(char *source, User * dest, int message, ...)
 {
-    va_list args;
-    char buf[4096], buf2[4096], outbuf[BUFSIZE];
-    char *s, *t;
-    const char *fmt;
+	va_list args;
+	char buf[4096], buf2[4096], outbuf[BUFSIZE];
+	char *s, *t;
+	const char *fmt;
 
-    if (!dest || !message) {
-        return;
-    }
-    va_start(args, message);
-    fmt = getstring(dest, message);
-    if (!fmt) {
-        return;
-    }
-    strlcpy(buf2, fmt, sizeof(buf2));
-    strnrepl(buf2, sizeof(buf2), "%S", "\1\1");
-    ircvsnprintf(buf, sizeof(buf), buf2, args);
-    va_end(args);
-    s = buf;
-    while (*s) {
-        t = s;
-        s += strcspn(s, "\n");
-        if (*s)
-            *s++ = 0;
-        strlcpy(outbuf, t, sizeof(outbuf));
-        strnrepl(outbuf, sizeof(outbuf), "\1\1", source);
-        denora_cmd_notice(source, dest->nick, "%s",
-                          *outbuf ? outbuf : " ");
-    }
+	if (!dest || !message)
+	{
+		return;
+	}
+	va_start(args, message);
+	fmt = getstring(dest, message);
+	if (!fmt)
+	{
+		return;
+	}
+	strlcpy(buf2, fmt, sizeof(buf2));
+	strnrepl(buf2, sizeof(buf2), "%S", "\1\1");
+	ircvsnprintf(buf, sizeof(buf), buf2, args);
+	va_end(args);
+	s = buf;
+	while (*s)
+	{
+		t = s;
+		s += strcspn(s, "\n");
+		if (*s)
+			*s++ = 0;
+		strlcpy(outbuf, t, sizeof(outbuf));
+		strnrepl(outbuf, sizeof(outbuf), "\1\1", source);
+		denora_cmd_notice(source, dest->nick, "%s",
+		                  *outbuf ? outbuf : " ");
+	}
 }
 
 /*************************************************************************/
@@ -248,17 +267,18 @@ void notice_help(char *source, User * dest, int message, ...)
  */
 void notice(char *source, char *dest, const char *fmt, ...)
 {
-    va_list args;
-    char buf[BUFSIZE];
-    *buf = '\0';
+	va_list args;
+	char buf[BUFSIZE];
+	*buf = '\0';
 
-    if (fmt) {
-        va_start(args, fmt);
-        ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
+	if (fmt)
+	{
+		va_start(args, fmt);
+		ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
 
-        denora_cmd_notice(source, dest, "%s", buf);
-        va_end(args);
-    }
+		denora_cmd_notice(source, dest, "%s", buf);
+		va_end(args);
+	}
 }
 
 /*************************************************************************/
@@ -273,17 +293,18 @@ void notice(char *source, char *dest, const char *fmt, ...)
  */
 void privmsg(char *source, char *dest, const char *fmt, ...)
 {
-    va_list args;
-    char buf[BUFSIZE];
-    *buf = '\0';
+	va_list args;
+	char buf[BUFSIZE];
+	*buf = '\0';
 
-    if (fmt) {
-        va_start(args, fmt);
-        ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
-        va_end(args);
-    }
+	if (fmt)
+	{
+		va_start(args, fmt);
+		ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
+		va_end(args);
+	}
 
-    denora_cmd_privmsg(source, dest, "%s", buf);
+	denora_cmd_privmsg(source, dest, "%s", buf);
 }
 
 /*************************************************************************/

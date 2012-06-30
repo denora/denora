@@ -7,8 +7,8 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
- * 
+ *
+ *
  *
  */
 
@@ -22,7 +22,8 @@ typedef struct  Zdata   aZdata;
 /* the maximum amount of data to be compressed (can actually be a bit more) */
 #define ZIP_MAXIMUM     8192	/* WARNING: *DON'T* CHANGE THIS!!!! */
 
-struct Zdata {
+struct Zdata
+{
 	z_stream *in;		/* input zip stream data */
 	z_stream *out;		/* output zip stream data */
 	char inbuf[ZIP_MAXIMUM];	/* incoming zipped buffer */

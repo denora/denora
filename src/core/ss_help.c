@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * 
+ *
  *
  */
 /*************************************************************************/
@@ -27,19 +27,20 @@ void DenoraFini(void);
  **/
 int DenoraInit(int argc, char **argv)
 {
-    Command *c;
+	Command *c;
 
-    if (denora->debug >= 2) {
-        protocol_debug(NULL, argc, argv);
-    }
-    moduleAddAuthor("Denora");
-    moduleAddVersion("");
-    moduleSetType(CORE);
+	if (denora->debug >= 2)
+	{
+		protocol_debug(NULL, argc, argv);
+	}
+	moduleAddAuthor("Denora");
+	moduleAddVersion("");
+	moduleSetType(CORE);
 
-    c = createCommand("HELP", do_help, NULL, -1, -1, -1, -1);
-    moduleAddCommand(STATSERV, c, MOD_UNIQUE);
+	c = createCommand("HELP", do_help, NULL, -1, -1, -1, -1);
+	moduleAddCommand(STATSERV, c, MOD_UNIQUE);
 
-    return MOD_CONT;
+	return MOD_CONT;
 }
 
 /**
@@ -56,23 +57,29 @@ void DenoraFini(void)
 
 static int do_help(User * u, int ac, char **av)
 {
-    SET_SEGV_LOCATION();
+	SET_SEGV_LOCATION();
 
-    if (ac < 1) {
-        notice_help(s_StatServ, u, STAT_HELP);
+	if (ac < 1)
+	{
+		notice_help(s_StatServ, u, STAT_HELP);
 #ifdef USE_MODULES
-        if (is_stats_admin(u))
-            notice_help(s_StatServ, u, STAT_HELP_ADMIN_CMD);
+		if (is_stats_admin(u))
+			notice_help(s_StatServ, u, STAT_HELP_ADMIN_CMD);
 #endif
-        moduleDisplayHelp(1, u);
-    } else {
-        if (!BadChar(av[0])) {
-            mod_help_cmd(s_StatServ, u, STATSERV, av[0]);
-        } else {
-            notice_lang(s_StatServ, u, NO_HELP_AVAILABLE, av[0]);
-        }
-    }
-    return MOD_CONT;
+		moduleDisplayHelp(1, u);
+	}
+	else
+	{
+		if (!BadChar(av[0]))
+		{
+			mod_help_cmd(s_StatServ, u, STATSERV, av[0]);
+		}
+		else
+		{
+			notice_lang(s_StatServ, u, NO_HELP_AVAILABLE, av[0]);
+		}
+	}
+	return MOD_CONT;
 }
 
 /*************************************************************************/

@@ -7,8 +7,8 @@
  *
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
- * 
- * 
+ *
+ *
  *
  */
 /*************************************************************************/
@@ -21,24 +21,26 @@ void DenoraFini(void);
 
 int DenoraInit(int argc, char **argv)
 {
-    XMLRPCCmd *xml;
+	XMLRPCCmd *xml;
 
-    if (denora->debug >= 2) {
-        protocol_debug(NULL, argc, argv);
-    }
-    moduleAddAuthor("Denora");
-    moduleAddVersion
-        ("");
-    moduleSetType(CORE);
+	if (denora->debug >= 2)
+	{
+		protocol_debug(NULL, argc, argv);
+	}
+	moduleAddAuthor("Denora");
+	moduleAddVersion
+	("");
+	moduleSetType(CORE);
 
-    if (!XMLRPC_Enable) {
-        return MOD_STOP;
-    }
+	if (!XMLRPC_Enable)
+	{
+		return MOD_STOP;
+	}
 
-    xml = createXMLCommand("denora.channellist", xmlrpc_channellist);
-    moduleAddXMLRPCcmd(xml);
+	xml = createXMLCommand("denora.channellist", xmlrpc_channellist);
+	moduleAddXMLRPCcmd(xml);
 
-    return MOD_CONT;
+	return MOD_CONT;
 }
 
 /**
@@ -51,39 +53,46 @@ void DenoraFini(void)
 
 int xmlrpc_channellist(deno_socket_t xmlsocket, int ac, char **av)
 {
-    char buf[BUFSIZE];
-    Channel *c, *next;
-    char *s = NULL;
+	char buf[BUFSIZE];
+	Channel *c, *next;
+	char *s = NULL;
 
-    *buf = '\0';
+	*buf = '\0';
 
-    if (denora->debug >= 2) {
-        protocol_debug(NULL, ac, av);
-    }
-    c = firstchan();
-    while (c) {
-        next = nextchan();
-        if (SP_HTML) {
-            if (ChanHasMode(c->name, CMODE_s)
-                || ChanHasMode(c->name, CMODE_p)) {
-                c = next;
-                continue;
-            }
-        }
-        if (s) {
-            ircsnprintf(buf, BUFSIZE,
-                        "%s <value><string>%s</string></value>\n\r", s,
-                        c->name);
-            free(s);
-        } else {
-            ircsnprintf(buf, BUFSIZE,
-                        "<value><string>%s</string></value>\n\r", c->name);
-        }
-        s = sstrdup(buf);
-        c = next;
-    }
-    ircsnprintf(buf, BUFSIZE,
-                "<array>\r\n <data>\r\n  %s\r\n </data>\r\n</array>", s);
-    xmlrpc_send(xmlsocket, 1, buf);
-    return MOD_CONT;
+	if (denora->debug >= 2)
+	{
+		protocol_debug(NULL, ac, av);
+	}
+	c = firstchan();
+	while (c)
+	{
+		next = nextchan();
+		if (SP_HTML)
+		{
+			if (ChanHasMode(c->name, CMODE_s)
+			        || ChanHasMode(c->name, CMODE_p))
+			{
+				c = next;
+				continue;
+			}
+		}
+		if (s)
+		{
+			ircsnprintf(buf, BUFSIZE,
+			            "%s <value><string>%s</string></value>\n\r", s,
+			            c->name);
+			free(s);
+		}
+		else
+		{
+			ircsnprintf(buf, BUFSIZE,
+			            "<value><string>%s</string></value>\n\r", c->name);
+		}
+		s = sstrdup(buf);
+		c = next;
+	}
+	ircsnprintf(buf, BUFSIZE,
+	            "<array>\r\n <data>\r\n  %s\r\n </data>\r\n</array>", s);
+	xmlrpc_send(xmlsocket, 1, buf);
+	return MOD_CONT;
 }

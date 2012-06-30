@@ -8,7 +8,7 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * 
+ *
  *
  */
 /*
@@ -35,25 +35,28 @@
 
 #define LISTCOUNT_T_MAX ULONG_MAX
 
-	typedef unsigned long listcount_t;
+typedef unsigned long listcount_t;
 
-	typedef struct lnode_t {
-		struct lnode_t *list_next;
-		struct lnode_t *list_prev;
-		void *list_data;
-	} lnode_t;
+typedef struct lnode_t
+{
+	struct lnode_t *list_next;
+	struct lnode_t *list_prev;
+	void *list_data;
+} lnode_t;
 
-	typedef struct lnodepool_t {
-		struct lnode_t *list_pool;
-		struct lnode_t *list_free;
-		listcount_t list_size;
-	} lnodepool_t;
+typedef struct lnodepool_t
+{
+	struct lnode_t *list_pool;
+	struct lnode_t *list_free;
+	listcount_t list_size;
+} lnodepool_t;
 
-	typedef struct list_t {
-		lnode_t list_nilnode;
-		listcount_t list_nodecount;
-		listcount_t list_maxcount;
-	} list_t;
+typedef struct list_t
+{
+	lnode_t list_nilnode;
+	listcount_t list_nodecount;
+	listcount_t list_maxcount;
+} list_t;
 
 E lnode_t *lnode_create (void *);
 E lnode_t *lnode_init (lnode_t *, void *);
