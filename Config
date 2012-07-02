@@ -65,7 +65,7 @@ Run_Config () {
     if [ "$MYSQL" != "yes" ] ; then
     	WITH_MYSQL=" --without-mysql"
     fi
-    if [ "$DMEMORY" != "" ] ; then
+    if [ "$DMEMORY" != "no" ] ; then
     	WITH_MEMORYDEBUG=" --enable-dmalloc"
     fi
     if [ "$ENCRYPT" != "" ] ; then
@@ -414,7 +414,7 @@ while [ $ok -lt 1 ] ; do
         fi
         case $INPUT in
                 n*|N*)
-			DMEMORY=
+			DMEMORY="no"
 			ok=1
 			;;
                 y*|Y*)
