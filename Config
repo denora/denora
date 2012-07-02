@@ -97,8 +97,8 @@ Load_Cache () {
         . ./config.cache
         CAN_QUICK="yes"
     	if [ "$BINDEST" = "" ] ; then
-			BINDEST=$HOME/stats
-		fi
+		BINDEST=$HOME/stats
+	fi
     	if [ "$DATDEST" = "" ] ; then
         	DATDEST=$HOME/stats
     	fi
@@ -359,7 +359,7 @@ while [ $ok -lt 1 ] ; do
         fi
         case $INPUT in
                 n*|N*)
-			MYSQL=
+			MYSQL="no"
 			ok=1
 			;;
                 y*|Y*)
