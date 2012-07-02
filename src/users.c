@@ -1335,10 +1335,9 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 					free(user->lastuname);
 				user->lastuname = sstrdup(user->sgroup);        /* in case we need to merge later */
 			}
+			alog(LOG_DEBUG, "debug: %s has changed nicks to %s", source, nick);
 			sql_do_nick_chg(nick, user->nick);
 			change_user_nick(user, nick);
-			alog(LOG_DEBUG, "debug: %s has changed nicks to %s", source,
-			     nick);
 			send_event(EVENT_CHANGE_NICK, 2, source, nick);
 			free(user->sqlnick);
 			user->sqlnick = rdb_escape(user->nick);

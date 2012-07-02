@@ -27,6 +27,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+12/07/02 Fixed debug output regarding nick changes
 12/06/27 Fixed a few possible memleaks (thx cedric for the valgrind report)
 12/06/26 Fixed a few compiler warnings 
 12/06/12 Fixed topichandler for scarynet protocol
