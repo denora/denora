@@ -824,8 +824,10 @@ void db_removenick_nt(char *nick, char *reason)
 #endif
 	char *username, *host, *queryhost;
 	char *newnick;
+/*
 	char *olduser = (char *) "";
 	char *newuser = (char *) "";
+*/
 
 	u = user_find(nick);
 
@@ -851,8 +853,7 @@ void db_removenick_nt(char *nick, char *reason)
 		{
 			username = rdb_escape(u->username);
 			host = rdb_escape(u->host);
-			queryhost =
-			    (myNumToken(host, '.') >= 2) ? strchr(host, '.') : host;
+			queryhost = (myNumToken(host, '.') >= 2) ? strchr(host, '.') : host;
 			queryhost = StrReverse(queryhost);
 			rdb_query(QUERY_HIGH,
 			          "SELECT nick FROM %s WHERE username=\'%s\' AND REVERSE(hostname) LIKE \'%s%%\' AND online=\'Y\' AND nick != \'%s\' ORDER BY connecttime DESC",
@@ -882,6 +883,7 @@ void db_removenick_nt(char *nick, char *reason)
 					          UserTable, nickid);
 
 					/* Getting uname of the old and new users */
+					/*
 					rdb_query(QUERY_LOW,
 					          "SELECT nick, uname FROM %s WHERE nick=\'%s\' OR nick=\'%s\'",
 					          AliasesTable, newnick, u->sqlnick);
@@ -902,6 +904,7 @@ void db_removenick_nt(char *nick, char *reason)
 						}
 						mysql_free_result(mysql_res2);
 					}
+					*/
 
 					/* Summing old user to new user, if they differ */
 					/*

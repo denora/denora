@@ -57,9 +57,6 @@ void sql_do_usermodes(User * u, char *modes)
 		return;
 	}
 
-	*db = '\0';
-	*buf = '\0';
-
 	SET_SEGV_LOCATION();
 
 	if (strlen(modes) == 1 && (*modes == '+' || *modes == '-'))
@@ -67,6 +64,9 @@ void sql_do_usermodes(User * u, char *modes)
 		alog(LOG_DEBUG, "Received just +/- as the users mode");
 		return;
 	}
+
+	*db = '\0';
+	*buf = '\0';
 
 	ircsnprintf(buf, sizeof(buf), "UPDATE %s SET ", UserTable);
 	strlcpy(db, buf, sizeof(db));
@@ -323,7 +323,7 @@ void sql_do_nick(User * u)
 
 	SET_SEGV_LOCATION();
 
-	if (ircd->vhost)
+	if (ircd->vhost && vhost)
 		free(vhost);
 	if (realname)
 		free(realname);
@@ -443,13 +443,15 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
 	          "INSERT INTO %s (nick, uname) VALUES (\'%s\', \'%s\') ON DUPLICATE KEY UPDATE uname=\'%s\'",
 	          AliasesTable, newnick, uname ? uname : newnick,
 	          uname ? uname : newnick);
+	if (uname)
+		free(uname);
 #endif
+/* These values are from the call itself, should they even be free'd ?
 	if (newnick)
 		free(newnick);
 	if (oldnick)
 		free(oldnick);
-	if (uname)
-		free(uname);
+*/
 }
 
 /*************************************************************************/
@@ -749,6 +751,7 @@ void delete_user(User * user)
 	{
 		tld_update(user->country_code);
 	}
+
 	alog(LOG_EXTRADEBUG, "debug: delete_user(): free user data");
 	free(user->username);
 	free(user->host);
@@ -780,6 +783,10 @@ void delete_user(User * user)
 	{
 		free(user->sgroup);
 	}
+	if (user->lastuname)
+	{
+		free(user->lastuname);
+	}
 	if (user->swhois)
 	{
 		free(user->swhois);
@@ -789,6 +796,7 @@ void delete_user(User * user)
 	{
 		free(user->sqlnick);
 	}
+
 	alog(LOG_EXTRADEBUG, "debug: delete_user(): remove from channels");
 	c = user->chans;
 	while (c)
@@ -798,8 +806,12 @@ void delete_user(User * user)
 		free(c);
 		c = c2;
 	}
-	alog(LOG_EXTRADEBUG, "debug: delete_user(): free founder data");
+	if (c2)
+		free(c2);
+	if (c)
+		free(c);
 
+	alog(LOG_EXTRADEBUG, "debug: delete_user(): free founder data");
 	moduleCleanStruct(&user->moduleData);
 
 	alog(LOG_EXTRADEBUG, "debug: delete_user(): delete from list");
@@ -815,6 +827,7 @@ void delete_user(User * user)
 	{
 		user->next->prev = user->prev;
 	}
+
 	alog(LOG_EXTRADEBUG, "debug: delete_user(): free user structure");
 	free(user);
 	alog(LOG_EXTRADEBUG, "debug: delete_user() done");
@@ -1318,6 +1331,8 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 		{
 			if (user->sgroup)
 			{
+				if (user->lastuname)
+					free(user->lastuname);
 				user->lastuname = sstrdup(user->sgroup);        /* in case we need to merge later */
 			}
 			sql_do_nick_chg(nick, user->nick);
@@ -1738,6 +1753,7 @@ void do_p10account(User * user, char *account, int flag)
 			     user->nick);
 			user->vhost = sstrdup(hhostbuf);
 		}
+		free(hhostbuf);
 	}
 
 	SET_SEGV_LOCATION();
