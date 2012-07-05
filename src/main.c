@@ -671,7 +671,7 @@ int main(int ac, char **av)
 		}
 
 		waiting = 1;
-		i = (int *)sgets2(inbuf, sizeof(inbuf), servsock);
+		i = (long int)sgets2(inbuf, sizeof(inbuf), servsock);
 		waiting = 0;
 		if ((i > 0) || (i < (-1)))
 		{
@@ -727,15 +727,12 @@ int main(int ac, char **av)
 
 void introduce_user(const char *user)
 {
-	/* Disabled the following lines to make compiler more happy in strict mode */
-	/*
 	ChannelStats *cs;
 	lnode_t *tn;
 	Uid *ud;
 
 	char *modes;
 	char nickbuf[BUFSIZE];
-	*/
 
 	/* Watch out for infinite loops... */
 #define LTSIZE 20

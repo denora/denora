@@ -120,7 +120,10 @@ AC_ARG_ENABLE(crypt,
 
 if test "$ac_cv_crypt" = "yes"; then
    AC_CHECK_HEADER(crypt.h,AC_DEFINE(HAVE_CRYPT,1,""))
-   AC_CHECK_LIB(crypt, crypt,DENORALIBS="$DENORALIBS-lcrypt ")
+   AC_CHECK_LIB(crypt, crypt,[
+     DENORALIBS="$DENORALIBS-lcrypt "
+     AC_DEFINE(HAVE_CRYPT,1,"")
+   ])
    DIS_ENCRYPT="Crypted Passwords: Yes"
 else
   DIS_ENCRYPT=""

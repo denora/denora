@@ -820,7 +820,7 @@ void db_removenick_nt(char *nick, char *reason)
 	User *u;
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
-	MYSQL_RES *mysql_res2;
+	/* MYSQL_RES *mysql_res2; */
 #endif
 	char *username, *host, *queryhost;
 	char *newnick;

@@ -938,7 +938,7 @@ struct tld_
 	TLD *next, *prev;
 
 	char *country;
-	char countrycode[NICKMAX];
+	char countrycode[3]; /* Two letter with an eventual NULL terminator */
 	uint32 count;
 	uint32 overall;
 	ModuleData *moduleData;

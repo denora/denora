@@ -5024,7 +5024,12 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_crypt_crypt" >&5
 $as_echo "$ac_cv_lib_crypt_crypt" >&6; }
 if test "x$ac_cv_lib_crypt_crypt" = x""yes; then :
-  DENORALIBS="$DENORALIBS-lcrypt "
+
+     DENORALIBS="$DENORALIBS-lcrypt "
+
+$as_echo "#define HAVE_CRYPT 1" >>confdefs.h
+
+
 fi
 
    DIS_ENCRYPT="Crypted Passwords: Yes"
