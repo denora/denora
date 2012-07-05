@@ -3318,7 +3318,7 @@ fi
 $as_echo_n "checking GCC flag(s) -ggdb... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_ggdb+set}" = set; then :
+  if test "${denora_cv_ggdb+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -3342,20 +3342,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_ggdb=yes
+  denora_cv_ggdb=yes
 else
-  denora_ggdb=no
+  denora_cv_ggdb=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_ggdb" = xyes; then
+  if test "x$denora_cv_ggdb" = xyes; then
    CFLAGS="${oldcflags} -ggdb "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_ggdb=''
+   denora_cv_ggdb=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -5028,6 +5028,9 @@ if test "x$ac_cv_lib_crypt_crypt" = x""yes; then :
      DENORALIBS="$DENORALIBS-lcrypt "
 
 $as_echo "#define HAVE_CRYPT 1" >>confdefs.h
+
+
+$as_echo "#define HAVE_CRYPT_H 1" >>confdefs.h
 
 
 fi
@@ -6827,7 +6830,7 @@ case $host in
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=ev4... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -6851,20 +6854,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=ev4 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -6878,7 +6881,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=ev5... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -6902,20 +6905,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=ev5 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -6929,7 +6932,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=ev56... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -6953,20 +6956,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=ev56 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -6981,7 +6984,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=pca56... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7005,20 +7008,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=pca56 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -7032,7 +7035,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=ev6... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7056,20 +7059,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=ev6 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -7083,7 +7086,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=ev6... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7107,20 +7110,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=ev6 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -7135,7 +7138,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=ev67... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7159,20 +7162,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=ev67 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -7186,7 +7189,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=ev6... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7210,20 +7213,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=ev6 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -7241,7 +7244,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mpa-risc-1-1... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7265,20 +7268,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mpa-risc-1-1 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -7296,7 +7299,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m68020... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7320,20 +7323,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m68020 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -7347,7 +7350,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m68030... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7371,20 +7374,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m68030 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -7398,7 +7401,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m68040... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7422,20 +7425,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m68040 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -7450,7 +7453,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m68060... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7474,20 +7477,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m68060 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -7501,7 +7504,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m68000... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7525,20 +7528,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m68000 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -7554,7 +7557,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7578,20 +7581,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -7605,7 +7608,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m68000... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7629,20 +7632,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m68000 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -7657,7 +7660,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m68000... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7681,20 +7684,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m68000 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -7712,7 +7715,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m88110... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7736,20 +7739,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m88110 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -7767,7 +7770,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=401... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7791,20 +7794,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=401 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -7818,7 +7821,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=403... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7842,20 +7845,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=403 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -7869,7 +7872,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=405... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7893,20 +7896,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=405 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -7920,7 +7923,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=505... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7944,20 +7947,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=505 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -7971,7 +7974,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=602... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -7995,20 +7998,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=602 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -8023,7 +8026,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=603... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -8047,20 +8050,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=603 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -8074,7 +8077,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=603... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -8098,20 +8101,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=603 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -8127,7 +8130,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=603e... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -8151,20 +8154,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=603e "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -8178,7 +8181,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=603e... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -8202,20 +8205,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=603e "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -8231,7 +8234,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=604... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -8255,20 +8258,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=604 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -8282,7 +8285,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=604... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -8306,20 +8309,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=604 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -8334,7 +8337,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=604e... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -8358,20 +8361,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=604e "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -8385,7 +8388,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=620... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -8409,20 +8412,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=620 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -8436,7 +8439,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=630... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -8460,20 +8463,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=630 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -8488,7 +8491,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=740... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -8512,20 +8515,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=740 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -8539,7 +8542,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=740... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -8563,20 +8566,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=740 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -8592,7 +8595,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=7400... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -8616,20 +8619,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=7400 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -8643,7 +8646,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=7400... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -8667,20 +8670,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=7400 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -8696,7 +8699,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=7450... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -8720,20 +8723,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=7450 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -8747,7 +8750,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=7450... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -8771,20 +8774,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=7450 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -8800,7 +8803,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=750... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -8824,20 +8827,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=750 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -8851,7 +8854,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=750... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -8875,20 +8878,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=750 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -8903,7 +8906,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=801... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -8927,20 +8930,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=801 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -8954,7 +8957,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=821... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -8978,20 +8981,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=821 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -9005,7 +9008,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=823... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -9029,20 +9032,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=823 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -9056,7 +9059,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=860... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -9080,20 +9083,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=860 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -9113,7 +9116,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=power... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -9137,20 +9140,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=power "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -9164,7 +9167,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=rios1... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -9188,20 +9191,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=rios1 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -9215,7 +9218,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=rios2... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -9239,20 +9242,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=rios2 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -9266,7 +9269,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=rsc... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -9290,20 +9293,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=rsc "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -9318,7 +9321,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mpower... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_power+set}" = set; then :
+  if test "${denora_cv_power+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -9342,20 +9345,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_power=yes
+  denora_cv_power=yes
 else
-  denora_power=no
+  denora_cv_power=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_power" = xyes; then
+  if test "x$denora_cv_power" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mpower "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_power=''
+   denora_cv_power=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -9376,7 +9379,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=v8... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -9400,20 +9403,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=v8 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -9427,7 +9430,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mv8... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mv8+set}" = set; then :
+  if test "${denora_cv_mv8+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -9451,20 +9454,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mv8=yes
+  denora_cv_mv8=yes
 else
-  denora_mv8=no
+  denora_cv_mv8=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mv8" = xyes; then
+  if test "x$denora_cv_mv8" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mv8 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mv8=''
+   denora_cv_mv8=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -9480,7 +9483,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=v8... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -9504,20 +9507,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=v8 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -9531,7 +9534,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mv8... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mv8+set}" = set; then :
+  if test "${denora_cv_mv8+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -9555,20 +9558,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mv8=yes
+  denora_cv_mv8=yes
 else
-  denora_mv8=no
+  denora_cv_mv8=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mv8" = xyes; then
+  if test "x$denora_cv_mv8" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mv8 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mv8=''
+   denora_cv_mv8=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -9582,7 +9585,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=v9... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -9606,20 +9609,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=v9 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -9633,7 +9636,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=ultrasparc... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -9657,20 +9660,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=ultrasparc "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -9692,7 +9695,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=i386... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -9716,20 +9719,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=i386 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -9743,7 +9746,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m32+set}" = set; then :
+  if test "${denora_cv_m32+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -9767,20 +9770,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m32=yes
+  denora_cv_m32=yes
 else
-  denora_m32=no
+  denora_cv_m32=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m32" = xyes; then
+  if test "x$denora_cv_m32" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m32=''
+   denora_cv_m32=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -9794,7 +9797,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=i386... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -9818,20 +9821,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=i386 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -9845,7 +9848,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=i386... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -9869,20 +9872,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=i386 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -9898,7 +9901,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=i586... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -9922,20 +9925,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=i586 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -9949,7 +9952,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m32+set}" = set; then :
+  if test "${denora_cv_m32+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -9973,20 +9976,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m32=yes
+  denora_cv_m32=yes
 else
-  denora_m32=no
+  denora_cv_m32=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m32" = xyes; then
+  if test "x$denora_cv_m32" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m32=''
+   denora_cv_m32=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10000,7 +10003,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=i586... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -10024,20 +10027,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=i586 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10051,7 +10054,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=i586... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -10075,20 +10078,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=i586 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10104,7 +10107,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=pentium... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -10128,20 +10131,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=pentium "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10155,7 +10158,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m32+set}" = set; then :
+  if test "${denora_cv_m32+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -10179,20 +10182,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m32=yes
+  denora_cv_m32=yes
 else
-  denora_m32=no
+  denora_cv_m32=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m32" = xyes; then
+  if test "x$denora_cv_m32" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m32=''
+   denora_cv_m32=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10206,7 +10209,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=pentium... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -10230,20 +10233,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=pentium "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10257,7 +10260,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=i586... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -10281,20 +10284,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=i586 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10310,7 +10313,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=pentiummmx... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -10334,20 +10337,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=pentiummmx "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10361,7 +10364,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m32+set}" = set; then :
+  if test "${denora_cv_m32+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -10385,20 +10388,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m32=yes
+  denora_cv_m32=yes
 else
-  denora_m32=no
+  denora_cv_m32=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m32" = xyes; then
+  if test "x$denora_cv_m32" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m32=''
+   denora_cv_m32=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10412,7 +10415,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=pentiummmx... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -10436,20 +10439,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=pentiummmx "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10465,7 +10468,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=pentiumpro... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -10489,20 +10492,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=pentiumpro "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10516,7 +10519,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m32+set}" = set; then :
+  if test "${denora_cv_m32+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -10540,20 +10543,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m32=yes
+  denora_cv_m32=yes
 else
-  denora_m32=no
+  denora_cv_m32=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m32" = xyes; then
+  if test "x$denora_cv_m32" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m32=''
+   denora_cv_m32=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10567,7 +10570,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=pentiumpro... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -10591,20 +10594,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=pentiumpro "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10618,7 +10621,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=i686... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -10642,20 +10645,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=i686 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10671,7 +10674,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=i686... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -10695,20 +10698,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=i686 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10722,7 +10725,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m32+set}" = set; then :
+  if test "${denora_cv_m32+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -10746,20 +10749,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m32=yes
+  denora_cv_m32=yes
 else
-  denora_m32=no
+  denora_cv_m32=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m32" = xyes; then
+  if test "x$denora_cv_m32" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m32=''
+   denora_cv_m32=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10773,7 +10776,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=i686... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -10797,20 +10800,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=i686 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10824,7 +10827,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=i686... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -10848,20 +10851,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=i686 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10877,7 +10880,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=i686... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -10901,20 +10904,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=i686 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10928,7 +10931,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m32+set}" = set; then :
+  if test "${denora_cv_m32+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -10952,20 +10955,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m32=yes
+  denora_cv_m32=yes
 else
-  denora_m32=no
+  denora_cv_m32=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m32" = xyes; then
+  if test "x$denora_cv_m32" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m32=''
+   denora_cv_m32=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -10979,7 +10982,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=i686... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11003,20 +11006,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=i686 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -11030,7 +11033,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=pentium3... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11054,20 +11057,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=pentium3 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -11083,7 +11086,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=pentium2... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11107,20 +11110,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=pentium2 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -11134,7 +11137,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m32+set}" = set; then :
+  if test "${denora_cv_m32+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11158,20 +11161,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m32=yes
+  denora_cv_m32=yes
 else
-  denora_m32=no
+  denora_cv_m32=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m32" = xyes; then
+  if test "x$denora_cv_m32" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m32=''
+   denora_cv_m32=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -11185,7 +11188,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=pentium2... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11209,20 +11212,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=pentium2 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -11236,7 +11239,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=i686... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11260,20 +11263,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=i686 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -11289,7 +11292,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=k6-3... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11313,20 +11316,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=k6-3 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -11340,7 +11343,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m32+set}" = set; then :
+  if test "${denora_cv_m32+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11364,20 +11367,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m32=yes
+  denora_cv_m32=yes
 else
-  denora_m32=no
+  denora_cv_m32=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m32" = xyes; then
+  if test "x$denora_cv_m32" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m32=''
+   denora_cv_m32=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -11391,7 +11394,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=k6-3... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11415,20 +11418,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=k6-3 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -11444,7 +11447,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=k6-2... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11468,20 +11471,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=k6-2 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -11495,7 +11498,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m32+set}" = set; then :
+  if test "${denora_cv_m32+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11519,20 +11522,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m32=yes
+  denora_cv_m32=yes
 else
-  denora_m32=no
+  denora_cv_m32=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m32" = xyes; then
+  if test "x$denora_cv_m32" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m32=''
+   denora_cv_m32=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -11546,7 +11549,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=k6-2... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11570,20 +11573,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=k6-2 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -11599,7 +11602,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=k6... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11623,20 +11626,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=k6 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -11650,7 +11653,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m32+set}" = set; then :
+  if test "${denora_cv_m32+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11674,20 +11677,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m32=yes
+  denora_cv_m32=yes
 else
-  denora_m32=no
+  denora_cv_m32=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m32" = xyes; then
+  if test "x$denora_cv_m32" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m32=''
+   denora_cv_m32=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -11701,7 +11704,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=k6... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11725,20 +11728,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=k6 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -11754,7 +11757,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=athlon-4... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11778,20 +11781,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=athlon-4 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -11805,7 +11808,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m32+set}" = set; then :
+  if test "${denora_cv_m32+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11829,20 +11832,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m32=yes
+  denora_cv_m32=yes
 else
-  denora_m32=no
+  denora_cv_m32=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m32" = xyes; then
+  if test "x$denora_cv_m32" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m32=''
+   denora_cv_m32=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -11856,7 +11859,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=athlon-4... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11880,20 +11883,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=athlon-4 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -11907,7 +11910,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=athlon-4... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11931,20 +11934,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=athlon-4 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -11960,7 +11963,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=athlon-xp... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -11984,20 +11987,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=athlon-xp "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12011,7 +12014,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m32+set}" = set; then :
+  if test "${denora_cv_m32+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -12035,20 +12038,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m32=yes
+  denora_cv_m32=yes
 else
-  denora_m32=no
+  denora_cv_m32=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m32" = xyes; then
+  if test "x$denora_cv_m32" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m32=''
+   denora_cv_m32=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12062,7 +12065,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=athlon-xp... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -12086,20 +12089,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=athlon-xp "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12113,7 +12116,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=athlon-xp... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -12137,20 +12140,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=athlon-xp "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12166,7 +12169,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=athlon-mp... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -12190,20 +12193,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=athlon-mp "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12217,7 +12220,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m32+set}" = set; then :
+  if test "${denora_cv_m32+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -12241,20 +12244,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m32=yes
+  denora_cv_m32=yes
 else
-  denora_m32=no
+  denora_cv_m32=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m32" = xyes; then
+  if test "x$denora_cv_m32" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m32=''
+   denora_cv_m32=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12268,7 +12271,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=athlon-mp... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -12292,20 +12295,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=athlon-mp "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12319,7 +12322,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=athlon-mp... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -12343,20 +12346,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=athlon-mp "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12372,7 +12375,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=athlon-tbird... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -12396,20 +12399,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=athlon-tbird "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12423,7 +12426,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m32+set}" = set; then :
+  if test "${denora_cv_m32+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -12447,20 +12450,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m32=yes
+  denora_cv_m32=yes
 else
-  denora_m32=no
+  denora_cv_m32=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m32" = xyes; then
+  if test "x$denora_cv_m32" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m32=''
+   denora_cv_m32=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12474,7 +12477,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=athlon-tbird... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -12498,20 +12501,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=athlon-tbird "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12525,7 +12528,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=athlon-tbird... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -12549,20 +12552,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=athlon-tbird "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12578,7 +12581,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=athlon... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -12602,20 +12605,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=athlon "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12629,7 +12632,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m32+set}" = set; then :
+  if test "${denora_cv_m32+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -12653,20 +12656,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m32=yes
+  denora_cv_m32=yes
 else
-  denora_m32=no
+  denora_cv_m32=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m32" = xyes; then
+  if test "x$denora_cv_m32" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m32=''
+   denora_cv_m32=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12680,7 +12683,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=athlon... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -12704,20 +12707,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=athlon "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12731,7 +12734,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=athlon... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -12755,20 +12758,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=athlon "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12784,7 +12787,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=pentium4... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -12808,20 +12811,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=pentium4 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12835,7 +12838,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m32+set}" = set; then :
+  if test "${denora_cv_m32+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -12859,20 +12862,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m32=yes
+  denora_cv_m32=yes
 else
-  denora_m32=no
+  denora_cv_m32=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m32" = xyes; then
+  if test "x$denora_cv_m32" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m32=''
+   denora_cv_m32=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12886,7 +12889,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=pentium4... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -12910,20 +12913,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=pentium4 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12937,7 +12940,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=pentium4... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -12961,20 +12964,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=pentium4 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -12990,7 +12993,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=c3-2... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -13014,20 +13017,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=c3-2 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -13041,7 +13044,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m32+set}" = set; then :
+  if test "${denora_cv_m32+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -13065,20 +13068,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m32=yes
+  denora_cv_m32=yes
 else
-  denora_m32=no
+  denora_cv_m32=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m32" = xyes; then
+  if test "x$denora_cv_m32" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m32=''
+   denora_cv_m32=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -13092,7 +13095,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=c3-2... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -13116,20 +13119,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=c3-2 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -13143,7 +13146,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=c3-2... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -13167,20 +13170,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=c3-2 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -13196,7 +13199,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=c3... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -13220,20 +13223,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=c3 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -13247,7 +13250,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m32+set}" = set; then :
+  if test "${denora_cv_m32+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -13271,20 +13274,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m32=yes
+  denora_cv_m32=yes
 else
-  denora_m32=no
+  denora_cv_m32=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m32" = xyes; then
+  if test "x$denora_cv_m32" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m32 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m32=''
+   denora_cv_m32=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -13298,7 +13301,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=c3... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -13322,20 +13325,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=c3 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -13349,7 +13352,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=c3... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -13373,20 +13376,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=c3 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -13402,7 +13405,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=k8... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -13426,20 +13429,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=k8 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -13453,7 +13456,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=athlon64... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -13477,20 +13480,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=athlon64 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -13504,7 +13507,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mtune=athlon-fx... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_mtune+set}" = set; then :
+  if test "${denora_cv_mtune+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -13528,20 +13531,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_mtune=yes
+  denora_cv_mtune=yes
 else
-  denora_mtune=no
+  denora_cv_mtune=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_mtune" = xyes; then
+  if test "x$denora_cv_mtune" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mtune=athlon-fx "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_mtune=''
+   denora_cv_mtune=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -13555,7 +13558,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -m64... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_m64+set}" = set; then :
+  if test "${denora_cv_m64+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -13579,20 +13582,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_m64=yes
+  denora_cv_m64=yes
 else
-  denora_m64=no
+  denora_cv_m64=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_m64" = xyes; then
+  if test "x$denora_cv_m64" = xyes; then
    OPCFLAGS="${OPCFLAGS}-m64 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_m64=''
+   denora_cv_m64=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -13606,7 +13609,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=k8... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -13630,20 +13633,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=k8 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -13657,7 +13660,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=athlon64... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -13681,20 +13684,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=athlon64 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -13708,7 +13711,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -march=athlon-fx... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_march+set}" = set; then :
+  if test "${denora_cv_march+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -13732,20 +13735,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_march=yes
+  denora_cv_march=yes
 else
-  denora_march=no
+  denora_cv_march=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_march" = xyes; then
+  if test "x$denora_cv_march" = xyes; then
    OPCFLAGS="${OPCFLAGS}-march=athlon-fx "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_march=''
+   denora_cv_march=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi
@@ -13759,7 +13762,7 @@ $as_echo "no" >&6; }
 $as_echo_n "checking GCC Optimizing flag(s) -mcpu=k8... " >&6; }
  if test "${GCC-no}" = yes
  then
-  if test "${denora_cpu+set}" = set; then :
+  if test "${denora_cv_cpu+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
 
@@ -13783,20 +13786,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  denora_cpu=yes
+  denora_cv_cpu=yes
 else
-  denora_cpu=no
+  denora_cv_cpu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
    CFLAGS="${oldcflags}"
 fi
 
-  if test "x$denora_cpu" = xyes; then
+  if test "x$denora_cv_cpu" = xyes; then
    OPCFLAGS="${OPCFLAGS}-mcpu=k8 "
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   else
-   denora_cpu=''
+   denora_cv_cpu=''
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
   fi

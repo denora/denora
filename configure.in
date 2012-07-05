@@ -45,7 +45,7 @@ if test "$host_cpu" = "x86_64"; then
     CFLAGS="$CFLAGS -fPIC"
 fi
 
-DENORA_CFLAGS_GCC_TRY_FLAGS(-ggdb, denora_ggdb)
+DENORA_CFLAGS_GCC_TRY_FLAGS(-ggdb, denora_cv_ggdb)
 DENORA_CPU_GCC_TRY_FLAGS(-O3, ac_cv_denora_O3)
 
 if test "$ac_cv_denora_O3" = "yes"; then
@@ -123,6 +123,7 @@ if test "$ac_cv_crypt" = "yes"; then
    AC_CHECK_LIB(crypt, crypt,[
      DENORALIBS="$DENORALIBS-lcrypt "
      AC_DEFINE(HAVE_CRYPT,1,"")
+     AC_DEFINE(HAVE_CRYPT_H,1,"")
    ])
    DIS_ENCRYPT="Crypted Passwords: Yes"
 else
@@ -669,98 +670,98 @@ case $host in
 
   alpha*-*-*)
     case $host_cpu in
-      alpha)        DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev4], denora_cpu) ;;
-      alphaev5)     DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev5], denora_cpu) ;;
-      alphaev56)    DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev56], denora_cpu) ;;
+      alpha)        DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev4], denora_cv_cpu) ;;
+      alphaev5)     DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev5], denora_cv_cpu) ;;
+      alphaev56)    DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev56], denora_cv_cpu) ;;
       alphapca56 | alphapca57)
-			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pca56], denora_cpu)
-			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev6], denora_cpu) ;;
-      alphaev6)     DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev6], denora_cpu) ;;
+			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pca56], denora_cv_cpu)
+			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev6], denora_cv_cpu) ;;
+      alphaev6)     DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev6], denora_cv_cpu) ;;
       alphaev67 | alphaev68)
-                    DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev67], denora_cpu)
-		    DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev6], denora_cpu) ;;
+                    DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev67], denora_cv_cpu)
+		    DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ev6], denora_cv_cpu) ;;
     esac
   ;;
 
   hppa*-*-*)
-    DENORA_CPU_GCC_TRY_FLAGS([-mpa-risc-1-1], denora_cpu)
+    DENORA_CPU_GCC_TRY_FLAGS([-mpa-risc-1-1], denora_cv_cpu)
   ;;
 
   m68*-*-*)
     case $host in
-    m68020-*-*)  DENORA_CPU_GCC_TRY_FLAGS([-m68020], denora_cpu) ;;
-    m68030-*-*)  DENORA_CPU_GCC_TRY_FLAGS([-m68030], denora_cpu) ;;
-    m68040-*-*)  DENORA_CPU_GCC_TRY_FLAGS([-m68040], denora_cpu) ;;
+    m68020-*-*)  DENORA_CPU_GCC_TRY_FLAGS([-m68020], denora_cv_cpu) ;;
+    m68030-*-*)  DENORA_CPU_GCC_TRY_FLAGS([-m68030], denora_cv_cpu) ;;
+    m68040-*-*)  DENORA_CPU_GCC_TRY_FLAGS([-m68040], denora_cv_cpu) ;;
     m68060-*-*)  
-          	  DENORA_CPU_GCC_TRY_FLAGS([-m68060], denora_cpu)
-		  DENORA_CPU_GCC_TRY_FLAGS([-m68000], denora_cpu)
+          	  DENORA_CPU_GCC_TRY_FLAGS([-m68060], denora_cv_cpu)
+		  DENORA_CPU_GCC_TRY_FLAGS([-m68000], denora_cv_cpu)
 		;;
     m68360-*-*)  
-		  DENORA_CPU_GCC_TRY_FLAGS([-mcpu32], denora_cpu)
-   		  DENORA_CPU_GCC_TRY_FLAGS([-m68000], denora_cpu) 
+		  DENORA_CPU_GCC_TRY_FLAGS([-mcpu32], denora_cv_cpu)
+   		  DENORA_CPU_GCC_TRY_FLAGS([-m68000], denora_cv_cpu) 
 		  ;;
-    *)    DENORA_CPU_GCC_TRY_FLAGS([-m68000], denora_cpu) ;;
+    *)    DENORA_CPU_GCC_TRY_FLAGS([-m68000], denora_cv_cpu) ;;
     esac
   ;;
 
   m88110*-*-*)
-    DENORA_CPU_GCC_TRY_FLAGS([-m88110], denora_cpu)
+    DENORA_CPU_GCC_TRY_FLAGS([-m88110], denora_cv_cpu)
   ;;
 
   powerpc*-*-*)
     case $host_cpu in
-      powerpc401)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=401], denora_cpu) ;;
-      powerpc403)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=403], denora_cpu) ;;
-      powerpc405)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=405], denora_cpu) ;;
-      powerpc505)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=505], denora_cpu) ;;
-      powerpc602)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=602], denora_cpu) ;;
+      powerpc401)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=401], denora_cv_cpu) ;;
+      powerpc403)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=403], denora_cv_cpu) ;;
+      powerpc405)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=405], denora_cv_cpu) ;;
+      powerpc505)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=505], denora_cv_cpu) ;;
+      powerpc602)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=602], denora_cv_cpu) ;;
       powerpc603)   
-			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=603], denora_cpu)
-			DENORA_CPU_GCC_TRY_FLAGS([-mtune=603], denora_mtune)
+			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=603], denora_cv_cpu)
+			DENORA_CPU_GCC_TRY_FLAGS([-mtune=603], denora_cv_mtune)
 	  ;;
       powerpc603e)  
-			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=603e], denora_cpu) 
-			DENORA_CPU_GCC_TRY_FLAGS([-mtune=603e], denora_mtune) 
+			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=603e], denora_cv_cpu) 
+			DENORA_CPU_GCC_TRY_FLAGS([-mtune=603e], denora_cv_mtune) 
 	  ;;
       powerpc604)   
-			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=604], denora_cpu) 
-			DENORA_CPU_GCC_TRY_FLAGS([-mtune=604], denora_cpu) 
+			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=604], denora_cv_cpu) 
+			DENORA_CPU_GCC_TRY_FLAGS([-mtune=604], denora_cv_cpu) 
 	  ;;
-      powerpc604e)  DENORA_CPU_GCC_TRY_FLAGS([-mcpu=604e], denora_cpu) ;;
-      powerpc620)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=620], denora_cpu) ;;
-      powerpc630)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=630], denora_cpu) ;;
+      powerpc604e)  DENORA_CPU_GCC_TRY_FLAGS([-mcpu=604e], denora_cv_cpu) ;;
+      powerpc620)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=620], denora_cv_cpu) ;;
+      powerpc630)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=630], denora_cv_cpu) ;;
       powerpc740)   
-			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=740], denora_cpu) 
-			DENORA_CPU_GCC_TRY_FLAGS([-mtune=740], denora_mtune) 
+			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=740], denora_cv_cpu) 
+			DENORA_CPU_GCC_TRY_FLAGS([-mtune=740], denora_cv_mtune) 
 	  ;;
       powerpc7400)  
-			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=7400], denora_cpu)
-			DENORA_CPU_GCC_TRY_FLAGS([-mtune=7400], denora_mtune) 
+			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=7400], denora_cv_cpu)
+			DENORA_CPU_GCC_TRY_FLAGS([-mtune=7400], denora_cv_mtune) 
 	  ;;
       powerpc7450)  
-			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=7450], denora_cpu) 
-			DENORA_CPU_GCC_TRY_FLAGS([-mtune=7450], denora_mtune) 
+			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=7450], denora_cv_cpu) 
+			DENORA_CPU_GCC_TRY_FLAGS([-mtune=7450], denora_cv_mtune) 
 	  ;;
       powerpc750)   
-			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=750], denora_cpu) 
-			DENORA_CPU_GCC_TRY_FLAGS([-mtune=750], denora_mtune) 
+			DENORA_CPU_GCC_TRY_FLAGS([-mcpu=750], denora_cv_cpu) 
+			DENORA_CPU_GCC_TRY_FLAGS([-mtune=750], denora_cv_mtune) 
       ;;
-      powerpc801)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=801], denora_cpu) ;;
-      powerpc821)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=821], denora_cpu) ;;
-      powerpc823)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=823], denora_cpu) ;;
-      powerpc860)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=860], denora_cpu) ;;
+      powerpc801)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=801], denora_cv_cpu) ;;
+      powerpc821)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=821], denora_cv_cpu) ;;
+      powerpc823)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=823], denora_cv_cpu) ;;
+      powerpc860)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=860], denora_cv_cpu) ;;
     esac
   ;;
 
   # POWER
   [power-*-* | power[12]-*-* | power2sc-*-*])
     case $host in
-      power-*-*)    DENORA_CPU_GCC_TRY_FLAGS([-mcpu=power], denora_cpu) ;;
-      power1-*-*)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=rios1], denora_cpu) ;;
-      power2-*-*)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=rios2], denora_cpu) ;;
-      power2sc-*-*) DENORA_CPU_GCC_TRY_FLAGS([-mcpu=rsc], denora_cpu) ;;
+      power-*-*)    DENORA_CPU_GCC_TRY_FLAGS([-mcpu=power], denora_cv_cpu) ;;
+      power1-*-*)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=rios1], denora_cv_cpu) ;;
+      power2-*-*)   DENORA_CPU_GCC_TRY_FLAGS([-mcpu=rios2], denora_cv_cpu) ;;
+      power2sc-*-*) DENORA_CPU_GCC_TRY_FLAGS([-mcpu=rsc], denora_cv_cpu) ;;
     esac
-    	DENORA_CPU_GCC_TRY_FLAGS([-mpower], denora_power)
+    	DENORA_CPU_GCC_TRY_FLAGS([-mpower], denora_cv_power)
    ;;
 
   *sparc*-*-*)
@@ -768,14 +769,14 @@ case $host in
 
    	case $host in
       sparcv8*-*-* | supersparc*-*-* | microsparc*-*-*)
-        	DENORA_CPU_GCC_TRY_FLAGS([-mcpu=v8], denora_cpu)
-		DENORA_CPU_GCC_TRY_FLAGS([-mv8], denora_mv8)
+        	DENORA_CPU_GCC_TRY_FLAGS([-mcpu=v8], denora_cv_cpu)
+		DENORA_CPU_GCC_TRY_FLAGS([-mv8], denora_cv_mv8)
 	  ;;
       sparcv9*-*-* | ultrasparc*-*-* | sparc64-*-*)
-        	DENORA_CPU_GCC_TRY_FLAGS([-mcpu=v8], denora_cpu)
-		DENORA_CPU_GCC_TRY_FLAGS([-mv8], denora_mv8)
-        	DENORA_CPU_GCC_TRY_FLAGS([-mcpu=v9], denora_cpu)
-        	DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ultrasparc], denora_cpu)
+        	DENORA_CPU_GCC_TRY_FLAGS([-mcpu=v8], denora_cv_cpu)
+		DENORA_CPU_GCC_TRY_FLAGS([-mv8], denora_cv_mv8)
+        	DENORA_CPU_GCC_TRY_FLAGS([-mcpu=v9], denora_cv_cpu)
+        	DENORA_CPU_GCC_TRY_FLAGS([-mcpu=ultrasparc], denora_cv_cpu)
       ;;
      esac
   ;;
@@ -784,124 +785,124 @@ case $host in
   X86_PATTERN | x86_64-*-*)
     case $host in
       i386*-*-*)
-       		DENORA_CPU_GCC_TRY_FLAGS([-mtune=i386], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
-		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=i386], denora_cpu)	  
-		DENORA_CPU_GCC_TRY_FLAGS([-march=i386], denora_march)
+       		DENORA_CPU_GCC_TRY_FLAGS([-mtune=i386], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_cv_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=i386], denora_cv_cpu)	  
+		DENORA_CPU_GCC_TRY_FLAGS([-march=i386], denora_cv_march)
         ;;
       i586*-*-*)
-       		DENORA_CPU_GCC_TRY_FLAGS([-mtune=i586], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
-		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=i586], denora_cpu)	  
-		DENORA_CPU_GCC_TRY_FLAGS([-march=i586], denora_march)
+       		DENORA_CPU_GCC_TRY_FLAGS([-mtune=i586], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_cv_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=i586], denora_cv_cpu)	  
+		DENORA_CPU_GCC_TRY_FLAGS([-march=i586], denora_cv_march)
         ;;
       pentium-*-*)
-       		DENORA_CPU_GCC_TRY_FLAGS([-mtune=pentium], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
-		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pentium], denora_cpu)	  
-		DENORA_CPU_GCC_TRY_FLAGS([-march=i586], denora_march)
+       		DENORA_CPU_GCC_TRY_FLAGS([-mtune=pentium], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_cv_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pentium], denora_cv_cpu)	  
+		DENORA_CPU_GCC_TRY_FLAGS([-march=i586], denora_cv_march)
 		;;
       pentiummmx-*-*)
-		DENORA_CPU_GCC_TRY_FLAGS([-mtune=pentiummmx], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
-		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pentiummmx], denora_cpu)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=pentiummmx], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_cv_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pentiummmx], denora_cv_cpu)
         ;;
       pentiumpro-*-*)
-       		DENORA_CPU_GCC_TRY_FLAGS([-mtune=pentiumpro], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
-		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pentiumpro], denora_cpu)	  
-		DENORA_CPU_GCC_TRY_FLAGS([-march=i686], denora_march)
+       		DENORA_CPU_GCC_TRY_FLAGS([-mtune=pentiumpro], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_cv_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pentiumpro], denora_cv_cpu)	  
+		DENORA_CPU_GCC_TRY_FLAGS([-march=i686], denora_cv_march)
         ;;
 	i686*-*-*)
-		DENORA_CPU_GCC_TRY_FLAGS([-mtune=i686], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
-		DENORA_CPU_GCC_TRY_FLAGS([-march=i686], denora_march)
-		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=i686], denora_cpu)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=i686], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_cv_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=i686], denora_cv_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=i686], denora_cv_cpu)
         ;;
        pentium3-*-*)
-       		DENORA_CPU_GCC_TRY_FLAGS([-mtune=i686], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
-		DENORA_CPU_GCC_TRY_FLAGS([-march=i686], denora_march)
-		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pentium3], denora_cpu)	  
+       		DENORA_CPU_GCC_TRY_FLAGS([-mtune=i686], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_cv_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=i686], denora_cv_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pentium3], denora_cv_cpu)	  
         ;;
       pentium2-*-*)
-       		DENORA_CPU_GCC_TRY_FLAGS([-mtune=pentium2], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
-		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pentium2], denora_cpu)	  
-		DENORA_CPU_GCC_TRY_FLAGS([-march=i686], denora_march)
+       		DENORA_CPU_GCC_TRY_FLAGS([-mtune=pentium2], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_cv_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pentium2], denora_cv_cpu)	  
+		DENORA_CPU_GCC_TRY_FLAGS([-march=i686], denora_cv_march)
         ;;
       k6-3-*)
-		DENORA_CPU_GCC_TRY_FLAGS([-mtune=k6-3], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
-		DENORA_CPU_GCC_TRY_FLAGS([-march=k6-3], denora_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=k6-3], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_cv_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=k6-3], denora_cv_march)
         ;;
       k6-2-*)
-		DENORA_CPU_GCC_TRY_FLAGS([-mtune=k6-2], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
-		DENORA_CPU_GCC_TRY_FLAGS([-march=k6-2], denora_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=k6-2], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_cv_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=k6-2], denora_cv_march)
         ;;
       k6-*)
-		DENORA_CPU_GCC_TRY_FLAGS([-mtune=k6], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
-		DENORA_CPU_GCC_TRY_FLAGS([-march=k6], denora_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=k6], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_cv_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=k6], denora_cv_march)
         ;;
       athlon-4-*)
-		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon-4], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
-		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon-4], denora_march)
-		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=athlon-4], denora_cpu)	  
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon-4], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_cv_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon-4], denora_cv_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=athlon-4], denora_cv_cpu)	  
         ;;
       athlon-xp-*)
-		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon-xp], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
-		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon-xp], denora_march)
-		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=athlon-xp], denora_cpu)	  
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon-xp], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_cv_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon-xp], denora_cv_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=athlon-xp], denora_cv_cpu)	  
         ;;
       athlon-mp-*)
-		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon-mp], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
-		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon-mp], denora_march)
-		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=athlon-mp], denora_cpu)	  
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon-mp], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_cv_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon-mp], denora_cv_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=athlon-mp], denora_cv_cpu)	  
         ;;
       athlon-tbird-*)
-		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon-tbird], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
-		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon-tbird], denora_march)
-		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=athlon-tbird], denora_cpu)	  
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon-tbird], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_cv_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon-tbird], denora_cv_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=athlon-tbird], denora_cv_cpu)	  
         ;;
       k7-* | athlon-*)
-		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
-		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon], denora_march)
-		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=athlon], denora_cpu)	  
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_cv_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon], denora_cv_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=athlon], denora_cv_cpu)	  
         ;;
       pentium4-*-* | i786-*-*)
-		DENORA_CPU_GCC_TRY_FLAGS([-mtune=pentium4], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
-		DENORA_CPU_GCC_TRY_FLAGS([-march=pentium4], denora_march)
-		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pentium4], denora_cpu)	  
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=pentium4], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_cv_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=pentium4], denora_cv_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=pentium4], denora_cv_cpu)	  
         ;;
       viac32-*-*)
-		DENORA_CPU_GCC_TRY_FLAGS([-mtune=c3-2], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
-		DENORA_CPU_GCC_TRY_FLAGS([-march=c3-2], denora_march)
-		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=c3-2], denora_cpu)	  
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=c3-2], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_cv_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=c3-2], denora_cv_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=c3-2], denora_cv_cpu)	  
         ;;
       viac3*-*-*)
-		DENORA_CPU_GCC_TRY_FLAGS([-mtune=c3], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_m32)
-		DENORA_CPU_GCC_TRY_FLAGS([-march=c3], denora_march)
-		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=c3], denora_cpu)	  
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=c3], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m32], denora_cv_m32)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=c3], denora_cv_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=c3], denora_cv_cpu)	  
         ;;
       x86_64-*-*)
-		DENORA_CPU_GCC_TRY_FLAGS([-mtune=k8], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon64], denora_mtune)		
-		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon-fx], denora_mtune)
-		DENORA_CPU_GCC_TRY_FLAGS([-m64], denora_m64)
-		DENORA_CPU_GCC_TRY_FLAGS([-march=k8], denora_march)
-		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon64], denora_march)		
-		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon-fx], denora_march)
-		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=k8], denora_cpu)	  
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=k8], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon64], denora_cv_mtune)		
+		DENORA_CPU_GCC_TRY_FLAGS([-mtune=athlon-fx], denora_cv_mtune)
+		DENORA_CPU_GCC_TRY_FLAGS([-m64], denora_cv_m64)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=k8], denora_cv_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon64], denora_cv_march)		
+		DENORA_CPU_GCC_TRY_FLAGS([-march=athlon-fx], denora_cv_march)
+		DENORA_CPU_GCC_TRY_FLAGS([-mcpu=k8], denora_cv_cpu)	  
         ;;
     esac
 
