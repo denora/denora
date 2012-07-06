@@ -133,7 +133,7 @@ void xml_write_tag(FILE * ptr, const char *tag, char *xdata)
 		{
 			mydata = char_encode(xdata);
 			fprintf(ptr, "<%s>%s</%s>\n\r", tag, mydata, tag);
-			free(mydata);
+			DenoraFree(mydata);
 		}
 		else
 		{
@@ -203,7 +203,7 @@ char *xml_prepare_tag(char *tag, char *xdata)
 		{
 			mydata = char_encode(xdata);
 			ircsnprintf(buf, BUFSIZE, "<%s>%s</%s>\n\r", tag, mydata, tag);
-			free(mydata);
+			DenoraFree(mydata);
 		}
 		else
 		{
@@ -443,11 +443,7 @@ int destroyHTMLTag(HTMLTag * m)
 		return MOD_ERR_PARAMS;
 	}
 
-	if (m->tag)
-	{
-		free(m->tag);
-	}
-
+	DenoraFree(m->tag);
 	free(m);
 	return MOD_ERR_OK;
 }
@@ -480,7 +476,7 @@ int delHTMLTag(HTMLTag * m)
 				lastHash->next = hcurrent->next;
 			}
 			destroyHTMLTag(hcurrent->h);
-			free(hcurrent->tag);
+			DenoraFree(hcurrent->tag);
 			free(hcurrent);
 			return MOD_ERR_OK;
 		}
@@ -590,7 +586,7 @@ void do_html()
 	fclose(tpl);
 	fclose(opf);
 	SET_SEGV_LOCATION();
-	free(bufold);
-	free(bufold1);
-	free(html_template);
+	DenoraFree(bufold);
+	DenoraFree(bufold1);
+	DenoraFree(html_template);
 }

@@ -714,7 +714,7 @@ int denora_event_svsmode(char *source, int ac, char **av)
 						{
 							ircsnprintf(buf, sizeof(buf), "%s%c", tbuf,
 							            *modes);
-							free(tbuf);
+							DenoraFree(tbuf);
 							tbuf = sstrdup(buf);
 						}
 						else
@@ -727,7 +727,7 @@ int denora_event_svsmode(char *source, int ac, char **av)
 					if (tbuf)
 					{
 						ircsnprintf(buf, sizeof(buf), "%s%c", tbuf, *modes);
-						free(tbuf);
+						DenoraFree(tbuf);
 						tbuf = sstrdup(buf);
 					}
 					else
@@ -743,15 +743,12 @@ int denora_event_svsmode(char *source, int ac, char **av)
 		{
 			ircsnprintf(modebuf, sizeof(modebuf), "%s%s",
 			            (add ? "+" : "-"), tbuf);
-			free(tbuf);
+			DenoraFree(tbuf);
 			newav[0] = av[0];
 			newav[1] = sstrdup(modebuf);
 			newav[2] = av[2];
 			do_svsumode(ac, newav);
-			if (newav[1])
-			{
-				free(newav[1]);
-			}
+			DenoraFree(newav[1]);
 		}
 	}
 	else
@@ -840,7 +837,7 @@ int denora_event_nick(char *source, int ac, char **av)
 			do_nick(source, av[0], av[3], av[4], (s ? s->name : av[5]),
 			        av[6], ts, 0, 0, NULL, NULL, strtoul(av[1], NULL, 10),
 			        NULL, NULL);
-			free(ipchar);
+			DenoraFree(ipchar);
 		}
 		else if (ac == 11)
 		{
@@ -850,7 +847,7 @@ int denora_event_nick(char *source, int ac, char **av)
 			            av[10], ts, strtoul(av[6], NULL, 0),
 			            ipchar, av[8], NULL, strtoul(av[1], NULL, 10),
 			            av[7], NULL);
-			free(ipchar);
+			DenoraFree(ipchar);
 
 		}
 		else
@@ -861,7 +858,7 @@ int denora_event_nick(char *source, int ac, char **av)
 			    do_nick(source, av[0], av[3], av[4], (s ? s->name : av[5]),
 			            av[9], ts, strtoul(av[6], NULL, 0), 0, av[8], NULL,
 			            strtoul(av[1], NULL, 10), av[7], NULL);
-			free(ipchar);
+			DenoraFree(ipchar);
 		}
 	}
 	else
@@ -904,9 +901,9 @@ int denora_event_server(char *source, int ac, char **av)
 		numeric = myStrGetToken(vl, '-', 2);
 		desc = myStrGetTokenRemainder(av[2], ' ', 1);
 		do_server(source, av[0], av[1], desc, numeric);
-		free(vl);
-		free(desc);
-		free(numeric);
+		DenoraFree(vl);
+		DenoraFree(desc);
+		DenoraFree(numeric);
 	}
 	else
 	{
@@ -1562,7 +1559,7 @@ int denora_event_svs2mode(char *source, int ac, char **av)
 					if (tbuf)
 					{
 						ircsnprintf(buf, sizeof(buf), "%s%c", tbuf, *modes);
-						free(tbuf);
+						DenoraFree(tbuf);
 						tbuf = sstrdup(buf);
 					}
 					else
@@ -1575,7 +1572,7 @@ int denora_event_svs2mode(char *source, int ac, char **av)
 				if (tbuf)
 				{
 					ircsnprintf(buf, sizeof(buf), "%s%c", tbuf, *modes);
-					free(tbuf);
+					DenoraFree(tbuf);
 					tbuf = sstrdup(buf);
 				}
 				else
@@ -1590,15 +1587,12 @@ int denora_event_svs2mode(char *source, int ac, char **av)
 	if (tbuf)
 	{
 		ircsnprintf(modebuf, sizeof(modebuf), "%s%s", (add ? "+" : "-"), tbuf);
-		free(tbuf);
+		DenoraFree(tbuf);
 		newav[0] = av[0];
 		newav[1] = sstrdup(modebuf);
 		newav[2] = av[2];
 		do_svsumode(ac, newav);
-		if (newav[1])
-		{
-			free(newav[1]);
-		}
+		DenoraFree(newav[1]);
 	}
 	return MOD_CONT;
 }

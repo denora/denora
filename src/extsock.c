@@ -237,7 +237,7 @@ void extsock_close(void)
 	deno_sockclose(svr_fd);
 	for (i = 0; i < SockIPNumber; i++)
 	{
-		free(ExtSockIPs[i]);
+		DenoraFree(ExtSockIPs[i]);
 	}
 	SockIPNumber = 0;
 }

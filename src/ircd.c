@@ -153,7 +153,7 @@ void denora_cmd_nick(char *nick, char *name, const char *modes)
 		            ServerName, name, time(NULL), 0, ipchar, ServiceHost,
 		            NULL, 1, (char *) modes, NULL);
 	}
-	free(ipchar);
+	DenoraFree(ipchar);
 	if (u)
 	{
 		u->isservice++;
@@ -224,7 +224,7 @@ void denora_cmd_bot_nick(char *nick, char *user, char *host, char *real,
 			make_exclude(u->nick);
 		}
 	}
-	free(ipchar);
+	DenoraFree(ipchar);
 }
 
 /*************************************************************************/
@@ -409,8 +409,8 @@ void denora_cmd_part(char *nick, char *chan, const char *fmt, ...)
 	v[1] = sstrdup(buf);
 	ircdproto.ircd_cmd_part(nick, chan, buf);
 	do_part(nick, 2, v);
-	free(v[0]);
-	free(v[1]);
+	DenoraFree(v[0]);
+	DenoraFree(v[1]);
 }
 
 /*************************************************************************/
@@ -518,7 +518,7 @@ void denora_cmd_ctcp(char *source, char *dest, const char *fmt, ...)
 	s = normalizeBuffer(buf);
 
 	ircdproto.ircd_cmd_ctcp(source, dest, s);
-	free(s);
+	DenoraFree(s);
 }
 
 /*************************************************************************/

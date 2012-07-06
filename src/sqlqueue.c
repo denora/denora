@@ -167,7 +167,7 @@ QueueEntry *RemoveQueueEntry(QueueEntry * qep)
 	QueueEntry *tempp;
 	alog(LOG_DEBUG, "Removing Queue entry data");
 	alog(LOG_DEBUG, "SQL %s", qep->msg);
-	free(qep->msg);
+	DenoraFree(qep->msg);
 	tempp = qep->link;
 	free(qep);
 	return tempp;

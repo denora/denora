@@ -93,7 +93,7 @@ void html_ctcp_table(FILE * ptr)
 				tempc = char_encode(c->version);
 				dfprintf(ptr, getstring(NULL, HTML_CTCP_CONTENT),
 				         tempc, c->overall);
-				free(tempc);
+				DenoraFree(tempc);
 				x++;
 				if (x > 10)
 				{

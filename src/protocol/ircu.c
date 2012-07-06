@@ -274,7 +274,7 @@ int denora_event_nick(char *source, int ac, char **av)
 		                && isaccount) ? hhostbuf : NULL, (char *) uid,
 		               strtoul(av[1], NULL, 10), modes, (char *) account);
 
-		free(ipchar);
+		DenoraFree(ipchar);
 	}
 	else
 	{
@@ -283,7 +283,7 @@ int denora_event_nick(char *source, int ac, char **av)
 		        NULL, strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0,
 		        NULL, NULL);
 	}
-	free(temp);
+	DenoraFree(temp);
 	return MOD_CONT;
 }
 
@@ -1112,14 +1112,8 @@ void ircu_cmd_pong(char *servname, char *who)
 	}
 	send_cmd(p10id, "Z %s %ld %ld %ld %s", p10id, (long int) ts,
 	         (long int) tsnow, (long int) value, militime_float(NULL));
-	if (s)
-	{
-		free(s);
-	}
-	if (t)
-	{
-		free(t);
-	}
+	DenoraFree(s);
+	DenoraFree(t);
 }
 
 void ircu_cmd_bot_nick(char *nick, char *user, char *host, char *real,

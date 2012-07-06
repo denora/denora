@@ -145,7 +145,7 @@ void sql_do_tld(int type, char *code, char *country, int count,
 #endif
 	}
 
-	free(sqlcountry);
+	DenoraFree(sqlcountry);
 }
 
 /*************************************************************************/
@@ -276,8 +276,8 @@ void load_tld_db(void)
 		{
 			t = new_tld(tempcc, tempc);
 			t->overall = overall;
-			free(tempc);
-			free(tempcc);
+			DenoraFree(tempc);
+			DenoraFree(tempcc);
 		}
 		else
 		{

@@ -93,10 +93,9 @@ static void load_lang(int langindex, const char *filename)
 			     langindex, filename);
 			while (--i >= 0)
 			{
-				if (langtexts[langindex][i])
-					free(langtexts[langindex][i]);
+				DenoraFree(langtexts[langindex][i]);
 			}
-			free(langtexts[langindex]);
+			DenoraFree(langtexts[langindex]);
 			langtexts[langindex] = NULL;
 			return;
 		}
@@ -111,10 +110,9 @@ static void load_lang(int langindex, const char *filename)
 			     "corrupt TOC?", i, langindex, filename);
 			while (--i >= 0)
 			{
-				if (langtexts[langindex][i])
-					free(langtexts[langindex][i]);
+				DenoraFree(langtexts[langindex][i]);
 			}
-			free(langtexts[langindex]);
+			DenoraFree(langtexts[langindex]);
 			langtexts[langindex] = NULL;
 			return;
 		}
@@ -125,10 +123,9 @@ static void load_lang(int langindex, const char *filename)
 			     "corrupt TOC?", i, langindex, filename);
 			while (--i >= 0)
 			{
-				if (langtexts[langindex][i])
-					free(langtexts[langindex][i]);
+				DenoraFree(langtexts[langindex][i]);
 			}
-			free(langtexts[langindex]);
+			DenoraFree(langtexts[langindex]);
 			langtexts[langindex] = NULL;
 			return;
 		}
@@ -143,10 +140,9 @@ static void load_lang(int langindex, const char *filename)
 				     langindex, filename);
 				while (--i >= 0)
 				{
-					if (langtexts[langindex][i])
-						free(langtexts[langindex][i]);
+					DenoraFree(langtexts[langindex][i]);
 				}
-				free(langtexts[langindex]);
+				DenoraFree(langtexts[langindex]);
 				langtexts[langindex] = NULL;
 				return;
 			}
@@ -216,7 +212,7 @@ void lang_destory(void)
 	{
 		for (j = 0; j < NUM_STRINGS; j++)
 		{
-			free(langtexts[i][j]);
+			DenoraFree(langtexts[i][j]);
 		}
 	}
 

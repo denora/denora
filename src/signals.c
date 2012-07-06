@@ -505,7 +505,7 @@ void do_backtrace(int header)
 		alog(LOG_NORMAL, "%s(%d): %s",
 		     (header ? "Backtrace" : "Execution Trace"), i, strings[i]);
 	}
-	free(strings);
+	DenoraFree(strings);
 	alog(LOG_NORMAL, "%s: complete",
 	     (header ? "Backtrace" : "Execution Trace"));
 	if (header)
@@ -532,7 +532,7 @@ void do_backtrace(int header)
 	alog(LOG_NORMAL, "Backtrace not supported on win32");
 	winver = GetWindowsVersion();
 	alog(LOG_NORMAL, "Running %s", winver);
-	free(winver);
+	DenoraFree(winver);
 #endif
 }
 

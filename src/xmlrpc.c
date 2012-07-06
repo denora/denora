@@ -112,7 +112,7 @@ void xmlrpc_process(deno_socket_t socket_fd, char *buffer)
 				                     "XMLRPC error: Unknown routine called [%s]",
 				                     name);
 			}
-			free(name);
+			DenoraFree(name);
 		}
 		else
 		{
@@ -120,7 +120,7 @@ void xmlrpc_process(deno_socket_t socket_fd, char *buffer)
 			xmlrpc_generic_error(socket_fd, xmlrpc_error_code,
 			                     "XMLRPC error: Missing methodRequest or methodName.");
 		}
-		free(tmp);
+		DenoraFree(tmp);
 	}
 	else
 	{
@@ -130,7 +130,7 @@ void xmlrpc_process(deno_socket_t socket_fd, char *buffer)
 	}
 	SET_SEGV_LOCATION();
 	if (ac)
-		free(av);
+		DenoraFree(av);
 }
 
 /*************************************************************************/
@@ -278,15 +278,9 @@ int destroyXMLRPCCommand(XMLRPCCmd * xml)
 	}
 	SET_SEGV_LOCATION();
 
-	if (xml->name)
-	{
-		free(xml->name);
-	}
+	DenoraFree(xml->name);
 	xml->func = NULL;
-	if (xml->mod_name)
-	{
-		free(xml->mod_name);
-	}
+	DenoraFree(xml->mod_name);
 	xml->next = NULL;
 	free(xml);
 	return MOD_ERR_OK;
@@ -355,7 +349,7 @@ int delXMLRPCCommand(XMLRPCCmdHash * xmlrpctable[], XMLRPCCmd * xml,
 				else
 				{
 					xmlrpctable[idx] = xcurrent->next;
-					free(xcurrent->name);
+					DenoraFree(xcurrent->name);
 					return MOD_ERR_OK;
 				}
 			}
@@ -386,7 +380,7 @@ int delXMLRPCCommand(XMLRPCCmdHash * xmlrpctable[], XMLRPCCmd * xml,
 				else
 				{
 					lastHash->next = xcurrent->next;
-					free(xcurrent->name);
+					DenoraFree(xcurrent->name);
 					return MOD_ERR_OK;
 				}
 			}
@@ -709,7 +703,7 @@ int xmlrpc_split_buf(char *buffer, char ***argv)
 					{
 						tagtype = 0;
 					}
-					free(nexttag);
+					DenoraFree(nexttag);
 				}
 			}
 			str = myStrGetToken(xdata, '>', 2);
@@ -731,21 +725,15 @@ int xmlrpc_split_buf(char *buffer, char ***argv)
 					{
 						(*argv)[ac++] = final;
 					}
-					free(final);
+					DenoraFree(final);
 				}
-				free(str);
-				if (temp)
-				{
-					free(temp);
-				}
+				DenoraFree(str);
+				DenoraFree(temp);
 			}                   /* str */
 		}                       /* data */
 		buffer = str2;
 	}                           /* while */
-	if (str2)
-	{
-		free(str2);
-	}
+	DenoraFree(str2);
 	return ac;
 }
 
@@ -770,11 +758,11 @@ char *xmlrpc_method(char *buffer)
 		if (tmp)
 		{
 			tmp2 = myStrGetToken(tmp, '<', 0);
-			free(tmp);
+			DenoraFree(tmp);
 			if (tmp2)
 			{
 				s = sstrdup(tmp2);
-				free(tmp2);
+				DenoraFree(tmp2);
 				return s;
 			}
 		}
@@ -814,7 +802,7 @@ void xmlrpc_generic_error(deno_socket_t socket_fd, int code,
 	            "<?xml version=\"1.0\"?>\r\n <methodResponse>\n\r  <fault>\n\r   <value>\n\r    <struct>\n\r     <member>\n\r      <name>faultCode</name>\n\r      <value><int>%d</int></value>\n\r     </member>\n\r     <member>\n\r      <name>faultString</name>\n\r      <value><string>%s</string></value>\n\r     </member>\n\r    </struct>\n\r   </value>\r\n  </fault>\r\n </methodResponse>",
 	            code, encoded);
 
-	free(encoded);
+	DenoraFree(encoded);
 
 	len = strlen(buf);
 
@@ -824,7 +812,7 @@ void xmlrpc_generic_error(deno_socket_t socket_fd, int code,
 		strlcpy(buf2, header, XMLRPC_BUFSIZE);
 		strlcat(buf2, buf, XMLRPC_BUFSIZE);
 		len += strlen(header);
-		free(header);
+		DenoraFree(header);
 		alog(LOG_DEBUG, "XMLRPC Send: %s", buf2);
 		buffered_write(socket_fd, buf2, len);
 	}
@@ -940,7 +928,7 @@ void xmlrpc_send(deno_socket_t socket_fd, int argc, ...)
 			ircsnprintf(buf, XMLRPC_BUFSIZE,
 			            "%s\r\n <param>\r\n  <value>\r\n   %s\r\n  </value>\r\n </param>",
 			            s, a);
-			free(s);
+			DenoraFree(s);
 			s = sstrdup(buf);
 		}
 	}
@@ -964,7 +952,7 @@ void xmlrpc_send(deno_socket_t socket_fd, int argc, ...)
 	{
 		header = xmlrpc_write_header(len);
 		ircsnprintf(buf2, XMLRPC_BUFSIZE, "%s%s", header, buf);
-		free(header);
+		DenoraFree(header);
 		len = strlen(buf2);
 		buffered_write(socket_fd, buf2, len);
 		xmlrpc.httpheader = 1;
@@ -975,10 +963,10 @@ void xmlrpc_send(deno_socket_t socket_fd, int argc, ...)
 	}
 	if (xmlrpc.encode)
 	{
-		free(xmlrpc.encode);
+		DenoraFree(xmlrpc.encode);
 		xmlrpc.encode = NULL;
 	}
-	free(s);
+	DenoraFree(s);
 }
 
 /*************************************************************************/
@@ -1062,12 +1050,12 @@ char *xmlrpc_integer(char *buf, int value)
 		            value, xmlrpc.inttagend);
 		if (xmlrpc.inttagend)
 		{
-			free(xmlrpc.inttagend);
+			DenoraFree(xmlrpc.inttagend);
 			xmlrpc.inttagend = NULL;
 		}
 		if (xmlrpc.inttagstart)
 		{
-			free(xmlrpc.inttagstart);
+			DenoraFree(xmlrpc.inttagstart);
 			xmlrpc.inttagstart = NULL;
 		}
 	}
@@ -1094,7 +1082,7 @@ char *xmlrpc_string(char *buf, char *value)
 		encoded = char_encode(value);
 		ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s>%s</%s>", XMLRPC_STRING_TAG,
 		            encoded, XMLRPC_STRING_TAG);
-		free(encoded);
+		DenoraFree(encoded);
 	}
 	else
 	{
@@ -1219,7 +1207,7 @@ char *xmlrpc_array(int argc, ...)
 		{
 			ircsnprintf(buf, XMLRPC_BUFSIZE,
 			            "%s\r\n     <value>%s</value>", s, a);
-			free(s);
+			DenoraFree(s);
 			s = sstrdup(buf);
 		}
 	}
@@ -1229,7 +1217,7 @@ char *xmlrpc_array(int argc, ...)
 	            "<array>\r\n    <data>\r\n  %s\r\n    </data>\r\n   </array>",
 	            s);
 	len = strlen(buf);
-	free(s);
+	DenoraFree(s);
 	return sstrdup(buf);
 }
 
@@ -1342,10 +1330,7 @@ int destroyxmlrpchash(XMLRPCCmdHash * xh)
 	{
 		return MOD_ERR_PARAMS;
 	}
-	if (xh->name)
-	{
-		free(xh->name);
-	}
+	DenoraFree(xh->name);
 	xh->xml = NULL;
 	xh->next = NULL;
 	free(xh);
@@ -1387,10 +1372,10 @@ char *xmlrpc_decode_string(char *buf)
 			ircsnprintf(buf2, 12, "%c", atoi(temptoken));
 			ircsnprintf(buf3, 12, "&%s;", token);
 			strnrepl(buf, XMLRPC_BUFSIZE, buf3, buf2);
-			free(token);
+			DenoraFree(token);
 		}
 	}
-	free(temp);
+	DenoraFree(temp);
 	return buf;
 }
 

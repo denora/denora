@@ -737,18 +737,10 @@ int denora_event_topic(char *source, int ac, char **av)
 	newav[2] = itostr(time(NULL));
 	newav[3] = sstrdup(av[1]);
 	do_topic(4, newav);
-	if (newav[0])
-	{
-		free(newav[0]);
-	}
-	if (newav[1])
-	{
-		free(newav[1]);
-	}
-	if (newav[3])
-	{
-		free(newav[3]);
-	}
+	DenoraFree(newav[0]);
+	DenoraFree(newav[1]);
+	DenoraFree(newav[2]);
+	DenoraFree(newav[3]);
 	return MOD_CONT;
 }
 

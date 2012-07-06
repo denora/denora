@@ -78,7 +78,7 @@ void add_line(char **buf, char *line)
 		*buf = realloc(*buf, oldlen + strlen(line) + 1);
 		strlcpy(*buf, tmp, sizeof(buf));
 		strlcat(*buf, line, sizeof(buf));
-		free(tmp);
+		DenoraFree(tmp);
 	}
 	else
 		*buf = strdup(line);
@@ -106,10 +106,10 @@ int __stdcall mysql_LoadFromFile(char *file)
 			add_line(&query, line);
 			if (mysql_real_query(mysql, query, strlen(query)))
 			{
-				free(query);
+				DenoraFree(query);
 				return 0;
 			}
-			free(query);
+			DenoraFree(query);
 			query = NULL;
 		}
 

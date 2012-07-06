@@ -263,8 +263,8 @@ int denora_event_nick(char *source, int ac, char **av)
 		               strtoul(av[2], NULL, 10), strtoul(av[7], NULL, 0),
 		               ipchar, vhost, NULL, strtoul(av[1], NULL, 10),
 		               av[3], NULL);
-		free(vhost);
-		free(ipchar);
+		DenoraFree(vhost);
+		DenoraFree(ipchar);
 	}
 	else
 	{

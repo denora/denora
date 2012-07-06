@@ -496,7 +496,7 @@ int _check_mtime(GeoIP *gi)
 
 				if (gi->databaseSegments != NULL)
 				{
-					free(gi->databaseSegments);
+					DenoraFree(gi->databaseSegments);
 					gi->databaseSegments = NULL;
 				}
 				_setup_segments(gi);
@@ -812,7 +812,7 @@ GeoIP* GeoIP_open (const char * filename, int flags)
 	if (gi->GeoIPDatabase == NULL)
 	{
 		fprintf(stderr,"Error Opening file %s\n",filename);
-		free(gi->file_path);
+		DenoraFree(gi->file_path);
 		free(gi);
 		return NULL;
 	}
@@ -823,7 +823,7 @@ GeoIP* GeoIP_open (const char * filename, int flags)
 			if (fstat(fileno(gi->GeoIPDatabase), &buf) == -1)
 			{
 				fprintf(stderr,"Error stating file %s\n",filename);
-				free(gi->file_path);
+				DenoraFree(gi->file_path);
 				free(gi);
 				return NULL;
 			}
@@ -838,7 +838,7 @@ GeoIP* GeoIP_open (const char * filename, int flags)
 				if ( gi->cache == MAP_FAILED )
 				{
 					fprintf(stderr,"Error mmaping file %s\n",filename);
-					free(gi->file_path);
+					DenoraFree(gi->file_path);
 					free(gi);
 					return NULL;
 				}
@@ -853,8 +853,8 @@ GeoIP* GeoIP_open (const char * filename, int flags)
 					if (fread(gi->cache, sizeof(unsigned char), buf.st_size, gi->GeoIPDatabase) != (size_t) buf.st_size)
 					{
 						fprintf(stderr,"Error reading file %s\n",filename);
-						free(gi->cache);
-						free(gi->file_path);
+						DenoraFree(gi->cache);
+						DenoraFree(gi->file_path);
 						free(gi);
 						return NULL;
 					}
@@ -868,7 +868,7 @@ GeoIP* GeoIP_open (const char * filename, int flags)
 				if (fstat(fileno(gi->GeoIPDatabase), &buf) == -1)
 				{
 					fprintf(stderr,"Error stating file %s\n",filename);
-					free(gi->file_path);
+					DenoraFree(gi->file_path);
 					free(gi);
 					return NULL;
 				}
@@ -889,8 +889,8 @@ GeoIP* GeoIP_open (const char * filename, int flags)
 				if (fread(gi->index_cache, sizeof(unsigned char), gi->databaseSegments[0] * (long)gi->record_length * 2, gi->GeoIPDatabase) != (size_t) (gi->databaseSegments[0]*(long)gi->record_length * 2))
 				{
 					fprintf(stderr,"Error reading file %s\n",filename);
-					free(gi->databaseSegments);
-					free(gi->index_cache);
+					DenoraFree(gi->databaseSegments);
+					DenoraFree(gi->index_cache);
 					free(gi);
 					return NULL;
 				}
@@ -920,16 +920,13 @@ void GeoIP_delete (GeoIP *gi)
 		}
 		else
 		{
-			free(gi->cache);
+			DenoraFree(gi->cache);
 		}
 		gi->cache = NULL;
 	}
-	if (gi->index_cache != NULL)
-		free(gi->index_cache);
-	if (gi->file_path != NULL)
-		free(gi->file_path);
-	if (gi->databaseSegments != NULL)
-		free(gi->databaseSegments);
+	DenoraFree(gi->index_cache);
+	DenoraFree(gi->file_path);
+	DenoraFree(gi->databaseSegments);
 	free(gi);
 }
 
@@ -993,7 +990,7 @@ static unsigned long _GeoIP_lookupaddress (const char *host)
 #endif
 		if (!phe || result != 0)
 		{
-			free(buf);
+			DenoraFree(buf);
 			return 0;
 		}
 #if !defined(_WIN32)
@@ -1003,7 +1000,7 @@ static unsigned long _GeoIP_lookupaddress (const char *host)
 #endif
 	}
 #ifdef HAVE_GETHOSTBYNAME_R
-	free(buf);
+	DenoraFree(buf);
 #endif
 	return ntohl(addr);
 }
@@ -1699,11 +1696,9 @@ void GeoIP_range_by_ip_delete( char ** ptr )
 {
 	if ( ptr )
 	{
-		if ( ptr[0] )
-			free(ptr[0]);
-		if ( ptr[1] )
-			free(ptr[1]);
-		free(ptr);
+		DenoraFree(ptr[0]);
+		DenoraFree(ptr[1]);
+		DenoraFree(ptr);
 	}
 }
 

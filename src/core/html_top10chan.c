@@ -134,7 +134,7 @@ void html_top10chan(FILE * ptr)
 							         (HTML_CHAN_TOP10_OFFLINE), tempc,
 							         s->joincounter);
 						}
-						free(tempc);
+						DenoraFree(tempc);
 					}
 				}
 				x++;

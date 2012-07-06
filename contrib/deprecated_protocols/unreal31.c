@@ -632,7 +632,7 @@ int denora_event_nick(char *source, int ac, char **av)
 			do_nick(source, av[0], av[3], av[4], av[5], av[6],
 			        strtoul(av[2], NULL, 10), 0, 0, NULL, NULL, 0, NULL,
 			        NULL);
-			free(ipchar);
+			DenoraFree(ipchar);
 		}
 		else
 		{
@@ -641,7 +641,7 @@ int denora_event_nick(char *source, int ac, char **av)
 			               strtoul(av[2], NULL, 10), strtoul(av[6], NULL,
 			                       0), 0, av[8],
 			               NULL, strtoul(av[1], NULL, 10), av[7], NULL);
-			free(ipchar);
+			DenoraFree(ipchar);
 		}
 	}
 	else

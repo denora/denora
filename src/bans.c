@@ -216,10 +216,10 @@ void fini_bans(void)
 	while (tn != NULL)
 	{
 		g = lnode_get(tn);
-		free(g->user);
-		free(g->host);
-		free(g->setby);
-		free(g->reason);
+		DenoraFree(g->user);
+		DenoraFree(g->host);
+		DenoraFree(g->setby);
+		DenoraFree(g->reason);
 		free(g);
 		tn = list_next(Glinehead, tn);
 	}
@@ -229,10 +229,10 @@ void fini_bans(void)
 	while (tn != NULL)
 	{
 		z = lnode_get(tn);
-		free(z->user);
-		free(z->host);
-		free(z->setby);
-		free(z->reason);
+		DenoraFree(z->user);
+		DenoraFree(z->host);
+		DenoraFree(z->setby);
+		DenoraFree(z->reason);
 		free(z);
 		tn = list_next(Zlinehead, tn);
 	}
@@ -242,10 +242,10 @@ void fini_bans(void)
 	while (tn != NULL)
 	{
 		q = lnode_get(tn);
-		free(q->user);
-		free(q->host);
-		free(q->setby);
-		free(q->reason);
+		DenoraFree(q->user);
+		DenoraFree(q->host);
+		DenoraFree(q->setby);
+		DenoraFree(q->reason);
 		free(q);
 		tn = list_next(Qlinehead, tn);
 	}
@@ -358,18 +358,9 @@ void p10_gline(char *type, char *source, int ac, char **av)
 	/*
 	 * Free the data that was allocated
 	 */
-	if (address)
-	{
-		free(address);
-	}
-	if (user)
-	{
-		free(user);
-	}
-	if (host)
-	{
-		free(host);
-	}
+	DenoraFree(address);
+	DenoraFree(user);
+	DenoraFree(host);
 }
 
 /*************************************************************************/
@@ -438,14 +429,8 @@ void sql_do_sqline(char *mask, char *reason)
 	/*
 	 * Free the data that was allocated
 	 */
-	if (sqlmask)
-	{
-		free(sqlmask);
-	}
-	if (sqlreason)
-	{
-		free(sqlreason);
-	}
+	DenoraFree(sqlmask);
+	DenoraFree(sqlreason);
 }
 
 /*************************************************************************/
@@ -546,14 +531,8 @@ void sql_do_sgline(char *length, char *mask)
 	/*
 	 * Free the data that was allocated
 	 */
-	if (sqlmask)
-	{
-		free(sqlmask);
-	}
-	if (sqlreason)
-	{
-		free(sqlreason);
-	}
+	DenoraFree(sqlmask);
+	DenoraFree(sqlreason);
 	return;
 }
 
@@ -620,14 +599,8 @@ void sql_do_xline(char *geos, char *reason)
 	/*
 	 * Free the data that was allocated
 	 */
-	if (sqlgeos)
-	{
-		free(sqlgeos);
-	}
-	if (sqlreason)
-	{
-		free(sqlreason);
-	}
+	DenoraFree(sqlgeos);
+	DenoraFree(sqlreason);
 	return;
 }
 
@@ -665,10 +638,7 @@ void sql_do_unxline(char *geos)
 	/*
 	 * Free the data that was allocated
 	 */
-	if (sqlgeos)
-	{
-		free(sqlgeos);
-	}
+	DenoraFree(sqlgeos);
 	return;
 }
 
@@ -857,18 +827,9 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
 	/*
 	 * Free the data that was allocated
 	 */
-	if (reason)
-	{
-		free(reason);
-	}
-	if (sqluser)
-	{
-		free(sqluser);
-	}
-	if (sqlhost)
-	{
-		free(sqlhost);
-	}
+	DenoraFree(reason);
+	DenoraFree(sqluser);
+	DenoraFree(sqlhost);
 	return;
 }
 
@@ -968,14 +929,8 @@ void sql_do_server_spam_add(char *target, char *action,
 	 */
 	SET_SEGV_LOCATION();
 
-	if (sqlreason)
-	{
-		free(sqlreason);
-	}
-	if (sqlregex)
-	{
-		free(sqlregex);
-	}
+	DenoraFree(sqlreason);
+	DenoraFree(sqlregex);
 	return;
 }
 
@@ -1033,14 +988,8 @@ void sql_do_server_bans_remove(char *type, char *user, char *host)
 	/*
 	 * Free the data that was allocated
 	 */
-	if (sqluser)
-	{
-		free(sqluser);
-	}
-	if (sqlhost)
-	{
-		free(sqlhost);
-	}
+	DenoraFree(sqluser);
+	DenoraFree(sqlhost);
 	return;
 }
 
@@ -1100,18 +1049,9 @@ void sql_do_server_spam_remove(char *target, char *action, char *regex)
 	/*
 	 * Free the data that was allocated
 	 */
-	if (sqlregex)
-	{
-		free(sqlregex);
-	}
-	if (sqlaction)
-	{
-		free(sqlaction);
-	}
-	if (sqltarget)
-	{
-		free(sqltarget);
-	}
+	DenoraFree(sqlregex);
+	DenoraFree(sqlaction);
+	DenoraFree(sqltarget);
 	return;
 }
 

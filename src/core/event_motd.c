@@ -127,7 +127,7 @@ int denora_event_372(char *source, int ac, char **av)
 		if (s->motd)
 		{
 			ircsnprintf(buf, NET_BUFSIZE - 1, "%s\n\r%s", s->motd, av[1]);
-			free(s->motd);
+			DenoraFree(s->motd);
 			s->motd = sstrdup(buf);
 		}
 		else

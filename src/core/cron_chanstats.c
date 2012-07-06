@@ -188,7 +188,7 @@ int chanstats_month(const char *name)
 				          CStatsTable, chan_);
 				rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chan=\'%s\'",
 				          UStatsTable, chan_);
-				free(chan_);
+				DenoraFree(chan_);
 				if (LogChannel)
 				{
 					if (stricmp(LogChannel, mysql_row[0]))

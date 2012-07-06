@@ -103,12 +103,12 @@ int do_fantasy(int argc, char **argv)
 			if (mysql_res && mysql_num_rows(mysql_res))
 			{
 				mysql_row = mysql_fetch_row(mysql_res);
-				free(sqltarget);
+				DenoraFree(sqltarget);
 				sqltarget = rdb_escape(mysql_row[0]);
 			}
 			else
 			{
-				free(sqltarget);
+				DenoraFree(sqltarget);
 				return MOD_CONT;
 			}
 #endif
@@ -116,7 +116,7 @@ int do_fantasy(int argc, char **argv)
 		cs = find_cs(argv[2]);
 		rdb_query(QUERY_HIGH, "SELECT * FROM %s WHERE chan=\'global\' AND type=0 AND uname=\'%s\';",
 		          UStatsTable, sqltarget);
-		free(sqltarget);
+		DenoraFree(sqltarget);
 #ifdef USE_MYSQL
 		mysql_res = mysql_store_result(mysql);
 		if (mysql_num_rows(mysql_res) > 0)

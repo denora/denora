@@ -134,7 +134,7 @@ void html_top10kicks(FILE * ptr)
 							         (HTML_CHAN_TOP10_KICKS_CONTENT),
 							         tempc, s->kickcount);
 						}
-						free(tempc);
+						DenoraFree(tempc);
 					}
 				}
 				x++;

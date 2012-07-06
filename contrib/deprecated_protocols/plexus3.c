@@ -296,7 +296,7 @@ int denora_event_nick(char *source, int ac, char **av)
 		               strtoul(av[2], NULL, 10),
 		               strtoul(av[7], NULL, 0), ipchar, av[5], NULL,
 		               strtoul(av[1], NULL, 0), av[3], NULL);
-		free(ipchar);
+		DenoraFree(ipchar);
 	}
 	else if (ac == 2)
 	{
@@ -310,7 +310,7 @@ int denora_event_nick(char *source, int ac, char **av)
 		     "Unknown NICK formatted message please report the following");
 		protocol_debug(temp, ac, av);
 	}
-	free(temp);
+	DenoraFree(temp);
 	return MOD_CONT;
 }
 
@@ -334,9 +334,10 @@ int denora_event_topic(char *source, int ac, char **av)
 			newav[2] = itostr(time(NULL));
 			newav[3] = sstrdup(av[1]);
 			do_topic(4, newav);
-			free(newav[0]);
-			free(newav[1]);
-			free(newav[3]);
+			DenoraFree(newav[0]);
+			DenoraFree(newav[1]);
+			DenoraFree(newav[2]);
+			DenoraFree(newav[3]);
 		}
 
 	}
@@ -1050,7 +1051,7 @@ void plexus_cmd_nick(char *nick, char *name, const char *mode)
 		         (long int) time(NULL), mode, ServiceUser, ServiceHost,
 		         ServerName, name);
 	}
-	free(ipaddr);
+	DenoraFree(ipaddr);
 }
 
 /* QUIT */

@@ -242,7 +242,7 @@ static int do_chanstats(User * u, int ac, char **av)
 				notice_lang(s_StatServ, u, STAT_CHANSTATS_CHAN_NOTFOUND,
 				            cmd2);
 			}
-			free(sqlchan);
+			DenoraFree(sqlchan);
 		}
 		else if (!stricmp("LIST", cmd1))
 		{

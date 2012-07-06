@@ -308,7 +308,7 @@ void db_connect(void)
 			          CStatsTable, sqlchan);
 			rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chan=\'%s\'",
 			          UStatsTable, sqlchan);
-			free(sqlchan);
+			DenoraFree(sqlchan);
 		}
 	}
 	if (!db_getcurrent_chans())
@@ -569,7 +569,7 @@ int db_checknick_nt(char *nick)
 							          "INSERT INTO %s (nick, uname) VALUES (\'%s\', \'%s\') ON DUPLICATE KEY UPDATE uname=\'%s\'",
 							          AliasesTable, u->sqlnick, olduname,
 							          olduname);
-							free(olduname);
+							DenoraFree(olduname);
 						}
 						mysql_free_result(mysql_res2);
 					}
@@ -585,13 +585,10 @@ int db_checknick_nt(char *nick)
 #endif
 		/* For some reason this fails */
 		/*
-		if (queryhost)
-		    free(queryhost);
+		DenoraFree(queryhost);
 		*/
-		if (username)
-			free(username);
-		if (host)
-			free(host);
+		DenoraFree(username);
+		DenoraFree(host);
 
 		return nickid;
 	}
@@ -785,10 +782,7 @@ void db_removenick(char *nick, char *reason)
 		rdb_query(QUERY_LOW,
 		          "UPDATE %s SET online=\'N\', lastquit=NOW(), lastquitmsg=\'%s\', servid=0 WHERE nickid=%d",
 		          UserTable, sqlreason, nickid);
-		if (sqlreason)
-		{
-			free(sqlreason);
-		}
+		DenoraFree(sqlreason);
 	}
 	else
 	{
@@ -858,12 +852,9 @@ void db_removenick_nt(char *nick, char *reason)
 			rdb_query(QUERY_HIGH,
 			          "SELECT nick FROM %s WHERE username=\'%s\' AND REVERSE(hostname) LIKE \'%s%%\' AND online=\'Y\' AND nick != \'%s\' ORDER BY connecttime DESC",
 			          UserTable, username, queryhost, u->sqlnick);
-			if (queryhost)
-				free(queryhost);
-			if (username)
-				free(username);
-			if (host)
-				free(host);
+			DenoraFree(queryhost);
+			DenoraFree(username);
+			DenoraFree(host);
 #ifdef USE_MYSQL
 			mysql_res = mysql_store_result(mysql);
 			if (mysql_res)
@@ -915,13 +906,10 @@ void db_removenick_nt(char *nick, char *reason)
 					         nick, olduser, newuser);
 					    sumuser(u, olduser, newuser);
 					}*/
-					if (newnick)
-						free(newnick);
+					DenoraFree(newnick);
 					/* Commented out for testing
-					                    if (olduser)
-					                        free(olduser);
-					                    if (newuser)
-					                        free(newuser);
+					DenoraFree(olduser);
+					DenoraFree(newuser);
 					*/
 				}
 				else
@@ -941,10 +929,7 @@ void db_removenick_nt(char *nick, char *reason)
 			          "UPDATE %s SET online=\'N\', lastquit=NOW(), lastquitmsg=\'%s\', servid=0 WHERE nickid=%d",
 			          UserTable, sqlreason, nickid);
 		}
-		if (sqlreason)
-		{
-			free(sqlreason);
-		}
+		DenoraFree(sqlreason);
 	}
 	else
 	{
@@ -995,7 +980,7 @@ void db_removefromchans(int nickid)
 			          ChanTable, chanid);
 			if (!ChanHasMode(chan, ircd->persist_char))
 				db_checkemptychan(atoi(res[0]));
-			free(chan);
+			DenoraFree(chan);
 		}
 		SET_SEGV_LOCATION();
 		mysql_free_result(mysql_res);
@@ -1350,7 +1335,7 @@ int db_getchancreate(char *chan)
 	{
 		c->sqlid = res;
 	}
-	free(channel);
+	DenoraFree(channel);
 	return res;
 }
 

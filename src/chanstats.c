@@ -290,7 +290,7 @@ void do_cstats(User * u, char *receiver, char *msg)
 	}
 	SET_SEGV_LOCATION();
 	make_stats(u, receiver, msg);
-	free(buf);
+	DenoraFree(buf);
 }
 
 /******************************************************************************************/
@@ -334,7 +334,7 @@ static void make_stats(User * u, char *receiver, char *msg)
 			words++;
 	}
 	smileys = countsmileys(buf);        /* count smileys */
-	free(buf);
+	DenoraFree(buf);
 	/* is a action ? */
 	if (strncmp("\01ACTION", msg, 7) == 0)      /* is a action ? */
 	{
@@ -544,7 +544,7 @@ static int check_db(User * u, Channel * c)
 				mysql_row = mysql_fetch_row(mysql_res);
 				if (u->sgroup)
 				{
-					free(u->sgroup);
+					DenoraFree(u->sgroup);
 				}
 				u->sgroup = rdb_escape(mysql_row[0]);
 				if (!stricmp(mysql_row[1], "Y"))
@@ -563,7 +563,7 @@ static int check_db(User * u, Channel * c)
 				alog(LOG_DEBUG, "Replacing sgroup %s with last used %s",
 				     u->sgroup, u->lastuname);
 				u->sgroup = sstrdup(u->lastuname);
-				free(u->lastuname);
+				DenoraFree(u->lastuname);
 				u->lastuname = NULL;
 			}
 			else                /* num_rows = 0 */
@@ -582,7 +582,7 @@ static int check_db(User * u, Channel * c)
 					 (long int) time(NULL));
 				}
 				u->cstats = 1;
-				free(u->sgroup);
+				DenoraFree(u->sgroup);
 				u->sgroup = sstrdup(u->sqlnick);
 			}
 			mysql_free_result(mysql_res);
@@ -626,7 +626,7 @@ static int check_db(User * u, Channel * c)
 			     "sgroup %s and lastuname %s differ, so we merge them",
 			     u->sgroup, u->lastuname);
 			sumuser(u, u->lastuname, u->sgroup);
-			free(u->lastuname);
+			DenoraFree(u->lastuname);
 			u->lastuname = NULL;
 			return 1;
 		}
@@ -785,7 +785,7 @@ void sumuser(User * u, char *user1, char *user2)
 			}
 			mysql_free_result(mysql_res);
 		}
-		free(chan_);
+		DenoraFree(chan_);
 	}                           /* while */
 	SET_SEGV_LOCATION();
 
@@ -814,7 +814,7 @@ void sumuser(User * u, char *user1, char *user2)
 #endif
 	while ((u2 = finduser_by_sgroup(user2, user2_)))
 	{
-		free(u2->sgroup);
+		DenoraFree(u2->sgroup);
 		u2->sgroup = sstrdup(user1_);
 	}
 	notice_lang(s_StatServ, u, STATS_CHANSTATS_SUMUSER_DONE, user2, user1);
@@ -822,8 +822,8 @@ void sumuser(User * u, char *user1, char *user2)
 
 end:
 	SET_SEGV_LOCATION();
-	free(user1_);
-	free(user2_);
+	DenoraFree(user1_);
+	DenoraFree(user2_);
 }
 
 /*************************************************************************/
@@ -892,7 +892,7 @@ void renameuser(User * u, char *user1, char *user2)
 	          AliasesTable, user2_, user1_);
 	while ((u2 = finduser_by_sgroup(user1, user1_)))
 	{
-		free(u2->sgroup);
+		DenoraFree(u2->sgroup);
 		u2->sgroup = sstrdup(user2_);
 	}
 	notice_lang(s_StatServ, u, STATS_CHANSTATS_RENAMEUSER_DONE, user1,
@@ -900,8 +900,8 @@ void renameuser(User * u, char *user1, char *user2)
 
 end:
 	SET_SEGV_LOCATION();
-	free(user1_);
-	free(user2_);
+	DenoraFree(user1_);
+	DenoraFree(user2_);
 }
 
 /*************************************************************************/

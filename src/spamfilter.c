@@ -104,12 +104,12 @@ void fini_SpamFilter(void)
 	while (tn != NULL)
 	{
 		sf = lnode_get(tn);
-		free(sf->regex);
-		free(sf->target);
-		free(sf->action);
-		free(sf->setby);
-		free(sf->expires);
-		free(sf->reason);
+		DenoraFree(sf->regex);
+		DenoraFree(sf->target);
+		DenoraFree(sf->action);
+		DenoraFree(sf->setby);
+		DenoraFree(sf->expires);
+		DenoraFree(sf->reason);
 		free(sf);
 		tn = list_next(Spamhead, tn);
 	}

@@ -233,7 +233,7 @@ int denora_event_nick(char *source, int ac, char **av)
 			    do_nick(source, av[0], av[3], av[4], (s ? s->name : temp),
 			            av[9], strtoul(av[2], NULL, 10), 0, ipchar, NULL,
 			            av[8], strtoul(av[1], NULL, 10), av[5], NULL);
-			free(ipchar);
+			DenoraFree(ipchar);
 		}
 		if (ac == 9)
 		{
@@ -243,7 +243,7 @@ int denora_event_nick(char *source, int ac, char **av)
 			    do_nick(source, av[0], av[3], av[4], (s ? s->name : temp),
 			            av[8], strtoul(av[2], NULL, 10), 0, 0, NULL, av[7],
 			            strtoul(av[1], NULL, 10), av[5], NULL);
-			free(ipchar);
+			DenoraFree(ipchar);
 		}
 	}
 	else
@@ -253,7 +253,7 @@ int denora_event_nick(char *source, int ac, char **av)
 		        strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0, NULL,
 		        NULL);
 	}
-	free(temp);
+	DenoraFree(temp);
 	return MOD_CONT;
 }
 
@@ -877,14 +877,8 @@ void beware_cmd_pong(char *servname, char *who)
 	}
 	send_cmd(p10id, "Z %s %ld %ld %ld %s", p10id, (long int) ts,
 	         (long int) tsnow, (long int) value, militime_float(NULL));
-	if (s)
-	{
-		free(s);
-	}
-	if (t)
-	{
-		free(t);
-	}
+	DenoraFree(s);
+	DenoraFree(t);
 }
 
 void beware_cmd_bot_nick(char *nick, char *user, char *host, char *real,

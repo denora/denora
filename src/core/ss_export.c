@@ -118,7 +118,7 @@ static int do_export(User * u, int ac, char **av)
 	{
 		syntax_error(s_StatServ, u, "EXPORT", STATS_EXPORT_SYNTAX);
 	}
-	free(filename);
+	DenoraFree(filename);
 	return MOD_CONT;
 }
 
@@ -184,7 +184,7 @@ void xml_export_channels(char *file)
 			                  (long int) c->stats->joincounter);
 			temp = chan_get_modes(c, 1);
 			xml_write_tag(ptr, "mode", temp);
-			free(temp);
+			DenoraFree(temp);
 
 			if (c->limit)
 			{
@@ -223,7 +223,7 @@ void xml_export_channels(char *file)
 					bans[i] = sstrdup(c->bans[i]);
 					xml_write_tag(ptr, "ban", bans[i]);
 				}
-				free(bans);
+				DenoraFree(bans);
 				xml_write_block_bottom(ptr, "bans");
 			}
 
@@ -238,7 +238,7 @@ void xml_export_channels(char *file)
 					bans[i] = sstrdup(c->excepts[i]);
 					xml_write_tag(ptr, "except", bans[i]);
 				}
-				free(bans);
+				DenoraFree(bans);
 				xml_write_block_bottom(ptr, "exceptions");
 			}
 
@@ -253,7 +253,7 @@ void xml_export_channels(char *file)
 					bans[i] = sstrdup(c->invite[i]);
 					xml_write_tag(ptr, "invite", bans[i]);
 				}
-				free(bans);
+				DenoraFree(bans);
 				xml_write_block_bottom(ptr, "invites");
 			}
 
@@ -799,7 +799,7 @@ void xml_export_all(char *file)
 			                  (long int) c->stats->joincounter);
 			temp = chan_get_modes(c, 1);
 			xml_write_tag(ptr, "mode", temp);
-			free(temp);
+			DenoraFree(temp);
 
 			if (c->limit)
 			{
@@ -838,7 +838,7 @@ void xml_export_all(char *file)
 					bans[i] = sstrdup(c->bans[i]);
 					xml_write_tag(ptr, "ban", bans[i]);
 				}
-				free(bans);
+				DenoraFree(bans);
 				xml_write_block_bottom(ptr, "bans");
 			}
 
@@ -853,7 +853,7 @@ void xml_export_all(char *file)
 					bans[i] = sstrdup(c->excepts[i]);
 					xml_write_tag(ptr, "except", bans[i]);
 				}
-				free(bans);
+				DenoraFree(bans);
 				xml_write_block_bottom(ptr, "exceptions");
 			}
 
@@ -868,7 +868,7 @@ void xml_export_all(char *file)
 					bans[i] = sstrdup(c->invite[i]);
 					xml_write_tag(ptr, "invite", bans[i]);
 				}
-				free(bans);
+				DenoraFree(bans);
 				xml_write_block_bottom(ptr, "invites");
 			}
 			xml_write_block_bottom(ptr, "chans");

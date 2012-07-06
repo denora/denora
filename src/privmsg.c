@@ -114,11 +114,7 @@ int destroyPrivMsg(PrivMsg * m)
 		return MOD_ERR_PARAMS;
 	}
 
-	if (m->service)
-	{
-		free(m->service);
-	}
-
+	DenoraFree(m->service);
 	free(m);
 	return MOD_ERR_OK;
 }
@@ -152,7 +148,7 @@ int delPrivMsg(PrivMsg * m)
 				lastHash->next = privcurrent->next;
 			}
 			destroyPrivMsg(privcurrent->p);
-			free(privcurrent->service);
+			DenoraFree(privcurrent->service);
 			free(privcurrent);
 			return MOD_ERR_OK;
 		}

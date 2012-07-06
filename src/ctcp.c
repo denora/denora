@@ -131,7 +131,7 @@ void load_ctcp_db(void)
 			{
 				ct = makectcp(version);
 				ct->overall = tempoverall;
-				free(version);
+				DenoraFree(version);
 			}
 		}
 		else
@@ -219,7 +219,7 @@ void save_ctcp_db(void)
 			version = sstrdup(c->version);
 			strnrepl(version, BUFSIZE, ":", "¶");
 			new_write_db_entry("version", dbptr, "%s", version);
-			free(version);
+			DenoraFree(version);
 			new_write_db_entry("count", dbptr, "%u", c->overall);
 			new_write_db_endofblock(dbptr);
 		}
@@ -264,7 +264,7 @@ void ctcp_update(char *version)
 	          "UPDATE %s SET count=%u, overall=%u WHERE version=\'%s\'",
 	          CTCPTable, c->count, c->overall, version);
 	SET_SEGV_LOCATION();
-	free(version);
+	DenoraFree(version);
 }
 
 /*************************************************************************/
@@ -317,23 +317,14 @@ void handle_ctcp_version(char *nick, char *version)
 
 	if (u)
 	{
-		if (!u->ctcp)
-		{
-			u->ctcp = sstrdup(version);
-		}
-		else
-		{
-			if (u->ctcp)
-			{
-				free(u->ctcp);
-			}
-			u->ctcp = sstrdup(version);
-		}
+		DenoraFree(u->ctcp);
+		u->ctcp = sstrdup(version);
+
 		version = rdb_escape(version);
 		rdb_query
 		(QUERY_LOW, "UPDATE %s SET ctcpversion=\'%s\' WHERE nickid=%d",
 		 UserTable, version, db_getnick(u->sqlnick));
-		free(version);
+		DenoraFree(version);
 	}
 }
 
@@ -387,6 +378,6 @@ void sql_do_ctcp(int type, char *version, int count, int overall)
 #endif
 		}
 		SET_SEGV_LOCATION();
-		free(temp);
+		DenoraFree(temp);
 	}
 }

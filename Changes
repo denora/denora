@@ -11,6 +11,8 @@ Additions
 11/02/11 r416 Added support for ircd-rizon
 
 Changes
+12/07/06 Changed delete_user to properly and warning free cleanup the channels
+12/07/05 Changed all free()'s into DenoraFree() in order to prevent double free()'s
 12/06/29 Undone a few changes as I might see issues
 12/06/27 Commented out a little more at src/db.c
 12/06/27 Bumped to 1.5.0-git-501

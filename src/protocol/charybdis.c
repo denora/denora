@@ -277,7 +277,7 @@ int denora_event_nick(char *source, int ac, char **av)
 		user = do_nick(source, av[0], av[4], av[5], av[6], av[7],
 		               strtoul(av[2], NULL, 10), 0, ipchar, NULL, av[7],
 		               strtoul(av[1], NULL, 10), av[3], NULL);
-		free(ipchar);
+		DenoraFree(ipchar);
 
 	}
 	else if (ac == 9)
@@ -289,7 +289,7 @@ int denora_event_nick(char *source, int ac, char **av)
 		user = do_nick(source, av[0], av[4], av[5], s->name, av[8],
 		               strtoul(av[2], NULL, 10), 0, ipchar, NULL, av[7],
 		               strtoul(av[1], NULL, 10), av[3], NULL);
-		free(ipchar);
+		DenoraFree(ipchar);
 	}
 	else
 	{
@@ -360,9 +360,9 @@ int denora_event_topic(char *source, int ac, char **av)
 			newav[2] = itostr(time(NULL));
 			newav[3] = sstrdup(av[1]);
 			do_topic(4, newav);
-			free(newav[0]);
-			free(newav[1]);
-			free(newav[3]);
+			DenoraFree(newav[0]);
+			DenoraFree(newav[1]);
+			DenoraFree(newav[3]);
 		}
 
 	}

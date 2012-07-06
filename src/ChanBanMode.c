@@ -131,11 +131,7 @@ int destroyChanBanMode(ChanBanMode * m)
 		return MOD_ERR_PARAMS;
 	}
 
-	if (m->mode)
-	{
-		free(m->mode);
-	}
-
+	DenoraFree(m->mode);
 	free(m);
 	return MOD_ERR_OK;
 }
@@ -169,7 +165,7 @@ int delChanBanMode(ChanBanMode * m)
 				lastHash->next = privcurrent->next;
 			}
 			destroyChanBanMode(privcurrent->cbm);
-			free(privcurrent->mode);
+			DenoraFree(privcurrent->mode);
 			free(privcurrent);
 			return MOD_ERR_OK;
 		}
@@ -242,14 +238,8 @@ void sql_channel_ban(int type, Channel * c, char *mask)
 		          ChanBansTable, sqlchan);
 	}
 	SET_SEGV_LOCATION();
-	if (mask)
-	{
-		free(mask);
-	}
-	if (sqlchan)
-	{
-		free(sqlchan);
-	}
+	DenoraFree(mask);
+	DenoraFree(sqlchan);
 }
 
 /*************************************************************************/
@@ -316,14 +306,8 @@ void sql_channel_quiet(int type, Channel * c, char *mask)
 		          ChanQuietTable, sqlchan);
 	}
 	SET_SEGV_LOCATION();
-	if (mask)
-	{
-		free(mask);
-	}
-	if (sqlchan)
-	{
-		free(sqlchan);
-	}
+	DenoraFree(mask);
+	DenoraFree(sqlchan);
 }
 
 /*************************************************************************/
@@ -388,14 +372,8 @@ void sql_channel_exception(int type, Channel * c, char *mask)
 		          ChanExceptTable, sqlchan);
 	}
 	SET_SEGV_LOCATION();
-	if (mask)
-	{
-		free(mask);
-	}
-	if (sqlchan)
-	{
-		free(sqlchan);
-	}
+	DenoraFree(mask);
+	DenoraFree(sqlchan);
 }
 
 /*************************************************************************/
@@ -463,12 +441,9 @@ void sql_channel_invite(int type, Channel * c, char *mask)
 	SET_SEGV_LOCATION();
 	if (mask && sqlmask)
 	{
-		free(sqlmask);
+		DenoraFree(sqlmask);
 	}
-	if (sqlchan)
-	{
-		free(sqlchan);
-	}
+	DenoraFree(sqlchan);
 }
 
 /*************************************************************************/
@@ -645,7 +620,7 @@ void del_exception(Channel * chan, char *mask)
 	{
 		if ((!reset) && (stricmp(chan->excepts[i], mask) == 0))
 		{
-			free(chan->excepts[i]);
+			DenoraFree(chan->excepts[i]);
 			reset = 1;
 		}
 		if (reset)
@@ -688,7 +663,7 @@ void del_invite(Channel * chan, char *mask)
 	{
 		if ((!reset) && (stricmp(chan->invite[i], mask) == 0))
 		{
-			free(chan->invite[i]);
+			DenoraFree(chan->invite[i]);
 			reset = 1;
 		}
 		if (reset)
@@ -730,7 +705,7 @@ void del_quiet(Channel * chan, char *mask)
 	{
 		if ((!reset) && (stricmp(chan->quiet[i], mask) == 0))
 		{
-			free(chan->quiet[i]);
+			DenoraFree(chan->quiet[i]);
 			reset = 1;
 		}
 		if (reset)

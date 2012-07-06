@@ -257,17 +257,11 @@ int free_admin(Dadmin * a)
 		}
 		while (a->hosts[i])
 		{
-			free(a->hosts[i]);
+			DenoraFree(a->hosts[i]);
 			i++;
 		}
-		if (a->passwd)
-		{
-			free(a->passwd);
-		}
-		if (a->name)
-		{
-			free(a->name);
-		}
+		DenoraFree(a->passwd);
+		DenoraFree(a->name);
 		free(a);
 		return 1;
 	}

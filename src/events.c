@@ -119,12 +119,9 @@ void send_event(const char *name, int argc, ...)
 	 **/
 	for (idx = 0; idx < argc; idx++)
 	{
-		if (!BadPtr(argv[idx]))
-		{
-			free(argv[idx]);
-		}
+		DenoraFree(argv[idx]);
 	}
-	free(argv);
+	DenoraFree(argv);
 }
 
 /*************************************************************************/
@@ -140,10 +137,7 @@ void eventprintf(const char *fmt, ...)
 	va_end(args);
 	event = sstrdup(buf);
 	event_message_process(event);
-	if (event)
-	{
-		free(event);
-	}
+	DenoraFree(event);
 	return;
 }
 
@@ -222,7 +216,7 @@ void event_message_process(char *eventbuf)
 		}
 	}
 	/* Free argument list we created */
-	free(av);
+	DenoraFree(av);
 }
 
 /*************************************************************************/
@@ -819,7 +813,7 @@ int delEventHandler(EvtMessageHash * msgEvtTable[], EvtMessage * evm,
 				else
 				{
 					msgEvtTable[eventindex] = eventcurrent->next;
-					free(eventcurrent->name);
+					DenoraFree(eventcurrent->name);
 					return MOD_ERR_OK;
 				}
 			}
@@ -850,7 +844,7 @@ int delEventHandler(EvtMessageHash * msgEvtTable[], EvtMessage * evm,
 				else
 				{
 					lastHash->next = eventcurrent->next;
-					free(eventcurrent->name);
+					DenoraFree(eventcurrent->name);
 					return MOD_ERR_OK;
 				}
 			}
@@ -916,7 +910,7 @@ int delEventHook(EvtHookHash * hookEvtTable[], EvtHook * evh,
 				else
 				{
 					hookEvtTable[eventindex] = eventcurrent->next;
-					free(eventcurrent->name);
+					DenoraFree(eventcurrent->name);
 					return MOD_ERR_OK;
 				}
 			}
@@ -947,7 +941,7 @@ int delEventHook(EvtHookHash * hookEvtTable[], EvtHook * evh,
 				else
 				{
 					lastHash->next = eventcurrent->next;
-					free(eventcurrent->name);
+					DenoraFree(eventcurrent->name);
 					return MOD_ERR_OK;
 				}
 			}
@@ -970,15 +964,9 @@ int destroyEventHandler(EvtMessage * evm)
 	{
 		return MOD_ERR_PARAMS;
 	}
-	if (evm->name)
-	{
-		free(evm->name);
-	}
+	DenoraFree(evm->name);
 	evm->func = NULL;
-	if (evm->mod_name)
-	{
-		free(evm->mod_name);
-	}
+	DenoraFree(evm->mod_name);
 	evm->next = NULL;
 	free(evm);
 	return MOD_ERR_OK;
@@ -997,15 +985,9 @@ int destroyEventHook(EvtHook * evh)
 	{
 		return MOD_ERR_PARAMS;
 	}
-	if (evh->name)
-	{
-		free(evh->name);
-	}
+	DenoraFree(evh->name);
 	evh->func = NULL;
-	if (evh->mod_name)
-	{
-		free(evh->mod_name);
-	}
+	DenoraFree(evh->mod_name);
 	evh->next = NULL;
 	free(evh);
 	return MOD_ERR_OK;

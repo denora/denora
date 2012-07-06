@@ -190,7 +190,7 @@ void do_swhois(char *user, char *msg)
 	/* Check if current set, if so we should free it before using it */
 	if (u->swhois)
 	{
-		free(u->swhois);
+		DenoraFree(u->swhois);
 		u->swhois = NULL;
 	}
 	u->swhois = (!msg || !*msg) ? NULL : sstrdup(msg);
@@ -211,7 +211,7 @@ void do_swhois(char *user, char *msg)
 			          "UPDATE %s SET swhois=\'%s\' WHERE nickid=%d",
 			          UserTable, sqlmsg, nickid);
 		}
-		free(sqlmsg);
+		DenoraFree(sqlmsg);
 	}
 
 	SET_SEGV_LOCATION();
@@ -312,25 +312,18 @@ void sql_do_nick(User * u)
 	}
 	SET_SEGV_LOCATION();
 
-	if (username)
-		free(username);
-	if (host)
-		free(host);
-	if (server)
-		free(server);
-	if (account)
-		free(account);
+	DenoraFree(username);
+	DenoraFree(host);
+	DenoraFree(server);
+	DenoraFree(account);
 
 	SET_SEGV_LOCATION();
 
 	if (ircd->vhost && vhost)
-		free(vhost);
-	if (realname)
-		free(realname);
-	if (countrycode)
-		free(countrycode);
-	if (countryname)
-		free(countryname);
+		DenoraFree(vhost);
+	DenoraFree(realname);
+	DenoraFree(countrycode);
+	DenoraFree(countryname);
 
 	SET_SEGV_LOCATION();
 }
@@ -443,14 +436,11 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
 	          "INSERT INTO %s (nick, uname) VALUES (\'%s\', \'%s\') ON DUPLICATE KEY UPDATE uname=\'%s\'",
 	          AliasesTable, newnick, uname ? uname : newnick,
 	          uname ? uname : newnick);
-	if (uname)
-		free(uname);
+	DenoraFree(uname);
 #endif
 /* These values are from the call itself, should they even be free'd ?
-	if (newnick)
-		free(newnick);
-	if (oldnick)
-		free(oldnick);
+	DenoraFree(newnick);
+	DenoraFree(oldnick);
 */
 }
 
@@ -562,7 +552,7 @@ void change_user_host(char *source, char *host)
 
 	if (user->vhost)
 	{
-		free(user->vhost);
+		DenoraFree(user->vhost);
 		user->vhost = NULL;
 	}
 	user->vhost = sstrdup(host);
@@ -597,7 +587,7 @@ void change_user_host(char *source, char *host)
 			 "UPDATE %s SET hiddenhostname=\'%s\' WHERE nickid=%d",
 			 UserTable, msg, userid);
 		}
-		free(msg);
+		DenoraFree(msg);
 	}
 	SET_SEGV_LOCATION();
 }
@@ -638,7 +628,7 @@ void change_user_realname(char *source, char *realname)
 
 	if (user->realname)
 	{
-		free(user->realname);
+		DenoraFree(user->realname);
 		user->realname = NULL;
 	}
 	user->realname = sstrdup(realname);
@@ -653,7 +643,7 @@ void change_user_realname(char *source, char *realname)
 		rdb_query
 		(QUERY_LOW, "UPDATE %s SET realname=\'%s\' WHERE nickid=%d",
 		 UserTable, msg, userid);
-		free(msg);
+		DenoraFree(msg);
 	}
 	SET_SEGV_LOCATION();
 }
@@ -692,7 +682,7 @@ void change_user_username(char *source, char *username)
 
 	if (user->username)
 	{
-		free(user->username);
+		DenoraFree(user->username);
 		user->username = NULL;
 	}
 	user->username = sstrdup(username);
@@ -707,7 +697,7 @@ void change_user_username(char *source, char *username)
 		rdb_query
 		(QUERY_LOW, "UPDATE %s SET username=\'%s\' WHERE nickid=%d",
 		 UserTable, msg, userid);
-		free(msg);
+		DenoraFree(msg);
 	}
 }
 
@@ -753,64 +743,55 @@ void delete_user(User * user)
 	}
 
 	alog(LOG_EXTRADEBUG, "debug: delete_user(): free user data");
-	free(user->username);
-	free(user->host);
-	if (user->vhost)
-	{
-		free(user->vhost);
-	}
-	free(user->ip);
-	if (user->account)
-	{
-		free(user->account);
-	}
+	DenoraFree(user->username);
+	DenoraFree(user->host);
+	DenoraFree(user->vhost);
+	DenoraFree(user->ip);
+	DenoraFree(user->account);
 	if (CTCPUsers)
 	{
 		if (user->ctcp)
 		{
 			ctcp_update(user->ctcp);
-			free(user->ctcp);
+			DenoraFree(user->ctcp);
 		}
 	}
 	if (user->isaway && user->awaymsg)
 	{
-		free(user->awaymsg);
+		DenoraFree(user->awaymsg);
 	}
 
-	free(user->country_code);
-	free(user->country_name);
-	if (user->sgroup)
-	{
-		free(user->sgroup);
-	}
-	if (user->lastuname)
-	{
-		free(user->lastuname);
-	}
-	if (user->swhois)
-	{
-		free(user->swhois);
-	}
-	free(user->realname);
+	DenoraFree(user->country_code);
+	DenoraFree(user->country_name);
+	DenoraFree(user->sgroup);
+	DenoraFree(user->lastuname);
+	DenoraFree(user->swhois);
+	DenoraFree(user->realname);
 	if (denora->do_sql)
 	{
-		free(user->sqlnick);
+		DenoraFree(user->sqlnick);
 	}
 
 	alog(LOG_EXTRADEBUG, "debug: delete_user(): remove from channels");
 	c = user->chans;
 	while (c)
 	{
-		c2 = c->next;
-		chan_deluser(user, c->chan);
-		free(c);
-		c = c2;
+		if (c2 = c->next)
+		{
+			alog(LOG_DEBUG, "dbg1: cleaning up channel %s for %s", c->chan->name, user->nick);
+			chan_deluser(user, c->chan);
+			free(c);
+			c = c2;
+		}
+		else
+		{
+			alog(LOG_DEBUG, "dbg2: cleaning up channel %s for %s", c->chan->name, user->nick);
+                        chan_deluser(user, c->chan);
+                        free(c);
+			break;
+		}
 	}
-	if (c2)
-		free(c2);
-	if (c)
-		free(c);
-
+	
 	alog(LOG_EXTRADEBUG, "debug: delete_user(): free founder data");
 	moduleCleanStruct(&user->moduleData);
 
@@ -1071,7 +1052,7 @@ void delete_uid(Uid * u)
 
 	alog(LOG_EXTRADEBUG, "debug: delete_uid() called");
 
-	free(u->uid);
+	DenoraFree(u->uid);
 
 	alog(LOG_EXTRADEBUG, "debug: delete_uid(): delete from list");
 
@@ -1315,7 +1296,7 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 		{
 			newav[0] = sstrdup(modes);
 			denora_set_umode(user, 1, newav);
-			free(newav[0]);
+			DenoraFree(newav[0]);
 		}
 	}
 	else
@@ -1331,15 +1312,14 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 		{
 			if (user->sgroup)
 			{
-				if (user->lastuname)
-					free(user->lastuname);
+				DenoraFree(user->lastuname);
 				user->lastuname = sstrdup(user->sgroup);        /* in case we need to merge later */
 			}
 			alog(LOG_DEBUG, "debug: %s has changed nicks to %s", source, nick);
 			sql_do_nick_chg(nick, user->nick);
 			change_user_nick(user, nick);
 			send_event(EVENT_CHANGE_NICK, 2, source, nick);
-			free(user->sqlnick);
+			DenoraFree(user->sqlnick);
 			user->sqlnick = rdb_escape(user->nick);
 		}
 		else
@@ -1633,10 +1613,7 @@ void do_account(User * user, char *account)
 		return;
 	}
 
-	if (user->account)
-	{
-		free(user->account);
-	}
+	DenoraFree(user->account);
 
 	nickid = db_getnick_unsure(user->sqlnick);
 
@@ -1650,7 +1627,7 @@ void do_account(User * user, char *account)
 			rdb_query(QUERY_LOW,
 			          "UPDATE %s SET account=\'%s\' WHERE nickid=%d",
 			          UserTable, sqlaccount, nickid);
-			free(sqlaccount);
+			DenoraFree(sqlaccount);
 		}
 	}
 	else
@@ -1717,30 +1694,21 @@ void do_p10account(User * user, char *account, int flag)
 	else if (flag == 1)
 	{
 		alog(LOG_DEBUG, "debug: account removed from %s", user->nick);
-		if (user->account)
-		{
-			free(user->account);
-		}
+		DenoraFree(user->account);
 		user->account = NULL;
 
 		if (user->vhost)
 		{
 			alog(LOG_DEBUG, "debug: removing vhost from %s", user->nick);
-			free(user->vhost);
+			DenoraFree(user->vhost);
 		}
 	}
 	else if (flag == 2)
 	{
 		alog(LOG_DEBUG, "debug: account %s renaming on %s", account,
 		     user->nick);
-		if (user->account)
-		{
-			free(user->account);
-		}
-		if (user->vhost)
-		{
-			free(user->vhost);
-		}
+		DenoraFree(user->account);
+		DenoraFree(user->vhost);
 		user->vhost = NULL;
 		user->account = sstrdup(account);
 		ircsnprintf(hhostbuf, sizeof(account) + sizeof(hhostbuf) + 2,
@@ -1752,7 +1720,6 @@ void do_p10account(User * user, char *account, int flag)
 			     user->nick);
 			user->vhost = sstrdup(hhostbuf);
 		}
-		free(hhostbuf);
 	}
 
 	SET_SEGV_LOCATION();
@@ -1773,8 +1740,8 @@ void do_p10account(User * user, char *account, int flag)
 			          "UPDATE %s SET account=\'%s\', hiddenhostname=\'%s\' WHERE nickid=%d",
 			          UserTable, sqlaccount, sqlhost, nickid);
 		}
-		free(sqlaccount);
-		free(sqlhost);
+		DenoraFree(sqlaccount);
+		DenoraFree(sqlhost);
 	}
 
 	SET_SEGV_LOCATION();

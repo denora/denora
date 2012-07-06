@@ -335,7 +335,7 @@ char *unreal32_lkill_servername(char *message)
 	servername = strtok(buf, " "); /* the servername in brackets */
 	servername[strlen(servername) - 1] = '\0'; /* last bracket removed */
 	servername++; /* first bracket removed */
-
+	DenoraFree(buf);
 	return servername;
 }
 
@@ -377,7 +377,7 @@ void unreal_cmd_capab()
 	{
 		if (!stricmp(NickChar, "latin1"))
 		{
-			free(NickChar);
+			DenoraFree(NickChar);
 			NickChar = sstrdup("cat,dut,fre,ger,ita,spa,swe");
 		}
 		ircsnprintf(buf, BUFSIZE, " NICKCHARS=%s", NickChar);
@@ -745,12 +745,12 @@ int denora_event_svs2mode(char *source, int ac, char **av)
 		{
 			case '+':
 				ircsnprintf(buf, sizeof(buf), "%s+", tbuf);
-				free(tbuf);
+				DenoraFree(tbuf);
 				tbuf = sstrdup(buf);
 				break;
 			case '-':
 				ircsnprintf(buf, sizeof(buf), "%s-", tbuf);
-				free(tbuf);
+				DenoraFree(tbuf);
 				tbuf = sstrdup(buf);
 				break;
 			case 'd':
@@ -761,7 +761,7 @@ int denora_event_svs2mode(char *source, int ac, char **av)
 				}
 			default:
 				ircsnprintf(buf, sizeof(buf), "%s%c", tbuf, *modes);
-				free(tbuf);
+				DenoraFree(tbuf);
 				tbuf = sstrdup(buf);
 				break;
 		}
@@ -773,11 +773,8 @@ int denora_event_svs2mode(char *source, int ac, char **av)
 		newav[1] = sstrdup(tbuf);
 		newav[2] = av[2];
 		do_svsumode(ac, newav);
-		free(tbuf);
-		if (newav[1])
-		{
-			free(newav[1]);
-		}
+		DenoraFree(tbuf);
+		DenoraFree(newav[1]);
 	}
 	return MOD_CONT;
 }
@@ -937,12 +934,12 @@ int denora_event_svsmode(char *source, int ac, char **av)
 			{
 				case '+':
 					ircsnprintf(buf, sizeof(buf), "%s+", tbuf);
-					free(tbuf);
+					DenoraFree(tbuf);
 					tbuf = sstrdup(buf);
 					break;
 				case '-':
 					ircsnprintf(buf, sizeof(buf), "%s-", tbuf);
-					free(tbuf);
+					DenoraFree(tbuf);
 					tbuf = sstrdup(buf);
 					break;
 				case 'd':
@@ -953,7 +950,7 @@ int denora_event_svsmode(char *source, int ac, char **av)
 					}
 				default:
 					ircsnprintf(buf, sizeof(buf), "%s%c", tbuf, *modes);
-					free(tbuf);
+					DenoraFree(tbuf);
 					tbuf = sstrdup(buf);
 					break;
 			}
@@ -965,11 +962,8 @@ int denora_event_svsmode(char *source, int ac, char **av)
 			newav[1] = sstrdup(tbuf);
 			newav[2] = av[2];
 			do_svsumode(ac, newav);
-			free(tbuf);
-			if (newav[1])
-			{
-				free(newav[1]);
-			}
+			DenoraFree(tbuf);
+			DenoraFree(newav[1]);
 		}
 	}
 	else
@@ -1068,7 +1062,7 @@ int denora_event_nick(char *source, int ac, char **av)
 			        av[6], ts, 0, ipchar, NULL, NULL, strtoul(av[1], NULL,
 			                10), NULL,
 			        NULL);
-			free(ipchar);
+			DenoraFree(ipchar);
 
 		}
 		else if (ac == 11)
@@ -1079,7 +1073,7 @@ int denora_event_nick(char *source, int ac, char **av)
 			            av[10], ts, strtoul(av[6], NULL, 0),
 			            ipchar, av[8], NULL,
 			            strtoul(av[1], NULL, 10), av[7], NULL);
-			free(ipchar);
+			DenoraFree(ipchar);
 
 		}
 		else
@@ -1090,7 +1084,7 @@ int denora_event_nick(char *source, int ac, char **av)
 			    do_nick(source, av[0], av[3], av[4], (s ? s->name : av[5]),
 			            av[9], ts, strtoul(av[6], NULL, 0), ipchar, av[8],
 			            NULL, strtoul(av[1], NULL, 10), av[7], NULL);
-			free(ipchar);
+			DenoraFree(ipchar);
 		}
 	}
 	else
@@ -1137,9 +1131,9 @@ int denora_event_server(char *source, int ac, char **av)
 		numeric = myStrGetToken(vl, '-', 2);
 		desc = myStrGetTokenRemainder(av[2], ' ', 1);
 		do_server(source, av[0], av[1], desc, numeric);
-		free(vl);
-		free(desc);
-		free(numeric);
+		DenoraFree(vl);
+		DenoraFree(desc);
+		DenoraFree(numeric);
 	}
 	else
 	{

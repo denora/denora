@@ -93,7 +93,7 @@ int do_fantasy(int argc, char **argv)
 		(QUERY_HIGH,
 		 "SELECT * FROM %s WHERE chan=\'%s\' AND type=0 ORDER BY letters DESC LIMIT 10;",
 		 UStatsTable, chan);
-		free(chan);
+		DenoraFree(chan);
 #ifdef USE_MYSQL
 		mysql_res = mysql_store_result(mysql);
 		if (mysql_num_rows(mysql_res) > 0)
