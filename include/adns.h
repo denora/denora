@@ -24,6 +24,7 @@
 #define ADNS_H_INCLUDED
 
 #ifndef _WIN32
+#ifndef HAVE_GETADDRINFO
 
 typedef unsigned char byte;
 
@@ -699,4 +700,5 @@ void adns__consistency(adns_state ads, adns_query qu, consistency_checks cc);
 
 #endif
 
+#endif
 #endif

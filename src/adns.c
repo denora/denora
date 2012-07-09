@@ -19,6 +19,7 @@
 #include "denora.h"
 
 #ifndef _WIN32
+#ifndef HAVE_GETADDRINFO
 
 /* *INDENT-OFF* */
 
@@ -5314,4 +5315,5 @@ adns_status adns__findrr(adns_query qu, int serv,
 
 /* *INDENT-ON* */
 
+#endif
 #endif

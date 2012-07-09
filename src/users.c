@@ -771,7 +771,7 @@ void delete_user(User * user)
 	c = user->chans;
 	while (c)
 	{
-		if (c2 = c->next)
+		if ((c2 = c->next))
 		{
 			chan_deluser(user, c->chan);
 			free(c);

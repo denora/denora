@@ -14,10 +14,8 @@
 
 #include "denora.h"
 
-#ifndef _WIN32
-#ifndef HAVE_getaddrinfo
+#if defined(_WIN32) && !defined(HAVE_GETADDRINFO)
 adns_state adns;
-#endif
 #endif
 
 /*************************************************************************/
@@ -29,13 +27,17 @@ adns_state adns;
  */
 char *host_resolve(char *host)
 {
-#ifndef _WIN32
-#ifndef HAVE_GETADDRINFO
-	adns_answer *answer;
-#else
+#if defined(HAVE_GETADDRINFO)
 	struct addrinfo hints, *res, *p;
 	int status;
 	char ipstr[INET6_ADDRSTRLEN];
+#elif !defined(_WIN32)
+	adns_answer *answer;
+#else
+	struct hostent *hentp = NULL;
+	uint32 ip = INADDR_NONE;
+	char *ipreturn;
+	struct in_addr addr;
 #endif
 
 	SET_SEGV_LOCATION();
@@ -45,15 +47,12 @@ char *host_resolve(char *host)
 		return sstrdup("0.0.0.0");
 	}
 
-#ifdef HAVE_GETADDRINFO
+#if defined(HAVE_GETADDRINFO)
 	memset(&hints, 0, sizeof hints);
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
  
-	if ((status = getaddrinfo(host, NULL, &hints, &res)) != 0) {
-		alog(LOG_DEBUG, "ERROR: %s has no IP addresses!", host);
-		return sstrdup("0.0.0.0");
-	} else {
+	if ((status = getaddrinfo(host, NULL, &hints, &res)) == 0) {
 		for(p = res;p != NULL; p = p->ai_next) {
 			void *addr;
 			if (p->ai_family == AF_INET) {
@@ -68,7 +67,8 @@ char *host_resolve(char *host)
 			return sstrdup(ipstr);
 		}
 	}
-#else
+
+#elif !defined(_WIN32)
 	adns_synchronous(adns, host, adns_r_a,
 			 adns_qf_search | adns_qf_owner, &answer);
 
@@ -94,23 +94,8 @@ char *host_resolve(char *host)
 		SET_SEGV_LOCATION();
 		return sstrdup(inet_ntoa(answer->rrs.inaddr[0]));
 	}
-	else
-	{
-		SET_SEGV_LOCATION();
-		return sstrdup("0.0.0.0");
-	}
-#endif
+
 #else
-	struct hostent *hentp = NULL;
-	uint32 ip = INADDR_NONE;
-	char *ipreturn;
-	struct in_addr addr;
-
-	if (!host)
-	{
-		return sstrdup("0.0.0.0");
-	}
-
 	hentp = gethostbyname(host);
 
 	if (hentp)
@@ -121,11 +106,8 @@ char *host_resolve(char *host)
 		alog(LOG_DEBUG, "debug: resolved %s to %s", host, ipreturn);
 		return sstrdup(ipreturn);
 	}
-	else
-	{
-		return sstrdup("0.0.0.0");
-	}
 #endif
+	return sstrdup("0.0.0.0");
 }
 
 /*************************************************************************/
@@ -156,7 +138,7 @@ char *gai_strerror(int ecode)
 	}
 }
 #endif
-#endif                          /* !HAVE_GAI_STRERROR */
+#endif			  /* !HAVE_GAI_STRERROR */
 
 /*************************************************************************/
 
@@ -172,7 +154,7 @@ void freeaddrinfo(struct addrinfo *ai)
 	}
 	while (NULL != (ai = next));
 }
-#endif                          /* !HAVE_FREEADDRINFO */
+#endif			  /* !HAVE_FREEADDRINFO */
 
 /*************************************************************************/
 
@@ -182,8 +164,8 @@ struct addrinfo *malloc_ai(int port, uint32 addr)
 	struct addrinfo *ai;
 
 	if (NULL != (ai = (struct addrinfo *) malloc(sizeof(struct addrinfo) +
-	                  sizeof(struct
-	                         sockaddr_in))))
+			  sizeof(struct
+				 sockaddr_in))))
 	{
 		memset(ai, 0,
 		       sizeof(struct addrinfo) + sizeof(struct sockaddr_in));
@@ -204,7 +186,7 @@ struct addrinfo *malloc_ai(int port, uint32 addr)
 /*************************************************************************/
 
 int getaddrinfo(const char *hostname, const char *servname,
-                const struct addrinfo *hints, struct addrinfo **res)
+		const struct addrinfo *hints, struct addrinfo **res)
 {
 	struct addrinfo *cur, *prev = NULL;
 	struct hostent *hp;
@@ -248,12 +230,12 @@ int getaddrinfo(const char *hostname, const char *servname,
 		}
 	}
 	if ((hp = gethostbyname(hostname)) &&
-	        hp->h_name && hp->h_name[0] && hp->h_addr_list[0])
+		hp->h_name && hp->h_name[0] && hp->h_addr_list[0])
 	{
 		for (i = 0; hp->h_addr_list[i]; i++)
 			if (NULL != (cur = malloc_ai(port, ((struct in_addr *)
-			                                    hp->
-			                                    h_addr_list[i])->s_addr)))
+							    hp->
+							    h_addr_list[i])->s_addr)))
 			{
 				if (prev)
 				{
@@ -277,4 +259,4 @@ int getaddrinfo(const char *hostname, const char *servname,
 	}
 	return EAI_NODATA;
 }
-#endif                          /* !HAVE_GETADDRINFO */
+#endif			  /* !HAVE_GETADDRINFO */

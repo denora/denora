@@ -280,7 +280,8 @@ static char *_GeoIP_full_path_to(const char *file_name)
 
 char ** GeoIPDBFileName = NULL;
 
-void _GeoIP_setup_dbfilename()
+static
+void _GeoIP_setup_dbfilename(void)
 {
 	if (NULL == GeoIPDBFileName)
 	{
