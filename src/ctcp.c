@@ -114,6 +114,9 @@ void load_ctcp_db(void)
 			alog(LOG_NORMAL, langstr(ALOG_DB_ERROR), dbptr->filename);
 			new_close_db(dbptr->fptr, &key, &value);
 			free(dbptr);
+			DenoraFree(key);
+			DenoraFree(value);
+			DenoraFree(version);
 			return;
 		}
 		else if (retval == DB_EOF_ERROR)
@@ -122,6 +125,9 @@ void load_ctcp_db(void)
 			     dbptr->filename);
 			new_close_db(dbptr->fptr, &key, &value);
 			free(dbptr);
+			DenoraFree(key);
+			DenoraFree(value);
+			DenoraFree(version);
 			return;
 		}
 		else if (retval == DB_READ_BLOCKEND)            /* DB_READ_BLOCKEND */
@@ -131,7 +137,6 @@ void load_ctcp_db(void)
 			{
 				ct = makectcp(version);
 				ct->overall = tempoverall;
-				DenoraFree(version);
 			}
 		}
 		else
@@ -154,6 +159,9 @@ void load_ctcp_db(void)
 			}
 		}                       /* else */
 	}                           /* while */
+	DenoraFree(key);
+	DenoraFree(value);
+	DenoraFree(version);
 }
 
 /*************************************************************************/
@@ -247,6 +255,7 @@ int del_ctcpver(__attribute__((unused))CTCPVerStats * c)
 void ctcp_update(char *version)
 {
 	CTCPVerStats *c;
+	char *dbversion;
 
 	SET_SEGV_LOCATION();
 
@@ -259,12 +268,12 @@ void ctcp_update(char *version)
 	{
 		c->count--;
 	}
-	version = rdb_escape(version);
+	dbversion = rdb_escape(version);
 	rdb_query(QUERY_LOW,
 	          "UPDATE %s SET count=%u, overall=%u WHERE version=\'%s\'",
-	          CTCPTable, c->count, c->overall, version);
+	          CTCPTable, c->count, c->overall, dbversion);
 	SET_SEGV_LOCATION();
-	DenoraFree(version);
+	free(dbversion);
 }
 
 /*************************************************************************/
@@ -273,6 +282,7 @@ void handle_ctcp_version(char *nick, char *version)
 {
 	CTCPVerStats *c;
 	User *u;
+	char *dbversion;
 
 	SET_SEGV_LOCATION();
 
@@ -317,14 +327,13 @@ void handle_ctcp_version(char *nick, char *version)
 
 	if (u)
 	{
-		DenoraFree(u->ctcp);
 		u->ctcp = sstrdup(version);
 
-		version = rdb_escape(version);
+		dbversion = rdb_escape(version);
 		rdb_query
 		(QUERY_LOW, "UPDATE %s SET ctcpversion=\'%s\' WHERE nickid=%d",
-		 UserTable, version, db_getnick(u->sqlnick));
-		DenoraFree(version);
+		 UserTable, dbversion, db_getnick(u->sqlnick));
+		free(dbversion);
 	}
 }
 
@@ -378,6 +387,6 @@ void sql_do_ctcp(int type, char *version, int count, int overall)
 #endif
 		}
 		SET_SEGV_LOCATION();
-		DenoraFree(temp);
+		free(temp);
 	}
 }

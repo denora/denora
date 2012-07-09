@@ -740,6 +740,18 @@ void delete_user(User * user)
 	if (user->country_code)
 	{
 		tld_update(user->country_code);
+		free(user->country_code);
+	}
+
+	if (CTCPUsers && user->ctcp)
+	{
+		ctcp_update(user->ctcp);
+		free(user->ctcp);
+	}
+
+	if (denora->do_sql && user->sqlnick)
+	{
+		free(user->sqlnick);
 	}
 
 	alog(LOG_EXTRADEBUG, "debug: delete_user(): free user data");
@@ -748,29 +760,12 @@ void delete_user(User * user)
 	DenoraFree(user->vhost);
 	DenoraFree(user->ip);
 	DenoraFree(user->account);
-	if (CTCPUsers)
-	{
-		if (user->ctcp)
-		{
-			ctcp_update(user->ctcp);
-			DenoraFree(user->ctcp);
-		}
-	}
-	if (user->isaway && user->awaymsg)
-	{
-		DenoraFree(user->awaymsg);
-	}
-
-	DenoraFree(user->country_code);
+	DenoraFree(user->awaymsg);
 	DenoraFree(user->country_name);
 	DenoraFree(user->sgroup);
 	DenoraFree(user->lastuname);
 	DenoraFree(user->swhois);
 	DenoraFree(user->realname);
-	if (denora->do_sql)
-	{
-		DenoraFree(user->sqlnick);
-	}
 
 	alog(LOG_EXTRADEBUG, "debug: delete_user(): remove from channels");
 	c = user->chans;
@@ -778,22 +773,26 @@ void delete_user(User * user)
 	{
 		if (c2 = c->next)
 		{
-			alog(LOG_DEBUG, "dbg1: cleaning up channel %s for %s", c->chan->name, user->nick);
 			chan_deluser(user, c->chan);
 			free(c);
 			c = c2;
 		}
 		else
 		{
-			alog(LOG_DEBUG, "dbg2: cleaning up channel %s for %s", c->chan->name, user->nick);
-                        chan_deluser(user, c->chan);
-                        free(c);
 			break;
 		}
+	}
+	if (c)
+	{
+		chan_deluser(user, c->chan);
+		free(c);
 	}
 	
 	alog(LOG_EXTRADEBUG, "debug: delete_user(): free founder data");
 	moduleCleanStruct(&user->moduleData);
+	DenoraFree(user->vident);
+	DenoraFree(user->uid);
+	DenoraFree(user->swhois);
 
 	alog(LOG_EXTRADEBUG, "debug: delete_user(): delete from list");
 	if (user->prev)
@@ -1319,7 +1318,6 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 			sql_do_nick_chg(nick, user->nick);
 			change_user_nick(user, nick);
 			send_event(EVENT_CHANGE_NICK, 2, source, nick);
-			DenoraFree(user->sqlnick);
 			user->sqlnick = rdb_escape(user->nick);
 		}
 		else

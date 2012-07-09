@@ -279,10 +279,10 @@ void p10_gline(char *type, char *source, int ac, char **av)
 
 	SET_SEGV_LOCATION();
 
-	if (ac < 4 || ac > 5)
+	if (ac < 4 || ac > 6)
 	{
 		alog(LOG_DEBUG,
-		     "debug: %s called with %d needed 4 or 5", PRETTY_FUNCTION,
+		     "debug: %s called with %d needed 4,5 or 6", PRETTY_FUNCTION,
 		     ac);
 		return;
 	}
@@ -335,7 +335,13 @@ void p10_gline(char *type, char *source, int ac, char **av)
 
 	if (*av[1] == '+')
 	{
-		if (ac == 5)
+		if (ac == 6)
+		{
+			sprintf(expires, "%d", atoi(av[3]) + atoi(av[4]));
+			sql_do_server_bans_add(type, user, host, setby, av[3], expires,
+					       av[5]);
+		}
+		else if (ac == 5)
 		{
 			sprintf(expires, "%d", atoi(av[2]) + atoi(av[3]));
 			sql_do_server_bans_add(type, user, host, setby, av[3], expires,

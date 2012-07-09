@@ -119,7 +119,7 @@ void send_event(const char *name, int argc, ...)
 	 **/
 	for (idx = 0; idx < argc; idx++)
 	{
-		DenoraFree(argv[idx]);
+		free(argv[idx]);
 	}
 	DenoraFree(argv);
 }

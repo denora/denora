@@ -20,7 +20,7 @@ int p10nickcnt = 0;
 IRCDVar myIrcd[] =
 {
 	{
-		"ScaryNet IRCu 2.10.11",   /* ircd name                 */
+		"ScaryNet IRCu 2.10.12",   /* ircd name                 */
 		"+iok",                    /* StatServ mode             */
 		IRCD_ENABLE,               /* Vhost                     */
 		IRCD_DISABLE,              /* Supports SGlines          */
@@ -42,7 +42,7 @@ IRCDVar myIrcd[] =
 		IRCD_DISABLE,              /* We support TOKENS         */
 		IRCD_DISABLE,              /* TOKENS are CASE Sensitive */
 		IRCD_DISABLE,              /* TIME STAMPS are BASE64    */
-		IRCD_DISABLE,               /* +I support                */
+		IRCD_DISABLE,              /* +I support                */
 		IRCD_DISABLE,              /* SJOIN ban char            */
 		IRCD_DISABLE,              /* SJOIN except char         */
 		IRCD_DISABLE,              /* SJOIN invite char         */
@@ -68,12 +68,12 @@ IRCDVar myIrcd[] =
 		IRCD_DISABLE,              /* except char               */
 		'I',                       /* invite char               */
 		IRCD_DISABLE,              /* zip                       */
-		IRCD_ENABLE,               /* ssl                       */
+		IRCD_DISABLE,              /* ssl                       */
 		IRCD_ENABLE,               /* uline                     */
 		NULL,                      /* nickchar                  */
 		IRCD_DISABLE,              /* svid                      */
 		IRCD_DISABLE,              /* hidden oper               */
-		IRCD_ENABLE,               /* extra warning             */
+		IRCD_DISABLE,              /* extra warning             */
 		IRCD_ENABLE,               /* Report sync state         */
 		IRCD_DISABLE               /* Persistent channel mode   */
 	},
@@ -155,7 +155,7 @@ void IRCDModeInit(void)
 	CreateChanMode(CMODE_n, NULL, NULL);        /* No external messages */
 	CreateChanMode(CMODE_p, NULL, NULL);        /* Private */
 	CreateChanMode(CMODE_r, NULL, NULL);        /* Registered Only */
-	CreateChanMode(CMODE_R, NULL, NULL);	/* Registered */
+	CreateChanMode(CMODE_R, NULL, NULL);        /* Registered */
 	CreateChanMode(CMODE_s, NULL, NULL);        /* Secret */
 	CreateChanMode(CMODE_t, NULL, NULL);        /* Topic only changeable by ops */
 	CreateChanMode(CMODE_u, NULL, NULL);        /* No Quitmessages */
@@ -209,11 +209,8 @@ int denora_event_nick(char *source, int ac, char **av)
 {
 	User *user;
 	Server *s;
-	char *temp;
-	char *ipchar;
-	char *realname, *ip, *nick;
-	char *ident, *host, *modes, *modes2;
-	char *uid, *timestamp, *account;
+	char *ipchar, *modes, *modes2;
+	char *account = NULL;
 	char hhostbuf[255];
 	int ishidden = 0, isaccount = 0;
 
@@ -225,23 +222,12 @@ int denora_event_nick(char *source, int ac, char **av)
 	   char *server, char *realname, time_t ts, uint32 svid,
 	   uint32 ip, char *vhost, char *uid, int hopcount, char *modes) */
 
-	temp = sstrdup(source);
-
 	if (ac != 2)
 	{
 		s = server_find(source);
-		*source = '\0';
 
-		realname = sstrdup(av[ac - 1]);
-		uid = sstrdup(av[ac - 2]);
-		ip = sstrdup(av[ac - 3]);
-		nick = sstrdup(av[0]);
-		ident = sstrdup(av[3]);
-		host = sstrdup(av[4]);
 		modes = sstrdup(av[5]);
 		modes2 = sstrdup(av[5]);
-		timestamp = sstrdup(av[2]);
-		account = sstrdup("");
 
 		if (strpbrk(av[5], "+"))
 		{
@@ -266,7 +252,7 @@ int denora_event_nick(char *source, int ac, char **av)
 		else
 			modes = NULL;
 
-		ipchar = scarynet_nickip(ip);
+		ipchar = scarynet_nickip(av[ac - 3]);
 
 		if (isaccount && ishidden)
 		{
@@ -274,12 +260,15 @@ int denora_event_nick(char *source, int ac, char **av)
 			            "%s%s%s", HiddenPrefix, av[6], HiddenSuffix);
 		}
 
-		user = do_nick(source, nick, ident, host, (s ? s->name : temp),
-		               realname, strtoul(timestamp, NULL, 10), 0, ipchar,
-		               (ishidden && isaccount) ? hhostbuf : NULL, uid,
+		user = do_nick("\0", av[0], av[3], av[4], (s ? s->name : source),
+		               av[ac - 1], strtoul(av[2], NULL, 10), 0, ipchar,
+		               (ishidden && isaccount) ? hhostbuf : NULL, av[ac - 2],
 		               strtoul(av[1], NULL, 10), modes, account);
 
 		DenoraFree(ipchar);
+		DenoraFree(modes);
+		DenoraFree(modes2);
+		DenoraFree(account);
 	}
 	else
 	{
@@ -288,7 +277,6 @@ int denora_event_nick(char *source, int ac, char **av)
 		        NULL, strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0,
 		        NULL, NULL);
 	}
-	DenoraFree(temp);
 	return MOD_CONT;
 }
 
@@ -427,7 +415,7 @@ void moduleAddIRCDMsgs(void)
 	m = createMessage("AC",       denora_event_account);
 	addCoreMessage(IRCD,m);
 	/* KILL */
-	m = createMessage("D",	  denora_event_kill);
+	m = createMessage("D",	      denora_event_kill);
 	addCoreMessage(IRCD,m);
 	/* GLINE */
 	m = createMessage("GL",       denora_event_gline);
@@ -451,13 +439,13 @@ void moduleAddIRCDMsgs(void)
 	m = createMessage("RI",       denora_event_rping);
 	addCoreMessage(IRCD,m);
 	/* RPONG */
-	m = createMessage("RO",	  denora_event_rpong);
+	m = createMessage("RO",	      denora_event_rpong);
 	addCoreMessage(IRCD,m);
 	/* End of Burst Acknowledge */
 	m = createMessage("EA",       denora_event_null);
 	addCoreMessage(IRCD,m);
 	/* SILENCE */
-	m = createMessage("U",	  denora_event_null);
+	m = createMessage("U",	      denora_event_null);
 	addCoreMessage(IRCD,m);
 	/* PRIVS */
 	m = createMessage("PRIVS",    denora_event_null);
@@ -988,7 +976,7 @@ char *scarynet_lkill_killer(char *message)
 	killer = strtok(buf, " ");
 	killer = strtok(NULL, " ");
 	killer++;
-
+	DenoraFree(buf);
 	return killer;
 }
 

@@ -491,7 +491,15 @@ void chan_deluser(User * user, Channel * c)
 
 	SET_SEGV_LOCATION();
 
-	for (u = c->users; u && u->user != user; u = u->next);
+	u = c->users;
+	while (u)
+	{
+		if (u->user == user)
+			break;
+		u = u->next;
+	}
+
+	/* for (u = c->users; u && u->user != user; u = u->next); */
 	if (!u)
 	{
 		return;
