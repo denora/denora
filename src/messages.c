@@ -120,7 +120,7 @@ void m_kill(char *source, char *nick, char *msg)
 		{
 			db_cleanuser();
 		}
-		DenoraFree(nick);
+		free(nick);
 	}
 	if (s && denora->do_sql)
 	{
@@ -257,17 +257,17 @@ int m_notice(char *source, char *receiver, char *msg)
 		temp = myStrGetToken(clean, ' ', 0);
 		if (!temp)
 		{
-			DenoraFree(clean);
+			free(clean);
 			return MOD_CONT;
 		}
 		if (!stricmp(temp, "VERSION"))
 		{
 			version = myStrGetTokenRemainder(clean, ' ', 1);
 			handle_ctcp_version(source, version);
-			DenoraFree(version);
+			free(version);
 		}
-		DenoraFree(clean);
-		DenoraFree(temp);
+		free(clean);
+		free(temp);
 	}
 
 	return MOD_CONT;

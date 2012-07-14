@@ -1591,9 +1591,9 @@ void merge_confs()
 	if (modules)
 	{
 		for (i = 0; modules->autoload[i]; i++)
-			DenoraFree(modules->autoload[i]);
+			free(modules->autoload[i]);
 		for (i = 0; modules->delayed[i]; i++)
-			DenoraFree(modules->delayed[i]);
+			free(modules->delayed[i]);
 		free(modules);
 	}
 	modules = new_modules;
@@ -1614,9 +1614,9 @@ void clear_newconfs()
 	if (new_modules)
 	{
 		for (i = 0; new_modules->autoload[i]; i++)
-			DenoraFree(new_modules->autoload[i]);
+			free(new_modules->autoload[i]);
 		for (i = 0; new_modules->delayed[i]; i++)
-			DenoraFree(new_modules->delayed[i]);
+			free(new_modules->delayed[i]);
 		free(new_modules);
 		new_modules = NULL;
 	}
@@ -1631,7 +1631,8 @@ static void free_vars(cVar * vars[])
 
 	while (vars[i])
 	{
-		DenoraFree(vars[i]->value);
+		if (vars[i]->value)
+			free(vars[i]->value);
 		free(vars[i]);
 		i++;
 	}
@@ -2402,8 +2403,10 @@ int moduleGetConfigDirective(char *configfile, Directive * d)
 			retval = parse_directive(d, dir, ac, av, linenum, 0, s);
 		}
 	}
-	DenoraFree(dir);
-	DenoraFree(s);
+	if (dir)
+		free(dir);
+	if (s)
+		free(s);
 
 	fclose(config);
 	return retval;

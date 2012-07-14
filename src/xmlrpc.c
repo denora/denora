@@ -112,7 +112,10 @@ void xmlrpc_process(deno_socket_t socket_fd, char *buffer)
 				                     "XMLRPC error: Unknown routine called [%s]",
 				                     name);
 			}
-			DenoraFree(name);
+			if (name)
+			{
+				free(name);
+			}
 		}
 		else
 		{
@@ -120,7 +123,10 @@ void xmlrpc_process(deno_socket_t socket_fd, char *buffer)
 			xmlrpc_generic_error(socket_fd, xmlrpc_error_code,
 			                     "XMLRPC error: Missing methodRequest or methodName.");
 		}
-		DenoraFree(tmp);
+		if (tmp)
+		{
+			free(tmp);
+		}
 	}
 	else
 	{
@@ -129,8 +135,10 @@ void xmlrpc_process(deno_socket_t socket_fd, char *buffer)
 		                     "XMLRPC error: Invalid document end at line 1");
 	}
 	SET_SEGV_LOCATION();
-	if (ac)
-		DenoraFree(av);
+	if (av)
+	{
+		free(av);
+	}
 }
 
 /*************************************************************************/
@@ -277,10 +285,15 @@ int destroyXMLRPCCommand(XMLRPCCmd * xml)
 		return MOD_ERR_PARAMS;
 	}
 	SET_SEGV_LOCATION();
-
-	DenoraFree(xml->name);
+	if (xml->name)
+	{
+		free(xml->name);
+	}
 	xml->func = NULL;
-	DenoraFree(xml->mod_name);
+	if (xml->mod_name)
+	{
+		free(xml->mod_name);
+	}
 	xml->next = NULL;
 	free(xml);
 	return MOD_ERR_OK;
@@ -349,7 +362,10 @@ int delXMLRPCCommand(XMLRPCCmdHash * xmlrpctable[], XMLRPCCmd * xml,
 				else
 				{
 					xmlrpctable[idx] = xcurrent->next;
-					DenoraFree(xcurrent->name);
+					if (xcurrent->name)
+					{
+						free(xcurrent->name);
+					}
 					return MOD_ERR_OK;
 				}
 			}
@@ -380,7 +396,10 @@ int delXMLRPCCommand(XMLRPCCmdHash * xmlrpctable[], XMLRPCCmd * xml,
 				else
 				{
 					lastHash->next = xcurrent->next;
-					DenoraFree(xcurrent->name);
+					if (xcurrent->name)
+					{
+						free(xcurrent->name);
+					}
 					return MOD_ERR_OK;
 				}
 			}
@@ -703,8 +722,9 @@ int xmlrpc_split_buf(char *buffer, char ***argv)
 					{
 						tagtype = 0;
 					}
-					DenoraFree(nexttag);
+					free(nexttag);
 				}
+				free(temp);
 			}
 			str = myStrGetToken(xdata, '>', 2);
 			str2 = myStrGetTokenRemainder(xdata, '>', 2);
@@ -725,15 +745,17 @@ int xmlrpc_split_buf(char *buffer, char ***argv)
 					{
 						(*argv)[ac++] = final;
 					}
-					DenoraFree(final);
+					free(final);
 				}
-				DenoraFree(str);
-				DenoraFree(temp);
+				free(str);
 			}                   /* str */
 		}                       /* data */
 		buffer = str2;
 	}                           /* while */
-	DenoraFree(str2);
+	if (str2)
+	{
+		free(str2);
+	}
 	return ac;
 }
 
@@ -758,11 +780,11 @@ char *xmlrpc_method(char *buffer)
 		if (tmp)
 		{
 			tmp2 = myStrGetToken(tmp, '<', 0);
-			DenoraFree(tmp);
+			free(tmp);
 			if (tmp2)
 			{
 				s = sstrdup(tmp2);
-				DenoraFree(tmp2);
+				free(tmp2);
 				return s;
 			}
 		}
@@ -802,7 +824,7 @@ void xmlrpc_generic_error(deno_socket_t socket_fd, int code,
 	            "<?xml version=\"1.0\"?>\r\n <methodResponse>\n\r  <fault>\n\r   <value>\n\r    <struct>\n\r     <member>\n\r      <name>faultCode</name>\n\r      <value><int>%d</int></value>\n\r     </member>\n\r     <member>\n\r      <name>faultString</name>\n\r      <value><string>%s</string></value>\n\r     </member>\n\r    </struct>\n\r   </value>\r\n  </fault>\r\n </methodResponse>",
 	            code, encoded);
 
-	DenoraFree(encoded);
+	free(encoded);
 
 	len = strlen(buf);
 
@@ -812,7 +834,7 @@ void xmlrpc_generic_error(deno_socket_t socket_fd, int code,
 		strlcpy(buf2, header, XMLRPC_BUFSIZE);
 		strlcat(buf2, buf, XMLRPC_BUFSIZE);
 		len += strlen(header);
-		DenoraFree(header);
+		free(header);
 		alog(LOG_DEBUG, "XMLRPC Send: %s", buf2);
 		buffered_write(socket_fd, buf2, len);
 	}
@@ -928,7 +950,7 @@ void xmlrpc_send(deno_socket_t socket_fd, int argc, ...)
 			ircsnprintf(buf, XMLRPC_BUFSIZE,
 			            "%s\r\n <param>\r\n  <value>\r\n   %s\r\n  </value>\r\n </param>",
 			            s, a);
-			DenoraFree(s);
+			free(s);
 			s = sstrdup(buf);
 		}
 	}
@@ -952,7 +974,7 @@ void xmlrpc_send(deno_socket_t socket_fd, int argc, ...)
 	{
 		header = xmlrpc_write_header(len);
 		ircsnprintf(buf2, XMLRPC_BUFSIZE, "%s%s", header, buf);
-		DenoraFree(header);
+		free(header);
 		len = strlen(buf2);
 		buffered_write(socket_fd, buf2, len);
 		xmlrpc.httpheader = 1;
@@ -963,10 +985,13 @@ void xmlrpc_send(deno_socket_t socket_fd, int argc, ...)
 	}
 	if (xmlrpc.encode)
 	{
-		DenoraFree(xmlrpc.encode);
+		free(xmlrpc.encode);
 		xmlrpc.encode = NULL;
 	}
-	DenoraFree(s);
+	if (s)
+	{
+		free(s);
+	}
 }
 
 /*************************************************************************/
@@ -1050,12 +1075,12 @@ char *xmlrpc_integer(char *buf, int value)
 		            value, xmlrpc.inttagend);
 		if (xmlrpc.inttagend)
 		{
-			DenoraFree(xmlrpc.inttagend);
+			free(xmlrpc.inttagend);
 			xmlrpc.inttagend = NULL;
 		}
 		if (xmlrpc.inttagstart)
 		{
-			DenoraFree(xmlrpc.inttagstart);
+			free(xmlrpc.inttagstart);
 			xmlrpc.inttagstart = NULL;
 		}
 	}
@@ -1082,7 +1107,7 @@ char *xmlrpc_string(char *buf, char *value)
 		encoded = char_encode(value);
 		ircsnprintf(buf, XMLRPC_BUFSIZE, "<%s>%s</%s>", XMLRPC_STRING_TAG,
 		            encoded, XMLRPC_STRING_TAG);
-		DenoraFree(encoded);
+		free(encoded);
 	}
 	else
 	{
@@ -1207,7 +1232,7 @@ char *xmlrpc_array(int argc, ...)
 		{
 			ircsnprintf(buf, XMLRPC_BUFSIZE,
 			            "%s\r\n     <value>%s</value>", s, a);
-			DenoraFree(s);
+			free(s);
 			s = sstrdup(buf);
 		}
 	}
@@ -1217,7 +1242,10 @@ char *xmlrpc_array(int argc, ...)
 	            "<array>\r\n    <data>\r\n  %s\r\n    </data>\r\n   </array>",
 	            s);
 	len = strlen(buf);
-	DenoraFree(s);
+	if (s)
+	{
+		free(s);
+	}
 	return sstrdup(buf);
 }
 
@@ -1330,7 +1358,10 @@ int destroyxmlrpchash(XMLRPCCmdHash * xh)
 	{
 		return MOD_ERR_PARAMS;
 	}
-	DenoraFree(xh->name);
+	if (xh->name)
+	{
+		free(xh->name);
+	}
 	xh->xml = NULL;
 	xh->next = NULL;
 	free(xh);
@@ -1372,10 +1403,10 @@ char *xmlrpc_decode_string(char *buf)
 			ircsnprintf(buf2, 12, "%c", atoi(temptoken));
 			ircsnprintf(buf3, 12, "&%s;", token);
 			strnrepl(buf, XMLRPC_BUFSIZE, buf3, buf2);
-			DenoraFree(token);
+			free(token);
 		}
 	}
-	DenoraFree(temp);
+	free(temp);
 	return buf;
 }
 

@@ -236,7 +236,7 @@ int denora_event_nick(char *source, int ac, char **av)
 			            ipchar, NULL, av[9], strtoul(av[1],
 			                    NULL, 10), av[5],
 			            NULL);
-			DenoraFree(ipchar);
+			free(ipchar);
 		}
 		else if (ac == 10)
 		{
@@ -247,7 +247,7 @@ int denora_event_nick(char *source, int ac, char **av)
 			            ipchar, NULL, av[8], strtoul(av[1],
 			                    NULL, 10), av[5],
 			            NULL);
-			DenoraFree(ipchar);
+			free(ipchar);
 		}
 		else if (ac == 9)
 		{
@@ -259,7 +259,7 @@ int denora_event_nick(char *source, int ac, char **av)
 			            ipchar, NULL, av[7], strtoul(av[1],
 			                    NULL, 10), av[5],
 			            NULL);
-			DenoraFree(ipchar);
+			free(ipchar);
 		}
 		else if (ac == 8)
 		{
@@ -267,7 +267,7 @@ int denora_event_nick(char *source, int ac, char **av)
 			do_nick(source, av[0], av[3], av[4], (s ? s->name : temp),
 			        av[7], strtoul(av[2], NULL, 10), 0, ipchar,
 			        NULL, av[6], strtoul(av[1], NULL, 10), NULL, NULL);
-			DenoraFree(ipchar);
+			free(ipchar);
 		}
 		else
 		{
@@ -283,7 +283,7 @@ int denora_event_nick(char *source, int ac, char **av)
 		        strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0, NULL,
 		        NULL);
 	}
-	DenoraFree(temp);
+	free(temp);
 	return MOD_CONT;
 }
 
@@ -961,8 +961,8 @@ void ircdreams_cmd_pong(char *servname, char *who)
 	}
 	send_cmd(p10id, "Z %s %ld %ld %ld %s", p10id, (long int) ts,
 	         (long int) tsnow, (long int) value, militime_float(NULL));
-	DenoraFree(s);
-	DenoraFree(t);
+	free(s);
+	free(t);
 }
 
 void ircdreams_cmd_bot_nick(char *nick, char *user, char *host, char *real,

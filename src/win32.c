@@ -97,7 +97,7 @@ char *GetWindowsVersion(void)
 					            "Microsoft Windows Server 2008 %s%s", cputype,
 					            extra);
 				}
-				DenoraFree(extra);
+				free(extra);
 			}
 			/* Windows 2003 or Windows XP Pro 64 */
 			if (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 2)
@@ -136,7 +136,7 @@ char *GetWindowsVersion(void)
 					            "Microsoft Windows Server 2003 Family %s%s",
 					            cputype, extra);
 				}
-				DenoraFree(extra);
+				free(extra);
 			}
 			if (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 1)
 			{
@@ -166,7 +166,7 @@ char *GetWindowsVersion(void)
 				}
 				ircsnprintf(buf, sizeof(buf), "Microsoft Windows XP %s",
 				            extra);
-				DenoraFree(extra);
+				free(extra);
 			}
 			if (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 0)
 			{
@@ -184,7 +184,7 @@ char *GetWindowsVersion(void)
 				}
 				ircsnprintf(buf, sizeof(buf), "Microsoft Windows 2000 %s",
 				            extra);
-				DenoraFree(extra);
+				free(extra);
 			}
 			if (osvi.dwMajorVersion <= 4)
 			{
@@ -198,7 +198,7 @@ char *GetWindowsVersion(void)
 				}
 				ircsnprintf(buf, sizeof(buf), "Microsoft Windows NT %s",
 				            extra);
-				DenoraFree(extra);
+				free(extra);
 			}
 		case VER_PLATFORM_WIN32_WINDOWS:
 			if (osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0)
@@ -213,7 +213,7 @@ char *GetWindowsVersion(void)
 				}
 				ircsnprintf(buf, sizeof(buf), "Microsoft Windows 95 %s",
 				            extra);
-				DenoraFree(extra);
+				free(extra);
 			}
 			if (osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 10)
 			{
@@ -227,7 +227,7 @@ char *GetWindowsVersion(void)
 				}
 				ircsnprintf(buf, sizeof(buf), "Microsoft Windows 98 %s",
 				            extra);
-				DenoraFree(extra);
+				free(extra);
 			}
 			if (osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 90)
 			{
@@ -235,7 +235,7 @@ char *GetWindowsVersion(void)
 				            "Microsoft Windows Millennium Edition");
 			}
 	}
-	DenoraFree(cputype);
+	free(cputype);
 	return sstrdup(buf);
 }
 

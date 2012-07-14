@@ -142,7 +142,7 @@ void moduleNoticeChanLang(char *source, ChannelStats * cs, int number, ...)
 				denora_cmd_privmsg(source, cs->name, outbuf);
 			}
 		}
-		DenoraFree(buf);
+		free(buf);
 	}
 	else
 	{
@@ -171,7 +171,7 @@ void moduleDeleteLanguage(int langNumber)
 	}
 	for (idx = 0; idx > mod_current_module->lang[langNumber].argc; idx++)
 	{
-		DenoraFree(mod_current_module->lang[langNumber].argv[idx]);
+		free(mod_current_module->lang[langNumber].argv[idx]);
 	}
 	mod_current_module->lang[langNumber].argc = 0;
 }
@@ -268,7 +268,7 @@ void moduleNoticeLang(char *source, User * u, int number, ...)
 			strlcpy(outbuf, t, sizeof(outbuf));
 			notice(source, u->nick, outbuf);
 		}
-		DenoraFree(buf);
+		free(buf);
 	}
 	else
 	{

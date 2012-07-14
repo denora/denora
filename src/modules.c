@@ -149,18 +149,39 @@ int destroyCommand(Command * c)
 	{
 		return MOD_ERR_UNKNOWN;
 	}
-	DenoraFree(c->name);
+	if (c->name)
+	{
+		free(c->name);
+	}
 	c->routine = NULL;
 	c->has_priv = NULL;
 	c->helpmsg_all = -1;
 	c->helpmsg_reg = -1;
 	c->helpmsg_admin = -1;
-	DenoraFree(c->help_param1);
-	DenoraFree(c->help_param2);
-	DenoraFree(c->help_param3);
-	DenoraFree(c->help_param4);
-	DenoraFree(c->mod_name);
-	DenoraFree(c->service);
+	if (c->help_param1)
+	{
+		free(c->help_param1);
+	}
+	if (c->help_param2)
+	{
+		free(c->help_param2);
+	}
+	if (c->help_param3)
+	{
+		free(c->help_param3);
+	}
+	if (c->help_param4)
+	{
+		free(c->help_param4);
+	}
+	if (c->mod_name)
+	{
+		free(c->mod_name);
+	}
+	if (c->service)
+	{
+		free(c->service);
+	}
 	c->next = NULL;
 	free(c);
 	return MOD_ERR_OK;
@@ -557,7 +578,7 @@ int delCommand(CommandHash * cmdTable[], Command * c, char *mod_name)
 				else
 				{
 					cmdTable[modindex] = CurrentCommand->next;
-					DenoraFree(CurrentCommand->name);
+					free(CurrentCommand->name);
 					return MOD_ERR_OK;
 				}
 			}
@@ -588,7 +609,7 @@ int delCommand(CommandHash * cmdTable[], Command * c, char *mod_name)
 				else
 				{
 					lastHash->next = CurrentCommand->next;
-					DenoraFree(CurrentCommand->name);
+					free(CurrentCommand->name);
 					return MOD_ERR_OK;
 				}
 			}
@@ -769,7 +790,7 @@ void core_modules_init(void)
 			mod_current_module = NULL;
 			mod_current_user = NULL;
 		}
-		DenoraFree(mname);
+		free(mname);
 	}
 	closedir(dirp);
 #else
@@ -921,7 +942,7 @@ int loadCoreModule(Module * m, User * u)
 		ret = func(argc, argv); /* exec AhearnInit */
 		if (u)
 		{
-			DenoraFree(argv[0]);
+			free(argv[0]);
 		}
 		if (ret == MOD_STOP)
 		{
@@ -1128,15 +1149,24 @@ int destroyModule(Module * m)
 	{
 		return MOD_ERR_PARAMS;
 	}
-	DenoraFree(m->name);
+	if (m->name)
+	{
+		free(m->name);
+	}
 	if (m->filename)
 	{
 		remove(m->filename);
-		DenoraFree(m->filename);
+		free(m->filename);
 	}
 	m->handle = NULL;
-	DenoraFree(m->author);
-	DenoraFree(m->version);
+	if (m->author)
+	{
+		free(m->author);
+	}
+	if (m->version)
+	{
+		free(m->version);
+	}
 	/* No need to free our cmd/msg list, as they will always be empty by the module is destroyed */
 	free(m);
 	return MOD_ERR_OK;
@@ -1152,7 +1182,10 @@ int destroyModuleHash(ModuleHash * m)
 	{
 		return MOD_ERR_PARAMS;
 	}
-	DenoraFree(m->name);
+	if (m->name)
+	{
+		free(m->name);
+	}
 	/* No need to free our cmd/msg list, as they will always be empty by the module is destroyed */
 	free(m);
 	return MOD_ERR_OK;
@@ -1236,7 +1269,7 @@ int delModule(Module * m)
 				lastHash->next = mcurrent->next;
 			}
 			destroyModule(mcurrent->m);
-			DenoraFree(mcurrent->name);
+			free(mcurrent->name);
 			free(mcurrent);
 			return MOD_ERR_OK;
 		}
@@ -1477,7 +1510,7 @@ int loadModule(Module * m, User * u)
 		ret = func(argc, argv); /* exec DenoraInit */
 		if (u)
 		{
-			DenoraFree(argv[0]);
+			free(argv[0]);
 		}
 		if (m->type == PROTOCOL && protocolModuleLoaded())
 		{
@@ -2086,12 +2119,21 @@ void moduleCallBackDeleteEntry(ModuleCallBack * prev)
 		tmp = prev->next;
 		prev->next = tmp->next;
 	}
-	DenoraFree(tmp->name);
-	DenoraFree(tmp->owner_name);
+	if (tmp->name)
+	{
+		free(tmp->name);
+	}
+	if (tmp->owner_name)
+	{
+		free(tmp->owner_name);
+	}
 	tmp->func = NULL;
 	for (i = 0; i < tmp->argc; i++)
 	{
-		DenoraFree(tmp->argv[i]);
+		if (tmp->argv[i])
+		{
+			free(tmp->argv[i]);
+		}
 	}
 	tmp->argc = 0;
 	tmp->next = NULL;
@@ -2676,7 +2718,7 @@ int delMessage(MessageHash * msgTable[], Message * m, char *mod_name)
 				else
 				{
 					msgTable[msgindex] = msgcurrent->next;
-					DenoraFree(msgcurrent->name);
+					free(msgcurrent->name);
 					return MOD_ERR_OK;
 				}
 			}
@@ -2707,7 +2749,7 @@ int delMessage(MessageHash * msgTable[], Message * m, char *mod_name)
 				else
 				{
 					lastHash->next = msgcurrent->next;
-					DenoraFree(msgcurrent->name);
+					free(msgcurrent->name);
 					return MOD_ERR_OK;
 				}
 			}
@@ -2732,9 +2774,15 @@ int destroyMessage(Message * m)
 	{
 		return MOD_ERR_PARAMS;
 	}
-	DenoraFree(m->name);
+	if (m->name)
+	{
+		free(m->name);
+	}
 	m->func = NULL;
-	DenoraFree(m->mod_name);
+	if (m->mod_name)
+	{
+		free(m->mod_name);
+	}
 	m->next = NULL;
 	free(m);
 	return MOD_ERR_OK;
@@ -2750,7 +2798,10 @@ int destroyMessageHash(MessageHash * mh)
 	{
 		return MOD_ERR_PARAMS;
 	}
-	DenoraFree(mh->name);
+	if (mh->name)
+	{
+		free(mh->name);
+	}
 	mh->m = NULL;
 	mh->next = NULL;
 	free(mh);
@@ -2767,7 +2818,10 @@ int destroyCommandHash(CommandHash * ch)
 	{
 		return MOD_ERR_PARAMS;
 	}
-	DenoraFree(ch->name);
+	if (ch->name)
+	{
+		free(ch->name);
+	}
 	ch->c = NULL;
 	ch->next = NULL;
 	free(ch);
@@ -2903,9 +2957,9 @@ void do_run_cmd(char *service, User * u, Command * c, const char *cmd,
 	{
 		notice_lang(service, u, UNKNOWN_COMMAND_HELP, cmd, service);
 	}
-	if (ac)
+	if (av)
 	{
-		DenoraFree(av);
+		free(av);
 	}
 }
 

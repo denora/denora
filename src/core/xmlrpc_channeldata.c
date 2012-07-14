@@ -80,7 +80,7 @@ int xmlrpc_channeldata(deno_socket_t xmlsocket, int ac, char **av)
 			{
 				temp = char_encode(c->topic);
 				ircsnprintf(buf, BUFSIZE, "<string>%s</string>", temp);
-				DenoraFree(temp);
+				free(temp);
 				xmlrpc_send(xmlsocket, 1, buf);
 			}
 			else if (!stricmp(av[1], "usercount"))
@@ -99,7 +99,7 @@ int xmlrpc_channeldata(deno_socket_t xmlsocket, int ac, char **av)
 			{
 				temp = chan_get_modes(c, 1);
 				xmlrpc_string(buf, temp);
-				DenoraFree(temp);
+				free(temp);
 				xmlrpc_send(xmlsocket, 1, buf);
 			}
 			else

@@ -114,7 +114,7 @@ void html_current_channels(FILE * ptr)
 						tempc = char_encode(s->name);
 						dfprintf(ptr, langstring(HTML_CHANNEL_CONTENT),
 						         tempc, s->usercount);
-						DenoraFree(tempc);
+						free(tempc);
 						x++;
 						if (x > 10)
 						{

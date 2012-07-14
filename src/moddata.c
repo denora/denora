@@ -31,9 +31,12 @@ void moduleCleanStruct(ModuleData ** moduleData)
 	while (modcurrent)
 	{
 		next = modcurrent->next;
-		DenoraFree(modcurrent->moduleName);
-		DenoraFree(modcurrent->key);
-		DenoraFree(modcurrent->value);
+		if (modcurrent->moduleName)
+			free(modcurrent->moduleName);
+		if (modcurrent->key)
+			free(modcurrent->key);
+		if (modcurrent->value)
+			free(modcurrent->value);
 		modcurrent->next = NULL;
 		free(modcurrent);
 		modcurrent = next;
@@ -90,7 +93,7 @@ int moduleAddData(ModuleData ** md, char *key, char *value)
 		alog(LOG_DEBUG,
 		     "debug: A module tried to use ModuleAddData() with one ore more NULL arguments... returning");
 		do_backtrace(0);
-		DenoraFree(mod_name);
+		free(mod_name);
 		return MOD_ERR_PARAMS;
 	}
 
@@ -109,7 +112,7 @@ int moduleAddData(ModuleData ** md, char *key, char *value)
 	newData = malloc(sizeof(ModuleData));
 	if (!newData)
 	{
-		DenoraFree(mod_name);
+		free(mod_name);
 		return MOD_ERR_MEMORY;
 	}
 
@@ -126,7 +129,7 @@ int moduleAddData(ModuleData ** md, char *key, char *value)
 	}
 	*md = newData;
 
-	DenoraFree(mod_name);
+	free(mod_name);
 
 	if (denora->debug)
 	{
@@ -170,12 +173,12 @@ char *moduleGetData(ModuleData ** md, char *key)
 		if ((stricmp(modcurrent->moduleName, mod_name) == 0)
 		        && (stricmp(modcurrent->key, key) == 0))
 		{
-			DenoraFree(mod_name);
+			free(mod_name);
 			return sstrdup(modcurrent->value);
 		}
 		modcurrent = modcurrent->next;
 	}
-	DenoraFree(mod_name);
+	free(mod_name);
 	return NULL;
 }
 
@@ -222,9 +225,12 @@ void moduleDelData(ModuleData ** md, char *key)
 				{
 					*md = modcurrent->next;
 				}
-				DenoraFree(modcurrent->moduleName);
-				DenoraFree(modcurrent->key);
-				DenoraFree(modcurrent->value);
+				if (modcurrent->moduleName)
+					free(modcurrent->moduleName);
+				if (modcurrent->key)
+					free(modcurrent->key);
+				if (modcurrent->value)
+					free(modcurrent->value);
 				modcurrent->next = NULL;
 				free(modcurrent);
 			}
@@ -236,7 +242,7 @@ void moduleDelData(ModuleData ** md, char *key)
 			modcurrent = next;
 		}
 	}
-	DenoraFree(mod_name);
+	free(mod_name);
 }
 
 /*************************************************************************/
@@ -279,9 +285,12 @@ void moduleDelAllData(ModuleData ** md)
 			{
 				*md = modcurrent->next;
 			}
-			DenoraFree(modcurrent->moduleName);
-			DenoraFree(modcurrent->key);
-			DenoraFree(modcurrent->value);
+			if (modcurrent->moduleName)
+				free(modcurrent->moduleName);
+			if (modcurrent->key)
+				free(modcurrent->key);
+			if (modcurrent->value)
+				free(modcurrent->value);
 			modcurrent->next = NULL;
 			free(modcurrent);
 		}
@@ -291,7 +300,7 @@ void moduleDelAllData(ModuleData ** md)
 		}
 		modcurrent = next;
 	}
-	DenoraFree(mod_name);
+	free(mod_name);
 }
 
 /*************************************************************************/
@@ -325,7 +334,7 @@ void moduleDelAllDataMod(Module * m)
 
 	if (freeme)
 	{
-		DenoraFree(mod_current_module_name);
+		free(mod_current_module_name);
 		mod_current_module_name = NULL;
 	}
 }

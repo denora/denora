@@ -140,7 +140,8 @@ int destroyUserMode(UserMode * m)
 		return MOD_ERR_PARAMS;
 	}
 
-	DenoraFree(m->mode);
+	if (m->mode)
+		free(m->mode);
 	free(m);
 	return MOD_ERR_OK;
 }
@@ -174,7 +175,7 @@ int delUserMode(UserMode * m)
 				lastHash->next = privcurrent->next;
 			}
 			destroyUserMode(privcurrent->m);
-			DenoraFree(privcurrent->mode);
+			free(privcurrent->mode);
 			free(privcurrent);
 			return MOD_ERR_OK;
 		}
@@ -371,7 +372,7 @@ void denora_set_umode(User * user, int ac, char **av)
 								           (add ? EVENT_MODE_ADD :
 								            EVENT_MODE_REMOVE), user->nick,
 								           modebuf, *av);
-								DenoraFree(newav[2]);
+								free(newav[2]);
 							}
 							else
 							{
@@ -393,7 +394,8 @@ void denora_set_umode(User * user, int ac, char **av)
 		}
 		(void) *modes++;
 	}
-	DenoraFree(newav[1]);
+	if (newav[1])
+		free(newav[1]);
 	send_event(EVENT_POST_MODE, 1, user->nick);
 }
 
@@ -405,7 +407,8 @@ void ModuleUpdateSQLUserMode(void)
 	char *temp = NULL;
 	int i = 0;
 
-	DenoraFree(ircd->usermodes);
+	if (ircd->usermodes)
+		free(ircd->usermodes);
 	for (i = 0; i < 128; i++)
 	{
 		if (umodes[i])
@@ -419,7 +422,8 @@ void ModuleUpdateSQLUserMode(void)
 			{
 				ircsnprintf(modebuf, sizeof(modebuf), "%s%c", temp,
 				            (char) i);
-				DenoraFree(temp);
+				if (temp)
+					free(temp);
 				temp = sstrdup(modebuf);
 			}
 		}
@@ -427,6 +431,6 @@ void ModuleUpdateSQLUserMode(void)
 	if (temp)
 	{
 		ircd->usermodes = sstrdup(temp);
-		DenoraFree(temp);
+		free(temp);
 	}
 }

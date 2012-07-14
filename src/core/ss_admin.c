@@ -181,7 +181,7 @@ static int do_admin(User * u, int ac, char **av)
 				notice_lang(s_StatServ, u, STAT_CHGPASS_CONFIG, av[1]);
 				return MOD_CONT;
 			}
-			DenoraFree(a->passwd);
+			free(a->passwd);
 			a->passwd = sstrdup(MakePassword(av[2]));
 			notice_lang(s_StatServ, u, STAT_CHGPASS_OK, av[1]);
 		}

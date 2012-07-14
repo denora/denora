@@ -132,7 +132,7 @@ void html_top10_topics(FILE * ptr)
 						         (HTML_CHAN_TOP10_KICKS_CONTENT),
 						         tempc, s->topic_count);
 					}
-					DenoraFree(tempc);
+					free(tempc);
 					x++;
 					if (x > 10)
 					{

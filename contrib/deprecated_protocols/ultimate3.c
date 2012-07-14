@@ -233,7 +233,7 @@ int denora_event_nick(char *source, int ac, char **av)
 		                       0),
 		               ipchar, NULL, NULL, strtoul(av[1], NULL, 0), av[3],
 		               NULL);
-		DenoraFree(ipchar);
+		free(ipchar);
 	}
 	else
 	{
@@ -297,7 +297,7 @@ int denora_event_client(char *source, int ac, char **av)
 		                       0),
 		               ipchar, av[7], NULL,
 		               strtoul(av[1], NULL, 10), av[3], NULL);
-		DenoraFree(ipchar);
+		free(ipchar);
 	}
 	return MOD_CONT;
 }

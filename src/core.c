@@ -308,7 +308,9 @@ int match_usermask(const char *mask, User * user)
 	host = strtok(NULL, "");
 	if (!username || !host)
 	{
-		DenoraFree(mask2);
+		if (nick)
+			free(nick);
+		free(mask2);
 		return 0;
 	}
 	SET_SEGV_LOCATION();
@@ -319,6 +321,7 @@ int match_usermask(const char *mask, User * user)
 		         && match_wild_nocase(username, user->username)
 		         && (match_wild_nocase(host, user->host)
 		             || match_wild_nocase(host, user->vhost));
+		free(nick);
 	}
 	else
 	{
@@ -326,8 +329,9 @@ int match_usermask(const char *mask, User * user)
 		         && (match_wild_nocase(host, user->host)
 		             || match_wild_nocase(host, user->vhost));
 	}
-
-	DenoraFree(mask2);
+	free(username);
+	free(host);
+	free(mask2);
 	return result;
 }
 
@@ -1283,19 +1287,22 @@ void destroy_all(void)
 
 	if (ircd->ts6 && UseTS6)
 	{
-		DenoraFree(TS6UPLINK);
-		DenoraFree(TS6SID);
+		if (TS6UPLINK)
+			free(TS6UPLINK);
+		if (TS6SID)
+			free(TS6SID);
 	}
 
-	DenoraFree(mod_current_buffer);
+	if (mod_current_buffer)
+		free(mod_current_buffer);
 	if (ircd->chanmodes)
 	{
-		DenoraFree(ircd->chanmodes);
+		free(ircd->chanmodes);
 		ircd->chanmodes = NULL;
 	}
 	if (ircd->nickchars)
 	{
-		DenoraFree(ircd->nickchars);
+		free(ircd->nickchars);
 		ircd->nickchars = NULL;
 	}
 
@@ -1312,7 +1319,7 @@ void destroy_all(void)
 		{
 			sqlnick = rdb_escape(u->nick);
 			db_removenick(sqlnick, (char *) "Denora shutdown");
-			DenoraFree(sqlnick);
+			free(sqlnick);
 		}
 		delete_user(u);
 		u = next;
@@ -1477,81 +1484,140 @@ void destroy_all(void)
 
 	for (i = 0; i < SockIPNumber; i++)
 	{
-		DenoraFree(ExtSockIPs[i]);
+		if (ExtSockIPs[i])
+			free(ExtSockIPs[i]);
 	}
 
-	alog(LOG_DEBUG, "debug: Clearing varaibles");
+	alog(LOG_DEBUG, "debug: Clearing variables");
 
-	DenoraFree(denora->qmsg);
-	DenoraFree(denora->version_protocol);
-	if (mod_current_module)
-	{
-		DenoraFree(mod_current_module->author);
-	}
+	if (denora->qmsg)
+		free(denora->qmsg);
+	if (denora->version_protocol)
+		free(denora->version_protocol);
+	if (mod_current_module && mod_current_module->author)
+		free(mod_current_module->author);
 
-
-	DenoraFree(denora->uplink);
-	DenoraFree(UserTable);
-	DenoraFree(ChanBansTable);
-	DenoraFree(ChanExceptTable);
-	DenoraFree(IsOnTable);
-	DenoraFree(ServerTable);
-	DenoraFree(GlineTable);
-	DenoraFree(ChanTable);
-	DenoraFree(MaxValueTable);
-	DenoraFree(ChanInviteTable);
-	DenoraFree(TLDTable);
-	DenoraFree(CTCPTable);
-	DenoraFree(SglineTable);
-	DenoraFree(SqlineTable);
-	DenoraFree(AliasesTable);
-	DenoraFree(CStatsTable);
-	DenoraFree(UStatsTable);
-	DenoraFree(StatsTable);
-	DenoraFree(ChanStatsTable);
-	DenoraFree(ServerStatsTable);
-	DenoraFree(SpamTable);
-	DenoraFree(CurrentTable);
-	DenoraFree(NetworkName);
-	DenoraFree(NickChar);
-	DenoraFree(ChannelDB);
-	DenoraFree(statsDB);
-	DenoraFree(SqlHost);
-	DenoraFree(SqlUser);
-	DenoraFree(SqlPass);
-	DenoraFree(LogChannel);
-	DenoraFree(Smiley);
-	DenoraFree(XMLRPC_Host);
-	DenoraFree(SqlName);
-	DenoraFree(SqlSock);
-	DenoraFree(s_StatServ);
-	DenoraFree(desc_StatServ);
-	DenoraFree(ChanStatsTrigger);
-	DenoraFree(s_StatServ_alias);
-	DenoraFree(IRCDModule);
-	DenoraFree(desc_StatServ_alias);
-	DenoraFree(RemoteServer);
+	if (denora->uplink)
+		free(denora->uplink);
+	if (UserTable)
+		free(UserTable);
+	if (ChanBansTable)
+		free(ChanBansTable);
+	if (ChanExceptTable)
+		free(ChanExceptTable);
+	if (IsOnTable)
+		free(IsOnTable);
+	if (ServerTable)
+		free(ServerTable);
+	if (GlineTable)
+		free(GlineTable);
+	if (ChanTable)
+		free(ChanTable);
+	if (MaxValueTable)
+		free(MaxValueTable);
+	if (ChanInviteTable)
+		free(ChanInviteTable);
+	if (TLDTable)
+		free(TLDTable);
+	if (CTCPTable)
+		free(CTCPTable);
+	if (SqlineTable)
+		free(SglineTable);
+	if (SqlineTable)
+		free(SqlineTable);
+	if (AliasesTable)
+		free(AliasesTable);
+	if (CStatsTable)
+		free(CStatsTable);
+	if (UStatsTable)
+		free(UStatsTable);
+	if (StatsTable)
+		free(StatsTable);
+	if (ChanStatsTable)
+		free(ChanStatsTable);
+	if (ServerStatsTable)
+		free(ServerStatsTable);
+	if (SpamTable)
+		free(SpamTable);
+	if (CurrentTable)
+		free(CurrentTable);
+	if (NetworkName)
+		free(NetworkName);
+	if (NickChar)
+		free(NickChar);
+	if (ChannelDB)
+		free(ChannelDB);
+	if (statsDB)
+		free(statsDB);
+	if (SqlHost)
+		free(SqlHost);
+	if (SqlUser)
+		free(SqlUser);
+	if (SqlPass)
+		free(SqlPass);
+	if (LogChannel)
+		free(LogChannel);
+	if (Smiley)
+		free(Smiley);
+	if (XMLRPC_Host)
+		free(XMLRPC_Host);
+	if (SqlName)
+		free(SqlName);
+	if (SqlSock)
+		free(SqlSock);
+	if (s_StatServ)
+		free(s_StatServ);
+	if (desc_StatServ)
+		free(desc_StatServ);
+	if (ChanStatsTrigger)
+		free(ChanStatsTrigger);
+	if (s_StatServ_alias)
+		free(s_StatServ_alias);
+	if (IRCDModule)
+		free(IRCDModule);
+	if (desc_StatServ_alias)
+		free(desc_StatServ_alias);
+	if (RemoteServer)
+		free(RemoteServer);
 	for (j = 0; j < NumExcludeServers; j++)
 	{
-		DenoraFree(ExcludeServers[j]);
+		if (ExcludeServers[j])
+			free(ExcludeServers[j]);
 	}
-	DenoraFree(RemotePassword);
-	DenoraFree(LocalHost);
-	DenoraFree(MOTDFilename);
-	DenoraFree(ServerName);
-	DenoraFree(ServerDesc);
-	DenoraFree(ServiceUser);
-	DenoraFree(NickChar);
-	DenoraFree(HTMLFilename);
-	DenoraFree(GeoIPDBFileName);
-	DenoraFree(excludeDB);
-	DenoraFree(ctcpDB);
-	DenoraFree(ServerDB);
-	DenoraFree(ChannelStatsDB);
-	DenoraFree(TLDDB);
-	DenoraFree(Numeric);
+	if (RemotePassword)
+		free(RemotePassword);
+	if (LocalHost)
+		free(LocalHost);
+	if(MOTDFilename)
+		free(MOTDFilename);
+	if (ServerName)
+		free(ServerName);
+	if (ServerDesc)
+		free(ServerDesc);
+	if (ServiceUser)
+		free(ServiceUser);
+	if (NickChar)
+		free(NickChar);
+	if (HTMLFilename)
+		free(HTMLFilename);
+	if (GeoIPDBFileName)
+		free(GeoIPDBFileName);
+	if (excludeDB)
+		free(excludeDB);
+	if (ctcpDB)
+		free(ctcpDB);
+	if (ServerDB)
+		free(ServerDB);
+	if (ChannelStatsDB)
+		free(ChannelStatsDB);
+	if (TLDDB)
+		free(TLDDB);
+	if (Numeric)
+		free(Numeric);
 	remove_pidfile();
-	DenoraFree(PIDFilename);
-	DenoraFree(rdb_errmsg);
+	if (PIDFilename)
+		free(PIDFilename);
+	if (rdb_errmsg)
+		free(rdb_errmsg);
 	alog(LOG_DEBUG, "debug: Clean up complete");
 }

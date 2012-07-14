@@ -251,7 +251,7 @@ int del_exclude(Exclude * e)
 		if (e->name)
 		{
 			SET_SEGV_LOCATION();
-			DenoraFree(e->name);
+			free(e->name);
 		}
 		free(e);
 		return 1;

@@ -343,9 +343,15 @@ int destroyCronEvent(CronEvent * evh)
 	}
 	SET_SEGV_LOCATION();
 
-	DenoraFree(evh->name);
+	if (evh->name)
+	{
+		free(evh->name);
+	}
 	evh->func = NULL;
-	DenoraFree(evh->mod_name);
+	if (evh->mod_name)
+	{
+		free(evh->mod_name);
+	}
 	evh->next = NULL;
 	free(evh);
 	return MOD_ERR_OK;
@@ -402,7 +408,10 @@ int delCronEvent(CronEventHash * msgEvtTable[], CronEvent * evm,
 				else
 				{
 					msgEvtTable[cronindex] = ccurrent->next;
-					DenoraFree(ccurrent->name);
+					if (ccurrent->name)
+					{
+						free(ccurrent->name);
+					}
 					return MOD_ERR_OK;
 				}
 			}
@@ -433,7 +442,10 @@ int delCronEvent(CronEventHash * msgEvtTable[], CronEvent * evm,
 				else
 				{
 					lastHash->next = ccurrent->next;
-					DenoraFree(ccurrent->name);
+					if (ccurrent->name)
+					{
+						free(ccurrent->name);
+					}
 					return MOD_ERR_OK;
 				}
 			}
@@ -658,7 +670,10 @@ int destroyCronEventHash(CronEventHash * mh)
 	{
 		return MOD_ERR_PARAMS;
 	}
-	DenoraFree(mh->name);
+	if (mh->name)
+	{
+		free(mh->name);
+	}
 	mh->evh = NULL;
 	mh->next = NULL;
 	free(mh);

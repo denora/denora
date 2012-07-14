@@ -91,7 +91,7 @@ Server *server_map(Server * s, FILE * ptr, int last)
 				if (tbuf)
 				{
 					ircsnprintf(buf, 256, "%s&nbsp", tbuf);
-					DenoraFree(tbuf);
+					free(tbuf);
 					tbuf = sstrdup(buf);
 				}
 				else
@@ -102,7 +102,7 @@ Server *server_map(Server * s, FILE * ptr, int last)
 			}
 			ircsnprintf(prefixbuf, sizeof(prefixbuf), "%s%s", tbuf,
 			            (last ? "`-" : "|-"));
-			DenoraFree(tbuf);
+			free(tbuf);
 			prefix = sstrdup(prefixbuf);
 
 		}
@@ -149,7 +149,7 @@ Server *server_map(Server * s, FILE * ptr, int last)
 				         (long int) s->ss->highestping);
 			}
 		}
-		DenoraFree(prefix);
+		free(prefix);
 
 		if (s->slinks_count)
 		{

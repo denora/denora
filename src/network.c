@@ -150,7 +150,7 @@ void freeaddrinfo(struct addrinfo *ai)
 	do
 	{
 		next = ai->ai_next;
-		DenoraFree(ai);
+		free(ai);
 	}
 	while (NULL != (ai = next));
 }

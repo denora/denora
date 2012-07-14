@@ -110,7 +110,7 @@ void html_server_table(FILE * ptr)
 				         getstring(NULL, HTML_SERVER_CONTENT_ONLINE),
 				         s->name, tempc);
 			}
-			DenoraFree(tempc);
+			free(tempc);
 			s = next;
 		}
 		fprintf(ptr, "%s", getstring(NULL, HTML_SERVER_FOOTER));

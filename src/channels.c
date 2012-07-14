@@ -259,7 +259,7 @@ void sql_do_part(char *chan, User * u)
 			db_checkemptychan(chanid);
 	}
 	SET_SEGV_LOCATION();
-	DenoraFree(sqlchan);
+	free(sqlchan);
 }
 
 /*************************************************************************/
@@ -281,7 +281,7 @@ void sql_do_partall(char *nick)
 		sqlnick = rdb_escape(nick);
 		SET_SEGV_LOCATION();
 		db_removefromchans(db_getnick(sqlnick));
-		DenoraFree(sqlnick);
+		free(sqlnick);
 	}
 }
 
@@ -309,7 +309,7 @@ void sql_do_join(char *chan, char *nick)
 	chanid = db_getchancreate(chan);
 	users = sstrdup(nick);
 	sql_do_addusers(chanid, users);
-	DenoraFree(users);
+	free(users);
 }
 
 /*************************************************************************/
@@ -442,7 +442,7 @@ void sql_do_addusers(int chanid, char *users)
 			     langstr(ALOG_DEBUG_NONEXISTANT_USER_JOIN),
 			     (u ? u->nick : users), chanid);
 		}
-		DenoraFree(users);
+		free(users);
 		users = nextusers;
 		if (users)
 		{
@@ -491,15 +491,19 @@ void chan_deluser(User * user, Channel * c)
 
 	SET_SEGV_LOCATION();
 
-	u = c->users;
-	while (u)
-	{
-		if (u->user == user)
-			break;
-		u = u->next;
-	}
-
 	/* for (u = c->users; u && u->user != user; u = u->next); */
+
+        u = c->users;
+
+	if (u && u->user != user)
+	{
+        	while ((u = u->next))
+        	{
+                	if (u->user == user)
+				break;
+		}
+        }
+
 	if (!u)
 	{
 		return;
@@ -700,9 +704,9 @@ void do_bmask(char **av)
 			{
 				add_quiet(c, b);
 			}
-			DenoraFree(b);
+			free(b);
 		}
-		DenoraFree(bans);
+		free(bans);
 	}
 }
 
@@ -748,7 +752,7 @@ char *p10_mode_parse(char *mode, int *nomode)
 			if (temp)
 			{
 				ircsnprintf(modebuf, sizeof(modebuf), "%s%c", temp, *s);
-				DenoraFree(temp);
+				free(temp);
 				temp = sstrdup(modebuf);
 			}
 			else
@@ -856,7 +860,7 @@ void do_p10_burst(char *source, int ac, char **av)
 						if (strcmp(s, "~") == 0)
 						{
 							except = 1;
-							DenoraFree(s);
+							free(s);
 							i++;
 							continue;
 						}
@@ -890,8 +894,8 @@ void do_p10_burst(char *source, int ac, char **av)
 							     langstr(ALOG_DEBUG_SJOIN_NONEXISTANT), t,
 							     av[0]);
 							i++;
-							DenoraFree(t);
-							DenoraFree(m);
+							free(t);
+							free(m);
 							continue;
 						}
 						v[0] = av[0];
@@ -900,7 +904,7 @@ void do_p10_burst(char *source, int ac, char **av)
 						if (m)
 						{
 							flag = sstrdup(m);
-							DenoraFree(m);
+							free(m);
 						}
 						if (flag)
 						{
@@ -926,14 +930,15 @@ void do_p10_burst(char *source, int ac, char **av)
 									}
 									/* setting user qaohv flags */
 									do_cmode(user->nick, j, x);
-									DenoraFree(x[1]);
+									free(x[1]);
 								}
 							}
 						}
 						i++;
-						DenoraFree(t);
+						free(t);
 					}
-					DenoraFree(flag);
+					if (flag)
+						free(flag);
 					pc++;
 					break;
 			}
@@ -1041,9 +1046,9 @@ void do_p10_kick(const char *source, int ac, char **av)
 	v[1] = sstrdup((u2 ? u2->nick : av[1]));
 	v[2] = sstrdup(av[1]);
 	do_kick((u ? u->nick : source), ac, v);
-	DenoraFree(v[0]);
-	DenoraFree(v[1]);
-	DenoraFree(v[2]);
+	free(v[0]);
+	free(v[1]);
+	free(v[2]);
 }
 
 /*************************************************************************/
@@ -1097,7 +1102,7 @@ void do_kick(const char *source, int ac, char **av)
 				          "UPDATE %s SET kickcount=%d WHERE chanid=%d",
 				          ChanTable, c2->stats->kickcount, chanid);
 				sql_do_part(chan, user);
-				DenoraFree(chan);
+				free(chan);
 			}
 		}
 
@@ -1325,7 +1330,7 @@ void do_sjoin(const char *source, int ac, char **av)
 		{
 			sqlusers = sstrdup(av[ac - 1]);
 			sql_do_sjoin(av[1], sqlusers, &av[2], (ac > 3) ? ac - 3 : 0);
-			DenoraFree(sqlusers);
+			free(sqlusers);
 		}
 
 		cubuf[0] = '+';
@@ -1349,7 +1354,7 @@ void do_sjoin(const char *source, int ac, char **av)
 				{
 					buf = myStrGetToken(s, ircd->sjoinbanchar, 1);
 					add_ban(c, buf);
-					DenoraFree(buf);
+					free(buf);
 					if (!end)
 						break;
 					s = end + 1;
@@ -1362,7 +1367,7 @@ void do_sjoin(const char *source, int ac, char **av)
 				{
 					buf = myStrGetToken(s, ircd->sjoinexchar, 1);
 					add_exception(c, buf);
-					DenoraFree(buf);
+					free(buf);
 					if (!end)
 						break;
 					s = end + 1;
@@ -1376,7 +1381,7 @@ void do_sjoin(const char *source, int ac, char **av)
 				{
 					buf = myStrGetToken(s, ircd->sjoinivchar, 1);
 					add_invite(c, buf);
-					DenoraFree(buf);
+					free(buf);
 					if (!end)
 						break;
 					s = end + 1;
@@ -1427,7 +1432,7 @@ void do_sjoin(const char *source, int ac, char **av)
 		{
 			sqlusers = sstrdup(av[ac - 1]);
 			sql_do_sjoin(av[1], sqlusers, &av[2], (ac > 3) ? ac - 3 : 0);
-			DenoraFree(sqlusers);
+			free(sqlusers);
 		}
 		c = findchan(av[1]);
 		cubuf[0] = '+';
@@ -1484,7 +1489,7 @@ void do_sjoin(const char *source, int ac, char **av)
 		{
 			sqlusers = sstrdup(source);
 			sql_do_sjoin(av[1], sqlusers, &av[2], (ac > 3) ? ac - 3 : 0);
-			DenoraFree(sqlusers);
+			free(sqlusers);
 		}
 
 		cubuf[0] = '+';
@@ -1510,7 +1515,7 @@ void do_sjoin(const char *source, int ac, char **av)
 			{
 				alog(LOG_NONEXISTANT,
 				     langstr(ALOG_DEBUG_SJOIN_NONEXISTANT), s, av[1]);
-				DenoraFree(s);
+				free(s);
 				return;
 			}
 
@@ -1541,7 +1546,7 @@ void do_sjoin(const char *source, int ac, char **av)
 		{
 			sqlusers = sstrdup(source);
 			sql_do_join(av[1], sqlusers);
-			DenoraFree(sqlusers);
+			free(sqlusers);
 		}
 		user = user_find(source);
 		if (!user)
@@ -1686,7 +1691,7 @@ void do_topic(int ac, char **av)
 
 	if (c->topic)
 	{
-		DenoraFree(c->topic);
+		free(c->topic);
 		c->topic = NULL;
 	}
 	c->topic = (ac > 3 ? sstrdup(av[3]) : NULL);
@@ -1695,7 +1700,7 @@ void do_topic(int ac, char **av)
 	{
 		s = myStrGetToken(av[1], '!', 0);
 		strlcpy(c->topic_setter, s, sizeof(c->topic_setter));
-		DenoraFree(s);
+		free(s);
 	}
 	else
 	{
@@ -1727,8 +1732,9 @@ void do_topic(int ac, char **av)
 				count_topics(u, c);
 			}
 		}
-		DenoraFree(author);
-		DenoraFree(topic);
+		free(author);
+		if (topic)
+			free(topic);
 	}
 	SET_SEGV_LOCATION();
 	send_event(EVENT_CHANNEL_TOPIC, 3, c->name, c->topic_setter,
@@ -1765,7 +1771,7 @@ void chan_clearmodes(const char *source, int ac, char **av)
 					{
 						if (c->bans[i])
 						{
-							DenoraFree(c->bans[i]);
+							free(c->bans[i]);
 						}
 						else
 						{
@@ -1779,7 +1785,7 @@ void chan_clearmodes(const char *source, int ac, char **av)
 					{
 						if (c->excepts[i])
 						{
-							DenoraFree(c->excepts[i]);
+							free(c->excepts[i]);
 						}
 						else
 						{
@@ -2044,21 +2050,23 @@ void chan_delete(Channel * c)
 	c->stats->in_use = 0;
 	stats->chans--;
 
-	DenoraFree(c->topic);
+	if (c->topic)
+		free(c->topic);
 	SET_SEGV_LOCATION();
 
-	DenoraFree(c->key);
-	if (ircd->fmode)
+	if (c->key)
+		free(c->key);
+	if (ircd->fmode && c->flood)
 	{
-		DenoraFree(c->flood);
+		free(c->flood);
 	}
-	if (ircd->jmode)
+	if (ircd->jmode && c->flood_alt)
 	{
-		DenoraFree(c->flood_alt);
+		free(c->flood_alt);
 	}
-	if (ircd->Lmode)
+	if (ircd->Lmode && c->redirect)
 	{
-		DenoraFree(c->redirect);
+		free(c->redirect);
 	}
 	SET_SEGV_LOCATION();
 
@@ -2066,18 +2074,19 @@ void chan_delete(Channel * c)
 	{
 		if (c->bans[i])
 		{
-			DenoraFree(c->bans[i]);
+			free(c->bans[i]);
 		}
 		else
 		{
 			alog(LOG_ERROR, langstr(ALOG_BAN_FREE_ERROR), c->name, i);
 		}
 	}
-	if (c->bansize)
+	if (c->bansize && c->bans)
 	{
-		DenoraFree(c->bans);
+		free(c->bans);
 	}
-	DenoraFree(c->sqlchan);
+	if (c->sqlchan)
+		free(c->sqlchan);
 
 	if (denora->do_sql)
 		sql_channel_ban(ALL, c, NULL);
@@ -2089,7 +2098,7 @@ void chan_delete(Channel * c)
 		{
 			if (c->excepts[i])
 			{
-				DenoraFree(c->excepts[i]);
+				free(c->excepts[i]);
 			}
 			else
 			{
@@ -2097,9 +2106,9 @@ void chan_delete(Channel * c)
 				     c->name, i);
 			}
 		}
-		if (c->exceptsize)
+		if (c->exceptsize && c->excepts)
 		{
-			DenoraFree(c->excepts);
+			free(c->excepts);
 		}
 		if (denora->do_sql)
 		{
@@ -2115,7 +2124,7 @@ void chan_delete(Channel * c)
 		{
 			if (c->invite[i])
 			{
-				DenoraFree(c->invite[i]);
+				free(c->invite[i]);
 			}
 			else
 			{
@@ -2123,9 +2132,9 @@ void chan_delete(Channel * c)
 				     i);
 			}
 		}
-		if (c->invitesize)
+		if (c->invitesize && c->invite)
 		{
-			DenoraFree(c->invite);
+			free(c->invite);
 		}
 		if (denora->do_sql)
 		{

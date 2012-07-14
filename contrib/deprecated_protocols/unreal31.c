@@ -620,6 +620,7 @@ int denora_event_nick(char *source, int ac, char **av)
 
 	if (ac != 2)
 	{
+		ipchar = host_resolve(av[4]);
 		if (ac == 7)
 		{
 			/*
@@ -628,21 +629,18 @@ int denora_event_nick(char *source, int ac, char **av)
 			   <codemastr> it's sent when a nick collision occurs
 			   - so we have to leave it around for now -TSL
 			 */
-			ipchar = host_resolve(av[4]);
 			do_nick(source, av[0], av[3], av[4], av[5], av[6],
 			        strtoul(av[2], NULL, 10), 0, 0, NULL, NULL, 0, NULL,
 			        NULL);
-			DenoraFree(ipchar);
 		}
 		else
 		{
-			ipchar = host_resolve(av[4]);
 			user = do_nick(source, av[0], av[3], av[4], av[5], av[9],
 			               strtoul(av[2], NULL, 10), strtoul(av[6], NULL,
 			                       0), 0, av[8],
 			               NULL, strtoul(av[1], NULL, 10), av[7], NULL);
-			DenoraFree(ipchar);
 		}
+		free(ipchar);
 	}
 	else
 	{

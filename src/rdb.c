@@ -208,7 +208,7 @@ char *rdb_escape(char *ch)
 	{
 		result = db_mysql_quote(ch);
 		ret = sstrdup(result);
-		DenoraFree(result);
+		free(result);
 	}
 #endif
 #ifdef USE_POSTGRE
@@ -216,7 +216,7 @@ char *rdb_escape(char *ch)
 	{
 		result = db_postgre_quote(ch);
 		ret = sstrdup(result);
-		DenoraFree(result);
+		free(result);
 	}
 #endif
 	return ret;
@@ -247,7 +247,8 @@ int rdb_insertid()
 
 char *rdb_error_msg()
 {
-	DenoraFree(rdb_errmsg);
+	if (rdb_errmsg)
+		free(rdb_errmsg);
 	rdb_errmsg = NULL;
 #ifdef USE_MYSQL
 	if (sqltype == SQL_MYSQL)

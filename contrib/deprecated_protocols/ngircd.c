@@ -178,7 +178,7 @@ int denora_event_nick(char *source, int ac, char **av)
 		do_nick("", av[0], av[2], av[3], s ? s->name : source, av[6],
 		        UplinkSynced ? time(NULL) : 0, 0, ipchar, NULL, NULL,
 		        strtoul(av[1], NULL, 10), av[5], NULL);
-		DenoraFree(ipchar);
+		free(ipchar);
 	}
 	else
 	{
@@ -320,20 +320,21 @@ int denora_event_chaninfo(char *source, int ac, char **av)
 
 	chan = rdb_escape(av[0]);
 	db_getchancreate(chan);
-	DenoraFree(chan);
+	free(chan);
 
 	ircsnprintf(buf, BUFSIZE, "%ld", (long int) time(NULL));
-	v[0] = av[0];               /* channel */
+	v[0] = sstrdup(av[0]);      /* channel */
 	v[1] = sstrdup(source);     /* setter */
 	v[2] = sstrdup(buf);
 	v[3] = sstrdup(av[2]);
 	do_topic(4, v);
-	DenoraFree(v[1]);
-	DenoraFree(v[2]);
-	DenoraFree(v[3]);
+	free(v[1]);
+	free(v[2]);
+	free(v[3]);
 	v[1] = sstrdup(av[1]);
 	do_cmode(source, 2, v);
-	DenoraFree(v[1]);
+	free(v[0]);
+	free(v[1]);
 	return MOD_CONT;
 }
 
@@ -361,7 +362,7 @@ int denora_event_sjoin(char *source, int ac, char **av)
 			if (temp2)
 			{
 				ircsnprintf(buf, BUFSIZE, "%s %s", temp2, temp);
-				DenoraFree(temp2);
+				free(temp2);
 				temp2 = sstrdup(buf);
 			}
 			else
@@ -369,7 +370,7 @@ int denora_event_sjoin(char *source, int ac, char **av)
 				ircsnprintf(buf, BUFSIZE, "%s", temp);
 				temp2 = sstrdup(buf);
 			}
-			DenoraFree(temp);
+			free(temp);
 		}
 		if (temp2)
 		{
@@ -385,9 +386,9 @@ int denora_event_sjoin(char *source, int ac, char **av)
 		v[2] = sstrdup(av[1]);
 	}
 	do_sjoin(source, 3, v);
-	DenoraFree(v[0]);
-	DenoraFree(v[1]);
-	DenoraFree(v[2]);
+	free(v[0]);
+	free(v[1]);
+	free(v[2]);
 	return MOD_CONT;
 }
 
@@ -580,13 +581,14 @@ int denora_event_join(char *source, int ac, char **av)
 	do_join(source, ac, av);
 	if (flags)
 	{
-		x[0] = av[0];
+		x[0] = sstrdup(av[0]);
 		ircsnprintf(buf, BUFSIZE, "+%s", flags);
 		x[1] = sstrdup(buf);
 		x[2] = sstrdup(source);
 		do_cmode(source, 3, x);
-		DenoraFree(x[1]);
-		DenoraFree(x[2]);
+		free(x[0]);
+		free(x[1]);
+		free(x[2]);
 	}
 	return MOD_CONT;
 }

@@ -224,8 +224,6 @@
 
 #define SWAP_CHAR( x, y ) {char c; c = x; x = y; y = c;}
 
-#define DenoraFree(x) if (x) free(x)
-
 /*************************************************************************/
 /* Setup how we define our macro fro externing data                      */
 /*************************************************************************/

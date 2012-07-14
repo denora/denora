@@ -34,9 +34,9 @@ int new_open_db_read(DenoraDBFile * dbptr, char **key, char **value)
 	SET_SEGV_LOCATION();
 	if ((dbptr->fptr = FileOpen(dbptr->filename, FILE_READ)) == NULL)
 	{
-		DenoraFree(*key);
+		free(*key);
 		*key = NULL;
-		DenoraFree(*value);
+		free(*value);
 		*value = NULL;
 		return DB_READ_ERROR;
 	}
@@ -50,9 +50,9 @@ int new_open_db_read(DenoraDBFile * dbptr, char **key, char **value)
 	{
 		alog(LOG_DEBUG, "debug: Error reading version number on %s",
 		     dbptr->filename);
-		DenoraFree(*key);
+		free(*key);
 		*key = NULL;
-		DenoraFree(*value);
+		free(*value);
 		*value = NULL;
 		return DB_READ_ERROR;
 	}
@@ -61,9 +61,9 @@ int new_open_db_read(DenoraDBFile * dbptr, char **key, char **value)
 		alog(LOG_DEBUG,
 		     "debug: Error reading version number on %s: End of file detected",
 		     dbptr->filename);
-		DenoraFree(*key);
+		free(*key);
 		*key = NULL;
-		DenoraFree(*value);
+		free(*value);
 		*value = NULL;
 		SET_SEGV_LOCATION();
 		return DB_EOF_ERROR;
@@ -72,9 +72,9 @@ int new_open_db_read(DenoraDBFile * dbptr, char **key, char **value)
 	{
 		alog(LOG_DEBUG, "debug: Invalid version number (%d) on %s",
 		     dbptr->db_version, dbptr->filename);
-		DenoraFree(*key);
+		free(*key);
 		*key = NULL;
-		DenoraFree(*value);
+		free(*value);
 		*value = NULL;
 		return DB_VERSION_ERROR;
 	}
@@ -116,14 +116,14 @@ void new_close_db(FILE * fptr, char **key, char **value)
 
 	if (key && *key)
 	{
-		DenoraFree(*key);
+		free(*key);
 		*key = NULL;
 	}
 	SET_SEGV_LOCATION();
 
 	if (value && *value)
 	{
-		DenoraFree(*value);
+		free(*value);
 		*value = NULL;
 	}
 	SET_SEGV_LOCATION();

@@ -379,7 +379,7 @@ int denora_event_push(char *source, int ac, char **av)
 			{
 				ircsnprintf(buf, NET_BUFSIZE - 1, "%s\n\r%s", s->motd,
 				            av[1]);
-				DenoraFree(s->motd);
+				free(s->motd);
 				s->motd = sstrdup(buf);
 			}
 			else
@@ -463,8 +463,8 @@ int denora_event_addline(__attribute__((unused))char *source, __attribute__((unu
 		host = myStrGetToken(av[1], '@', myNumToken(av[1], '@') - 1);
 		sql_do_server_bans_add(av[0], user, host, av[2], av[3], buf,
 		                       av[5]);
-		DenoraFree(user);
-		DenoraFree(host);
+		free(user);
+		free(host);
 	}
 	else if (!stricmp(av[0], "Q"))
 	{
@@ -511,8 +511,8 @@ int denora_event_gline(char *source, int ac, char **av)
 	{
 		sql_do_server_bans_remove((char *) "G", user, host);
 	}
-	DenoraFree(user);
-	DenoraFree(host);
+	free(user);
+	free(host);
 	return MOD_CONT;
 }
 
@@ -546,8 +546,8 @@ int denora_event_eline(char *source, int ac, char **av)
 	{
 		sql_do_server_bans_remove((char *) "E", user, host);
 	}
-	DenoraFree(user);
-	DenoraFree(host);
+	free(user);
+	free(host);
 	return MOD_CONT;
 }
 
@@ -684,11 +684,11 @@ int denora_event_capab(__attribute__((unused))char *source, __attribute__((unuse
 
 		capab_parse(argc, argv);
 
-		DenoraFree(argv[0]);
-		DenoraFree(argv[1]);
-		DenoraFree(argv[2]);
-		DenoraFree(argv[3]);
-		DenoraFree(argv[4]);
+		free(argv[0]);
+		free(argv[1]);
+		free(argv[2]);
+		free(argv[3]);
+		free(argv[4]);
 	}
 	return MOD_CONT;
 }
@@ -940,9 +940,9 @@ int denora_event_topic(char *source, int ac, char **av)
 	newav[2] = itostr(time(NULL));
 	newav[3] = sstrdup(av[1]);
 	do_topic(4, newav);
-	DenoraFree(newav[0]);
-	DenoraFree(newav[1]);
-	DenoraFree(newav[3]);
+	free(newav[0]);
+	free(newav[1]);
+	free(newav[3]);
 	return MOD_CONT;
 }
 

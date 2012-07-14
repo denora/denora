@@ -92,7 +92,7 @@ int do_fantasy(int argc, char **argv)
 		          "SELECT maxusers FROM %s WHERE channel=\'%s\';",
 		          ChanTable, chan);
 		alog(LOG_DEBUG, "!peak: Searching for %s", chan);
-		DenoraFree(chan);
+		free(chan);
 #ifdef USE_MYSQL
 		mysql_res = mysql_store_result(mysql);
 		if (mysql_res)

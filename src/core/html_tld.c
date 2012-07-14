@@ -92,8 +92,8 @@ void html_tld_table(FILE * ptr)
 				tempc = char_encode(t->country);
 				dfprintf(ptr, langstr(HTML_TLD_CONTENT),
 				         tempcc, tempc, t->count, t->overall);
-				DenoraFree(tempcc);
-				DenoraFree(tempc);
+				free(tempcc);
+				free(tempc);
 				x++;
 				if (x > 10)
 				{

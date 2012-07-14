@@ -216,10 +216,14 @@ void fini_bans(void)
 	while (tn != NULL)
 	{
 		g = lnode_get(tn);
-		DenoraFree(g->user);
-		DenoraFree(g->host);
-		DenoraFree(g->setby);
-		DenoraFree(g->reason);
+		if (g->user)
+			free(g->user);
+		if (g->host)
+			free(g->host);
+		if (g->setby)
+			free(g->setby);
+		if (g->reason)
+			free(g->reason);
 		free(g);
 		tn = list_next(Glinehead, tn);
 	}
@@ -229,10 +233,14 @@ void fini_bans(void)
 	while (tn != NULL)
 	{
 		z = lnode_get(tn);
-		DenoraFree(z->user);
-		DenoraFree(z->host);
-		DenoraFree(z->setby);
-		DenoraFree(z->reason);
+		if (z->user)
+			free(z->user);
+		if (z->host)
+			free(z->host);
+		if (z->setby)
+			free(z->setby);
+		if (z->reason)
+			free(z->reason);
 		free(z);
 		tn = list_next(Zlinehead, tn);
 	}
@@ -242,10 +250,14 @@ void fini_bans(void)
 	while (tn != NULL)
 	{
 		q = lnode_get(tn);
-		DenoraFree(q->user);
-		DenoraFree(q->host);
-		DenoraFree(q->setby);
-		DenoraFree(q->reason);
+		if (q->user)
+			free(q->user);
+		if (q->host)
+			free(q->host);
+		if (q->setby)
+			free(q->setby);
+		if (q->reason)
+			free(q->reason);
 		free(q);
 		tn = list_next(Qlinehead, tn);
 	}
@@ -364,9 +376,9 @@ void p10_gline(char *type, char *source, int ac, char **av)
 	/*
 	 * Free the data that was allocated
 	 */
-	DenoraFree(address);
-	DenoraFree(user);
-	DenoraFree(host);
+	free(address);
+	free(user);
+	free(host);
 }
 
 /*************************************************************************/
@@ -435,8 +447,8 @@ void sql_do_sqline(char *mask, char *reason)
 	/*
 	 * Free the data that was allocated
 	 */
-	DenoraFree(sqlmask);
-	DenoraFree(sqlreason);
+	free(sqlmask);
+	free(sqlreason);
 }
 
 /*************************************************************************/
@@ -506,13 +518,14 @@ void sql_do_sgline(char *length, char *mask)
 	SET_SEGV_LOCATION();
 
 	sqlmask = rdb_escape(mask);
-	sqlreason = rdb_escape(reason);
 
 	rdb_query
 	(QUERY_HIGH, "SELECT mask FROM %s WHERE mask = \'%s\';",
 	 SglineTable, sqlmask);
 
 #ifdef USE_MYSQL
+	sqlreason = rdb_escape(reason);
+
 	mysql_res = mysql_store_result(mysql);
 	if (mysql_res)
 	{
@@ -531,14 +544,15 @@ void sql_do_sgline(char *length, char *mask)
 		}
 		mysql_free_result(mysql_res);
 	}
+
+	free(sqlreason);
 #endif
 	SET_SEGV_LOCATION();
 
 	/*
 	 * Free the data that was allocated
 	 */
-	DenoraFree(sqlmask);
-	DenoraFree(sqlreason);
+	free(sqlmask);
 	return;
 }
 
@@ -574,13 +588,14 @@ void sql_do_xline(char *geos, char *reason)
 	SET_SEGV_LOCATION();
 
 	sqlgeos = rdb_escape(geos);
-	sqlreason = rdb_escape(reason);
 
 	rdb_query
 	(QUERY_HIGH, "SELECT mask FROM %s WHERE mask = \'%s\';",
 	 SglineTable, sqlgeos);
 
 #ifdef USE_MYSQL
+	sqlreason = rdb_escape(reason);
+
 	mysql_res = mysql_store_result(mysql);
 	if (mysql_res)
 	{
@@ -599,14 +614,15 @@ void sql_do_xline(char *geos, char *reason)
 		}
 		mysql_free_result(mysql_res);
 	}
+
+	free(sqlreason);
 #endif
 	SET_SEGV_LOCATION();
 
 	/*
 	 * Free the data that was allocated
 	 */
-	DenoraFree(sqlgeos);
-	DenoraFree(sqlreason);
+	free(sqlgeos);
 	return;
 }
 
@@ -644,7 +660,7 @@ void sql_do_unxline(char *geos)
 	/*
 	 * Free the data that was allocated
 	 */
-	DenoraFree(sqlgeos);
+	free(sqlgeos);
 	return;
 }
 
@@ -833,9 +849,9 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
 	/*
 	 * Free the data that was allocated
 	 */
-	DenoraFree(reason);
-	DenoraFree(sqluser);
-	DenoraFree(sqlhost);
+	free(reason);
+	free(sqluser);
+	free(sqlhost);
 	return;
 }
 
@@ -935,8 +951,8 @@ void sql_do_server_spam_add(char *target, char *action,
 	 */
 	SET_SEGV_LOCATION();
 
-	DenoraFree(sqlreason);
-	DenoraFree(sqlregex);
+	free(sqlreason);
+	free(sqlregex);
 	return;
 }
 
@@ -994,8 +1010,8 @@ void sql_do_server_bans_remove(char *type, char *user, char *host)
 	/*
 	 * Free the data that was allocated
 	 */
-	DenoraFree(sqluser);
-	DenoraFree(sqlhost);
+	free(sqluser);
+	free(sqlhost);
 	return;
 }
 
@@ -1055,9 +1071,9 @@ void sql_do_server_spam_remove(char *target, char *action, char *regex)
 	/*
 	 * Free the data that was allocated
 	 */
-	DenoraFree(sqlregex);
-	DenoraFree(sqlaction);
-	DenoraFree(sqltarget);
+	free(sqlregex);
+	free(sqlaction);
+	free(sqltarget);
 	return;
 }
 

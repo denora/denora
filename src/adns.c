@@ -207,7 +207,8 @@ int adns__vbuf_appendstr(vbuf * vb, const char *adata)
 
 void adns__vbuf_free(vbuf * vb)
 {
-	DenoraFree(vb->buf);
+	if (vb->buf)
+		free(vb->buf);
 	adns__vbuf_init(vb);
 }
 
@@ -824,7 +825,7 @@ void adns__querysend_tcp(adns_query qu, __attribute__((unused))struct timeval no
 		wr = deno_sockwrite(qu->ads->tcpsocket, buf,
 		                    (2 + qu->query_dglen));
 		errno = deno_sockgeterr();
-		DenoraFree(buf);
+		free(buf);
 #else
 		iov[0].iov_base = length;
 		iov[0].iov_len = 2;
@@ -3245,7 +3246,8 @@ void adns__search_next(adns_state ads, adns_query qu, struct timeval now)
 		}
 	}
 
-	DenoraFree(qu->query_dgram);
+	if (qu->query_dgram)
+		free(qu->query_dgram);
 	qu->query_dgram = 0;
 	qu->query_dglen = 0;
 
@@ -3398,7 +3400,7 @@ int adns_submit_reverse_any(adns_state ads, const struct sockaddr *addr,
 	ircsprintf(buf, "%d.%d.%d.%d.%s", iaddr[3], iaddr[2], iaddr[1],
 	           iaddr[0], zone);
 	r = adns_submit(ads, buf, type, flags, context, query_r);
-	DenoraFree(buf_free);
+	free(buf_free);
 	return r;
 }
 
@@ -3545,7 +3547,8 @@ static void free_query_allocs(adns_query qu)
 	ALIST_INIT(qu->allocations);
 	adns__vbuf_free(&qu->vb);
 	adns__vbuf_free(&qu->search_vb);
-	DenoraFree(qu->query_dgram);
+	if (qu->query_dgram)
+		free(qu->query_dgram);
 	qu->query_dgram = 0;
 }
 
@@ -4237,8 +4240,8 @@ static void addserver(adns_state ads, struct in_addr addr)
 static void freesearchlist(adns_state ads)
 {
 	if (ads->nsearchlist)
-		DenoraFree(*ads->searchlist);
-	DenoraFree(ads->searchlist);
+		free(*ads->searchlist);
+	free(ads->searchlist);
 }
 
 static void saveerr(adns_state ads, int en)
@@ -4331,7 +4334,7 @@ static void ccf_search(adns_state ads, __attribute__((unused))const char *fn, __
 	if (!newchars)
 	{
 		saveerr(ads, errno);
-		DenoraFree(newptrs);
+		free(newptrs);
 		return;
 	}
 
@@ -4834,8 +4837,8 @@ static void init_abort(adns_state ads)
 {
 	if (ads->nsearchlist)
 	{
-		DenoraFree(ads->searchlist[0]);
-		DenoraFree(ads->searchlist);
+		free(ads->searchlist[0]);
+		free(ads->searchlist);
 	}
 	free(ads);
 }

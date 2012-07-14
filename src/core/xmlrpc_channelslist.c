@@ -81,7 +81,7 @@ int xmlrpc_channellist(deno_socket_t xmlsocket, int ac, char **av)
 			ircsnprintf(buf, BUFSIZE,
 			            "%s <value><string>%s</string></value>\n\r", s,
 			            c->name);
-			DenoraFree(s);
+			free(s);
 		}
 		else
 		{

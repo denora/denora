@@ -48,7 +48,8 @@ void statserv(User * u, char *buf)
 
 	if (!cmd)
 	{
-		DenoraFree(buf2);
+		free(buf2);
+		free(str);
 		return;
 	}
 	else if (stricmp(cmd, "\1PING") == 0)
@@ -61,9 +62,9 @@ void statserv(User * u, char *buf)
 		/* CTCP VERSION that arrive this way are not ignored */
 		if (!stricmp(cmd, "\1VERSION"))
 		{
-			DenoraFree(buf2);
-			DenoraFree(cmd);
-			DenoraFree(str);
+			free(buf2);
+			free(cmd);
+			free(str);
 			return;
 		}
 		/* do not show the login password in the logchannel */
@@ -74,9 +75,9 @@ void statserv(User * u, char *buf)
 		}
 		mod_run_cmd(s_StatServ, u, STATSERV, cmd, str);
 	}
-	DenoraFree(cmd);
-	DenoraFree(str);
-	DenoraFree(buf2);
+	free(cmd);
+	free(str);
+	free(buf2);
 }
 
 /*************************************************************************/

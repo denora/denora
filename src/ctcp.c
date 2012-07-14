@@ -114,9 +114,8 @@ void load_ctcp_db(void)
 			alog(LOG_NORMAL, langstr(ALOG_DB_ERROR), dbptr->filename);
 			new_close_db(dbptr->fptr, &key, &value);
 			free(dbptr);
-			DenoraFree(key);
-			DenoraFree(value);
-			DenoraFree(version);
+			free(key);
+			free(value);
 			return;
 		}
 		else if (retval == DB_EOF_ERROR)
@@ -125,9 +124,8 @@ void load_ctcp_db(void)
 			     dbptr->filename);
 			new_close_db(dbptr->fptr, &key, &value);
 			free(dbptr);
-			DenoraFree(key);
-			DenoraFree(value);
-			DenoraFree(version);
+			free(key);
+			free(value);
 			return;
 		}
 		else if (retval == DB_READ_BLOCKEND)            /* DB_READ_BLOCKEND */
@@ -159,9 +157,12 @@ void load_ctcp_db(void)
 			}
 		}                       /* else */
 	}                           /* while */
-	DenoraFree(key);
-	DenoraFree(value);
-	DenoraFree(version);
+	if (key)
+		free(key);
+	if (value)
+		free(value);
+	if (version)
+		free(version);
 }
 
 /*************************************************************************/
@@ -227,7 +228,7 @@ void save_ctcp_db(void)
 			version = sstrdup(c->version);
 			strnrepl(version, BUFSIZE, ":", "¶");
 			new_write_db_entry("version", dbptr, "%s", version);
-			DenoraFree(version);
+			free(version);
 			new_write_db_entry("count", dbptr, "%u", c->overall);
 			new_write_db_endofblock(dbptr);
 		}

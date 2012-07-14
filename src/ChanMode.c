@@ -215,8 +215,8 @@ int destroyChanMode(ChanMode * m)
 	{
 		return MOD_ERR_PARAMS;
 	}
-
-	DenoraFree(m->mode);
+	if (m->mode)
+		free(m->mode);
 	free(m);
 	return MOD_ERR_OK;
 }
@@ -250,7 +250,7 @@ int delChanMode(ChanMode * m)
 				lastHash->next = privcurrent->next;
 			}
 			destroyChanMode(privcurrent->cm);
-			DenoraFree(privcurrent->mode);
+			free(privcurrent->mode);
 			free(privcurrent);
 			return MOD_ERR_OK;
 		}
@@ -308,7 +308,9 @@ void ModuleUpdateSQLChanMode(void)
 	char *temp = NULL;
 	int i = 0;
 
-	DenoraFree(ircd->cmodes);
+	if (ircd->cmodes)
+		free(ircd->cmodes);
+
 	for (i = 0; i < 128; i++)
 	{
 		if (cmodes[i])
@@ -322,7 +324,7 @@ void ModuleUpdateSQLChanMode(void)
 			{
 				ircsnprintf(modebuf, sizeof(modebuf), "%s%c", temp,
 				            (char) i);
-				DenoraFree(temp);
+				free(temp);
 				temp = sstrdup(modebuf);
 			}
 		}
@@ -330,7 +332,7 @@ void ModuleUpdateSQLChanMode(void)
 	if (temp)
 	{
 		ircd->cmodes = sstrdup(temp);
-		DenoraFree(temp);
+		free(temp);
 	}
 }
 
@@ -488,7 +490,7 @@ char *chan_get_modes(Channel * chan, int complete)
 		else
 		{
 			ircsnprintf(modebuf, sizeof(modebuf), "%s%s", temp, um->mode);
-			DenoraFree(temp);
+			free(temp);
 			temp = sstrdup(modebuf);
 		}
 	}
@@ -502,7 +504,7 @@ char *chan_get_modes(Channel * chan, int complete)
 			{
 				ircsnprintf(modebuf, sizeof(modebuf), "%s %s", temp,
 				            cm->getvalue);
-				DenoraFree(temp);
+				free(temp);
 				temp = sstrdup(modebuf);
 			}
 		}
@@ -531,7 +533,7 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 
 	if (!chanid)
 	{
-		DenoraFree(chan);
+		free(chan);
 		return;
 	}
 
@@ -586,7 +588,7 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 						 "UPDATE %s SET mode_lh=\'%c\' WHERE chanid=%d AND nickid=%d",
 						 IsOnTable, tmp[9], chanid, nickid);
 					}
-					DenoraFree(user);
+					free(user);
 				}
 				else if (ircd->owner && *modes == 'q')
 				{
@@ -600,7 +602,7 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 						 "UPDATE %s SET mode_lq=\'%c\' WHERE chanid=%d AND nickid=%d",
 						 IsOnTable, tmp[9], chanid, nickid);
 					}
-					DenoraFree(user);
+					free(user);
 				}
 				else if (ircd->protect && *modes == 'a')
 				{
@@ -614,7 +616,7 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 						 "UPDATE %s SET mode_la=\'%c\' WHERE chanid=%d AND nickid=%d",
 						 IsOnTable, tmp[9], chanid, nickid);
 					}
-					DenoraFree(user);
+					free(user);
 				}
 				else if (*modes == 'o' || *modes == 'v')
 				{
@@ -628,7 +630,7 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 						 "UPDATE %s SET mode_l%c=\'%c\' WHERE chanid=%d AND nickid=%d",
 						 IsOnTable, *modes, tmp[9], chanid, nickid);
 					}
-					DenoraFree(user);
+					free(user);
 				}
 				else
 				{
@@ -648,7 +650,7 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 							            "mode_lk_data=\'%s\', ",
 							            (HidePasswords ? "HIDDEN" : key));
 							strlcat(db, buf, sizeof(db));
-							DenoraFree(key);
+							free(key);
 						}
 						else
 						{
@@ -683,7 +685,7 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 							            (ircd->chanforward <= 90 ? "u" : "l"),
 							            ircd->chanforward, ch);
 							strlcat(db, buf, sizeof(db));
-							DenoraFree(ch);
+							free(ch);
 						}
 						else
 						{
@@ -803,7 +805,8 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 		            chanid);
 		rdb_query(QUERY_LOW, db);
 	}
-	DenoraFree(chan);
+	if (chan)
+		free(chan);
 }
 
 /*************************************************************************/
@@ -911,7 +914,8 @@ void set_flood(Channel * chan, char *value)
 		return;
 	}
 
-	DenoraFree(chan->flood);
+	if (chan->flood)
+		free(chan->flood);
 	chan->flood = (!BadPtr(value) ? sstrdup(value) : NULL);
 
 	alog(LOG_DEBUG, langstr(ALOG_DEBUG_FLOOD_MODE),
@@ -929,7 +933,8 @@ void set_flood_alt(Channel * chan, char *value)
 		return;
 	}
 
-	DenoraFree(chan->flood_alt);
+	if (chan->flood_alt)
+		free(chan->flood_alt);
 	chan->flood_alt = (!BadPtr(value) ? sstrdup(value) : NULL);
 
 	alog(LOG_DEBUG,
@@ -949,7 +954,8 @@ void set_key(Channel * chan, char *value)
 		return;
 	}
 
-	DenoraFree(chan->key);
+	if (chan->key)
+		free(chan->key);
 	chan->key = (!BadPtr(value) ? sstrdup(value) : NULL);
 
 	alog(LOG_DEBUG, langstr(ALOG_KEY_SET_TO), chan->name,
@@ -1000,7 +1006,8 @@ void set_nickchgflood(Channel * chan, char *value)
 		return;
 	}
 
-	DenoraFree(chan->nickchgflood);
+	if (chan->nickchgflood)
+		free(chan->nickchgflood);
 	chan->nickchgflood = (!BadPtr(value) ? sstrdup(value) : NULL);
 
 	alog(LOG_DEBUG, "debug: Nick change flood for %s set to %s",
@@ -1018,7 +1025,8 @@ void set_redirect(Channel * chan, char *value)
 		return;
 	}
 
-	DenoraFree(chan->redirect);
+	if (chan->redirect)
+		free(chan->redirect);
 	chan->redirect = (!BadPtr(value) ? sstrdup(value) : NULL);
 
 	alog(LOG_DEBUG, langstr(ALOG_REDIRECT_SET_TO), chan->name,

@@ -292,7 +292,7 @@ int denora_event_nick(char *source, int ac, char **av)
 		               strtoul(av[2], NULL, 10),
 		               strtoul(av[7], NULL, 0), ipchar, av[5], NULL,
 		               strtoul(av[1], NULL, 0), av[3], NULL);
-		DenoraFree(ipchar);
+		free(ipchar);
 	}
 	else if (ac == 2)
 	{
@@ -306,7 +306,7 @@ int denora_event_nick(char *source, int ac, char **av)
 		     "Unknown NICK formatted message please report the following");
 		protocol_debug(temp, ac, av);
 	}
-	DenoraFree(temp);
+	free(temp);
 	return MOD_CONT;
 }
 
@@ -330,9 +330,9 @@ int denora_event_topic(char *source, int ac, char **av)
 			newav[2] = itostr(time(NULL));
 			newav[3] = sstrdup(av[1]);
 			do_topic(4, newav);
-			DenoraFree(newav[0]);
-			DenoraFree(newav[1]);
-			DenoraFree(newav[3]);
+			free(newav[0]);
+			free(newav[1]);
+			free(newav[3]);
 		}
 
 	}
@@ -1030,15 +1030,15 @@ void rizon_cmd_nick(char *nick, char *name, const char *mode)
 	char *ipaddr;
 	char *nicknumbuf = ts6_uid_retrieve();
 
-	ipaddr = host_resolve(ServiceHost);
-
 	if (UseTS6)
 	{
+		ipaddr = host_resolve(ServiceHost);
 		send_cmd(TS6SID, "UID %s 1 %ld %s %s %s %s %s 0 %s :%s", nick,
 		         (long int) time(NULL), mode, ServiceUser, ServiceHost,
 		         ipaddr, nicknumbuf, ServiceHost, name);
 
 		new_uid(nick, nicknumbuf);
+		free(ipaddr);
 	}
 	else
 	{
@@ -1046,7 +1046,6 @@ void rizon_cmd_nick(char *nick, char *name, const char *mode)
 		         (long int) time(NULL), mode, ServiceUser, ServiceHost,
 		         ServerName, name);
 	}
-	DenoraFree(ipaddr);
 }
 
 /* QUIT */

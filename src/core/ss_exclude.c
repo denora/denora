@@ -118,7 +118,7 @@ static int do_exclude(User * u, int ac, char **av)
 			rdb_query(QUERY_LOW,
 			          "UPDATE `%s` SET `ignore`=\'Y\' WHERE `uname`=\'%s\'",
 			          AliasesTable, u2 ? u2->sgroup : name);
-			DenoraFree(name);
+			free(name);
 		}
 		else
 		{
@@ -150,7 +150,7 @@ static int do_exclude(User * u, int ac, char **av)
 				 "INSERT IGNORE INTO %s SET uname=\'%s\', chan=\'global\', type=%i;",
 				 UStatsTable, u2 ? u2->sgroup : name, i);
 			}
-			DenoraFree(name);
+			free(name);
 		}
 		else
 		{
@@ -172,12 +172,12 @@ static int do_exclude(User * u, int ac, char **av)
 				{
 					if (!isdigit(*s))
 					{
-						DenoraFree(tmp);
+						free(tmp);
 						return MOD_CONT;
 					}
 				}
 				from = atoi(tmp);
-				DenoraFree(tmp);
+				free(tmp);
 				tmp = myStrGetTokenRemainder(av[1], '-', 1);    /* Read TO out */
 				if (!tmp)
 				{
@@ -187,12 +187,12 @@ static int do_exclude(User * u, int ac, char **av)
 				{
 					if (!isdigit(*s))
 					{
-						DenoraFree(tmp);
+						free(tmp);
 						return MOD_CONT;
 					}
 				}
 				to = atoi(tmp);
-				DenoraFree(tmp);
+				free(tmp);
 			}
 		}
 

@@ -188,7 +188,7 @@ void process()
 			s = strpbrk(buf, " ");
 			if (!s)
 			{
-				DenoraFree(p10token);
+				free(p10token);
 				return;
 			}
 			*s = 0;
@@ -196,7 +196,7 @@ void process()
 			strlcpy(source, buf, sizeof(source));
 			memmove(buf, s, strlen(s) + 1);
 		}
-		DenoraFree(p10token);
+		free(p10token);
 	}
 	else
 	{
@@ -223,7 +223,8 @@ void process()
 		s = buf + strlen(buf);
 	strlcpy(cmd, buf, sizeof(cmd));
 	ac = split_buf(s, &av);
-	DenoraFree(mod_current_buffer);
+	if (mod_current_buffer)
+		free(mod_current_buffer);
 	/* fix to moduleGetLastBuffer() bug 296 */
 	/* old logic was that since its meant for PRIVMSG that we would get
 	   the NICK as AV[0] and the rest would be in av[1], however on Bahamut
@@ -299,7 +300,8 @@ void process()
 	handleModuleOperationQueue();
 
 	/* Free argument list we created */
-	DenoraFree(av);
+	if (av)
+		free(av);
 }
 
 /*************************************************************************/
@@ -923,7 +925,8 @@ static int parse_options(int ac, char **av)
 						return 0;
 					}
 				}
-				DenoraFree(RemoteServer);
+				if (RemoteServer)
+					free(RemoteServer);
 				RemoteServer = sstrdup(s);
 			}
 			else if (strcmp(value, "local") == 0)
@@ -948,7 +951,8 @@ static int parse_options(int ac, char **av)
 						return 0;
 					}
 				}
-				DenoraFree(LocalHost);
+				if (LocalHost)
+					free(LocalHost);
 				LocalHost = sstrdup(s);
 			}
 			else if (strcmp(value, "name") == 0)
@@ -958,7 +962,8 @@ static int parse_options(int ac, char **av)
 					fprintf(stderr, "-name requires a parameter\n");
 					return 0;
 				}
-				DenoraFree(ServerName);
+				if (ServerName)
+					free(ServerName);
 				ServerName = sstrdup(av[i]);
 			}
 			else if (strcmp(value, "desc") == 0)
@@ -968,7 +973,8 @@ static int parse_options(int ac, char **av)
 					fprintf(stderr, "-desc requires a parameter\n");
 					return 0;
 				}
-				DenoraFree(ServerDesc);
+				if (ServerDesc)
+					free(ServerDesc);
 				ServerDesc = sstrdup(av[i]);
 			}
 			else if (strcmp(value, "user") == 0)
@@ -978,7 +984,8 @@ static int parse_options(int ac, char **av)
 					fprintf(stderr, "-user requires a parameter\n");
 					return 0;
 				}
-				DenoraFree(ServiceUser);
+				if (ServiceUser)
+					free(ServiceUser);
 				ServiceUser = sstrdup(av[i]);
 			}
 			else if (strcmp(value, "host") == 0)
@@ -988,7 +995,8 @@ static int parse_options(int ac, char **av)
 					fprintf(stderr, "-host requires a parameter\n");
 					return 0;
 				}
-				DenoraFree(ServiceHost);
+				if (ServiceHost)
+					free(ServiceHost);
 				ServiceHost = sstrdup(av[i]);
 			}
 			else if (strcmp(value, "dir") == 0)
@@ -1100,8 +1108,8 @@ static int parse_options(int ac, char **av)
 				fprintf(stderr, "Unknown option -%s\n", value);
 				return 0;
 			}
-			DenoraFree(extra);
-			DenoraFree(value);
+			free(extra);
+			free(value);
 		}
 		else
 		{

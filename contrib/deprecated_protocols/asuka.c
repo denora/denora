@@ -233,7 +233,7 @@ int denora_event_nick(char *source, int ac, char **av)
 		                && isaccount) ? hhostbuf : NULL, (char *) uid,
 		               strtoul(av[1], NULL, 10), modes, (char *) account);
 
-		DenoraFree(ipchar);
+		free(ipchar);
 	}
 	else
 	{
@@ -242,7 +242,7 @@ int denora_event_nick(char *source, int ac, char **av)
 		        NULL, strtoul(av[1], NULL, 10), 0, NULL, NULL, NULL, 0,
 		        NULL, NULL);
 	}
-	DenoraFree(temp);
+	free(temp);
 	return MOD_CONT;
 }
 
@@ -934,8 +934,8 @@ void asuka_cmd_pong(char *servname, char *who)
 
 	SET_SEGV_LOCATION();
 
-	DenoraFree(s);
-	DenoraFree(t);
+	free(s);
+	free(t);
 }
 
 /*************************************************************************/

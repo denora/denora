@@ -241,7 +241,7 @@ int denora_event_nick(char *source, int ac, char **av)
 		user = do_nick(source, av[0], av[4], av[5], av[7], av[9],
 		               strtoul(av[2], NULL, 10), 0, ipchar, av[6], NULL,
 		               strtoul(av[1], NULL, 10), av[3], NULL);
-		DenoraFree(ipchar);
+		free(ipchar);
 	}
 	else
 	{

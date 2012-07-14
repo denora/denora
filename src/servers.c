@@ -286,8 +286,8 @@ void sql_motd_store(Server * s)
 	rdb_query(QUERY_LOW,
 	          "UPDATE %s SET motd=\'%s\' WHERE server=\'%s\'",
 	          ServerTable, string, source);
-	DenoraFree(source);
-	DenoraFree(string);
+	free(source);
+	free(string);
 }
 
 /*************************************************************************/
@@ -559,8 +559,8 @@ Server *do_server(const char *source, char *servername, char *hops,
 				 (long int) serv->ss->lastseen);
 			}
 		}
-		DenoraFree(descript);
-		DenoraFree(sqluplinkserver);
+		free(descript);
+		free(sqluplinkserver);
 		servid = db_getserver(servername);
 		serv->sqlid = servid;
 
@@ -587,7 +587,8 @@ Server *do_server(const char *source, char *servername, char *hops,
 						{
 							ircsnprintf(mbuf, NET_BUFSIZE - 1, "%s\n\r%s",
 							            serv->motd, buf);
-							DenoraFree(serv->motd);
+							if (serv->motd)
+								free(serv->motd);
 							serv->motd = sstrdup(mbuf);
 						}
 						else
@@ -600,7 +601,7 @@ Server *do_server(const char *source, char *servername, char *hops,
 				}
 			}
 		}
-		DenoraFree(servername);
+		free(servername);
 	}
 
 	SET_SEGV_LOCATION();
@@ -608,7 +609,8 @@ Server *do_server(const char *source, char *servername, char *hops,
 	{
 		db_cleanserver();
 	}
-	DenoraFree(uplinkserver);
+	if (uplinkserver)
+		free(uplinkserver);
 	SET_SEGV_LOCATION();
 	do_checkservsmax();
 	return serv;
@@ -673,7 +675,7 @@ void server_store_pong(char *source, uint32 ts)
 			 "UPDATE %s SET ping=%d, highestping=%d, maxpingtime=%ld, lastpingtime=%ld WHERE servid=%d",
 			 ServerTable, s->ping, s->ss->highestping,
 			 (long int) s->ss->maxpingtime, s->lastping, servid);
-			DenoraFree(serv);
+			free(serv);
 		}
 	}
 }
@@ -1025,7 +1027,7 @@ void delete_server(Server * serv, const char *quitreason, int depth)
 		i = 0;
 		ARRAY_FOREACH(i, serv->slinks)
 		{
-			DenoraFree(serv->slinks[i]);
+			free(serv->slinks[i]);
 			ARRAY_REMOVE(serv->slinks, i);
 		}
 		alog(LOG_DEBUG, "debug: Reached the end of the loop");
@@ -1042,9 +1044,12 @@ void delete_server(Server * serv, const char *quitreason, int depth)
 	serv->ss->split_stats = 1;
 	serv->ss->lastseen = time(NULL);
 
-	DenoraFree(serv->desc);
-	DenoraFree(serv->version);
-	DenoraFree(serv->suid);
+	if (serv->desc)
+		free(serv->desc);
+	if (serv->version)
+		free(serv->version);
+	if (serv->suid)
+		free(serv->suid);
 	if (serv->prev)
 		serv->prev->next = serv->next;
 	if (serv->next)
@@ -1064,7 +1069,7 @@ void delete_server(Server * serv, const char *quitreason, int depth)
 					alog(LOG_DEBUG,
 					     "Removed %s from it's parents list of children",
 					     serv->name);
-					DenoraFree(serv->uplink->slinks[i]);
+					free(serv->uplink->slinks[i]);
 					ARRAY_REMOVE(serv->uplink->slinks, i);
 				}
 			}
@@ -1228,8 +1233,8 @@ void sql_do_uptime(char *source, char *uptime)
 			else
 			{
 				alog(LOG_DEBUG, "Non-Standard Reply for UPTIME");
-				DenoraFree(tmp4);
-				DenoraFree(tmp);
+				free(tmp4);
+				free(tmp);
 				return;
 			}
 			tmp4 = NULL;
@@ -1246,23 +1251,28 @@ void sql_do_uptime(char *source, char *uptime)
 		hours = myStrGetToken(tmp4, ':', 0);
 		mins = myStrGetToken(tmp4, ':', 1);
 		secs = myStrGetToken(tmp4, ':', 2);
+		free(tmp4);
 	}
 
 	if (mins)
 	{
 		mins_int = atol(mins) * 60;
+		free(mins);
 	}
 	if (secs)
 	{
 		secs_int = atol(secs);
+		free(secs);
 	}
 	if (hours)
 	{
 		hours_int = atol(hours) * 3600;
+		free(hours);
 	}
 	if (days)
 	{
 		days_int = atol(days) * 86400;
+		free(days);
 	}
 
 	total = mins_int + secs_int + hours_int + days_int;
@@ -1276,12 +1286,8 @@ void sql_do_uptime(char *source, char *uptime)
 		s->uptime = total;
 	}
 
-	DenoraFree(days);
-	DenoraFree(hours);
-	DenoraFree(mins);
-	DenoraFree(secs);
-	DenoraFree(tmp);
-	DenoraFree(tmp4);
+	if (tmp)
+		free(tmp);
 	return;
 }
 
@@ -1302,8 +1308,8 @@ void sql_do_sdesc(char *user, char *msg)
 	msg = rdb_escape(msg);
 	rdb_query(QUERY_LOW, "UPDATE %s SET comment=\'%s\' WHERE servid=%d",
 	          ServerTable, msg, db_getservfromnick(user));
-	DenoraFree(user);
-	DenoraFree(msg);
+	free(user);
+	free(msg);
 }
 
 /*************************************************************************/
@@ -1315,7 +1321,8 @@ void server_set_desc(char *server, char *msg)
 
 	if (s)
 	{
-		DenoraFree(s->desc);
+		if (s->desc)
+			free(s->desc);
 		s->desc = sstrdup(msg);
 	}
 
@@ -1417,30 +1424,30 @@ void sql_do_server_version(char *server, int ac, char **av)
 	{
 		tmp2 = myStrGetToken(av[1], ' ', 0);
 		temp = sstrdup(tmp2);
-		DenoraFree(tmp2);
+		free(tmp2);
 		/* if you have NeoStats mods load they to will respond on VERSION saying they are a
 		   module */
 		if (!stricmp(temp, "MODULE"))
 		{
-			DenoraFree(temp);
+			free(temp);
 			return;
 			/* Atheme uses 351 to tell the user what os it was
 			   built on */
 		}
 		else if (!stricmp(temp, "Compile"))
 		{
-			DenoraFree(temp);
+			free(temp);
 			return;
 		}
 		else if (!stricmp(temp, "Compiled"))
 		{
-			DenoraFree(temp);
+			free(temp);
 			return;
 		}
 		else
 		{
 			version = sstrdup(temp);
-			DenoraFree(temp);
+			free(temp);
 		}
 	}
 
@@ -1470,9 +1477,9 @@ void sql_do_server_version(char *server, int ac, char **av)
 			          "UPDATE %s SET version=\'%s\' WHERE servid=%d",
 			          ServerTable, version, servid);
 		}
-		DenoraFree(sqlversion);
+		free(sqlversion);
 	}
-	DenoraFree(version);
+	free(version);
 }
 
 /*************************************************************************/
@@ -1497,7 +1504,7 @@ void sql_do_squit(char *server)
 		rdb_query(QUERY_LOW, "DELETE FROM %s WHERE server=\'%s\'",
 		          ServerTable, server);
 	}
-	DenoraFree(server);
+	free(server);
 }
 
 /*************************************************************************/
@@ -1564,7 +1571,7 @@ void capab_parse(int ac, char **av)
 
 		if (!s)
 		{
-			DenoraFree(tmp);
+			free(tmp);
 			continue;
 		}
 
@@ -1581,8 +1588,8 @@ void capab_parse(int ac, char **av)
 				ircd->nickchars = sstrdup(tmp);
 		}
 
-		DenoraFree(s);
-		DenoraFree(tmp);
+		free(s);
+		free(tmp);
 	}
 }
 
