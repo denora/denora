@@ -521,7 +521,6 @@ void denora_cmd_ctcp(char *source, char *dest, const char *fmt, ...)
 
 	ircdproto.ircd_cmd_ctcp(source, dest, s);
 	free(s);
-	free(buf);
 }
 
 /*************************************************************************/

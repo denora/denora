@@ -1,0 +1,32 @@
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+
+ DENORA Module
+ www.denorastats.org
+
+         Name: unreal_kline
+  Description: Get the ports of the servers
+      Version: 1.1.1
+ Requirements: Denora 1.2+	  
+         IRCd: UnrealIRCd
+       Author: Trystan
+    Copyright: 2006-2009 Trystan
+      License: GPLv2
+   Disclaimer: No warranties, use at your own risk!
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+
+
++------------+
+ INSTALLATION
++------------+
+1. Place unreal_kline.c in src/modules
+2. In the Denora root (outside src/) type "make modules"
+3. Type "make install"
+4. In IRC, login to your StatServ and type "MODLOAD unreal_kline"
+5. Edit your denora.conf and at the bottom of the 'modules' block, add this line:
+       delayed unreal_kline;
+
++---------+
+ CHANGELOG
++---------+
+v1.1.1 - 23.08.2009
+  F Fixed strict/ansi compilation warnings
+v1.1.0 - 30.07.2006
+  A First release

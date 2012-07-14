@@ -1,0 +1,32 @@
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+
+ DENORA Module
+ www.denorastats.org
+
+         Name: log_ctcpversion
+  Description: Logs CTCP version replies to a channel
+      Version: 1.0.1
+ Requirements: Denora 1.4+	  
+         IRCd: all
+       Author: Jobe (jobe@mdbnet.co.uk)
+    Copyright: 2008-2009 Jobe
+      License: GPLv2
+   Disclaimer: No warranties, use at your own risk!
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+
+
++------------+
+ INSTALLATION
++------------+
+1. Place log_ctcpversion.c in src/modules
+2. In the Denora root (outside src/) type "make modules"
+3. Type "make install"
+4. In IRC, login to your StatServ and type "MODLOAD log_ctcpversion"
+5. Edit your denora.conf and at the bottom of the 'modules' block, add this line:
+       delayed log_ctcpversion;
+
++---------+
+ CHANGELOG
++---------+
+v1.0.1 - 23.08.2009
+  F Fixed strict/ansi compilation warnings
+v1.0.0 - 28.02.2008
+  A First release

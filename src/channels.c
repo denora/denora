@@ -493,6 +493,13 @@ void chan_deluser(User * user, Channel * c)
 
 	/* for (u = c->users; u && u->user != user; u = u->next); */
 
+	if (!c->users)
+	{
+		/* TODO: Fix this corruption */
+		alog(LOG_DEBUG, "dbg: Channel %s seems to have no users.",c->name);
+		return;
+	}
+
         u = c->users;
 
 	if (u && u->user != user)

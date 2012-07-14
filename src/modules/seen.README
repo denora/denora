@@ -1,0 +1,126 @@
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+
+ DENORA Module
+ www.denorastats.org
+
+         Name: seen
+  Description: Adds a !seen command
+      Version: 1.2.1
+ Requirements: Denora 1.4.3+	  
+         IRCd: all
+       Author: Hal9000 (hal9000@denorastats.org)
+    Copyright: 2006-2009 Hal9000
+      License: GPLv2
+   Disclaimer: No warranties, use at your own risk!
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+
+
++------------+
+ INSTALLATION
++------------+
+1. Place seen.c in src/modules
+2. In the Denora root (outside src/) type "make modules"
+3. Type "make install"
+
++-------------+
+ CONFIGURATION
++-------------+
+1. In IRC, login to your StatServ and type "MODLOAD seen"
+2. Enable the fantasy commands in StatServ:
+   /msg StatServ CHANSTATS SET FANTASY NOTICE
+   or
+   /msg StatServ CHANSTATS SET FANTASY ON
+3. IMPORTANT: open your denora.conf and make the following changes:
+   - Change the 'usercache' and 'servercache' parameters to a higher value,
+     such as 15 days (15d), to keep information for a longer time.
+     IMPORTANT: servercache must be NOT smaller than usercache!
+       usercache 15d;
+       servercache 30d;
+   - Enable the 'keepusers' and 'keepservers' parameters by removing the '#' in front:
+       keepusers;
+       keepservers;
+   - At the bottom of the 'modules' block, add this line:
+       delayed seen;
+4. If you are using Anope Services 1.7+, you might want to remove the bs_fantasy_seen module from
+   the configuration file (recent versions) or use the bs_removeseen module (older versions)
+
++-----+
+ USAGE
++-----+
+In channel :  !seen [nickname|user|nick@host|nick!ident@host]
+In query   :  /msg StatServ SEEN [nickname|user|nick@host|nick!ident@host]
+Wildcards (*) are supported!
+("!" is the default trigger and StatServ is the default nickname for Denora.
+ If you have a different configuration, that one applies)
+
++---------+
+ CHANGELOG
++---------+
+v1.2.1 - 26.08.2009
+  F Ignore users with +Q/+I under inspircd
+v1.2.0 - 23.08.2009
+  F Fixed strict/ansi compilation warnings
+  F Now compiles under Windows
+v1.1.0 - 27.02.2009
+  A Adaptations to Denora's improved nick tracking system
+v1.0.2 - 05.02.2008
+  A Added Russian Language
+  F Fixed Denora version detection
+v1.0.1 - 30.08.2007
+  A Added Spanish language translation (provided by DrStein)
+  F Fixes to German language
+v1.0.0 - 18.08.2007
+  F Fixed ison table not being taken from config
+  A Complain about missing mysql or incompatible Denora
+  F Fixed strict compilation warnings
+v0.9.2 - 09.05.2007
+  F Fixed problem with hostnames on newer svn revs
+v0.9.1 - 06.01.2007
+  F Now works on Denora 1.3 SVN as well
+  A Added Dutch language (thanks OUTsider)
+  A Some code improvements (thanks OUTsider)
+v0.9.0 - 13.11.2006
+  A Don't care about chanstats ignore anymore
+  A Major code rewrite and cleanup
+  F Users without chanstats are returned as well now
+v0.8.0 - 21.09.2006
+  A Added /msg support
+  F Configured trigger is shown in syntax help
+  A Single result instead of three (Denora has got better nick tracking)
+  U Updated README file to point out some stuff
+v0.7.4 - 24.07.2006
+  F Improved compatibility with ircds
+  F Updated required Denora configuration settings in README
+v0.7.3 - 13.07.2006
+  U Updated README for Denora SVN revision >= 624
+  F Files now are in UNIX format
+  F Tiny include fix
+v0.7.2 - 16.06.2006
+  F Fixed strict compiler warnings and made code ansi compilant (gcc 3.3.5)
+  U Updated README file and moved changelog out of seen.c
+v0.7.1 - 15.06.2006
+  F Updated to work with Denora rev. 612 upwards
+v0.7.0 - 09.05.2006
+  A Should now support all ircds
+v0.6.0 - 29.03.2006
+  A Added support for quit messages
+  A Improved responses
+v0.5.0 - 14.02.2006
+  F Input is now being escaped for SQL
+  A Added support for custom tables
+  A Now supports nick tracking and nick ignoring via alias table
+  A Added French language (provided by meepmeep)
+v0.4.0 - 08.02.2006
+  F Fixed +s/+A channels being shown
+  F Fixed crashbug when using " character
+  A Now showing how long users have been online/offline
+  A Now following denora's language setting
+  A Channels the user is in are shown
+  A Times displayed in a friendlier format
+  A Online now shows connect time
+  F Fixed wrong online interpretation in rare cases
+v0.3.0 - 06.02.2006
+  A Language strings configurable
+  A Added support for privmsg reply
+v0.2.0 - 05.02.2006
+  A Added support for input in mask format
+v0.1.0 - 05.02.2006
+  A First version

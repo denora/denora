@@ -3,6 +3,7 @@ Denora v1.5.0-git
 -------------
 
 Additions
+12/07/14 Moved modules from separate modules git into this one and fixed their warnings
 12/07/09 Don't use adns if getaddrinfo is available (adns has no ipv6 support)
 12/06/12 Added channelmode +R to scarynet
 12/04/20 Added country lookup for servers to support #46@magirc

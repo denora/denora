@@ -1,0 +1,64 @@
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+
+ DENORA Module
+ www.denorastats.org
+
+         Name: lastspoke
+  Description: Adds a !lastspoke command
+      Version: 1.2.1
+ Requirements: Denora 1.4.3+	  
+         IRCd: all
+       Author: Hal9000 (hal9000@denorastats.org)
+    Copyright: 2006-2009 Hal9000
+      License: GPLv2
+   Disclaimer: No warranties, use at your own risk!
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+
+
++------------+
+ INSTALLATION
++------------+
+1. Place lastspoke.c in src/modules
+2. In the Denora root (outside src/) type "make modules"
+3. Type "make install"
+
++-------------+
+ CONFIGURATION
++-------------+
+1. In IRC, login to your StatServ and type "MODLOAD lastspoke"
+2. Enable the fantasy commands in StatServ:
+   /msg StatServ CHANSTATS SET FANTASY NOTICE
+   or
+   /msg StatServ CHANSTATS SET FANTASY ON
+3. IMPORTANT: open your denora.conf and make the following changes:
+   - Change the 'usercache' and 'servercache' parameters to a higher value,
+     such as 15 days (15d), to keep information for a longer time.
+     IMPORTANT: servercache must be NOT smaller than usercache!
+       usercache 15d;
+       servercache 30d;
+   - Enable the 'keepusers' and 'keepservers' parameters by removing the '#' in front:
+       keepusers;
+       keepservers;
+   - At the bottom of the 'modules' block, add this line:
+       delayed lastspoke;
+
++-----+
+ USAGE
++-----+
+In channel :  !lastspoke [nickname|user|nick@host|nick!ident@host]
+In query   :  /msg StatServ LASTSPOKE [nickname|user|nick@host|nick!ident@host]
+Wildcards (*) are supported!
+("!" is the default trigger and StatServ is the default nickname for Denora.
+ If you have a different configuration, that one applies)
+
++---------+
+ CHANGELOG
++---------+
+v1.2.1 - 26.08.2009
+  F Ignore users with +Q/+I under inspircd
+v1.2.0 - 23.08.2009
+  F Fixed strict/ansi compiler warnings
+  F Now compiles under Windows
+v1.1.0 - 27.02.2009
+  A Adaptations to Denora's improved nick tracking system
+  F Fixed result sorting not returning best possible record
+v0.9.0 - 30.08.2007
+  A Initial version
