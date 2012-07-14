@@ -416,7 +416,7 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
 	/* we get the current sgroup or uname from aliases */
 	if (u && u->sgroup)
 	{
-		uname = u->sgroup;
+		uname = sstrdup(u->sgroup);
 		alog(LOG_DEBUG, "We will use u->sgroup which is %s", uname);
 	}
 	else

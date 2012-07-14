@@ -223,8 +223,11 @@ void process()
 		s = buf + strlen(buf);
 	strlcpy(cmd, buf, sizeof(cmd));
 	ac = split_buf(s, &av);
+/* Doesn't seem to work */
+/*
 	if (mod_current_buffer)
 		free(mod_current_buffer);
+*/
 	/* fix to moduleGetLastBuffer() bug 296 */
 	/* old logic was that since its meant for PRIVMSG that we would get
 	   the NICK as AV[0] and the rest would be in av[1], however on Bahamut

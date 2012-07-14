@@ -695,13 +695,16 @@ int denora_event_topic(char *source, int ac, char **av)
 	u = find_byuid(source);
 	s = server_find(source);
 
-	newav[0] = av[0]; /* channel */
+	newav[0] = sstrdup(av[0]); /* channel */
 	newav[1] = (u ? (char *)u->nick : (s ? (char *)s->name : (char *)"Unknown")); /* topic setter */
-	newav[2] = av[1]; /* ts */
-	newav[3] = av[ac - 1]; /* topic */
+	newav[2] = sstrdup(av[1]); /* ts */
+	newav[3] = sstrdup(av[ac - 1]); /* topic */
 	newav[4] = '\0';
 
 	do_topic(4, newav);
+	free(newav[0]);
+	free(newav[3]);
+	free(newav[4]);
 	return MOD_CONT;
 }
 
@@ -741,9 +744,15 @@ int denora_event_quit(char *source, int ac, char **av)
 		u = find_byuid(source);
 
 		if (killer)
+		{
 			m_kill(killer, (u ? u->nick : source), msg);
+			free(killer);
+		}
 		else
 			m_kill((u ? u->nick : source), (u ? u->nick : source), msg);
+
+		if (msg)
+			free(msg);
 	}
 	return MOD_CONT;
 }
@@ -771,11 +780,11 @@ int denora_event_mode(char *source, int ac, char **av)
 
 	if (!u)
 	{
-		sender = source;
+		sender = sstrdup(source);
 	}
 	else
 	{
-		sender = u->nick;
+		sender = sstrdup(u->nick);
 	}
 
 	if (*av[0] == '#' || *av[0] == '&')
@@ -786,7 +795,7 @@ int denora_event_mode(char *source, int ac, char **av)
 	{
 		s = server_find(source);
 		if (s)
-			sender = av[0];
+			sender = sstrdup(av[0]);
 		do_umode(sender, ac, av);
 		if (strcmp(av[1], "x") != -1)
 		{
@@ -801,6 +810,8 @@ int denora_event_mode(char *source, int ac, char **av)
 			}
 		}
 	}
+	if (sender)
+		free(sender);
 	return MOD_CONT;
 }
 
@@ -862,11 +873,15 @@ int denora_event_create(char *source, int ac, char **av)
 
 	do_join(source, ac, av);
 
-	newav[0] = av[0];
-	newav[1] = (char *) "+o";
-	newav[2] = source;
+	newav[0] = sstrdup(av[0]);
+	newav[1] = sstrdup("+o");
+	newav[2] = sstrdup(source);
 
 	do_cmode(source, 3, newav);
+
+	free(newav[0]);
+	free(newav[1]);
+	free(newav[2]);
 
 	return MOD_CONT;
 }
@@ -1093,6 +1108,7 @@ void scarynet_cmd_pong(char *servname, char *who)
 	uint32 ts, tsnow, value;
 	t = myStrGetToken(who, '!', 1);
 	s = myStrGetToken(t, '.', 0);
+	free(t);
 	if (!s)
 	{
 		ts = 0;
@@ -1100,6 +1116,7 @@ void scarynet_cmd_pong(char *servname, char *who)
 	else
 	{
 		ts = strtol(s, NULL, 10);
+		free(s);
 	}
 	tsnow = time(NULL);
 	value = tsnow - ts;
@@ -1109,8 +1126,6 @@ void scarynet_cmd_pong(char *servname, char *who)
 	}
 	send_cmd(p10id, "Z %s %ld %ld %ld %s", p10id, (long int) ts,
 	         (long int) tsnow, (long int) value, militime_float(NULL));
-	free(s);
-	free(t);
 }
 
 void scarynet_cmd_bot_nick(char *nick, char *user, char *host, char *real,

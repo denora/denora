@@ -180,16 +180,19 @@ char *do_seen(User * u, char *target)
 	for (i = 0; sqltarget[i]; i++)
 	    if (sqltarget[i] == '*')
 	        sqltarget[i] = '%';
+
 	seenhost = myStrGetToken(sqltarget, '@', 1);
 	split1 = myStrGetToken(sqltarget, '@', 0);
 	seennick = myStrGetToken(split1, '!', 0);
 	seenuname = myStrGetToken(split1, '!', 1);
+	free(split1);
+
 	if (seenhost == NULL)
-	    seenhost = (char *) "%";
+	    seenhost = sstrdup("%");
 	if (seennick == NULL)
-	    seennick = (char *) "%";
+	    seennick = sstrdup("%");
 	if (seenuname == NULL)
-	    seenuname = (char *) "%";
+	    seenuname = sstrdup("%");
 	free(sqltarget);
 	
 	if (!strcmp(seennick, "%")) {
@@ -214,6 +217,7 @@ char *do_seen(User * u, char *target)
 	          AliasesTable, UserTable, seenuname, UserTable, seenhost,
 	          UserTable, seenhost, UserTable, ServerTable, ServerTable, UserTable);
 		mysql_res = mysql_store_result(mysql);
+		free(uname);
 	} else {
 		rdb_query(QUERY_LOW,
 	          "SELECT %s.nickid, %s.nick, %s.hostname, %s.hiddenhostname, %s.username, UNIX_TIMESTAMP(%s.connecttime), %s.away, %s.awaymsg, %s.online, UNIX_TIMESTAMP(%s.lastquit), %s.lastquitmsg FROM %s,%s WHERE %s.nick LIKE \"%s\" AND %s.username LIKE \"%s\" AND (%s.hostname LIKE \"%s\" OR %s.hiddenhostname LIKE \"%s\") AND %s.server = %s.server AND %s.uline = \"0\" ORDER BY online,lastquit DESC, %s.connecttime ASC LIMIT 1;",
@@ -330,17 +334,6 @@ char *do_seen(User * u, char *target)
 	}
 	SET_SEGV_LOCATION();
 	mysql_free_result(mysql_res);
-
-	if (split1)
-		free(split1);
-	if (seenhost)
-		free(seenhost);
-	if (seennick)
-		free(seennick);
-	if (seenuname)
-		free(seenuname);
-	if (uname)
-		free(uname);
 
 	return message;
 }

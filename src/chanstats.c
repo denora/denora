@@ -535,7 +535,7 @@ static int check_db(User * u, Channel * c)
 	if (u->cstats == 0)
 	{
 		rdb_query(QUERY_HIGH,
-		          "SELECT uname,`ignore` FROM %s WHERE uname=\'%s\';",
+		          "SELECT `uname`,`ignore` FROM %s WHERE uname=\'%s\';",
 		          AliasesTable, u->sqlnick);
 		mysql_res = mysql_store_result(mysql);
 		if (mysql_res)
@@ -563,6 +563,7 @@ static int check_db(User * u, Channel * c)
 				/* user already had a stats user, so we'll take that one */
 				alog(LOG_DEBUG, "Replacing sgroup %s with last used %s",
 				     u->sgroup, u->lastuname);
+				free(u->sgroup);
 				u->sgroup = sstrdup(u->lastuname);
 				free(u->lastuname);
 				u->lastuname = NULL;
@@ -634,7 +635,7 @@ static int check_db(User * u, Channel * c)
 		}
 		rdb_query
 		(QUERY_HIGH,
-		 "SELECT uname FROM %s WHERE uname=\'%s\' AND chan=\'%s\';",
+		 "SELECT `uname` FROM %s WHERE `uname`=\'%s\' AND `chan`=\'%s\';",
 		 UStatsTable, u->sgroup, c->sqlchan);
 		mysql_res = mysql_store_result(mysql);
 		if (mysql_res)
