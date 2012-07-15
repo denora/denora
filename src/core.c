@@ -330,7 +330,8 @@ int match_usermask(const char *mask, User * user)
 		             || match_wild_nocase(host, user->vhost));
 	}
 	free(username);
-	free(host);
+	if (host)
+		free(host);
 	free(mask2);
 	return result;
 }
