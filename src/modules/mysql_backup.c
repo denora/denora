@@ -23,7 +23,7 @@ void do_mysql_backup(char *table, char *output);
 int DenoraInit(int argc, char **argv)
 {
 	EvtHook *hook;
-#if defined(USE_MYSQL) && defined(HAVE_FNMATCH)
+#ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
 #endif
 
@@ -42,7 +42,7 @@ int DenoraInit(int argc, char **argv)
 		return MOD_STOP;
 	}
 
-#if defined(USE_MYSQL) && defined(HAVE_FNMATCH)
+#ifdef USE_MYSQL
 	/* Check if we have the FILE privilege if not, bail out */
         rdb_query(QUERY_HIGH, "SHOW GRANTS;");
 	mysql_res = mysql_store_result(mysql);
@@ -54,10 +54,6 @@ int DenoraInit(int argc, char **argv)
 			alog(LOG_NORMAL, "You do not have FILE privileges enabled. Disabling module");
 			mysql_free_result(mysql_res);
 			return MOD_STOP;
-		}
-		else
-		{
-			alog(LOG_NORMAL, "FILE permissions present reading %s", rdb_escape(mysql_row[0]));
 		}
 		mysql_free_result(mysql_res);
 	}

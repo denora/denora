@@ -148,6 +148,7 @@ int do_msg_seen(User * u, int argc, char **argv)
  **/
 char *do_seen(User * u, char *target)
 {
+#ifdef USE_MYSQL
 	char *split1 = NULL;
 	char *seenhost = NULL;
 	char *seennick = NULL;
@@ -155,10 +156,10 @@ char *do_seen(User * u, char *target)
 	struct tm tm;
 	char buf[255];
 	int i;
-	MYSQL_RES *mysql_res;
 	char *sqltarget;
 	char usrchans[1024] = "\0";
 	time_t tsnow = time(NULL);
+	MYSQL_RES *mysql_res;
 	MYSQL_RES *mysql_res2;
 	MYSQL_ROW mysql_row2;
 	char cmodep[32] = "\0";
@@ -216,7 +217,9 @@ char *do_seen(User * u, char *target)
 	          AliasesTable, uname, UserTable,
 	          AliasesTable, UserTable, seenuname, UserTable, seenhost,
 	          UserTable, seenhost, UserTable, ServerTable, ServerTable, UserTable);
+#ifdef USE_MYSQL
 		mysql_res = mysql_store_result(mysql);
+#endif
 		free(uname);
 	} else {
 		rdb_query(QUERY_LOW,
@@ -228,7 +231,6 @@ char *do_seen(User * u, char *target)
 	          UserTable, seenhost, UserTable, ServerTable, ServerTable, UserTable);
 		mysql_res = mysql_store_result(mysql);
 	}
-
 	if (mysql_num_rows(mysql_res) > 0) {
 	    SET_SEGV_LOCATION();
 	    while ((mysql_row = mysql_fetch_row(mysql_res)) != NULL) {
@@ -334,8 +336,10 @@ char *do_seen(User * u, char *target)
 	}
 	SET_SEGV_LOCATION();
 	mysql_free_result(mysql_res);
-
 	return message;
+#else
+	return;
+#endif
 }
 
 char *get_timestring(User * u, int timestamp)

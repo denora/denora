@@ -108,6 +108,7 @@ int my_squit(int argc, char **argv)
 
 void create_table(void)
 {
+#ifdef USE_MYSQL
     MYSQL_RES *mysql_res;
 
 	rdb_query(QUERY_LOW, "SHOW TABLES LIKE '%s';", SERVPORTTABLE);
@@ -116,6 +117,7 @@ void create_table(void)
         rdb_query(QUERY_LOW, "CREATE TABLE %s ( id mediumint(15) NOT NULL auto_increment, name varchar(255), portnum varchar(255), porttype varchar(255), PRIMARY KEY (id) );", SERVPORTTABLE);
     }
     mysql_free_result(mysql_res);
+#endif
 }
 
 int get_port(char *source, __attribute__((unused))int ac, char **av)

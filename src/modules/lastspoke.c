@@ -148,6 +148,7 @@ int do_msg_lastspoke(User * u, int argc, char **argv)
  **/
 char *do_lastspoke(User * u, char *target)
 {
+#ifdef USE_MYSQL
 	char *split1 = NULL;
 	char *lastspokehost = NULL;
 	char *lastspokenick = NULL;
@@ -311,6 +312,9 @@ char *do_lastspoke(User * u, char *target)
 		free(uname);
 
 	return message;
+#else
+	return;
+#endif
 }
 
 char *get_timestring(User * u, int timestamp)
