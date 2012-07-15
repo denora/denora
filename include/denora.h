@@ -64,6 +64,10 @@
 #include <signal.h>              /* Include signal header                */
 #endif				 /* end if                               */
 
+#ifdef HAVE_FNMATCH
+#include <fnmatch.h>
+#endif
+
 #ifdef HAVE_POLL_H
 #include <poll.h>
 #endif				/* end if                               */

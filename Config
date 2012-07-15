@@ -387,7 +387,7 @@ while [ $ok -lt 1 ] ; do
         fi
         case $INPUT in
                 n*|N*)
-			REGSCRIPT=
+			REGSCRIPT="no"
 			ok=1
 			;;
                 y*|Y*)
@@ -495,7 +495,6 @@ MYSQL="$MYSQL"
 REGSCRIPT="$REGSCRIPT"
 DMEMORY="$DMEMORY"
 ENCRYPT="$ENCRYPT"
-REGSCRIPT="$REGSCRIPT"
 EOT
 echo "done."
 

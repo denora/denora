@@ -14,6 +14,7 @@ Additions
 11/02/11 r416 Added support for ircd-rizon
 
 Changes
+12/07/15 File permission detection in mysql_backup.c (should fix #1127)
 12/07/15 Added automode for logchan in bahamut
 12/07/15 Adding automode for logchan in inspircd12.c (should fix #1418)
 12/07/15 Don't init something to NULL after free if you gonna sstrdup something over it anyways.
@@ -38,6 +39,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+12/07/15 Fixed double presence of REGSCRIPT in config.cache (fixes #1428)
 12/07/15 xmlrpc didn't like free(av) which caused #1128
 12/07/15 Fixed some memleaks in lastspoke.c and converted it to unix format
 12/07/09 More warning fixes

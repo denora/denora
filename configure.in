@@ -551,6 +551,7 @@ AC_CHECK_FUNCS(ntohl,AC_DEFINE(HAVE_NTOHL,1))
 AC_CHECK_FUNCS(inet_aton,AC_DEFINE([HAVE_INETATON], [1], [System supports inet_aton]))
 AC_CHECK_FUNCS(setrlimit,AC_DEFINE([HAVE_GETSETRLIMIT], [1], [System supports set/get/rlimit]))
 AC_CHECK_FUNCS(getrlimit,AC_DEFINE([HAVE_GETSETRLIMIT], [1], [System supports set/get/rlimit]))
+AC_CHECK_FUNCS(fnmatch, AC_DEFINE(HAVE_FNMATCH,1))
 
 AC_ARG_WITH(rungroup, [ --with-rungroup=group     Specify the rungroup for Denora], [ 
     AC_DEFINE_UNQUOTED(RUNGROUP,"$withval","Run group")

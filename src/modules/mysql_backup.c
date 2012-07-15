@@ -23,6 +23,9 @@ void do_mysql_backup(char *table, char *output);
 int DenoraInit(int argc, char **argv)
 {
 	EvtHook *hook;
+#if defined(USE_MYSQL) && defined(HAVE_FNMATCH)
+	MYSQL_RES *mysql_res;
+#endif
 
 	if (denora->debug >= 2)
 	{
@@ -33,13 +36,35 @@ int DenoraInit(int argc, char **argv)
 	moduleAddVersion("1.1");
 	moduleSetType(THIRD);
 
-	hook = createEventHook(EVENT_DB_BACKUP, do_sql_backup);
-	moduleAddEventHook(hook);
-
 	if (!denora->do_sql)
 	{
+		alog(LOG_NORMAL, "This module makes no sense if mysql ain't enabled");
 		return MOD_STOP;
 	}
+
+#if defined(USE_MYSQL) && defined(HAVE_FNMATCH)
+	/* Check if we have the FILE privilege if not, bail out */
+        rdb_query(QUERY_HIGH, "SHOW GRANTS;");
+	mysql_res = mysql_store_result(mysql);
+	if (mysql_res && mysql_num_rows(mysql_res))
+	{
+		mysql_row = mysql_fetch_row(mysql_res);
+		if (fnmatch("GRANT FILE ON *", rdb_escape(mysql_row[0]), NULL) == FNM_NOMATCH)
+		{
+			alog(LOG_NORMAL, "You do not have FILE privileges enabled. Disabling module");
+			mysql_free_result(mysql_res);
+			return MOD_STOP;
+		}
+		else
+		{
+			alog(LOG_NORMAL, "FILE permissions present reading %s", rdb_escape(mysql_row[0]));
+		}
+		mysql_free_result(mysql_res);
+	}
+#endif
+
+	hook = createEventHook(EVENT_DB_BACKUP, do_sql_backup);
+	moduleAddEventHook(hook);
 
 	return MOD_CONT;
 }
@@ -114,6 +139,11 @@ int do_sql_backup(__attribute__((unused))int argc, char **argv)
 #ifdef USE_MYSQL
 void do_mysql_backup(char *table, char *output)
 {
+	if (!denora->do_sql)
+	{
+		alog(LOG_ERROR, "SQL is disabled in the meantime, backup stopped");
+		return;
+	}
 	dbMySQLPrepareForQuery();
 	rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", table, output);
 	alog(LOG_NORMAL, "Backing up %s to '%s'", table, output);
