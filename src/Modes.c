@@ -285,11 +285,11 @@ void handle_ircop(int ac, char **av)
 		u = user_find(av[1]);
 		if (u)
 		{
-			if (!stricmp(av[0], MODE_ADD))
+			if (!stricmp(av[0], MODE_ADD) && !is_oper(u))
 			{
 				add_oper_count(u);
 			}
-			if (!stricmp(av[0], MODE_REMOVE))
+			if (!stricmp(av[0], MODE_REMOVE) && is_oper(u))
 			{
 				del_oper_count(u);
 			}
