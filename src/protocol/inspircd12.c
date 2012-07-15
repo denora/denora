@@ -843,13 +843,20 @@ void inspircd_cmd_pong(__attribute__((unused))char *servname, char *who)
 void inspircd_cmd_join(char *user, char *channel, time_t chantime)
 {
 	Uid *ud;
+	Channel *c;
+
 	ud = find_uid(user);
 
 	alog(LOG_PROTOCOL, "User %s joins %s at %ld", user, channel,
 	     (long int) chantime);
 	send_cmd(ud ? ud->uid : user, "JOIN %s", channel);
+
 	if (AutoOp && AutoMode && !started)
 	{
+		c = findchan(channel);
+		send_cmd(TS6SID, "FMODE %s %u %s %s", channel,
+			 (unsigned int) ((c) ? c->creation_time : time(NULL)), 
+			 AutoMode, ud ? ud->uid : user);
 		inspircd_cmd_mode(TS6SID, channel, AutoMode);
 	}
 }
