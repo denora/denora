@@ -13,6 +13,7 @@ Additions
 11/02/11 r416 Added support for ircd-rizon
 
 Changes
+12/07/15 Don't init something to NULL after free if you gonna sstrdup something over it anyways.
 12/07/15 More free/sstrdup usage / Cleaned up seen.c and made it ^M free
 12/07/14 Revoked change to DenoraFree() and removed that macro entirely
 12/07/09 Updated ScaryNet Protocol

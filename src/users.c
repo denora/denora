@@ -558,7 +558,6 @@ void change_user_host(char *source, char *host)
 	if (user->vhost)
 	{
 		free(user->vhost);
-		user->vhost = NULL;
 	}
 	user->vhost = sstrdup(host);
 
@@ -634,7 +633,6 @@ void change_user_realname(char *source, char *realname)
 	if (user->realname)
 	{
 		free(user->realname);
-		user->realname = NULL;
 	}
 	user->realname = sstrdup(realname);
 
@@ -688,7 +686,6 @@ void change_user_username(char *source, char *username)
 	if (user->username)
 	{
 		free(user->username);
-		user->username = NULL;
 	}
 	user->username = sstrdup(username);
 
