@@ -303,14 +303,8 @@ char *do_lastspoke(User * u, char *target)
 	}
 	SET_SEGV_LOCATION();
 	mysql_free_result(mysql_res);
-	if (lastspokehost)
-		free(lastspokehost);
 	if (lastspokenick)
 		free(lastspokenick);
-	if (lastspokeuname)
-		free(lastspokeuname);
-	if (sqltarget)
-		free(sqltarget);
 	if (usrchan)
 		free(usrchan);
 	if (uname)
