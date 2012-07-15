@@ -460,6 +460,8 @@ void bahamut_cmd_join(char *user, char *channel, time_t chantime)
 	{
 		send_cmd(ServerName, "SJOIN %ld %s +nt :%s", (long int) chantime,
 		         channel, user);
+		if (AutoOp && AutoMode)
+			bahamut_cmd_mode(ServerName, user, AutoMode);
 	}
 }
 
