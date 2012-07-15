@@ -315,6 +315,24 @@ Dadmin *next_admin(void)
 
 /*************************************************************************/
 
+static int is_md5(char *passwd)
+{
+	int count;
+	const char *ch;
+	const char *valid = "0123456789abcdefABCDEF";
+
+	if (strlen(passwd) != 32)
+		return 0;
+
+	for (count = 0;count < strlen(passwd);count++)
+	{
+		ch = &passwd[count];
+		if (strstr(valid, ch))
+			return 0;
+	}
+	return 1;
+}
+
 int add_sqladmin(char *name, char *passwd, int level, char *host, int lang)
 {
 
@@ -329,9 +347,18 @@ int add_sqladmin(char *name, char *passwd, int level, char *host, int lang)
 		return -1;
 	}
 
-	rdb_query(QUERY_LOW,
-	          "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', MD5('%s'), %d, '%s', %d)",
-	          AdminTable, name, passwd, level, host, lang);
+	if (is_md5(passwd))
+	{
+		rdb_query(QUERY_LOW,
+			  "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', '%s', %d, '%s', %d)",
+			  AdminTable, name, passwd, level, host, lang);
+	}
+	else
+	{
+		rdb_query(QUERY_LOW,
+		          "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', MD5('%s'), %d, '%s', %d)",
+		          AdminTable, name, passwd, level, host, lang);
+	}
 
 #ifdef USE_MYSQL
 	mysql_res = mysql_store_result(mysql);
@@ -390,10 +417,20 @@ void reset_sqladmin(void)
 		{
 			for (a = adminlists[i]; a; a = a->next)
 			{
-				rdb_query(QUERY_LOW,
-				          "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', MD5('%s'), %d, '%s', %d)",
-				          AdminTable, a->name, a->passwd, a->configfile,
-				          a->hosts[0], a->language);
+				if (is_md5(a->passwd))
+				{
+					rdb_query(QUERY_LOW,
+					          "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', '%s', %d, '%s', %d)",
+					          AdminTable, a->name, a->passwd, a->configfile,
+					          a->hosts[0], a->language);
+				}
+				else
+				{
+					rdb_query(QUERY_LOW,
+                                                  "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', MD5('%s'), %d, '%s', %d)",
+                                                  AdminTable, a->name, a->passwd, a->configfile,
+                                                  a->hosts[0], a->language);
+				}
 			}
 		}
 	}
