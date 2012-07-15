@@ -310,7 +310,8 @@ int match_usermask(const char *mask, User * user)
 	{
 		if (nick)
 			free(nick);
-		free(mask2);
+		if (mask2)
+			free(mask2);
 		return 0;
 	}
 	SET_SEGV_LOCATION();
@@ -330,7 +331,6 @@ int match_usermask(const char *mask, User * user)
 		             || match_wild_nocase(host, user->vhost));
 	}
 	free(username);
-	free(mask2);
 	return result;
 }
 
