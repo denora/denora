@@ -38,7 +38,6 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
-12/07/15 Hopefully fixed double oper counting (#1264)
 12/07/15 Fixed some memleaks in lastspoke.c and converted it to unix format
 12/07/09 More warning fixes
 12/07/08 Lots of changes in users.c/channels.c/ctcp.c
