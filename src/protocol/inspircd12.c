@@ -843,7 +843,7 @@ void inspircd_cmd_pong(__attribute__((unused))char *servname, char *who)
 void inspircd_cmd_join(char *user, char *channel, time_t chantime)
 {
 	Uid *ud;
-	Channel *c;
+	Channel *c,*c2;
 
 	ud = find_uid(user);
 
@@ -851,12 +851,12 @@ void inspircd_cmd_join(char *user, char *channel, time_t chantime)
 	     (long int) chantime);
 	send_cmd(ud ? ud->uid : user, "JOIN %s", channel);
 
-	if (AutoOp && AutoMode && !started)
+	if (AutoOp && AutoMode && LogChannel == channel)
 	{
 		c = findchan(channel);
 		send_cmd(TS6SID, "FMODE %s %u %s %s", channel,
-			 (unsigned int) ((c) ? c->creation_time : time(NULL)), 
-			 AutoMode, ud ? ud->uid : user);
+				 (unsigned int) ((c) ? c->creation_time : time(NULL)), 
+				 AutoMode, ud ? ud->uid : user);
 	}
 }
 
