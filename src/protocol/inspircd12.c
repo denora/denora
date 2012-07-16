@@ -857,7 +857,6 @@ void inspircd_cmd_join(char *user, char *channel, time_t chantime)
 		send_cmd(TS6SID, "FMODE %s %u %s %s", channel,
 			 (unsigned int) ((c) ? c->creation_time : time(NULL)), 
 			 AutoMode, ud ? ud->uid : user);
-		inspircd_cmd_mode(TS6SID, channel, AutoMode);
 	}
 }
 
