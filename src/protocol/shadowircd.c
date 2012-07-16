@@ -840,7 +840,7 @@ void shadowircd_cmd_mode(char *source, char *dest, char *buf)
     }
 }
 
-void shadowircd_cmd_tmode(char *source, char *dest, const char *fmt, ...)
+void shadowircd_cmd_tmode(__attribute__((unused))char *source, char *dest, const char *fmt, ...)
 {
     va_list args;
     char buf[BUFSIZE];
