@@ -843,7 +843,7 @@ void inspircd_cmd_pong(__attribute__((unused))char *servname, char *who)
 void inspircd_cmd_join(char *user, char *channel, time_t chantime)
 {
 	Uid *ud;
-	char *modes;
+	int i;
 
 	ud = find_uid(user);
 
@@ -853,13 +853,8 @@ void inspircd_cmd_join(char *user, char *channel, time_t chantime)
 
 	if (AutoOp && AutoMode && LogChannel == channel)
 	{
-		modes = sstrdup(AutoMode);
-		modes++; /* Skip the + */
-		while (*modes)
-		{
-			send_cmd(ud ? ud->uid : user, "MODE %s +%s %s", channel, *modes, ud ? ud->uid : user);
-			modes++;
-		}
+		for (i=1;i < strlen(AutoMode);i++)
+			send_cmd(ud ? ud->uid : user, "MODE %s +%s %s", channel, AutoMode[i], ud ? ud->uid : user);
 	}
 }
 
