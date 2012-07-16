@@ -40,8 +40,8 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
-12/07/16 Removed is_md5 (no longer need it) and properly fix #1174 using #ifdef HAVE_CRYPT
-12/07/15 Added is_md5() and used it to fix #1174 
+12/07/16 Removed is_md5 (no longer need it) and properly fix #1176 using #ifdef HAVE_CRYPT
+12/07/15 Added is_md5() and used it to fix #1176 
 12/07/15 Fixed double presence of REGSCRIPT in config.cache (fixes #1428)
 12/07/15 xmlrpc didn't like free(av) which caused #1128
 12/07/15 Fixed some memleaks in lastspoke.c and converted it to unix format
