@@ -856,7 +856,10 @@ void inspircd_cmd_join(char *user, char *channel, time_t chantime)
 		for (i=1;i < strlen(AutoMode);i++)
 		{
 			if (AutoMode[i])
+			{
+				alog(LOG_DEBUG, "debug: AutoMode[%d] equals %s",i,AutoMode[i]);
 				send_cmd(ud ? ud->uid : user, "MODE %s +%s %s", channel, AutoMode[i], ud ? ud->uid : user);
+			}
 		}
 	}
 }
