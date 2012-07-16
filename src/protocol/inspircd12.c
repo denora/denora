@@ -854,7 +854,10 @@ void inspircd_cmd_join(char *user, char *channel, time_t chantime)
 	if (AutoOp && AutoMode && LogChannel == channel)
 	{
 		for (i=1;i < strlen(AutoMode);i++)
-			send_cmd(ud ? ud->uid : user, "MODE %s +%s %s", channel, AutoMode[i], ud ? ud->uid : user);
+		{
+			if (AutoMode[i])
+				send_cmd(ud ? ud->uid : user, "MODE %s +%s %s", channel, AutoMode[i], ud ? ud->uid : user);
+		}
 	}
 }
 
