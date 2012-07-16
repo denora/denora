@@ -843,7 +843,7 @@ void inspircd_cmd_pong(__attribute__((unused))char *servname, char *who)
 void inspircd_cmd_join(char *user, char *channel, time_t chantime)
 {
 	Uid *ud;
-	Channel *c,*c2;
+	char *modes;
 
 	ud = find_uid(user);
 
@@ -853,10 +853,13 @@ void inspircd_cmd_join(char *user, char *channel, time_t chantime)
 
 	if (AutoOp && AutoMode && LogChannel == channel)
 	{
-		c = findchan(channel);
-		send_cmd(TS6SID, "FMODE %s %u %s %s", channel,
-				 (unsigned int) ((c) ? c->creation_time : time(NULL)), 
-				 AutoMode, ud ? ud->uid : user);
+		modes = sstrdup(AutoMode);
+		modes++; /* Skip the + */
+		while (*modes)
+		{
+			send_cmd(ud ? ud->uid : user, "MODE %s +%s %s", channel, *modes, ud ? ud->uid : user);
+			modes++;
+		}
 	}
 }
 
