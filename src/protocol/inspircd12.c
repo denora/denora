@@ -844,7 +844,7 @@ void inspircd_cmd_join(char *user, char *channel, time_t chantime)
 {
 	Uid *ud;
 	int i;
-	char *modes = sstrdup(AutoMode);
+	char buf[BUFSIZE];
 
 	ud = find_uid(user);
 
@@ -854,15 +854,12 @@ void inspircd_cmd_join(char *user, char *channel, time_t chantime)
 
 	if (AutoOp && AutoMode && LogChannel == channel)
 	{
-		for (i=1;i < strlen(modes);i++)
+		for (i=0;i < strlen(AutoMode)-1;i++)
 		{
-			if (modes[i])
-			{
-				alog(LOG_DEBUG,"modes %d is %s",i,modes[i]);
-				/* send_cmd(ud ? ud->uid : user, "MODE %s +%s %s", channel, modes[i], ud ? ud->uid : user); */
-			}
+			strlcat(buf, " ",sizeof(buf));
+			strlcat(buf, ud ? ud->uid : user, sizeof(buf));
 		}
-		free(modes);
+		send_cmd(ud ? ud->uid : user, "MODE %s %s%s", channel, AutoMode, buf);
 	}
 }
 
