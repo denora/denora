@@ -716,13 +716,22 @@ void hybrid_cmd_part(char *nick, char *chan, char *buf)
 
 int denora_event_ping(char *source, int ac, char **av)
 {
+	char buf[BUFSIZE];
+	int i;
+
+	*buf = '\0';
 	if (denora->protocoldebug)
 	{
 		protocol_debug(source, ac, av);
 	}
 	if (ac < 1)
 		return MOD_CONT;
-	hybrid_cmd_pong(ac > 1 ? av[1] : ServerName, av[0]);
+	
+	*buf = '\0';
+	for (i=0; i < ac; i++)
+		ircsnprintf(buf, BUFSIZE, "%s %s", buf, av[i]);
+		
+	hybrid_cmd_pong(source, buf);
 	return MOD_CONT;
 }
 
@@ -990,15 +999,19 @@ int denora_event_bmask(char *source, int ac, char **av)
 }
 
 /* PONG */
-void hybrid_cmd_pong(char *servname, char *who)
+void hybrid_cmd_pong(char *source, char *buf)
 {
+	int ac;
+	char **av;
+	ac = split_buf(buf, &av);
+
 	if (UseTS6)
 	{
-		send_cmd(TS6SID, "PONG %s", who);
+		send_cmd(TS6SID, "PONG %s :%s", av[2] ? av[2] : TS6SID, av[1]);
 	}
 	else
 	{
-		send_cmd(servname, "PONG %s", who);
+		send_cmd(source, "PONG %s :%s", av[2] ? av[2] : source, av[1]);
 	}
 }
 

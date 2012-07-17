@@ -20,7 +20,7 @@ void hybrid_cmd_privmsg(char *source, char *dest, char *buf);
 void hybrid_cmd_serv_notice(char *source, char *dest, char *msg);
 void hybrid_cmd_serv_privmsg(char *source, char *dest, char *msg);
 void hybrid_cmd_quit(char *source, char *buf);
-void hybrid_cmd_pong(char *servname, char *who);
+void hybrid_cmd_pong(char *source, char *buf);
 void hybrid_cmd_join(char *user, char *channel, time_t chantime);
 void hybrid_cmd_part(char *nick, char *chan, char *buf);
 void hybrid_cmd_global(char *source, char *buf);
