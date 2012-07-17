@@ -15,6 +15,7 @@ Additions
 11/02/11 r416 Added support for ircd-rizon
 
 Changes
+12/07/17 Don't call events if (umode = o && ((add && was_oper) || (!add && !was_oper)) (should fix #1264)
 12/07/17 Updated README
 12/07/15 used #ifdef USE_MYSQL in modules seen/lastspoke/ircd_ports (should fix #1429)
 12/07/15 File permission detection in mysql_backup.c (should fix #1127)

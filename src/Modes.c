@@ -311,7 +311,8 @@ void handle_ircop(int ac, char **av)
  */
 void denora_set_umode(User * user, int ac, char **av)
 {
-	int add = 1;                /* 1 if adding modes, 0 if deleting */
+	int add = 1;                	/* 1 if adding modes, 0 if deleting */
+	int was_oper = is_oper(user);	/* usefull to attempt to prevent double oper counting */
 	char *modes = av[0];
 	char modebuf[BUFSIZE];
 	char *newav[127];
@@ -376,6 +377,9 @@ void denora_set_umode(User * user, int ac, char **av)
 							}
 							else
 							{
+								// Discard double (de)oper
+								if (strcmp(um->mode,"o") && ((was_oper && add) || (!was_oper && !add)))
+									continue;
 								um->set(2, newav);
 								send_event(EVENT_USER_MODE, 3,
 								           (add ? EVENT_MODE_ADD :
