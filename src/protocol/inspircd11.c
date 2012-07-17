@@ -815,9 +815,22 @@ void inspircd_cmd_pong(char *servname, char *who)
 /* JOIN */
 void inspircd_cmd_join(char *user, char *channel, time_t chantime)
 {
+	int i;
+	char buf[BUFSIZE];
+
 	alog(LOG_PROTOCOL, "User %s joins %s at %ld", user, channel,
-	     (long int) chantime);
+		(long int) chantime);
 	send_cmd(user, "JOIN %s", channel);
+
+	if (AutoOp && AutoMode && LogChannel == channel)
+	{
+		for (i=0;i < strlen(AutoMode)-1;i++)
+		{
+			strlcat(buf, " ",sizeof(buf));
+			strlcat(buf, ud ? ud->uid : user, sizeof(buf));
+		}
+		send_cmd(user, "MODE %s %s%s", channel, AutoMode, buf);
+	}
 }
 
 /* PART */

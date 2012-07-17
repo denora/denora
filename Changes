@@ -15,6 +15,7 @@ Additions
 11/02/11 r416 Added support for ircd-rizon
 
 Changes
+12/07/18 Added automode handler for logchannel into inspircd11
 12/07/17 p10 wants 391 replies (RPL_TIME) in another way. 'Fixed', just need to calc offset somehow.
 12/07/17 Don't call events if (umode = o && ((add && was_oper) || (!add && !was_oper)) (should fix #1264)
 12/07/17 Updated README
