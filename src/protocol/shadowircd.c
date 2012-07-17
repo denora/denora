@@ -71,7 +71,8 @@ IRCDVar myIrcd[] = {
 	 IRCD_DISABLE,			/* hidden oper			*/
 	 IRCD_ENABLE,			/* extra warning		*/
 	 IRCD_DISABLE,			/* Report sync state		*/
-	 IRCD_DISABLE			/* Persistent channel mode   	*/
+	 IRCD_DISABLE,			/* Persistent channel mode   	*/
+	}
 };
 
 IRCDCAPAB myIrcdcap[] = {

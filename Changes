@@ -42,6 +42,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+12/07/17 Made ss_exclude use lower() in queries (fixes #1240)
 12/07/17 Removed fnmatch from mysql_backup and now check result of file permission check properly
 12/07/17 Found a couple of missing free()'s
 12/07/16 #1418 is no more. Sorry for the many pushes, but it was worth it ;)
