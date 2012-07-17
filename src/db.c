@@ -809,14 +809,9 @@ void db_removenick_nt(char *nick, char *reason)
 	User *u;
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
-	/* MYSQL_RES *mysql_res2; */
 #endif
 	char *username, *host, *queryhost;
 	char *newnick;
-/*
-	char *olduser = (char *) "";
-	char *newuser = (char *) "";
-*/
 
 	u = user_find(nick);
 
@@ -868,43 +863,7 @@ void db_removenick_nt(char *nick, char *reason)
 					rdb_query(QUERY_LOW, "DELETE FROM %s WHERE nickid=%d",
 					          UserTable, nickid);
 
-					/* Getting uname of the old and new users */
-					/*
-					rdb_query(QUERY_LOW,
-					          "SELECT nick, uname FROM %s WHERE nick=\'%s\' OR nick=\'%s\'",
-					          AliasesTable, newnick, u->sqlnick);
-					mysql_res2 = mysql_store_result(mysql);
-					if (mysql_res2)
-					{
-						while ((mysql_row =
-						            mysql_fetch_row(mysql_res2)) != NULL)
-						{
-							if (stricmp(mysql_row[0], newnick) == 0)
-							{
-								newuser = rdb_escape(mysql_row[1]);
-							}
-							if (stricmp(mysql_row[0], u->sqlnick) == 0)
-							{
-								olduser = rdb_escape(mysql_row[1]);
-							}
-						}
-						mysql_free_result(mysql_res2);
-					}
-					*/
 					free(newnick);
-
-					/* Summing old user to new user, if they differ */
-					/*
-					if ((!BadPtr(newuser)) && (!BadPtr(olduser))
-					    && (stricmp(newuser, olduser) != 0)) {
-					    alog(LOG_DEBUG,
-					         "db_removenick_nt(%s): summing old user %s and new user %s.",
-					         nick, olduser, newuser);
-					    sumuser(u, olduser, newuser);
-					}
-					free(olduser);
-					free(newuser);
-					*/
 				}
 				else
 				{
@@ -1130,9 +1089,6 @@ int db_getchannel(char *chan)
 	if (!chan)
 		return -1;
 
-	/*
-	    strtolwr(chan);
-	*/
 	SET_SEGV_LOCATION();
 
 	c = findchan(chan);
@@ -1217,9 +1173,6 @@ int db_getchannel_users(char *chan)
 #endif
 
 	SET_SEGV_LOCATION();
-	/*
-	    strtolwr(chan);
-	*/
 
 	if (!denora->do_sql)
 	{

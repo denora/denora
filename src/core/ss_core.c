@@ -131,7 +131,6 @@ static int do_restart(User * u, int ac, char **av)
 		denora->qmsg = sstrdup(buf);
 	}
 
-	/*    raise(SIGHUP); */
 	do_restart_denora();
 #else
 	notice_lang(s_StatServ, u, STAT_CANNOT_RESTART);

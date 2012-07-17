@@ -1329,8 +1329,6 @@ int moduleCopyFile(char *name, char *output)
 	char input[4096];
 #ifdef _WIN32
 	errno_t err;
-#endif
-#ifdef _WIN32
 	char *srcop;
 	char buffer[_MAX_PATH];
 

@@ -223,11 +223,7 @@ void process()
 		s = buf + strlen(buf);
 	strlcpy(cmd, buf, sizeof(cmd));
 	ac = split_buf(s, &av);
-/* Doesn't seem to work */
-/*
-	if (mod_current_buffer)
-		free(mod_current_buffer);
-*/
+
 	/* fix to moduleGetLastBuffer() bug 296 */
 	/* old logic was that since its meant for PRIVMSG that we would get
 	   the NICK as AV[0] and the rest would be in av[1], however on Bahamut
@@ -730,15 +726,6 @@ int main(int ac, char **av)
 
 void introduce_user(const char *user)
 {
-/*
-	ChannelStats *cs;
-	lnode_t *tn;
-	Uid *ud;
-
-	char *modes;
-	char nickbuf[BUFSIZE];
-*/
-
 	/* Watch out for infinite loops... */
 #define LTSIZE 20
 	static int lasttimes[LTSIZE];
@@ -764,38 +751,6 @@ void introduce_user(const char *user)
 		}
 	}
 	SET_SEGV_LOCATION();
-	/* I think this is not needed, as denora will join with correct ts upon first user join */
-	/*
-	if (!LargeNet) {
-	    tn = list_first(CStatshead);
-	    ud = find_uid(s_StatServ);
-	    while (tn != NULL) {
-	        cs = lnode_get(tn);
-	        alog(LOG_DEBUG, "TESTING: calling denora_cmd_join main.c:669");
-	        denora_cmd_join(s_StatServ, cs->name, time(NULL));
-	        if (AutoOp && AutoMode) {
-	        	*nickbuf = '\0';
-	            modes = sstrdup(AutoMode);
-	            while (*modes) {
-	                switch (*modes) {
-	                case '+':
-	                    break;
-	                case '-':
-	                    break;
-	                default:
-	                    ircsnprintf(nickbuf, BUFSIZE, "%s %s", nickbuf,
-	                                ((ircd->p10
-	                                  && ud) ? ud->uid : s_StatServ));
-	                }
-	                (void) *modes++;
-	            }
-	            denora_cmd_mode(ServerName, cs->name, "%s%s", AutoMode,
-	                            nickbuf);
-	        }
-	        tn = list_next(CStatshead, tn);
-	    }
-	}
-	*/
 }
 
 /*************************************************************************/

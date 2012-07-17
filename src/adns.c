@@ -1101,8 +1101,6 @@ static void inter_maxto(struct timeval **tv_io, struct timeval *tvbuf,
 		if (timercmp(rbuf, &maxto, >))
 			*rbuf = maxto;
 	}
-	/*fprintf(stderr,"inter_maxto maxto=%ld.%06ld result=%ld.%06ld\n",
-		maxto.tv_sec,maxto.tv_usec,(**tv_io).tv_sec,(**tv_io).tv_usec);*/
 }
 
 static void inter_maxtoabs(struct timeval **tv_io, struct timeval *tvbuf,
@@ -1111,8 +1109,6 @@ static void inter_maxtoabs(struct timeval **tv_io, struct timeval *tvbuf,
 	/* tv_io may be 0 */
 	ldiv_t dr;
 
-	/*fprintf(stderr,"inter_maxtoabs now=%ld.%06ld maxtime=%ld.%06ld\n",
-		now.tv_sec,now.tv_usec,maxtime.tv_sec,maxtime.tv_usec);*/
 	if (!tv_io)
 		return;
 	maxtime.tv_sec -= (now.tv_sec + 2);

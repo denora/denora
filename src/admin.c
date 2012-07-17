@@ -83,6 +83,7 @@ Dadmin *find_admin(char *name, User * u)
 
 void load_admin_db(void)
 {
+	/* TODO: check if key,value needs free */
 	DenoraDBFile *dbptr = calloc(1, sizeof(DenoraDBFile));
 	char *key, *value;
 	int retval = 0;

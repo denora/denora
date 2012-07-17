@@ -309,15 +309,15 @@ void p10_gline(char *type, char *source, int ac, char **av)
 	}
 	if (s)
 	{
-		setby = s->name;
+		setby = sstrdup(s->name);
 	}
 	else if (u)
 	{
-		setby = u->sqlnick;
+		setby = sstrdup(u->sqlnick);
 	}
 	else
 	{
-		setby = source;
+		setby = sstrdup(source);
 	}
 
 	SET_SEGV_LOCATION();
@@ -379,6 +379,7 @@ void p10_gline(char *type, char *source, int ac, char **av)
 	free(address);
 	free(user);
 	free(host);
+	free(setby);
 }
 
 /*************************************************************************/
@@ -953,6 +954,7 @@ void sql_do_server_spam_add(char *target, char *action,
 
 	free(sqlreason);
 	free(sqlregex);
+	free(sqlaction);
 	return;
 }
 

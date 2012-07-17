@@ -142,6 +142,5 @@ void do_mysql_backup(char *table, char *output)
 	}
 	dbMySQLPrepareForQuery();
 	rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", table, output);
-	alog(LOG_NORMAL, "Backing up %s to '%s'", table, output);
 }
 #endif

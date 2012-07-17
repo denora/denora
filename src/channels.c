@@ -31,6 +31,7 @@ int CompareStatsChan(const void *v, const void *cc)
 
 void load_chan_db(void)
 {
+	/* TODO: check if key,value needs free */
 	DenoraDBFile *dbptr = calloc(1, sizeof(DenoraDBFile));
 	StatsChannel *ss = NULL;
 	char *key, *value;
@@ -299,7 +300,6 @@ void sql_do_partall(char *nick)
 void sql_do_join(char *chan, char *nick)
 {
 	int chanid;
-	char *users;
 
 	if (!denora->do_sql || BadPtr(chan) || BadPtr(nick))
 	{
@@ -307,9 +307,7 @@ void sql_do_join(char *chan, char *nick)
 	}
 	SET_SEGV_LOCATION();
 	chanid = db_getchancreate(chan);
-	users = sstrdup(nick);
-	sql_do_addusers(chanid, users);
-	free(users);
+	sql_do_addusers(chanid, nick);
 }
 
 /*************************************************************************/
@@ -490,8 +488,6 @@ void chan_deluser(User * user, Channel * c)
 	ChannelStats *cs;
 
 	SET_SEGV_LOCATION();
-
-	/* for (u = c->users; u && u->user != user; u = u->next); */
 
 	if (!c->users)
 	{
@@ -727,7 +723,7 @@ char *p10_mode_parse(char *mode, int *nomode)
 	nomode = 0;
 
 	/* We make all the users join */
-	s = mode;
+	s = sstrdup(mode);
 	while (*s)
 	{
 		switch (*s)

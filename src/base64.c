@@ -458,6 +458,7 @@ int b64_decode(char *src, char *target, size_t targsize)
 				SET_SEGV_LOCATION();
 				abort();
 		}
+		free(pos);
 	}
 
 	/*
@@ -533,7 +534,6 @@ char *encode_ip(unsigned char *ip)
 	char ipbuf[50];
 	struct in_addr ia;          /* For IPv4 */
 	char *s_ip;                 /* Signed ip string */
-	char *temp;
 
 	SET_SEGV_LOCATION();
 
@@ -552,9 +552,9 @@ char *encode_ip(unsigned char *ip)
 		ircsnprintf(ipbuf, 50, "%uld", ia.s_addr);
 		SET_SEGV_LOCATION();
 		b64_encode((char *) &ipbuf, sizeof(struct in_addr), buf, 25);
+		free(s_ip);
 	}
-	temp = sstrdup(buf);
-	return temp;
+	return sstrdup(buf);
 }
 
 /*************************************************************************/

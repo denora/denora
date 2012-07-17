@@ -342,7 +342,7 @@ void ModuleUpdateSQLChanMode(void)
 void chan_set_modes(Channel * chan, int ac, char **av)
 {
 	int add = 1;
-	char *modes = av[0], mode;
+	char *modes = sstrdup(av[0]), mode;
 	ChanMode *cm;
 	ChanBanMode *cbm;
 	char modebuf[BUFSIZE];
@@ -533,11 +533,10 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 
 	if (!chanid)
 	{
-		free(chan);
 		return;
 	}
 
-	modes = av[0];
+	modes = sstrdup(av[0]);
 
 	SET_SEGV_LOCATION();
 	ircsnprintf(buf, sizeof(buf), "UPDATE %s SET ", ChanTable);
@@ -805,8 +804,6 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 		            chanid);
 		rdb_query(QUERY_LOW, db);
 	}
-	if (chan)
-		free(chan);
 }
 
 /*************************************************************************/

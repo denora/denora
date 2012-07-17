@@ -91,7 +91,6 @@ void sql_do_usermodes(User * u, char *modes)
 					atleastone = 1;
 					tmp[5] = ((*modes >= 'a') ? 'l' : 'u');
 					tmp[6] = tolower(*modes);
-					/* strcat(db, tmp); */
 					strlcat(db, tmp, sizeof(db));
 				}
 				break;
@@ -1568,16 +1567,6 @@ void do_quit(const char *source, int ac, char **av)
 
 	if (denora->do_sql)
 	{
-		/*if (NickTracking == 0) {
-		    db_removenick(user->sqlnick,
-		                  (!BadPtr(av[0]) ? av[0] : (char *) "Quit"));
-		} else if (LargeNet || !UplinkSynced) {
-		    db_removenick(user->sqlnick,
-		                  (!BadPtr(av[0]) ? av[0] : (char *) "Quit"));
-		} else {
-		    db_removenick_nt(user->sqlnick,
-		                     (!BadPtr(av[0]) ? av[0] : (char *) "Quit"));
-		}*/
 		db_removenick(user->sqlnick, (!BadPtr(av[0]) ? av[0] : (char *) "Quit"));
 		if (UserCacheTime)
 		{

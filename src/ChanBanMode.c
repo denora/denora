@@ -403,6 +403,8 @@ void sql_channel_invite(int type, Channel * c, char *mask)
 	}
 	else
 	{
+		if (sqlmask)
+			free(sqlmask);
 		return;
 	}
 

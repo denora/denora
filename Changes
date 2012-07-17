@@ -40,6 +40,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+12/07/17 Found a couple of missing free()'s
 12/07/16 #1418 is no more. Sorry for the many pushes, but it was worth it ;)
 12/07/16 Removed is_md5 (no longer need it) and properly fix #1176 using #ifdef HAVE_CRYPT
 12/07/15 Added is_md5() and used it to fix #1176 
@@ -69,6 +70,7 @@ Fixes
 11/02/11 r416 Scarynet module was not compiled on windows
 
 Removals
+12/07/17 Removed commented out unused code
 12/06/26 Removed defs for strndup as it's not used at all
 11/02/11 r418 Removed support for Nefarious ircd 1.0-1.2
 11/02/11 r416 Removed support for Asuka ircd
