@@ -41,6 +41,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+12/07/17 Removed fnmatch from mysql_backup and now check result of file permission check properly
 12/07/17 Found a couple of missing free()'s
 12/07/16 #1418 is no more. Sorry for the many pushes, but it was worth it ;)
 12/07/16 Removed is_md5 (no longer need it) and properly fix #1176 using #ifdef HAVE_CRYPT

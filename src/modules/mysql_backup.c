@@ -25,6 +25,7 @@ int DenoraInit(int argc, char **argv)
 	EvtHook *hook;
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
+	int found = 0;
 #endif
 
 	if (denora->debug >= 2)
@@ -48,8 +49,15 @@ int DenoraInit(int argc, char **argv)
 	mysql_res = mysql_store_result(mysql);
 	if (mysql_res && mysql_num_rows(mysql_res))
 	{
-		mysql_row = mysql_fetch_row(mysql_res);
-		if (fnmatch("GRANT FILE ON *", rdb_escape(mysql_row[0]), NULL) == FNM_NOMATCH)
+		while ((mysql_row = mysql_fetch_row(mysql_res)))
+		{
+			if (strstr(rdb_escape(mysql_row[0]),"GRANT FILE ON "))
+			{
+				found = 1;
+				break;
+			}
+		}
+		if (found == 0)
 		{
 			alog(LOG_NORMAL, "You do not have FILE privileges enabled. Disabling module");
 			mysql_free_result(mysql_res);
