@@ -123,6 +123,7 @@ void extsock_process(void)
 {
 	int socket_fd, clnt_fd, len, bytes;
 	char buffer[BUFFERSIZE];
+	char *ip;
 	struct sockaddr_in clnt_addr;
 	struct timeval wait;
 
@@ -155,14 +156,16 @@ void extsock_process(void)
 				}
 				else
 				{
+					ip = inet_ntoa(clnt_addr.sin_addr);
 					alog(LOG_NORMAL, "new connection from %s (socket %d)",
-					     inet_ntoa(clnt_addr.sin_addr), clnt_fd);
+					     ip, clnt_fd);
 					if (!extsock_val_clnt(clnt_addr.sin_addr))
 					{
 						alog(LOG_NORMAL,
 						     "%s does not have access to the external socket",
-						     inet_ntoa(clnt_addr.sin_addr));
+						     ip);
 						close(clnt_fd);
+						free(ip);
 						continue;
 					}
 					FD_SET(clnt_fd, &master_fdset);
@@ -170,6 +173,7 @@ void extsock_process(void)
 					{
 						max_fd = clnt_fd;
 					}
+					free(ip);
 				}
 			}
 			else
