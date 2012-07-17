@@ -92,7 +92,7 @@ TABLE OF CONTENTS
     Denora's StatServ pseudo client, provides access to commands that
     allow to manage and view the network stats.
 
-    Denora Stats coupled with phpDenora[1] is the most powerful tool
+    Denora Stats coupled with phpDenora[1] or MagIRC[1] is the most powerful tool
     for generating statistics for IRC.
 
     Denora currently works with the following IRCds:
@@ -159,10 +159,10 @@ TABLE OF CONTENTS
       provided. The more precise you are, the sooner you'll be likely to get an answer.
 
     * If you think you found a bug, add it to the bug tracking system on our
-      website (http://dev.denorastats.org/) and - again - be as
+      website (http://bugs.anope.org/) and - again - be as
       precise as possible. Also say whether the bug happens always or under what
       circumstances, and anything that could be useful to track your bug down.
       If you wrote a patch, send it over.
 
     * Support is also available via our forums located at
-      http://forum.denorastats.org/
+      http://forum.anope.org/
