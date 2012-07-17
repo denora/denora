@@ -354,37 +354,18 @@ void denora_cmd_pong(char *servname, char *who)
 
 void denora_cmd_join(char *user, char *channel, time_t chantime)
 {
-	char *v[32];
-	int i = 2;
+	char *chan[1];
 
 	if (!BadChanName(channel))
 	{
 		ircdproto.ircd_cmd_join(user, channel, chantime);
-		v[0] = channel;         /* channel */
 		if (!LargeNet)
 		{
-			do_join(user, 1, v);
+			chan[0] = sstrdup(channel);
+			do_join(user, 1, chan);
 		}
-		if (AutoOp)
-		{
-			v[1] = sstrdup(AutoMode);
-			while (*v[1])
-			{
-				switch (*v[1])
-				{
-					case '+':
-						break;
-					case '-':
-						break;
-					default:
-						v[i++] = sstrdup(user);
-						break;
-				}
-				v[1]++;
-			}
-			v[1] = sstrdup(AutoMode);
-			do_cmode(user, i, v);
-		}
+		if (AutoOp && AutoMode)
+			denora_automode(channel);
 	}
 }
 

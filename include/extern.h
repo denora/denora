@@ -1213,6 +1213,7 @@ E UserMode *CreateUserModeCallBack(char *mode, int extra, void (*func) (int ac, 
 E UserMode *FindUserMode(char *name);
 E void init_umodes(void);
 E void ModuleUpdateSQLUserMode(void);
+E void denora_automode(char *chan);
 
 E ChanBanMode *FindChanBanMode(char *name);
 E ChanBanMode *CreateChanBanMode(int mode, void (*addmask) (Channel *chan, char *mask), void (*delmask) (Channel *chan, char *mask));

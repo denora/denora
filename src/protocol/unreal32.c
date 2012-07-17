@@ -433,6 +433,7 @@ void unreal_cmd_join(char *user, char *channel, time_t chantime)
 	send_cmd(ServerName, "%s !%s %s :%s",
 	         send_token("SJOIN", "~"), base64enc((long int) chantime),
 	         channel, user);
+	/* TODO: Add AutoMode handler */
 }
 
 /*************************************************************************/

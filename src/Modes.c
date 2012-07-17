@@ -438,3 +438,28 @@ void ModuleUpdateSQLUserMode(void)
 		free(temp);
 	}
 }
+
+/*************************************************************************/
+
+void denora_automode(char *chan)
+{
+	Uid *ud = find_uid(s_StatServ);
+        char *modes = sstrdup(AutoMode);
+        char nickbuf[BUFSIZE];
+        *nickbuf = '\0';
+
+	while (*modes)
+	{
+		switch (*modes)
+		{
+			case '+':
+				break;
+			case '-':
+				break;
+			default:
+				ircsnprintf(nickbuf, BUFSIZE, "%s %s", nickbuf, ((ircd->p10 && ud) ? ud->uid : s_StatServ));
+		}
+		(void) *modes++;
+	}
+	denora_cmd_mode(ServerName, chan, "%s%s", AutoMode, nickbuf);
+}

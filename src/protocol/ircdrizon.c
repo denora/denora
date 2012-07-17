@@ -656,6 +656,7 @@ void rizon_cmd_join(char *user, char *channel, time_t chantime)
 	ud = find_uid(user);
 	send_cmd(NULL, "SJOIN %ld %s + :%s", (long int) chantime,
 	         channel, (UseTS6 ? (ud ? ud->uid : user) : user));
+	/* TODO: Add automode handler */
 }
 
 /*

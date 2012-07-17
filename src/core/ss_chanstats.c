@@ -68,11 +68,6 @@ static int do_chanstats(User * u, int ac, char **av)
 	int i;
 	int x = 0;
 	char *sqlchan;
-	Uid *ud;
-
-	char *modes;
-	char nickbuf[BUFSIZE];
-	*nickbuf = '\0';
 
 	if (ac >= 1)
 	{
@@ -170,31 +165,9 @@ static int do_chanstats(User * u, int ac, char **av)
 				notice_lang(s_StatServ, u, STAT_CHANSTATS_CHAN_ADDED,
 				            cmd2);
 
-				ud = find_uid(s_StatServ);
 				denora_cmd_join(s_StatServ, cs->name, time(NULL));
 				if (AutoOp && AutoMode)
-				{
-					modes = sstrdup(AutoMode);
-					while (*modes)
-					{
-						switch (*modes)
-						{
-							case '+':
-								break;
-							case '-':
-								break;
-							default:
-								ircsnprintf(nickbuf, BUFSIZE, "%s %s",
-								            nickbuf,
-								            ((ircd->p10
-								              && ud) ? ud->uid :
-								             s_StatServ));
-						}
-						(void) *modes++;
-					}
-					denora_cmd_mode(ServerName, cs->name, "%s%s",
-					                AutoMode, nickbuf);
-				}
+					denora_automode(cs->name);
 			}
 			else
 			{
