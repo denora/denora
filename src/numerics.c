@@ -135,7 +135,12 @@ void denora_cmd_391(char *source, char *timestr)
 	}
 	if (ircd->numerics)
 	{
-		denora_cmd_numeric(source, 391, "%s :%s", ServerName, timestr);
+		/* p10 wants it different */
+		/* AM 391 ACAAB Hausham.DE.EU.ScaryNet.Org 1342004972 -14661 :Wednesday July 11 2012 -- 17:13 +02:00 */
+		if (ircd->p10)
+			denora_cmd_numeric(source, 391, "%s %d 0 :%s",ServerName, (long int) time(NULL), timestr);
+		else
+			denora_cmd_numeric(source, 391, "%s :%s", ServerName, timestr);
 	}
 }
 
