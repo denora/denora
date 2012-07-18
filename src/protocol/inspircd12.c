@@ -79,7 +79,7 @@ IRCDVar myIrcd[] =
 		IRCD_ENABLE,               /* hidden oper                  */
 		IRCD_DISABLE,              /* extra warning                */
 		IRCD_ENABLE,               /* Report sync state            */
-		IRCD_DISABLE               /* Persistent channel mode   */
+		CMODE_P                    /* Persistent channel mode   */
 	}
 	,
 };
