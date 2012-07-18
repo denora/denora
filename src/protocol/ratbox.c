@@ -526,7 +526,8 @@ void ratbox_cmd_join(char *user, char *channel, time_t chantime)
 	ud = find_uid(user);
 	send_cmd(NULL, "SJOIN %ld %s + :%s", (long int) chantime,
 	         channel, (UseTS6 ? (ud ? ud->uid : user) : user));
-	/* TODO: Add AutoMode handler */
+	if (AutoOp && AutoMode && LogChannel == channel)
+		denora_automode(channel);
 }
 
 /*

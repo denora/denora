@@ -565,7 +565,8 @@ void hybrid_cmd_join(char *user, char *channel, time_t chantime)
 	ud = find_uid(user);
 	send_cmd(NULL, "SJOIN %ld %s + :%s", (long int) chantime,
 	         channel, (UseTS6 ? (ud ? ud->uid : user) : user));
-	/* TODO: Add automode handler */
+	if (AutoOp && AutoMode && LogChannel == channel)
+		denora_automode(channel);
 }
 
 void hybrid_cmd_version(char *server)

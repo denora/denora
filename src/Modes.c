@@ -457,7 +457,7 @@ void denora_automode(char *chan)
 			case '-':
 				break;
 			default:
-				ircsnprintf(nickbuf, BUFSIZE, "%s %s", nickbuf, ((ircd->p10 && ud) ? ud->uid : s_StatServ));
+				ircsnprintf(nickbuf, BUFSIZE, "%s %s", nickbuf, ((ircd->p10 || UseTS6) && ud) ? ud->uid : s_StatServ);
 		}
 		(void) *modes++;
 	}
