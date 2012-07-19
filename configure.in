@@ -123,9 +123,8 @@ if test "$ac_cv_crypt" = "yes"; then
    AC_CHECK_LIB(crypt, crypt,[
      DENORALIBS="$DENORALIBS-lcrypt "
      AC_DEFINE(HAVE_CRYPT_H,1,"")
-     AC_DEFINE(HAVE_CRYPT_LIB,1,"")
+     AC_DEFINE(HAVE_CRYPT,1,"")
    ])
-   AC_CHECK_FUNCS(crypt,AC_DEFINE(HAVE_CRYPT,1))
    DIS_ENCRYPT="Crypted Passwords: Yes"
 else
   DIS_ENCRYPT=""
