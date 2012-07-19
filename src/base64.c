@@ -458,7 +458,6 @@ int b64_decode(char *src, char *target, size_t targsize)
 				SET_SEGV_LOCATION();
 				abort();
 		}
-		free(pos);
 	}
 
 	/*

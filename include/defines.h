@@ -92,7 +92,9 @@
 
 /* Some Linux boxes (or maybe glibc includes) require this for the
  * prototype of strsignal(). */
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE
+#endif
 
 #define MAX_SQL_BUF   4096
 

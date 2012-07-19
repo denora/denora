@@ -48,6 +48,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+12/07/17 Fixed some warnings on x86_64
 12/07/17 Hybrid kills denora after sending PONG the wrong way (hopefully fixes #1420)
 12/07/17 Added account support to charybdis and shadowircd (fixes #1426)
 12/07/17 Made ss_exclude use lower() in queries (fixes #1240)
