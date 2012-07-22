@@ -109,14 +109,14 @@ int my_squit(int argc, char **argv)
 void create_table(void)
 {
 #ifdef USE_MYSQL
-    MYSQL_RES *mysql_res;
+	MYSQL_RES *mysql_res;
 
-	rdb_query(QUERY_LOW, "SHOW TABLES LIKE '%s';", SERVPORTTABLE);
+	rdb_query(QUERY_HIGH, "SHOW TABLES LIKE '%s';", SERVPORTTABLE);
 	mysql_res = mysql_store_result(mysql);
 	if (mysql_num_rows(mysql_res) == 0) {
-        rdb_query(QUERY_LOW, "CREATE TABLE %s ( id mediumint(15) NOT NULL auto_increment, name varchar(255), portnum varchar(255), porttype varchar(255), PRIMARY KEY (id) );", SERVPORTTABLE);
-    }
-    mysql_free_result(mysql_res);
+        	rdb_query(QUERY_LOW, "CREATE TABLE %s ( id mediumint(15) NOT NULL auto_increment, name varchar(255), portnum varchar(255), porttype varchar(255), PRIMARY KEY (id) );", SERVPORTTABLE);
+	}
+	mysql_free_result(mysql_res);
 #endif
 }
 

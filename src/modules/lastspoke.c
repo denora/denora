@@ -195,7 +195,7 @@ char *do_lastspoke(User * u, char *target)
 	if (!strcmp(lastspokenick, "%")) {
 		uname = sstrdup("%");
 	} else {	
-		rdb_query(QUERY_LOW, "SELECT uname FROM %s WHERE nick LIKE \'%s\' ",
+		rdb_query(QUERY_HIGH, "SELECT uname FROM %s WHERE nick LIKE \'%s\' ",
 					  AliasesTable, lastspokenick);
 		mysql_res = mysql_store_result(mysql);
 		if (mysql_res && mysql_num_rows(mysql_res)) {
@@ -205,7 +205,7 @@ char *do_lastspoke(User * u, char *target)
 	}
 
 	if (uname) {
-		rdb_query(QUERY_LOW,
+		rdb_query(QUERY_HIGH,
 			  "SELECT %s.nick, %s.username, %s.hostname, %s.hiddenhostname, %s.online, %s.away, %s.chan, %s.lastspoke FROM %s, %s, %s, %s WHERE %s.uname LIKE \"%s\" AND %s.nick = %s.nick AND %s.username LIKE \"%s\" AND (%s.hostname LIKE \"%s\" OR %s.hiddenhostname LIKE \"%s\") AND %s.server = %s.server AND %s.uline = \"0\" AND %s.uname = %s.uname AND %s.chan != \"global\" ORDER BY %s.online, %s.lastquit, %s.lastspoke DESC, %s.connecttime ASC LIMIT 1",
 			  UserTable, UserTable, UserTable, UserTable, UserTable,
 			  UserTable, UStatsTable, UStatsTable, UserTable, ServerTable,
@@ -246,7 +246,7 @@ char *do_lastspoke(User * u, char *target)
 				if (denora_umode(UMODE_I) == 1)
 					sprintf(umodeI, "AND %s.mode_ui = 'N' ", UserTable);
 			}				
-			rdb_query(QUERY_LOW,
+			rdb_query(QUERY_HIGH,
 					  "SELECT %s.channel FROM %s, %s WHERE %s.nick = \"%s\" AND %s.channel = \"%s\" %s%s%s%s%s%s%s ORDER BY %s.channel ASC LIMIT 1",
 					  ChanTable, ChanTable, UserTable, UserTable,
 					  mysql_row[0], ChanTable, mysql_row[6], cmodep,

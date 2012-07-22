@@ -802,7 +802,7 @@ void sumuser(User * u, char *user1, char *user2)
 	          "UPDATE %s SET uname = \'%s\' WHERE uname = \'%s\';",
 	          AliasesTable, user1_, user2_);
 	/* check for ignore flag. if at least one is found, replicate */
-	rdb_query(QUERY_LOW,
+	rdb_query(QUERY_HIGH,
 	          "SELECT `ignore` FROM %s WHERE `uname` = \'%s\' AND `ignore`=\'Y\';",
 	          AliasesTable, user1_);
 #ifdef USE_MYSQL

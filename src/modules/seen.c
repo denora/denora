@@ -199,7 +199,7 @@ char *do_seen(User * u, char *target)
 	if (!strcmp(seennick, "%")) {
 		uname = sstrdup("%");
 	} else {	
-		rdb_query(QUERY_LOW, "SELECT uname FROM %s WHERE nick LIKE \'%s\' ",
+		rdb_query(QUERY_HIGH, "SELECT uname FROM %s WHERE nick LIKE \'%s\' ",
 					  AliasesTable, seennick);
 		mysql_res = mysql_store_result(mysql);
 		if (mysql_res && mysql_num_rows(mysql_res)) {
@@ -209,7 +209,7 @@ char *do_seen(User * u, char *target)
 	}
 	
 	if (uname) {
-		rdb_query(QUERY_LOW,
+		rdb_query(QUERY_HIGH,
 	          "SELECT %s.nickid, %s.nick, %s.hostname, %s.hiddenhostname, %s.username, UNIX_TIMESTAMP(%s.connecttime), %s.away, %s.awaymsg, %s.online, UNIX_TIMESTAMP(%s.lastquit), %s.lastquitmsg FROM %s,%s,%s WHERE %s.uname LIKE \"%s\" AND %s.nick = %s.nick AND %s.username LIKE \"%s\" AND (%s.hostname LIKE \"%s\" OR %s.hiddenhostname LIKE \"%s\") AND %s.server = %s.server AND %s.uline = \"0\" ORDER BY online,lastquit DESC, %s.connecttime ASC LIMIT 1;",
 	          UserTable, UserTable, UserTable, UserTable, UserTable,
 	          UserTable, UserTable, UserTable, UserTable, UserTable,
@@ -222,7 +222,7 @@ char *do_seen(User * u, char *target)
 #endif
 		free(uname);
 	} else {
-		rdb_query(QUERY_LOW,
+		rdb_query(QUERY_HIGH,
 	          "SELECT %s.nickid, %s.nick, %s.hostname, %s.hiddenhostname, %s.username, UNIX_TIMESTAMP(%s.connecttime), %s.away, %s.awaymsg, %s.online, UNIX_TIMESTAMP(%s.lastquit), %s.lastquitmsg FROM %s,%s WHERE %s.nick LIKE \"%s\" AND %s.username LIKE \"%s\" AND (%s.hostname LIKE \"%s\" OR %s.hiddenhostname LIKE \"%s\") AND %s.server = %s.server AND %s.uline = \"0\" ORDER BY online,lastquit DESC, %s.connecttime ASC LIMIT 1;",
 	          UserTable, UserTable, UserTable, UserTable, UserTable,
 	          UserTable, UserTable, UserTable, UserTable, UserTable,
@@ -269,7 +269,7 @@ char *do_seen(User * u, char *target)
 					if (denora_umode(UMODE_I) == 1)
 						sprintf(umodeI, "AND %s.mode_ui = 'N' ", UserTable);
 				}
-	            rdb_query(QUERY_LOW,
+	            rdb_query(QUERY_HIGH,
 	                      "SELECT %s.channel FROM %s,%s,%s WHERE %s.nickid =%s AND %s.chanid = %s.chanid AND %s.nickid = %s.nickid %s%s%s%s%s%s%s ORDER BY %s.channel ASC",
 	                      ChanTable, ChanTable, UserTable, IsOnTable,
 	                      IsOnTable, mysql_row[0], ChanTable, IsOnTable,
