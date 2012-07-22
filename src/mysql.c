@@ -19,7 +19,7 @@
 /*************************************************************************/
 
 /* Database Global Variables */
-MYSQL *mysql;                   /* MySQL Handler */
+MYSQL *mysql;                   /* Main MySQL Handler */
 MYSQL_FIELD *mysql_fields;      /* MySQL Fields  */
 MYSQL_ROW mysql_row;            /* MySQL Row     */
 

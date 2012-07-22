@@ -171,7 +171,7 @@ int rdb_query(int i, const char *fmt, ...)
 	va_end(args);
 
 #ifdef USE_THREADS
-	if (UseThreading)
+	if (UseThreading && ThreadCount != 0)
 	{
 		if (i == QUERY_HIGH)
 		{
