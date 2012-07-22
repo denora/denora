@@ -843,7 +843,7 @@ void inspircd_cmd_pong(__attribute__((unused))char *servname, char *who)
 void inspircd_cmd_join(char *user, char *channel, time_t chantime)
 {
 	Uid *ud;
-	int i;
+	unsigned int i;
 	char buf[BUFSIZE];
 
 	ud = find_uid(user);
@@ -854,7 +854,7 @@ void inspircd_cmd_join(char *user, char *channel, time_t chantime)
 
 	if (AutoOp && AutoMode && LogChannel == channel)
 	{
-		for (i=0;i < strlen(AutoMode)-1;i++)
+		for (i=0;i < (strlen(AutoMode)-1);i++)
 		{
 			strlcat(buf, " ",sizeof(buf));
 			strlcat(buf, ud ? ud->uid : user, sizeof(buf));

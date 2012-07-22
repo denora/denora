@@ -997,7 +997,7 @@ static int parse_options(int ac, char **av)
 			else if (strcmp(value, "nofork") == 0)
 			{
 				denora->nofork = 1;
-#ifdef HAVE_CRYPT
+#if defined(HAVE_CRYPT)
 			}
 			else if (strcmp(value, "mkpass") == 0)
 			{
@@ -1051,7 +1051,7 @@ static int parse_options(int ac, char **av)
 				fprintf(stdout, "-help          -help\n");
 				fprintf(stdout, "-log           -log logfilename\n");
 				fprintf(stdout, "-dir           -dir statsdirectory\n");
-#ifdef HAVE_CRYPT
+#if defined(HAVE_CRYPT)
 				fprintf(stdout, "-mkpass        -mkpass=password\n");
 #endif
 				fprintf(stdout, "\n");

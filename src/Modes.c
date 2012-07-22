@@ -377,7 +377,7 @@ void denora_set_umode(User * user, int ac, char **av)
 							}
 							else
 							{
-								// Discard double (de)oper
+								/* Discard double (de)oper */
 								if (strcmp(um->mode,"o") && ((was_oper && add) || (!was_oper && !add)))
 									continue;
 								um->set(2, newav);

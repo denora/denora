@@ -14,93 +14,44 @@
 
 /* include/sysconf.h.in.  Generated from configure.in by autoheader.  */
 
+/* Setting to BSD style signals */
+#undef BSD_RELIABLE_SIGNALS
+
 /* "Default umask Permissions" */
 #undef DEFUMASK
 
 /* "No prefix needed for dlopen" */
 #undef DL_PREFIX
 
+/* System supports RTLD_LOCAL */
+#undef HAS_RTLD_LOCAL
+
 /* "Has sys/types.h" */
 #undef HAS_SYS_TYPES_H
 
-/* "System supports long long" */
-#undef HAVE_LONG_LONG
-
 /* "" */
-#undef HAVE_MALLOC_H
-
-/* "" */
-#undef HAVE_SSL
-
-/* "System supports set/get/rlimit" */
-#undef HAVE_GETSETRLIMIT
-
-/* "" */
-#undef HAVE_SIGNAL_H
-
-/* "" */
-#undef HAVE_INLINE
-
-/* "" */
-#undef HAVE_POLL_H
+#undef HAVE_BACKTRACE
 
 /* "" */
 #undef HAVE_CRYPT
 
 /* "" */
-#undef HAVE_PERL_H
+#undef HAVE_CRYPT_H
 
-/* */
+/* "" */
 #undef HAVE_DMALLOC
-
-/* */
-#undef HAS_RTLD_LOCAL
-
-/* MySQL supports charset */
-#undef HAVE_MYSQL_SET_CHARSET
-
-/* */
-#undef USE_THREADS
 
 /* Define to 1 if you have the `fork' function. */
 #undef HAVE_FORK
 
-/* Define if you have `__PRETTY_FUNCTION__'.  */
-#undef HAVE_PRETTY_FUNCTION
-
-/* Define if you have `__FUNCTION__' but no `__PRETTY_FUNCTION__'.  */
-#undef HAVE_FUNCTION
-
-/* Define if you have `__func__' but no `__PRETTY_FUNCTION__' nor
-   `__FUNCTION__'  */
-#undef HAVE_FUNC
-
-/* Define to 1 if you have the `gethostbyname' function. */
-#undef HAVE_GETHOSTBYNAME
-
-/* Define to 1 if you have the `gethostbyname_r' function. */
-#undef HAVE_GETHOSTBYNAME_R
-
-/* Define to 1 if you have the `gettimeofday' function. */
-#undef HAVE_GETTIMEOFDAY
-
-/* Define to 1 if you have the <inttypes.h> header file. */
-#undef HAVE_INTTYPES_H
-
-/* Define to 1 if you have the <memory.h> header file. */
-#undef HAVE_MEMORY_H
-
-/* Define to 1 if you have the `setgrent' function. */
-#undef HAVE_SETGRENT
-
-/* Define to 1 if you have the <stdint.h> header file. */
-#undef HAVE_STDINT_H
-
-/* Define to 1 if you have the <stdlib.h> header file. */
-#undef HAVE_STDLIB_H
-
 /* Define to 1 if you have the `freeaddrinfo' function. */
 #undef HAVE_FREEADDRINFO
+
+/* Define if the C complier supports __func__ */
+#undef HAVE_FUNC
+
+/* Define if the C complier supports __FUNCTION__ */
+#undef HAVE_FUNCTION
 
 /* Define to 1 if you have the `gai_strerror' function. */
 #undef HAVE_GAI_STRERROR
@@ -108,36 +59,86 @@
 /* Define to 1 if you have the `getaddrinfo' function. */
 #undef HAVE_GETADDRINFO
 
-/* */
-#undef HAVE_STRUCT_SOCKADDR_STORAGE
+/* Define to 1 if you have the `gethostbyname' function. */
+#undef HAVE_GETHOSTBYNAME
 
-/* */
-#undef HAVE_STRUCT_SOCKADDR_IN6
+/* Define to 1 if you have the `gethostbyname_r' function. */
+#undef HAVE_GETHOSTBYNAME_R
 
-/* */
-#undef HAVE_STRUCT_IN6_ADDR
+/* Define to 1 if you have the `getnameinfo' function. */
+#undef HAVE_GETNAMEINFO
 
-/* */
-#undef HAVE_STRUCT_ADDRINFO
+/* Define to 1 if you have the `getrlimit' function. */
+#undef HAVE_GETRLIMIT
 
-/* */
-#undef RFC2553BIS
+/* System supports set/get/rlimit */
+#undef HAVE_GETSETRLIMIT
 
-/* */
-#undef HAVE_SS_FAMILY_IN_SS
+/* Define to 1 if you have the `gettimeofday' function. */
+#undef HAVE_GETTIMEOFDAY
 
-/* */
-#undef HAVE___SS_FAMILY_IN_SS
-
-
-/* Define to 1 if you have the `strlcpy' function. */
-#undef HAVE_STRLCPY
-
-/* Define to 1 if you have the `inet_aton' function. */
+/* System supports inet_aton */
 #undef HAVE_INETATON
 
-/* Define to 1 if you have the `strlcat' function. */
-#undef HAVE_STRLCAT
+/* Define to 1 if you have the `inet_aton' function. */
+#undef HAVE_INET_ATON
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* "" */
+#undef HAVE_LIBZ
+
+/* "System supports long long" */
+#undef HAVE_LONG_LONG
+
+/* "" */
+#undef HAVE_MALLOC_H
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* "" */
+#undef HAVE_NETDBH
+
+/* "" */
+#undef HAVE_NETINETIN
+
+/* Define to 1 if you have the `ntohl' function. */
+#undef HAVE_NTOHL
+
+/* "" */
+#undef HAVE_PERL_H
+
+/* "" */
+#undef HAVE_POLL_H
+
+/* Define if the C complier supports __PRETTY_FUNCTION__ */
+#undef HAVE_PRETTY_FUNCTION
+
+/* Define if you have POSIX threads libraries and header files. */
+#undef HAVE_PTHREAD
+
+/* Define to 1 if you have the `setgrent' function. */
+#undef HAVE_SETGRENT
+
+/* Define to 1 if you have the `setrlimit' function. */
+#undef HAVE_SETRLIMIT
+
+/* "" */
+#undef HAVE_SIGNAL_H
+
+/* System supports s.ss_family */
+#undef HAVE_SS_FAMILY_IN_SS
+
+/* "" */
+#undef HAVE_STDINT_H
+
+/* "" */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the `strcasecmp' function. */
+#undef HAVE_STRCASECMP
 
 /* Define to 1 if you have the `strerror' function. */
 #undef HAVE_STRERROR
@@ -145,14 +146,20 @@
 /* Define to 1 if you have the `stricmp' function. */
 #undef HAVE_STRICMP
 
-/* Define to 1 if you have the `stricmp' function. */
-#undef HAVE_STRNICMP
-
 /* "" */
 #undef HAVE_STRINGS_H
 
-/* Define to 1 if you have the <string.h> header file. */
+/* "" */
 #undef HAVE_STRING_H
+
+/* Define to 1 if you have the `strlcat' function. */
+#undef HAVE_STRLCAT
+
+/* Define to 1 if you have the `strlcpy' function. */
+#undef HAVE_STRLCPY
+
+/* Define to 1 if you have the `strnicmp' function. */
+#undef HAVE_STRNICMP
 
 /* Define to 1 if you have the `strsignal' function. */
 #undef HAVE_STRSIGNAL
@@ -160,29 +167,23 @@
 /* Define to 1 if you have the `strspn' function. */
 #undef HAVE_STRSPN
 
+/* System supports struct addrinfo */
+#undef HAVE_STRUCT_ADDRINFO
+
+/* System supports struct in6_addr */
+#undef HAVE_STRUCT_IN6_ADDR
+
+/* System supports sockaddr_in6 */
+#undef HAVE_STRUCT_SOCKADDR_IN6
+
+/* System supports sockaddr_storage */
+#undef HAVE_STRUCT_SOCKADDR_STORAGE
+
 /* Define to 1 if you have the `sys_errlist' function. */
 #undef HAVE_SYS_ERRLIST
 
 /* "" */
 #undef HAVE_SYS_SELECT_H
-
-/* "" */
-#undef HAVE_BACKTRACE
-
-/* "" */
-#undef HAVE_LIBZ
-
-/* "" */
-#undef HAVE_NETINETIN
-
-/* "" */
-#undef POSIX_SIGNALS
-
-/* "" */
-#undef BSD_RELIABLE_SIGNALS
-
-/* "" */
-#undef SYSV_UNRELIABLE_SIGNALS
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #undef HAVE_SYS_STAT_H
@@ -193,14 +194,17 @@
 /* Define to 1 if you have the `umask' function. */
 #undef HAVE_UMASK
 
-/* Define to 1 if you have the <unistd.h> header file. */
+/* "" */
 #undef HAVE_UNISTD_H
+
+/* "System has VA_LIST as an array" */
+#undef HAVE_VA_LIST_AS_ARRAY
+
+/* System supports s.__ss_family */
+#undef HAVE___SS_FAMILY_IN_SS
 
 /* "Module dir" */
 #undef MODULE_PATH
-
-/* "Has mysql/mysql.h" */
-#undef MYSQL_HEADER_PREFIX
 
 /* Define to the address where bug reports for this package should be sent. */
 #undef PACKAGE_BUGREPORT
@@ -214,20 +218,39 @@
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
 
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
+
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
+
+/* Setting to POSIX style signals */
+#undef POSIX_SIGNALS
+
+/* Define to necessary symbol if this constant uses a non-standard name on
+   your system. */
+#undef PTHREAD_CREATE_JOINABLE
+
+/* System supports RFC2553BIS */
+#undef RFC2553BIS
 
 /* "Run group" */
 #undef RUNGROUP
 
+/* The size of `int', as computed by sizeof. */
+#undef SIZEOF_INT
+
+/* The size of `long', as computed by sizeof. */
+#undef SIZEOF_LONG
+
+/* The size of `short', as computed by sizeof. */
+#undef SIZEOF_SHORT
+
+/* "modules not available" */
+#undef STATIC_LINKING
+
 /* "Binary Dir" */
 #undef STATS_BIN
-
-/* "services bin dir" */
-#undef STATS_DIR
-
-/* "stats os" */
-#undef STATS_OS
 
 /* "stats build" */
 #undef STATS_BUILD
@@ -235,20 +258,17 @@
 /* "stats cpu" */
 #undef STATS_CPU
 
-/* The size of a `int', as computed by sizeof. */
-#undef SIZEOF_INT
+/* "stats bin dir" */
+#undef STATS_DIR
 
-/* The size of a `long', as computed by sizeof. */
-#undef SIZEOF_LONG
-
-/* The size of a `short', as computed by sizeof. */
-#undef SIZEOF_SHORT
-
-/* "modules not available" */
-#undef STATIC_LINKING
+/* "stats os" */
+#undef STATS_OS
 
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
+
+/* Setting to SYSV style signals */
+#undef SYSV_UNRELIABLE_SIGNALS
 
 /* "Modules available" */
 #undef USE_MODULES
@@ -256,17 +276,20 @@
 /* "Use Mysql" */
 #undef USE_MYSQL
 
-/* "Has libpq-fe.h" */
-#undef USE_POSTGRE
+/* 'Enable Perl Support' */
+#undef USE_PERL
 
-/* "path to the header" */
-#undef POSTGRE_PATH
+/* "Use RDB" */
+#undef USE_RDB
 
-/* Define as 1 if your va_list type is an array */
-#undef HAVE_VA_LIST_AS_ARRAY
+/* "Use threads" */
+#undef USE_THREADS
 
-/* "mem debug" */
-#undef MEMORY_DEBUG
+/* Define to `__inline__' or `__inline' if that's what the C compiler
+   calls it, or to nothing if 'inline' is not supported under any name.  */
+#ifndef __cplusplus
+#undef inline
+#endif
 
 /* Define to `short' if <sys/types.h> does not define. */
 #undef int16_t
@@ -274,11 +297,20 @@
 /* Define to `long' if <sys/types.h> does not define. */
 #undef int32_t
 
+/* Define to `long long' if <sys/types.h> does not define. */
+#undef int64_t
+
+/* Substitute for socklen_t */
+#undef socklen_t
+
 /* Define to `unsigned short' if <sys/types.h> does not define. */
 #undef u_int16_t
 
 /* Define to `unsigned long' if <sys/types.h> does not define. */
 #undef u_int32_t
+
+/* Define to `unsigned long long' if <sys/types.h> does not define. */
+#undef uint64_t
 
 /* Static config, copy from here to below before running autoheader! */
 
@@ -308,3 +340,4 @@ char *strsignal(int sig);
 #endif
 
 #endif
+

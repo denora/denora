@@ -16,8 +16,8 @@
 /*************************************************************************/
 
 #include "sysconf.h"             /* Include auto generated header which  */
-/* describes the users system this file */
-/* is created by running configure      */
+                                 /* describes the users system this file */
+                                 /* is created by running configure      */
 
 #ifdef __sun                     /* If the system reports as Sun OS      */
 #include "os/sun.h"              /* include hacks for the Sun OS         */
@@ -151,7 +151,7 @@
 /* Include the crypt header file if the system can has it                */
 /*************************************************************************/
 
-#ifdef HAVE_CRYPT_H
+#if defined(HAVE_CRYPT_H) && defined(HAVE_CRYPT)
 #include <crypt.h>
 #endif
 

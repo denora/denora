@@ -5027,9 +5027,6 @@ if test "x$ac_cv_lib_crypt_crypt" = x""yes; then :
 
      DENORALIBS="$DENORALIBS-lcrypt "
 
-$as_echo "#define HAVE_CRYPT_H 1" >>confdefs.h
-
-
 $as_echo "#define HAVE_CRYPT 1" >>confdefs.h
 
 
@@ -5037,10 +5034,10 @@ fi
 
    DIS_ENCRYPT="Crypted Passwords: Yes"
 else
-  DIS_ENCRYPT=""
+   DIS_ENCRYPT="Crypted Passwords: No"
 fi
 
-DIS_MYSQL="  MySQL: No"
+DIS_MYSQL="MySQL: No"
 
 # Check whether --with-mysql was given.
 if test "${with_mysql+set}" = set; then :
@@ -5161,7 +5158,7 @@ _ACEOF
 			RDB=" rdb.c "
 
 
-			 DIS_MYSQL="  MySQL: Yes"
+			DIS_MYSQL="MySQL: Yes"
 		else
 			CFLAGS="$hold_cflags"
 			LDFLAGS="$hold_ldflags"
@@ -5171,6 +5168,7 @@ _ACEOF
 fi
 
 
+DIS_THREADING="Threading: No"
 # Check whether --enable-threading was given.
 if test "${enable_threading+set}" = set; then :
   enableval=$enable_threading; ac_cv_pthread="$enableval"
@@ -5510,6 +5508,7 @@ cat >>confdefs.h <<_ACEOF
 #define USE_THREADS 1
 _ACEOF
 
+    DIS_THREADING="Threading: Yes"
 
         :
 else
@@ -5523,9 +5522,8 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
-   DIS_THREADING="THREADING Support: YES"
 else
-  DIS_THREADING=""
+  DIS_THREADING="Threading: No"
 fi
 
 # Check whether --enable-dmalloc was given.
@@ -5628,9 +5626,9 @@ if test "x$ac_cv_lib_dmalloc_dmalloc_shutdown" = x""yes; then :
 fi
 
    fi
-   DIS_DMALLOC="DMALLOC: Yes"
+   DIS_DMALLOC="Memory debugging: Yes"
 else
-  DIS_DMALLOC=""
+  DIS_DMALLOC="Memory debugging: No"
 fi
 
 
@@ -6126,7 +6124,7 @@ $as_echo "#define HAVE___SS_FAMILY_IN_SS 1" >>confdefs.h
 fi
 
 
-DIS_MODULES="Modules Support: YES"
+DIS_MODULES="Modules Support: Yes"
 
 
 
@@ -6178,7 +6176,7 @@ if test "x$ac_cv_lib_dl_dlopen" = x""yes; then :
 $as_echo "#define USE_MODULES 1" >>confdefs.h
 
   USE_MODULES="yes"
-  DIS_MODULES="Modules Support: YES"
+  DIS_MODULES="Modules Support: Yes"
 
 else
 
@@ -6187,7 +6185,7 @@ $as_echo "$as_me: WARNING: Dynamic linking is not enabled because dlopen was not
 
 $as_echo "#define STATIC_LINKING \"NO_MODULES\"" >>confdefs.h
 
-  DIS_MODULES="Modules Support: NO"
+  DIS_MODULES="Modules Support: No"
 
 fi
 
@@ -16994,9 +16992,11 @@ fi
 
 cat <<EOT
 
-$DIS_MODULES
-$DIS_MYSQL
-$DIS_DMALLOC
+    $DIS_MODULES
+              $DIS_MYSQL
+   $DIS_DMALLOC
+  $DIS_ENCRYPT
+          $DIS_THREADING
 
 All done! Above you can see if Modules Support and MySQL Support will be compiled or not.
 If you intended to compile MySQL support and you see "NO", then your system is probably

@@ -330,7 +330,7 @@ int add_sqladmin(char *name, char *passwd, int level, char *host, int lang)
 		return -1;
 	}
 
-#ifdef HAVE_CRYPT
+#if defined(HAVE_CRYPT)
 	rdb_query(QUERY_LOW,
 		  "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', '%s', %d, '%s', %d)",
 		  AdminTable, name, passwd, level, host, lang);
@@ -397,7 +397,7 @@ void reset_sqladmin(void)
 		{
 			for (a = adminlists[i]; a; a = a->next)
 			{
-#ifdef HAVE_CRYPT
+#if defined(HAVE_CRYPT)
 				rdb_query(QUERY_LOW,
 				          "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', '%s', %d, '%s', %d)",
 				          AdminTable, a->name, a->passwd, a->configfile,

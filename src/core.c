@@ -1158,7 +1158,7 @@ int is_valid_server(char *name)
 
 char *MakePassword(char *plaintext)
 {
-#ifdef HAVE_CRYPT
+#if defined(HAVE_CRYPT)
 	unsigned long seed[2];
 	char salt[] = "$1$........";
 	const char *const seedchars =
@@ -1187,7 +1187,7 @@ char *MakePassword(char *plaintext)
 
 int ValidPassword(char *plaintext, char *checkvs)
 {
-#ifdef HAVE_CRYPT
+#if defined(HAVE_CRYPT)
 	char *result;
 	/* Read in the user's password and encrypt it,
 	   passing the expected password in as the salt. */
