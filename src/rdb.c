@@ -116,6 +116,12 @@ int rdb_direct_query(char *query, int con)
 	if (sqltype == SQL_MYSQL)
 	{
 		return db_mysql_query(query, con);
+		/* 
+		 * Threaded calls may return results but are probably way too late.
+		 * So lets clean them up in order to free results and save memory
+		 */
+		if (con == 1)
+			dbMySQLPrepareForQuery(con);
 	}
 #endif
 #ifdef USE_POSTGRE
