@@ -1147,28 +1147,6 @@ void do_kick(const char *source, int ac, char **av)
 			{
 				alog(LOG_DEBUG, "TESTING: calling denora_cmd_join channels.c:989");
 				denora_cmd_join(s_StatServ, av[0], time(NULL));
-				if (AutoOp && AutoMode)
-				{
-					ud = find_uid(s_StatServ);
-					modes = sstrdup(AutoMode);
-					while (*modes)
-					{
-						switch (*modes)
-						{
-							case '+':
-								break;
-							case '-':
-								break;
-							default:
-								ircsnprintf(nickbuf, BUFSIZE, "%s %s", nickbuf,
-								            ((ircd->p10
-								              && ud) ? ud->uid : s_StatServ));
-						}
-						(void) *modes++;
-					}
-					denora_cmd_mode(ServerName, cs->name, "%s%s", AutoMode,
-					                nickbuf);
-				}
 			}
 		}
 	}
@@ -1896,26 +1874,6 @@ void chan_adduser2(User * user, Channel * c)
 	{
 		alog(LOG_DEBUG, "TESTING: calling denora_cmd_join channels.c:1643");
 		denora_cmd_join(s_StatServ, c->name, c->creation_time);
-		if (AutoOp && AutoMode)
-		{
-			ud = find_uid(s_StatServ);
-			modes = sstrdup(AutoMode);
-			while (*modes)
-			{
-				switch (*modes)
-				{
-					case '+':
-						break;
-					default:
-						ircsnprintf(nickbuf, BUFSIZE, "%s %s", nickbuf,
-						            ((ircd->p10
-						              && ud) ? ud->uid : s_StatServ));
-				}
-				(void) *modes++;
-			}
-			denora_cmd_mode(ServerName, cs->name, "%s%s", AutoMode,
-			                nickbuf);
-		}
 	}
 
 	SET_SEGV_LOCATION();

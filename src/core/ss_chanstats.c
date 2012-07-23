@@ -166,8 +166,6 @@ static int do_chanstats(User * u, int ac, char **av)
 				            cmd2);
 
 				denora_cmd_join(s_StatServ, cs->name, time(NULL));
-				if (AutoOp && AutoMode)
-					denora_automode(cs->name);
 			}
 			else
 			{
