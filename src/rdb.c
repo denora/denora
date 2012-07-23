@@ -24,7 +24,7 @@ int rdb_init()
 #ifdef USE_MYSQL
 	if (sqltype == SQL_MYSQL)
 	{
-		res = db_mysql_init();
+		res = db_mysql_init(0);
 	}
 	SET_SEGV_LOCATION();
 #endif
@@ -50,7 +50,11 @@ int rdb_close()
 #ifdef USE_MYSQL
 	if (sqltype == SQL_MYSQL)
 	{
-		db_mysql_close();
+		db_mysql_close(0);
+#ifdef USE_THREADS
+		if (UseThreading)
+			db_mysql_close(1);
+#endif
 		return 1;
 	}
 #endif
@@ -89,7 +93,7 @@ int rdb_clear_table(char *table)
 	}
 #ifdef USE_MYSQL
 	if (sqltype == SQL_MYSQL)
-		return db_mysql_query(buf);
+		return db_mysql_query(buf,0);
 #endif
 #ifdef USE_POSTGRE
 	if (sqltype == SQL_POSTGRE)
@@ -101,7 +105,7 @@ int rdb_clear_table(char *table)
 
 /*************************************************************************/
 
-int rdb_direct_query(char *query)
+int rdb_direct_query(char *query, int con)
 {
 	SET_SEGV_LOCATION();
 
@@ -112,7 +116,7 @@ int rdb_direct_query(char *query)
 #ifdef USE_MYSQL
 	if (sqltype == SQL_MYSQL)
 	{
-		return db_mysql_query(query);
+		return db_mysql_query(query, con);
 	}
 #endif
 #ifdef USE_POSTGRE
@@ -152,7 +156,7 @@ int rdb_query(int i, const char *fmt, ...)
 	{
 		if (i == QUERY_HIGH)
 		{
-			res = rdb_direct_query(buf);
+			res = rdb_direct_query(buf, 0);
 		}
 		else
 		{
@@ -162,10 +166,10 @@ int rdb_query(int i, const char *fmt, ...)
 	}
 	else
 	{
-		res = rdb_direct_query(buf);
+		res = rdb_direct_query(buf,0);
 	}
 #else
-	res = rdb_direct_query(buf);
+	res = rdb_direct_query(buf,0);
 #endif
 	return res;
 }

@@ -26,22 +26,22 @@ MYSQL *mysql_thread;		/* MySQL Handler for thread */
 MYSQL_FIELD *mysql_fields;      /* MySQL Fields  */
 MYSQL_ROW mysql_row;            /* MySQL Row     */
 
-void db_mysql_error(int severity, const char *msg);
+void db_mysql_error(int severity, const char *msg, int con);
 char *db_mysql_hidepass(char *sql);
 
 /*************************************************************************/
 
-void db_mysql_error(int severity, const char *msg)
+void db_mysql_error(int severity, const char *msg, int con)
 {
 	static char buf[512];
 
 	SET_SEGV_LOCATION();
 
-	if (mysql_error(mysql))
+	if (mysql_error(con ? mysql_thread : mysql))
 	{
 		ircsnprintf(buf, sizeof(buf), "MySQL %s %s: %s", msg,
 		            severity == SQL_WARNING ? "warning" : "error",
-		            mysql_error(mysql));
+		            mysql_error(con ? mysql_thread : mysql));
 	}
 	else
 	{
@@ -55,9 +55,8 @@ void db_mysql_error(int severity, const char *msg)
 
 /*************************************************************************/
 
-int db_mysql_init()
+int db_mysql_init(int con)
 {
-
 	SET_SEGV_LOCATION();
 
 	/* If the host is not defined, assume we don't want MySQL */
@@ -90,7 +89,7 @@ int db_mysql_init()
 
 	SET_SEGV_LOCATION();
 
-	if (!db_mysql_open())
+	if (!db_mysql_open(con))
 	{
 		denora->do_sql = 0;
 		return 0;
@@ -99,7 +98,7 @@ int db_mysql_init()
 	{
 		denora->do_sql = 1;
 		alog(LOG_SQLDEBUG, "MySQL: server version %s.",
-		     mysql_get_server_info(mysql));
+		     mysql_get_server_info(con ? mysql_thread : mysql));
 	}
 	SET_SEGV_LOCATION();
 
@@ -108,7 +107,7 @@ int db_mysql_init()
 
 /*************************************************************************/
 
-int db_mysql_open()
+int db_mysql_open(int con)
 {
 	unsigned int seconds;
 	int flags;
@@ -119,9 +118,18 @@ int db_mysql_open()
 
 	SET_SEGV_LOCATION();
 
-	mysql = mysql_init(NULL);
-	if (mysql == NULL)
-		db_mysql_error(SQL_WARNING, "Unable to create mysql object");
+	if (con == 0)
+	{
+		mysql = mysql_init(NULL);
+		db_mysql_error(SQL_WARNING, "Unable to create mysql object", con);
+		return 0;
+	}
+	else
+	{
+		mysql_thread = mysql_init(NULL);
+		db_mysql_error(SQL_WARNING, "Unable to create mysql object", con);
+		return 0;
+	}
 
 	if (!SqlPort)
 	{
@@ -130,12 +138,12 @@ int db_mysql_open()
 
 	if (!DisableMySQLOPT)
 	{
-		mysql_options(mysql, MYSQL_OPT_COMPRESS, 0);
+		mysql_options(con ? mysql_thread : mysql, MYSQL_OPT_COMPRESS, 0);
 #if MYSQL_VERSION_ID > 40102
-		mysql_options(mysql, MYSQL_SET_CHARSET_NAME, "latin1");
+		mysql_options(con ? mysql_thread : mysql, MYSQL_SET_CHARSET_NAME, "latin1");
 #endif
 		seconds = SQLPingFreq * 2;
-		mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, (char *) &seconds);
+		mysql_options(con ? mysql_thread : mysql, MYSQL_OPT_CONNECT_TIMEOUT, (char *) &seconds);
 	}
 
 	SET_SEGV_LOCATION();
@@ -158,12 +166,15 @@ int db_mysql_open()
 	}
 
 	if ((!mysql_real_connect
-	        (mysql, SqlHost, SqlUser, (SqlPass ? SqlPass : ""), SqlName,
+	        (con ? mysql_thread : mysql, SqlHost, SqlUser, (SqlPass ? SqlPass : ""), SqlName,
 	         SqlPort, SqlSock ? SqlSock : NULL, flags)))
 	{
 		log_perror("MySQL Error: Cant connect to MySQL: %s\n",
-		           mysql_error(mysql));
-		denora->do_sql = 0;
+		           mysql_error(con ? mysql_thread : mysql));
+		if (con == 0)
+			denora->do_sql = 0;
+		else
+			UseThreading = 0;
 		return 0;
 	}
 	return 1;
@@ -171,7 +182,7 @@ int db_mysql_open()
 
 /*************************************************************************/
 
-int db_mysql_query(char *sql)
+int db_mysql_query(char *sql, int con)
 {
 	int result, lcv;
 	int pingresult;
@@ -183,10 +194,10 @@ int db_mysql_query(char *sql)
 
 	alog(LOG_SQLDEBUG, "sql debug: %s", db_mysql_hidepass(sql));
 
-	pingresult = mysql_ping(mysql);
+	pingresult = mysql_ping(con ? mysql_thread : mysql);
 	if (!pingresult)
 	{
-		result = mysql_query(mysql, sql);
+		result = mysql_query(con ? mysql_thread : mysql, sql);
 	}
 	else
 	{
@@ -195,7 +206,7 @@ int db_mysql_query(char *sql)
 
 	if (result)
 	{
-		switch (mysql_errno(mysql))
+		switch (mysql_errno(con ? mysql_thread : mysql))
 		{
 			case CR_SERVER_GONE_ERROR:
 			case CR_SERVER_LOST:
@@ -206,11 +217,11 @@ int db_mysql_query(char *sql)
 				for (lcv = 0; lcv < SqlRetries; lcv++)
 				{
 					alog(LOG_NORMAL, "%s, trying to reconnect...",
-					     mysql_error(mysql));
-					if (db_mysql_open())
+					     mysql_error(con ? mysql_thread : mysql));
+					if (db_mysql_open(con))
 					{
 						alog(LOG_NORMAL, "MySQL connection reestablished");
-						result = mysql_query(mysql, sql);
+						result = mysql_query(con ? mysql_thread : mysql, sql);
 						return (result);
 					}
 					sleep(SqlRetryGap);
@@ -218,67 +229,66 @@ int db_mysql_query(char *sql)
 
 				/* If we get here, we could not connect. */
 				log_perror("Unable to reconnect to database: %s\n",
-				           mysql_error(mysql));
-				db_mysql_error(SQL_ERROR, "connect");
+				           mysql_error(con ? mysql_thread : mysql));
+				db_mysql_error(SQL_ERROR, "connect", con);
 				alog(LOG_ERROR, "Disabling MYSQL due to problem with server");
 				denora->do_sql = 0;
 				SQLDisableDueServerLost = 1;
 				/* Never reached. */
 				break;
 			case CR_COMMANDS_OUT_OF_SYNC:
-				db_mysql_error(SQL_ERROR, "Commands out of sync");
+				db_mysql_error(SQL_ERROR, "Commands out of sync", con);
 				break;
 			case ER_PARSE_ERROR:
-				db_mysql_error(SQL_ERROR, "parser error");
+				db_mysql_error(SQL_ERROR, "parser error", con);
 				break;
 			case ER_WRONG_VALUE_COUNT_ON_ROW:
-				db_mysql_error(SQL_ERROR, "query error");
+				db_mysql_error(SQL_ERROR, "query error", con);
 				break;
 			case ER_BAD_FIELD_ERROR:
-				db_mysql_error(SQL_ERROR, "Unknown field");
+				db_mysql_error(SQL_ERROR, "Unknown field", con);
 				break;
 			case ER_NO_SUCH_TABLE:
-				db_mysql_error(SQL_ERROR, "Table Doesn't exist");
+				db_mysql_error(SQL_ERROR, "Table Doesn't exist", con);
 				break;
 			case ER_DUP_FIELDNAME:
 				break;
 			case ER_DUP_ENTRY:
-				alog(LOG_ERROR, "MYSQL said %s", mysql_error(mysql));
+				alog(LOG_ERROR, "MYSQL said %s", mysql_error(con ? mysql_thread : mysql));
 				alog(LOG_ERROR, "MYSQL query %s", sql);
 				break;
 			case ER_BAD_NULL_ERROR:
 				db_mysql_error(SQL_ERROR,
-				               "Column can not be NULL!! - check statement");
+				               "Column can not be NULL!! - check statement", con);
 				break;
 			case ER_USER_LIMIT_REACHED:
 				db_mysql_error(SQL_ERROR,
-				               "To Many Connections, closing denora mysql connection");
+				               "To Many Connections, closing denora mysql connection", con);
 				denora->do_sql = 0;
-				db_mysql_close();
+				db_mysql_close(con);
 				SQLDisableDueServerLost = 1;
 				break;
 			case ER_GET_ERRNO:
 				db_mysql_error(SQL_ERROR,
-				               "mysql returned errno code: disabling MYSQL");
+				               "mysql returned errno code: disabling MYSQL", con);
 				denora->do_sql = 0;
-				db_mysql_close();
+				db_mysql_close(con);
 				SQLDisableDueServerLost = 1;
 				break;
 			default:
 				alog(LOG_ERROR, "MYSQL reported Error Code %d",
-				     mysql_errno(mysql));
-				alog(LOG_ERROR, "MYSQL said %s", mysql_error(mysql));
+				     mysql_errno(con ? mysql_thread : mysql));
+				alog(LOG_ERROR, "MYSQL said %s", mysql_error(con ? mysql_thread : mysql));
 				alog(LOG_ERROR, "Report this to Denora Developers");
 				alog(LOG_ERROR, "Disabling MYSQL due to this error");
 				denora->do_sql = 0;
-				db_mysql_close();
+				db_mysql_close(con);
 				SQLDisableDueServerLost = 1;
 				return 0;
 		}
 	}
 
 	return 1;
-
 }
 
 /*************************************************************************/
@@ -298,7 +308,6 @@ char *db_mysql_quote(char *sql)
 
 	mysql_real_escape_string(mysql, quoted, sql, slen);
 	return quoted;
-
 }
 
 /*************************************************************************/
@@ -350,18 +359,27 @@ char *db_mysql_hidepass(char *sql)
 /*************************************************************************/
 
 /* I don't like using res here, maybe we can pass it as a param? */
-int db_mysql_close()
+int db_mysql_close(int con)
 {
-	mysql_close(mysql);
+	if (mysql && con == 0)
+	{
+		mysql_close(mysql);
+#ifdef USE_THREADS
+	}
+	else if (UseThreading && mysql_thread && con == 1)
+	{
+		mysql_close(mysql_thread);
+#endif
+	}
 	return 1;
 }
 
 /*************************************************************************/
 
-void dbMySQLPrepareForQuery(void)
+void dbMySQLPrepareForQuery(int con)
 {
 	MYSQL_RES *mysql_res;
-	mysql_res = mysql_use_result(mysql);
+	mysql_res = mysql_use_result(con ? mysql_thread : mysql);
 	if (mysql_res)
 	{
 		mysql_free_result(mysql_res);

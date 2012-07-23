@@ -148,7 +148,6 @@ void do_mysql_backup(char *table, char *output)
 		alog(LOG_ERROR, "SQL is disabled in the meantime, backup stopped");
 		return;
 	}
-	dbMySQLPrepareForQuery();
 	rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", table, output);
 }
 #endif

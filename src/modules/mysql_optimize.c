@@ -68,13 +68,6 @@ int db_optimize(__attribute__((unused))const char *name)
 	if (ircd->spamfilter)
 		sprintf(tables, "%s, %s", tables, SpamTable);
 
-#ifdef USE_MYSQL
-	dbMySQLPrepareForQuery();
-#endif
 	rdb_query(QUERY_LOW, "OPTIMIZE TABLE %s", tables);
-#ifdef USE_MYSQL
-	dbMySQLPrepareForQuery();
-#endif
-
 	return MOD_CONT;
 }

@@ -361,7 +361,7 @@ E char *statsDB;
 E int rdb_init(void);
 E int rdb_close(void);
 E int rdb_clear_table(char *table);
-E int rdb_direct_query(char *query);
+E int rdb_direct_query(char *query, int con);
 E char *rdb_error_msg(void);
 E char *rdb_errmsg;
 E int rdb_check_table(char *table);
@@ -597,12 +597,12 @@ E MYSQL_ROW   mysql_row;
 E MYSQL	      *mysql_thread;
 #endif
 
-E int db_mysql_init(void);
-E int db_mysql_open(void);
-E int db_mysql_close(void);
-E int db_mysql_query(char *sql);
+E int db_mysql_init(int con);
+E int db_mysql_open(int con);
+E int db_mysql_close(int con);
+E int db_mysql_query(char *sql, int con);
 E char *db_mysql_quote(char *sql);
-E void dbMySQLPrepareForQuery(void);
+E void dbMySQLPrepareForQuery(int con);
 
 #endif
 

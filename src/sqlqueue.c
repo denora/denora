@@ -201,7 +201,7 @@ QueueEntry *ExecuteQueue(QueueEntry * qep)
 {
 	if (qep != NULL)
 	{
-		rdb_direct_query(qep->msg);
+		rdb_direct_query(qep->msg, 1);
 		return RemoveQueueEntry(qep);
 	}
 	return NULL;
