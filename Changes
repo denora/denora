@@ -49,6 +49,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+12/07/23 Fixed Config not remembering thread settings
 12/07/23 Threading needed more fixes, hope it works now :) (Now works)
 12/07/22 Fixed threading by actually documenting it in conf (duh)
 12/07/22 Several more warnings and fixes in sysconf.h.in / configure(.in)
