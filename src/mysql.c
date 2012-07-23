@@ -20,6 +20,9 @@
 
 /* Database Global Variables */
 MYSQL *mysql;                   /* Main MySQL Handler */
+#ifdef USE_THREADS
+MYSQL *mysql_thread;		/* MySQL Handler for thread */
+#endif
 MYSQL_FIELD *mysql_fields;      /* MySQL Fields  */
 MYSQL_ROW mysql_row;            /* MySQL Row     */
 
@@ -154,29 +157,14 @@ int db_mysql_open()
 #endif
 	}
 
-	if (SqlSock)
+	if ((!mysql_real_connect
+	        (mysql, SqlHost, SqlUser, (SqlPass ? SqlPass : ""), SqlName,
+	         SqlPort, SqlSock ? SqlSock : NULL, flags)))
 	{
-		if ((!mysql_real_connect
-		        (mysql, SqlHost, SqlUser, (SqlPass ? SqlPass : ""), SqlName,
-		         SqlPort, SqlSock, flags)))
-		{
-			log_perror("MySQL Error: Cant connect to MySQL: %s\n",
-			           mysql_error(mysql));
-			denora->do_sql = 0;
-			return 0;
-		}
-	}
-	else
-	{
-		if ((!mysql_real_connect
-		        (mysql, SqlHost, SqlUser, (SqlPass ? SqlPass : ""), SqlName,
-		         SqlPort, NULL, flags)))
-		{
-			log_perror("MySQL Error: Cant connect to MySQL: %s\n",
-			           mysql_error(mysql));
-			denora->do_sql = 0;
-			return 0;
-		}
+		log_perror("MySQL Error: Cant connect to MySQL: %s\n",
+		           mysql_error(mysql));
+		denora->do_sql = 0;
+		return 0;
 	}
 	return 1;
 }
@@ -379,8 +367,5 @@ void dbMySQLPrepareForQuery(void)
 		mysql_free_result(mysql_res);
 	}
 }
-
-
-
 
 #endif

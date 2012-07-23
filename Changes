@@ -15,6 +15,7 @@ Additions
 11/02/11 r416 Added support for ircd-rizon
 
 Changes
+12/07/23 Updated sql specific code, more preparations for threadin
 12/07/18 Fixed persistent channel support by actually setting the modes in the protocols.
 12/07/18 Applied denora_automode to several protocols
 12/07/18 Moved automode handler into a separate void and marked some todo's regarding it for later
@@ -85,6 +86,7 @@ Fixes
 11/02/11 r416 Scarynet module was not compiled on windows
 
 Removals
+12/07/23 Removed threadcount - we only will need ONE
 12/07/17 Removed commented out unused code
 12/06/26 Removed defs for strndup as it's not used at all
 11/02/11 r418 Removed support for Nefarious ircd 1.0-1.2

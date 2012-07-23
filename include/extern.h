@@ -593,6 +593,9 @@ E int has_cmode(char *chan, int m);
 E MYSQL       *mysql;
 E MYSQL_FIELD *mysql_fields;
 E MYSQL_ROW   mysql_row;
+#ifdef USE_THREADS
+E MYSQL	      *mysql_thread;
+#endif
 
 E int db_mysql_init(void);
 E int db_mysql_open(void);
@@ -1022,7 +1025,6 @@ E void queue_lock(void);
 E void queue_wait(void);
 E void queue_signal(void);
 E void *queue_thread_main(void *arg);
-E int ThreadCount;
 E int UseThreading;
 E QueueEntry *AddQueueEntry(QueueEntry *qp, char *msg);
 E QueueEntry *RemoveQueueEntry(QueueEntry *qp);

@@ -1280,11 +1280,6 @@ int confadd_threading(cVar * vars[], int lnum)
 			tmp->type = NULL;
 			UseThreading++;
 		}
-		else if (tmp->type && (tmp->type->flag & THREADING_COUNT_F))
-		{
-			tmp->type = NULL;
-			ThreadCount = atoi(tmp->value);
-		}
 	}
 	return lnum;
 }

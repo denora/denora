@@ -297,8 +297,6 @@
 /* threading */
 #define THREADING_USE    "usethread"
 #define THREADING_USE_F                  0x00000001
-#define THREADING_COUNT  "threadcount"
-#define THREADING_COUNT_F                0x00000002
 
 /* module block definitions */
 
@@ -461,7 +459,6 @@ sConf confxmlrpctab[] =
 sConf confthreadingtab[] =
 {
 	{THREADING_USE, THREADING_USE_F, VARTYPE_NONE},
-	{THREADING_COUNT, THREADING_COUNT_F, VARTYPE_INT},
 	{(char *) 0, 0, 0}
 };
 

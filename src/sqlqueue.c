@@ -33,7 +33,7 @@ int QueueEntryInit(void)
 	int i;
 	deno_thread_t th;
 
-	for (i = 1; i <= ThreadCount; i++)
+	if (UseThreading)
 	{
 		if (deno_thread_create(th, queue_thread_main, NULL))
 		{
@@ -43,8 +43,8 @@ int QueueEntryInit(void)
 		{
 			return 0;
 		}
-		alog(LOG_DEBUG, "debug: Creating Queue thread %ld (%d of %d)",
-		     (long) th, i, ThreadCount);
+		alog(LOG_DEBUG, "debug: Creating Queue thread %ld",
+		     (long) th);
 	}
 
 	alog(LOG_DEBUG, "Queue Thread initialized");

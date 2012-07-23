@@ -50,11 +50,7 @@ int rdb_close()
 #ifdef USE_MYSQL
 	if (sqltype == SQL_MYSQL)
 	{
-		if (mysql)
-		{
-			mysql_close(mysql);
-		}
-		mysql = NULL;
+		db_mysql_close();
 		return 1;
 	}
 #endif
@@ -72,52 +68,33 @@ int rdb_close()
 
 int rdb_clear_table(char *table)
 {
-#ifdef USE_MYSQL
+#if defined(USE_MYSQL) || defined(USE_POSTGRE)
 	static char buf[1024];
-#endif
 
 	SET_SEGV_LOCATION();
 
+	if (KeepUserTable && !stricmp(table, UserTable))
+	{
+		ircsnprintf(buf, sizeof(buf), "UPDATE %s SET online='N'",
+		            table);
+	}
+	else if (KeepServerTable && !stricmp(table, ServerTable))
+	{
+		ircsnprintf(buf, sizeof(buf), "UPDATE %s SET online='N'",
+		            table);
+	}
+	else
+	{
+		ircsnprintf(buf, sizeof(buf), "TRUNCATE TABLE %s", table);
+	}
 #ifdef USE_MYSQL
 	if (sqltype == SQL_MYSQL)
-	{
-		if (KeepUserTable && !stricmp(table, UserTable))
-		{
-			ircsnprintf(buf, sizeof(buf), "UPDATE %s SET online='N'",
-			            table);
-		}
-		else if (KeepServerTable && !stricmp(table, ServerTable))
-		{
-			ircsnprintf(buf, sizeof(buf), "UPDATE %s SET online='N'",
-			            table);
-		}
-		else
-		{
-			ircsnprintf(buf, sizeof(buf), "TRUNCATE TABLE %s", table);
-		}
 		return db_mysql_query(buf);
-
-	}
 #endif
 #ifdef USE_POSTGRE
 	if (sqltype == SQL_POSTGRE)
-	{
-		if (KeepUserTable && !stricmp(table, UserTable))
-		{
-			ircsnprintf(buf, sizeof(buf), "UPDATE %s SET online='N'",
-			            table);
-		}
-		else if (KeepServerTable && !stricmp(table, ServerTable))
-		{
-			ircsnprintf(buf, sizeof(buf), "UPDATE %s SET online='N'",
-			            table);
-		}
-		else
-		{
-			ircsnprintf(buf, sizeof(buf), "TRUNCATE TABLE %s", table);
-		}
 		return db_postgre_query(buf);
-	}
+#endif
 #endif
 	return 0;
 }
@@ -171,7 +148,7 @@ int rdb_query(int i, const char *fmt, ...)
 	va_end(args);
 
 #ifdef USE_THREADS
-	if (UseThreading && ThreadCount != 0)
+	if (UseThreading)
 	{
 		if (i == QUERY_HIGH)
 		{
@@ -198,23 +175,23 @@ int rdb_query(int i, const char *fmt, ...)
 /* escape the string */
 char *rdb_escape(char *ch)
 {
-#ifdef USE_MYSQL
-	char *result;
-#endif
 	char *ret = NULL;
-
+#if defined(USE_MYSQL) || defined(USE_POSTGRE)
+	char *result;
 #ifdef USE_MYSQL
 	if (sqltype == SQL_MYSQL)
 	{
 		result = db_mysql_quote(ch);
-		ret = sstrdup(result);
-		free(result);
 	}
 #endif
 #ifdef USE_POSTGRE
 	if (sqltype == SQL_POSTGRE)
 	{
 		result = db_postgre_quote(ch);
+	}
+#endif
+	if (result)
+	{
 		ret = sstrdup(result);
 		free(result);
 	}
@@ -254,7 +231,6 @@ char *rdb_error_msg()
 	if (sqltype == SQL_MYSQL)
 	{
 		rdb_errmsg = sstrdup(mysql_error(mysql));
-		return rdb_errmsg;
 	}
 #endif
 #ifdef USE_POSTGRE
