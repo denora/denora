@@ -58,12 +58,6 @@ int DenoraInit(int argc, char **argv)
 		return MOD_STOP;
 	}
 
-	if (!denora->do_sql) {
-		alog(LOG_ERROR,
-			 "[lastspoke] SQL needs to be enabled to load this module.");
-		return MOD_STOP;
-	}
-
 	hook = createEventHook(EVENT_FANTASY, do_fantasy_lastspoke);
 	moduleAddEventHook(hook);
 
