@@ -101,24 +101,16 @@ DENORA_INLINE int isExcludedServer(char *name)
 
 void load_exclude_db(void)
 {
-	DenoraDBFile *dbptr = calloc(1, sizeof(DenoraDBFile));
-	Exclude *e = NULL;
 	char *key, *value;
+	DenoraDBFile *dbptr = filedb_open(excludeDB, EXCLUDE_VERSION, &key, &value);
+	Exclude *e = NULL;
 	int retval = 0;
 
-	alog(LOG_NORMAL, "Loading %s", excludeDB);
-
-	fill_db_ptr(dbptr, 0, EXCLUDE_VERSION, s_StatServ, excludeDB);
-
-	/* let's remove existing temp files here, because we only load dbs on startup */
-	remove(dbptr->temp_name);
-
-	/* Open the db, fill the rest of dbptr and allocate memory for key and value */
-	if (new_open_db_read(dbptr, &key, &value))
-	{
-		free(dbptr);
-		return;                 /* Bang, an error occurred */
-	}
+        if (!dbptr)
+        {
+                return;                 /* Bang, an error occurred */
+        }
+        SET_SEGV_LOCATION();
 
 	while (1)
 	{
@@ -129,16 +121,14 @@ void load_exclude_db(void)
 		{
 			alog(LOG_NORMAL, "WARNING! DB_READ_ERROR in %s",
 			     dbptr->filename);
-			new_close_db(dbptr->fptr, &key, &value);
-			free(dbptr);
+			filedb_close(dbptr, &key, &value);
 			return;
 		}
 		else if (retval == DB_EOF_ERROR)
 		{
 			alog(LOG_EXTRADEBUG, "debug: %s read successfully",
 			     dbptr->filename);
-			new_close_db(dbptr->fptr, &key, &value);
-			free(dbptr);
+			filedb_close(dbptr, &key, &value);
 			return;
 		}
 		else if (retval == DB_READ_BLOCKEND)            /* DB_READ_BLOCKEND */
@@ -192,21 +182,9 @@ Exclude *make_exclude(char *mask)
 
 void save_exclude_db(void)
 {
-	DenoraDBFile *dbptr = calloc(1, sizeof(DenoraDBFile));
+	DenoraDBFile *dbptr = filedb_create(excludeDB, EXCLUDE_VERSION);
 	Exclude *e;
 	int i;
-
-	fill_db_ptr(dbptr, 0, EXCLUDE_VERSION, s_StatServ, excludeDB);
-
-	/* time to backup the old db */
-	rename(excludeDB, dbptr->temp_name);
-
-	if (new_open_db_write(dbptr))
-	{
-		rename(dbptr->temp_name, excludeDB);
-		free(dbptr);
-		return;                 /* Bang, an error occurred */
-	}
 
 	for (i = 0; i < 1024; i++)
 	{
@@ -218,12 +196,7 @@ void save_exclude_db(void)
 		}
 	}
 
-	if (dbptr)
-	{
-		new_close_db(dbptr->fptr, NULL, NULL);  /* close file */
-		remove(dbptr->temp_name);       /* saved successfully, no need to keep the old one */
-		free(dbptr);            /* free the db struct */
-	}
+	filedb_close(dbptr, NULL, NULL);  /* close file */
 }
 
 /*************************************************************************/

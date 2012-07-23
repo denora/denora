@@ -144,8 +144,8 @@ int db_mysql_open(int con)
 	{
 		mysql_options(con ? mysql_thread : mysql, MYSQL_OPT_COMPRESS, 0);
 #if MYSQL_VERSION_ID > 40102
-		mysql_options(con ? mysql_thread : mysql, MYSQL_SET_CHARSET_NAME, "utf8");
-		mysql_options(con ? mysql_thread : mysql, MYSQL_INIT_COMMAND, "SET NAMES 'utf8';");
+		mysql_options(con ? mysql_thread : mysql, MYSQL_SET_CHARSET_NAME, "latin1");
+		/* mysql_options(con ? mysql_thread : mysql, MYSQL_INIT_COMMAND, "SET NAMES 'utf8';"); */
 #endif
 		seconds = SQLPingFreq * 2;
 		mysql_options(con ? mysql_thread : mysql, MYSQL_OPT_CONNECT_TIMEOUT, (char *) &seconds);
@@ -191,6 +191,7 @@ int db_mysql_query(char *sql, int con)
 {
 	int result, lcv;
 	int pingresult;
+	int closesql = 0;
 
 	if (!denora->do_sql)
 	{
@@ -203,6 +204,7 @@ int db_mysql_query(char *sql, int con)
 	if (!pingresult)
 	{
 		result = mysql_query(con ? mysql_thread : mysql, sql);
+		alog(LOG_DEBUG, "[con %d/%s] %s", con, result == 0 ? "Accepted" : "Rejected", sql);
 	}
 	else
 	{
@@ -235,7 +237,7 @@ int db_mysql_query(char *sql, int con)
 				/* If we get here, we could not connect. */
 				log_perror("Unable to reconnect to database: %s\n",
 				           mysql_error(con ? mysql_thread : mysql));
-				db_mysql_error(SQL_ERROR, "connect", con);
+				db_mysql_error(SQL_ERROR, "Connect", con);
 				alog(LOG_ERROR, "Disabling MYSQL due to problem with server");
 				denora->do_sql = 0;
 				SQLDisableDueServerLost = 1;
@@ -245,10 +247,10 @@ int db_mysql_query(char *sql, int con)
 				db_mysql_error(SQL_ERROR, "Commands out of sync", con);
 				break;
 			case ER_PARSE_ERROR:
-				db_mysql_error(SQL_ERROR, "parser error", con);
+				db_mysql_error(SQL_ERROR, "Parser error", con);
 				break;
 			case ER_WRONG_VALUE_COUNT_ON_ROW:
-				db_mysql_error(SQL_ERROR, "query error", con);
+				db_mysql_error(SQL_ERROR, "Query error", con);
 				break;
 			case ER_BAD_FIELD_ERROR:
 				db_mysql_error(SQL_ERROR, "Unknown field", con);
@@ -257,40 +259,42 @@ int db_mysql_query(char *sql, int con)
 				db_mysql_error(SQL_ERROR, "Table Doesn't exist", con);
 				break;
 			case ER_DUP_FIELDNAME:
+				db_mysql_error(SQL_ERROR, "Duplicate fieldname", con);
 				break;
 			case ER_DUP_ENTRY:
-				alog(LOG_ERROR, "MYSQL said %s", mysql_error(con ? mysql_thread : mysql));
+				db_mysql_error(SQL_ERROR, "Duplicate entry", con);
 				alog(LOG_ERROR, "MYSQL query %s", sql);
 				break;
 			case ER_BAD_NULL_ERROR:
-				db_mysql_error(SQL_ERROR,
-				               "Column can not be NULL!! - check statement", con);
+				db_mysql_error(SQL_ERROR, "Column can not be NULL", con);
 				break;
 			case ER_USER_LIMIT_REACHED:
-				db_mysql_error(SQL_ERROR,
-				               "To Many Connections, closing denora mysql connection", con);
-				denora->do_sql = 0;
-				db_mysql_close(con);
-				SQLDisableDueServerLost = 1;
+				db_mysql_error(SQL_ERROR, "Too Many Connections, disabling mysql", con);
+				closesql = 1;
 				break;
 			case ER_GET_ERRNO:
-				db_mysql_error(SQL_ERROR,
-				               "mysql returned errno code: disabling MYSQL", con);
-				denora->do_sql = 0;
-				db_mysql_close(con);
-				SQLDisableDueServerLost = 1;
+				db_mysql_error(SQL_ERROR, "Mysql returned errno code, disabling mysql", con);
+				closesql = 1;
 				break;
 			default:
-				alog(LOG_ERROR, "MYSQL reported Error Code %d",
-				     mysql_errno(con ? mysql_thread : mysql));
+				alog(LOG_ERROR, "MYSQL reported Error Code %d", mysql_errno(con ? mysql_thread : mysql));
 				alog(LOG_ERROR, "MYSQL said %s", mysql_error(con ? mysql_thread : mysql));
 				alog(LOG_ERROR, "Report this to Denora Developers");
 				alog(LOG_ERROR, "Disabling MYSQL due to this error");
-				denora->do_sql = 0;
-				db_mysql_close(con);
-				SQLDisableDueServerLost = 1;
-				return 0;
+				closesql = 1;
 		}
+	}
+
+	if (closesql == 1)
+	{
+		if (con)
+		{
+			UseThreading = 0;
+		}
+		denora->do_sql = 0;
+		db_mysql_close(con);
+		SQLDisableDueServerLost = 1;
+		return 0;
 	}
 
 	return 1;
@@ -371,7 +375,7 @@ int db_mysql_close(int con)
 		mysql_close(mysql);
 #ifdef USE_THREADS
 	}
-	else if (UseThreading && mysql_thread && con == 1)
+	else if (mysql_thread)
 	{
 		mysql_close(mysql_thread);
 #endif
@@ -388,7 +392,11 @@ void dbMySQLPrepareForQuery(int con)
 	if (mysql_res)
 	{
 		mysql_free_result(mysql_res);
+		if (con)
+			alog(LOG_DEBUG, "Result from the threaded query");
 	}
+	else if (con)
+		alog(LOG_DEBUG, "No result from the threaded query");
 }
 
 #endif

@@ -15,6 +15,7 @@ Additions
 11/02/11 r416 Added support for ircd-rizon
 
 Changes
+12/07/23 Rewrote db file handling a little
 12/07/23 Automode handled in denora_cmd_join now, removed from other obsolete places (fixed #1433)
 12/07/23 Updated sql specific code, more preparations for threadin
 12/07/18 Fixed persistent channel support by actually setting the modes in the protocols.

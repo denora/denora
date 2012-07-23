@@ -99,22 +99,13 @@ void update_sync_state(char *source, int ac)
 
 void load_server_db(void)
 {
-	DenoraDBFile *dbptr = calloc(1, sizeof(DenoraDBFile));
-	ServStats *ss = NULL;
 	char *key, *value;
+	DenoraDBFile *dbptr = filedb_open(ServerDB, SERVER_VERSION, &key, &value);
+	ServStats *ss = NULL;
 	int retval = 0;
 
-	alog(LOG_NORMAL, "Loading %s", ServerDB);
-
-	fill_db_ptr(dbptr, 0, SERVER_VERSION, s_StatServ, ServerDB);
-
-	/* let's remove existing temp files here, because we only load dbs on startup */
-	remove(dbptr->temp_name);
-
-	/* Open the db, fill the rest of dbptr and allocate memory for key and value */
-	if (new_open_db_read(dbptr, &key, &value))
+	if (!dbptr)
 	{
-		free(dbptr);
 		return;                 /* Bang, an error occurred */
 	}
 
@@ -126,16 +117,14 @@ void load_server_db(void)
 		if (retval == DB_READ_ERROR)
 		{
 			alog(LOG_NORMAL, langstr(ALOG_DB_ERROR), dbptr->filename);
-			new_close_db(dbptr->fptr, &key, &value);
-			free(dbptr);
+			filedb_close(dbptr, &key, &value);
 			return;
 		}
 		else if (retval == DB_EOF_ERROR)
 		{
 			alog(LOG_EXTRADEBUG, langstr(ALOG_DEBUG_DB_OK),
 			     dbptr->filename);
-			new_close_db(dbptr->fptr, &key, &value);
-			free(dbptr);
+			filedb_close(dbptr, &key, &value);
 			return;
 		}
 		else if (retval == DB_READ_BLOCKEND)            /* DB_READ_BLOCKEND */
@@ -211,21 +200,9 @@ void load_server_db(void)
 
 void save_server_db(void)
 {
-	DenoraDBFile *dbptr = calloc(1, sizeof(DenoraDBFile));
+	DenoraDBFile *dbptr = filedb_create(ServerDB, SERVER_VERSION);
 	ServStats *ss;
 	int i;
-
-	fill_db_ptr(dbptr, 0, SERVER_VERSION, s_StatServ, ServerDB);
-
-	/* time to backup the old db */
-	rename(ServerDB, dbptr->temp_name);
-
-	if (new_open_db_write(dbptr))
-	{
-		rename(dbptr->temp_name, ServerDB);
-		free(dbptr);
-		return;                 /* Bang, an error occurred */
-	}
 
 	for (i = 0; i < 1024; i++)
 	{
@@ -256,12 +233,7 @@ void save_server_db(void)
 		}
 	}
 
-	if (dbptr)
-	{
-		new_close_db(dbptr->fptr, NULL, NULL);  /* close file */
-		remove(dbptr->temp_name);       /* saved successfully, no need to keep the old one */
-		free(dbptr);            /* free the db struct */
-	}
+	filedb_close(dbptr, NULL, NULL);  /* close file */
 }
 
 /*************************************************************************/

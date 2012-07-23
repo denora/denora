@@ -32,25 +32,15 @@ static int UserLastClean = -1;
  */
 void load_stats_db(void)
 {
-	DenoraDBFile *dbptr = calloc(1, sizeof(DenoraDBFile));
 	char *key, *value;
+	DenoraDBFile *dbptr = filedb_open(statsDB, STATSDB_VERSION, &key, &value);
 	int retval = 0;
 
-	alog(LOG_NORMAL, "Loading %s", statsDB);
-
-	fill_db_ptr(dbptr, 0, STATSDB_VERSION, s_StatServ, statsDB);
-	SET_SEGV_LOCATION();
-
-	/* let's remove existing temp files here, because we only load dbs on startup */
-	remove(dbptr->temp_name);
-
-	/* Open the db, fill the rest of dbptr and allocate memory for key and value */
-	if (new_open_db_read(dbptr, &key, &value))
-	{
-		SET_SEGV_LOCATION();
-		free(dbptr);
-		return;                 /* Bang, an error occurred */
-	}
+        if (!dbptr)
+        {
+                return;                 /* Bang, an error occurred */
+        }
+        SET_SEGV_LOCATION();
 
 	while (1)
 	{
@@ -60,18 +50,14 @@ void load_stats_db(void)
 		if (retval == DB_READ_ERROR)
 		{
 			alog(LOG_NORMAL, langstr(ALOG_DB_ERROR), dbptr->filename);
-			new_close_db(dbptr->fptr, &key, &value);
-			SET_SEGV_LOCATION();
-			free(dbptr);
+			filedb_close(dbptr, &key, &value);
 			return;
 		}
 		else if (retval == DB_EOF_ERROR)
 		{
 			alog(LOG_EXTRADEBUG, langstr(ALOG_DEBUG_DB_OK),
 			     dbptr->filename);
-			new_close_db(dbptr->fptr, &key, &value);
-			SET_SEGV_LOCATION();
-			free(dbptr);
+			filedb_close(dbptr, &key, &value);
 			return;
 		}
 		else if (retval == DB_READ_BLOCKEND)            /* DB_READ_BLOCKEND */
@@ -138,20 +124,8 @@ void load_stats_db(void)
  */
 void save_stats_db(void)
 {
-	DenoraDBFile *dbptr = calloc(1, sizeof(DenoraDBFile));
+	DenoraDBFile *dbptr = filedb_create(statsDB, STATSDB_VERSION);
 
-	fill_db_ptr(dbptr, 0, STATSDB_VERSION, s_StatServ, statsDB);
-	SET_SEGV_LOCATION();
-
-	/* time to backup the old db */
-	rename(statsDB, dbptr->temp_name);
-
-	if (new_open_db_write(dbptr))
-	{
-		rename(dbptr->temp_name, statsDB);
-		free(dbptr);
-		return;                 /* Bang, an error occurred */
-	}
 	SET_SEGV_LOCATION();
 	new_write_db_entry("usermax", dbptr, "%ld", stats->users_max);
 	new_write_db_entry("usermaxtime", dbptr, "%ld",
@@ -175,12 +149,7 @@ void save_stats_db(void)
 	new_write_db_endofblock(dbptr);
 
 	SET_SEGV_LOCATION();
-	if (dbptr)
-	{
-		new_close_db(dbptr->fptr, NULL, NULL);  /* close file */
-		remove(dbptr->temp_name);       /* saved successfully, no need to keep the old one */
-		free(dbptr);            /* free the db struct */
-	}
+	filedb_close(dbptr, NULL, NULL);  /* close file */
 }
 
 /*************************************************************************/

@@ -20,122 +20,6 @@ static int curday = 0;
 
 /*************************************************************************/
 
-int new_open_db_read(DenoraDBFile * dbptr, char **key, char **value)
-{
-	*key = malloc(MAXKEYLEN);
-	*value = malloc(MAXVALLEN);
-
-	if (!FileExists(dbptr->filename))
-	{
-		/* Exit before trying to open if the file is not there */
-		return DB_READ_ERROR;
-	}
-
-	SET_SEGV_LOCATION();
-	if ((dbptr->fptr = FileOpen(dbptr->filename, FILE_READ)) == NULL)
-	{
-		free(*key);
-		*key = NULL;
-		free(*value);
-		*value = NULL;
-		return DB_READ_ERROR;
-	}
-	SET_SEGV_LOCATION();
-	dbptr->db_version =
-	    fgetc(dbptr->fptr) << 24 | fgetc(dbptr->fptr) << 16 | fgetc(dbptr->
-	            fptr)
-	    << 8 | fgetc(dbptr->fptr);
-
-	if (ferror(dbptr->fptr))
-	{
-		alog(LOG_DEBUG, "debug: Error reading version number on %s",
-		     dbptr->filename);
-		free(*key);
-		*key = NULL;
-		free(*value);
-		*value = NULL;
-		return DB_READ_ERROR;
-	}
-	else if (feof(dbptr->fptr))
-	{
-		alog(LOG_DEBUG,
-		     "debug: Error reading version number on %s: End of file detected",
-		     dbptr->filename);
-		free(*key);
-		*key = NULL;
-		free(*value);
-		*value = NULL;
-		SET_SEGV_LOCATION();
-		return DB_EOF_ERROR;
-	}
-	else if (dbptr->db_version < 1)
-	{
-		alog(LOG_DEBUG, "debug: Invalid version number (%d) on %s",
-		     dbptr->db_version, dbptr->filename);
-		free(*key);
-		*key = NULL;
-		free(*value);
-		*value = NULL;
-		return DB_VERSION_ERROR;
-	}
-	SET_SEGV_LOCATION();
-	return DB_READ_SUCCESS;
-}
-
-/*************************************************************************/
-
-int new_open_db_write(DenoraDBFile * dbptr)
-{
-	SET_SEGV_LOCATION();
-
-	if (!(dbptr->fptr = FileOpen(dbptr->filename, FILE_WRITE)))
-	{
-		return DB_WRITE_ERROR;
-	}
-	SET_SEGV_LOCATION();
-
-	if (fputc(dbptr->core_db_version >> 24 & 0xFF, dbptr->fptr) < 0 ||
-	        fputc(dbptr->core_db_version >> 16 & 0xFF, dbptr->fptr) < 0 ||
-	        fputc(dbptr->core_db_version >> 8 & 0xFF, dbptr->fptr) < 0 ||
-	        fputc(dbptr->core_db_version & 0xFF, dbptr->fptr) < 0)
-	{
-		alog(LOG_DEBUG, "debug: Error writing version number on %s",
-		     dbptr->filename);
-		return DB_WRITE_ERROR;
-	}
-	SET_SEGV_LOCATION();
-
-	return DB_WRITE_SUCCESS;
-}
-
-/*************************************************************************/
-
-void new_close_db(FILE * fptr, char **key, char **value)
-{
-	SET_SEGV_LOCATION();
-
-	if (key && *key)
-	{
-		free(*key);
-		*key = NULL;
-	}
-	SET_SEGV_LOCATION();
-
-	if (value && *value)
-	{
-		free(*value);
-		*value = NULL;
-	}
-	SET_SEGV_LOCATION();
-
-	if (fptr)
-	{
-		fclose(fptr);
-	}
-}
-
-/*************************************************************************/
-
 int new_read_db_entry(char **key, char **value, FILE * fptr)
 {
 	char *string = *key;
@@ -154,30 +38,30 @@ int new_read_db_entry(char **key, char **value, FILE * fptr)
 			{
 				return DB_READ_ERROR;   /* error! */
 			}
-			return DB_EOF_ERROR;        /* end of file */
+			return DB_EOF_ERROR;	/* end of file */
 		}
-		else if (character == BLOCKEND)         /* END OF BLOCK */
+		else if (character == BLOCKEND)	 /* END OF BLOCK */
 		{
 			return DB_READ_BLOCKEND;
 		}
-		else if (character == VALUEEND)         /* END OF VALUE */
+		else if (character == VALUEEND)	 /* END OF VALUE */
 		{
 			string[i] = '\0';   /* end of value */
 			return DB_READ_SUCCESS;
 		}
-		else if (character == SEPARATOR)        /* END OF KEY */
+		else if (character == SEPARATOR)	/* END OF KEY */
 		{
 			string[i] = '\0';   /* end of key */
 			string = *value;    /* beginning of value */
-			i = 0;              /* start with the first character of our value */
+			i = 0;	      /* start with the first character of our value */
 		}
 		else
 		{
 			if ((i == (MAXKEYLEN - 1)) && (string == *key))     /* max key length reached, continuing with value */
 			{
 				string[i] = '\0';       /* end of key */
-				string = *value;        /* beginning of value */
-				i = 0;          /* start with the first character of our value */
+				string = *value;	/* beginning of value */
+				i = 0;	  /* start with the first character of our value */
 			}
 			else if ((i == (MAXVALLEN - 1)) && (string == *value))      /* max value length reached, returning */
 			{
@@ -196,7 +80,7 @@ int new_read_db_entry(char **key, char **value, FILE * fptr)
 /*************************************************************************/
 
 int new_write_db_entry(const char *key, DenoraDBFile * dbptr,
-                       const char *fmt, ...)
+		       const char *fmt, ...)
 {
 	char string[MAXKEYLEN + MAXVALLEN + 2], value[MAXVALLEN];   /* safety byte :P */
 	va_list ap;
@@ -218,19 +102,16 @@ int new_write_db_entry(const char *key, DenoraDBFile * dbptr,
 	}
 	SET_SEGV_LOCATION();
 	ircsnprintf(string, MAXKEYLEN + MAXVALLEN + 1, "%s%c%s", key,
-	            SEPARATOR, value);
+		    SEPARATOR, value);
 	length = strlen(string);
 	string[length] = VALUEEND;
 	length++;
 	if (fwrite(string, 1, length, dbptr->fptr) < length)
 	{
 		alog(LOG_DEBUG, "debug: Error writing to %s", dbptr->filename);
-		new_close_db(dbptr->fptr, NULL, NULL);
-		alog(LOG_DEBUG, "debug: Restoring backup.");
 		remove(dbptr->filename);
 		rename(dbptr->temp_name, dbptr->filename);
-		SET_SEGV_LOCATION();
-		free(dbptr);
+		filedb_close(dbptr, NULL, NULL);
 		dbptr = NULL;
 		return DB_WRITE_ERROR;
 	}
@@ -251,7 +132,7 @@ int new_write_db_endofblock(DenoraDBFile * dbptr)
 	if (fputc(BLOCKEND, dbptr->fptr) == EOF)
 	{
 		alog(LOG_DEBUG, "debug: Error writing to %s", dbptr->filename);
-		new_close_db(dbptr->fptr, NULL, NULL);
+		filedb_close(dbptr, NULL, NULL);
 		return DB_WRITE_ERROR;
 	}
 	SET_SEGV_LOCATION();
@@ -262,7 +143,7 @@ int new_write_db_endofblock(DenoraDBFile * dbptr)
 /*************************************************************************/
 
 void fill_db_ptr(DenoraDBFile * dbptr, int version, int core_version,
-                 char *service, char *filename)
+		 char *service, char *filename)
 {
 	char buffer[PATH_MAX];
 	char buf[BUFSIZE];
@@ -348,7 +229,7 @@ static void rename_database(char *name, char *ext)
 	{
 		alog(LOG_NORMAL, "Backup of %s failed.", name);
 		denora_cmd_global(s_StatServ, "WARNING! Backup of %s failed.",
-		                  name);
+				  name);
 	}
 }
 
@@ -514,6 +395,138 @@ void ModuleRemoveBackups(char *dbname)
 
 	ircsnprintf(path, sizeof(path), "backups/%s.%s", dbname, ext);
 	unlink(path);
+}
+
+/*************************************************************************/
+
+DenoraDBFile *filedb_open(char *db, int type, char **key, char **value)
+{
+	DenoraDBFile *dbptr = calloc(1, sizeof(DenoraDBFile));
+
+	*key = malloc(MAXKEYLEN);
+	*value = malloc(MAXVALLEN);
+
+	alog(LOG_NORMAL, "Loading %s", db);
+
+	fill_db_ptr(dbptr, 0, type, s_StatServ, db);
+	SET_SEGV_LOCATION();
+
+	if (!FileExists(dbptr->filename))
+	{
+		filedb_close(dbptr, key, value);
+		return NULL;
+	}
+
+	SET_SEGV_LOCATION();
+	if ((dbptr->fptr = FileOpen(dbptr->filename, FILE_READ)) == NULL)
+	{
+		filedb_close(dbptr, key, value);
+		return NULL;
+	}
+	SET_SEGV_LOCATION();
+	dbptr->db_version =
+	    fgetc(dbptr->fptr) << 24 | fgetc(dbptr->fptr) << 16 | fgetc(dbptr->
+		    fptr)
+	    << 8 | fgetc(dbptr->fptr);
+
+	if (ferror(dbptr->fptr))
+	{
+		alog(LOG_DEBUG, "debug: Error reading version number on %s",
+		     dbptr->filename);
+		filedb_close(dbptr, key, value);
+		return NULL;
+	}
+	else if (feof(dbptr->fptr))
+	{
+		alog(LOG_DEBUG,
+		     "debug: Error reading version number on %s: End of file detected",
+		     dbptr->filename);
+		filedb_close(dbptr, key, value);
+		return NULL;
+	}
+	else if (dbptr->db_version < 1)
+	{
+		alog(LOG_DEBUG, "debug: Invalid version number (%d) on %s",
+		     dbptr->db_version, dbptr->filename);
+		filedb_close(dbptr, key, value);
+		return NULL;
+	}
+	SET_SEGV_LOCATION();
+
+	return dbptr;
+}
+
+/*************************************************************************/
+
+DenoraDBFile *filedb_create(char * db, int type)
+{
+	DenoraDBFile *dbptr = calloc(1, sizeof(DenoraDBFile));
+
+	fill_db_ptr(dbptr, 0, type, s_StatServ, db);
+	SET_SEGV_LOCATION();
+
+	/* time to backup the old db */
+	rename(db, dbptr->temp_name);
+
+	if (!(dbptr->fptr = FileOpen(dbptr->filename, FILE_WRITE)))
+	{
+		rename(dbptr->temp_name, db);
+		free(dbptr);
+		return NULL;
+	}
+	SET_SEGV_LOCATION();
+
+	if (fputc(dbptr->core_db_version >> 24 & 0xFF, dbptr->fptr) < 0 ||
+		fputc(dbptr->core_db_version >> 16 & 0xFF, dbptr->fptr) < 0 ||
+		fputc(dbptr->core_db_version >> 8 & 0xFF, dbptr->fptr) < 0 ||
+		fputc(dbptr->core_db_version & 0xFF, dbptr->fptr) < 0)
+	{
+		alog(LOG_DEBUG, "debug: Error writing version number on %s",
+		     dbptr->filename);
+		rename(dbptr->temp_name, db);
+		free(dbptr);
+		return NULL;
+	}
+	SET_SEGV_LOCATION();
+
+	return dbptr;
+}
+
+/*************************************************************************/
+
+void filedb_close(DenoraDBFile * dbptr, char **key, char **value)
+{
+	SET_SEGV_LOCATION();
+	if (dbptr)
+	{
+		if (key && *key)
+		{
+			free(*key);
+			*key = NULL;
+		}
+		SET_SEGV_LOCATION();
+
+		if (value && *value)
+		{
+			free(*value);
+			*value = NULL;
+		}
+		SET_SEGV_LOCATION();
+
+		if (dbptr->fptr)
+		{
+			fclose(dbptr->fptr);
+		}
+		SET_SEGV_LOCATION();
+
+		if (FileExists(dbptr->temp_name))
+		{
+			remove(dbptr->temp_name);
+		}
+		SET_SEGV_LOCATION();
+
+		free(dbptr);
+	}
 }
 
 /*************************************************************************/

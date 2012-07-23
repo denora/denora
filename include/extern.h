@@ -475,13 +475,13 @@ E void notice_lang(char *source, User *dest, int message, ...);
 E void notice_help(char *source, User *dest, int message, ...);
 
 
-E int new_open_db_read(DenoraDBFile * dbptr, char **key, char **value);
-E int new_open_db_write(DenoraDBFile * dbptr);
-E void new_close_db(FILE * fptr, char **key, char **value);
 E int new_read_db_entry(char **key, char **value, FILE * fptr);
 E int new_write_db_entry(const char *key, DenoraDBFile * dbptr, const char *fmt, ...);
 E int new_write_db_endofblock(DenoraDBFile * dbptr);
 E void fill_db_ptr(DenoraDBFile * dbptr, int version, int core_version, char *service, char *filename);
+E DenoraDBFile *filedb_open(char *db, int type, char **key, char **value);
+E DenoraDBFile *filedb_create(char *db, int type);
+E void filedb_close(DenoraDBFile *dbptr, char **key, char **value);
 
 E char **buildStringList(char *src, int *number);
 

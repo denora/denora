@@ -137,23 +137,13 @@ void Fini_ChannelStats(void)
  */
 void load_cs_db(void)
 {
-	DenoraDBFile *dbptr = calloc(1, sizeof(DenoraDBFile));
-	ChannelStats *cs = NULL;
 	char *key, *value;
+	DenoraDBFile *dbptr = filedb_open(ChannelStatsDB, CS_VERSION, &key, &value);
+	ChannelStats *cs = NULL;
 	int retval = 0;
 
-	alog(LOG_NORMAL, "Loading %s", ChannelStatsDB);
-
-	fill_db_ptr(dbptr, 0, CS_VERSION, s_StatServ, ChannelStatsDB);
-	SET_SEGV_LOCATION();
-
-	/* let's remove existing temp files here, because we only load dbs on startup */
-	remove(dbptr->temp_name);
-
-	/* Open the db, fill the rest of dbptr and allocate memory for key and value */
-	if (new_open_db_read(dbptr, &key, &value))
+	if (!dbptr)
 	{
-		free(dbptr);
 		return;                 /* Bang, an error occurred */
 	}
 	SET_SEGV_LOCATION();
@@ -167,16 +157,14 @@ void load_cs_db(void)
 		{
 			alog(LOG_NORMAL, "WARNING! DB_READ_ERROR in %s",
 			     dbptr->filename);
-			new_close_db(dbptr->fptr, &key, &value);
-			free(dbptr);
+			filedb_close(dbptr, &key, &value);
 			return;
 		}
 		else if (retval == DB_EOF_ERROR)
 		{
 			alog(LOG_EXTRADEBUG, "debug: %s read successfully",
 			     dbptr->filename);
-			new_close_db(dbptr->fptr, &key, &value);
-			free(dbptr);
+			filedb_close(dbptr, &key, &value);
 			return;
 		}
 		else if (retval == DB_READ_BLOCKEND)            /* DB_READ_BLOCKEND */
@@ -210,22 +198,9 @@ void load_cs_db(void)
 
 void save_cs_db(void)
 {
-	DenoraDBFile *dbptr = calloc(1, sizeof(DenoraDBFile));
+	DenoraDBFile *dbptr = filedb_create(ChannelStatsDB, CS_VERSION);
 	ChannelStats *cs;
 	lnode_t *tn;
-
-	fill_db_ptr(dbptr, 0, CS_VERSION, s_StatServ, ChannelStatsDB);
-	SET_SEGV_LOCATION();
-
-	/* time to backup the old db */
-	rename(ChannelStatsDB, dbptr->temp_name);
-
-	if (new_open_db_write(dbptr))
-	{
-		rename(dbptr->temp_name, ChannelStatsDB);
-		free(dbptr);
-		return;                 /* Bang, an error occurred */
-	}
 
 	tn = list_first(CStatshead);
 	while (tn != NULL)
@@ -240,12 +215,7 @@ void save_cs_db(void)
 
 	SET_SEGV_LOCATION();
 
-	if (dbptr)
-	{
-		new_close_db(dbptr->fptr, NULL, NULL);  /* close file */
-		remove(dbptr->temp_name);       /* saved successfully, no need to keep the old one */
-		free(dbptr);            /* free the db struct */
-	}
+	filedb_close(dbptr, NULL, NULL);  /* close file */
 }
 
 /*****************************************************************************************/

@@ -81,28 +81,18 @@ CTCPVerStats *find_ctcpver(char *mask)
  */
 void load_ctcp_db(void)
 {
-	DenoraDBFile *dbptr = calloc(1, sizeof(DenoraDBFile));
-	CTCPVerStats *ct = NULL;
 	char *key, *value;
+	DenoraDBFile *dbptr = filedb_open(ctcpDB, CTCP_VERSION, &key, &value);
+	CTCPVerStats *ct = NULL;
 	int retval = 0;
 	char *version = NULL;
 	int tempoverall = 0;
 
-	alog(LOG_NORMAL, "Loading %s", ctcpDB);
-
-	fill_db_ptr(dbptr, 0, CTCP_VERSION, s_StatServ, ctcpDB);
-	SET_SEGV_LOCATION();
-
-	/* let's remove existing temp files here, because we only load dbs on startup */
-	remove(dbptr->temp_name);
-
-	/* Open the db, fill the rest of dbptr and allocate memory for key and value */
-	if (new_open_db_read(dbptr, &key, &value))
-	{
-		free(dbptr);
-		return;                 /* Bang, an error occurred */
-	}
-	SET_SEGV_LOCATION();
+        if (!dbptr)
+        {
+                return;                 /* Bang, an error occurred */
+        }
+        SET_SEGV_LOCATION();
 
 	while (1)
 	{
@@ -112,20 +102,14 @@ void load_ctcp_db(void)
 		if (retval == DB_READ_ERROR)
 		{
 			alog(LOG_NORMAL, langstr(ALOG_DB_ERROR), dbptr->filename);
-			new_close_db(dbptr->fptr, &key, &value);
-			free(dbptr);
-			free(key);
-			free(value);
+			filedb_close(dbptr, &key, &value);
 			return;
 		}
 		else if (retval == DB_EOF_ERROR)
 		{
 			alog(LOG_EXTRADEBUG, langstr(ALOG_DEBUG_DB_OK),
 			     dbptr->filename);
-			new_close_db(dbptr->fptr, &key, &value);
-			free(dbptr);
-			free(key);
-			free(value);
+			filedb_close(dbptr, &key, &value);
 			return;
 		}
 		else if (retval == DB_READ_BLOCKEND)            /* DB_READ_BLOCKEND */
@@ -200,23 +184,11 @@ CTCPVerStats *makectcp(char *mask)
  */
 void save_ctcp_db(void)
 {
-	DenoraDBFile *dbptr = calloc(1, sizeof(DenoraDBFile));
+	DenoraDBFile *dbptr = filedb_create(ctcpDB, CTCP_VERSION);
 	CTCPVerStats *c;
 	char *version;
 	lnode_t *tn;
 
-	fill_db_ptr(dbptr, 0, CTCP_VERSION, s_StatServ, ctcpDB);
-	SET_SEGV_LOCATION();
-
-	/* time to backup the old db */
-	rename(ctcpDB, dbptr->temp_name);
-
-	if (new_open_db_write(dbptr))
-	{
-		rename(dbptr->temp_name, ctcpDB);
-		free(dbptr);
-		return;                 /* Bang, an error occurred */
-	}
 	SET_SEGV_LOCATION();
 
 	tn = list_first(CTCPhead);
@@ -235,13 +207,7 @@ void save_ctcp_db(void)
 		tn = list_next(CTCPhead, tn);
 	}
 
-	if (dbptr)
-	{
-		new_close_db(dbptr->fptr, NULL, NULL);  /* close file */
-		SET_SEGV_LOCATION();
-		remove(dbptr->temp_name);       /* saved successfully, no need to keep the old one */
-		free(dbptr);            /* free the db struct */
-	}
+	filedb_close(dbptr, NULL, NULL);  /* close file */
 }
 
 /*************************************************************************/
