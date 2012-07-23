@@ -426,7 +426,7 @@ fi
 DIS_MODULES="Modules Support: Yes"
 
 dnl module checking based on Unreal's module checking code
-AC_DEFUN(AC_ENABLE_DYN,
+AC_DEFUN([AC_ENABLE_DYN],
 [
 AC_CHECK_FUNC(dlopen,, AC_CHECK_LIB(dl,dlopen,[
   DENORALIBS="$DENORALIBS -ldl"
