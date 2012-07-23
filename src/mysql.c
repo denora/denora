@@ -145,7 +145,6 @@ int db_mysql_open(int con)
 		mysql_options(con ? mysql_thread : mysql, MYSQL_OPT_COMPRESS, 0);
 #if MYSQL_VERSION_ID > 40102
 		mysql_options(con ? mysql_thread : mysql, MYSQL_SET_CHARSET_NAME, "utf8");
-		mysql_options(con ? mysql_thread : mysql, MYSQL_OPT_RECONNECT, 1);
 		mysql_options(con ? mysql_thread : mysql, MYSQL_INIT_COMMAND, "SET NAMES 'utf8';");
 #endif
 		seconds = SQLPingFreq * 2;
