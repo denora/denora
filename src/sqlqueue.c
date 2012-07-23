@@ -44,6 +44,9 @@ int QueueEntryInit(void)
 		}
 		alog(LOG_DEBUG, "debug: Creating Queue thread %ld",
 		     (long) th);
+#ifdef USE_MYSQL
+		db_mysql_init(1);
+#endif
 	}
 
 	alog(LOG_DEBUG, "Queue Thread initialized");
@@ -56,7 +59,7 @@ int QueueEntryInit(void)
 void queue_unlock(__attribute__((unused))void *arg)
 {
 #ifdef USE_THREADS
-	alog(LOG_DEBUG, "debug: Thread %ld: Unlocking queue mutex",
+	alog(LOG_EXTRADEBUG, "debug: Thread %ld: Unlocking queue mutex",
 	     (long int) deno_thread_self());
 	deno_mutex_unlock(queuemut);
 #endif
@@ -67,7 +70,7 @@ void queue_unlock(__attribute__((unused))void *arg)
 void queue_lock(void)
 {
 #ifdef USE_THREADS
-	alog(LOG_DEBUG, "debug: Thread %ld: Locking proxy queue mutex",
+	alog(LOG_EXTRADEBUG, "debug: Thread %ld: Locking proxy queue mutex",
 	     (long int) deno_thread_self());
 	deno_mutex_lock(queuemut);
 #endif
@@ -78,7 +81,7 @@ void queue_lock(void)
 void queue_wait(void)
 {
 #ifdef USE_THREADS
-	alog(LOG_DEBUG, "debug: Thread %ld: waiting proxy queue condition",
+	alog(LOG_EXTRADEBUG, "debug: Thread %ld: waiting proxy queue condition",
 	     (long int) deno_thread_self());
 	deno_cond_wait(queuecond, queuemut);
 #endif
@@ -89,7 +92,7 @@ void queue_wait(void)
 void queue_signal(void)
 {
 #ifdef USE_THREADS
-	alog(LOG_DEBUG, "debug: Thread %ld: Signaling proxy queue condition",
+	alog(LOG_EXTRADEBUG, "debug: Thread %ld: Signaling proxy queue condition",
 	     (long int) deno_thread_self());
 	deno_cond_signal(queuecond);
 #endif
@@ -130,7 +133,7 @@ QueueEntry *AddQueueEntry(QueueEntry * qep, char *sqlmsg)
 {
 	QueueEntry *lp = qep;
 
-	alog(LOG_DEBUG, "Adding Query %s", sqlmsg);
+	alog(LOG_SQLDEBUG, "Threading Adding Query %s", sqlmsg);
 
 	if (qep != NULL)
 	{
@@ -164,8 +167,8 @@ QueueEntry *AddQueueEntry(QueueEntry * qep, char *sqlmsg)
 QueueEntry *RemoveQueueEntry(QueueEntry * qep)
 {
 	QueueEntry *tempp;
-	alog(LOG_DEBUG, "Removing Queue entry data");
-	alog(LOG_DEBUG, "SQL %s", qep->msg);
+	alog(LOG_EXTRADEBUG, "Removing Queue entry data");
+	alog(LOG_EXTRADEBUG, "SQL %s", qep->msg);
 	free(qep->msg);
 	tempp = qep->link;
 	free(qep);

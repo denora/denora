@@ -121,14 +121,20 @@ int db_mysql_open(int con)
 	if (con == 0)
 	{
 		mysql = mysql_init(NULL);
-		db_mysql_error(SQL_WARNING, "Unable to create mysql object", con);
-		return 0;
+		if (!mysql)
+		{
+			db_mysql_error(SQL_WARNING, "Unable to create mysql object", con);
+			return 0;
+		}
 	}
 	else
 	{
 		mysql_thread = mysql_init(NULL);
-		db_mysql_error(SQL_WARNING, "Unable to create mysql object", con);
-		return 0;
+		if (!mysql_thread)
+		{
+			db_mysql_error(SQL_WARNING, "Unable to create mysql_thread object", con);
+			return 0;
+		}
 	}
 
 	if (!SqlPort)
@@ -193,6 +199,7 @@ int db_mysql_query(char *sql, int con)
 	}
 
 	alog(LOG_SQLDEBUG, "sql debug: %s", db_mysql_hidepass(sql));
+	alog(LOG_DEBUG, "dbg: using mysql connection %d", con);
 
 	pingresult = mysql_ping(con ? mysql_thread : mysql);
 	if (!pingresult)

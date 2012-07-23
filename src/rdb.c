@@ -52,8 +52,7 @@ int rdb_close()
 	{
 		db_mysql_close(0);
 #ifdef USE_THREADS
-		if (UseThreading)
-			db_mysql_close(1);
+		db_mysql_close(1);
 #endif
 		return 1;
 	}
@@ -160,7 +159,7 @@ int rdb_query(int i, const char *fmt, ...)
 		}
 		else
 		{
-			qp = AddQueueEntry(qp, buf);
+			qp = AddQueueEntry(NULL, buf);
 			res = 1;
 		}
 	}
