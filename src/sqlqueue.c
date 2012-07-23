@@ -30,7 +30,6 @@ QueueEntry *qp;
 int QueueEntryInit(void)
 {
 #ifdef USE_THREADS
-	int i;
 	deno_thread_t th;
 
 	if (UseThreading)

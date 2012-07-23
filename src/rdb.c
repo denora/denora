@@ -181,7 +181,7 @@ char *rdb_escape(char *ch)
 {
 	char *ret = NULL;
 #if defined(USE_MYSQL) || defined(USE_POSTGRE)
-	char *result;
+	char *result = NULL;
 #ifdef USE_MYSQL
 	if (sqltype == SQL_MYSQL)
 	{

@@ -37,12 +37,6 @@ int DenoraInit(int argc, char **argv)
 	moduleAddVersion("1.1");
 	moduleSetType(THIRD);
 
-	if (!denora->do_sql)
-	{
-		alog(LOG_NORMAL, "This module makes no sense if mysql ain't enabled");
-		return MOD_STOP;
-	}
-
 #ifdef USE_MYSQL
 	/* Check if we have the FILE privilege if not, bail out */
         rdb_query(QUERY_HIGH, "SHOW GRANTS;");
