@@ -20,9 +20,7 @@
 
 /* Database Global Variables */
 MYSQL *mysql;                   /* Main MySQL Handler */
-#ifdef USE_THREADS
 MYSQL *mysql_thread;		/* MySQL Handler for thread */
-#endif
 MYSQL_FIELD *mysql_fields;      /* MySQL Fields  */
 MYSQL_ROW mysql_row;            /* MySQL Row     */
 

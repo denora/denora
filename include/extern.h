@@ -593,9 +593,7 @@ E int has_cmode(char *chan, int m);
 E MYSQL       *mysql;
 E MYSQL_FIELD *mysql_fields;
 E MYSQL_ROW   mysql_row;
-#ifdef USE_THREADS
 E MYSQL	      *mysql_thread;
-#endif
 
 E int db_mysql_init(int con);
 E int db_mysql_open(int con);
