@@ -307,9 +307,7 @@
 #define DB_READ_SUCCESS   0
 #define DB_READ_ERROR     1
 #define DB_EOF_ERROR      2
-#define DB_VERSION_ERROR  3
-#define DB_READ_BLOCKEND  4
-#define DB_READ_SUBSTART  5
+#define DB_READ_BLOCKEND  3 
 
 #define DB_WRITE_SUCCESS  0
 #define DB_WRITE_ERROR    1
