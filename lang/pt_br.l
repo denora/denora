@@ -1088,7 +1088,7 @@ ALOG_DEBUG_REPORT_AT
 	debug: Informar o bugtracker para: http://bugs.anope.org
 
 ALOG_DEBUG_NONEXISTANT_USER_JOIN
-	Canal: recebido join de um usu�rio n�o existente/bot %s no canal com o ID %d
+	Canal: recebido join de um usu�rio n�o existente/bot %s no canal %s
 
 ALOG_DEBUG_CHANGE_MODE_CHAN
 	debug: Mudando modos do canal %s para %s

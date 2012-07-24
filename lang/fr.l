@@ -1102,7 +1102,7 @@ ALOG_DEBUG_REPORT_AT
 	debug: veuillez reporter cette erreur sur le bugtracker au http://bugs.anope.org
 
 ALOG_DEBUG_NONEXISTANT_USER_JOIN
-	Canal: reception d'un join pour l'utilisateur %s non existant sur le canal ID %s
+	Canal: reception d'un join pour l'utilisateur %s non existant sur le canal %s
 
 ALOG_DEBUG_CHANGE_MODE_CHAN
 	debug: Changement des modes pour %s en %s

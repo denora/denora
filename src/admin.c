@@ -286,50 +286,27 @@ Dadmin *next_admin(void)
 
 /*************************************************************************/
 
-int add_sqladmin(char *name, char *passwd, int level, char *host, int lang)
+void add_sqladmin(char *name, char *passwd, int level, char *host, int lang)
 {
-
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
+	int crypted = is_crypted(passwd);
 
 	SET_SEGV_LOCATION();
 
 	if (!denora->do_sql)
 	{
-		return -1;
+		return;
 	}
 
-#if defined(HAVE_CRYPT)
 	rdb_query(QUERY_LOW,
-		  "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', '%s', %d, '%s', %d)",
-		  AdminTable, name, passwd, level, host, lang);
-#else
-	rdb_query(QUERY_LOW,
-	          "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', MD5('%s'), %d, '%s', %d)",
-	          AdminTable, name, passwd, level, host, lang);
-#endif
-
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
-	{
-		SET_SEGV_LOCATION();
-		mysql_free_result(mysql_res);
-		return 1;
-	}
-#endif
-
-	return 0;
+		  "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', '%s', %d, %s%s%s, %d) \
+		   ON DUPLICATE KEY UPDATE passwd=%s%s%s, level=%d, host='%s', lang=%d",
+		  AdminTable, name, crypted ? "'" : "MD5('", passwd, crypted ? "'" : "')", level, host, lang, 
+				    crypted ? "'" : "MD5('", passwd, crypted ? "'" : "')", level, host, lang);
+	return;
 }
 
 int del_sqladmin(char *name)
 {
-
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
-
 	SET_SEGV_LOCATION();
 
 	if (!denora->do_sql)
@@ -339,17 +316,6 @@ int del_sqladmin(char *name)
 
 	rdb_query(QUERY_LOW, "DELETE FROM %s WHERE uname = '%s'",
 	          AdminTable, name);
-
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
-	{
-		SET_SEGV_LOCATION();
-		mysql_free_result(mysql_res);
-		return 1;
-	}
-#endif
-
 	return 0;
 }
 
@@ -357,6 +323,7 @@ void reset_sqladmin(void)
 {
 	Dadmin *a;
 	int i;
+	int crypted;
 
 	SET_SEGV_LOCATION();
 
@@ -367,17 +334,13 @@ void reset_sqladmin(void)
 		{
 			for (a = adminlists[i]; a; a = a->next)
 			{
-#if defined(HAVE_CRYPT)
+				crypted = is_crypted(a->passwd);
 				rdb_query(QUERY_LOW,
-				          "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', '%s', %d, '%s', %d)",
-				          AdminTable, a->name, a->passwd, a->configfile,
-				          a->hosts[0], a->language);
-#else
-				rdb_query(QUERY_LOW,
-                                          "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', MD5('%s'), %d, '%s', %d)",
-                                          AdminTable, a->name, a->passwd, a->configfile,
-                                          a->hosts[0], a->language);
-#endif
+					"INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', '%s', %d, %s%s%s, %d) \
+					ON DUPLICATE KEY UPDATE passwd=%s%s%s, level=%d, host='%s', lang=%d",
+					AdminTable, a->name, crypted ? "'" : "MD5('", a->passwd, crypted ? "'" : "')", a->configfile, 
+					a->hosts[0], a->language, crypted ? "'" : "MD5('", a->passwd, crypted ? "'" : "')", a->configfile,
+					a->hosts[0], a->language);
 			}
 		}
 	}

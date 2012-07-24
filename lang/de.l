@@ -1097,7 +1097,7 @@ ALOG_DEBUG_REPORT_AT
 	Debug: Bitte melde das im Bugtracker : http://bugs.anope.org
 
 ALOG_DEBUG_NONEXISTANT_USER_JOIN
-	Channel: Join vom nicht vorhandenen User %s  Channel ID %d
+	Channel: Join vom nicht vorhandenen User %s  Channel %s
 
 ALOG_DEBUG_CHANGE_MODE_CHAN
 	Debug: Ändere Modes in %s zu %s

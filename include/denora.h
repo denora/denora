@@ -338,6 +338,8 @@ typedef struct gline_ Gline;
 typedef struct qline_ Qline;
 typedef struct zline_ Zline;
 
+typedef struct MD5Context MD5_CTX;
+
 
 /*************************************************************************/
 /* Define out the hash tables                                            */
@@ -1279,6 +1281,16 @@ struct queueentry_
 {
 	char *msg;
 	QueueEntry *link;
+};
+
+/**************************************************************************/
+/* MD5                                                                    */
+/**************************************************************************/
+
+struct MD5Context {
+	uint32 buf[4];        /**< Current digest state/value. */
+	uint32 bits[2];       /**< Number of bits hashed so far. */
+	unsigned char in[64]; /**< Residual input buffer. */
 };
 
 /**************************************************************************/

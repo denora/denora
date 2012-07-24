@@ -406,7 +406,7 @@ void sql_do_addusers(int chanid, char *users)
 		{
 			alog(LOG_NONEXISTANT,
 			     langstr(ALOG_DEBUG_NONEXISTANT_USER_JOIN),
-			     (u ? u->nick : users), chanid);
+			     (u ? u->nick : users), db_getchannel_byid(chanid));
 		}
 		free(users);
 		users = nextusers;
@@ -1107,13 +1107,9 @@ void do_kick(const char *source, int ac, char **av)
 			SET_SEGV_LOCATION();
 			/* free(c); disabled to fix #491 */
 		}
-		if ((cs = find_cs(av[0])))
+		if ((cs = find_cs(av[0])) && !stricmp(s, s_StatServ))
 		{
-			if (!stricmp(s, s_StatServ))
-			{
-				alog(LOG_DEBUG, "TESTING: calling denora_cmd_join channels.c:989");
-				denora_cmd_join(s_StatServ, av[0], time(NULL));
-			}
+			denora_cmd_join(s_StatServ, av[0], time(NULL));
 		}
 	}
 }
@@ -1836,7 +1832,6 @@ void chan_adduser2(User * user, Channel * c)
 
 	if (cs && c->statservon == 0)
 	{
-		alog(LOG_DEBUG, "TESTING: calling denora_cmd_join channels.c:1643");
 		denora_cmd_join(s_StatServ, c->name, c->creation_time);
 	}
 

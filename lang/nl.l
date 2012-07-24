@@ -1110,7 +1110,7 @@ ALOG_DEBUG_REPORT_AT
 	foutopsporing: rapporteer deze in de bugtracker op http://bugs.anope.org
 
 ALOG_DEBUG_NONEXISTANT_USER_JOIN
-	kanaal: join ontvangen voor niet-bestaande gebruiker %s op kanaal ID %d
+	kanaal: join ontvangen voor niet-bestaande gebruiker %s op kanaal %d
 
 ALOG_DEBUG_CHANGE_MODE_CHAN
 	foutopsporing: Modes voor %s worden veranderd in %s

@@ -1093,7 +1093,7 @@ ALOG_DEBUG_REPORT_AT
 	debug: riporta queste al bugtracker, http://bugs.anope.org
 
 ALOG_DEBUG_NONEXISTANT_USER_JOIN
-	Canale: ricevuto join per l'utente %s non esistente sul canale dall'ID %d
+	Canale: ricevuto join per l'utente %s non esistente sul canale %s
 
 ALOG_DEBUG_CHANGE_MODE_CHAN
 	debug: Cambio modo per %s in %s

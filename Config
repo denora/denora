@@ -21,117 +21,117 @@
 ###########################################################################
 
 echo2 () {
-    $ECHO2 "$*$ECHO2SUF"    # these are defined later
+	$ECHO2 "$*$ECHO2SUF"	# these are defined later
 }
 
 Show_Banner () {
 	if [ -f .BANNER ] ; then
-        . ./version.in
-        clear
-        cat .BANNER | sed "s/CURVER/$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH $VERSION_EXTRA/" | sed "s/CURSHORTVER/$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH/" | more
+		. ./version.in
+		clear
+		cat .BANNER | sed "s/CURVER/$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH $VERSION_EXTRA/" | sed "s/CURSHORTVER/$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH/" | more
 	fi
-    echo ""
-    echo "Beginning Stats configuration."
-    echo ""
+	echo ""
+	echo "Beginning Stats configuration."
+	echo ""
 }
 
 Run_Config () {
-    WITH_BIN=""
-    WITH_DATA=""
-    WITH_RUN=""
-    WITH_PERM=""
-    WITH_MYSQL=""
-    WITH_MEMORYDEBUG=""
-    WITH_ENCRYPT=""
-    WITH_THREADING=""
-    
-    if [ "$BINDEST" != "" ] ; then
-        WITH_BIN=" --with-bindir=$BINDEST"
-        WITH_DATA=" --with-datadir=$DATDEST"
-    fi
-    
-    if [ "$DATDEST" != "" ] ; then
-        WITH_DATA=" --with-datadir=$DATDEST"
-    fi
-    
-    if [ "$RUNGROUP" != "" ] ; then
-        WITH_RUN="  --with-rungroup=$RUNGROUP"
-    fi
-    
-    if [ "$UMASK" != "" ] ; then
-        WITH_PERM=" --with-permissions=$UMASK"
-    fi
+	WITH_BIN=""
+	WITH_DATA=""
+	WITH_RUN=""
+	WITH_PERM=""
+	WITH_MYSQL=""
+	WITH_MEMORYDEBUG=""
+	WITH_ENCRYPT=""
+	WITH_THREADING=""
+   
+	if [ "$BINDEST" != "" ] ; then
+		WITH_BIN=" --with-bindir=$BINDEST"
+		WITH_DATA=" --with-datadir=$DATDEST"
+	fi
+	
+	if [ "$DATDEST" != "" ] ; then
+		WITH_DATA=" --with-datadir=$DATDEST"
+	fi
+	
+	if [ "$RUNGROUP" != "" ] ; then
+		WITH_RUN="  --with-rungroup=$RUNGROUP"
+	fi
+	
+	if [ "$UMASK" != "" ] ; then
+		WITH_PERM=" --with-permissions=$UMASK"
+	fi
 
-    if [ "$MYSQL" != "yes" ] ; then
-    	WITH_MYSQL=" --without-mysql"
-    fi
-    if [ "$DMEMORY" != "no" ] ; then
-    	WITH_MEMORYDEBUG=" --enable-dmalloc"
-    fi
-    if [ "$ENCRYPT" != "" ] ; then
-    	WITH_ENCRYPT=" --enable-crypt"
-    fi
-    if [ "$THREAD" != "" ] ; then
-    	WITH_THREADING=" --enable-threading"
-    fi
+	if [ "$MYSQL" == "no" ] ; then
+		WITH_MYSQL=" --without-mysql"
+	fi
+	if [ "$DMEMORY" == "yes" ] ; then
+		WITH_MEMORYDEBUG=" --enable-dmalloc"
+	fi
+	if [ "$ENCRYPT" == "yes" ] ; then
+		WITH_ENCRYPT=" --enable-crypt"
+	fi
+	if [ "$THREAD" == "yes" ] ; then
+		WITH_THREADING=" --enable-threading"
+	fi
   
-    echo "./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_THREADING"
-    
-    ./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_THREADING
-    if [ "$REGSCRIPT" = "yes" ] ; then
-    	src/bin/register
-    fi
+	echo "./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_THREADING"
+	
+	./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_THREADING
+	if [ "$REGSCRIPT" = "yes" ] ; then
+		src/bin/register
+	fi
 }
 
-exists () {                     # because some shells don't have test -e
-        if [ -f $1 -o -d $1 -o -p $1 -o -c $1 -o -b $1 ] ; then
-            return 0
-        else
-            return 1
-        fi
+exists () {			 # because some shells don't have test -e
+	if [ -f $1 -o -d $1 -o -p $1 -o -c $1 -o -b $1 ] ; then
+		return 0
+	else
+		return 1
+	fi
 }
 
 Load_Cache () {
-    if [ -f config.cache -a -r config.cache -a ! "$NOCACHE" ] ; then
-        echo "Using defaults from config.cache. To ignore, rm config.cache"
-        . ./config.cache
-        CAN_QUICK="yes"
-    	if [ "$BINDEST" = "" ] ; then
-		BINDEST=$HOME/stats
+	if [ -f config.cache -a -r config.cache -a ! "$NOCACHE" ] ; then
+		echo "Using defaults from config.cache. To ignore, rm config.cache"
+		. ./config.cache
+		CAN_QUICK="yes"
+		if [ "$BINDEST" = "" ] ; then
+			BINDEST=$HOME/stats
+		fi
+		if [ "$DATDEST" = "" ] ; then
+			DATDEST=$HOME/stats
+		fi
+		if [ "$MYSQL" = "" ] ; then
+			MYSQL="yes"
+		fi
+		if [ "$DMEMORY" = "" ] ; then
+			DMEMORY="no"
+		fi
+		if [ "$REGSCRIPT" = "" ] ; then
+			REGSCRIPT="no"
+		fi
+		if [ "$ENCRYPT" = "" ] ; then
+			ENCRYPT="no"
+		fi
+		if [ "$THREAD" = "" ] ; then
+			THREAD="no"
+		fi
+	else
+		CAN_QUICK="no"
 	fi
-    	if [ "$DATDEST" = "" ] ; then
-        	DATDEST=$HOME/stats
-    	fi
-	if [ "$MYSQL" = "" ] ; then
-		MYSQL="yes"
-	fi
-	if [ "$DMEMORY" = "" ] ; then
-    		DMEMORY="no"
-    	fi
-	if [ "$REGSCRIPT" = "" ] ; then
-    		REGSCRIPT="no"
-    	fi
-	if [ "$ENCRYPT" = "" ] ; then
-    		ENCRYPT="no"
-    	fi
-	if [ "$THREAD" = "" ] ; then
-    		THREAD="no"
-    	fi
-    else
-        CAN_QUICK="no"
-    fi
 }
 
 ECHO2SUF=''
 if [ "`echo -n a ; echo -n b`" = "ab" ] ; then
-        ECHO2='echo -n'
+	ECHO2='echo -n'
 elif [ "`echo 'a\c' ; echo 'b\c'`" = "ab" ] ; then
-        ECHO2='echo' ; ECHO2SUF='\c'
+	ECHO2='echo' ; ECHO2SUF='\c'
 elif [ "`printf 'a' 2>&1 ; printf 'b' 2>&1`" = "ab" ] ; then
-        ECHO2='printf "%s"'
+	ECHO2='printf "%s"'
 else
-        # oh well...
-        ECHO2='echo'
+	# oh well...
+	ECHO2='echo'
 fi
 export ECHO2 ECHO2SUF
 
@@ -156,44 +156,44 @@ THREAD="yes"
 # Check out the options
 ###########################################################################
 while [ $# -ge 1 ] ; do
-        if [ $1 = "--help" ] ; then
-                echo "Config utility for Denora"
-                echo "-----------------------------"
-                echo "Syntax: ./Config [options]"
-                echo "-nocache     Ignore settings saved in config.cache"
-                echo "-nointro     Skip intro (release notes, etc)"
-                echo "-quick       Skip questions, go straight to configure"
-                exit 0
-        elif [ $1 = "-nocache" ] ; then
-                NOCACHE="1"
-        elif [ $1 = "-nointro" ] ; then
-                SHOW_INTRO="no"
-        elif [ $1 = "-quick" -o $1 = "-q" ] ; then
-                Load_Cache
-                if [ $CAN_QUICK = "yes" ] ; then
-                    Run_Config
-                else
-                    echo "Can't find cache file, aborting..."
-                fi
-                exit 0
-        fi
-        shift 1
+	if [ $1 = "--help" ] ; then
+		echo "Config utility for Denora"
+		echo "-----------------------------"
+		echo "Syntax:	./Config [options]"
+		echo "-nocache	Ignore settings saved in config.cache"
+		echo "-nointro	Skip intro (release notes, etc)"
+		echo "-quick	Skip questions, go straight to configure"
+		exit 0
+	elif [ $1 = "-nocache" ] ; then
+		NOCACHE="1"
+	elif [ $1 = "-nointro" ] ; then
+		SHOW_INTRO="no"
+	elif [ $1 = "-quick" -o $1 = "-q" ] ; then
+		Load_Cache
+		if [ $CAN_QUICK = "yes" ] ; then
+			Run_Config
+		else
+			echo "Can't find cache file, aborting..."
+		fi
+		exit 0
+	fi
+	shift 1
 done
 
 ###########################################################################
 # Load the cache
 ###########################################################################
 if [ ! "$NOCACHE" ] ; then
-    Load_Cache
+	Load_Cache
 fi
 
 ###########################################################################
 # Show the banner
 ###########################################################################
 if [ $SHOW_INTRO = "yes" ] ; then
-    Show_Banner
+	Show_Banner
 else
-    echo ""
+	echo ""
 fi
 
 ###########################################################################
@@ -204,10 +204,9 @@ export ok INPUT
 ####
 
 if [ "`id -u`" = "0" ] ; then
-
-        echo "ERROR: You can NOT run Config as root, nor run Denora as root"
+	echo "ERROR: You can NOT run Config as root, nor run Denora as root"
 	echo ""
-        exit 0
+	exit 0
 fi
 
 
@@ -246,35 +245,34 @@ BINDEST=$INPUT
 DATDEST=$INPUT
 echo ""
 
-
 ####
 
 ok=0
 echo "Where do you want the data files to be installed?"
 while [ $ok -lt 1 ] ; do
-        echo2 "[$DATDEST] "
-        if read INPUT ; then : ; else echo "" ; exit 1 ; fi
-        if [ ! "$INPUT" ] ; then
-                INPUT=$DATDEST
-        fi
-        if [ ! -d "$INPUT" ] ; then
-                if exists "$INPUT" ; then
-                        echo "$INPUT exists, but is not a directory!"
-                else
-                        echo "$INPUT does not exist.  Create it?"
-                        echo2 "[y] "
-                        read YN
-                        if [ "$YN" != "n" ] ; then
-                                if mkdir -p $INPUT ; then
-                                        ok=1
-                                fi
-                        fi
-                fi
-        elif exists "$INPUT/include/denora.h" ; then
-                echo "You cannot use the stats source directory as a target directory."
-        else
-                ok=1
-        fi
+	echo2 "[$DATDEST] "
+	if read INPUT ; then : ; else echo "" ; exit 1 ; fi
+	if [ ! "$INPUT" ] ; then
+		INPUT=$DATDEST
+	fi
+	if [ ! -d "$INPUT" ] ; then
+		if exists "$INPUT" ; then
+			echo "$INPUT exists, but is not a directory!"
+		else
+			echo "$INPUT does not exist.  Create it?"
+			echo2 "[y] "
+			read YN
+			if [ "$YN" != "n" ] ; then
+				if mkdir -p $INPUT ; then
+					ok=1
+				fi
+			fi
+		fi
+	elif exists "$INPUT/include/denora.h" ; then
+		echo "You cannot use the stats source directory as a target directory."
+	else
+		ok=1
+	fi
 done
 DATDEST=$INPUT
 echo ""
@@ -284,59 +282,59 @@ echo ""
 
 OLD_RUNGROUP="$RUNGROUP"
 if [ "$RUNGROUP" ] ; then
-  echo "Which group should all Stats data files be owned by?  (If Stats"
-  echo "should not force files to be owned by a particular group, type "\"none\"
-  echo "(without the quotes) and press Return.)"
+	echo "Which group should all Stats data files be owned by?  (If Stats"
+	echo "should not force files to be owned by a particular group, type "\"none\"
+	echo "(without the quotes) and press Return.)"
 else
-  echo "Which group should all Stats data files be owned by?  (If Stats"
-  echo "should not force files to be owned by a particular group, just press"
-  echo "Return.)"
+	echo "Which group should all Stats data files be owned by?  (If Stats"
+	echo "should not force files to be owned by a particular group, just press"
+	echo "Return.)"
 fi
 echo2 "[$RUNGROUP] "
 if read INPUT ; then : ; else echo "" ; exit 1 ; fi
 if [ "$INPUT" ] ; then
-		lcfile=`echo $INPUT | tr A-Z a-z`
-        if [ "$INPUT" = "none" ] ; then
-                RUNGROUP=""
-        elif [ $lcfile = "root" ] ; then
-                RUNGROUP=""
-				echo "Can not use root group to run denora"
-				exit 0;
-        else
-                RUNGROUP="$INPUT"
-        fi
+	lcfile=`echo $INPUT | tr A-Z a-z`
+	if [ "$INPUT" = "none" ] ; then
+		RUNGROUP=""
+	elif [ $lcfile = "root" ] ; then
+		RUNGROUP=""
+		echo "Can not use root group to run denora"
+		exit 0;
+	else
+		RUNGROUP="$INPUT"
+	fi
 fi
 echo ""
 
 ####
 
 if [ ! "$UMASK" -o "$RUNGROUP" != "$OLD_RUNGROUP" ] ; then
-        if [ "$RUNGROUP" ] ; then
-                UMASK=007
-        else
-                UMASK=077
-        fi
+	if [ "$RUNGROUP" ] ; then
+		UMASK=007
+	else
+		UMASK=077
+	fi
 fi
 
 ok=0
 echo "What should the default umask for data files be (in octal)?"
 echo "(077 = only accessible by owner; 007 = accessible by owner and group)"
 while [ $ok -lt 1 ] ; do
-        echo2 "[$UMASK] "
-        if read INPUT ; then : ; else echo "" ; exit 1 ; fi
-        if [ ! "$INPUT" ] ; then
-                INPUT=$UMASK
-        fi
-        if [ "$INPUT" = "000" ] ; then
-                echo "Invalid UMASK please enter a valid Umask";
-        elif [ `echo "$INPUT" | grep -c '[^0-7]'` -gt 0 ] ; then
-                echo "$UMASK is not a valid octal number!"
-        else
-                if [ "`echo $INPUT | cut -c1`" != "0" ] ; then
-                        INPUT=0$INPUT
-                fi
-                ok=1
-        fi
+	echo2 "[$UMASK] "
+	if read INPUT ; then : ; else echo "" ; exit 1 ; fi
+	if [ ! "$INPUT" ] ; then
+		INPUT=$UMASK
+	fi
+	if [ "$INPUT" = "000" ] ; then
+		echo "Invalid UMASK please enter a valid Umask";
+	elif [ `echo "$INPUT" | grep -c '[^0-7]'` -gt 0 ] ; then
+		echo "$UMASK is not a valid octal number!"
+	else
+		if [ "`echo $INPUT | cut -c1`" != "0" ] ; then
+			INPUT=0$INPUT
+		fi
+		ok=1
+	fi
 done
 UMASK=$INPUT
 echo ""
@@ -352,24 +350,24 @@ echo "         in order to compile Denora with SQL support."
 echo "         On Debian/Ubuntu systems for example, you need to install the"
 echo "         libmysqlclient15-dev package or similar."
 while [ $ok -lt 1 ] ; do
-        echo2 "[$MYSQL] "
-        if read INPUT ; then : ; else echo "" ; exit 1 ; fi
-        if [ ! "$INPUT" ] ; then
-                INPUT=$DEF
-        fi
-        case $INPUT in
-                n*|N*)
+	echo2 "[$MYSQL] "
+	if read INPUT ; then : ; else echo "" ; exit 1 ; fi
+	if [ ! "$INPUT" ] ; then
+		INPUT=$DEF
+	fi
+	case $INPUT in
+		n*|N*)
 			MYSQL="no"
 			ok=1
 			;;
-                y*|Y*)
+		y*|Y*)
 			MYSQL="yes"
 			ok=1
 			;;
-                *)
-                        echo "Please enter 'yes' or 'no'."
-                        ;;
-        esac
+		*)
+			echo "Please enter 'yes' or 'no'."
+			;;
+	esac
 done
 echo ""
 
@@ -380,106 +378,108 @@ DEF=no
 echo "Would you like to register your network with Denora?"
 echo "Doing this will allow us to better focus our project"
 while [ $ok -lt 1 ] ; do
-        echo2 "[$REGSCRIPT] "
-        if read INPUT ; then : ; else echo "" ; exit 1 ; fi
-        if [ ! "$INPUT" ] ; then
-                INPUT=$DEF
-        fi
-        case $INPUT in
-                n*|N*)
+	echo2 "[$REGSCRIPT] "
+	if read INPUT ; then : ; else echo "" ; exit 1 ; fi
+	if [ ! "$INPUT" ] ; then
+		INPUT=$DEF
+	fi
+	case $INPUT in
+		n*|N*)
 			REGSCRIPT="no"
 			ok=1
 			;;
-                y*|Y*)
+		y*|Y*)
 			REGSCRIPT="yes"
 			ok=1
 			;;
-                *)
-                        echo "Please enter 'yes' or 'no'."
-                        ;;
-        esac
+		*)
+			echo "Please enter 'yes' or 'no'."
+			;;
+	esac
 done
 echo ""
+
+####
 
 ok=0
 DEF=No
-echo "Allow Denora to attempt to build a dmalloc library and use"
-echo "dmallc memory debugging tools. Should only enable this if"
-echo "you are attempting to locate memory problems"
+echo "Allow Denora to attempt to build a dmalloc library and use dmalloc memory debugging tools."
+echo "Should only enable this if you are attempting to locate memory problems"
 while [ $ok -lt 1 ] ; do
-        echo2 "[$DMEMORY] "
-        if read INPUT ; then : ; else echo "" ; exit 1 ; fi
-        if [ ! "$INPUT" ] ; then
-                INPUT=$DEF
-        fi
-        case $INPUT in
-                n*|N*)
+	echo2 "[$DMEMORY] "
+	if read INPUT ; then : ; else echo "" ; exit 1 ; fi
+	if [ ! "$INPUT" ] ; then
+		INPUT=$DEF
+	fi
+	case $INPUT in
+		n*|N*)
 			DMEMORY="no"
 			ok=1
 			;;
-                y*|Y*)
+		y*|Y*)
 			DMEMORY="yes"
 			ok=1
 			;;
-                *)
-                        echo "Please enter 'yes' or 'no'."
-                        ;;
-        esac
+		*)
+			echo "Please enter 'yes' or 'no'."
+			;;
+	esac
 done
 echo ""
 
+####
+
 ok=0
 DEF=Yes
-echo "Allow Denora to attempt to build a crypt library so that"
-echo "admin passwords can be encrypted in the config and db files"
+echo "Allow Denora to attempt to build a crypt library so that admin passwords can be encrypted in the config and db files"
 while [ $ok -lt 1 ] ; do
-        echo2 "[$ENCRYPT] "
-        if read INPUT ; then : ; else echo "" ; exit 1 ; fi
-        if [ ! "$INPUT" ] ; then
-                INPUT=$DEF
-        fi
-        case $INPUT in
-                n*|N*)
-			ENCRYPT=
+	echo2 "[$ENCRYPT] "
+	if read INPUT ; then : ; else echo "" ; exit 1 ; fi
+	if [ ! "$INPUT" ] ; then
+		INPUT=$DEF
+	fi
+	case $INPUT in
+		n*|N*)
+			ENCRYPT="no"
 			ok=1
 			;;
-                y*|Y*)
+		y*|Y*)
 			ENCRYPT="yes"
 			ok=1
 			;;
-                *)
-                        echo "Please enter 'yes' or 'no'."
-                        ;;
-        esac
+		*)
+			echo "Please enter 'yes' or 'no'."
+			;;
+	esac
 done
 echo ""
+
+####
 
 ok=0
 DEF=Yes
-echo "Allow Denora to attempt to build a threading library so that"
-echo "the code can be multithreaded for speed"
+echo "Allow Denora to attempt to build a threading library so that the code can be multithreaded for speed"
 while [ $ok -lt 1 ] ; do
-        echo2 "[$THREAD] "
-        if read INPUT ; then : ; else echo "" ; exit 1 ; fi
-        if [ ! "$INPUT" ] ; then
-                INPUT=$DEF
-        fi
-        case $INPUT in
-                n*|N*)
+	echo2 "[$THREAD] "
+	if read INPUT ; then : ; else echo "" ; exit 1 ; fi
+	if [ ! "$INPUT" ] ; then
+		INPUT=$DEF
+	fi
+	case $INPUT in
+		n*|N*)
 			THREAD=
 			ok=1
 			;;
-                y*|Y*)
+		y*|Y*)
 			THREAD="yes"
 			ok=1
 			;;
-                *)
-                        echo "Please enter 'yes' or 'no'."
-                        ;;
-        esac
+		*)
+			echo "Please enter 'yes' or 'no'."
+			;;
+	esac
 done
 echo ""
-
 
 ################################################################################
 # Store values

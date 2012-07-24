@@ -997,7 +997,6 @@ static int parse_options(int ac, char **av)
 			else if (strcmp(value, "nofork") == 0)
 			{
 				denora->nofork = 1;
-#if defined(HAVE_CRYPT)
 			}
 			else if (strcmp(value, "mkpass") == 0)
 			{
@@ -1012,7 +1011,6 @@ static int parse_options(int ac, char **av)
 					        "Please use syntax of -mkpass=password\n");
 				}
 				return 0;
-#endif
 			}
 			else if (!strcmp(value, "version"))
 			{
@@ -1051,9 +1049,7 @@ static int parse_options(int ac, char **av)
 				fprintf(stdout, "-help          -help\n");
 				fprintf(stdout, "-log           -log logfilename\n");
 				fprintf(stdout, "-dir           -dir statsdirectory\n");
-#if defined(HAVE_CRYPT)
 				fprintf(stdout, "-mkpass        -mkpass=password\n");
-#endif
 				fprintf(stdout, "\n");
 				fprintf(stdout,
 				        "Further support is available from http://www.denorastats.org/\n");
@@ -1394,7 +1390,6 @@ int init(int ac, char **av)
 	/* And hybrid needs Global joined in the logchan */
 	if (!BadPtr(LogChannel))
 	{
-		alog(LOG_DEBUG, "TESTING: calling denora_cmd_join main.c:1238");
 		denora_cmd_join(s_StatServ, LogChannel, time(NULL));
 	}
 

@@ -1156,9 +1156,34 @@ int is_valid_server(char *name)
 
 /*************************************************************************/
 
+int is_crypted(const char *passwd)
+{
+	char *crypto;
+
+#ifdef HAVE_CRYPT
+	crypto = crypt(passwd, passwd);
+	if (strcmp(crypto, passwd))
+	{
+		free(crypto);
+		return 1;
+	}
+#endif
+	crypto = md5(passwd);
+	if (!stricmp(crypto, passwd))
+	{
+		free(crypto);
+		return 1;
+	}
+
+	if (crypto)
+		free(crypto);
+
+	return 0;
+}
+
 char *MakePassword(char *plaintext)
 {
-#if defined(HAVE_CRYPT)
+#ifdef HAVE_CRYPT
 	unsigned long seed[2];
 	char salt[] = "$1$........";
 	const char *const seedchars =
@@ -1178,33 +1203,41 @@ char *MakePassword(char *plaintext)
 	/* Read in the user's password and encrypt it. */
 	password = crypt(plaintext, (char *) salt);
 	return password;
-#else
-	return plaintext;
 #endif
+
+	return md5(plaintext);
 }
 
 /*************************************************************************/
 
 int ValidPassword(char *plaintext, char *checkvs)
 {
-#if defined(HAVE_CRYPT)
 	char *result;
+
+#ifdef HAVE_CRYPT
 	/* Read in the user's password and encrypt it,
 	   passing the expected password in as the salt. */
 	result = crypt(plaintext, checkvs);
 	if (!BadPtr(result) && !strcmp(result, checkvs))
 	{
+		free(result);
 		return 1;
 	}
 #endif
+	result = md5(plaintext);
+	if (!stricmp(result, checkvs))
+	{
+		free(result);
+		return 1;
+	}
+	if (result)
+		free(result);
+
 	if (!strcmp(plaintext, checkvs))
 	{
 		return 1;
 	}
-	else
-	{
-		return 0;
-	}
+	return 0;
 }
 
 /*************************************************************************/
