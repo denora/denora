@@ -199,7 +199,7 @@ void do_swhois(char *user, char *msg)
 	if (denora->do_sql)
 	{
 		sqlmsg = (!msg || !*msg) ? NULL : rdb_escape(msg);
-		nickid = db_getnick_unsure(u->sqlnick);
+		nickid = db_getnick(u->sqlnick);
 		if (nickid == -1)
 		{
 			alog(LOG_NONEXISTANT, langstr(ALOG_SWHOIS_ERROR), user);
@@ -255,7 +255,7 @@ void sql_do_nick(User * u)
 
 	if (LargeNet || !UplinkSynced || UserStatsRegistered)
 	{
-		nickid = db_checknick(u->sqlnick);
+		nickid = db_getnick(u->sqlnick);
 	}
 	else
 	{
@@ -373,7 +373,7 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
 	oldnick = rdb_escape(oldnick);
 	/* the target nickname might already exist if caching is enabled */
 	if (UserCacheTime && (strcasecmp(newnick, oldnick))
-	        && ((nickid = db_checknick(newnick)) != -1))
+	        && ((nickid = db_getnick(newnick)) != -1))
 	{
 		/* In this case, we don't keep a record of the old nick. It would be :
 		 * - technically difficult, because we'd have to make a copy of the record
@@ -1635,13 +1635,18 @@ void do_account(User * user, char *account)
 		free(user->account);
 	}
 
-	nickid = db_getnick_unsure(user->sqlnick);
+	nickid = db_getnick(user->sqlnick);
+	if (nickid == -1)
+	{
+		alog(LOG_NONEXISTANT, "ACCOUNT set for nonexistent user %s", user);
+		return;
+	}
 
 	if (account)
 	{
 		alog(LOG_DEBUG, "debug: account %s set on %s", account, user->nick);
 		user->account = sstrdup(account);
-		if (denora->do_sql && nickid != -1)
+		if (denora->do_sql)
 		{
 			sqlaccount = rdb_escape(account);
 			rdb_query(QUERY_LOW,
@@ -1654,7 +1659,7 @@ void do_account(User * user, char *account)
 	{
 		alog(LOG_DEBUG, "debug: account removed from %s", user->nick);
 		user->account = NULL;
-		if (denora->do_sql && nickid != -1)
+		if (denora->do_sql)
 		{
 			rdb_query(QUERY_LOW,
 			          "UPDATE %s SET account=\'\' WHERE nickid=%d",
@@ -1748,11 +1753,10 @@ void do_p10account(User * user, char *account, int flag)
 	{
 		sqlaccount = rdb_escape(account);
 		sqlhost = rdb_escape(user->vhost);
-		nickid = db_getnick_unsure(user->sqlnick);
+		nickid = db_getnick(user->sqlnick);
 		if (nickid == -1)
 		{
-			alog(LOG_NONEXISTANT, "ACCOUNT set for nonexistent user %s",
-			     user);
+			alog(LOG_NONEXISTANT, "ACCOUNT set for nonexistent user %s", user);
 		}
 		else
 		{

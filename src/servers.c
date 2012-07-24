@@ -498,7 +498,7 @@ Server *do_server(const char *source, char *servername, char *hops,
 		upservid = db_getserver(sqluplinkserver);
 
 		if (ServerCacheTime
-		        && ((servid = db_checkserver(servername)) != -1))
+		        && ((servid = db_getserver(servername)) != -1))
 		{
 			rdb_query
 			(QUERY_LOW,
@@ -513,7 +513,7 @@ Server *do_server(const char *source, char *servername, char *hops,
 			if (KeepServerTable)
 			{
 				rdb_query
-				(QUERY_LOW,
+				(QUERY_HIGH,
 				 "INSERT INTO %s (server, country, countrycode, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld))  ON DUPLICATE KEY UPDATE hops=\'%s\', comment=\'%s\', linkedto=%d, connecttime=NOW(), maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld)",
 				 ServerTable, servername, serv->country, serv->countrycode, hops, descript, upservid,
 				 serv->ss->maxusers, serv->ss->maxusertime,
@@ -524,7 +524,7 @@ Server *do_server(const char *source, char *servername, char *hops,
 			else
 			{
 				rdb_query
-				(QUERY_LOW,
+				(QUERY_HIGH,
 				 "INSERT INTO %s (server, country, countrycode, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld))",
 				 ServerTable, servername, serv->country, serv->countrycode, hops, descript, upservid,
 				 serv->ss->maxusers, serv->ss->maxusertime,
@@ -1443,7 +1443,7 @@ void sql_do_server_version(char *server, int ac, char **av)
 	if (denora->do_sql)
 	{
 		sqlversion = rdb_escape(version);
-		if (((servid = db_checkserver(s->name)) != -1))
+		if (((servid = db_getserver(s->name)) != -1))
 		{
 			rdb_query(QUERY_LOW,
 			          "UPDATE %s SET version=\'%s\' WHERE servid=%d",

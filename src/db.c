@@ -293,17 +293,17 @@ void db_connect(void)
 
 /* serv should be db_escape'd before call */
 /* -1 if server not found, servid else */
-int db_checkserver(char *serv)
+int db_getserver(char *serv)
 {
-	int servid = -1;
 	Server *s;
+	int servid = -1;
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
 #endif
 
 	if (!serv)
 	{
-		return -1;
+		return servid;
 	}
 
 	s = server_find(serv);
@@ -316,7 +316,7 @@ int db_checkserver(char *serv)
 
 	if (!denora->do_sql)
 	{
-		return -1;
+		return servid;
 	}
 
 	rdb_query(QUERY_HIGH, "SELECT servid FROM %s WHERE server=\'%s\'",
@@ -329,112 +329,31 @@ int db_checkserver(char *serv)
 		{
 			mysql_row = mysql_fetch_row(mysql_res);
 			servid = strtol(mysql_row[0], NULL, 10);
+			s->sqlid = servid;
 		}
 		SET_SEGV_LOCATION();
 		mysql_free_result(mysql_res);
 	}
 #endif
 	return servid;
-}
-
-/*************************************************************************/
-
-/* serv should be db_escape'd before call */
-/* -1 if server not found, servid else */
-int db_checkserver_online(char *serv)
-{
-	int servid = 0;
-	Server *s;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
-
-	s = server_find(serv);
-	if (s && s->sqlid)
-	{
-		return s->sqlid;
-	}
-
-	SET_SEGV_LOCATION();
-
-	if (!denora->do_sql)
-	{
-		return -1;
-	}
-
-	rdb_query(QUERY_HIGH,
-	          "SELECT servid FROM %s WHERE server=\'%s\' and online=\'Y\'",
-	          ServerTable, serv);
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
-	{
-		SET_SEGV_LOCATION();
-		mysql_free_result(mysql_res);
-		return 1;
-	}
-#endif
-	return servid;
-}
-
-/*************************************************************************/
-
-/* serv should be db_escape'd before call */
-int db_getserver(char *serv)
-{
-	Server *s;
-	int res = 0;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
-
-	SET_SEGV_LOCATION();
-
-	s = server_find(serv);
-	if (s && s->sqlid)
-	{
-		return s->sqlid;
-	}
-
-	if (!denora->do_sql)
-	{
-		return res;
-	}
-
-	if (!serv)
-	{
-		return res;
-	}
-
-	rdb_query(QUERY_HIGH, "SELECT servid FROM %s WHERE server=\'%s\'",
-	          ServerTable, serv);
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
-	{
-		if (mysql_num_rows(mysql_res))
-		{
-			mysql_row = mysql_fetch_row(mysql_res);
-			res = strtol(mysql_row[0], NULL, 10);
-		}
-		SET_SEGV_LOCATION();
-		mysql_free_result(mysql_res);
-	}
-#endif
-	return res;
 }
 
 /*************************************************************************/
 
 /* nick should be db_escape'd before call */
 /* -1 if nick not found, nickid else */
-int db_checknick(char *nick)
+int db_getnick(char *nick)
 {
 	int nickid = -1;
 	User *u;
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
 #endif
+
+	if (!nick)
+	{
+		return nickid;
+	}
 
 	SET_SEGV_LOCATION();
 
@@ -446,7 +365,7 @@ int db_checknick(char *nick)
 
 	if (!denora->do_sql)
 	{
-		return -1;
+		return nickid;
 	}
 
 	rdb_query(QUERY_HIGH, "SELECT nickid FROM %s WHERE nick=\'%s\'",
@@ -459,13 +378,10 @@ int db_checknick(char *nick)
 		{
 			mysql_row = mysql_fetch_row(mysql_res);
 			nickid = strtol(mysql_row[0], NULL, 10);
+			u->sqlid = nickid;
 		}
 		SET_SEGV_LOCATION();
 		mysql_free_result(mysql_res);
-	}
-	else
-	{
-		nickid = -1;
 	}
 #endif
 	return nickid;
@@ -495,18 +411,16 @@ int db_checknick_nt(char *nick)
 
 	if (!denora->do_sql)
 	{
-		return -1;
+		return nickid;
 	}
 
 	if (u)
 	{
 		username = rdb_escape(u->username);
 		host = rdb_escape(u->host);
-		queryhost =
-		    (myNumToken(host, '.') >= 2) ? strchr(host, '.') : host;
-		queryhost = StrReverse(queryhost);
+		queryhost = (myNumToken(host, '.') >= 2) ? strchr(host, '.') : host;
 		rdb_query(QUERY_HIGH,
-		          "SELECT nickid,nick FROM %s WHERE (username=\'%s\' AND REVERSE(hostname) LIKE \'%s%%\' AND online=\'N\') OR nick=\'%s\' ORDER BY connecttime DESC",
+		          "SELECT nickid,nick FROM %s WHERE (username=\'%s\' AND hostname LIKE \'%%%s\' AND online=\'N\') OR nick=\'%s\' ORDER BY connecttime DESC",
 		          UserTable, username, queryhost, u->sqlnick);
 		free(username);
 		free(host);
@@ -518,6 +432,7 @@ int db_checknick_nt(char *nick)
 			{
 				mysql_row = mysql_fetch_row(mysql_res);
 				nickid = strtol(mysql_row[0], NULL, 10);
+				u->sqlid = nickid;
 				if (stricmp(mysql_row[1], u->sqlnick) != 0)
 				{
 					/* Removing old user to avoid duplicate on update, which will happen shortly */
@@ -549,12 +464,7 @@ int db_checknick_nt(char *nick)
 			}
 			SET_SEGV_LOCATION();
 		}
-		else
-		{
-			nickid = -1;
-		}
 #endif
-		return nickid;
 	}
 	else
 	{
@@ -568,107 +478,14 @@ int db_checknick_nt(char *nick)
 			{
 				mysql_row = mysql_fetch_row(mysql_res);
 				nickid = strtol(mysql_row[0], NULL, 10);
+				u->sqlid = nickid;
 			}
 			SET_SEGV_LOCATION();
 			mysql_free_result(mysql_res);
 		}
-		else
-		{
-			nickid = -1;
-		}
 #endif
-		return nickid;
 	}
-}
-
-/*************************************************************************/
-
-/* nick should be db_escape'd before call */
-int db_getnick_unsure(char *nick)
-{
-	User *u;
-	int res = 0;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
-
-	SET_SEGV_LOCATION();
-
-	u = user_find(nick);
-	if (u && u->sqlid)
-	{
-		return u->sqlid;
-	}
-
-	if (!denora->do_sql)
-	{
-		return -1;
-	}
-
-	rdb_query(QUERY_HIGH, "SELECT nickid FROM %s WHERE nick=\'%s\'",
-	          UserTable, nick);
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
-	{
-		if (mysql_num_rows(mysql_res))
-		{
-			mysql_row = mysql_fetch_row(mysql_res);
-			res = strtol(mysql_row[0], NULL, 10);
-		}
-		else
-		{
-			res = -1;
-		}
-		SET_SEGV_LOCATION();
-		mysql_free_result(mysql_res);
-	}
-#endif
-	return res;
-}
-
-/*************************************************************************/
-
-/* nick should be db_escape'd before call */
-int db_getnick(char *nick)
-{
-	User *u;
-	int res = 0;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
-
-	u = user_find(nick);
-	if (u && u->sqlid)
-	{
-		return u->sqlid;
-	}
-
-	if (!denora->do_sql)
-	{
-		return 0;
-	}
-	SET_SEGV_LOCATION();
-
-	rdb_query(QUERY_HIGH, "SELECT nickid FROM %s WHERE nick=\'%s\'",
-	          UserTable, nick);
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
-	{
-		if (mysql_num_rows(mysql_res))
-		{
-			mysql_row = mysql_fetch_row(mysql_res);
-			res = strtol(mysql_row[0], NULL, 10);
-		}
-		else
-		{
-			alog(LOG_NONEXISTANT, "nickname not found ! %s", nick);
-		}
-		mysql_free_result(mysql_res);
-	}
-#endif
-	return res;
+	return nickid;
 }
 
 /*************************************************************************/
@@ -732,9 +549,9 @@ void db_removenick(char *nick, char *reason)
 		return;
 	}
 
-	if (nickid == 0)
+	if (nickid == -1)
 	{
-		alog(LOG_DEBUG, "nickid 0");
+		alog(LOG_NONEXISTANT, "Trying to remove nonexistent nick %s", nick);
 		return;
 	}
 	SET_SEGV_LOCATION();
@@ -782,6 +599,11 @@ void db_removenick_nt(char *nick, char *reason)
 	char *username, *host, *queryhost;
 	char *newnick;
 
+	if (!nick)
+	{
+		return;
+	}
+
 	u = user_find(nick);
 
 	SET_SEGV_LOCATION();
@@ -791,9 +613,9 @@ void db_removenick_nt(char *nick, char *reason)
 		return;
 	}
 
-	if (nickid == 0)
+	if (!nickid)
 	{
-		alog(LOG_DEBUG, "nickid 0");
+		alog(LOG_NONEXISTANT, "nickname not found ! %s", nick);
 		return;
 	}
 	SET_SEGV_LOCATION();
@@ -807,9 +629,8 @@ void db_removenick_nt(char *nick, char *reason)
 			username = rdb_escape(u->username);
 			host = rdb_escape(u->host);
 			queryhost = (myNumToken(host, '.') >= 2) ? strchr(host, '.') : host;
-			queryhost = StrReverse(queryhost);
 			rdb_query(QUERY_HIGH,
-			          "SELECT nick FROM %s WHERE username=\'%s\' AND REVERSE(hostname) LIKE \'%s%%\' AND online=\'Y\' AND nick != \'%s\' ORDER BY connecttime DESC",
+			          "SELECT nick FROM %s WHERE username=\'%s\' AND hostname LIKE \'%%%s\' AND online=\'Y\' AND nick != \'%s\' ORDER BY connecttime DESC",
 			          UserTable, username, queryhost, u->sqlnick);
 			free(queryhost);
 			free(username);

@@ -689,7 +689,7 @@ int denora_event_topic(char *source, int ac, char **av)
 	if (denora->protocoldebug)
 		protocol_debug(source, ac, av);
 
-	if (ac < 4)
+	if (ac < 3)
 		return MOD_CONT;
 
 	u = find_byuid(source);

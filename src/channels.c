@@ -355,7 +355,7 @@ void sql_do_addusers(int chanid, char *users)
 		}
 		u = user_find(users);
 		users = rdb_escape((u ? u->nick : users));
-		nickid = db_checknick((u ? u->nick : users));
+		nickid = db_getnick((u ? u->nick : users));
 		if (nickid != -1)
 		{
 			/* Build the query dynamically */

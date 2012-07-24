@@ -709,14 +709,10 @@ E char *host_resolve(char *host);
 
 E void db_connect(void);
 E int rdb_query(int i, const char *fmt, ...);
-E int db_checkserver(char *serv);
-E int db_checkserver_online(char *serv);
 E int db_getserver(char *serv);
 E int db_getservfromnick(char *nick);
-E int db_checknick(char *nick);
-E int db_checknick_nt(char *nick);
 E int db_getnick(char *nick);
-E int db_getnick_unsure(char *nick);
+E int db_checknick_nt(char *nick);
 E int rdb_insertid(void);
 E int db_getchannel(char *chan);
 E int db_getchancreate(char *chan);
