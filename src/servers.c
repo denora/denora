@@ -534,7 +534,6 @@ Server *do_server(const char *source, char *servername, char *hops,
 		free(descript);
 		free(sqluplinkserver);
 		servid = db_getserver(servername);
-		serv->sqlid = servid;
 
 		if (!stricmp(servername, ServerName))
 		{

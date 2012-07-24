@@ -299,14 +299,10 @@ void sql_do_nick(User * u)
 			 host, vhost, username, account, (long int) u->timestamp,
 			 servid, server, countrycode, countryname);
 		}
+		if (!u->sqlid)
+			nickid = db_getnick(u->sqlnick);
 	}
 	SET_SEGV_LOCATION();
-
-	nickid = db_getnick(u->sqlnick);
-	if (nickid)
-	{
-		u->sqlid = nickid;
-	}
 
 	if (UserCacheTime)
 	{
