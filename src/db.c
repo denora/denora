@@ -329,12 +329,15 @@ int db_getserver(char *serv)
 		{
 			mysql_row = mysql_fetch_row(mysql_res);
 			servid = strtol(mysql_row[0], NULL, 10);
-			s->sqlid = servid;
 		}
 		SET_SEGV_LOCATION();
 		mysql_free_result(mysql_res);
 	}
 #endif
+	if (s && servid)
+	{
+		s->sqlid = servid;
+	}
 	return servid;
 }
 
@@ -378,12 +381,15 @@ int db_getnick(char *nick)
 		{
 			mysql_row = mysql_fetch_row(mysql_res);
 			nickid = strtol(mysql_row[0], NULL, 10);
-			u->sqlid = nickid;
 		}
 		SET_SEGV_LOCATION();
 		mysql_free_result(mysql_res);
 	}
 #endif
+	if (u && nickid)
+	{
+		u->sqlid = nickid;
+	}
 	return nickid;
 }
 
@@ -432,7 +438,6 @@ int db_checknick_nt(char *nick)
 			{
 				mysql_row = mysql_fetch_row(mysql_res);
 				nickid = strtol(mysql_row[0], NULL, 10);
-				u->sqlid = nickid;
 				if (stricmp(mysql_row[1], u->sqlnick) != 0)
 				{
 					/* Removing old user to avoid duplicate on update, which will happen shortly */
@@ -478,12 +483,15 @@ int db_checknick_nt(char *nick)
 			{
 				mysql_row = mysql_fetch_row(mysql_res);
 				nickid = strtol(mysql_row[0], NULL, 10);
-				u->sqlid = nickid;
 			}
 			SET_SEGV_LOCATION();
 			mysql_free_result(mysql_res);
 		}
 #endif
+	}
+	if (u && nickid)
+	{
+		u->sqlid = nickid;
 	}
 	return nickid;
 }
@@ -870,14 +878,14 @@ int db_getlusers(int type)
 /* chan should be db_escape'd before call */
 int db_getchannel(char *chan)
 {
-	int res = 0;
+	int chanid = -1;
 	Channel *c;
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
 #endif
 
 	if (!chan)
-		return -1;
+		return chanid;
 
 	SET_SEGV_LOCATION();
 
@@ -889,7 +897,7 @@ int db_getchannel(char *chan)
 
 	if (!denora->do_sql)
 	{
-		return -1;
+		return chanid;
 	}
 
 	rdb_query(QUERY_HIGH, "SELECT chanid FROM %s WHERE channel=\'%s\'",
@@ -901,7 +909,7 @@ int db_getchannel(char *chan)
 		if (mysql_num_rows(mysql_res))
 		{
 			mysql_row = mysql_fetch_row(mysql_res);
-			res = strtol(mysql_row[0], NULL, 10);
+			chanid = strtol(mysql_row[0], NULL, 10);
 		}
 		else
 		{
@@ -911,7 +919,11 @@ int db_getchannel(char *chan)
 		mysql_free_result(mysql_res);
 	}
 #endif
-	return res;
+	if (c && chanid)
+	{
+		c->sqlid = chanid;
+	}
+	return chanid;
 }
 
 /*************************************************************************/
