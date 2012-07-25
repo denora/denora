@@ -1,6 +1,4 @@
 /*
- * IRC - Internet Relay Chat, ircd/ircd_md5.h
- *
  * This code implements the MD5 message-digest algorithm.
  * The algorithm is due to Ron Rivest.  This code was
  * written by Colin Plumb in 1993, no copyright is claimed.
@@ -15,12 +13,6 @@
  * MD5Context structure, pass it to MD5Init, call MD5Update as
  * needed on buffers full of bytes, and then call MD5Final, which
  * will fill a supplied 16-byte array with the digest.
- *
- * ircuified 2002 by hikari
- */
-/** @file
- * @brief MD5 implementation for ircu.
- * @version $Id$
  */
 
 #include "denora.h"
@@ -51,6 +43,7 @@ static void byteReverse(unsigned char *buf, unsigned longs)
 /** Iniitalize MD5 context.
  * @param[out] ctx MD5 context to initialize.
  */
+void MD5Init(struct MD5Context *ctx);
 void MD5Init(struct MD5Context *ctx)
 {
 	ctx->buf[0] = 0x67452301U;
@@ -67,6 +60,7 @@ void MD5Init(struct MD5Context *ctx)
  * @param[in] buf Input buffer.
  * @param[in] len Number of bytes in input buffer.
  */
+void MD5Update(struct MD5Context *ctx, unsigned const char *buf, unsigned len);
 void MD5Update(struct MD5Context *ctx, unsigned const char *buf, unsigned len)
 {
 	uint32 t;
@@ -115,6 +109,7 @@ void MD5Update(struct MD5Context *ctx, unsigned const char *buf, unsigned len)
  * @param[out] digest Receives output hash value.
  * @param[in,out] ctx MD5 context to finalize.
  */
+void MD5Final(unsigned char digest[16], struct MD5Context *ctx);
 void MD5Final(unsigned char digest[16], struct MD5Context *ctx)
 {
 	unsigned count;
@@ -179,6 +174,7 @@ void MD5Final(unsigned char digest[16], struct MD5Context *ctx)
  * @param[in,out] buf Hash value.
  * @param[in] in Input buffer.
  */
+void MD5Transform(uint32 buf[4], uint32 const in[16]);
 void MD5Transform(uint32 buf[4], uint32 const in[16])
 {
 	register uint32 a, b, c, d;
@@ -274,9 +270,9 @@ char *md5(const char *str) {
         MD5Init(&c);
         while (length > 0) {
                 if (length > 512)
-                        MD5Update(&c, str, 512);
+                        MD5Update(&c, (const unsigned char *)str, 512);
                 else
-                        MD5Update(&c, str, length);
+                        MD5Update(&c, (const unsigned char *)str, length);
                 length -= 512;
                 str += 512;
         }
