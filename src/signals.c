@@ -25,7 +25,7 @@ char segv_location[SEGV_LOCATION_BUFSIZE];
 
 #if !defined(HAVE_STRSIGNAL)
 define strsignal(int sig) get_signame(int sig);
-#elsif !defined(strsignal) and (!defined(__CYGWIN__) || (__FreeBSD__) || (__OpenBSD__))
+#elif !defined(strsignal) && (!defined(__CYGWIN__) || (__FreeBSD__) || (__OpenBSD__))
 char *strsignal(int sig);
 #endif
 
