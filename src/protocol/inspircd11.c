@@ -1422,7 +1422,7 @@ void inspircd_cmd_ctcp(char *source, char *dest, char *buf)
 #ifndef _WIN32
 void inspircd_cmd_version(__attribute__((unused))char *server)
 #else
-void inspircd_cmd_version(char *server);
+void inspircd_cmd_version(char *server)
 #endif
 {
 	/* TODO: InspIRCd sends you all servers version strings as they burst.

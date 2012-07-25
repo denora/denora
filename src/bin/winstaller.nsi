@@ -312,7 +312,6 @@ Section Uninstall
   Delete "$INSTDIR\sql\bahamut.sql"
   Delete "$INSTDIR\sql\asuka.sql"
   Delete "$INSTDIR\README"
-  Delete "$INSTDIR\mysql.m4"
   Delete "$INSTDIR\docs\XMLRPC_MOD"
   Delete "$INSTDIR\docs\XMLRPC"
   Delete "$INSTDIR\docs\WIN32.txt"
