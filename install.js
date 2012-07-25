@@ -56,6 +56,21 @@ var installerQuestions = [{
 	}
 }, ];
 var buildPackages = [{
+	'name': 'Microsoft Visual Studio 2012 (with Windows SDK 8.0)',
+	'libpaths': ['Program Files\\Microsoft Visual Studio 11.0\\VC\\lib', 'Program Files\\Windows Kits\\8.0\\Lib\\win8\\um\\x86'],
+	'incpaths': ['Program Files\\Microsoft Visual Studio 11.0\\VC\\include', 'Program Files\\Windows Kits\\8.0\\Include\\um'],
+	'nmake': ['Program Files\\Microsoft Visual Studio 11.0\\VC\\bin', ''],
+	'additional_switches': ['/w'],
+	'installedDrive': 'C'
+},
+{
+	'name': 'Microsoft Visual Studio 2012 (with Windows SDK 8.0)',
+	'libpaths': ['Program Files (x86)\\Microsoft Visual Studio 11.0\\VC\\lib', 'Program Files (x86)\\Windows Kits\\8.0\\Lib\\win8\\um\\x86'],
+	'incpaths': ['Program Files (x86)\\Microsoft Visual Studio 11.0\\VC\\include', 'Program Files (x86)\\Windows Kits\\8.0\\Include\\um'],
+	'nmake': ['Program Files (x86)\\Microsoft Visual Studio 11.0\\VC\\bin', ''],
+	'additional_switches': ['/w'],
+	'installedDrive': 'C'
+},{
 	'name': 'Microsoft Visual Studio 2010 (with Windows SDK 7.1)',
 	'libpaths': ['Program Files\\Microsoft Visual Studio 10.0\\VC\\lib', 'Program Files\\Microsoft SDKs\\Windows\\v7.1\\Lib'],
 	'incpaths': ['Program Files\\Microsoft Visual Studio 10.0\\VC\\include', 'Program Files\\Microsoft SDKs\\Windows\\v7.1\\Include'],
@@ -123,17 +138,10 @@ var mysqlVersions = [{
 	'installedDrive': 'C'
 },
 {
-	'name': 'MySQL 4.1',
-	'libpaths': ['Program Files\\MySQL\\MySQL Server 4.1\\Lib\\opt'],
-	'incpaths': ['Program Files\\MySQL\\MySQL Server 4.1\\Include'],
-	'dllfile': 'Program Files\\MySQL\\MySQL Server 4.1\\Bin\\libmysql.dll',
-	'installedDrive': 'C'
-},
-{
-	'name': 'MySQL 4.0',
-	'libpaths': ['Program Files\\MySQL\\MySQL Server 4.0\\Lib\\opt'],
-	'incpaths': ['Program Files\\MySQL\\MySQL Server 4.0\\Include'],
-	'dllfile': 'Program Files\\MySQL\\MySQL Server 4.0\\Bin\\libmysql.dll',
+	'name': 'MySQL 5.0',
+	'libpaths': ['Program Files (x86)\\MySQL\\MySQL Server 5.0\\lib\\opt'],
+	'incpaths': ['Program Files (x86)\\MySQL\\MySQL Server 5.0\\include'],
+	'dllfile': 'Program Files (x86)\\MySQL\\MySQL Server 5.0\\lib\\opt\\libmysql.dll',
 	'installedDrive': 'C'
 }];
 var bannerReplacements = [{
@@ -206,7 +214,7 @@ for (x in installerQuestions) {
 }
 if (!findCompiler()) {
 	WScript.Echo("\nERROR: No suitable build tools were found!");
-	WScript.Echo("Please ensure you have downloaded and installed a version of Visual C++ and/or PlatformSDK.\n");
+	WScript.Echo("Please ensure you have downloaded and installed a version of Visual C++ and/or Windows SDK.\n");
 	WScript.Echo("For more information on the tools needed to build Denora on Windows, see:\nhttp://www.denorastats.org\n");
 } else {
 	WScript.Echo("\nBuild tools were found successfully!\n");
@@ -357,12 +365,12 @@ function findCompiler() {
 			continue;
 		}
 		if (!findFile("wsock32.lib", thisPack.libpaths)) {
-			WScript.Echo("ERROR: Cannot find wsock32.lib - Probably missing PlatformSDK...\n");
+			WScript.Echo("ERROR: Cannot find wsock32.lib - Probably missing Windows SDK...\n");
 			noPSDK = true;
 			continue;
 		}
 		if (!findFile("advapi32.lib", thisPack.libpaths)) {
-			WScript.Echo("ERROR: Cannot find advapi32.lib - Probably missing PlatformSDK...\n");
+			WScript.Echo("ERROR: Cannot find advapi32.lib - Probably missing Windows SDK...\n");
 			noPSDK = true;
 			continue;
 		}
@@ -371,7 +379,7 @@ function findCompiler() {
 			continue;
 		}
 		if (!findFile("windows.h", thisPack.incpaths)) {
-			WScript.Echo("ERROR: Cannot find windows.h - Probably missing PlatformSDK headers...\n");
+			WScript.Echo("ERROR: Cannot find windows.h - Probably missing Windows SDK headers...\n");
 			noPSDK = true;
 			continue;
 		}
