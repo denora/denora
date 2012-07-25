@@ -336,7 +336,7 @@ void reset_sqladmin(void)
 			{
 				crypted = is_crypted(a->passwd);
 				rdb_query(QUERY_LOW,
-					"INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', '%s', %d, %s%s%s, %d) \
+					"INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', %s%s%s, %d, '%s', %d) \
 					ON DUPLICATE KEY UPDATE passwd=%s%s%s, level=%d, host='%s', lang=%d",
 					AdminTable, a->name, crypted ? "'" : "MD5('", a->passwd, crypted ? "'" : "')", a->configfile, 
 					a->hosts[0], a->language, crypted ? "'" : "MD5('", a->passwd, crypted ? "'" : "')", a->configfile,

@@ -1158,25 +1158,35 @@ int is_valid_server(char *name)
 
 int is_crypted(const char *passwd)
 {
-	char *crypto;
-
+	const char *const valid_md5chars = "0123456789abcdef";
+	int found, i, j;
 #ifdef HAVE_CRYPT
-	crypto = crypt(passwd, passwd);
-	if (strcmp(crypto, passwd))
+	/* Check if the string matches $1$........$...................... */
+	if (strlen(passwd) == 34 && passwd[0] == '$' && passwd[1] == '1' && passwd[2] == '$' && passwd[11] == '$')
 	{
-		free(crypto);
 		return 1;
 	}
 #endif
-	crypto = md5(passwd);
-	if (!stricmp(crypto, passwd))
-	{
-		free(crypto);
-		return 1;
-	}
 
-	if (crypto)
-		free(crypto);
+	/* Check if string matches a md5 using ^[0-9a-f]{32}$ the non regex fugly way */
+	if (strlen(passwd) == 32)
+	{
+		for (i = 0; i < 32; i++)
+		{
+			found = 0;
+			for (i = 0; i < strlen(valid_md5chars); i++)
+			{
+				if (passwd[i] == valid_md5chars[i])
+				{
+					found = 1;
+					break;
+				}
+			}
+			if (!found)
+				return 0;
+		}
+		return 1;
+        }
 
 	return 0;
 }
