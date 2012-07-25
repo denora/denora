@@ -1014,7 +1014,7 @@ struct user_
 
 	int cstats;          	/* used for channelstats - dont modify it */
 	char *sgroup;        	/* contains the escaped name of the stats-group */
-	char *lastuname;		/* used for nick tracking */
+	char *lastuname;	/* used for nick tracking */
 
 	ModuleData *moduleData;	/* defined for it, it should allow the module Add/Get */
 	char *country_code;

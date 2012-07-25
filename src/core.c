@@ -1159,10 +1159,11 @@ int is_valid_server(char *name)
 int is_crypted(const char *passwd)
 {
 	const char *const valid_md5chars = "0123456789abcdef";
-	int found, i, j;
+	int i;
+
 #ifdef HAVE_CRYPT
 	/* Check if the string matches $1$........$...................... */
-	if (strlen(passwd) == 34 && passwd[0] == '$' && passwd[1] == '1' && passwd[2] == '$' && passwd[11] == '$')
+	if (strlen(passwd) == 34 && strncmp("$1$",passwd, 3) == 0 && passwd[11] == '$')
 	{
 		return 1;
 	}
@@ -1173,17 +1174,10 @@ int is_crypted(const char *passwd)
 	{
 		for (i = 0; i < 32; i++)
 		{
-			found = 0;
-			for (i = 0; i < strlen(valid_md5chars); i++)
+			if (strchr(valid_md5chars, passwd[i]) == NULL)
 			{
-				if (passwd[i] == valid_md5chars[i])
-				{
-					found = 1;
-					break;
-				}
-			}
-			if (!found)
 				return 0;
+			}
 		}
 		return 1;
         }

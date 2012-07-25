@@ -527,8 +527,7 @@ static int check_db(User * u, Channel * c)
 					u->cstats = 1;
 				}
 			}
-			else if (u->sgroup && u->lastuname
-			         && stricmp(u->sgroup, u->lastuname))
+			else if (u->sgroup && u->lastuname && stricmp(u->sgroup, u->lastuname))
 			{
 				/* user already had a stats user, so we'll take that one */
 				alog(LOG_DEBUG, "Replacing sgroup %s with last used %s",

@@ -287,7 +287,7 @@ void sql_do_addusers(int chanid, char *users)
 	char *nextusers;
 	char flagbuf[BUFSIZE];
 	char valuebuf[BUFSIZE];
-	int nickid, status_flag;
+	int status_flag;
 	User *u;
 
 	SET_SEGV_LOCATION();
@@ -355,8 +355,8 @@ void sql_do_addusers(int chanid, char *users)
 		}
 		u = user_find(users);
 		users = rdb_escape((u ? u->nick : users));
-		nickid = db_getnick((u ? u->nick : users));
-		if (nickid != -1)
+		db_getnick((u ? u->nick : users));
+		if (u->sqlid)
 		{
 			/* Build the query dynamically */
 			/* First, setup the head and tail for the basic query */
@@ -364,7 +364,7 @@ void sql_do_addusers(int chanid, char *users)
 			            "INSERT IGNORE INTO %s (nickid, chanid, mode_lo, mode_lv",
 			            IsOnTable);
 			ircsnprintf(valuebuf, sizeof(valuebuf),
-			            ") VALUES (%d, %d, \'%s\', \'%s\'", nickid, chanid,
+			            ") VALUES (%d, %d, \'%s\', \'%s\'", u->sqlid, chanid,
 			            (op ? "Y" : "N"), (voice ? "Y" : "N"));
 
 			/* Next, check if an ircd supports a certain mode and add */

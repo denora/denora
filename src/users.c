@@ -233,8 +233,6 @@ void do_swhois(char *user, char *msg)
 void sql_do_nick(User * u)
 {
 	int servid;
-	int add = 1;
-	int nickid;
 	char *username, *account, *host, *vhost, *server, *realname,
 	     *countryname, *countrycode;
 
@@ -255,52 +253,38 @@ void sql_do_nick(User * u)
 
 	if (LargeNet || !UplinkSynced || UserStatsRegistered)
 	{
-		nickid = db_getnick(u->sqlnick);
+		db_getnick(u->sqlnick);
 	}
 	else
 	{
-		nickid = db_checknick_nt(u->sqlnick);
+		db_checknick_nt(u->sqlnick);
 	}
 
-	if (UserCacheTime && (nickid != -1))
+	if (u->sqlid)
+	{
+		SET_SEGV_LOCATION();
+		rdb_query
+		(QUERY_LOW,
+		 "UPDATE %s SET nick='%s', hopcount=%d, nickip='%s', countrycode='%s', country='%s', realname='%s', hostname='%s', hiddenhostname='%s', username='%s', swhois='', account='%s', connecttime=FROM_UNIXTIME(%ld), servid=%d, server='%s', lastquit=NULL, online='Y', away='%s', awaymsg='%s' WHERE nickid=%d",
+		 UserTable, u->sqlnick, u->hopcount, u->ip, countrycode, countryname, realname, host, vhost, username, account,
+		 (long int) u->timestamp, servid, server, u->isaway ? "Y" : "N", u->isaway && u->awaymsg ? u->awaymsg : NULL, u->sqlid);
+		sql_reset_usermodes(u->sqlid, NULL);
+	}
+	else
 	{
 		SET_SEGV_LOCATION();
 		rdb_query
 		(QUERY_HIGH,
-		 "UPDATE %s SET nick=\'%s\', hopcount=%d, nickip=\'%s\', countrycode=\'%s\', country=\'%s\', realname=\'%s\', hostname=\'%s\', hiddenhostname=\"%s\", username=\'%s\', swhois=\'\', account=\'%s\', connecttime=FROM_UNIXTIME(%ld), servid=%d, server=\'%s\', lastquit=NULL, online=\'Y\', away=\'N\', awaymsg=\'\' WHERE nickid=%d",
-		 UserTable, u->sqlnick, u->hopcount, u->ip, countrycode,
-		 countryname, realname, host, vhost, username, account,
-		 (long int) u->timestamp, servid, server, nickid);
-		sql_reset_usermodes(nickid, NULL);
-		add = 0;
-	}
-	if (add)
-	{
-		SET_SEGV_LOCATION();
-		if (KeepUserTable)
-		{
-			rdb_query
-			(QUERY_HIGH,
-			 "INSERT INTO %s (nick,hopcount,nickip,realname,hostname,hiddenhostname,username,swhois,account,connecttime,servid,server,countrycode,country) VALUES(\'%s\',%d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'\',\'%s\',FROM_UNIXTIME(%ld),%d,\'%s\',\'%s\',\'%s\') ON DUPLICATE KEY UPDATE nick=\'%s\', hopcount=%d, nickip=\'%s\', realname=\'%s\', hostname=\'%s\', hiddenhostname=\'%s\', username=\'%s\', account=\'%s\', connecttime=FROM_UNIXTIME(%ld), servid=%d, server=\'%s\', countrycode=\'%s\', country=\'%s\', lastquit=NULL, online=\'Y\', away=\'N\', awaymsg=\'\'",
-			 UserTable, u->sqlnick, u->hopcount, u->ip, realname,
-			 host, vhost, username, account, (long int) u->timestamp,
-			 servid, server, countrycode, countryname, u->sqlnick,
-			 u->hopcount, u->ip, realname, host, vhost, username,
-			 account, (long int) u->timestamp, servid, server,
-			 countrycode, countryname);
-			sql_reset_usermodes(0, u->sqlnick);
-		}
-		else
-		{
-			rdb_query
-			(QUERY_HIGH,
-			 "INSERT INTO %s (nick, hopcount, nickip, realname, hostname, hiddenhostname, username, swhois, account, connecttime, servid, server, countrycode, country) VALUES(\'%s\',%d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'\',\'%s\',FROM_UNIXTIME(%ld),%d,\'%s\',\'%s\',\'%s\')",
-			 UserTable, u->sqlnick, u->hopcount, u->ip, realname,
-			 host, vhost, username, account, (long int) u->timestamp,
-			 servid, server, countrycode, countryname);
-		}
+		 "INSERT INTO %s (nick,hopcount,nickip,realname,hostname,hiddenhostname,username,swhois,account,connecttime,servid,server,countrycode,country) VALUES('%s',%d,'%s','%s','%s','%s','%s','','%s',FROM_UNIXTIME(%ld),%d,'%s','%s','%s') ON DUPLICATE KEY UPDATE nick='%s', hopcount=%d, nickip='%s', realname='%s', hostname='%s', hiddenhostname='%s', username='%s', account='%s', connecttime=FROM_UNIXTIME(%ld), servid=%d, server='%s', countrycode='%s', country='%s', lastquit=NULL, online='Y', away='%s', awaymsg='%s'",
+		 UserTable, u->sqlnick, u->hopcount, u->ip, realname,
+		 host, vhost, username, account, (long int) u->timestamp,
+		 servid, server, countrycode, countryname, u->sqlnick,
+		 u->hopcount, u->ip, realname, host, vhost, username,
+		 account, (long int) u->timestamp, servid, server,
+		 countrycode, countryname, u->isaway ? "Y" : "N", u->isaway && u->awaymsg ? u->awaymsg : NULL);
+		sql_reset_usermodes(0, u->sqlnick);
 		if (!u->sqlid)
-			nickid = db_getnick(u->sqlnick);
+			db_getnick(u->sqlnick);
 	}
 	SET_SEGV_LOCATION();
 
@@ -310,25 +294,18 @@ void sql_do_nick(User * u)
 	}
 	SET_SEGV_LOCATION();
 
-	if (username)
-		free(username);
-	if (host)
-		free(host);
-	if (server)
-		free(server);
-	if (account)
-		free(account);
-
+	free(username);
+	free(host);
+	free(server);
+	free(realname);
+	free(countrycode);
+	free(countryname);
 	SET_SEGV_LOCATION();
 
+	if (account)
+		free(account);
 	if (ircd->vhost && vhost)
 		free(vhost);
-	if (realname)
-		free(realname);
-	if (countrycode)
-		free(countrycode);
-	if (countryname)
-		free(countryname);
 	SET_SEGV_LOCATION();
 }
 
