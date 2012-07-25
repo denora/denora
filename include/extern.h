@@ -912,11 +912,6 @@ int fileno(FILE *stream);
 #endif
 #endif
 
-#ifndef _WIN32
-#ifndef HAVE_GETADDRINFO
-E adns_state adns;
-#endif
-#endif
 E GeoIP *gidb;
 E GeoIP *gidb_v6;
 

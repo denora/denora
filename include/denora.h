@@ -1365,7 +1365,6 @@ typedef struct
 #include "list.h"
 #include "modules.h"
 #include "xmlrpc.h"
-#include "adns.h"
 #include "extern.h"
 
 /*************************************************************************/

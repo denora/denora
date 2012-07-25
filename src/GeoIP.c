@@ -1616,7 +1616,7 @@ static char *_get_name_v6 (GeoIP* gi, geoipv6_t ipnum)
 	return org_buf;
 }
 
-static char *_GeoIP_num_to_addr (__attribute__((unused))GeoIP* gi, unsigned long ipnum)
+static char *_GeoIP_num_to_addr (unsigned long ipnum)
 {
 	char *ret_str;
 	char *cur_str;
@@ -1679,7 +1679,7 @@ char **GeoIP_range_by_ip (GeoIP* gi, const char *addr)
 		mask = 0xffffffff << ( 32 - GeoIP_last_netmask(gi) );
 		left_seek = ( left_seek - 1 ) & mask;
 	}
-	ret[0] = _GeoIP_num_to_addr(gi, left_seek);
+	ret[0] = _GeoIP_num_to_addr(left_seek);
 
 	while (right_seek != 0xffffffff
 	        && target_value == _GeoIP_seek_record(gi, right_seek + 1) )
@@ -1690,7 +1690,7 @@ char **GeoIP_range_by_ip (GeoIP* gi, const char *addr)
 		right_seek = ( right_seek + 1 ) & mask;
 		right_seek += 0xffffffff & ~mask;
 	}
-	ret[1] = _GeoIP_num_to_addr(gi, right_seek);
+	ret[1] = _GeoIP_num_to_addr(right_seek);
 
 	gi->netmask = orig_netmask;
 

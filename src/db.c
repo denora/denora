@@ -548,7 +548,7 @@ int db_getservfromnick(char *nick)
 void db_removenick(char *nick, char *reason)
 {
 	char *sqlreason;
-	int nickid = db_getnick(nick);
+	User *u;
 
 	SET_SEGV_LOCATION();
 
@@ -557,26 +557,34 @@ void db_removenick(char *nick, char *reason)
 		return;
 	}
 
-	if (nickid == -1)
+	u = user_find(nick);
+	if (!u)
 	{
 		alog(LOG_NONEXISTANT, "Trying to remove nonexistent nick %s", nick);
 		return;
 	}
+
+	if (!u->sqlid && db_getnick(nick) == -1)
+	{
+		alog(LOG_NONEXISTANT, "Trying to remove nonexistant user %s", nick);
+		return;
+	}
+
 	SET_SEGV_LOCATION();
 
-	db_removefromchans(nickid);
+	db_removefromchans(u->sqlid);
 	if (UserCacheTime)
 	{
 		sqlreason = rdb_escape(reason);
 		rdb_query(QUERY_LOW,
 		          "UPDATE %s SET online=\'N\', lastquit=NOW(), lastquitmsg=\'%s\', servid=0 WHERE nickid=%d",
-		          UserTable, sqlreason, nickid);
+		          UserTable, sqlreason, u->sqlid);
 		free(sqlreason);
 	}
 	else
 	{
 		rdb_query(QUERY_LOW, "DELETE FROM %s WHERE nickid=%d",
-		          UserTable, nickid);
+		          UserTable, u->sqlid);
 	}
 
 

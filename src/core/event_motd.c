@@ -81,9 +81,15 @@ void DenoraFini(void)
 /*************************************************************************/
 
 
-int denora_event_376(char *source, __attribute__((unused))int ac, __attribute__((unused))char **av)
+int denora_event_376(char *source, int ac, char **av)
 {
 	Server *s;
+
+        if (denora->protocoldebug)
+        {
+                protocol_debug(source, ac, av);
+        }
+
 	s = server_find(source);
 	if (!s)
 	{

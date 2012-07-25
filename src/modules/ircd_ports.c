@@ -16,7 +16,11 @@ int get_port(char *source, int ac, char **av);
 int my_squit(int argc, char **argv);
 void create_table(void);
 
+#ifndef _WIN32
 int DenoraInit(__attribute__((unused))int argc, __attribute__((unused))char **argv)
+#else
+int DenoraInit(int argc, char **argv)
+#endif
 {
     EvtHook *hook = NULL;
     Message *msg = NULL;

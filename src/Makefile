@@ -14,12 +14,12 @@
 MYSQL_OBJ = $(MYSQL:.c=.o)
 POSTGRE_OBJ = $(POSTGRE:.c=.o)
 
-OBJS =  admin.o adns.o base64.o bans.o channels.o chanstats.o ChanBanMode.o ChanMode.o core.o cron.o ctcp.o config.o db.o datafiles.o \
+OBJS =  admin.o base64.o bans.o channels.o chanstats.o ChanBanMode.o ChanMode.o core.o cron.o ctcp.o config.o db.o datafiles.o \
         exclude.o events.o extsock.o FileIO.o GeoIP.o language.o list.o log.o ircd.o main.o markup.o modules.o moddata.o moduleapi.o \
         messages.o md5.o mod_version.o Modes.o network.o numerics.o privmsg.o rdb.o send.o servers.o signals.o sockutil.o statserv.o \
         spamfilter.o sqlqueue.o strings.o tld.o users.o xmlrpc.o zip.o \
         $(MYSQL_OBJ) $(POSTGRE_OBJ)
-SRCS =  admin.c adns.c base64.c bans.c channels.c chanstats.c ChanBanMode.c ChanMode.c core.c cron.c ctcp.c config.c db.c datafiles.c \
+SRCS =  admin.c base64.c bans.c channels.c chanstats.c ChanBanMode.c ChanMode.c core.c cron.c ctcp.c config.c db.c datafiles.c \
         exclude.c events.c extsock.c FileIO.c GeoIP.c language.c list.c log.c ircd.c main.c markup.c  modules.c moddata.c moduleapi.c \
         messages.c md5.c mod_version.c Modes.c network.c numerics.c privmsg.c rdb.c send.c servers.c signals.c sockutil.c statserv.c \
         spamfilter.c sqlqueue.c strings.c tld.c users.c xmlrpc.o zip.c \
@@ -49,7 +49,6 @@ stats:  $(OBJS)
 
 $(OBJS): Makefile
 admin.o:        admin.c     $(INCLUDES)
-adns.o:         adns.c      $(INCLUDES)
 base64.o:       base64.c    $(INCLUDES)
 bans.o:         bans.c      $(INCLUDES)
 channels.o:     channels.c  $(INCLUDES) 

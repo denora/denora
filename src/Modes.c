@@ -327,8 +327,7 @@ void denora_set_umode(User * user, int ac, char **av)
 		return;
 	}
 
-	alog(LOG_DEBUG, "debug: Changing mode for %s to %s", user->nick,
-	     modes);
+	alog(LOG_DEBUG, "debug: Changing mode for %s to %s", user->nick, modes);
 
 	while (*modes)
 	{

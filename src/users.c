@@ -146,7 +146,7 @@ void sql_reset_usermodes(int nickid, char *nickname)
 	}
 	SET_SEGV_LOCATION();
 
-	if (nickid == 0)
+	if (nickid < 1)
 	{
 		ircsnprintf(&db[strlen(db) - 2], sizeof(db), " WHERE nick='%s'",
 		            nickname);
@@ -260,7 +260,7 @@ void sql_do_nick(User * u)
 		db_checknick_nt(u->sqlnick);
 	}
 
-	if (u->sqlid)
+	if (u->sqlid != -1)
 	{
 		SET_SEGV_LOCATION();
 		rdb_query
@@ -282,9 +282,9 @@ void sql_do_nick(User * u)
 		 u->hopcount, u->ip, realname, host, vhost, username,
 		 account, (long int) u->timestamp, servid, server,
 		 countrycode, countryname, u->isaway ? "Y" : "N", u->isaway && u->awaymsg ? u->awaymsg : NULL);
-		sql_reset_usermodes(0, u->sqlnick);
 		if (!u->sqlid)
 			db_getnick(u->sqlnick);
+		sql_reset_usermodes(u->sqlid, NULL);
 	}
 	SET_SEGV_LOCATION();
 

@@ -14,10 +14,6 @@
 
 #include "denora.h"
 
-#if defined(_WIN32) && !defined(HAVE_GETADDRINFO)
-adns_state adns;
-#endif
-
 /*************************************************************************/
 
 /**
@@ -31,13 +27,8 @@ char *host_resolve(char *host)
 	struct addrinfo hints, *res, *p;
 	int status;
 	char ipstr[INET6_ADDRSTRLEN];
-#elif !defined(_WIN32)
-	adns_answer *answer;
 #else
-	struct hostent *hentp = NULL;
-	uint32 ip = INADDR_NONE;
 	char *ipreturn;
-	struct in_addr addr;
 #endif
 
 	SET_SEGV_LOCATION();
@@ -54,47 +45,12 @@ char *host_resolve(char *host)
  
 	if ((status = getaddrinfo(host, NULL, &hints, &res)) == 0) {
 		for(p = res;p != NULL; p = p->ai_next) {
-			void *addr;
-			if (p->ai_family == AF_INET) {
-				addr = &(p->ai_addr);
-			} else {
-				struct sockaddr_in6 *ipv6 = (struct sockaddr_in6 *)p->ai_addr;
-				addr = &(ipv6->sin6_addr);
-			}
 			inet_ntop(p->ai_family, p->ai_addr, ipstr, sizeof ipstr);
 			alog(LOG_DEBUG, "debug: %s resolves to IP address %s", host, ipstr);
 			freeaddrinfo(res);
 			return sstrdup(ipstr);
 		}
 	}
-
-#elif !defined(_WIN32)
-	adns_synchronous(adns, host, adns_r_a,
-			 adns_qf_search | adns_qf_owner, &answer);
-
-	SET_SEGV_LOCATION();
-
-	if (answer->status == adns_s_ok)
-	{
-		if (answer->nrrs == 0)
-		{
-			alog(LOG_DEBUG, "ERROR: %s has no IP addresses!", host);
-			return sstrdup("0.0.0.0");
-		}
-		if (answer->nrrs > 1)
-		{
-			alog(LOG_DEBUG, "debug: %s has %d IP addresses (using %s)",
-			     host, answer->nrrs, inet_ntoa(answer->rrs.inaddr[0]));
-		}
-		else
-		{
-			alog(LOG_DEBUG, "debug: %s resolves to IP address %s", host,
-			     inet_ntoa(answer->rrs.inaddr[0]));
-		}
-		SET_SEGV_LOCATION();
-		return sstrdup(inet_ntoa(answer->rrs.inaddr[0]));
-	}
-
 #else
 	hentp = gethostbyname(host);
 

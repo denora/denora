@@ -411,21 +411,34 @@ int denora_event_push(char *source, int ac, char **av)
 	return MOD_CONT;
 }
 
-int denora_event_eob(__attribute__((unused))char *source, __attribute__((unused))int ac, __attribute__((unused))char **av)
+int denora_event_eob(char *source, int ac, char **av)
 {
+        if (denora->protocoldebug)
+        {
+                protocol_debug(source, ac, av);
+        }
 	update_sync_state(denora->uplink, SYNC_COMPLETE);
 	return MOD_CONT;
 }
 
-int denora_event_sanick(__attribute__((unused))char *source, __attribute__((unused))int ac, char **av)
+int denora_event_sanick(char *source, int ac, char **av)
 {
+        if (denora->protocoldebug)
+        {
+                protocol_debug(source, ac, av);
+        }
 	do_nick(av[0], av[1], NULL, NULL, NULL,
 	        NULL, (int) time(NULL), 0, NULL, NULL, NULL, 0, NULL, NULL);
 	return MOD_CONT;
 }
 
-int denora_event_svsmode(__attribute__((unused))char *source, __attribute__((unused))int ac, char **av)
+int denora_event_svsmode(char *source, int ac, char **av)
 {
+        if (denora->protocoldebug)
+        {
+                protocol_debug(source, ac, av);
+        }
+
 	denora_event_mode(av[0], 2, av);
 	return MOD_CONT;
 }
@@ -438,15 +451,19 @@ int denora_event_svsmode(__attribute__((unused))char *source, __attribute__((unu
 [Dec 30 16:03:09.301158 2005] av[3] = 1135968312
 [Dec 30 16:03:09.301214 2005] av[4] = 0
 [Dec 30 16:03:09.301270 2005] av[5] = Reserved For Services
-
 */
-int denora_event_addline(__attribute__((unused))char *source, __attribute__((unused))int ac, char **av)
+int denora_event_addline(char *source, int ac, char **av)
 {
 	char *user, *host;
 	int checkdur, timeset;
 	char buf[BUFSIZE];
 	checkdur = atoi(av[4]);
 	timeset = atoi(av[3]);
+
+        if (denora->protocoldebug)
+        {
+                protocol_debug(source, ac, av);
+        }
 
 	if (checkdur != 0)
 	{
@@ -609,10 +626,16 @@ int denora_event_qline(char *source, int ac, char **av)
 	return MOD_CONT;
 }
 
-int denora_event_ftopic(__attribute__((unused))char *source, int ac, char **av)
+int denora_event_ftopic(char *source, int ac, char **av)
 {
 	/* :source FTOPIC channel ts setby :topic */
 	char *temp;
+
+        if (denora->protocoldebug)
+        {
+                protocol_debug(source, ac, av);
+        }
+
 	if (ac < 4)
 		return MOD_CONT;
 	temp = av[1];               /* temp now holds ts */
@@ -633,11 +656,17 @@ int denora_event_version(char *source, int ac, char **av)
 	return MOD_CONT;
 }
 
-int denora_event_opertype(char *source, __attribute__((unused))int ac, __attribute__((unused))char **av)
+int denora_event_opertype(char *source, int ac, char **av)
 {
 	/* opertype is equivalent to mode +o because servers
 	   dont do this directly */
 	char *newav[2];
+
+        if (denora->protocoldebug)
+        {
+                protocol_debug(source, ac, av);
+        }
+
 	newav[0] = source;
 	newav[1] = (char *) "+o";
 	return denora_event_mode(source, 2, newav);
@@ -645,10 +674,15 @@ int denora_event_opertype(char *source, __attribute__((unused))int ac, __attribu
 
 int has_globopsmod = 0;
 /* Event: PROTOCTL */
-int denora_event_capab(__attribute__((unused))char *source, __attribute__((unused))int ac, char **av)
+int denora_event_capab(char *source, int ac, char **av)
 {
 	int argc = 5;
 	char *argv[5];
+
+        if (denora->protocoldebug)
+        {
+                protocol_debug(source, ac, av);
+        }
 
 	if (strcasecmp(av[0], "START") == 0)
 	{
@@ -748,12 +782,20 @@ void inspircd_cmd_privmsg(char *source, char *dest, char *buf)
 	         ud2 ? ud2->uid : dest, buf);
 }
 
+#ifndef _WIN32
 void inspircd_cmd_serv_notice(__attribute__((unused))char *source, char *dest, char *msg)
+#else
+void inspircd_cmd_serv_notice(char *source, char *dest, char *msg)
+#endif
 {
 	send_cmd(TS6SID, "NOTICE $%s :%s", dest, msg);
 }
 
+#ifndef _WIN32
 void inspircd_cmd_serv_privmsg(__attribute__((unused))char *source, char *dest, char *msg)
+#else
+void inspircd_cmd_serv_privmsg(char *source, char *dest, char *msg)
+#endif
 {
 	send_cmd(TS6SID, "PRIVMSG $%s :%s", dest, msg);
 }
@@ -834,7 +876,11 @@ void inspircd_cmd_server(char *servname, int hop, char *descript)
 }
 
 /* PONG */
+#ifndef _WIN32
 void inspircd_cmd_pong(__attribute__((unused))char *servname, char *who)
+#else
+void inspircd_cmd_pong(char *servname, char *who)
+#endif
 {
 	send_cmd(TS6SID, "PONG %s", who);
 }
@@ -1364,8 +1410,12 @@ int denora_event_uid(char *source, int ac, char **av)
 	return MOD_CONT;
 }
 
-int denora_event_nick(char *source, __attribute__((unused))int ac, char **av)
+int denora_event_nick(char *source, int ac, char **av)
 {
+        if (denora->protocoldebug)
+        {
+                protocol_debug(source, ac, av);
+        }
 	do_nick(source, av[0], NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL,
 	        0, NULL, NULL);
 	return MOD_CONT;
@@ -1501,7 +1551,11 @@ void inspircd_cmd_ctcp(char *source, char *dest, char *buf)
 	send_cmd(source, "NOTICE %s :\1%s \1", dest, buf);
 }
 
+#ifndef _WIN32
 void inspircd_cmd_version(__attribute__((unused))char *server)
+#else
+void inspircd_cmd_version(char *server)
+#endif
 {
 	/* TODO: InspIRCd sends you all servers version strings as they burst.
 	 * These can be cached, rather than having to request them.
@@ -1535,7 +1589,11 @@ int denora_event_notice(char *source, int ac, char **av)
 	return MOD_CONT;
 }
 
+#ifndef _WIN32
 void inspircd_cmd_mode(__attribute__((unused))char *source, char *dest, char *buf)
+#else
+void inspircd_cmd_mode(char *source, char *dest, char *buf)
+#endif
 {
 	Channel *c;
 	if (!buf)

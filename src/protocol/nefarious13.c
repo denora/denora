@@ -1431,11 +1431,15 @@ int denora_event_notice(char *source, int ac, char **av)
 	}
 	return MOD_CONT;
 }
-
-int denora_event_fakehost(__attribute__((unused))char *source, __attribute__((unused))int ac, char **av)
+int denora_event_fakehost(char *source, int ac, char **av)
 {
 	User *ud;
 	char *parv[2];
+
+        if (denora->protocoldebug)
+        {
+                protocol_debug(source, ac, av);
+        }
 
 	ud = user_find(av[0]);
 

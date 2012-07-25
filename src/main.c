@@ -418,11 +418,6 @@ void denora_shutdown(void)
 	{
 		rdb_close();
 	}
-#ifndef _WIN32
-#ifndef HAVE_GETADDRINFO
-	adns_finish(adns);
-#endif
-#endif
 	if (gidb)
 	{
 		GeoIP_delete(gidb);
@@ -493,11 +488,6 @@ int main(int ac, char **av)
 	}
 #endif
 
-#ifndef _WIN32
-#ifndef HAVE_GETADDRINFO
-	adns_init(&adns, adns_if_noenv, 0);
-#endif
-#endif
 #ifdef STATS_DIR
 	GeoIP_setup_custom_directory((char *)STATS_DIR);
 #endif

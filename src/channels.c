@@ -2088,8 +2088,11 @@ void chan_delete(Channel * c)
 }
 
 /*************************************************************************/
-
+#ifndef _WIN32
 void StatsChannel_delete(__attribute__((unused))StatsChannel * c)
+#else
+void StatsChannel_delete(StatsChannel * c)
+#endif
 {
 }
 

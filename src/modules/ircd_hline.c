@@ -14,7 +14,11 @@ int my_server(int argc, char **argv);
 int get_hline(char *source, int ac, char **av);
 void create_field(void);
 
+#ifndef _WIN32
 int DenoraInit(__attribute__((unused))int argc, __attribute__((unused))char **argv)
+#else
+int DenoraInit(int argc, char **argv)
+#endif
 {
 	EvtHook *hook = NULL;
 	Message *msg = NULL;

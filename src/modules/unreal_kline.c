@@ -13,7 +13,11 @@ void DenoraFini(void);
 int my_server(int argc, char **argv);
 int get_kline(char *source, int ac, char **av);
 
+#ifndef _WIN32
 int DenoraInit(__attribute__((unused))int argc, __attribute__((unused))char **argv)
+#else
+int DenoraInit(int argc, char **argv)
+#endif
 {
     EvtHook *hook = NULL;
     Message *msg = NULL;
@@ -71,11 +75,16 @@ int my_server(int argc, char **argv)
 [Jan 10 03:19:45.232860 2006] av[6] = Abuse (Adds a K:line for 2 days)
 */
 
-int get_kline(__attribute__((unused))char *source, int ac, char **av)
+int get_kline(char *source, int ac, char **av)
 {
     char *user, *host;
     char buf[BUFSIZE];
     char buf2[BUFSIZE];
+
+        if (denora->protocoldebug)
+        {
+                protocol_debug(source, ac, av);
+        }
 
     if (!strcmp(av[1], "K")) {
       user = myStrGetToken(av[2], '@', 0);

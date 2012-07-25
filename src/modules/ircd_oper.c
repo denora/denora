@@ -17,7 +17,11 @@ int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
 int do_oper(char *source, int ac, char **av);
 
+#ifndef _WIN32
 int DenoraInit(__attribute__((unused))int argc, __attribute__((unused))char **argv)
+#else
+int DenoraInit(int argc, char **argv)
+#endif
 {
 	Message *msg = NULL;
 	int status;

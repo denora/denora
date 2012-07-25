@@ -75,7 +75,11 @@ void DenoraFini(void)
 
 }
 
+#ifndef _WIN32
 int do_sql_backup(__attribute__((unused))int argc, char **argv)
+#else
+int do_sql_backup(int argc, char **argv)
+#endif
 {
 	int i;
 	char output[BUFSIZE];

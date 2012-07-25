@@ -54,6 +54,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+12/07/25 Fixed win32 specific warnings, in some cases the fugly way
 12/07/23 Fixed Config not remembering thread settings
 12/07/23 Threading needed more fixes, hope it works now :) (Now works)
 12/07/22 Fixed threading by actually documenting it in conf (duh)
@@ -93,6 +94,7 @@ Fixes
 11/02/11 r416 Scarynet module was not compiled on windows
 
 Removals
+12/07/25 Removed adns - if resolve does no longer work for you, tell me
 12/07/23 Removed threadcount - we only will need ONE
 12/07/17 Removed commented out unused code
 12/06/26 Removed defs for strndup as it's not used at all
