@@ -24,8 +24,9 @@ VOIDSIG signal_die(int signum);
 char segv_location[SEGV_LOCATION_BUFSIZE];
 
 #if !defined(HAVE_STRSIGNAL) && defined(_WIN32)
-const char* get_signame (int sig);
-#elif !defined(strsignal) && (!defined(__CYGWIN__) || (__FreeBSD__) || (__OpenBSD__))
+const char* get_signame(int sig);
+#endif
+#if !defined(strsignal) && (!defined(__CYGWIN__) || (__FreeBSD__) || (__OpenBSD__))
 char *strsignal(int sig);
 #endif
 
