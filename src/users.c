@@ -549,6 +549,7 @@ void change_user_host(char *source, char *host)
 {
 	User *user;
 	char db[MAX_SQL_BUF];
+	char *sqlvhost;
 
 	user = user_find(source);
 	if (!user)
@@ -583,11 +584,16 @@ void change_user_host(char *source, char *host)
 				}
 				ircsnprintf(&db[strlen(db) - 1], sizeof(db), " mode_l%c=\'Y\',", ircd->vhostchar);
 			}
-			ircsnprintf(&db[strlen(db) - 1], sizeof(db), " hiddenhostname=\'%s\' WHERE nickid=%d", rdb_escape(user->vhost), user->sqlid);
+			sqlvhost = rdb_escape(user->vhost);
+			ircsnprintf(&db[strlen(db) - 1], sizeof(db), " hiddenhostname=\'%s\' WHERE nickid=%d", sqlvhost, user->sqlid);
 			rdb_query(QUERY_LOW, db);
+			free(sqlvhost);
 		}
 	}
+
 	SET_SEGV_LOCATION();
+
+	return;
 }
 
 /*************************************************************************/
@@ -604,6 +610,7 @@ void change_user_host(char *source, char *host)
 void change_user_realname(char *source, char *realname)
 {
 	User *user;
+	char *sqlrealname;
 
 	SET_SEGV_LOCATION();
 
@@ -632,8 +639,10 @@ void change_user_realname(char *source, char *realname)
 
 	if (denora->do_sql && (user->sqlid || db_getnick(user->sqlnick) != -1))
 	{
+		sqlrealname = rdb_escape(user->realname);
 		rdb_query(QUERY_LOW, "UPDATE %s SET realname=\'%s\' WHERE nickid=%d",
 		 UserTable, rdb_escape(user->realname), user->sqlid);
+		free(sqlrealname);
 	}
 
 	return;
@@ -653,6 +662,7 @@ void change_user_realname(char *source, char *realname)
 void change_user_username(char *source, char *username)
 {
 	User *user;
+	char *sqlusername;
 
 	SET_SEGV_LOCATION();
 
@@ -677,12 +687,17 @@ void change_user_username(char *source, char *username)
 
 	alog(LOG_DEBUG, langstr(ALOG_USERNAME_FOR), user->nick, username);
 
+	SET_SEGV_LOCATION;
+
 	if (denora->do_sql && (user->sqlid || db_getnick(user->sqlnick) != -1))
 	{
-		SET_SEGV_LOCATION();
+		sqlusername = rdb_escape(user->username);
 		rdb_query(QUERY_LOW, "UPDATE %s SET username=\'%s\' WHERE nickid=%d",
-			  UserTable, rdb_escape(user->username), user->sqlid);
+			  UserTable, sqlusername, user->sqlid);
+		free(sqlusername);
 	}
+
+	SET_SEGV_LOCATION;
 
 	return;
 }
@@ -1639,6 +1654,8 @@ void do_kill(char *nick, char *msg)
  */
 void do_account(User * user, char *account)
 {
+	char *sqlaccount;
+
 	if (!user)
 	{
 		alog(LOG_NONEXISTANT, "debug: ACCOUNT %s on nonexistent nick", account);
@@ -1668,9 +1685,11 @@ void do_account(User * user, char *account)
 	}
 	if (denora->do_sql)
 	{
+		sqlaccount = rdb_escape(user->account);
 		rdb_query(QUERY_LOW,
 			  "UPDATE %s SET account=\'%s\' WHERE nickid=%d",
-			  UserTable, rdb_escape(user->account), user->sqlid);
+			  UserTable, sqlaccount, user->sqlid);
+		free(sqlaccount);
 	}
 
 	return;
@@ -1689,6 +1708,7 @@ void do_account(User * user, char *account)
 void do_p10account(User * user, char *account, int flag)
 {
 	char hhostbuf[255];
+	char *sqlaccount, *sqlvhost;
 
 	if (flag != 1 && (!account || !*account))
 	{
@@ -1751,9 +1771,13 @@ void do_p10account(User * user, char *account, int flag)
 			alog(LOG_NONEXISTANT, "ACCOUNT set for nonexistent user %s", user);
 			return;
 		}
+		sqlaccount = rdb_escape(account);
+		sqlvhost = rdb_escape(user->vhost);
 		rdb_query(QUERY_LOW,
 			  "UPDATE %s SET account=\'%s\', hiddenhostname=\'%s\' WHERE nickid=%d",
-			  UserTable, rdb_escape(account), rdb_escape(user->vhost), user->sqlid);
+			  UserTable, sqlaccount, sqlvhost, user->sqlid);
+		free(sqlaccount);
+		free(sqlvhost);
 	}
 
 	SET_SEGV_LOCATION();
