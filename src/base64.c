@@ -570,12 +570,12 @@ char* decode_ip(char *buf)
 	if (len == 24)                /* IPv6 */
 	{
 		static char result[INET6_ADDRSTRLEN];
-		return (char *)inet_ntop(AF_INET6, (const struct in6_addr *)targ, result, INET6_ADDRSTRLEN);
+		return (char *)_GeoIP_inet_ntop(AF_INET6, (const struct in6_addr *)targ, result, INET6_ADDRSTRLEN);
 	}
 	else if (len == 8)            /* IPv4 */
 	{
 		static char result[INET_ADDRSTRLEN];
-		return (char *)inet_ntop(AF_INET, (const struct in_addr *)targ, result, INET_ADDRSTRLEN);
+		return (char *)_GeoIP_inet_ntop(AF_INET, (const struct in_addr *)targ, result, INET_ADDRSTRLEN);
 	}
 	else                          /* Error */
 		return 0;

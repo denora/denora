@@ -17,7 +17,7 @@ Additions
 11/02/11 r416 Added support for ircd-rizon
 
 Changes
-12/07/26 More cleanup and rewrites in src/users.c src/admin.c src/bans.c
+12/07/26 More cleanup and rewrites in src/users.c src/admin.c src/bans.c src/base64.c src/GeoIP.c
 12/07/25 More cleanup and rewrite
 12/07/24 Lots of cleanup in src/db.c
 12/07/23 Rewrote db file handling a little
