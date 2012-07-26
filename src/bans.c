@@ -320,7 +320,7 @@ void p10_gline(char *type, char *source, int ac, char **av)
 	{
 		alog(LOG_DEBUG,
 		     "debug: %s called without a source", PRETTY_FUNCTION);
-		return
+		return;
 	}
 
 	SET_SEGV_LOCATION();
