@@ -3,6 +3,7 @@ Denora v1.5.0-git
 -------------
 
 Additions
+12/07/26 Added MAX_UIDS/MAX_USERS to denora.h to more easily update limits
 12/07/25 Added md5 support to hash passwords
 12/07/17 Added the sql needed for shadowircd protocol
 12/07/15 Added shadowircd protocol supplied by Joah
@@ -16,6 +17,7 @@ Additions
 11/02/11 r416 Added support for ircd-rizon
 
 Changes
+12/07/26 More cleanup and rewrites in src/users.c
 12/07/25 More cleanup and rewrite
 12/07/24 Lots of cleanup in src/db.c
 12/07/23 Rewrote db file handling a little
@@ -54,6 +56,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+12/07/26 More possible memleak fixes in src/users.c
 12/07/25 Fixed win32 specific warnings, in some cases the fugly way
 12/07/23 Fixed Config not remembering thread settings
 12/07/23 Threading needed more fixes, hope it works now :) (Now works)

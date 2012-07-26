@@ -765,7 +765,7 @@ E void sql_do_part(char *chan, User *u);
 E void sql_do_partall(char *nick);
 E void sql_do_join(char *chan, char *nick);
 E void sql_do_usermodes(User *u, char *modes);
-E void sql_reset_usermodes(int nickid, char *nickname);
+E void sql_reset_usermodes(User *u);
 E void sql_do_chanmodes(char *chan, int ac, char **av);
 E void denora_set_umode(User * user, int ac, char **av);
 E int denora_set_mod_current_buffer(int ac, char **av);

@@ -15,8 +15,8 @@
 
 #include "denora.h"
 
-User *userlist[1024];
-Uid *uidlist[1024];
+User *userlist[MAX_USERS];
+Uid *uidlist[MAX_UIDS];
 static Uid *ucurrent;
 static User *current;
 static User *uidcurrent;
@@ -43,33 +43,33 @@ void sql_do_usermodes(User * u, char *modes)
 	int atleastone = 0;
 	char db[MAX_SQL_BUF];
 	char tmp[14] = "mode_XX=\'X\', ";
-	char buf[1000];
-	int nickid = 0;
-
-	SET_SEGV_LOCATION();
-
-	if (!denora->do_sql)
-	{
-		return;
-	}
-	else if (!(nickid = db_getnick(u->sqlnick)))
-	{
-		return;
-	}
 
 	SET_SEGV_LOCATION();
 
 	if (strlen(modes) == 1 && (*modes == '+' || *modes == '-'))
 	{
-		alog(LOG_DEBUG, "Received just +/- as the users mode");
+		alog(LOG_DEBUG, "Received just %s as the users mode for %s", modes, u->nick);
 		return;
 	}
 
-	*db = '\0';
-	*buf = '\0';
+	if (!denora->do_sql)
+	{
+		return;
+	}
 
-	ircsnprintf(buf, sizeof(buf), "UPDATE %s SET ", UserTable);
-	strlcpy(db, buf, sizeof(db));
+	if (!u->sqlid && db_getnick(u->sqlnick) == -1)
+	{
+		alog(LOG_NONEXISTANT, "Trying to update usermodes %s on nonexistant user %s", modes, u->nick);
+		return;
+	}
+
+	SET_SEGV_LOCATION();
+
+	*db = '\0';
+	ircsnprintf(db, sizeof(db), "UPDATE %s SET ", UserTable);
+
+	SET_SEGV_LOCATION();
+
 	while (*modes)
 	{
 		switch (*modes)
@@ -99,19 +99,19 @@ void sql_do_usermodes(User * u, char *modes)
 	}
 	SET_SEGV_LOCATION();
 
-	ircsnprintf(&db[strlen(db) - 2], sizeof(db), " WHERE nickid=%d",
-	            nickid);
 	if (atleastone)
 	{
+		ircsnprintf(&db[strlen(db) - 2], sizeof(db), " WHERE nickid=%d", u->sqlid);
 		rdb_query(QUERY_LOW, db);
 	}
 	else
 	{
 		alog(LOG_DEBUG,
-		     "There were no modes or atleastone (%d) was still 0",
-		     atleastone);
+		     "There were no modes or atleastone (%d) was still 0", atleastone);
 		alog(LOG_DEBUG, "buffer = %s", db);
 	}
+
+	return;
 }
 
 /*************************************************************************/
@@ -120,43 +120,48 @@ void sql_do_usermodes(User * u, char *modes)
  * Reset all user modes to N for the given nick ID
  */
 
-void sql_reset_usermodes(int nickid, char *nickname)
+void sql_reset_usermodes(User *u)
 {
-	const char *modes =
-	    "qwertzuiopasdfghjklyxcvbnmQWERTZUIOPASDFGHJKLYXCVBNM";
+	const char *modes = sstrdup(ircd->usermodes);
 	char db[MAX_SQL_BUF];
 	char tmp[14] = "mode_XX=\'X\', ";
-	char buf[1000];
 
 	*db = '\0';
-	*buf = '\0';
 
-	ircsnprintf(buf, sizeof(buf), "UPDATE %s SET ", UserTable);
-	strlcpy(db, buf, sizeof(db));
+	if (!denora->do_sql)
+	{
+		return;
+	}
+
+	if (!u)
+	{
+		alog(LOG_NONEXISTANT, "Trying to reset usermodes on a non-existing user");
+		return;
+	}
+
+	if (!u->sqlid && db_getnick(u->sqlnick) == -1)
+	{
+		alog(LOG_NONEXISTANT, "Trying to reset usermodes on nonexistant user %s", u->sqlnick);
+		return;
+	}
+
+	ircsnprintf(db, sizeof(db), "UPDATE %s SET ", UserTable);
+
 	while (*modes)
 	{
 		tmp[9] = 'N';
-		if (strchr(ircd->usermodes, *modes))
-		{
-			tmp[5] = ((*modes >= 'a') ? 'l' : 'u');
-			tmp[6] = tolower(*modes);
-			strlcat(db, tmp, sizeof(db));
-		}
+		tmp[5] = ((*modes >= 'a') ? 'l' : 'u');
+		tmp[6] = tolower(*modes);
+		strlcat(db, tmp, sizeof(db));
 		modes++;
 	}
 	SET_SEGV_LOCATION();
 
-	if (nickid < 1)
-	{
-		ircsnprintf(&db[strlen(db) - 2], sizeof(db), " WHERE nick='%s'",
-		            nickname);
-	}
-	else
-	{
-		ircsnprintf(&db[strlen(db) - 2], sizeof(db), " WHERE nickid=%d",
-		            nickid);
-	}
+	ircsnprintf(&db[strlen(db) - 2], sizeof(db), " WHERE nickid=%d", u->sqlid);
+
 	rdb_query(QUERY_LOW, db);
+
+	return;
 }
 
 /*************************************************************************/
@@ -172,7 +177,6 @@ void sql_reset_usermodes(int nickid, char *nickname)
  */
 void do_swhois(char *user, char *msg)
 {
-	int nickid;
 	User *u;
 	char *sqlmsg = NULL;
 
@@ -183,7 +187,7 @@ void do_swhois(char *user, char *msg)
 	if (!u)
 	{
 		alog(LOG_NONEXISTANT, langstr(ALOG_SWHOIS_ERROR), user);
-		return;                 /* Can't find them exit */
+		return;		 /* Can't find them exit */
 	}
 
 	/* Check if current set, if so we should free it before using it */
@@ -198,21 +202,20 @@ void do_swhois(char *user, char *msg)
 
 	if (denora->do_sql)
 	{
-		sqlmsg = (!msg || !*msg) ? NULL : rdb_escape(msg);
-		nickid = db_getnick(u->sqlnick);
-		if (nickid == -1)
+		if (!u->sqlid && db_getnick(u->sqlnick) == -1)
 		{
 			alog(LOG_NONEXISTANT, langstr(ALOG_SWHOIS_ERROR), user);
 		}
 		else
 		{
+			sqlmsg = (!msg || !*msg) ? NULL : rdb_escape(msg);
 			rdb_query(QUERY_LOW,
-			          "UPDATE %s SET swhois=\'%s\' WHERE nickid=%d",
-			          UserTable, sqlmsg, nickid);
-		}
-		if (sqlmsg)
-		{
-			free(sqlmsg);
+				  "UPDATE %s SET swhois=\'%s\' WHERE nickid=%d",
+				  UserTable, sqlmsg, u->sqlid);
+			if (sqlmsg)
+			{
+				free(sqlmsg);
+			}
 		}
 	}
 
@@ -251,47 +254,61 @@ void sql_do_nick(User * u)
 
 	SET_SEGV_LOCATION();
 
-	if (LargeNet || !UplinkSynced || UserStatsRegistered)
+	if ((LargeNet || !UplinkSynced || UserStatsRegistered) && !u->sqlid)
 	{
 		db_getnick(u->sqlnick);
 	}
-	else
+	else if (!u->sqlid)
 	{
 		db_checknick_nt(u->sqlnick);
 	}
-
+	
 	if (u->sqlid != -1)
 	{
 		SET_SEGV_LOCATION();
 		rdb_query
 		(QUERY_LOW,
-		 "UPDATE %s SET nick='%s', hopcount=%d, nickip='%s', countrycode='%s', country='%s', realname='%s', hostname='%s', hiddenhostname='%s', username='%s', swhois='', account='%s', connecttime=FROM_UNIXTIME(%ld), servid=%d, server='%s', lastquit=NULL, online='Y', away='%s', awaymsg='%s' WHERE nickid=%d",
+		 "UPDATE %s SET nick='%s', hopcount=%d, nickip='%s', countrycode='%s', country='%s', realname='%s', hostname='%s', \
+		 hiddenhostname='%s', username='%s', swhois='', account='%s', connecttime=FROM_UNIXTIME(%ld), servid=%d, server='%s', \
+		 lastquit=NULL, online='Y', away='%s', awaymsg='%s' WHERE nickid=%d",
 		 UserTable, u->sqlnick, u->hopcount, u->ip, countrycode, countryname, realname, host, vhost, username, account,
 		 (long int) u->timestamp, servid, server, u->isaway ? "Y" : "N", u->isaway && u->awaymsg ? u->awaymsg : NULL, u->sqlid);
-		sql_reset_usermodes(u->sqlid, NULL);
 	}
 	else
 	{
 		SET_SEGV_LOCATION();
 		rdb_query
 		(QUERY_HIGH,
-		 "INSERT INTO %s (nick,hopcount,nickip,realname,hostname,hiddenhostname,username,swhois,account,connecttime,servid,server,countrycode,country) VALUES('%s',%d,'%s','%s','%s','%s','%s','','%s',FROM_UNIXTIME(%ld),%d,'%s','%s','%s') ON DUPLICATE KEY UPDATE nick='%s', hopcount=%d, nickip='%s', realname='%s', hostname='%s', hiddenhostname='%s', username='%s', account='%s', connecttime=FROM_UNIXTIME(%ld), servid=%d, server='%s', countrycode='%s', country='%s', lastquit=NULL, online='Y', away='%s', awaymsg='%s'",
+		 "INSERT INTO %s (nick,hopcount,nickip,realname,hostname,hiddenhostname,username,swhois,account,connecttime,servid,server,\
+		 countrycode,country) VALUES('%s',%d,'%s','%s','%s','%s','%s','','%s',FROM_UNIXTIME(%ld),%d,'%s','%s','%s') ON DUPLICATE KEY \
+		 UPDATE nick='%s',hopcount=%d,nickip='%s',realname='%s',hostname='%s',hiddenhostname='%s',username='%s',account='%s',\
+		 connecttime=FROM_UNIXTIME(%ld),servid=%d,server='%s',countrycode='%s',country='%s',lastquit=NULL,online='Y',away='%s',\
+		 awaymsg='%s'",
 		 UserTable, u->sqlnick, u->hopcount, u->ip, realname,
 		 host, vhost, username, account, (long int) u->timestamp,
 		 servid, server, countrycode, countryname, u->sqlnick,
 		 u->hopcount, u->ip, realname, host, vhost, username,
 		 account, (long int) u->timestamp, servid, server,
 		 countrycode, countryname, u->isaway ? "Y" : "N", u->isaway && u->awaymsg ? u->awaymsg : NULL);
-		if (!u->sqlid)
-			db_getnick(u->sqlnick);
-		sql_reset_usermodes(u->sqlid, NULL);
+
+		if (!u->sqlid && db_getnick(u->sqlnick) == -1)
+		{
+			alog(LOG_DEBUG, "debug: Line 290 : Something went wrong trying to create user %s", u->sqlnick);
+		}
 	}
+
+	if (u)
+	{
+		sql_reset_usermodes(u);
+	}
+
 	SET_SEGV_LOCATION();
 
 	if (UserCacheTime)
 	{
 		db_cleanuser();
 	}
+
 	SET_SEGV_LOCATION();
 
 	free(username);
@@ -300,13 +317,24 @@ void sql_do_nick(User * u)
 	free(realname);
 	free(countrycode);
 	free(countryname);
+
 	SET_SEGV_LOCATION();
 
 	if (account)
+	{
 		free(account);
-	if (ircd->vhost && vhost)
-		free(vhost);
+	}
+
 	SET_SEGV_LOCATION();
+
+	if (ircd->vhost && vhost)
+	{
+		free(vhost);
+	}
+
+	SET_SEGV_LOCATION();
+
+	return;
 }
 
 /*************************************************************************/
@@ -342,51 +370,43 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
 		return;
 	}
 
-	newnick = rdb_escape(newnick);
 	oldnick = rdb_escape(oldnick);
+	newnick = rdb_escape(newnick);
+	nickid = db_getnick(newnick);
+
 	/* the target nickname might already exist if caching is enabled */
-	if (UserCacheTime && (strcasecmp(newnick, oldnick))
-	        && ((nickid = db_getnick(newnick)) != -1))
+	if (UserCacheTime && (strcasecmp(newnick, oldnick)) && nickid)
 	{
 		/* In this case, we don't keep a record of the old nick. It would be :
 		 * - technically difficult, because we'd have to make a copy of the record
 		 * - dangerous, because it would provide an easy way to fill up the DB */
-		rdb_query(QUERY_HIGH, "DELETE from %s WHERE nickid=%d", UserTable,
-		          nickid);
+		rdb_query(QUERY_HIGH, "DELETE from %s WHERE nickid=%d", UserTable, nickid);
 	}
-	rdb_query
-	(QUERY_HIGH, "SELECT nick FROM %s WHERE nick = \"%s\";", UserTable,
-	 newnick);
+
+	rdb_query(QUERY_HIGH, "SELECT nick FROM %s WHERE nick = \"%s\";", UserTable, newnick);
 	SET_SEGV_LOCATION();
 
 #ifdef USE_MYSQL
 	mysql_res = mysql_store_result(mysql);
 	if (mysql_res)
 	{
-		if (mysql_num_rows(mysql_res) == 0)
+		if (mysql_num_rows(mysql_res) != 0)
 		{
-			/* we update the nickname */
-			rdb_query(QUERY_LOW,
-			          "UPDATE %s SET nick=\'%s\' WHERE nick=\'%s\'",
-			          UserTable, newnick, oldnick);
-		}
-		else
-		{
-			rdb_query(QUERY_LOW, "DELETE from %s WHERE nick=\'%s\'",
-			          UserTable, newnick);
-			rdb_query(QUERY_LOW,
-			          "UPDATE %s SET nick=\'%s\' WHERE nick=\'%s\'",
-			          UserTable, newnick, oldnick);
+			rdb_query(QUERY_HIGH, "DELETE from %s WHERE nick=\'%s\'",
+				  UserTable, newnick);
 		}
 		mysql_free_result(mysql_res);
 	}
+	rdb_query(QUERY_HIGH,
+		  "UPDATE %s SET nick=\'%s\' WHERE nick=\'%s\'",
+		  UserTable, newnick, oldnick);
 
 	SET_SEGV_LOCATION();
 
 	u = user_find(oldnick);
 
 	/* we get the current sgroup or uname from aliases */
-	if (u && u->sgroup)
+	if (u->sgroup)
 	{
 		uname = sstrdup(u->sgroup);
 		alog(LOG_DEBUG, "We will use u->sgroup which is %s", uname);
@@ -397,28 +417,42 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
 		     "We check if oldnick %s already has a uname in aliases (it should)",
 		     oldnick);
 		rdb_query(QUERY_HIGH, "SELECT uname FROM %s WHERE nick=\'%s\' ",
-		          AliasesTable, oldnick);
+			  AliasesTable, oldnick);
 		mysql_res = mysql_store_result(mysql);
-		if (mysql_res && mysql_num_rows(mysql_res))
+		if (mysql_res)
 		{
-			mysql_row = mysql_fetch_row(mysql_res);
-			uname = rdb_escape(mysql_row[0]);
-			alog(LOG_DEBUG, "Yes indeed, we got uname %s", uname);
+			if (mysql_num_rows(mysql_res))
+			{
+				mysql_row = mysql_fetch_row(mysql_res);
+				uname = rdb_escape(mysql_row[0]);
+				if (u)
+				{
+					u->sgroup = sstrdup(uname);
+				}
+				alog(LOG_DEBUG, "Yes indeed, we got uname %s", uname);
+			}
+			mysql_free_result(mysql_res);
 		}
 		else
 		{
 			alog(LOG_DEBUG, "No uname found");
 		}
-		mysql_free_result(mysql_res);
 	}
 
 	/* we insert a new alias record */
 	rdb_query(QUERY_HIGH,
-	          "INSERT INTO %s (nick, uname) VALUES (\'%s\', \'%s\') ON DUPLICATE KEY UPDATE uname=\'%s\'",
-	          AliasesTable, newnick, uname ? uname : newnick,
-	          uname ? uname : newnick);
-	free(uname);
+		  "INSERT INTO %s (nick, uname) VALUES (\'%s\', \'%s\') ON DUPLICATE KEY UPDATE uname=\'%s\'",
+		  AliasesTable, newnick, uname ? uname : newnick,
+		  uname ? uname : newnick);
+
+	if (uname)
+	{
+		free(uname);
+	}
+	free(oldnick);
+	free(newnick);
 #endif
+	return;
 }
 
 /*************************************************************************/
@@ -488,7 +522,7 @@ static void change_user_nick(User * user, const char *nick)
 	{
 		user->next->prev = user->prev;
 	}
-	user->nick[1] = 0;          /* paranoia for zero-length nicks */
+	*user->nick = '\0';	  /* paranoia for zero-length nicks */
 	strlcpy(user->nick, nick, NICKMAX);
 	list = &userlist[USERHASH(user->nick)];
 	user->next = *list;
@@ -514,8 +548,7 @@ static void change_user_nick(User * user, const char *nick)
 void change_user_host(char *source, char *host)
 {
 	User *user;
-	char *msg;
-	int userid;
+	char db[MAX_SQL_BUF];
 
 	user = user_find(source);
 	if (!user)
@@ -537,33 +570,22 @@ void change_user_host(char *source, char *host)
 
 	if (denora->do_sql)
 	{
-		msg = rdb_escape(user->vhost);
-		SET_SEGV_LOCATION();
-		userid = db_getnick(user->sqlnick);
-
-		if (ircd->vhostchar && ircd->vhostchar2)
+		if (user->sqlid || db_getnick(user->sqlnick) != -1)
 		{
-			rdb_query
-			(QUERY_LOW,
-			 "UPDATE %s SET mode_l%c=\'Y\', mode_l%c=\'Y\', hiddenhostname=\'%s\' WHERE nickid=%d",
-			 UserTable, ircd->vhostchar, ircd->vhostchar2, msg,
-			 userid);
+			*db = '\0';
+			ircsnprintf(db, sizeof(db), "UPDATE %s SET", UserTable);
+			SET_SEGV_LOCATION();
+			if (ircd->vhostchar)
+			{
+				if(ircd->vhostchar2)
+				{
+					ircsnprintf(&db[strlen(db) - 1], sizeof(db), " mode_l%c=\'Y\',", ircd->vhostchar2);
+				}
+				ircsnprintf(&db[strlen(db) - 1], sizeof(db), " mode_l%c=\'Y\',", ircd->vhostchar);
+			}
+			ircsnprintf(&db[strlen(db) - 1], sizeof(db), " hiddenhostname=\'%s\' WHERE nickid=%d", rdb_escape(user->vhost), user->sqlid);
+			rdb_query(QUERY_LOW, db);
 		}
-		else if (ircd->vhostchar && !ircd->vhostchar2)
-		{
-			rdb_query
-			(QUERY_LOW,
-			 "UPDATE %s SET mode_l%c=\'Y\', hiddenhostname=\'%s\' WHERE nickid=%d",
-			 UserTable, ircd->vhostchar, msg, userid);
-		}
-		else
-		{
-			rdb_query
-			(QUERY_LOW,
-			 "UPDATE %s SET hiddenhostname=\'%s\' WHERE nickid=%d",
-			 UserTable, msg, userid);
-		}
-		free(msg);
 	}
 	SET_SEGV_LOCATION();
 }
@@ -582,8 +604,6 @@ void change_user_host(char *source, char *host)
 void change_user_realname(char *source, char *realname)
 {
 	User *user;
-	char *msg;
-	int userid;
 
 	SET_SEGV_LOCATION();
 
@@ -610,17 +630,13 @@ void change_user_realname(char *source, char *realname)
 
 	alog(LOG_DEBUG, langstr(ALOG_REALNAME_FOR), user->nick, realname);
 
-	if (denora->do_sql)
+	if (denora->do_sql && (user->sqlid || db_getnick(user->sqlnick) != -1))
 	{
-		msg = rdb_escape(user->realname);
-		SET_SEGV_LOCATION();
-		userid = db_getnick(user->sqlnick);
-		rdb_query
-		(QUERY_LOW, "UPDATE %s SET realname=\'%s\' WHERE nickid=%d",
-		 UserTable, msg, userid);
-		free(msg);
+		rdb_query(QUERY_LOW, "UPDATE %s SET realname=\'%s\' WHERE nickid=%d",
+		 UserTable, rdb_escape(user->realname), user->sqlid);
 	}
-	SET_SEGV_LOCATION();
+
+	return;
 }
 
 /*************************************************************************/
@@ -637,8 +653,6 @@ void change_user_realname(char *source, char *realname)
 void change_user_username(char *source, char *username)
 {
 	User *user;
-	char *msg;
-	int userid;
 
 	SET_SEGV_LOCATION();
 
@@ -663,16 +677,14 @@ void change_user_username(char *source, char *username)
 
 	alog(LOG_DEBUG, langstr(ALOG_USERNAME_FOR), user->nick, username);
 
-	if (denora->do_sql)
+	if (denora->do_sql && (user->sqlid || db_getnick(user->sqlnick) != -1))
 	{
-		msg = rdb_escape(user->username);
-		userid = db_getnick(user->sqlnick);
 		SET_SEGV_LOCATION();
-		rdb_query
-		(QUERY_LOW, "UPDATE %s SET username=\'%s\' WHERE nickid=%d",
-		 UserTable, msg, userid);
-		free(msg);
+		rdb_query(QUERY_LOW, "UPDATE %s SET username=\'%s\' WHERE nickid=%d",
+			  UserTable, rdb_escape(user->username), user->sqlid);
 	}
+
+	return;
 }
 
 /*************************************************************************/
@@ -688,6 +700,7 @@ void change_user_username(char *source, char *username)
 void delete_user(User * user)
 {
 	struct u_chanlist *c, *c2;
+	struct u_modes *m, *m2;
 	PrivMsg *p;
 
 	SET_SEGV_LOCATION();
@@ -700,67 +713,6 @@ void delete_user(User * user)
 	del_current_user(user->server);
 
 	alog(LOG_EXTRADEBUG, "debug: delete_user() called for %s", user->nick);
-	if (is_oper(user))
-	{
-		del_oper_count(user);
-	}
-
-	if (user->isservice)
-	{
-		p = findPrivMsg(user->nick);
-		delPrivMsg(p);
-	}
-
-	if (user->country_code)
-	{
-		tld_update(user->country_code);
-		free(user->country_code);
-	}
-
-	if (CTCPUsers && user->ctcp)
-	{
-		ctcp_update(user->ctcp);
-		free(user->ctcp);
-	}
-
-	if (denora->do_sql && user->sqlnick)
-	{
-		free(user->sqlnick);
-	}
-
-	alog(LOG_EXTRADEBUG, "debug: delete_user(): free user data");
-	free(user->username);
-	free(user->host);
-	if (user->vhost)
-	{
-		free(user->vhost);
-	}
-	free(user->ip);
-	if (user->account)
-	{
-		free(user->account);
-	}
-	if (user->awaymsg)
-	{
-		free(user->awaymsg);
-	}
-	if (user->country_name)
-	{
-		free(user->country_name);
-	}
-	if (user->lastuname)
-	{
-		free(user->lastuname);
-	}
-	if (user->swhois)
-	{
-		free(user->swhois);
-	}
-	if (user->realname)
-	{
-		free(user->realname);
-	}
-
 	alog(LOG_EXTRADEBUG, "debug: delete_user(): remove from channels");
 	c = user->chans;
 	while (c)
@@ -781,16 +733,120 @@ void delete_user(User * user)
 		chan_deluser(user, c->chan);
 		free(c);
 	}
+
+	if (is_oper(user))
+	{
+		alog(LOG_EXTRADEBUG, "debug: delete_user(): update oper count");
+		del_oper_count(user);
+	}
 	
+	alog(LOG_EXTRADEBUG, "debug: delete_user(): remove usermodes");
+	m = user->modes;
+	while (m)
+	{
+		if ((m2 = m->next))
+		{
+			if (m->mode)
+			{
+				free(m->mode);
+			}
+			free(m);
+			m = m2;
+		}
+		else
+		{
+			break;
+		}
+	}
+	if (m)
+	{
+		if (m->mode)
+		{
+			free(m->mode);
+		}
+		free(m);
+	}
+
 	alog(LOG_EXTRADEBUG, "debug: delete_user(): free founder data");
 	moduleCleanStruct(&user->moduleData);
+
+	alog(LOG_EXTRADEBUG, "debug: delete_user(): cleanups");
+	if (user->isservice)
+	{
+		p = findPrivMsg(user->nick);
+		delPrivMsg(p);
+	}
+
+	if (user->country_code)
+	{
+		tld_update(user->country_code);
+		free(user->country_code);
+	}
+
+	if (CTCPUsers && user->ctcp)
+	{
+		ctcp_update(user->ctcp);
+	}
+
+	alog(LOG_EXTRADEBUG, "debug: delete_user(): conditional free");
+	if (user->vhost)
+	{
+		free(user->vhost);
+	}
+
+	if (user->uid)
+	{
+		free(user->uid);
+	}
+
+	if (user->account)
+	{
+		free(user->account);
+	}
+
+	if (user->sgroup)
+	{
+		free(user->sgroup);
+	}
+
+	if (user->lastuname)
+	{
+		free(user->lastuname);
+	}
+
+	if (user->country_name)
+	{
+		free(user->country_name);
+	}
+
+	if (user->ctcp)
+	{
+		free(user->ctcp);
+	}
+
 	if (user->vident)
 	{
 		free(user->vident);
 	}
-	free(user->uid);
 
-	alog(LOG_EXTRADEBUG, "debug: delete_user(): delete from list");
+	if (user->awaymsg)
+	{
+		free(user->awaymsg);
+	}
+
+	if (user->swhois)
+	{
+		free(user->swhois);
+	}
+
+	alog(LOG_EXTRADEBUG, "debug: delete_user(): unconditional free");
+	free(user->username);
+	free(user->host);
+	free(user->realname);
+	free(user->ip);
+	free(user->sqlnick);
+
+	alog(LOG_EXTRADEBUG, "debug: delete_user(): update listpointers");
 	if (user->prev)
 	{
 		user->prev->next = user->next;
@@ -804,9 +860,10 @@ void delete_user(User * user)
 		user->next->prev = user->prev;
 	}
 
-	alog(LOG_EXTRADEBUG, "debug: delete_user(): free user structure");
+	alog(LOG_EXTRADEBUG, "debug: delete_user(): final free");
 	free(user);
-	alog(LOG_EXTRADEBUG, "debug: delete_user() done");
+
+	return;
 }
 
 /*************************************************************************/
@@ -838,8 +895,7 @@ User *finduser(const char *nick)
 	{
 		user = user->next;
 	}
-	alog(LOG_EXTRADEBUG, "debug: finduser(%s) -> 0x%p", nick,
-	     (void *) user);
+	alog(LOG_EXTRADEBUG, "debug: finduser(%s) -> 0x%p", nick, (void *) user);
 	return user;
 }
 
@@ -857,21 +913,15 @@ User *firstuser(void)
 
 	SET_SEGV_LOCATION();
 
-	while (next_index < 1024 && current == NULL)
+	while (next_index < MAX_USERS && current == NULL)
 	{
 		current = userlist[next_index++];
 	}
 	alog(LOG_EXTRADEBUG, "debug: User Hash index %d", next_index);
 	alog(LOG_EXTRADEBUG, "debug: firstuser() returning %s",
 	     current ? current->nick : "NULL (end of list)");
-	if (current)
-	{
-		return current;
-	}
-	else
-	{
-		return NULL;
-	}
+
+	return current ? current : NULL;
 }
 
 /*************************************************************************/
@@ -890,9 +940,9 @@ User *nextuser(void)
 	{
 		current = current->next;
 	}
-	if (!current && next_index < 1024)
+	if (!current && next_index < MAX_USERS)
 	{
-		while (next_index < 1024 && current == NULL)
+		while (next_index < MAX_USERS && current == NULL)
 		{
 			current = userlist[next_index++];
 		}
@@ -913,12 +963,9 @@ User *find_byuid(const char *uid)
 	while (u)
 	{
 		next = next_uid();
-		if (u && u->uid)
+		if (u && u->uid && !strcmp(uid, u->uid))
 		{
-			if (!strcmp(uid, u->uid))
-			{
-				return u;
-			}
+			return u;
 		}
 		u = next;
 	}
@@ -937,7 +984,7 @@ User *first_uid(void)
 {
 	unext_index = 0;
 
-	while (unext_index < 1024 && uidcurrent == NULL)
+	while (unext_index < MAX_UIDS && uidcurrent == NULL)
 	{
 		uidcurrent = userlist[unext_index++];
 	}
@@ -965,9 +1012,9 @@ User *next_uid(void)
 		uidcurrent = uidcurrent->next;
 	}
 
-	if (!uidcurrent && unext_index < 1024)
+	if (!uidcurrent && unext_index < MAX_UIDS)
 	{
-		while (unext_index < 1024 && uidcurrent == NULL)
+		while (unext_index < MAX_UIDS && uidcurrent == NULL)
 		{
 			uidcurrent = userlist[unext_index++];
 		}
@@ -986,7 +1033,7 @@ User *next_uid(void)
 Uid *uid_first(void)
 {
 	uidnext_index = 0;
-	while (uidnext_index < 1024 && ucurrent == NULL)
+	while (uidnext_index < MAX_UIDS && ucurrent == NULL)
 	{
 		ucurrent = uidlist[uidnext_index++];
 	}
@@ -1005,9 +1052,9 @@ Uid *uid_next(void)
 		ucurrent = ucurrent->next;
 	}
 
-	if (!ucurrent && uidnext_index < 1024)
+	if (!ucurrent && uidnext_index < MAX_UIDS)
 	{
-		while (uidnext_index < 1024 && ucurrent == NULL)
+		while (uidnext_index < MAX_UIDS && ucurrent == NULL)
 			ucurrent = uidlist[uidnext_index++];
 	}
 
@@ -1069,10 +1116,12 @@ void delete_uid(Uid * u)
 	}
 	SET_SEGV_LOCATION();
 
-	alog(LOG_EXTRADEBUG, "debug: delete_uid(): free user structure");
+	alog(LOG_EXTRADEBUG, "debug: delete_uid(): free uid structure");
 
 	free(u);
+
 	alog(LOG_EXTRADEBUG, "debug: delete_uid() done");
+	return;
 }
 
 /*************************************************************************/
@@ -1095,7 +1144,7 @@ Uid *find_uid(const char *nick)
 		return NULL;
 	}
 
-	for (i = 0; i < 1024; i++)
+	for (i = 0; i < MAX_UIDS; i++)
 	{
 		for (u = uidlist[i]; u; u = u->next)
 		{
@@ -1131,7 +1180,7 @@ Uid *find_nickuid(const char *uid)
 		return NULL;
 	}
 
-	for (i = 0; i < 1024; i++)
+	for (i = 0; i < MAX_UIDS; i++)
 	{
 		for (u = uidlist[i]; u; u = u->next)
 		{
@@ -1171,9 +1220,9 @@ Uid *find_nickuid(const char *uid)
  *
  */
 User *do_nick(const char *source, char *nick, char *username, char *host,
-              char *server, char *realname, time_t ts, uint32 svid,
-              char *ipchar, char *vhost, char *uid, int hopcount,
-              char *modes, char *account)
+	      char *server, char *realname, time_t ts, uint32 svid,
+	      char *ipchar, char *vhost, char *uid, int hopcount,
+	      char *modes, char *account)
 {
 
 	User *user;
@@ -1198,8 +1247,6 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 			{
 				country_id = GeoIP_id_by_addr(gidb, ipchar);
 			}
-			country_code = GeoIP_code_by_id(country_id);
-			country_name = GeoIP_name_by_id(country_id);
 
 			if (country_id == 0)
 			{
@@ -1214,12 +1261,18 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 					country_code = "??";
 				}
 			}
+			else
+			{
+				country_code = GeoIP_code_by_id(country_id);
+				country_name = GeoIP_name_by_id(country_id);
+			}
 		}
 		else
 		{
 			country_name = "Unknown";
 			country_code = "??";
 		}
+
 		s = server_find(server);
 		/* Allocate User structure and fill it in. */
 		user = new_user(nick);
@@ -1233,7 +1286,7 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 		user->vhost = (vhost ? sstrdup(vhost) : NULL);
 		user->uid = (uid ? sstrdup(uid) : NULL);
 		user->account = (account ? sstrdup(account) : NULL);
-		user->admin = 0;        /* 0 by default, winner, eh? */
+		user->admin = 0;	/* 0 by default, winner, eh? */
 		user->hopcount = hopcount;
 		user->ip = sstrdup(ipchar);
 		user->cstats = 0;
@@ -1250,8 +1303,8 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 				if (ircd->syncstate || UplinkSynced)
 				{
 					sql_do_tld(UPDATE, user->country_code,
-					           user->country_name, tld->count,
-					           tld->overall);
+						   user->country_name, tld->count,
+						   tld->overall);
 				}
 			}
 		}
@@ -1267,27 +1320,14 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 				sql_do_usermodes(user, modes);
 			}
 		}
-		if (!LargeNet)
+		if (!LargeNet && CTCPUsers && stricmp(s_StatServ, user->nick))
 		{
-			if (CTCPUsers && stricmp(s_StatServ, user->nick))
+			if ((CTCPUsersEOB && UplinkSynced) || !CTCPUsersEOB)
 			{
-				if (CTCPUsersEOB)
-				{
-					if (UplinkSynced)
-					{
-						denora_cmd_privmsg(s_StatServ_alias ?
-						                   s_StatServ_alias : s_StatServ,
-						                   user->nick, "\1VERSION\1");
-						send_event(EVENT_SENT_CTCP_VERSION, 1, user->nick);
-					}
-				}
-				else
-				{
-					denora_cmd_privmsg(s_StatServ_alias ? s_StatServ_alias
-					                   : s_StatServ, user->nick,
-					                   "\1VERSION\1");
-					send_event(EVENT_SENT_CTCP_VERSION, 1, user->nick);
-				}
+				denora_cmd_privmsg(s_StatServ_alias ? s_StatServ_alias
+						   : s_StatServ, user->nick,
+						   "\1VERSION\1");
+				send_event(EVENT_SENT_CTCP_VERSION, 1, user->nick);
 			}
 		}
 		if (modes)
@@ -1314,7 +1354,7 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 				{
 					free(user->lastuname);
 				}
-				user->lastuname = sstrdup(user->sgroup);        /* in case we need to merge later */
+				user->lastuname = sstrdup(user->sgroup);	/* in case we need to merge later */
 			}
 			alog(LOG_DEBUG, "debug: %s has changed nicks to %s", source, nick);
 			sql_do_nick_chg(nick, user->nick);
@@ -1324,7 +1364,6 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 		}
 		else
 		{
-			alog(LOG_DEBUG, "compare says its the same");
 			user->my_signon = time(NULL);
 		}
 
@@ -1396,6 +1435,8 @@ void do_umode(const char *source, int ac, char **av)
 		change_user_username(user->nick, (char *) vident);
 		change_user_host(user->nick, (char *) vhost);
 	}
+
+	return;
 }
 
 /*************************************************************************/
@@ -1455,6 +1496,8 @@ void do_svsumode(int ac, char **av)
 			sql_do_usermodes(user, av[1]);
 		}
 	}
+
+	return;
 }
 
 /*************************************************************************/
@@ -1499,6 +1542,8 @@ void do_umode2(const char *source, int ac, char **av)
 	{
 		sql_do_usermodes(user, av[0]);
 	}
+
+	return;
 }
 
 /*************************************************************************/
@@ -1535,8 +1580,7 @@ void do_quit(const char *source, int ac, char **av)
 		     source, merge_args(ac, av));
 		return;
 	}
-	alog(LOG_DEBUG, "debug: %s quits (%s)", user->nick,
-	     (!BadPtr(av[0]) ? av[0] : "Quit"));
+	alog(LOG_DEBUG, "debug: %s quits (%s)", user->nick, (!BadPtr(av[0]) ? av[0] : "Quit"));
 
 	if (denora->do_sql)
 	{
@@ -1546,9 +1590,10 @@ void do_quit(const char *source, int ac, char **av)
 			db_cleanuser();
 		}
 	}
-	send_event(EVENT_USER_LOGOFF, 2, user->nick,
-	           (!BadPtr(av[0]) ? av[0] : "Quit"));
+	send_event(EVENT_USER_LOGOFF, 2, user->nick, (!BadPtr(av[0]) ? av[0] : "Quit"));
 	delete_user(user);
+
+	return;
 }
 
 /*************************************************************************/
@@ -1583,6 +1628,8 @@ void do_kill(char *nick, char *msg)
 	alog(LOG_DEBUG, "debug: %s killed: %s", nick, msg);
 	send_event(EVENT_USER_LOGOFF, 2, user->nick, msg);
 	delete_user(user);
+
+	return;
 }
 
 /*************************************************************************/
@@ -1592,11 +1639,6 @@ void do_kill(char *nick, char *msg)
  */
 void do_account(User * user, char *account)
 {
-	int nickid;
-	char *sqlaccount = NULL;
-
-	SET_SEGV_LOCATION();
-
 	if (!user)
 	{
 		alog(LOG_NONEXISTANT, "debug: ACCOUNT %s on nonexistent nick", account);
@@ -1608,8 +1650,7 @@ void do_account(User * user, char *account)
 		free(user->account);
 	}
 
-	nickid = db_getnick(user->sqlnick);
-	if (nickid == -1)
+	if (!user->sqlid && db_getnick(user->sqlnick) == -1)
 	{
 		alog(LOG_NONEXISTANT, "ACCOUNT set for nonexistent user %s", user);
 		return;
@@ -1619,26 +1660,20 @@ void do_account(User * user, char *account)
 	{
 		alog(LOG_DEBUG, "debug: account %s set on %s", account, user->nick);
 		user->account = sstrdup(account);
-		if (denora->do_sql)
-		{
-			sqlaccount = rdb_escape(account);
-			rdb_query(QUERY_LOW,
-			          "UPDATE %s SET account=\'%s\' WHERE nickid=%d",
-			          UserTable, sqlaccount, nickid);
-			free(sqlaccount);
-		}
 	}
 	else
 	{
 		alog(LOG_DEBUG, "debug: account removed from %s", user->nick);
 		user->account = NULL;
-		if (denora->do_sql)
-		{
-			rdb_query(QUERY_LOW,
-			          "UPDATE %s SET account=\'\' WHERE nickid=%d",
-			          UserTable, nickid);
-		}
 	}
+	if (denora->do_sql)
+	{
+		rdb_query(QUERY_LOW,
+			  "UPDATE %s SET account=\'%s\' WHERE nickid=%d",
+			  UserTable, rdb_escape(user->account), user->sqlid);
+	}
+
+	return;
 }
 
 /**
@@ -1653,17 +1688,11 @@ void do_account(User * user, char *account)
  */
 void do_p10account(User * user, char *account, int flag)
 {
-	int nickid;
-	char *sqlaccount = NULL;
-	char *sqlhost = NULL;
 	char hhostbuf[255];
 
-	if (flag != 1)
+	if (flag != 1 && (!account || !*account))
 	{
-		if (!account || !*account)
-		{
-			return;
-		}
+		return;
 	}
 
 	SET_SEGV_LOCATION();
@@ -1676,16 +1705,13 @@ void do_p10account(User * user, char *account, int flag)
 
 	if (flag == 0)
 	{
-		alog(LOG_DEBUG, "debug: account %s set on %s", account,
-		     user->nick);
+		alog(LOG_DEBUG, "debug: account %s set on %s", account, user->nick);
 		user->account = sstrdup(account);
-		ircsnprintf(hhostbuf, sizeof(account) + sizeof(hhostbuf) + 2,
-		            "%s%s%s", HiddenPrefix, account, HiddenSuffix);
-
 		if (!user->vhost && UserHasMode(user->nick, UMODE_x))
 		{
-			alog(LOG_DEBUG, "debug: setting vhost %s on %s", hhostbuf,
-			     user->nick);
+			ircsnprintf(hhostbuf, sizeof(hhostbuf), "%s%s%s",
+				    HiddenPrefix, account, HiddenSuffix);
+			alog(LOG_DEBUG, "debug: setting vhost %s on %s", hhostbuf, user->nick);
 			user->vhost = sstrdup(hhostbuf);
 		}
 	}
@@ -1694,7 +1720,6 @@ void do_p10account(User * user, char *account, int flag)
 		alog(LOG_DEBUG, "debug: account removed from %s", user->nick);
 		free(user->account);
 		user->account = NULL;
-
 		if (user->vhost)
 		{
 			alog(LOG_DEBUG, "debug: removing vhost from %s", user->nick);
@@ -1703,19 +1728,16 @@ void do_p10account(User * user, char *account, int flag)
 	}
 	else if (flag == 2)
 	{
-		alog(LOG_DEBUG, "debug: account %s renaming on %s", account,
-		     user->nick);
+		alog(LOG_DEBUG, "debug: account %s renaming on %s", account, user->nick);
 		free(user->account);
 		free(user->vhost);
 		user->vhost = NULL;
 		user->account = sstrdup(account);
-		ircsnprintf(hhostbuf, sizeof(account) + sizeof(hhostbuf) + 2,
-		            "%s%s%s", HiddenPrefix, account, HiddenSuffix);
-
 		if (UserHasMode(user->nick, UMODE_x))
 		{
-			alog(LOG_DEBUG, "debug: setting vhost %s on %s", hhostbuf,
-			     user->nick);
+			ircsnprintf(hhostbuf, sizeof(account) + sizeof(hhostbuf) + 2,
+				    "%s%s%s", HiddenPrefix, account, HiddenSuffix);
+			alog(LOG_DEBUG, "debug: setting vhost %s on %s", hhostbuf, user->nick);
 			user->vhost = sstrdup(hhostbuf);
 		}
 	}
@@ -1724,24 +1746,19 @@ void do_p10account(User * user, char *account, int flag)
 
 	if (denora->do_sql)
 	{
-		sqlaccount = rdb_escape(account);
-		sqlhost = rdb_escape(user->vhost);
-		nickid = db_getnick(user->sqlnick);
-		if (nickid == -1)
+		if (!user->sqlid && db_getnick(user->sqlnick) == -1)
 		{
 			alog(LOG_NONEXISTANT, "ACCOUNT set for nonexistent user %s", user);
+			return;
 		}
-		else
-		{
-			rdb_query(QUERY_LOW,
-			          "UPDATE %s SET account=\'%s\', hiddenhostname=\'%s\' WHERE nickid=%d",
-			          UserTable, sqlaccount, sqlhost, nickid);
-		}
-		free(sqlaccount);
-		free(sqlhost);
+		rdb_query(QUERY_LOW,
+			  "UPDATE %s SET account=\'%s\', hiddenhostname=\'%s\' WHERE nickid=%d",
+			  UserTable, rdb_escape(account), rdb_escape(user->vhost), user->sqlid);
 	}
 
 	SET_SEGV_LOCATION();
+
+	return;
 }
 
 /*************************************************************************/
@@ -1757,17 +1774,7 @@ void do_p10account(User * user, char *account, int flag)
 int is_oper(User * user)
 {
 	SET_SEGV_LOCATION();
-
-	if (user)
-	{
-		SET_SEGV_LOCATION();
-		return (UserHasMode(user->nick, denora_get_oper_mode()));
-	}
-	else
-	{
-		SET_SEGV_LOCATION();
-		return 0;
-	}
+	return user ? UserHasMode(user->nick, denora_get_oper_mode()) : 0;
 }
 
 /*************************************************************************/
@@ -1788,16 +1795,9 @@ char *common_get_vhost(User * u)
 	{
 		return NULL;
 	}
-	if (ircd->vhostmode)
+	if (ircd->vhostmode && (u->mode & ircd->vhostmode) && u->vhost)
 	{
-		if (u->mode & ircd->vhostmode)
-		{
-			return u->vhost;
-		}
-		else
-		{
-			return u->host;
-		}
+		return u->vhost;
 	}
 	else
 	{
@@ -1823,23 +1823,9 @@ char *common_get_vident(User * u)
 	{
 		return NULL;
 	}
-	if (ircd->vhostmode)
+	if (ircd->vhostmode && (u->mode & ircd->vhostmode) && u->vident)
 	{
-		if (u->mode & ircd->vhostmode)
-		{
-			if (u->vident)
-			{
-				return u->vident;
-			}
-			else
-			{
-				return u->username;
-			}
-		}
-		else
-		{
-			return u->username;
-		}
+		return u->vident;
 	}
 	else
 	{
@@ -1858,35 +1844,15 @@ User *user_find(const char *source)
 		return NULL;
 	}
 
-	if (ircd->p10)
+	if (ircd->p10 || (UseTS6 && ircd->ts6))
 	{
 		user = find_byuid(source);
-		if (!user)
-		{
-			return finduser(source);
-		}
-		else
-		{
-			return user;
-		}
-	}
-	else if (UseTS6 && ircd->ts6)
-	{
-		user = find_byuid(source);
-		if (!user)
-		{
-			return finduser(source);
-		}
-		else
-		{
-			return user;
-		}
+		return user ? user : finduser(source);
 	}
 	else
 	{
 		return finduser(source);
 	}
-	return NULL;
 }
 
 /*************************************************************************/

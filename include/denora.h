@@ -1,83 +1,83 @@
-/*************************************************************************/
-/* (c) 2004-2012 Denora Team                                             */
-/* Contact us at info@denorastats.org                                       */
-/*                                                                       */
-/* Please read COPYING and README for furhter details.                   */
-/*                                                                       */
-/* Based on the original code of Anope by Anope Team.                    */
-/* Based on the original code of Thales by Lucas.                        */
-/*                                                                       */
-/*                       */
-/*                                                                       */
-/*************************************************************************/
+/************************************************************************/
+/* (c) 2004-2012 Denora Team						*/
+/* Contact us at info@denorastats.org					*/
+/*									*/
+/* Please read COPYING and README for furhter details.			*/
+/*									*/
+/* Based on the original code of Anope by Anope Team.			*/
+/* Based on the original code of Thales by Lucas.			*/
+/*									*/
+/*									*/
+/*									*/
+/************************************************************************/
 
-/*************************************************************************/
-/* Include all nesscary header files for this project                    */
-/*************************************************************************/
+/************************************************************************/
+/* Include all nesscary header files for this project			*/
+/************************************************************************/
 
-#include "sysconf.h"             /* Include auto generated header which  */
-                                 /* describes the users system this file */
-                                 /* is created by running configure      */
+#include "sysconf.h"		/* Include auto generated header which  */
+				/* describes the users system this file */
+				/* is created by running configure	*/
 
-#ifdef __sun                     /* If the system reports as Sun OS      */
-#include "os/sun.h"              /* include hacks for the Sun OS         */
-#endif                           /* end if                               */
+#ifdef __sun			/* If the system reports as Sun OS	*/
+#include "os/sun.h"		/* include hacks for the Sun OS		*/
+#endif				/* end if				*/
 
-#include <errno.h>		 /* Include system error numbers header  */
-#include <stdio.h>               /* Include standard I/O header          */
-#include <stddef.h>		 /* Include standard defines header      */
-#include <stdarg.h>              /* Include standard arguements header   */
+#include <errno.h>		/* Include system error numbers header	*/
+#include <stdio.h>		/* Include standard I/O header		*/
+#include <stddef.h>		/* Include standard defines header	*/
+#include <stdarg.h>		/* Include standard arguements header	*/
 
-#ifdef HAVE_STDLIB_H		 /* If system has standard library       */
-#include <stdlib.h>              /* Include standard library header      */
-#endif                           /* end if                               */
+#ifdef HAVE_STDLIB_H		/* If system has standard library	*/
+#include <stdlib.h>		/* Include standard library header	*/
+#endif				/* end if				*/
 
-#ifdef HAVE_STRING_H		 /* If system has string library         */
-#include <string.h>              /* Include string library header        */
-#endif                           /* end if                               */
+#ifdef HAVE_STRING_H		/* If system has string library		*/
+#include <string.h>		/* Include string library header	*/
+#endif				/* end if				*/
 
-#if HAVE_STRINGS_H		 /* If system has strings library        */
-#include <strings.h>             /* Include strigns library header       */
-#endif                           /* end if                               */
+#if HAVE_STRINGS_H		/* If system has strings library	*/
+#include <strings.h>		/* Include strigns library header	*/
+#endif				/* end if				*/
 
-#include <time.h>		 /* Include time library header          */
-#include <limits.h>		 /* Include limits header                */
+#include <time.h>		/* Include time library header		*/
+#include <limits.h>		/* Include limits header		*/
 
-#ifdef HAS_SYS_TYPES_H	     	 /* If system has sys/types header       */
-#include <sys/types.h>           /* Include sys/types header             */
-#endif				 /* end if                               */
+#ifdef HAS_SYS_TYPES_H		/* If system has sys/types header	*/
+#include <sys/types.h>		/* Include sys/types header		*/
+#endif				/* end if				*/
 
-#include <sys/stat.h>		 /* Include sys/stats header             */
-#include <fcntl.h>               /* Include file control header          */
-#include <ctype.h>               /* Include C data types header          */
-#include <assert.h>              /* Include assert header                */
+#include <sys/stat.h>		/* Include sys/stats header		*/
+#include <fcntl.h>		/* Include file control header		*/
+#include <ctype.h>		/* Include C data types header		*/
+#include <assert.h>		/* Include assert header		*/
 
-#ifdef HAVE_STDINT_H		 /* If system has standard integer       */
-#include <stdint.h>              /* include standard integer header      */
-#endif				 /* end if                               */
+#ifdef HAVE_STDINT_H		/* If system has standard integer	*/
+#include <stdint.h>		/* include standard integer header	*/
+#endif				/* end if				*/
 
-#if HAVE_SYS_SELECT_H		 /* If system has select header          */
-#include <sys/select.h>          /* Include sys/select header            */
-#endif				 /* end if                               */
+#if HAVE_SYS_SELECT_H		/* If system has select header		*/
+#include <sys/select.h>		/* Include sys/select header		*/
+#endif				/* end if				*/
 
-#ifdef HAVE_SIGNAL_H             /* If system has signal header          */
-#include <signal.h>              /* Include signal header                */
-#endif				 /* end if                               */
+#ifdef HAVE_SIGNAL_H		/* If system has signal header		*/
+#include <signal.h>		/* Include signal header		*/
+#endif				/* end if				*/
 
-#ifdef HAVE_POLL_H
-#include <poll.h>
-#endif				/* end if                               */
+#ifdef HAVE_POLL_H		/* If system has poll header		*/
+#include <poll.h>		/* Include poll header			*/
+#endif				/* end if				*/
 
-/*************************************************************************/
-/* Include the header for modules as long as we can and its not win32    */
-/*************************************************************************/
+/************************************************************************/
+/* Include the header for modules as long as we can and its not win32	*/
+/************************************************************************/
 
 #if defined(USE_MODULES) && !defined(_WIN32)
 #include <dlfcn.h>
 #endif
 
 /*************************************************************************/
-/* Following includes build info for the given Operating System          */
+/* Following includes build info for the given Operating System	  */
 /*************************************************************************/
 
 #ifdef _WIN32
@@ -97,76 +97,76 @@
 #include "os/aix.h"
 #endif
 
-/*************************************************************************/
-/* If system can use threading include headers for threading             */
-/*************************************************************************/
+/************************************************************************/
+/* If system can use threading include headers for threading		*/
+/************************************************************************/
 
 #ifdef USE_THREADS
-#ifndef _WIN32                    /* Non Win32                          */
-#include <pthread.h>              /* Include pthread header             */
-#endif                            /* end if                             */
-#include "threads.h"               /* our common threading header        */
+#ifndef _WIN32			/* Non Win32				*/
+#include <pthread.h>		/* Include pthread header		*/
+#endif				/* end if				*/
+#include "threads.h"		/* our common threading header		*/
 #endif
 
-/*************************************************************************/
-/* MySQL headers that we want to include and defines that older versions */
-/* do not have. Note that  MYSQL_HEADER_PREFIX should be trapped from    */
-/* sysconf.h                                                             */
-/*************************************************************************/
+/************************************************************************/
+/* MySQL headers that we want to include and defines that older		*/
+/* versions do not have.						*/
+/* Note that MYSQL_HEADER_PREFIX should be trapped from	sysconf.h	*/
+/************************************************************************/
 
 #ifdef USE_MYSQL
 #ifdef MYSQL_HEADER_PREFIX
-# include <mysql/mysql_version.h>
-# include <mysql/mysql.h>
-# include <mysql/errmsg.h>
-# include <mysql/mysqld_error.h>
+#include <mysql/mysql_version.h>
+#include <mysql/mysql.h>
+#include <mysql/errmsg.h>
+#include <mysql/mysqld_error.h>
 #else
-# include <mysql_version.h>
-# include <mysql.h>
-# include <errmsg.h>
-# include <mysqld_error.h>
+#include <mysql_version.h>
+#include <mysql.h>
+#include <errmsg.h>
+#include <mysqld_error.h>
 #endif
 #ifndef ER_USER_LIMIT_REACHED
 #define ER_USER_LIMIT_REACHED 1226
 #endif
 #endif
 
-/*************************************************************************/
-/* Include the zlib header file if the system can has it                 */
-/*************************************************************************/
+/************************************************************************/
+/* Include the zlib header file if the system can has it		*/
+/************************************************************************/
 
 #ifdef HAVE_LIBZ
 #include <zlib.h>
 #endif
 
-/*************************************************************************/
-/* Include the openssl header file if the system can has it              */
-/*************************************************************************/
+/************************************************************************/
+/* Include the openssl header file if the system can has it		*/
+/************************************************************************/
 
 #ifdef HAVE_SSL
 #include <ssl.h>
 #endif
 
-/*************************************************************************/
-/* Include the crypt header file if the system can has it                */
-/*************************************************************************/
+/************************************************************************/
+/* Include the crypt header file if the system can has it		*/
+/************************************************************************/
 
 #if defined(HAVE_CRYPT_H) && defined(HAVE_CRYPT)
 #include <crypt.h>
 #endif
 
-/*************************************************************************/
-/* Include the postgre header file if the system can has it              */
-/*************************************************************************/
+/************************************************************************/
+/* Include the postgre header file if the system can has it		*/
+/************************************************************************/
 
 #ifdef USE_POSTGRE
 #include <libpq-fe.h>
 #endif
 
-/*************************************************************************/
-/* Include the Dmalloc header file if the system can has it, and user    */
-/* had requested it, if not attempt to include the malloc header file    */
-/*************************************************************************/
+/************************************************************************/
+/* Include the Dmalloc header file if the system can has it, and user	*/
+/* had requested it, if not attempt to include the malloc header file	*/
+/************************************************************************/
 
 #ifdef HAVE_DMALLOC
 #include <dmalloc.h>
@@ -178,9 +178,9 @@
 #endif
 #endif
 
-/*************************************************************************/
-/* These are our headers that setup various things                       */
-/*************************************************************************/
+/************************************************************************/
+/* These are our headers that setup various things			*/
+/************************************************************************/
 
 #include "defines.h"
 #include "language.h"
@@ -194,21 +194,21 @@
 #include "cron.h"
 #include "list-array.h"
 
-/*************************************************************************/
-/* Remove standard C functions and replace with our own functions        */
-/*************************************************************************/
+/************************************************************************/
+/* Remove standard C functions and replace with our own functions	*/
+/************************************************************************/
 
 #undef tolower
 #undef toupper
 #define tolower tolower_
 #define toupper toupper_
 
-/*************************************************************************/
-/* Macro functions that help us with a few items                         */
-/*************************************************************************/
+/************************************************************************/
+/* Macro functions that help us with a few items			*/
+/************************************************************************/
 
 /* Length of an array: */
-#define lenof(a)	(sizeof(a) / sizeof(*(a)))
+#define lenof(a) (sizeof(a) / sizeof(*(a)))
 
 /* is a digit ie, 0, to 9 */
 #define IsDigit(c) (char_atribs[(unsigned char)(c)]&DIGIT)
@@ -224,9 +224,9 @@
 
 #define SWAP_CHAR( x, y ) {char c; c = x; x = y; y = c;}
 
-/*************************************************************************/
-/* Setup how we define our macro fro externing data                      */
-/*************************************************************************/
+/************************************************************************/
+/* Setup how we define our macro fro externing data			*/
+/************************************************************************/
 
 #ifndef _WIN32
 #if defined(__CYGWIN__)
@@ -242,11 +242,11 @@
 #endif
 #endif
 
-/*************************************************************************/
-/* Setup a true/false boolean                                            */
-/* Windows defines a boolean type as an unsigned char. It does however   */
-/* need true/false. -- codemastr                                         */
-/*************************************************************************/
+/************************************************************************/
+/* Setup a true/false boolean						*/
+/* Windows defines a boolean type as an unsigned char.			*/
+/* It does however need true/false. -- codemastr			*/
+/************************************************************************/
 
 #ifndef _WIN32
 typedef enum { false, true } boolean;
@@ -259,17 +259,17 @@ typedef enum { false, true } boolean;
 #endif
 #endif /* _WIN32 */
 
-/*************************************************************************/
-/* Some enum stuff                                                       */
-/*************************************************************************/
+/************************************************************************/
+/* Some enum stuff							*/
+/************************************************************************/
 
 typedef enum
 {
-	CORE,        	    /* Core Module                               */
-	PROTOCOL,    	    /* IRCD Protocol Module                      */
-	THIRD,                   /* Third Party Module                        */
-	SUPPORTED,               /* Supported (included module)               */
-	QATESTED                 /* QA Team has checked and cleared it        */
+	CORE,			/* Core Module				*/
+	PROTOCOL,		/* IRCD Protocol Module			*/
+	THIRD,			/* Third Party Module			*/
+	SUPPORTED,		/* Supported (included module)		*/
+	QATESTED		/* QA Team has checked and cleared it	*/
 } MODType;
 
 typedef enum
@@ -278,35 +278,35 @@ typedef enum
 	MOD_OP_UNLOAD
 } ModuleOperation;
 
-/*************************************************************************/
-/* Setup the structs                                                     */
-/*************************************************************************/
+/************************************************************************/
+/* Setup the structs							*/
+/************************************************************************/
 
-typedef struct server_ Server;			    /* Server struct     */
-typedef struct user_ User;			    /* User struct       */
-typedef struct channel_ Channel;		    /* Channel struct    */
-typedef struct ModuleData_ ModuleData;              /* ModuleData struct */
-typedef struct metadata_ MetaData;                  /* MetaData struct   */
-typedef struct tld_ TLD;			    /* TLD Struct        */
-typedef struct ircdvars_ IRCDVar;		    /* IRCD Struct       */
-typedef struct statvars_ STATVar;		    /* Stats Struct      */
-typedef struct ircdcapab_ IRCDCAPAB;                /* IRCD Capab Struct */
-typedef struct denoravars_ DenoraVar;		    /* Denora Struct     */
-typedef struct uid_ Uid;			    /* UID Struct        */
-typedef struct serverstats_ ServStats;
-typedef struct ctcpverstats_ CTCPVerStats;
-typedef struct exclude_ Exclude;
-typedef struct chanstats_ ChannelStats;
-typedef struct statschan_ StatsChannel;
-typedef struct db_file_ DenoraDBFile;
-typedef struct serverbans_ ServerBans;
-typedef struct capabinfo_ CapabInfo;
-typedef struct dadmin_ Dadmin;
-typedef struct Conf_Modules Conf_Modules;
+typedef struct server_ Server;			/* Server struct	*/
+typedef struct user_ User;			/* User struct		*/
+typedef struct channel_ Channel;		/* Channel struct	*/
+typedef struct ModuleData_ ModuleData;		/* ModuleData struct	*/
+typedef struct metadata_ MetaData;		/* MetaData struct	*/
+typedef struct tld_ TLD;			/* TLD Struct		*/
+typedef struct ircdvars_ IRCDVar;		/* IRCD Struct		*/
+typedef struct statvars_ STATVar;		/* Stats Struct		*/
+typedef struct ircdcapab_ IRCDCAPAB;		/* IRCD Capab Struct	*/
+typedef struct denoravars_ DenoraVar;		/* Denora Struct	*/
+typedef struct uid_ Uid;			/* UID Struct		*/
+typedef struct serverstats_ ServStats;		/* Server stats		*/
+typedef struct ctcpverstats_ CTCPVerStats;	/* CTCP			*/
+typedef struct exclude_ Exclude;		/* Excludes		*/
+typedef struct chanstats_ ChannelStats;		/* Chanstats		*/
+typedef struct statschan_ StatsChannel;		/* Statschan		*/
+typedef struct db_file_ DenoraDBFile;		/* DB File struct	*/
+typedef struct serverbans_ ServerBans;		/* Serverbans		*/
+typedef struct capabinfo_ CapabInfo;		/* CAPAB Info		*/
+typedef struct dadmin_ Dadmin;			/* Admins		*/
+typedef struct Conf_Modules Conf_Modules;	/* Config		*/
 typedef struct TopConf tConf;
 typedef struct SubConf sConf;
 typedef struct ConfVar cVar;
-typedef struct queueentry_ QueueEntry;
+typedef struct queueentry_ QueueEntry;		/* Queue		*/
 typedef struct PrivMsgHandler_ PrivMsg;
 typedef struct PrivMsgHash_ PrivMsgHash;
 typedef struct htmltag_ HTMLTag;
@@ -341,9 +341,9 @@ typedef struct zline_ Zline;
 typedef struct MD5Context MD5_CTX;
 
 
-/*************************************************************************/
-/* Define out the hash tables                                            */
-/*************************************************************************/
+/************************************************************************/
+/* Define out the hash tables						*/
+/************************************************************************/
 
 #define STATSERV OS_cmdTable
 #define IRCD IRCD_cmdTable
@@ -355,9 +355,9 @@ typedef struct MD5Context MD5_CTX;
 #define XMLRPCCMD XMLRPCCMD_cmdTable
 #define USERMODEHANDLERS usermode_table
 
-/*************************************************************************/
-/* Command Struct                                                        */
-/*************************************************************************/
+/************************************************************************/
+/* Command Struct							*/
+/************************************************************************/
 
 struct Command_
 {
@@ -376,7 +376,7 @@ struct Command_
 	char *help_param4;
 
 	/* Module related stuff */
-	int core;           /* Can this command be deleted? */
+	int core;	   /* Can this command be deleted? */
 	char *mod_name;	/* Name of the module who owns us, NULL for core's  */
 	char *service;	/* Service we provide this command for */
 	int (*all_help)(User *u);
@@ -386,20 +386,20 @@ struct Command_
 	Command *next;	/* Next command responsible for the same command */
 };
 
-/*************************************************************************/
-/* Command Hash                                                          */
-/*************************************************************************/
+/************************************************************************/
+/* Command Hash								*/
+/************************************************************************/
 
 struct CommandHash_
 {
-	char *name;	/* Name of the command */
-	Command *c;	/* Actual command */
-	CommandHash *next; /* Next command */
+	char *name;		/* Name of the command */
+	Command *c;		/* Actual command */
+	CommandHash *next;	/* Next command */
 };
 
-/*************************************************************************/
-/* SpamFilter                                                            */
-/*************************************************************************/
+/************************************************************************/
+/* SpamFilter								*/
+/************************************************************************/
 
 struct spamfilter_
 {
@@ -413,9 +413,9 @@ struct spamfilter_
 	char *reason;
 };
 
-/*************************************************************************/
-/* Gline                                                                 */
-/*************************************************************************/
+/************************************************************************/
+/* Gline								*/
+/************************************************************************/
 
 struct gline_
 {
@@ -427,9 +427,9 @@ struct gline_
 	char *reason;
 };
 
-/*************************************************************************/
-/* Qline                                                                 */
-/*************************************************************************/
+/************************************************************************/
+/* Qline								*/
+/************************************************************************/
 
 struct qline_
 {
@@ -441,9 +441,9 @@ struct qline_
 	char *reason;
 };
 
-/*************************************************************************/
-/* Zline                                                                 */
-/*************************************************************************/
+/************************************************************************/
+/* Zline								*/
+/************************************************************************/
 
 struct zline_
 {
@@ -455,9 +455,9 @@ struct zline_
 	char *reason;
 };
 
-/*************************************************************************/
-/* Message Struct                                                        */
-/*************************************************************************/
+/************************************************************************/
+/* Message Struct							*/
+/************************************************************************/
 
 struct Message_
 {
@@ -468,9 +468,9 @@ struct Message_
 	Message *next;
 };
 
-/*************************************************************************/
-/* Message Hash                                                          */
-/*************************************************************************/
+/************************************************************************/
+/* Message Hash								*/
+/************************************************************************/
 
 struct MessageHash_
 {
@@ -479,9 +479,9 @@ struct MessageHash_
 	MessageHash *next;
 };
 
-/*************************************************************************/
-/* Event Message Struct                                                  */
-/*************************************************************************/
+/************************************************************************/
+/* Event Message Struct							*/
+/************************************************************************/
 
 struct EvtMessage_
 {
@@ -492,9 +492,9 @@ struct EvtMessage_
 	EvtMessage *next;
 };
 
-/*************************************************************************/
-/* Event Message Hash                                                    */
-/*************************************************************************/
+/************************************************************************/
+/* Event Message Hash							*/
+/************************************************************************/
 
 struct EvtMessageHash_
 {
@@ -503,9 +503,9 @@ struct EvtMessageHash_
 	EvtMessageHash *next;
 };
 
-/*************************************************************************/
-/* Event Hook Struct                                                     */
-/*************************************************************************/
+/************************************************************************/
+/* Event Hook Struct							*/
+/************************************************************************/
 
 struct EvtHook_
 {
@@ -516,9 +516,9 @@ struct EvtHook_
 	EvtHook *next;
 };
 
-/*************************************************************************/
-/* Event Hook Hash                                                       */
-/*************************************************************************/
+/************************************************************************/
+/* Event Hook Hash							*/
+/************************************************************************/
 
 struct EvtHookHash_
 {
@@ -527,9 +527,9 @@ struct EvtHookHash_
 	EvtHookHash *next;
 };
 
-/*************************************************************************/
-/* Cron Event                                                            */
-/*************************************************************************/
+/************************************************************************/
+/* Cron Event								*/
+/************************************************************************/
 
 struct CronEvent_
 {
@@ -540,9 +540,9 @@ struct CronEvent_
 	CronEvent *next;
 };
 
-/*************************************************************************/
-/* Cron Event Hash                                                       */
-/*************************************************************************/
+/************************************************************************/
+/* Cron Event Hash							*/
+/************************************************************************/
 
 struct CronEventHash_
 {
@@ -551,9 +551,9 @@ struct CronEventHash_
 	CronEventHash *next;
 };
 
-/*************************************************************************/
-/* Module Call back stuff                                                */
-/*************************************************************************/
+/************************************************************************/
+/* Module Call back stuff						*/
+/************************************************************************/
 
 struct ModuleCallBack_
 {
@@ -566,9 +566,9 @@ struct ModuleCallBack_
 	ModuleCallBack *next;
 };
 
-/*************************************************************************/
-/* Module Language                                                       */
-/*************************************************************************/
+/************************************************************************/
+/* Module Language							*/
+/************************************************************************/
 
 struct ModuleLang_
 {
@@ -576,9 +576,9 @@ struct ModuleLang_
 	char **argv;
 };
 
-/*************************************************************************/
-/* Module Queue - shows how to load/unload modules                       */
-/*************************************************************************/
+/************************************************************************/
+/* Module Queue - shows how to load/unload modules			*/
+/************************************************************************/
 
 struct ModuleQueue_
 {
@@ -589,9 +589,9 @@ struct ModuleQueue_
 	ModuleQueue *next;
 };
 
-/*************************************************************************/
-/* Module Struct - contains module data                                  */
-/*************************************************************************/
+/************************************************************************/
+/* Module Struct - contains module data					*/
+/************************************************************************/
 
 struct Module_
 {
@@ -608,9 +608,9 @@ struct Module_
 	ModuleLang lang[NUM_LANGS];
 };
 
-/*************************************************************************/
-/* Module Hash Struct - contains list of all modules                     */
-/*************************************************************************/
+/************************************************************************/
+/* Module Hash Struct - contains list of all modules			*/
+/************************************************************************/
 
 struct ModuleHash_
 {
@@ -619,9 +619,9 @@ struct ModuleHash_
 	ModuleHash *next;
 };
 
-/*************************************************************************/
-/* Server Bans (not currently used)                                      */
-/*************************************************************************/
+/************************************************************************/
+/* Server Bans (not currently used)					*/
+/************************************************************************/
 
 struct serverbans_
 {
@@ -635,10 +635,12 @@ struct serverbans_
 	char *reason;
 };
 
-/*************************************************************************/
-/* UID struct - needed for P10/TS6 ircds to track our internal UIDs      */
-/*************************************************************************/
-
+/************************************************************************/
+/* UID struct - needed for P10/TS6 ircds to track our internal UIDs	*/
+/************************************************************************/
+#ifndef MAX_UIDS
+#define MAX_UIDS 1024
+#endif
 struct uid_
 {
 	Uid *next, *prev;
@@ -646,23 +648,23 @@ struct uid_
 	char *uid;
 };
 
-/*************************************************************************/
-/* Database struct                                                       */
-/*************************************************************************/
+/************************************************************************/
+/* Database struct							*/
+/************************************************************************/
 
 struct db_file_
 {
-	FILE *fptr;              /* Pointer to the opened file               */
-	int db_version;          /* The db version of the datafiles          */
-	int core_db_version;     /* The current db version of this source    */
-	char *service;       	 /* StatServ/etc.                            */
-	char *filename;  		 /* Filename of the database                 */
-	char *temp_name; 		 /* Temp filename of the database            */
+	FILE *fptr;		/* Pointer to the opened file		*/
+	int db_version;		/* The db version of the datafiles	*/
+	int core_db_version;	/* The current db version of this source*/
+	char *service;	   	/* StatServ/etc.			*/
+	char *filename;  	/* Filename of the database		*/
+	char *temp_name; 	/* Temp filename of the database	*/
 };
 
-/*************************************************************************/
-/* Denora operation struct                                               */
-/*************************************************************************/
+/************************************************************************/
+/* Denora operation struct						*/
+/************************************************************************/
 
 struct denoravars_
 {
@@ -694,9 +696,9 @@ struct denoravars_
 	int protocoldebug;
 };
 
-/*************************************************************************/
-/* Statiscal Data Numbers Struct                                         */
-/*************************************************************************/
+/************************************************************************/
+/* Statiscal Data Numbers Struct					*/
+/************************************************************************/
 
 struct statvars_
 {
@@ -728,42 +730,40 @@ struct statvars_
 
 };
 
-/*************************************************************************/
-/* IRCD Protocol struct                                                  */
-/*************************************************************************/
+/************************************************************************/
+/* IRCD Protocol struct							*/
+/************************************************************************/
 
 struct ircdvars_
 {
-	const char *name;				/* Name of the IRCD        			 */
-	const char *statservmode;		/* Mode used by StatServ   			 */
-	int vhost;		        /* IRCD supports vhost		         */
-	int sgline;		        /* IRCD supports SGline		         */
-	int sgline_table;       /* Whether we need the sgline table  */
-	int sqline;				/* IRCD supports SQline		         */
-	int sqline_table;       /* Whether we need the sqline table  */
-	int szline;				/* IRCD supports SZline		         */
-	int except;		        /* IRCD supports exception +e		 */
-	int vident;		        /* IRCD supports vidents		     */
-	int nickip;		        /* IRCD sends IP on NICK		     */
-	int nickvhost;		        /* Users vhost sent during NICK cmd  */
-	int fmode;		        /* IRCD supprts channel flood mode this is normally +f */
+	const char *name;		/* Name of the IRCD			*/
+	const char *statservmode;	/* Mode used by StatServ   		*/
+	int vhost;			/* IRCD supports vhost			*/
+	int sgline;			/* IRCD supports SGline			*/
+	int sgline_table;		/* Whether we need the sgline table	*/
+	int sqline;			/* IRCD supports SQline			*/
+	int sqline_table;		/* Whether we need the sqline table	*/
+	int szline;			/* IRCD supports SZline			*/
+	int except;			/* IRCD supports exception +e		*/
+	int vident;			/* IRCD supports vidents		*/
+	int nickip;			/* IRCD sends IP on NICK		*/
+	int nickvhost;			/* Users vhost sent during NICK cmd	*/
+	int fmode;			/* IRCD supprts channel flood mode this is normally +f */
 	int jmode;			/* IRCD supprts a secondary flood mode protection, this is normally +j */
-	int Lmode;			/* IRCD supports linked channels 	 */
-	uint32 chan_fmode;	        /* IRCD_CMODE_* for primary flood  	 */
-	uint32 chan_jmode;	        /* IRCD_CMODE_* for secondary flood  */
-	uint32 chan_lmode;	        /* IRCD_CMODE_* for linked channels	 */
-	char *chanmodes;	        /* If the ircd sends CHANMODE in CAPAB this is where we store it */
-	int token;		        /* Does Denora support the tokens for the ircd */
-	int tokencaseless;	        /* IRCD TOKENs are not case senstive
-                                         * UnrealIRCD is not case senstive,
-                                     	 *  most IRCD are case senstive
-					 */
-	int sjb64;		        /* SJOIN time stamps are encoded in base 64 formatting */
-	int invitemode;		        /* IRCD supports Invite exception +I */
-	int sjoinbanchar;			/* SJOIN bans use this char          */
-	int sjoinexchar;			/* SJOIN expection use this char     */
-	int sjoinivchar;			/* SJOIN Invite use this char        */
-	uint32 vhostmode;	        /* IRCD_UMODE_* for Vhost            */
+	int Lmode;			/* IRCD supports linked channels 	*/
+	uint32 chan_fmode;		/* IRCD_CMODE_* for primary flood  	*/
+	uint32 chan_jmode;		/* IRCD_CMODE_* for secondary flood	*/
+	uint32 chan_lmode;		/* IRCD_CMODE_* for linked channels	*/
+	char *chanmodes;		/* If the ircd sends CHANMODE in CAPAB this is where we store it */
+	int token;			/* Does Denora support the tokens for the ircd */
+	int tokencaseless;		/* IRCD TOKENs are not case senstive
+					 * UnrealIRCD is not case senstive compared to most other IRCD */
+	int sjb64;			/* SJOIN time stamps are encoded in base 64 formatting */
+	int invitemode;			/* IRCD supports Invite exception +I	*/
+	int sjoinbanchar;		/* SJOIN bans use this char		*/
+	int sjoinexchar;		/* SJOIN expection use this char	*/
+	int sjoinivchar;		/* SJOIN Invite use this char		*/
+	uint32 vhostmode;		/* IRCD_UMODE_* for Vhost		*/
 	int owner;
 	int protect;
 	int halfop;
@@ -795,9 +795,9 @@ struct ircdvars_
 	int persist_char;
 };
 
-/*************************************************************************/
-/* IRCD Capabilities struct                                              */
-/*************************************************************************/
+/************************************************************************/
+/* IRCD Capabilities struct						*/
+/************************************************************************/
 
 struct ircdcapab_
 {
@@ -834,67 +834,67 @@ struct ircdcapab_
 	uint32 nickchars;
 };
 
-/**************************************************************************/
-/* ModuleData strucs used to allow modules to add / delete module         */
-/* Data from existing structs                                             */
-/**************************************************************************/
+/************************************************************************/
+/* ModuleData strucs used to allow modules to add / delete module	*/
+/* Data from existing structs						*/
+/************************************************************************/
 
 struct ModuleData_
 {
-	char *moduleName;		/* Which module we belong to  */
-	char *key;			/* The key                    */
-	char *value;			/* The Value                  */
-	ModuleData *next;		/* The next ModuleData record */
+	char *moduleName;		/* Which module we belong to	*/
+	char *key;			/* The key			*/
+	char *value;			/* The Value			*/
+	ModuleData *next;		/* The next ModuleData record	*/
 };
 
-/**************************************************************************/
-/* MetaData strucs used to allow core and modules to add / delete / share */
-/* Data independent of a struct                                           */
-/**************************************************************************/
+/************************************************************************/
+/* MetaData strucs used to allow core/modules to add / delete / share	*/
+/* Data independent of a struct						*/
+/************************************************************************/
 
 struct metadata_
 {
-	int flags;			/* Private or Public          */
-	char *key;			/* The key                    */
-	char *value;			/* The Value                  */
-	MetaData *next;                  /* The next MetaData record   */
+	int flags;			/* Private or Public		*/
+	char *key;			/* The key			*/
+	char *value;			/* The Value			*/
+	MetaData *next;			/* The next MetaData record	*/
 };
 
-/**************************************************************************/
-/* Server Struct - this is not the stats this is destoried on shutdown    */
-/**************************************************************************/
+/************************************************************************/
+/* Server Struct - this is not the stats this is destoried on shutdown	*/
+/************************************************************************/
 
 struct server_
 {
 	Server *next, *prev;
 
-	char *name;				/* Server name 			          */
-	char *country;                      /* Server country                         */
-	char *countrycode;                  /* Server country code                    */
-	uint16 hops;		        /* Hops between services and server 	  */
-	char *desc;			        /* Server description 			  */
-	uint16 flags;			/* Some info flags			  */
-	char *suid;				/* Server Universal ID		     	  */
-	int sync;	        		/* Whether is synced or not	          */
-	char *version;			/* Version 				  */
-	uint32 uptime;			/* Uptime				  */
-	ServStats *ss;			/* Server Stats Struct                    */
-	Server *uplink;			/* Uplink Server Struct  		  */
+	char *name;			/* Server name 			*/
+	char *country;			/* Server country		*/
+	char *countrycode;		/* Server country code		*/
+	uint16 hops;			/* Hops between services and server */
+	char *desc;			/* Server description 		*/
+	uint16 flags;			/* Some info flags		*/
+	char *suid;			/* Server Universal ID		*/
+	int sync;			/* Whether is synced or not	*/
+	char *version;			/* Version 			*/
+	uint32 uptime;			/* Uptime			*/
+	ServStats *ss;			/* Server Stats Struct		*/
+	Server *uplink;			/* Uplink Server Struct  	*/
 	time_t lag_time;
-	uint32 ping;                        /* ping time                              */
-	uint32 lastping;                    /* Last time pinged                       */
-	uint32 sqlid;			/* server sql id                          */
-	Server *links;		        /* Linked list head for linked servers 	  */
-	int uline;                          /* Server is ulined                       */
-	ModuleData *moduleData;		/* Module Data                            */
-	char **slinks;                      /* Array of Server Links                  */
+	uint32 ping;			/* ping time			*/
+	uint32 lastping;		/* Last time pinged		*/
+	uint32 sqlid;			/* server sql id		*/
+	Server *links;			/* Linked list head for linked servers */
+	int uline;			/* Server is ulined		*/
+	ModuleData *moduleData;		/* Module Data			*/
+	char **slinks;			/* Array of Server Links	*/
 	int slinks_count;
 	char *motd;
 };
 
-/**************************************************************************/
-/* Capab Info - used so we can check stuff quicker with less lines        */
-/**************************************************************************/
+/************************************************************************/
+/* Capab Info - used so we can check stuff quicker with less lines	*/
+/************************************************************************/
 
 struct capabinfo_
 {
@@ -902,26 +902,26 @@ struct capabinfo_
 	uint32 flag;
 };
 
-/**************************************************************************/
-/* Server Statisical Struct                                               */
-/**************************************************************************/
+/************************************************************************/
+/* Server Statisical Struct						*/
+/************************************************************************/
 
 struct serverstats_
 {
 	ServStats *next, *prev;
 
-	char name[NICKMAX];		/* Server name 				*/
-	uint32 uptime;			/* Uptime				*/
-	uint32 currentusers; 	        /* Curretn Users 			*/
-	uint32 maxusers;		/* Max Users				*/
-	uint32 opers;			/* Current Opers			*/
-	uint32 maxopers;		/* Max Opers				*/
-	time_t maxopertime;		/* Time of Max Opers		        */
-	time_t maxusertime;		/* Time of Max Users			*/
-	uint32 highestping;             /* Largest Ping 			*/
-	time_t maxpingtime;		/* Largest ping time			*/
-	uint32 totalusersever;          /* Total users ever			*/
-	uint32 splits;			/* Total number of server splits	*/
+	char name[NICKMAX];		/* Server name 			*/
+	uint32 uptime;			/* Uptime			*/
+	uint32 currentusers; 		/* Curretn Users 		*/
+	uint32 maxusers;		/* Max Users			*/
+	uint32 opers;			/* Current Opers		*/
+	uint32 maxopers;		/* Max Opers			*/
+	time_t maxopertime;		/* Time of Max Opers		*/
+	time_t maxusertime;		/* Time of Max Users		*/
+	uint32 highestping;		/* Largest Ping 		*/
+	time_t maxpingtime;		/* Largest ping time		*/
+	uint32 totalusersever;		/* Total users ever		*/
+	uint32 splits;			/* Total number of server splits*/
 	uint32 ircopskills;
 	uint32 serverkills;
 	uint32 split_stats;
@@ -929,9 +929,9 @@ struct serverstats_
 	ModuleData *moduleData;
 };
 
-/**************************************************************************/
-/* Top Level Domain Statisical Struct                                     */
-/**************************************************************************/
+/************************************************************************/
+/* Top Level Domain Statisical Struct					*/
+/************************************************************************/
 
 struct tld_
 {
@@ -944,9 +944,9 @@ struct tld_
 	ModuleData *moduleData;
 };
 
-/**************************************************************************/
-/* Temp Struct used for sorting                                           */
-/**************************************************************************/
+/************************************************************************/
+/* Temp Struct used for sorting						*/
+/************************************************************************/
 
 typedef struct
 {
@@ -954,9 +954,9 @@ typedef struct
 	int count;
 } temp_data;
 
-/**************************************************************************/
-/* CTCP Statisical Struct                                                 */
-/**************************************************************************/
+/************************************************************************/
+/* CTCP Statisical Struct						*/
+/************************************************************************/
 
 struct ctcpverstats_
 {
@@ -969,7 +969,9 @@ struct ctcpverstats_
 	ModuleData *moduleData;
 };
 
-/*************************************************************************/
+/************************************************************************/
+/* Exclude Struct							*/
+/************************************************************************/
 
 struct exclude_
 {
@@ -979,46 +981,48 @@ struct exclude_
 	uint32 flag;
 };
 
-/**************************************************************************/
-/* User Struct                                                            */
-/**************************************************************************/
-
+/************************************************************************/
+/* User Struct								*/
+/************************************************************************/
+#ifndef MAX_USERS
+#define MAX_USERS 1024
+#endif
 struct user_
 {
 	User *next, *prev;
 	char nick[NICKMAX];
-	char *username;             /* User's real ident		*/
-	char *host;                 /* User's real hostname 	*/
-	char *vhost;        	/* User's virtual hostname      */
-	char *vident;       	/* User's virtual ident 	*/
-	char *realname;		/* Realname 			*/
-	Server *server;	        /* Server struct user is on     */
-	char *ip;			/* User's resolved IP           */
-	time_t timestamp;	        /* Timestamp of the nick 	*/
-	time_t my_signon;	        /* When did _we_ see the user?  */
-	uint32 svid;		/* Services ID 			*/
-	uint32 mode;		/* See below 			*/
-	char *uid;			/* Univeral ID			*/
-	char *account;		/* P10 Account                  */
-	uint16 language;
-	uint16 admin;
-	uint16 confadmin;   	/* if admin is from configfile */
-	char *ctcp;
-	int sqlid;			/* mysql id number */
-	char *sqlnick;
-	char *swhois;
-	int hopcount;
+	char *username;		/* User's real ident			*/
+	char *host;		/* User's real hostname 		*/
+	char *vhost;		/* User's virtual hostname		*/
+	char *vident;	   	/* User's virtual ident 		*/
+	char *realname;		/* Realname 				*/
+	Server *server;		/* Server struct user is on		*/
+	char *ip;		/* User's resolved IP			*/
+	time_t timestamp;	/* Timestamp of the nick		*/
+	time_t my_signon;	/* When did _we_ see the user?		*/
+	uint32 svid;		/* Services ID 				*/
+	uint32 mode;		/* See below 				*/
+	char *uid;		/* Univeral ID				*/
+	char *account;		/* P10 Account				*/
+	uint16 language;	/* Denora language			*/
+	uint16 admin;		/* Denora admin				*/
+	uint16 confadmin;   	/* if admin is from configfile		*/
+	char *ctcp;		/* CTCP Version				*/
+	int sqlid;		/* mysql id number			*/
+	char *sqlnick;		/* mysql escaped nick			*/
+	char *swhois;		/* server forced realname		*/
+	int hopcount;		/* hopcount				*/
 
-	int isaway;
-	char *awaymsg;
+	int isaway;		/* User marked away ?			*/
+	char *awaymsg;		/* Away message				*/
 
-	int cstats;          	/* used for channelstats - dont modify it */
-	char *sgroup;        	/* contains the escaped name of the stats-group */
-	char *lastuname;	/* used for nick tracking */
+	int cstats;	  	/* used for channelstats - dont modify it */
+	char *sgroup;		/* contains the escaped name of the stats-group */
+	char *lastuname;	/* used for nick tracking		*/
 
 	ModuleData *moduleData;	/* defined for it, it should allow the module Add/Get */
-	char *country_code;
-	char *country_name;
+	char *country_code;	/* country code				*/
+	char *country_name;	/* country name				*/
 
 	int isservice;
 
@@ -1026,8 +1030,8 @@ struct user_
 	{
 		struct u_chanlist *next, *prev;
 		Channel *chan;
-		int16 status;    	/* Associated flags; see CSTATUS_* below. */
-	} *chans;            	/* Channels user has joined */
+		int16 status;		/* Associated flags; see CSTATUS_* below. */
+	} *chans;			/* Channels user has joined */
 
 	struct u_modes
 	{
@@ -1036,7 +1040,7 @@ struct user_
 	} *modes;
 };
 
-/*************************************************************************/
+/************************************************************************/
 
 struct usermode_
 {
@@ -1053,7 +1057,7 @@ struct usermodehash_
 	UserMode *m;
 };
 
-/*************************************************************************/
+/************************************************************************/
 
 struct chanmode_
 {
@@ -1070,7 +1074,7 @@ struct chanmodehash_
 	ChanMode *cm;
 };
 
-/*************************************************************************/
+/************************************************************************/
 
 struct chanbanmode_
 {
@@ -1087,7 +1091,9 @@ struct chanbanmodehash_
 	ChanBanMode *cbm;
 };
 
-/*************************************************************************/
+/************************************************************************/
+/* Channel stats structs						*/
+/************************************************************************/
 
 struct chanstats_
 {
@@ -1096,8 +1102,6 @@ struct chanstats_
 	uint32 flags;
 	uint32 timeadded;
 };
-
-/*************************************************************************/
 
 struct statschan_
 {
@@ -1123,22 +1127,24 @@ struct statschan_
 	ModuleData *moduleData;
 };
 
-/*************************************************************************/
+/************************************************************************/
+/* Channel struct							*/
+/************************************************************************/
 
 struct channel_
 {
 	Channel *next, *prev;
 	char name[CHANMAX];
-	time_t creation_time;		/* When channel was created */
+	time_t creation_time;		/* When channel was created	*/
 	char *topic;
-	char topic_setter[NICKMAX];		/* Who set the topic */
-	time_t topic_time;			/* When topic was set */
-	uint32 limit;			/* 0 if none */
-	uint32 rejoinlock;			/* 0 if none */
+	char topic_setter[NICKMAX];	/* Who set the topic		*/
+	time_t topic_time;		/* When topic was set		*/
+	uint32 limit;			/* 0 if none			*/
+	uint32 rejoinlock;		/* 0 if none			*/
 	char *nickchgflood;
-	char *key;				/* NULL if none */
-	char *redirect;			/* +L; NULL if none */
-	char *flood;			/* +f; NULL if none */
+	char *key;			/* NULL if none			*/
+	char *redirect;			/* +L; NULL if none		*/
+	char *flood;			/* +f; NULL if none		*/
 	char *flood_alt;
 	int32 bancount, bansize;
 	char **bans;
@@ -1155,11 +1161,11 @@ struct channel_
 		User *user;
 	} *users;
 	StatsChannel *stats;
-	int cstats;          /* used for channelstats - dont modify it */
+	int cstats;	  		/* used for channelstats 	*/
 	int sqlid;
 	int statservon;
 
-	time_t server_modetime;		/* Time of last server MODE */
+	time_t server_modetime;		/* Time of last server MODE 	*/
 	int16 server_modecount;		/* Number of server MODEs this second */
 	ModuleData *moduleData;
 
@@ -1181,7 +1187,7 @@ struct dadmin_
 	char *name;
 	uint16 language;
 	int   legal;
-	int   configfile;    /* Admin was loaded by the config file  */
+	int   configfile;		/* Admin was loaded by the config file */
 };
 
 struct Conf_Modules
@@ -1190,9 +1196,9 @@ struct Conf_Modules
 	char *delayed[128];
 };
 
-/**************************************************************************/
-/* Privmsg Handlers                                                       */
-/**************************************************************************/
+/*************************************************************************/
+/* Privmsg Handlers							 */
+/*************************************************************************/
 
 struct PrivMsgHandler_
 {
@@ -1207,9 +1213,9 @@ struct PrivMsgHash_
 	PrivMsgHash *next;
 };
 
-/**************************************************************************/
-/* HTML Tag struct                                                        */
-/**************************************************************************/
+/************************************************************************/
+/* HTML Tag struct							*/
+/************************************************************************/
 
 struct htmltag_
 {
@@ -1224,12 +1230,12 @@ struct htmlhash_
 	HTMLHash *next;
 };
 
-/*************************************************************************/
-/**
- * IRCD Protocol module support struct.
- * protocol modules register the command they want touse for function X with our set
- * functions, we then call the correct function for the anope_ commands.
- **/
+/************************************************************************/
+/* IRCD Protocol module support struct.					*/
+/* protocol modules register the command they want touse for function X */
+/* with our set functions, we then call the correct function for the	*/
+/* anope_ commands.							*/
+/************************************************************************/
 typedef struct ircd_proto_
 {
 	void (*ircd_set_mod_current_buffer)(int ac, char **av);
@@ -1261,9 +1267,9 @@ typedef struct ircd_modes_
 	uint32 ircd_var;
 } IRCDModes;
 
-/**************************************************************************/
-/* Base64 struct data                                                     */
-/**************************************************************************/
+/************************************************************************/
+/* Base64 struct data							*/
+/************************************************************************/
 
 struct buffer_st
 {
@@ -1273,9 +1279,9 @@ struct buffer_st
 	int offset;
 };
 
-/**************************************************************************/
-/* First In / First Out Queue                                             */
-/**************************************************************************/
+/************************************************************************/
+/* First In / First Out Queue						*/
+/************************************************************************/
 
 struct queueentry_
 {
@@ -1283,50 +1289,50 @@ struct queueentry_
 	QueueEntry *link;
 };
 
-/**************************************************************************/
-/* MD5                                                                    */
-/**************************************************************************/
+/************************************************************************/
+/* MD5									*/
+/************************************************************************/
 
 struct MD5Context {
-	uint32 buf[4];        /**< Current digest state/value. */
-	uint32 bits[2];       /**< Number of bits hashed so far. */
-	unsigned char in[64]; /**< Residual input buffer. */
+	uint32 buf[4];		/* Current digest state/value.		*/
+	uint32 bits[2];		/* Number of bits hashed so far.	*/
+	unsigned char in[64];	/* Residual input buffer.		*/
 };
 
-/**************************************************************************/
-/* Config File Related Stuff                                              */
-/**************************************************************************/
+/************************************************************************/
+/* Config File Related Stuff						*/
+/************************************************************************/
 
 /* top level conf options */
 struct TopConf
 {
-	const char *tok;        		   /* our token string             */
-	unsigned int flag;      	           /* our token flag               */
-	unsigned int nest;                     /* tokens we allow to nest here */
-	sConf *subtok;          	           /* sub-tokens allowed in here   */
+	const char *tok;	/* our token string			*/
+	unsigned int flag;	/* our token flag			*/
+	unsigned int nest;	/* tokens we allow to nest here		*/
+	sConf *subtok;	  	/* sub-tokens allowed in here   	*/
 	int (*func) (cVar * vars[], int lnum); /* function to call to add this */
 };
 
 /* sub-token options */
 struct SubConf
 {
-	const char *tok;        /* our token string             */
-	unsigned long flag;     /* our token flag               */
-	unsigned int var;       /* our variable type            */
+	const char *tok;	/* our token string		 	*/
+	unsigned long flag;	/* our token flag		 	*/
+	unsigned int var;	/* our variable type			*/
 };
 
 struct ConfVar
 {
 	sConf   *type;
-	char    *value;
-	int      loaded;        /* 1 - identified.
-                             * 2 - variable loaded
-                             * 3 - delimited cleared */
+	char	*value;
+	int	loaded;		/* 1 - identified.
+				 * 2 - variable loaded
+				 * 3 - delimited cleared */
 };
 
-/*************************************************************************/
-/* Flat Config Details                                                   */
-/*************************************************************************/
+/************************************************************************/
+/* Flat Config Details							*/
+/************************************************************************/
 
 #define MAXPARAMS	8
 
@@ -1337,35 +1343,35 @@ typedef struct
 	const char *name;
 	struct
 	{
-		int type;               /* PARAM_* below */
-		int flags;              /* Same */
-		void *ptr;              /* Pointer to where to store the value */
+		int type;		/* PARAM_* below		*/
+		int flags;		/* Same				*/
+		void *ptr;		/* Pointer to where to store the value */
 	} params[MAXPARAMS];
 } Directive;
 
 #define PARAM_NONE	0
 #define PARAM_INT	1
-#define PARAM_POSINT	2       /* Positive integer only */
-#define PARAM_PORT	3       /* 1..65535 only */
+#define PARAM_POSINT	2		/* Positive integer only 	*/
+#define PARAM_PORT	3		/* 1..65535 only 		*/
 #define PARAM_STRING	4
 #define PARAM_TIME	5
-#define PARAM_STRING_ARRAY 6    /* Array of string */
-#define PARAM_SET	-1      /* Not a real parameter; just set the
-*    given integer variable to 1 */
+#define PARAM_STRING_ARRAY 6		/* Array of string 		*/
+#define PARAM_SET	-1		/* Not a real parameter; just set the
+					 * given integer variable to 1	*/
 /* Flags: */
 #define PARAM_OPTIONAL	0x01
-#define PARAM_FULLONLY	0x02    /* Directive only allowed if !STREAMLINED */
-#define PARAM_RELOAD    0x04    /* Directive is reloadable */
+#define PARAM_FULLONLY	0x02	/* Directive only allowed if !STREAMLINED */
+#define PARAM_RELOAD	0x04	/* Directive is reloadable 		*/
 
-/**************************************************************************/
-/* These include need to be down here due to the fact that they use       */
-/* structs that are created above                                         */
-/**************************************************************************/
+/************************************************************************/
+/* These include need to be down here due to the fact that they use	*/
+/* structs that are created above					*/
+/************************************************************************/
 
 #include "list.h"
 #include "modules.h"
 #include "xmlrpc.h"
 #include "extern.h"
 
-/*************************************************************************/
+/************************************************************************/
 
