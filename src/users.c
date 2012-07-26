@@ -687,8 +687,6 @@ void change_user_username(char *source, char *username)
 
 	alog(LOG_DEBUG, langstr(ALOG_USERNAME_FOR), user->nick, username);
 
-	SET_SEGV_LOCATION;
-
 	if (denora->do_sql && (user->sqlid || db_getnick(user->sqlnick) != -1))
 	{
 		sqlusername = rdb_escape(user->username);
