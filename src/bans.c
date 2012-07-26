@@ -786,7 +786,7 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
 					}
 					rdb_query(QUERY_LOW,
 					         "UPDATE %s SET setat=%ld, expires=%ld, reason=\'%s\' WHERE id = \'%d\'",
-					         GlineTable, strtoul(setat, NULL, 10), strtoul(expires, NULL, 10), sqlid);
+					         GlineTable, strtoul(setat, NULL, 10), strtoul(expires, NULL, 10), rdb_escape(reason), sqlid);
 				}
 				mysql_free_result(mysql_res);
 			}
