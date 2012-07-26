@@ -266,24 +266,16 @@ void sql_do_nick(User * u)
 	if (u->sqlid != -1)
 	{
 		SET_SEGV_LOCATION();
-		rdb_query
-		(QUERY_LOW,
-		 "UPDATE %s SET nick='%s', hopcount=%d, nickip='%s', countrycode='%s', country='%s', realname='%s', hostname='%s', \
-		 hiddenhostname='%s', username='%s', swhois='', account='%s', connecttime=FROM_UNIXTIME(%ld), servid=%d, server='%s', \
-		 lastquit=NULL, online='Y', away='%s', awaymsg='%s' WHERE nickid=%d",
-		 UserTable, u->sqlnick, u->hopcount, u->ip, countrycode, countryname, realname, host, vhost, username, account,
-		 (long int) u->timestamp, servid, server, u->isaway ? "Y" : "N", u->isaway && u->awaymsg ? u->awaymsg : NULL, u->sqlid);
+		rdb_query(QUERY_LOW,
+		          "UPDATE %s SET nick='%s', hopcount=%d, nickip='%s', countrycode='%s', country='%s', realname='%s', hostname='%s', hiddenhostname='%s', username='%s', swhois='', account='%s', connecttime=FROM_UNIXTIME(%ld), servid=%d, server='%s', lastquit=NULL, online='Y', away='%s', awaymsg='%s' WHERE nickid=%d",
+		          UserTable, u->sqlnick, u->hopcount, u->ip, countrycode, countryname, realname, host, vhost, username, account,
+		          (long int) u->timestamp, servid, server, u->isaway ? "Y" : "N", u->isaway && u->awaymsg ? u->awaymsg : NULL, u->sqlid);
 	}
 	else
 	{
 		SET_SEGV_LOCATION();
-		rdb_query
-		(QUERY_HIGH,
-		 "INSERT INTO %s (nick,hopcount,nickip,realname,hostname,hiddenhostname,username,swhois,account,connecttime,servid,server,\
-		 countrycode,country) VALUES('%s',%d,'%s','%s','%s','%s','%s','','%s',FROM_UNIXTIME(%ld),%d,'%s','%s','%s') ON DUPLICATE KEY \
-		 UPDATE nick='%s',hopcount=%d,nickip='%s',realname='%s',hostname='%s',hiddenhostname='%s',username='%s',account='%s',\
-		 connecttime=FROM_UNIXTIME(%ld),servid=%d,server='%s',countrycode='%s',country='%s',lastquit=NULL,online='Y',away='%s',\
-		 awaymsg='%s'",
+		rdb_query(QUERY_HIGH,
+		          "INSERT INTO %s (nick,hopcount,nickip,realname,hostname,hiddenhostname,username,swhois,account,connecttime,servid,server,countrycode,country) VALUES('%s',%d,'%s','%s','%s','%s','%s','','%s',FROM_UNIXTIME(%ld),%d,'%s','%s','%s') ON DUPLICATE KEY UPDATE nick='%s',hopcount=%d,nickip='%s',realname='%s',hostname='%s',hiddenhostname='%s',username='%s',account='%s',connecttime=FROM_UNIXTIME(%ld),servid=%d,server='%s',countrycode='%s',country='%s',lastquit=NULL,online='Y',away='%s',awaymsg='%s'",
 		 UserTable, u->sqlnick, u->hopcount, u->ip, realname,
 		 host, vhost, username, account, (long int) u->timestamp,
 		 servid, server, countrycode, countryname, u->sqlnick,
@@ -1238,6 +1230,7 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 
 	User *user = new_user(nick);
 	char *newav[5];
+	char *country_code, *country_name;
 	Server *s = server_find(server);
 	int country_id;
 	TLD *tld;
@@ -1261,24 +1254,27 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 			{
 				if (host && !stricmp("localhost", host))
 				{
-					user->country_name = sstrdup((s && s->country) ? s->country : "localhost");
-					user->country_code = sstrdup((s && s->countrycode) ? s->countrycode : "local");
+					country_code = (s && s->countrycode) ? sstrdup(s->countrycode) : "local";
+					country_name = (s && s->country) ? sstrdup(s->country) : "localhost";
 				}
 			}
 			else
 			{
-				user->country_code = (char *) GeoIP_code_by_id(country_id);
-				user->country_name = (char *) GeoIP_name_by_id(country_id);
+				country_code = (char *)GeoIP_code_by_id(country_id);
+				country_name = (char *)GeoIP_name_by_id(country_id);
 			}
 		}
 
-		if (!user->country_name)
+		user->country_name = country_name ? sstrdup(country_name) : "??";
+		user->country_code = country_code ? sstrdup(country_code) : "Unknown";
+
+		if (country_name)
 		{
-			user->country_name = sstrdup("Unknown");
+			free(country_name);
 		}
-		if (!user->country_code)
+		if (country_code)
 		{
-			user->country_code = sstrdup("??");
+			free(country_code);
 		}
 
 		/* Allocate User structure and fill it in. */
