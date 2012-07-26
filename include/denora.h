@@ -410,6 +410,7 @@ struct spamfilter_
 	char *expires;
 	int32 setat;
 	int32 duration;
+	int sqlid;
 	char *reason;
 };
 
@@ -424,6 +425,7 @@ struct gline_
 	char *setby;
 	int32 expires;
 	int32 setat;
+	int sqlid;
 	char *reason;
 };
 
@@ -438,6 +440,7 @@ struct qline_
 	char *setby;
 	int32 expires;
 	int32 setat;
+	int sqlid;
 	char *reason;
 };
 
@@ -452,6 +455,7 @@ struct zline_
 	char *setby;
 	int32 expires;
 	int32 setat;
+	int sqlid;
 	char *reason;
 };
 
