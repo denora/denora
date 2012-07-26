@@ -126,7 +126,12 @@ const char GeoIP_country_continent[253][3] = {
 
 geoipv6_t _GeoIP_lookupaddress_v6 (const char *host);
 
-#if defined(HAVE_GETNAMEINFO)
+#if defined(HAVE_INET_NTOP)
+const char * _GeoIP_inet_ntop(int af, const void *src, char *dst, socklen_t cnt)
+{
+	return inet_ntop(af, src, dst, cnt);
+}
+#elif defined(HAVE_GETNAMEINFO)
 const char * _GeoIP_inet_ntop(int af, const void *src, char *dst, socklen_t cnt)
 {
 	if (af == AF_INET)
@@ -144,22 +149,22 @@ const char * _GeoIP_inet_ntop(int af, const void *src, char *dst, socklen_t cnt)
 		struct sockaddr_in6 in;
 		memset(&in, 0, sizeof(in));
 		in.sin6_family = AF_INET6;
-		memcpy(&in.sin6_addr, src, sizeof(struct in_addr6));
+		memcpy(&in.sin6_addr, src, sizeof(struct in6_addr));
 		getnameinfo((struct sockaddr *)&in, sizeof(struct
 		            sockaddr_in6), dst, cnt, NULL, 0, NI_NUMERICHOST);
 		return dst;
 	}
 	return NULL;
 }
-#else
-const char * _GeoIP_inet_ntop(int af, const void *src, char *dst, socklen_t cnt)
-{
-	return inet_ntop(af, src, dst, cnt);
-}
 #endif
 
-#if defined(HAVE_GETADDRINFO) && defined(HAVE_FREEADDRINFO)
-static int _GeoIP_inet_pton(int af, const char *src, void *dst)
+#if defined(HAVE_INET_PTON)
+int _GeoIP_inet_pton(int af, const char *src, void *dst)
+{
+	return inet_pton(af, src, dst);
+}
+#elif defined(HAVE_GETADDRINFO) && defined(HAVE_FREEADDRINFO)
+int _GeoIP_inet_pton(int af, const char *src, void *dst)
 {
 	struct addrinfo hints, *res, *ressave;
 
@@ -182,11 +187,6 @@ static int _GeoIP_inet_pton(int af, const char *src, void *dst)
 
 	freeaddrinfo(ressave);
 	return 0;
-}
-#else
-static int _GeoIP_inet_pton(int af, const char *src, void *dst)
-{
-	return inet_pton(af, src, dst);
 }
 #endif
 

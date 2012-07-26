@@ -211,8 +211,10 @@ E int inet_aton(const char *cp, struct in_addr *inp);
 #ifdef _WIN32
 E int inet_aton(const char *cp, struct in_addr *inp);
 #endif
-/* added since we use this for base64 as xp/2003 does not have inet_ntop */
+
+/* added since we use this for base64 as xp/2003 does not have inet_ntop/inet_pton */
 E const char * _GeoIP_inet_ntop(int af, const void *src, char *dst, socklen_t cnt);
+E int _GeoIP_inet_pton(int af, const char *src, void *dst);
 
 E size_t denora_strlen(const char *str);
 

@@ -656,14 +656,14 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
 {
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
-	int sqlid;
 #endif
+	int sqlid = 0;
 	int checkdur = 0;
 	int expire = 0;
 	uint32 setattime = 0;
-	Gline *g;
-	Qline *q;
-	Zline *z;
+	Gline *g = NULL;
+	Qline *q = NULL;
+	Zline *z = NULL;
 
 
 	SET_SEGV_LOCATION();

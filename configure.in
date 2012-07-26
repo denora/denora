@@ -295,7 +295,7 @@ dnl
 dnl IPv4/IPv6 related checks
 dnl
 
-AC_CHECK_FUNCS(freeaddrinfo gai_strerror getaddrinfo getnameinfo)
+AC_CHECK_FUNCS(freeaddrinfo gai_strerror getaddrinfo getnameinfo inet_ntop inet_pton)
 
 
 
