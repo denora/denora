@@ -695,8 +695,6 @@ void change_user_username(char *source, char *username)
 		free(sqlusername);
 	}
 
-	SET_SEGV_LOCATION;
-
 	return;
 }
 
