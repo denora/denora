@@ -711,7 +711,7 @@ void db_removefromchans(int nickid)
 
 	SET_SEGV_LOCATION();
 
-	if (!denora->do_sql)
+	if (!denora->do_sql || nickid == -1)
 	{
 		return;
 	}

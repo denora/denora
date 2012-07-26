@@ -783,7 +783,7 @@ void delete_user(User * user)
 	if (user->country_code)
 	{
 		tld_update(user->country_code);
-		free(user->country_code);
+		/* free(user->country_code); */
 	}
 
 	if (CTCPUsers && user->ctcp)
@@ -819,7 +819,7 @@ void delete_user(User * user)
 
 	if (user->country_name)
 	{
-		free(user->country_name);
+		/* free(user->country_name); */
 	}
 
 	if (user->ctcp)
@@ -1230,7 +1230,8 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 
 	User *user = new_user(nick);
 	char *newav[5];
-	char *country_code, *country_name;
+	char *country_code = NULL;
+	char *country_name = NULL;
 	Server *s = server_find(server);
 	int country_id;
 	TLD *tld;
@@ -1241,41 +1242,54 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 	{
 		if (!LargeNet)
 		{
-			if (strstr(ipchar,":") != NULL)
+			if (host && !stricmp("localhost", host))
 			{
-				country_id = GeoIP_id_by_addr_v6(gidb_v6, ipchar);
-			}
-			else
-			{
-				country_id = GeoIP_id_by_addr(gidb, ipchar);
-			}
-
-			if (country_id == 0)
-			{
-				if (host && !stricmp("localhost", host))
+				if (s && s->countrycode)
 				{
-					country_code = (s && s->countrycode) ? sstrdup(s->countrycode) : "local";
-					country_name = (s && s->country) ? sstrdup(s->country) : "localhost";
+					country_code = sstrdup(s->countrycode);
+				}
+				else
+				{
+					country_code = sstrdup("local");
+				}
+				if (s && s->country)
+				{
+					country_name = sstrdup(s->country);
+				}
+				else
+				{
+					country_name = sstrdup("localhost");
 				}
 			}
 			else
 			{
-				country_code = (char *)GeoIP_code_by_id(country_id);
-				country_name = (char *)GeoIP_name_by_id(country_id);
+				if (strstr(ipchar,":") != NULL)
+				{
+					country_id = GeoIP_id_by_addr_v6(gidb_v6, ipchar);
+				}
+				else
+				{
+					country_id = GeoIP_id_by_addr(gidb, ipchar);
+				}
+
+				if (country_id > 0)
+				{
+					country_code = (char *)GeoIP_code_by_id(country_id);
+					country_name = (char *)GeoIP_name_by_id(country_id);
+				}
 			}
 		}
-
-		user->country_name = country_name ? sstrdup(country_name) : "??";
-		user->country_code = country_code ? sstrdup(country_code) : "Unknown";
-
-		if (country_name)
+		if (!country_name)
 		{
-			free(country_name);
+			country_name = sstrdup("Unknown");
 		}
-		if (country_code)
+		if (!country_code)
 		{
-			free(country_code);
+			country_code = sstrdup("??");
 		}
+
+		user->country_name = country_name;
+		user->country_code = country_code;
 
 		/* Allocate User structure and fill it in. */
 		user->username = (username ? sstrdup(username) : NULL);
