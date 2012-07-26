@@ -184,43 +184,31 @@ void sql_channel_ban(int type, Channel * c, char *mask)
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
 #endif
-	char *sqlchan;
+	char *sqlmask;
 
 	SET_SEGV_LOCATION();
 
-	if (LargeNet)
-	{
-		return;
-	}
-	if (mask)
-	{
-		mask = rdb_escape(mask);
-	}
-	if (c && c->name)
-	{
-		sqlchan = rdb_escape(c->name);
-	}
-	else
+	if (LargeNet || !c)
 	{
 		return;
 	}
 
+	sqlmask = rdb_escape(mask);
+
 	if (type == 1)
 	{
-		rdb_query
-		(QUERY_HIGH,
-		 "SELECT bans FROM %s WHERE chan = \'%s\' and bans = \'%s\';",
-		 ChanBansTable, sqlchan, mask);
+		rdb_query(QUERY_HIGH,
+		          "SELECT id FROM %s WHERE chan = \'%s\' and bans = \'%s\' LIMIT 1",
+		          ChanBansTable, c->sqlchan, sqlmask);
 #ifdef USE_MYSQL
 		mysql_res = mysql_store_result(mysql);
 		if (mysql_res)
 		{
 			if (mysql_num_rows(mysql_res) == 0)
 			{
-				rdb_query
-				(QUERY_LOW,
-				 "INSERT INTO %s (chan, bans) VALUES (\'%s\', \'%s\')",
-				 ChanBansTable, sqlchan, mask);
+				rdb_query(QUERY_LOW,
+				          "INSERT INTO %s (chan, bans) VALUES (\'%s\', \'%s\')",
+				          ChanBansTable, c->sqlchan, sqlmask);
 			}
 			mysql_free_result(mysql_res);
 		}
@@ -228,20 +216,21 @@ void sql_channel_ban(int type, Channel * c, char *mask)
 	}
 	else if (type == 2)
 	{
-		if (c->sqlchan)
-		{
-			rdb_query(QUERY_LOW,
-			          "DELETE FROM %s WHERE chan=\'%s\' AND bans=\'%s\'",
-			          ChanBansTable, sqlchan, mask);
-		}
+		rdb_query(QUERY_LOW,
+		          "DELETE FROM %s WHERE chan=\'%s\' AND bans=\'%s\'",
+		          ChanBansTable, c->sqlchan, sqlmask);
 	}
 	else
 	{
-		rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chan=\'%s\'",
-		          ChanBansTable, sqlchan);
+		rdb_query(QUERY_LOW,
+                          "DELETE FROM %s WHERE chan=\'%s\'",
+		          ChanBansTable, c->sqlchan);
 	}
 	SET_SEGV_LOCATION();
-	free(sqlchan);
+
+	free(sqlmask);
+
+	return;
 }
 
 /*************************************************************************/
@@ -251,33 +240,22 @@ void sql_channel_quiet(int type, Channel * c, char *mask)
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
 #endif
-	char *sqlchan;
+	char *sqlmask;
 
 	SET_SEGV_LOCATION();
 
-	if (LargeNet)
-	{
-		return;
-	}
-	if (mask)
-	{
-		mask = rdb_escape(mask);
-	}
-	if (c && c->name)
-	{
-		sqlchan = rdb_escape(c->name);
-	}
-	else
+	if (LargeNet || !c)
 	{
 		return;
 	}
 
+	sqlmask = rdb_escape(mask);
+
 	if (type == 1)
 	{
-		rdb_query
-		(QUERY_HIGH,
-		 "SELECT bans FROM %s WHERE chan = \'%s\' and bans = \'%s\';",
-		 ChanQuietTable, sqlchan, mask);
+		rdb_query(QUERY_HIGH,
+		          "SELECT id FROM %s WHERE chan = \'%s\' and bans = \'%s\' LIMIT 1",
+		          ChanQuietTable, c->sqlchan, sqlmask);
 #ifdef USE_MYSQL
 		mysql_res = mysql_store_result(mysql);
 		if (mysql_res)
@@ -287,7 +265,7 @@ void sql_channel_quiet(int type, Channel * c, char *mask)
 				rdb_query
 				(QUERY_LOW,
 				 "INSERT INTO %s (chan, bans) VALUES (\'%s\', \'%s\')",
-				 ChanQuietTable, sqlchan, mask);
+				 ChanQuietTable, c->sqlchan, sqlmask);
 			}
 			mysql_free_result(mysql_res);
 		}
@@ -295,20 +273,20 @@ void sql_channel_quiet(int type, Channel * c, char *mask)
 	}
 	else if (type == 2)
 	{
-		if (c->sqlchan)
-		{
-			rdb_query(QUERY_LOW,
-			          "DELETE FROM %s WHERE chan=\'%s\' AND bans=\'%s\'",
-			          ChanQuietTable, sqlchan, mask);
-		}
+		rdb_query(QUERY_LOW,
+			  "DELETE FROM %s WHERE chan=\'%s\' AND bans=\'%s\'",
+			  ChanQuietTable, c->sqlchan, sqlmask);
 	}
 	else
 	{
 		rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chan=\'%s\'",
-		          ChanQuietTable, sqlchan);
+		          ChanQuietTable, c->sqlchan);
 	}
 	SET_SEGV_LOCATION();
-	free(sqlchan);
+
+	free(sqlmask);
+
+	return;
 }
 
 /*************************************************************************/
@@ -318,44 +296,31 @@ void sql_channel_exception(int type, Channel * c, char *mask)
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
 #endif
-	char *sqlchan;
+	char *sqlmask;
 
 	SET_SEGV_LOCATION();
 
-	if (LargeNet)
+	if (LargeNet || !c)
 	{
 		return;
 	}
 
-	if (mask)
-	{
-		mask = rdb_escape(mask);
-	}
-	if (c && c->name)
-	{
-		sqlchan = rdb_escape(c->name);
-	}
-	else
-	{
-		return;
-	}
+	sqlmask = rdb_escape(mask);
 
 	if (type == 1)
 	{
-		rdb_query
-		(QUERY_HIGH,
-		 "SELECT mask FROM %s WHERE chan = \'%s\' and mask = \'%s\';",
-		 ChanExceptTable, c->sqlchan, mask);
+		rdb_query(QUERY_HIGH,
+		          "SELECT mask FROM %s WHERE chan = \'%s\' and mask = \'%s\' LIMIT 1",
+		          ChanExceptTable, c->sqlchan, sqlmask);
 #ifdef USE_MYSQL
 		mysql_res = mysql_store_result(mysql);
 		if (mysql_res)
 		{
 			if (mysql_num_rows(mysql_res) == 0)
 			{
-				rdb_query
-				(QUERY_LOW,
-				 "INSERT IGNORE INTO %s (chan, mask) VALUES (\'%s\', \'%s\')",
-				 ChanExceptTable, sqlchan, mask);
+				rdb_query(QUERY_LOW,
+				          "INSERT IGNORE INTO %s (chan, mask) VALUES (\'%s\', \'%s\')",
+				          ChanExceptTable, c->sqlchan, sqlmask);
 			}
 			mysql_free_result(mysql_res);
 		}
@@ -365,15 +330,18 @@ void sql_channel_exception(int type, Channel * c, char *mask)
 	{
 		rdb_query(QUERY_LOW,
 		          "DELETE FROM %s WHERE chan=\'%s\' AND mask=\'%s\'",
-		          ChanExceptTable, sqlchan, mask);
+		          ChanExceptTable, c->sqlchan, sqlmask);
 	}
 	else
 	{
 		rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chan=\'%s\'",
-		          ChanExceptTable, sqlchan);
+		          ChanExceptTable, c->sqlchan);
 	}
 	SET_SEGV_LOCATION();
-	free(sqlchan);
+
+	free(sqlmask);
+
+	return;
 }
 
 /*************************************************************************/
@@ -383,47 +351,31 @@ void sql_channel_invite(int type, Channel * c, char *mask)
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
 #endif
-	char *sqlchan = NULL;
-	char *sqlmask = NULL;
+	char *sqlmask;
 
 	SET_SEGV_LOCATION();
 
-	if (LargeNet)
+	if (LargeNet || !c)
 	{
 		return;
 	}
 
-	if (mask)
-	{
-		sqlmask = rdb_escape(mask);
-	}
-	if (c && c->name)
-	{
-		sqlchan = rdb_escape(c->name);
-	}
-	else
-	{
-		if (sqlmask)
-			free(sqlmask);
-		return;
-	}
+	sqlmask = rdb_escape(mask);
 
 	if (type == 1)
 	{
-		rdb_query
-		(QUERY_HIGH,
-		 "SELECT mask FROM %s WHERE chan = \'%s\' and mask = \'%s\';",
-		 ChanInviteTable, sqlchan, sqlmask);
+		rdb_query(QUERY_HIGH,
+		          "SELECT mask FROM %s WHERE chan = \'%s\' and mask = \'%s\';",
+		          ChanInviteTable, c->sqlchan, sqlmask);
 #ifdef USE_MYSQL
 		mysql_res = mysql_store_result(mysql);
 		if (mysql_res)
 		{
 			if (mysql_num_rows(mysql_res) == 0)
 			{
-				rdb_query
-				(QUERY_LOW,
-				 "INSERT IGNORE INTO %s (chan, mask) VALUES (\'%s\', \'%s\')",
-				 ChanInviteTable, sqlchan, sqlmask);
+				rdb_query(QUERY_LOW,
+				          "INSERT IGNORE INTO %s (chan, mask) VALUES (\'%s\', \'%s\')",
+				          ChanInviteTable, c->sqlchan, sqlmask);
 			}
 			mysql_free_result(mysql_res);
 		}
@@ -433,19 +385,18 @@ void sql_channel_invite(int type, Channel * c, char *mask)
 	{
 		rdb_query(QUERY_LOW,
 		          "DELETE FROM %s WHERE chan=\'%s\' AND mask=\'%s\'",
-		          ChanInviteTable, sqlchan, sqlmask);
+		          ChanInviteTable, c->sqlchan, sqlmask);
 	}
 	else
 	{
 		rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chan=\'%s\'",
-		          ChanInviteTable, sqlchan);
+		          ChanInviteTable, c->sqlchan);
 	}
 	SET_SEGV_LOCATION();
-	if (sqlmask)
-	{
-		free(sqlmask);
-	}
-	free(sqlchan);
+
+	free(sqlmask);
+
+	return;
 }
 
 /*************************************************************************/

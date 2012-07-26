@@ -1079,7 +1079,7 @@ void sql_do_server_spam_remove(char *target, char *action, char *regex)
 
 	sqltarget = rdb_escape(target);
 	sqlaction = rdb_escape(action);
-	sqlregex = rdb_escape(sqlregex);
+	sqlregex = rdb_escape(regex);
 
 	/*
 	 * Query the spam table and remove bans that match the following

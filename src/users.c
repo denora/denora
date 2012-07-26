@@ -1236,11 +1236,9 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 	      char *modes, char *account)
 {
 
-	User *user;
+	User *user = new_user(nick);
 	char *newav[5];
-	Server *s;
-	const char *country_code;
-	const char *country_name;
+	Server *s = server_find(server);
 	int country_id;
 	TLD *tld;
 
@@ -1263,30 +1261,27 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 			{
 				if (host && !stricmp("localhost", host))
 				{
-					country_name = "localhost";
-					country_code = "local";
-				}
-				else
-				{
-					country_name = "Unknown";
-					country_code = "??";
+					user->country_name = sstrdup((s && s->country) ? s->country : "localhost");
+					user->country_code = sstrdup((s && s->countrycode) ? s->countrycode : "local");
 				}
 			}
 			else
 			{
-				country_code = GeoIP_code_by_id(country_id);
-				country_name = GeoIP_name_by_id(country_id);
+				user->country_code = (char *) GeoIP_code_by_id(country_id);
+				user->country_name = (char *) GeoIP_name_by_id(country_id);
 			}
 		}
-		else
+
+		if (!user->country_name)
 		{
-			country_name = "Unknown";
-			country_code = "??";
+			user->country_name = sstrdup("Unknown");
+		}
+		if (!user->country_code)
+		{
+			user->country_code = sstrdup("??");
 		}
 
-		s = server_find(server);
 		/* Allocate User structure and fill it in. */
-		user = new_user(nick);
 		user->username = (username ? sstrdup(username) : NULL);
 		user->host = (host ? sstrdup(host) : NULL);
 		user->server = (s ? s : me_server);
@@ -1304,8 +1299,7 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 		user->sgroup = NULL;
 		user->lastuname = NULL;
 		user->language = StatsLanguage;
-		user->country_code = sstrdup(country_code);
-		user->country_name = sstrdup(country_name);
+
 		if (!LargeNet)
 		{
 			tld = do_tld(user->country_name, user->country_code);
@@ -1319,6 +1313,7 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 				}
 			}
 		}
+
 		user->svid = (svid == (uint32) ts ? svid : 1);
 		user->sqlnick = rdb_escape(user->nick);
 		send_event(EVENT_NEWNICK, 1, user->nick);
