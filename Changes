@@ -3,6 +3,7 @@ Denora v1.5.0-git
 -------------
 
 Additions
+12/07/26 Housecleaning src/admin.c (Added MAX_ADMINS)
 12/07/26 Added MAX_UIDS/MAX_USERS to denora.h to more easily update limits
 12/07/25 Added md5 support to hash passwords
 12/07/17 Added the sql needed for shadowircd protocol

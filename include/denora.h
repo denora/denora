@@ -1177,7 +1177,9 @@ struct channel_
 };
 
 /* Configuration structures */
-
+#ifndef MAX_ADMINS
+#define MAX_ADMINS 1024
+#endif
 struct dadmin_
 {
 	Dadmin *prev, *next;

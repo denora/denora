@@ -14,7 +14,7 @@
 
 #include "denora.h"
 
-Dadmin *adminlists[1024];
+Dadmin *adminlists[MAX_ADMINS];
 static Dadmin *current;
 static int next_index;
 
@@ -33,6 +33,8 @@ void insert_admin(Dadmin * a)
 		a->next->prev = a;
 	}
 	adminlists[adminindex] = a;
+
+	return;
 }
 
 /*************************************************************************/
@@ -158,6 +160,8 @@ void load_admin_db(void)
 			}
 		}                       /* else */
 	}                           /* while */
+
+	return;
 }
 
 /*************************************************************************/
@@ -169,7 +173,7 @@ void save_admin_db(void)
 	int i;
 
 	SET_SEGV_LOCATION();
-	for (i = 0; i < 1024; i++)
+	for (i = 0; i < MAX_ADMINS; i++)
 	{
 		for (a = adminlists[i]; a; a = a->next)
 		{
@@ -186,6 +190,8 @@ void save_admin_db(void)
 	SET_SEGV_LOCATION();
 
 	filedb_close(dbptr, NULL, NULL);  /* close file */
+
+	return;
 }
 
 
@@ -232,9 +238,13 @@ int free_admin(Dadmin * a)
 			i++;
 		}
 		if (a->passwd)
+		{
 			free(a->passwd);
+		}
 		if (a->name)
+		{
 			free(a->name);
+		}
 		free(a);
 		return 1;
 	}
@@ -249,7 +259,7 @@ Dadmin *first_admin(void)
 
 	SET_SEGV_LOCATION();
 
-	while (next_index < 1024 && current == NULL)
+	while (next_index < MAX_ADMINS && current == NULL)
 	{
 		current = adminlists[next_index++];
 	}
@@ -270,9 +280,9 @@ Dadmin *next_admin(void)
 	{
 		current = current->next;
 	}
-	if (!current && next_index < 1024)
+	if (!current && next_index < MAX_ADMINS)
 	{
-		while (next_index < 1024 && current == NULL)
+		while (next_index < MAX_ADMINS && current == NULL)
 		{
 			current = adminlists[next_index++];
 		}
@@ -330,7 +340,7 @@ void reset_sqladmin(void)
 	if (denora->do_sql)
 	{
 		rdb_query(QUERY_LOW, "TRUNCATE TABLE %s", AdminTable);
-		for (i = 0; i < 1024; i++)
+		for (i = 0; i < MAX_ADMINS; i++)
 		{
 			for (a = adminlists[i]; a; a = a->next)
 			{
