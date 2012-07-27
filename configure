@@ -688,7 +688,7 @@ with_ssl
 enable_crypt
 with_mysql
 with_mysqlconfig_path
-enable_mysql_backtrace
+enable_mysqlbt
 enable_threading
 enable_dmalloc
 enable_perl
@@ -1321,11 +1321,11 @@ Optional Features:
   --disable-option-checking  ignore unrecognized --enable/--with options
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
-  --enable-crypt        Enable Admin encrypted passwords
-  --enable-mysqlbt         Enable backtrace of mysql queries
-  --enable-threading        Enable support for the threading library
+  --enable-crypt          Enable Admin encrypted passwords
+  --enable-mysqlbt        Enable backtrace of mysql queries
+  --enable-threading      Enable support for the threading library
   --enable-dmalloc        Enable support for the dmalloc debugging library
-  --enable-perl          build the perl plugin
+  --enable-perl           Build the perl plugin
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -1333,12 +1333,12 @@ Optional Packages:
   --with-ssl enable ssl will check /usr/local/ssl
                             /usr/lib/ssl /usr/ssl /usr/pkg /usr/local /usr
 
-  --without-mysql         Do not use MySQL or attempt to find it
+  --without-mysql       Do not use MySQL or attempt to find it
   --with-mysqlconfig-path=PATH Complete path to the mysql_config executable
- --with-rungroup=group     Specify the rungroup for Denora
+ --with-rungroup=group  Specify the rungroup for Denora
  --with-permissions=permissions     Specify the default permissions for Denora
- --with-bindir=bindir     Specify the default binary dir for Denora
- --with-datadir=datadir     Specify the location of the stats data folder
+ --with-bindir=bindir   Specify the default binary dir for Denora
+ --with-datadir=datadir Specify the location of the stats data folder
 
 Some influential environment variables:
   CC          C compiler command
@@ -5171,15 +5171,15 @@ fi
 
 
 DIS_MYSQLBT="Mysql backtrace debug: No"
-# Check whether --enable-mysql_backtrace was given.
-if test "${enable_mysql_backtrace+set}" = set; then :
-  enableval=$enable_mysql_backtrace; ac_cv_mysql_backtrace="$enableval"
+# Check whether --enable-mysqlbt was given.
+if test "${enable_mysqlbt+set}" = set; then :
+  enableval=$enable_mysqlbt; ac_cv_mysqlbt="$enableval"
 else
-  ac_cv_mysql_backtrace="no"
+  ac_cv_mysqlbt="no"
 fi
 
 
-if test "$ac_cv_mysql_backtrace" = "yes"; then
+if test "$ac_cv_mysqlbt" = "yes"; then
 
 cat >>confdefs.h <<_ACEOF
 #define USE_MYSQL_BT 1
@@ -6666,8 +6666,8 @@ cat >>confdefs.h <<_ACEOF
 #define MODULE_PATH "${withval}/modules/"
 _ACEOF
 
- DATDEST=$withval
- MODULE_PATH=${withval}/modules/
+        DATDEST=$withval
+        MODULE_PATH=${withval}/modules/
 
 fi
 

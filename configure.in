@@ -114,7 +114,7 @@ AC_C_INLINE
 CHECK_SSL
 
 AC_ARG_ENABLE(crypt,
-    [  --enable-crypt        Enable Admin encrypted passwords],
+    [  --enable-crypt          Enable Admin encrypted passwords],
     [ac_cv_crypt="$enableval"],
     [ac_cv_crypt="no"])
 
@@ -130,7 +130,8 @@ else
 fi
 
 DIS_MYSQL="MySQL: No"
-AC_ARG_WITH(mysql, [  --without-mysql         Do not use MySQL or attempt to find it],,[
+AC_ARG_WITH(mysql, 
+    [  --without-mysql       Do not use MySQL or attempt to find it],,[
 	AC_ARG_WITH(mysqlconfig-path, [  --with-mysqlconfig-path=PATH Complete path to the mysql_config executable],
 	mysql_config_path="$withval", mysql_config_path="")
 	MYSQLCONF=""
@@ -182,19 +183,19 @@ int main()
 ])
 
 DIS_MYSQLBT="Mysql backtrace debug: No"
-AC_ARG_ENABLE(mysql_backtrace,
-    [  --enable-mysqlbt         Enable backtrace of mysql queries],
-    [ac_cv_mysql_backtrace="$enableval"],
-    [ac_cv_mysql_backtrace="no"])
+AC_ARG_ENABLE(mysqlbt,
+    [  --enable-mysqlbt        Enable backtrace of mysql queries],
+    [ac_cv_mysqlbt="$enableval"],
+    [ac_cv_mysqlbt="no"])
 
-if test "$ac_cv_mysql_backtrace" = "yes"; then
+if test "$ac_cv_mysqlbt" = "yes"; then
   AC_DEFINE_UNQUOTED(USE_MYSQL_BT,1,"Backtrace mysql queries")
   DIS_MYSQLBT="Mysql backtrace debug: Yes"
 fi
 
 DIS_THREADING="Threading: No"
 AC_ARG_ENABLE(threading,
-    [  --enable-threading        Enable support for the threading library],
+    [  --enable-threading      Enable support for the threading library],
     [ac_cv_pthread="$enableval"],
     [ac_cv_pthread="no"])
 
@@ -228,7 +229,7 @@ fi
 
 
 AC_ARG_ENABLE(perl,
-	[  --enable-perl          build the perl plugin],
+	[  --enable-perl           Build the perl plugin],
 	        perl=$enableval, perl=no)
 
 	if test "$perl" = yes; then
@@ -563,7 +564,8 @@ AC_CHECK_FUNCS(inet_aton,AC_DEFINE([HAVE_INETATON], [1], [System supports inet_a
 AC_CHECK_FUNCS(setrlimit,AC_DEFINE([HAVE_GETSETRLIMIT], [1], [System supports set/get/rlimit]))
 AC_CHECK_FUNCS(getrlimit,AC_DEFINE([HAVE_GETSETRLIMIT], [1], [System supports set/get/rlimit]))
 
-AC_ARG_WITH(rungroup, [ --with-rungroup=group     Specify the rungroup for Denora], [ 
+AC_ARG_WITH(rungroup,
+    [ --with-rungroup=group  Specify the rungroup for Denora], [ 
     AC_DEFINE_UNQUOTED(RUNGROUP,"$withval","Run group")
     RUNGROUP=$withval
 ])
@@ -571,9 +573,12 @@ AC_SUBST(RUNGROUP)
 
 dnl AC_DEFINE_UNQUOTED(MYOSNAME,"`uname -a`","uname")
 
-AC_ARG_WITH(permissions, [ --with-permissions=permissions     Specify the default permissions for Denora], AC_DEFINE_UNQUOTED(DEFUMASK,$withval,"Default umask permissions"), AC_DEFINE(DEFUMASK, 007,"Default umask Permissions"))
+AC_ARG_WITH(permissions,
+    [ --with-permissions=permissions     Specify the default permissions for Denora],
+    AC_DEFINE_UNQUOTED(DEFUMASK,$withval,"Default umask permissions"), AC_DEFINE(DEFUMASK, 007,"Default umask Permissions"))
 
-AC_ARG_WITH(bindir, [ --with-bindir=bindir     Specify the default binary dir for Denora], [ 
+AC_ARG_WITH(bindir,
+    [ --with-bindir=bindir   Specify the default binary dir for Denora], [ 
     AC_DEFINE_UNQUOTED(STATS_BIN,"${withval}/stats","Binary Dir")
     BINDEST=$withval
     DATDEST=$withval
@@ -582,11 +587,13 @@ AC_ARG_WITH(bindir, [ --with-bindir=bindir     Specify the default binary dir fo
 
 AC_SUBST(BINDEST)
 
-AC_ARG_WITH(datadir, [ --with-datadir=datadir     Specify the location of the stats data folder], [
- AC_DEFINE_UNQUOTED(STATS_DIR,"$withval","stats bin dir")
- AC_DEFINE_UNQUOTED(MODULE_PATH,"${withval}/modules/","Module dir")
- DATDEST=$withval
- MODULE_PATH=${withval}/modules/
+AC_ARG_WITH(datadir,
+    [ --with-datadir=datadir Specify the location of the stats data folder],
+    [
+        AC_DEFINE_UNQUOTED(STATS_DIR,"$withval","stats bin dir")
+        AC_DEFINE_UNQUOTED(MODULE_PATH,"${withval}/modules/","Module dir")
+        DATDEST=$withval
+        MODULE_PATH=${withval}/modules/
 ])
 
 AC_SUBST(DATDEST)
