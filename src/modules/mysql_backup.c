@@ -77,9 +77,13 @@ void DenoraFini(void)
 
 int do_sql_backup(int argc, char **argv)
 {
+#ifdef USE_MYSQL
 	int i;
 	char output[BUFSIZE];
 	char *table[18];
+#else
+	USE_VAR(argv);
+#endif
 
 	USE_VAR(argc);
 

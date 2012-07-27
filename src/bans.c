@@ -575,6 +575,8 @@ void sql_do_xline(char *geos, char *reason)
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
 	char *sqlreason;
+#else
+	USE_VAR(reason);
 #endif
 	char *sqlgeos;
 	SET_SEGV_LOCATION();

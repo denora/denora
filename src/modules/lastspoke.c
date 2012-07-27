@@ -307,7 +307,9 @@ char *do_lastspoke(User * u, char *target)
 
 	return message;
 #else
-	return;
+	USE_VAR(u);
+	USE_VAR(target);
+	return NULL;
 #endif
 }
 

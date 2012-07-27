@@ -98,6 +98,8 @@ int rdb_clear_table(char *table)
 	if (sqltype == SQL_POSTGRE)
 		return db_postgre_query(buf);
 #endif
+#else
+	USE_VAR(table);
 #endif
 	return 0;
 }
@@ -106,6 +108,11 @@ int rdb_clear_table(char *table)
 
 int rdb_direct_query(char *query, int con)
 {
+#if !defined(USE_MYSQL) && !defined(USE_POSTGRE)
+	USE_VAR(query);
+	USE_VAR(con);
+#endif
+
 	SET_SEGV_LOCATION();
 
 	if (!denora->do_sql)
@@ -204,6 +211,8 @@ char *rdb_escape(char *ch)
 		ret = sstrdup(result);
 		free(result);
 	}
+#else
+	USE_VAR(ch);
 #endif
 	return ret;
 }
@@ -279,6 +288,8 @@ int rdb_check_table(char *table)
 		alog(LOG_DEBUG, "Table %s was not found", table);
 	}
 	return res;
+#else
+	USE_VAR(table);
 #endif
 	return 0;
 }

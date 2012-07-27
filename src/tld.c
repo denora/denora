@@ -77,6 +77,10 @@ void sql_do_tld(int type, char *code, char *country, int count, int overall)
 	char *sqlcountry;
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
+#else
+	USE_VAR(code);
+	USE_VAR(count);
+	USE_VAR(overall);
 #endif
 
 	if (!denora->do_sql)

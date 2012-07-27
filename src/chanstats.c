@@ -384,6 +384,10 @@ void count_kicks(User * kicker, User * kicked, Channel * c)
 			 UStatsTable, kicked->sgroup, c->sqlchan);
 		}
 	}
+#else
+	USE_VAR(kicker);
+	USE_VAR(kicked);
+	USE_VAR(c);
 #endif
 }
 
@@ -472,11 +476,8 @@ static int check_db(User * u, Channel * c)
 #ifdef USE_MYSQL
 	int i, excluded;
 	MYSQL_RES *mysql_res;
-#endif
+
 	SET_SEGV_LOCATION();
-#ifndef USE_MYSQL
-	return 0;
-#else
 
 	/* Check if user has +r and/or +B */
 	excluded = 0;
@@ -630,6 +631,11 @@ static int check_db(User * u, Channel * c)
 	}
 	SET_SEGV_LOCATION();
 	return 1;
+#else
+	USE_VAR(u);
+	USE_VAR(c);
+
+	return 0;
 #endif
 }
 

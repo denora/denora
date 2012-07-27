@@ -404,8 +404,9 @@ int db_checknick_nt(char *nick)
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
 	MYSQL_RES *mysql_res2;
+	char *olduname;
 #endif
-	char *username, *host, *queryhost, *olduname;
+	char *username, *host, *queryhost;
 
 	SET_SEGV_LOCATION();
 
@@ -611,9 +612,9 @@ void db_removenick_nt(char *nick, char *reason)
 	User *u;
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
+	char *newnick;
 #endif
 	char *username, *host, *queryhost;
-	char *newnick;
 
 	if (!nick)
 	{

@@ -332,7 +332,9 @@ char *do_seen(User * u, char *target)
 	mysql_free_result(mysql_res);
 	return message;
 #else
-	return;
+	USE_VAR(u);
+	USE_VAR(target);
+	return NULL;
 #endif
 }
 
