@@ -35,6 +35,8 @@
 #define HAVE_BACKTRACE 		0
 #define HAVE_FUNCTION       1
 #define HAVE_STRUCT_SOCKADDR_STORAGE 1
+#define HAVE_GETNAMEINFO	1
+#define HAVE_FREEADDRINFO	1
 
 /* Enable Module support */
 #define USE_MODULES

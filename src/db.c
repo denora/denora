@@ -337,7 +337,13 @@ int db_getserver(char *serv)
 	if (s && servid > 0)
 	{
 		s->sqlid = servid;
+#ifdef USE_THREADS
+		alog(LOG_DEBUG, "SET Serverid %d", servid);
+#endif
 	}
+#ifdef USE_THREADS
+	alog(LOG_DEBUG, "RETURN %d", servid);
+#endif
 	return servid;
 }
 
