@@ -655,17 +655,18 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 						)
 					{
 						SET_SEGV_LOCATION();
+						tmpmode = tolower(*modes);
 						if (tmp[9] == 'Y' && argptr < ac)
 						{
 							ircsnprintf(&db[strlen(db)], sizeof(db),
-							            "mode_%s%s_data='%s', ",
-							            tmp[5], tmp[6], av[argptr++]);
+							            "mode_%c%c_data='%s', ",
+							            tmp[5], tmpmode, av[argptr++]);
 						}
 						else
 						{
 							ircsnprintf(&db[strlen(db)], sizeof(db), 
-							            "mode_%s%s_data='', ",
-							            tmp[5], tmp[6]);
+							            "mode_%c%c_data='', ",
+							            tmp[5], tmpmode);
 						}
 					}
 				}
