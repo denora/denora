@@ -181,6 +181,17 @@ int main()
 	fi
 ])
 
+DIS_MYSQLBT="Mysql backtrace debug: No"
+AC_ARG_ENABLE(mysql_backtrace,
+    [  --enable-mysqlbt         Enable backtrace of mysql queries],
+    [ac_cv_mysql_backtrace="$enableval"],
+    [ac_cv_mysql_backtrace="no"])
+
+if test "$ac_cv_mysql_backtrace" = "yes"; then
+  AC_DEFINE_UNQUOTED(USE_MYSQL_BT,1,"Backtrace mysql queries")
+  DIS_MYSQLBT="Mysql backtrace debug: Yes"
+fi
+
 DIS_THREADING="Threading: No"
 AC_ARG_ENABLE(threading,
     [  --enable-threading        Enable support for the threading library],
@@ -973,11 +984,12 @@ AC_OUTPUT
 
 cat <<EOT
 
-    $DIS_MODULES
-              $DIS_MYSQL
-   $DIS_DMALLOC
-  $DIS_ENCRYPT
-          $DIS_THREADING
+      $DIS_MODULES
+                $DIS_MYSQL
+$DIS_MYSQLBT
+     $DIS_DMALLOC
+    $DIS_ENCRYPT
+            $DIS_THREADING
 
 All done! Above you can see if Modules Support and MySQL Support will be compiled or not.
 If you intended to compile MySQL support and you see "NO", then your system is probably

@@ -279,6 +279,9 @@
 /* "Use Mysql" */
 #undef USE_MYSQL
 
+/* "Backtrace mysql queries" */
+#undef USE_MYSQL_BT
+
 /* 'Enable Perl Support' */
 #undef USE_PERL
 

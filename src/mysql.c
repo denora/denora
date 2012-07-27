@@ -193,7 +193,6 @@ int db_mysql_query(char *sql, int con)
 	int pingresult;
 	int closesql = 0;
 
-#define USE_MYSQL_BT 1
 #ifdef USE_MYSQL_BT
 	int nptrs, j;
 	void *buffer[100];

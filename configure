@@ -688,6 +688,7 @@ with_ssl
 enable_crypt
 with_mysql
 with_mysqlconfig_path
+enable_mysql_backtrace
 enable_threading
 enable_dmalloc
 enable_perl
@@ -1321,6 +1322,7 @@ Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --enable-crypt        Enable Admin encrypted passwords
+  --enable-mysqlbt         Enable backtrace of mysql queries
   --enable-threading        Enable support for the threading library
   --enable-dmalloc        Enable support for the dmalloc debugging library
   --enable-perl          build the perl plugin
@@ -5167,6 +5169,24 @@ _ACEOF
 
 fi
 
+
+DIS_MYSQLBT="Mysql backtrace debug: No"
+# Check whether --enable-mysql_backtrace was given.
+if test "${enable_mysql_backtrace+set}" = set; then :
+  enableval=$enable_mysql_backtrace; ac_cv_mysql_backtrace="$enableval"
+else
+  ac_cv_mysql_backtrace="no"
+fi
+
+
+if test "$ac_cv_mysql_backtrace" = "yes"; then
+
+cat >>confdefs.h <<_ACEOF
+#define USE_MYSQL_BT 1
+_ACEOF
+
+  DIS_MYSQLBT="Mysql backtrace debug: Yes"
+fi
 
 DIS_THREADING="Threading: No"
 # Check whether --enable-threading was given.
@@ -16992,11 +17012,12 @@ fi
 
 cat <<EOT
 
-    $DIS_MODULES
-              $DIS_MYSQL
-   $DIS_DMALLOC
-  $DIS_ENCRYPT
-          $DIS_THREADING
+      $DIS_MODULES
+                $DIS_MYSQL
+$DIS_MYSQLBT
+     $DIS_DMALLOC
+    $DIS_ENCRYPT
+            $DIS_THREADING
 
 All done! Above you can see if Modules Support and MySQL Support will be compiled or not.
 If you intended to compile MySQL support and you see "NO", then your system is probably
