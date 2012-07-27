@@ -830,8 +830,8 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
 				}
 				mysql_free_result(mysql_res);
 			}
-		}
 #endif
+		}
 	}
 	else
 	{
