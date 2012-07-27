@@ -844,14 +844,12 @@ void shadowircd_cmd_mode(char *source, char *dest, char *buf)
 	}
 }
 
-#ifndef _WIN32
-void shadowircd_cmd_tmode(__attribute__((unused))char *source, char *dest, const char *fmt, ...)
-#else
 void shadowircd_cmd_tmode(char *source, char *dest, const char *fmt, ...)
-#endif
 {
 	va_list args;
 	char buf[BUFSIZE];
+	USE_VAR(source);
+
 	*buf = '\0';
 
 	if (fmt) {

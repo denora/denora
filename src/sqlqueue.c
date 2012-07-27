@@ -56,12 +56,9 @@ int QueueEntryInit(void)
 
 /*************************************************************************/
 
-#ifndef _WIN32
-void queue_unlock(__attribute__((unused))void *arg)
-#else
 void queue_unlock(void *arg)
-#endif
 {
+	USE_VAR(arg);
 #ifdef USE_THREADS
 	alog(LOG_EXTRADEBUG, "debug: Thread %ld: Unlocking queue mutex",
 	     (long int) deno_thread_self());
@@ -104,12 +101,10 @@ void queue_signal(void)
 
 /*************************************************************************/
 
-#ifndef _WIN32
-void *queue_thread_main(__attribute__((unused))void *arg)
-#else
 void *queue_thread_main(void *arg)
-#endif
 {
+	USE_VAR(arg);
+
 #ifdef USE_THREADS
 	while (1)
 	{

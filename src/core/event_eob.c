@@ -68,14 +68,13 @@ void DenoraFini(void)
 
 /*************************************************************************/
 
-#ifndef _WIN32
-int denora_event_synccomplete(__attribute__((unused))int ac, __attribute__((unused))char **av)
-#else
 int denora_event_synccomplete(int ac, char **av)
-#endif
 {
 	TLD *t;
 	lnode_t *tn;
+
+	USE_VAR(ac);
+	USE_VAR(av);
 
 	SET_SEGV_LOCATION();
 

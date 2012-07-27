@@ -12,31 +12,30 @@ int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
 int do_help(User * u, int argc, char **argv);
 
-#ifndef _WIN32
-int DenoraInit(__attribute__((unused))int argc, __attribute__((unused))char **argv)
-#else
 int DenoraInit(int argc, char **argv)
-#endif
 {
-  Command *c;
-  c = createCommand("HELP", do_help, is_oper, -1, -1, -1, -1);
-  moduleAddCommand(STATSERV, c, MOD_HEAD);
+	Command *c;
 
-  moduleAddAuthor(AUTHOR);
-  moduleAddVersion(VERSION);
-  return MOD_CONT;
+	USE_VAR(argc);
+	USE_VAR(argv);
+
+	c = createCommand("HELP", do_help, is_oper, -1, -1, -1, -1);
+	moduleAddCommand(STATSERV, c, MOD_HEAD);
+
+	moduleAddAuthor(AUTHOR);
+	moduleAddVersion(VERSION);
+	return MOD_CONT;
 }
 
 void DenoraFini(void)
 {
-  alog(LOG_NORMAL, "Unloading ss_restricthelp%s", MODULE_EXT);
+	alog(LOG_NORMAL, "Unloading ss_restricthelp%s", MODULE_EXT);
 }
 
-#ifndef _WIN32
-int do_help(__attribute__((unused))User * u, __attribute__((unused))int argc, __attribute__((unused))char **argv)
-#else
 int do_help(User * u, int argc, char **argv)
-#endif
 {
-  return MOD_CONT;
+	USE_VAR(u);
+	USE_VAR(argc);
+	USE_VAR(argv);
+	return MOD_CONT;
 }

@@ -19,18 +19,13 @@ int db_optimize(const char *name);
 int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
 
-#ifndef _WIN32
-int DenoraInit(__attribute__((unused))int argc, __attribute__((unused))char **argv)
-#else
 int DenoraInit(int argc, char **argv)
-#endif
 {
 	CronEvent *evt;
 
-	if (denora->debug >= 2)
-	{
-		protocol_debug(NULL, argc, argv);
-	}
+	USE_VAR(argc);
+	USE_VAR(argv);
+
 	moduleAddAuthor("Denora");
 	moduleAddVersion("1.1");
 	moduleSetType(THIRD);
@@ -49,9 +44,11 @@ void DenoraFini(void)
 
 }
 
-int db_optimize(__attribute__((unused))const char *name)
+int db_optimize(const char *name)
 {
 	char tables[512] = "\0";
+
+	USE_VAR(name);
 
 	alog(LOG_NORMAL, "Optimzing MYSQL tables");
 

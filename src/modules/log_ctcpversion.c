@@ -14,14 +14,13 @@ int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
 int my_version(int argc, char **argv);
 
-#ifndef _WIN32
-int DenoraInit(__attribute__((unused))int argc, __attribute__((unused))char **argv)
-#else
 int DenoraInit(int argc, char **argv)
-#endif
 {
     EvtHook *hook = NULL;
     int status;
+
+	USE_VAR(argc);
+	USE_VAR(argv);
 
     hook = createEventHook(EVENT_CTCP_VERSION, my_version);
     status = moduleAddEventHook(hook);

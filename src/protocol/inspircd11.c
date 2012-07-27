@@ -1419,15 +1419,12 @@ void inspircd_cmd_ctcp(char *source, char *dest, char *buf)
 	send_cmd(source, "NOTICE %s :\1%s \1", dest, buf);
 }
 
-#ifndef _WIN32
-void inspircd_cmd_version(__attribute__((unused))char *server)
-#else
 void inspircd_cmd_version(char *server)
-#endif
 {
 	/* TODO: InspIRCd sends you all servers version strings as they burst.
 	 * These can be cached, rather than having to request them.
 	 */
+	USE_VAR(server);
 }
 
 void inspircd_cmd_motd(char *sender, char *server)

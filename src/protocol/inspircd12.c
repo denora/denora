@@ -782,21 +782,15 @@ void inspircd_cmd_privmsg(char *source, char *dest, char *buf)
 	         ud2 ? ud2->uid : dest, buf);
 }
 
-#ifndef _WIN32
-void inspircd_cmd_serv_notice(__attribute__((unused))char *source, char *dest, char *msg)
-#else
 void inspircd_cmd_serv_notice(char *source, char *dest, char *msg)
-#endif
 {
+	USE_VAR(source);
 	send_cmd(TS6SID, "NOTICE $%s :%s", dest, msg);
 }
 
-#ifndef _WIN32
-void inspircd_cmd_serv_privmsg(__attribute__((unused))char *source, char *dest, char *msg)
-#else
 void inspircd_cmd_serv_privmsg(char *source, char *dest, char *msg)
-#endif
 {
+	USE_VAR(source);
 	send_cmd(TS6SID, "PRIVMSG $%s :%s", dest, msg);
 }
 
@@ -876,12 +870,9 @@ void inspircd_cmd_server(char *servname, int hop, char *descript)
 }
 
 /* PONG */
-#ifndef _WIN32
-void inspircd_cmd_pong(__attribute__((unused))char *servname, char *who)
-#else
 void inspircd_cmd_pong(char *servname, char *who)
-#endif
 {
+	USE_VAR(servname);
 	send_cmd(TS6SID, "PONG %s", who);
 }
 
@@ -1551,15 +1542,12 @@ void inspircd_cmd_ctcp(char *source, char *dest, char *buf)
 	send_cmd(source, "NOTICE %s :\1%s \1", dest, buf);
 }
 
-#ifndef _WIN32
-void inspircd_cmd_version(__attribute__((unused))char *server)
-#else
 void inspircd_cmd_version(char *server)
-#endif
 {
 	/* TODO: InspIRCd sends you all servers version strings as they burst.
 	 * These can be cached, rather than having to request them.
 	 */
+	USE_VAR(server);
 }
 
 void inspircd_cmd_motd(char *sender, char *server)
@@ -1589,13 +1577,12 @@ int denora_event_notice(char *source, int ac, char **av)
 	return MOD_CONT;
 }
 
-#ifndef _WIN32
-void inspircd_cmd_mode(__attribute__((unused))char *source, char *dest, char *buf)
-#else
 void inspircd_cmd_mode(char *source, char *dest, char *buf)
-#endif
 {
 	Channel *c;
+
+	USE_VAR(source);
+
 	if (!buf)
 	{
 		return;

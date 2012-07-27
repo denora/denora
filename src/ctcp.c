@@ -211,12 +211,10 @@ void save_ctcp_db(void)
 }
 
 /*************************************************************************/
-#ifndef _WIN32
-int del_ctcpver(__attribute__((unused))CTCPVerStats * c)
-#else
+
 int del_ctcpver(CTCPVerStats * c)
-#endif
 {
+	USE_VAR(c);
 	return 0;
 }
 

@@ -16,15 +16,14 @@ int get_port(char *source, int ac, char **av);
 int my_squit(int argc, char **argv);
 void create_table(void);
 
-#ifndef _WIN32
-int DenoraInit(__attribute__((unused))int argc, __attribute__((unused))char **argv)
-#else
 int DenoraInit(int argc, char **argv)
-#endif
 {
     EvtHook *hook = NULL;
     Message *msg = NULL;
     int status;
+
+	USE_VAR(argc);
+	USE_VAR(argv);
 
     hook = createEventHook(EVENT_SERVER, my_server);
     status = moduleAddEventHook(hook);
@@ -124,7 +123,7 @@ void create_table(void)
 #endif
 }
 
-int get_port(char *source, __attribute__((unused))int ac, char **av)
+int get_port(char *source, int ac, char **av)
 {
     char *port;
     char *portnum;
@@ -132,6 +131,8 @@ int get_port(char *source, __attribute__((unused))int ac, char **av)
     char *temp = NULL;
     Server *s;
     User *u = NULL;
+
+	USE_VAR(ac);
 
     if (denora_get_ircd() == IRC_SOLIDIRCD) {
         s = server_find(source);

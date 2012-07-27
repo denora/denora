@@ -934,14 +934,12 @@ void charybdis_cmd_mode(char *source, char *dest, char *buf)
 	}
 }
 
-#ifndef _WIN32
-void charybdis_cmd_tmode(__attribute__((unused))char *source, char *dest, const char *fmt, ...)
-#else
 void charybdis_cmd_tmode(char *source, char *dest, const char *fmt, ...)
-#endif
 {
 	va_list args;
 	char buf[BUFSIZE];
+	USE_VAR(source);
+
 	*buf = '\0';
 
 	if (fmt)
@@ -950,6 +948,7 @@ void charybdis_cmd_tmode(char *source, char *dest, const char *fmt, ...)
 		ircvsnprintf(buf, BUFSIZE - 1, fmt, args);
 		va_end(args);
 	}
+
 	if (!*buf)
 	{
 		return;

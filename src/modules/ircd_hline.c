@@ -14,15 +14,14 @@ int my_server(int argc, char **argv);
 int get_hline(char *source, int ac, char **av);
 void create_field(void);
 
-#ifndef _WIN32
-int DenoraInit(__attribute__((unused))int argc, __attribute__((unused))char **argv)
-#else
 int DenoraInit(int argc, char **argv)
-#endif
 {
 	EvtHook *hook = NULL;
 	Message *msg = NULL;
 	int status;
+
+	USE_VAR(argc);
+	USE_VAR(argv);
 
 	hook = createEventHook(EVENT_SERVER, my_server);
 	status = moduleAddEventHook(hook);
@@ -71,10 +70,12 @@ void create_field(void)
 	rdb_query(QUERY_LOW, "ALTER TABLE `%s` ADD `hline` ENUM( 'Y', 'N' ) DEFAULT 'N' NOT NULL;", ServerTable);
 }
 
-int get_hline(char *source, __attribute__((unused))int ac, char **av)
+int get_hline(char *source, int ac, char **av)
 {
 	Server *s;
 	int id;
+
+	USE_VAR(ac);;
 
 	if (denora_get_ircd() == IRC_ULTIMATE3) {
 		s = server_find(source);
