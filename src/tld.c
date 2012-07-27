@@ -72,8 +72,7 @@ void tld_update(char *country_code)
  * @return void - no returend value
  *
  */
-void sql_do_tld(int type, char *code, char *country, int count,
-                int overall)
+void sql_do_tld(int type, char *code, char *country, int count, int overall)
 {
 	char *sqlcountry;
 #ifdef USE_MYSQL
@@ -87,7 +86,7 @@ void sql_do_tld(int type, char *code, char *country, int count,
 	sqlcountry = rdb_escape(country);
 
 	SET_SEGV_LOCATION();
-	if (type == 1)
+	if (type == 1 || type == 4)
 	{
 		rdb_query(QUERY_HIGH,
 		          "SELECT country FROM %s WHERE country = \'%s\';",
@@ -96,19 +95,17 @@ void sql_do_tld(int type, char *code, char *country, int count,
 		mysql_res = mysql_store_result(mysql);
 		if (mysql_res)
 		{
-			if (mysql_num_rows(mysql_res) == 0)         /* exists this nick already in the database? */
+			if (mysql_num_rows(mysql_res))         /* does the country already exist in the database? */
 			{
-				rdb_query
-				(QUERY_LOW,
-				 "UPDATE %s SET count=%d, overall=%d WHERE code=\'%s\'",
-				 TLDTable, count, overall, code);
+				rdb_query(QUERY_LOW,
+					"UPDATE %s SET count=%d, overall=%d WHERE code=\'%s\'",
+					TLDTable, count, overall, code);
 			}
 			else
 			{
-				rdb_query
-				(QUERY_LOW,
-				 "INSERT INTO %s (code, country, count, overall) VALUES(\'%s\', \'%s\', %d, %d)",
-				 TLDTable, code, sqlcountry, count, overall);
+				rdb_query(QUERY_LOW,
+					"INSERT INTO %s (code, country, count, overall) VALUES(\'%s\', \'%s\', %d, %d)",
+					TLDTable, code, sqlcountry, count, overall);
 			}
 			mysql_free_result(mysql_res);
 		}
@@ -117,37 +114,12 @@ void sql_do_tld(int type, char *code, char *country, int count,
 
 	SET_SEGV_LOCATION();
 
-	if (type == 4)
-	{
-		rdb_query(QUERY_HIGH,
-		          "SELECT country FROM %s WHERE country = \'%s\';",
-		          TLDTable, sqlcountry);
-#ifdef USE_MYSQL
-		mysql_res = mysql_store_result(mysql);
-		if (mysql_res)
-		{
-			if (mysql_num_rows(mysql_res) == 0)         /* exists this nick already in the database? */
-			{
-				rdb_query
-				(QUERY_LOW,
-				 "INSERT INTO %s (code, country, count, overall) VALUES(\'%s\', \'%s\', %d, %d)",
-				 TLDTable, code, sqlcountry, count, overall);
-			}
-			else
-			{
-				rdb_query
-				(QUERY_LOW,
-				 "UPDATE %s SET count=%d, overall=%d WHERE code=\'%s\'",
-				 TLDTable, count, overall, code);
-			}
-			mysql_free_result(mysql_res);
-		}
-#endif
-	}
 	if (sqlcountry)
 	{
 		free(sqlcountry);
 	}
+
+	return;
 }
 
 /*************************************************************************/

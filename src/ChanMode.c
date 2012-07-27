@@ -33,6 +33,7 @@ void init_cmodes(void)
 	{
 		cmodes[i] = 0;
 	}
+	return;
 }
 
 /*************************************************************************/
@@ -48,6 +49,7 @@ void init_csmodes(void)
 	{
 		sjoinmodes[i] = 0;
 	}
+	return;
 }
 
 /*************************************************************************/
@@ -57,6 +59,7 @@ void ModuleSetChanUMode(int mode, char letter, int status_flag)
 	csmodes[mode] = letter;
 	sjoinmodes[mode] = status_flag;
 	ModuleSetChanMode((int) letter, IRCD_ENABLE);
+	return;
 }
 
 /*************************************************************************/
@@ -108,6 +111,7 @@ void ModuleSetChanMode(int mode, int flag)
 	{
 		cmodes[mode] = IRCD_ENABLE;
 	}
+	return;
 }
 
 /*************************************************************************/
@@ -273,6 +277,7 @@ void SetChanMode(Channel * c, char *mode)
 	}
 	c->modes = u;
 	u->mode = sstrdup(mode);
+	return;
 }
 
 /*************************************************************************/
@@ -298,6 +303,7 @@ void RemoveChanMode(Channel * c, char *mode)
 		}
 		free(u);
 	}
+	return;
 }
 
 /*************************************************************************/
@@ -334,6 +340,7 @@ void ModuleUpdateSQLChanMode(void)
 		ircd->cmodes = sstrdup(temp);
 		free(temp);
 	}
+	return;
 }
 
 /*************************************************************************/
@@ -463,6 +470,7 @@ void chan_set_modes(Channel * chan, int ac, char **av)
 
 	chan->stats->secret = ChanHasMode(chan->name, CMODE_s);
 	chan->stats->private = ChanHasMode(chan->name, CMODE_p);
+	return;
 }
 
 /*************************************************************************/
@@ -515,37 +523,36 @@ char *chan_get_modes(Channel * chan, int complete)
 
 /*************************************************************************/
 
-/* adds modes to a given chanid */
+/* adds modes to a given chan */
 void sql_do_chanmodes(char *chan, int ac, char **av)
 {
+	Channel *c;
 	int atleastone = 0;
-	char db[1000];              /* should be enough for long queries */
+	char db[1000];
 	char tmp[14] = "mode_XX=\"X\", ";
 	char *modes;
+	int tmpmode;
 	int argptr = 1;
-	char buf[BUFSIZE];
 	int nickid;
 	char *user;
-	int chanid;
 
-	chan = rdb_escape(chan);
-	chanid = db_getchannel(chan);
-
-	if (!chanid)
+	c = findchan(chan);
+	if (!c || c->sqlid < 1)
 	{
 		return;
 	}
 
 	modes = sstrdup(av[0]);
-
-	SET_SEGV_LOCATION();
-	ircsnprintf(buf, sizeof(buf), "UPDATE %s SET ", ChanTable);
-
 	if (*modes == '0')
 	{
 		return;
 	}
-	strlcpy(db, buf, sizeof(db));
+
+	SET_SEGV_LOCATION();
+
+	*db = '\0';
+	ircsnprintf(db, sizeof(db), "UPDATE %s SET ", ChanTable);
+
 	while (*modes)
 	{
 		switch (*modes)
@@ -575,59 +582,23 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 				{
 					argptr++;
 				}
-				else if (ircd->halfop && *modes == 'h')
+				else if (
+						(ircd->owner && *modes == 'q') ||
+						(ircd->protect && *modes == 'a') ||
+						(ircd->halfop && *modes == 'h') ||
+						*modes == 'o' ||
+						*modes == 'v'
+				        )
 				{
 					SET_SEGV_LOCATION();
 					user = rdb_escape(av[argptr++]);
 					nickid = db_getnick(user);
-					if (nickid)
+					tmpmode = tolower(*modes);
+					if (nickid > 0)
 					{
-						rdb_query
-						(QUERY_LOW,
-						 "UPDATE %s SET mode_lh=\'%c\' WHERE chanid=%d AND nickid=%d",
-						 IsOnTable, tmp[9], chanid, nickid);
-					}
-					free(user);
-				}
-				else if (ircd->owner && *modes == 'q')
-				{
-					SET_SEGV_LOCATION();
-					user = rdb_escape(av[argptr++]);
-					nickid = db_getnick(user);
-					if (nickid)
-					{
-						rdb_query
-						(QUERY_LOW,
-						 "UPDATE %s SET mode_lq=\'%c\' WHERE chanid=%d AND nickid=%d",
-						 IsOnTable, tmp[9], chanid, nickid);
-					}
-					free(user);
-				}
-				else if (ircd->protect && *modes == 'a')
-				{
-					SET_SEGV_LOCATION();
-					user = rdb_escape(av[argptr++]);
-					nickid = db_getnick(user);
-					if (nickid)
-					{
-						rdb_query
-						(QUERY_LOW,
-						 "UPDATE %s SET mode_la=\'%c\' WHERE chanid=%d AND nickid=%d",
-						 IsOnTable, tmp[9], chanid, nickid);
-					}
-					free(user);
-				}
-				else if (*modes == 'o' || *modes == 'v')
-				{
-					SET_SEGV_LOCATION();
-					user = rdb_escape(av[argptr++]);
-					nickid = db_getnick(user);
-					if (nickid)
-					{
-						rdb_query
-						(QUERY_LOW,
-						 "UPDATE %s SET mode_l%c=\'%c\' WHERE chanid=%d AND nickid=%d",
-						 IsOnTable, *modes, tmp[9], chanid, nickid);
+						rdb_query(QUERY_LOW,
+						          "UPDATE %s SET mode_l%c='%c' WHERE chanid=%d AND nickid=%d",
+						          IsOnTable, tmpmode, tmp[9], c->sqlid, nickid);
 					}
 					free(user);
 				}
@@ -636,40 +607,23 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 					atleastone = 1;
 					tmp[5] = ((*modes >= 'a') ? 'l' : 'u');
 					tmp[6] = tolower(*modes);
-					strlcat(db, tmp, sizeof(db));
+					ircsnprintf(&db[strlen(db)], sizeof(db), "%s", tmp);
 					if (*modes == 'k')
 					{
 						SET_SEGV_LOCATION();
 						if (tmp[9] == 'Y' && argptr < ac)
 						{
-							char *key;
-							key = rdb_escape(av[argptr++]);
-							*buf = '\0';
-							ircsnprintf(buf, BUFSIZE - 1,
-							            "mode_lk_data=\'%s\', ",
+							char *key = rdb_escape(av[argptr++]);
+							ircsnprintf(&db[strlen(db)], sizeof(db), 
+							            "mode_lk_data='%s', ",
 							            (HidePasswords ? "HIDDEN" : key));
-							strlcat(db, buf, sizeof(db));
 							free(key);
 						}
 						else
 						{
-							strlcat(db, "mode_lk_data=\'\', ", sizeof(db));
+							ircsnprintf(&db[strlen(db)], sizeof(db),
+							            "mode_lk_data='', ");
 							argptr++;       /* mode -k needs a parameter */
-						}
-					}
-					else if (*modes == 'l')
-					{
-						SET_SEGV_LOCATION();
-						if (tmp[9] == 'Y' && argptr < ac)
-						{
-							*buf = '\0';
-							ircsnprintf(buf, BUFSIZE - 1,
-							            "mode_ll_data=\'%s\', ", av[argptr++]);
-							strlcat(db, buf, sizeof(db));
-						}
-						else
-						{
-							strlcat(db, "mode_ll_data=\'\', ", sizeof(db));
 						}
 					}
 					else if (ircd->Lmode && *modes == ircd->chanforward)
@@ -678,119 +632,40 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 						if (tmp[9] == 'Y' && argptr < ac)
 						{
 							char *ch = rdb_escape(av[argptr++]);
-							*buf = '\0';
-							ircsnprintf(buf, BUFSIZE - 1,
-							            "mode_%s%c_data=\'%s\', ",
+							ircsnprintf(&db[strlen(db)], sizeof(db), 
+							            "mode_%s%c_data='%s', ",
 							            (ircd->chanforward <= 90 ? "u" : "l"),
 							            ircd->chanforward, ch);
-							strlcat(db, buf, sizeof(db));
 							free(ch);
 						}
 						else
 						{
-							*buf = '\0';
-							ircsnprintf(buf, BUFSIZE - 1,
-							            "mode_%s%c_data=\'\', ",
+							ircsnprintf(&db[strlen(db)], sizeof(db),
+							            "mode_%s%c_data='', ",
 							            (ircd->chanforward <= 90 ? "u" : "l"),
 							            ircd->chanforward);
-							strlcat(db, buf, sizeof(db));
 						}
 					}
-					else if (ircd->fmode && ircd->floodchar
-					         && *modes == ircd->floodchar)
+					else if (
+							(*modes == 'l') ||
+							(ircd->fmode && ircd->floodchar && *modes == ircd->floodchar) ||
+							(ircd->jmode && ircd->floodchar_alternative && *modes == ircd->floodchar_alternative) ||
+							(ircd->jointhrottle && *modes == ircd->jointhrottle) ||
+							(ircd->nickchgfloodchar && *modes == ircd->nickchgfloodchar)
+						)
 					{
 						SET_SEGV_LOCATION();
 						if (tmp[9] == 'Y' && argptr < ac)
 						{
-							*buf = '\0';
-							ircsnprintf(buf, BUFSIZE - 1,
-							            "mode_%s%c_data=\'%s\', ",
-							            (ircd->floodchar <= 90 ? "u" : "l"),
-							            ircd->floodchar, av[argptr++]);
-							strlcat(db, buf, sizeof(db));
+							ircsnprintf(&db[strlen(db)], sizeof(db),
+							            "mode_%s%s_data='%s', ",
+							            tmp[5], tmp[6], av[argptr++]);
 						}
 						else
 						{
-							*buf = '\0';
-							ircsnprintf(buf, BUFSIZE - 1,
-							            "mode_%s%c_data=\'\', ",
-							            (ircd->floodchar <= 90 ? "u" : "l"),
-							            ircd->floodchar);
-							strlcat(db, buf, sizeof(db));
-						}
-					}
-					else if (ircd->jmode && ircd->floodchar_alternative
-					         && *modes == ircd->floodchar_alternative)
-					{
-						SET_SEGV_LOCATION();
-						if (tmp[9] == 'Y' && argptr < ac)
-						{
-							*buf = '\0';
-							ircsnprintf(buf, BUFSIZE - 1,
-							            "mode_%s%c_data=\'%s\', ",
-							            (ircd->floodchar_alternative <=
-							             90 ? "u" : "l"),
-							            ircd->floodchar_alternative,
-							            av[argptr++]);
-							strlcat(db, buf, sizeof(db));
-						}
-						else
-						{
-							*buf = '\0';
-							ircsnprintf(buf, BUFSIZE - 1,
-							            "mode_%s%c_data=\'\', ",
-							            (ircd->floodchar_alternative <=
-							             90 ? "u" : "l"),
-							            ircd->floodchar_alternative);
-							strlcat(db, buf, sizeof(db));
-						}
-					}
-					else if (ircd->jointhrottle
-					         && *modes == ircd->jointhrottle)
-					{
-						SET_SEGV_LOCATION();
-						if (tmp[9] == 'Y' && argptr < ac)
-						{
-							*buf = '\0';
-							ircsnprintf(buf, BUFSIZE - 1,
-							            "mode_%s%c_data=\'%s\', ",
-							            (ircd->jointhrottle <= 90 ? "u" : "l"),
-							            ircd->jointhrottle, av[argptr++]);
-							strlcat(db, buf, sizeof(db));
-						}
-						else
-						{
-							*buf = '\0';
-							ircsnprintf(buf, BUFSIZE - 1,
-							            "mode_%s%c_data=\'\', ",
-							            (ircd->jointhrottle <= 90 ? "u" : "l"),
-							            ircd->jointhrottle);
-							strlcat(db, buf, sizeof(db));
-						}
-					}
-					else if (ircd->nickchgfloodchar
-					         && *modes == ircd->nickchgfloodchar)
-					{
-						SET_SEGV_LOCATION();
-						if (tmp[9] == 'Y' && argptr < ac)
-						{
-							*buf = '\0';
-							ircsnprintf(buf, BUFSIZE - 1,
-							            "mode_%s%c_data=\'%s\', ",
-							            (ircd->nickchgfloodchar <=
-							             90 ? "u" : "l"),
-							            ircd->nickchgfloodchar, av[argptr++]);
-							strlcat(db, buf, sizeof(db));
-						}
-						else
-						{
-							*buf = '\0';
-							ircsnprintf(buf, BUFSIZE - 1,
-							            "mode_%s%c_data=\'\', ",
-							            (ircd->nickchgfloodchar <=
-							             90 ? "u" : "l"),
-							            ircd->nickchgfloodchar);
-							strlcat(db, buf, sizeof(db));
+							ircsnprintf(&db[strlen(db)], sizeof(db), 
+							            "mode_%s%s_data='', ",
+							            tmp[5], tmp[6]);
 						}
 					}
 				}
@@ -800,10 +675,10 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 	}
 	if (atleastone)
 	{
-		ircsnprintf(&db[strlen(db) - 2], sizeof(db), " WHERE chanid=%d",
-		            chanid);
+		ircsnprintf(&db[strlen(db) - 2], sizeof(db), " WHERE chanid=%d", c->sqlid);
 		rdb_query(QUERY_LOW, db);
 	}
+	return;
 }
 
 /*************************************************************************/
@@ -811,11 +686,7 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 char *get_flood(Channel * chan)
 {
 	SET_SEGV_LOCATION();
-	if (!chan)
-	{
-		return NULL;
-	}
-	return chan->flood;
+	return chan ? chan->flood : NULL;
 }
 
 /*************************************************************************/
@@ -823,11 +694,7 @@ char *get_flood(Channel * chan)
 char *get_flood_alt(Channel * chan)
 {
 	SET_SEGV_LOCATION();
-	if (!chan)
-	{
-		return NULL;
-	}
-	return chan->flood_alt;
+	return chan ? chan->flood_alt : NULL;
 }
 
 /*************************************************************************/
@@ -835,24 +702,14 @@ char *get_flood_alt(Channel * chan)
 char *get_key(Channel * chan)
 {
 	SET_SEGV_LOCATION();
-	if (!chan)
-	{
-		return NULL;
-	}
-	return chan->key;
+	return chan ? chan->key : NULL;
 }
 
 /*************************************************************************/
 
 char *get_limit(Channel * chan)
 {
-	if (!chan)
-	{
-		return NULL;
-	}
-	SET_SEGV_LOCATION();
-
-	if (chan->limit == 0)
+	if (!chan || chan->limit == 0)
 	{
 		return NULL;
 	}
@@ -863,13 +720,7 @@ char *get_limit(Channel * chan)
 
 char *get_rejoinlock(Channel * chan)
 {
-	if (!chan)
-	{
-		return NULL;
-	}
-	SET_SEGV_LOCATION();
-
-	if (chan->rejoinlock == 0)
+	if (!chan || chan->rejoinlock == 0)
 	{
 		return NULL;
 	}
@@ -881,11 +732,7 @@ char *get_rejoinlock(Channel * chan)
 char *get_nickchgflood(Channel * chan)
 {
 	SET_SEGV_LOCATION();
-	if (!chan)
-	{
-		return NULL;
-	}
-	return chan->nickchgflood;
+	return chan ? chan->nickchgflood : NULL;
 }
 
 /*************************************************************************/
@@ -893,11 +740,7 @@ char *get_nickchgflood(Channel * chan)
 char *get_redirect(Channel * chan)
 {
 	SET_SEGV_LOCATION();
-	if (!chan)
-	{
-		return NULL;
-	}
-	return chan->redirect;
+	return chan ? chan->redirect : NULL;
 }
 
 /*************************************************************************/
@@ -917,6 +760,8 @@ void set_flood(Channel * chan, char *value)
 
 	alog(LOG_DEBUG, langstr(ALOG_DEBUG_FLOOD_MODE),
 	     chan->name, (chan->flood ? chan->flood : langstr(ALOG_NO_FLOOD)));
+
+	return;
 }
 
 /*************************************************************************/
@@ -938,6 +783,8 @@ void set_flood_alt(Channel * chan, char *value)
 	     "debug: Alternative Flood mode for channel %s set to %s",
 	     chan->name,
 	     (chan->flood_alt ? chan->flood_alt : langstr(ALOG_NO_FLOOD)));
+
+	return;
 }
 
 /*************************************************************************/
@@ -957,6 +804,8 @@ void set_key(Channel * chan, char *value)
 
 	alog(LOG_DEBUG, langstr(ALOG_KEY_SET_TO), chan->name,
 	     (chan->key ? chan->key : langstr(ALOG_NO_KEY)));
+
+	return;
 }
 
 /*************************************************************************/
@@ -973,6 +822,8 @@ void set_limit(Channel * chan, char *value)
 	chan->limit = (!BadPtr(value) ? strtoul(value, NULL, 10) : 0);
 
 	alog(LOG_DEBUG, langstr(ALOG_LIMIT_SET_TO), chan->name, chan->limit);
+
+	return;
 }
 
 /*************************************************************************/
@@ -990,6 +841,8 @@ void set_rejoinlock(Channel * chan, char *value)
 
 	alog(LOG_DEBUG, "debug: Rejoin lock for channel %s set to %u",
 	     chan->name, chan->rejoinlock);
+
+	return;
 }
 
 /*************************************************************************/
@@ -1009,6 +862,8 @@ void set_nickchgflood(Channel * chan, char *value)
 
 	alog(LOG_DEBUG, "debug: Nick change flood for %s set to %s",
 	     chan->name, chan->nickchgflood);
+
+	return;
 }
 
 /*************************************************************************/
@@ -1028,6 +883,8 @@ void set_redirect(Channel * chan, char *value)
 
 	alog(LOG_DEBUG, langstr(ALOG_REDIRECT_SET_TO), chan->name,
 	     (chan->redirect ? chan->redirect : langstr(ALOG_NO_REDIRECT)));
+
+	return;
 }
 
 /*************************************************************************/

@@ -57,7 +57,7 @@ void sql_do_usermodes(User * u, char *modes)
 		return;
 	}
 
-	if (!u->sqlid && db_getnick(u->sqlnick) == -1)
+	if (u->sqlid < 1 && db_getnick(u->sqlnick) == -1)
 	{
 		alog(LOG_NONEXISTANT, "Trying to update usermodes %s on nonexistant user %s", modes, u->nick);
 		return;
@@ -139,7 +139,7 @@ void sql_reset_usermodes(User *u)
 		return;
 	}
 
-	if (!u->sqlid && db_getnick(u->sqlnick) == -1)
+	if (u->sqlid < 1 && db_getnick(u->sqlnick) == -1)
 	{
 		alog(LOG_NONEXISTANT, "Trying to reset usermodes on nonexistant user %s", u->sqlnick);
 		return;
@@ -202,7 +202,7 @@ void do_swhois(char *user, char *msg)
 
 	if (denora->do_sql)
 	{
-		if (!u->sqlid && db_getnick(u->sqlnick) == -1)
+		if (u->sqlid < 1 && db_getnick(u->sqlnick) == -1)
 		{
 			alog(LOG_NONEXISTANT, langstr(ALOG_SWHOIS_ERROR), user);
 		}
@@ -254,16 +254,16 @@ void sql_do_nick(User * u)
 
 	SET_SEGV_LOCATION();
 
-	if ((LargeNet || !UplinkSynced || UserStatsRegistered) && !u->sqlid)
+	if ((LargeNet || !UplinkSynced || UserStatsRegistered) && u->sqlid < 1)
 	{
 		db_getnick(u->sqlnick);
 	}
-	else if (!u->sqlid)
+	else if (u->sqlid < 1)
 	{
 		db_checknick_nt(u->sqlnick);
 	}
 	
-	if (u->sqlid != -1)
+	if (u->sqlid > 0)
 	{
 		SET_SEGV_LOCATION();
 		rdb_query(QUERY_LOW,
@@ -283,7 +283,7 @@ void sql_do_nick(User * u)
 		 account, (long int) u->timestamp, servid, server,
 		 countrycode, countryname, u->isaway ? "Y" : "N", u->isaway && u->awaymsg ? u->awaymsg : NULL);
 
-		if (!u->sqlid && db_getnick(u->sqlnick) == -1)
+		if (u->sqlid < 1 && db_getnick(u->sqlnick) == -1)
 		{
 			alog(LOG_DEBUG, "debug: Line 290 : Something went wrong trying to create user %s", u->sqlnick);
 		}
@@ -563,7 +563,7 @@ void change_user_host(char *source, char *host)
 
 	if (denora->do_sql)
 	{
-		if (user->sqlid || db_getnick(user->sqlnick) != -1)
+		if (user->sqlid > 0 || db_getnick(user->sqlnick) != -1)
 		{
 			*db = '\0';
 			ircsnprintf(db, sizeof(db), "UPDATE %s SET", UserTable);
@@ -629,7 +629,7 @@ void change_user_realname(char *source, char *realname)
 
 	alog(LOG_DEBUG, langstr(ALOG_REALNAME_FOR), user->nick, realname);
 
-	if (denora->do_sql && (user->sqlid || db_getnick(user->sqlnick) != -1))
+	if (denora->do_sql && (user->sqlid > 0 || db_getnick(user->sqlnick) != -1))
 	{
 		sqlrealname = rdb_escape(user->realname);
 		rdb_query(QUERY_LOW, "UPDATE %s SET realname=\'%s\' WHERE nickid=%d",
@@ -679,7 +679,7 @@ void change_user_username(char *source, char *username)
 
 	alog(LOG_DEBUG, langstr(ALOG_USERNAME_FOR), user->nick, username);
 
-	if (denora->do_sql && (user->sqlid || db_getnick(user->sqlnick) != -1))
+	if (denora->do_sql && (user->sqlid < 1 || db_getnick(user->sqlnick) != -1))
 	{
 		sqlusername = rdb_escape(user->username);
 		rdb_query(QUERY_LOW, "UPDATE %s SET username=\'%s\' WHERE nickid=%d",
@@ -1668,7 +1668,7 @@ void do_account(User * user, char *account)
 		free(user->account);
 	}
 
-	if (!user->sqlid && db_getnick(user->sqlnick) == -1)
+	if (user->sqlid < 1 && db_getnick(user->sqlnick) == -1)
 	{
 		alog(LOG_NONEXISTANT, "ACCOUNT set for nonexistent user %s", user);
 		return;
@@ -1767,7 +1767,7 @@ void do_p10account(User * user, char *account, int flag)
 
 	if (denora->do_sql)
 	{
-		if (!user->sqlid && db_getnick(user->sqlnick) == -1)
+		if (user->sqlid < 1 && db_getnick(user->sqlnick) == -1)
 		{
 			alog(LOG_NONEXISTANT, "ACCOUNT set for nonexistent user %s", user);
 			return;

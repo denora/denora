@@ -255,8 +255,8 @@ void db_connect(void)
 		          UStatsTable, e->name);
 		e = next;
 	}
-	rdb_query(QUERY_LOW, "DELETE FROM %s WHERE uname=\'%s\'", UStatsTable,
-	          s_StatServ);
+	rdb_query(QUERY_LOW, "DELETE FROM %s WHERE uname=\'%s\'", 
+		  UStatsTable,s_StatServ);
 	if (s_StatServ_alias)
 	{
 		rdb_query(QUERY_LOW, "DELETE FROM %s WHERE uname=\'%s\'",
@@ -307,7 +307,7 @@ int db_getserver(char *serv)
 	}
 
 	s = server_find(serv);
-	if (s && s->sqlid)
+	if (s && (s->sqlid > 0))
 	{
 		return s->sqlid;
 	}
@@ -334,7 +334,7 @@ int db_getserver(char *serv)
 		mysql_free_result(mysql_res);
 	}
 #endif
-	if (s && servid)
+	if (s && servid > 0)
 	{
 		s->sqlid = servid;
 	}
@@ -361,7 +361,7 @@ int db_getnick(char *nick)
 	SET_SEGV_LOCATION();
 
 	u = user_find(nick);
-	if (u && u->sqlid)
+	if (u && (u->sqlid > 0))
 	{
 		return u->sqlid;
 	}
@@ -386,7 +386,7 @@ int db_getnick(char *nick)
 		mysql_free_result(mysql_res);
 	}
 #endif
-	if (u && nickid)
+	if (u && (nickid > 0))
 	{
 		u->sqlid = nickid;
 	}
@@ -898,7 +898,7 @@ int db_getchannel(char *chan)
 	SET_SEGV_LOCATION();
 
 	c = findchan(chan);
-	if (c && c->sqlid)
+	if (c && c->sqlid > 0)
 	{
 		return c->sqlid;
 	}
@@ -927,7 +927,7 @@ int db_getchannel(char *chan)
 		mysql_free_result(mysql_res);
 	}
 #endif
-	if (c && chanid)
+	if (c && chanid > 0)
 	{
 		c->sqlid = chanid;
 	}
@@ -1020,17 +1020,19 @@ int db_getchannel_users(char *chan)
 /* chan is created if not exists */
 int db_getchancreate(char *chan)
 {
-	int res = -1;
+	int chanid = -1;
+	int created = 0;
+	int newcase = 0;
 	Channel *c;
 	char *channel;
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
+	MYSQL_ROW row;
 #endif
 
 	SET_SEGV_LOCATION();
 
 	c = findchan(chan);
-
 	if (c)
 	{
 		if (c->sqlid)
@@ -1050,43 +1052,64 @@ int db_getchancreate(char *chan)
 
 	if (!denora->do_sql)
 	{
-		return -1;
+		return chanid;
 	}
-	rdb_query(QUERY_HIGH, "SELECT chanid FROM %s WHERE channel=\'%s\'",
-	          ChanTable, channel);
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
+
+	if (!c || c->sqlid < 1)
 	{
-		if (mysql_num_rows(mysql_res))
-			res = atoi(*mysql_fetch_row(mysql_res));
-		mysql_free_result(mysql_res);
-	}
-#endif
-	SET_SEGV_LOCATION();
-	if (res == -1)
-	{
-		rdb_query(QUERY_HIGH, "INSERT INTO %s (channel) VALUES (\'%s\')",
+		rdb_query(QUERY_HIGH, "SELECT chanid, channel FROM %s WHERE channel=\'%s\'",
 		          ChanTable, channel);
-		res = rdb_insertid();
+#ifdef USE_MYSQL
+		mysql_res = mysql_store_result(mysql);
+		if (mysql_res)
+		{
+			if (mysql_num_rows(mysql_res))
+			{
+				row = mysql_fetch_row(mysql_res);
+				alog(LOG_DEBUG, "debug: RESULT: %s %s", row[0], row[1]);
+				chanid = atoi(row[0]);
+				if (channel != row[1])
+				{
+					newcase = 1;
+				}
+				if (c && chanid > 0)
+				{
+					c->sqlid = chanid;
+				}
+			}
+			mysql_free_result(mysql_res);
+		}
+#endif
+		SET_SEGV_LOCATION();
+		if (chanid < 1)
+		{
+			rdb_query(QUERY_HIGH, "INSERT INTO %s (channel) VALUES (\'%s\')",
+			          ChanTable, channel);
+			chanid = rdb_insertid();
+			if (c && chanid > 0)
+			{
+				c->sqlid = chanid;	
+			}
+			created = 1;
+		}
 	}
-	else
+
+	if (newcase)
 	{
-		/* We update the channel name in case casing has changed */
-		rdb_query(QUERY_LOW, "UPDATE %s SET channel = \'%s\' WHERE chanid = %d",
-		          ChanTable, channel, res);
+		if (!created && chanid != -1)
+		{
+			/* We update the channel name in case casing has changed */
+			rdb_query(QUERY_LOW, "UPDATE %s SET channel=\'%s\' WHERE chanid=%d",
+			          ChanTable, channel, chanid);
+		}
+		rdb_query(QUERY_LOW, "UPDATE %s SET chan=\'%s\' WHERE chan=\'%s\'",
+		          CStatsTable, channel, channel);
+		rdb_query(QUERY_LOW, "UPDATE %s SET chan=\'%s\' WHERE chan=\'%s\'",
+		          UStatsTable, channel, channel);
 	}
-	rdb_query(QUERY_LOW, "UPDATE %s SET chan = \'%s\' WHERE chan = \'%s\'",
-	          CStatsTable, channel, channel);
-	rdb_query(QUERY_LOW, "UPDATE %s SET chan = \'%s\' WHERE chan = \'%s\'",
-	          UStatsTable, channel, channel);
 	SET_SEGV_LOCATION();
-	if (c && res)
-	{
-		c->sqlid = res;
-	}
 	free(channel);
-	return res;
+	return chanid;
 }
 
 /*************************************************************************/

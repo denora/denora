@@ -20,7 +20,7 @@ Changes
 12/07/26 Set country to server's country if connection is localhost
 12/07/26 Use geoip's nice ntop/pton wrapper and depend on the existance of the functions, not the OS
 12/07/26 More cleanup and rewrites in src/users.c src/admin.c src/bans.c src/base64.c src/GeoIP.c
-         src/ChanBanMode.c
+         src/ChanBanMode.c src/ChanMode.c src/channels.c
 12/07/25 More cleanup and rewrite
 12/07/24 Lots of cleanup in src/db.c
 12/07/23 Rewrote db file handling a little

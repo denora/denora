@@ -125,7 +125,7 @@ void m_kill(char *source, char *nick, char *msg)
 	if (s && denora->do_sql)
 	{
 		id = db_getserver(s->name);
-		if (id)
+		if (id > 0)
 		{
 			rdb_query
 			(QUERY_LOW,

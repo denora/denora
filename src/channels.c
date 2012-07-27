@@ -140,6 +140,8 @@ void load_chan_db(void)
 			}
 		}                       /* else */
 	}                           /* while */
+
+	return;
 }
 
 /*************************************************************************/
@@ -189,6 +191,8 @@ void save_chan_db(void)
 	}
 	SET_SEGV_LOCATION();
 	filedb_close(dbptr, NULL, NULL);  /* close file */
+
+	return;
 }
 
 /*************************************************************************/
@@ -201,6 +205,8 @@ void InitStatsChanList(void)
 	StatsChanhead = list_create(-1);
 	cs = malloc(sizeof(StatsChannel));
 	bzero(cs, sizeof(StatsChannel));
+
+	return;
 }
 
 /*************************************************************************/
@@ -208,19 +214,22 @@ void InitStatsChanList(void)
 /* PART */
 void sql_do_part(char *chan, User * u)
 {
-	char *sqlchan;
 	int chanid, nickid;
+	char *sqlchan;
 
 	SET_SEGV_LOCATION();
 	sqlchan = rdb_escape(chan);
 	chanid = db_getchannel(sqlchan);
 	nickid = db_getnick(u->sqlnick);
 
-	if (chanid || nickid)
+	if (chanid > 0)
 	{
-		rdb_query(QUERY_LOW,
-		          "DELETE FROM %s WHERE nickid=%d AND chanid=%d",
-		          IsOnTable, nickid, chanid);
+		if (nickid > 0)
+		{
+			rdb_query(QUERY_LOW,
+			          "DELETE FROM %s WHERE nickid=%d AND chanid=%d",
+			          IsOnTable, nickid, chanid);
+		}
 		rdb_query(QUERY_LOW,
 		          "UPDATE %s SET currentusers=currentusers-1 WHERE chanid=%d",
 		          ChanTable, chanid);
@@ -229,6 +238,7 @@ void sql_do_part(char *chan, User * u)
 	}
 	SET_SEGV_LOCATION();
 	free(sqlchan);
+	return;
 }
 
 /*************************************************************************/
@@ -252,6 +262,8 @@ void sql_do_partall(char *nick)
 		db_removefromchans(db_getnick(sqlnick));
 		free(sqlnick);
 	}
+
+	return;
 }
 
 /*************************************************************************/
@@ -275,7 +287,12 @@ void sql_do_join(char *chan, char *nick)
 	}
 	SET_SEGV_LOCATION();
 	chanid = db_getchancreate(chan);
-	sql_do_addusers(chanid, nick);
+	if (chanid > 0)
+	{
+		sql_do_addusers(chanid, nick);
+	}
+
+	return;
 }
 
 /*************************************************************************/
@@ -289,6 +306,11 @@ void sql_do_addusers(int chanid, char *users)
 	char valuebuf[BUFSIZE];
 	int status_flag;
 	User *u;
+
+	if (chanid < 1 || !users)
+	{
+		return;
+	}
 
 	SET_SEGV_LOCATION();
 
@@ -356,7 +378,7 @@ void sql_do_addusers(int chanid, char *users)
 		u = user_find(users);
 		users = rdb_escape((u ? u->nick : users));
 		db_getnick((u ? u->nick : users));
-		if (u->sqlid)
+		if (u->sqlid > 0)
 		{
 			/* Build the query dynamically */
 			/* First, setup the head and tail for the basic query */
@@ -415,6 +437,8 @@ void sql_do_addusers(int chanid, char *users)
 			users++;
 		}
 	}
+
+	return;
 }
 
 /*************************************************************************/
@@ -441,11 +465,16 @@ void sql_do_sjoin(char *chan, char *users, char **modes, int nbmodes)
 
 	SET_SEGV_LOCATION();
 	chanid = db_getchancreate(chan);
-	sql_do_addusers(chanid, users);
+	if (chanid > 0)
+	{
+		sql_do_addusers(chanid, users);
+	}
 	if (nbmodes)
 	{
 		sql_do_chanmodes(chan, nbmodes, modes);
 	}
+
+	return;
 }
 
 /*************************************************************************/
@@ -508,6 +537,8 @@ void chan_deluser(User * user, Channel * c)
 	{
 		chan_delete(c);
 	}
+
+	return;
 }
 
 /*************************************************************************/
@@ -527,6 +558,8 @@ void chan_remove_user_status(Channel * chan, User * user, int16 status)
 			break;
 		}
 	}
+
+	return;
 }
 
 /*************************************************************************/
@@ -679,6 +712,8 @@ void do_bmask(char **av)
 		}
 		free(bans);
 	}
+
+	return;
 }
 
 char *p10_mode_parse(char *mode, int *nomode)
@@ -920,6 +955,8 @@ void do_p10_burst(char *source, int ac, char **av)
 		alog(LOG_ERROR,
 		     "ERROR: Unable to find channel %s in do_p10_burst()", av[0]);
 	}
+
+	return;
 }
 
 /*************************************************************************/
@@ -996,6 +1033,8 @@ void do_join(const char *source, int ac, char **av)
 		}
 		SET_SEGV_LOCATION();
 	}
+
+	return;
 }
 
 /*************************************************************************/
@@ -1020,6 +1059,8 @@ void do_p10_kick(const char *source, int ac, char **av)
 	free(v[0]);
 	free(v[1]);
 	free(v[2]);
+
+	return;
 }
 
 /*************************************************************************/
@@ -1067,9 +1108,12 @@ void do_kick(const char *source, int ac, char **av)
 			{
 				chan = rdb_escape(c2->name);
 				chanid = db_getchannel(chan);
-				rdb_query(QUERY_LOW,
-				          "UPDATE %s SET kickcount=%d WHERE chanid=%d",
-				          ChanTable, c2->stats->kickcount, chanid);
+				if (chanid > 0)
+				{
+					rdb_query(QUERY_LOW,
+					          "UPDATE %s SET kickcount=%d WHERE chanid=%d",
+					          ChanTable, c2->stats->kickcount, chanid);
+				}
 				sql_do_part(chan, user);
 				free(chan);
 			}
@@ -1112,6 +1156,8 @@ void do_kick(const char *source, int ac, char **av)
 			denora_cmd_join(s_StatServ, av[0], time(NULL));
 		}
 	}
+
+	return;
 }
 
 /*************************************************************************/
@@ -1188,6 +1234,8 @@ void do_part(const char *source, int ac, char **av)
 			free(c);
 		}
 	}
+
+	return;
 }
 
 /*************************************************************************/
@@ -1501,6 +1549,8 @@ void do_sjoin(const char *source, int ac, char **av)
 		SET_SEGV_LOCATION();
 		c = join_user_update(user, c, av[1], ts);
 	}
+
+	return;
 }
 
 
@@ -1595,6 +1645,8 @@ void do_cmode(const char *source, int ac, char **av)
 			}
 		}
 	}
+
+	return;
 }
 
 /*************************************************************************/
@@ -1658,7 +1710,7 @@ void do_topic(int ac, char **av)
 		author = rdb_escape(c->topic_setter);
 		topic = (c->topic ? rdb_escape(c->topic) : NULL);
 		chanid = db_getchannel(c->sqlchan);
-		if (chanid)
+		if (chanid > 0)
 		{
 			rdb_query
 			(QUERY_LOW,
@@ -1703,7 +1755,7 @@ void chan_clearmodes(const char *source, int ac, char **av)
 
 	modebuf = sstrdup("-");
 	c = findchan(av[0]);
-	if (c)
+	if (c && c->sqlid > 0)
 	{
 		while ((mode = *av[1]++))
 		{
@@ -1738,31 +1790,17 @@ void chan_clearmodes(const char *source, int ac, char **av)
 					}
 					if (denora->do_sql) sql_channel_exception(ALL, c, NULL);
 					break;
+				case 'q': /* remove all protected */
+				case 'a': /* remove all admins */
 				case 'o': /* remove all ops */
-					if (denora->do_sql)
-					{
-						rdb_query
-						(QUERY_LOW,
-						 "UPDATE %s SET mode_lo=\'N\' WHERE chanid=%d",
-						 IsOnTable, c->sqlid);
-					}
-					break;
 				case 'h': /* remove all halfops */
-					if (denora->do_sql)
-					{
-						rdb_query
-						(QUERY_LOW,
-						 "UPDATE %s SET mode_lh=\'N\' WHERE chanid=%d",
-						 IsOnTable, c->sqlid);
-					}
-					break;
 				case 'v': /* remove all voices */
 					if (denora->do_sql)
 					{
 						rdb_query
 						(QUERY_LOW,
-						 "UPDATE %s SET mode_lv=\'N\' WHERE chanid=%d",
-						 IsOnTable, c->sqlid);
+						 "UPDATE %s SET mode_l%c=\'N\' WHERE chanid=%d",
+						 IsOnTable, mode, c->sqlid);
 					}
 					break;
 				default:
@@ -1788,8 +1826,7 @@ void chan_adduser2(User * user, Channel * c)
 {
 	struct c_userlist *u;
 	ChannelStats *cs;
-	char nickbuf[BUFSIZE];
-	*nickbuf = '\0';
+	int chanid;
 
 	SET_SEGV_LOCATION();
 
@@ -1813,13 +1850,13 @@ void chan_adduser2(User * user, Channel * c)
 		c->stats->maxusertime = time(NULL);
 	}
 	send_event(EVENT_USER_JOIN, 2, user->nick, c->name);
-	if (denora->do_sql)
+	chanid = db_getchancreate(c->name);
+	if (denora->do_sql && chanid > 0)
 	{
-		rdb_query
-		(QUERY_LOW,
-		 "UPDATE %s SET currentusers=%d, maxusers=%d, maxusertime=%ld WHERE chanid=%d",
-		 ChanTable, c->stats->usercount, c->stats->maxusercount,
-		 (long int) c->stats->maxusertime, db_getchancreate(c->name));
+		rdb_query(QUERY_LOW,
+		          "UPDATE %s SET currentusers=%d, maxusers=%d, maxusertime=%ld WHERE chanid=%d",
+		          ChanTable, c->stats->usercount, c->stats->maxusercount,
+		          (long int) c->stats->maxusertime, chanid);
 	}
 	c->stats->joincounter++;
 	c->stats->joincounttime = time(NULL);
@@ -1828,8 +1865,8 @@ void chan_adduser2(User * user, Channel * c)
 	{
 		c->statservon = 1;
 	}
-	cs = find_cs(c->name);
 
+	cs = find_cs(c->name);
 	if (cs && c->statservon == 0)
 	{
 		denora_cmd_join(s_StatServ, c->name, c->creation_time);

@@ -517,7 +517,7 @@ void scarynet_cmd_join(char *user, char *channel, time_t chantime)
 
 	ud = find_uid(user);
 
-	if (started)
+	if (UplinkSynced)
 	{
 		send_cmd((ud ? ud->uid : user), "J %s %ld", channel,
 		         (long int) chantime);
@@ -1024,8 +1024,8 @@ void scarynet_cmd_nick(char *nick, char *name, const char *modes)
 }
 
 /* EVENT: SERVER */
-/* SERVER Auska.Nomadirc.net 1 1098025304 1098036331 J10 ABAP] + :Test Server */
-/* SERVER [SERVERNAME] [HOPCOUNT] [START TIME] [LINK TIME] [PROTOCOL] [NUMERIC/MAXCONN] [FLAGS] :[DESCRIPTION] */
+/* [NUMERIC] SERVER [SERVERNAME] [HOPCOUNT] [START TIME] [LINK TIME] [PROTOCOL] [NUMERIC/MAXCONN] [FLAGS] :[DESCRIPTION] */
+/* [NUMERIC] SERVER Auska.Nomadirc.net 1 1098025304 1098036331 J10 ABAP] + :Test Server */
 /* (AB S trystan.nomadirc.net 2 0 1106520454 P10 ACAP] +h :Test Server) */
 int denora_event_server(char *source, int ac, char **av)
 {

@@ -192,6 +192,12 @@ int db_mysql_query(char *sql, int con)
 	int result, lcv;
 	int pingresult;
 	int closesql = 0;
+/* Uncomment for query origination backtrace */
+/*
+	int nptrs, j;
+	void *buffer[100];
+	char **strings;
+*/
 
 	if (!denora->do_sql)
 	{
@@ -205,6 +211,17 @@ int db_mysql_query(char *sql, int con)
 	{
 		result = mysql_query(con ? mysql_thread : mysql, sql);
 		alog(LOG_DEBUG, "[con %d/%s] %s", con, result == 0 ? "Accepted" : "Rejected", sql);
+
+		/* Uncomment if you want to see where the query originates from */
+		/*
+			nptrs = backtrace(buffer, 6);
+			strings = backtrace_symbols(buffer, nptrs);
+			if (strings != NULL) {
+           			for (j = 2; j < nptrs; j++)
+					alog(LOG_DEBUG, "[bt %d/%d] %s", j, nptrs, strings[j]);
+				free(strings);
+			}
+		*/
 	}
 	else
 	{

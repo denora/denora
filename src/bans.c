@@ -686,7 +686,7 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
 #endif
-	int sqlid = 0;
+	int sqlid = -1;
 	int checkdur = 0;
 	int expire = 0;
 	uint32 setattime = 0;
@@ -781,9 +781,12 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
 			{
 				sqlid = z->sqlid;
 			}
-			rdb_query(QUERY_LOW,
-			         "UPDATE %s SET setat=%ld, expires=%ld, reason=\'%s\' WHERE id = \'%d\'",
-			         GlineTable, strtoul(setat, NULL, 10), strtoul(expires, NULL, 10), sqlreason, sqlid);
+			if (sqlid > 0)
+			{
+				rdb_query(QUERY_LOW,
+				         "UPDATE %s SET setat=%ld, expires=%ld, reason=\'%s\' WHERE id = \'%d\'",
+				         GlineTable, strtoul(setat, NULL, 10), strtoul(expires, NULL, 10), sqlreason, sqlid);
+			}
 		}
 		else
 		{
@@ -806,21 +809,24 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
 				{
 					mysql_row = mysql_fetch_row(mysql_res);
 					sqlid = strtol(mysql_row[0], NULL, 10);
-					if (g)
+					if (sqlid > 0)
 					{
-						g->sqlid = sqlid;
+						if (g)
+						{
+							g->sqlid = sqlid;
+						}
+						if (q)
+						{
+							q->sqlid = sqlid;
+						}
+						if (z)
+						{
+							z->sqlid = sqlid;
+						}
+						rdb_query(QUERY_LOW,
+						         "UPDATE %s SET setat=%ld, expires=%ld, reason=\'%s\' WHERE id = \'%d\'",
+						         GlineTable, strtoul(setat, NULL, 10), strtoul(expires, NULL, 10), sqlreason, sqlid);
 					}
-					if (q)
-					{
-						q->sqlid = sqlid;
-					}
-					if (z)
-					{
-						z->sqlid = sqlid;
-					}
-					rdb_query(QUERY_LOW,
-					         "UPDATE %s SET setat=%ld, expires=%ld, reason=\'%s\' WHERE id = \'%d\'",
-					         GlineTable, strtoul(setat, NULL, 10), strtoul(expires, NULL, 10), sqlreason, sqlid);
 				}
 				mysql_free_result(mysql_res);
 			}
@@ -935,7 +941,7 @@ void sql_do_server_spam_add(char *target, char *action,
 	sqlaction = rdb_escape(action);
 	sqlreason = rdb_escape(reason);
 
-	if (sf && sf->sqlid)
+	if (sf && sf->sqlid > 0)
 	{
 		rdb_query(QUERY_LOW,
 			 "UPDATE %s SET target=\'%s\', action=\'%s\', setby=\'%s\', expires=%ld, setat=%ld, duration=%ld, reason=\'%s\' WHERE id=\'%d\'",
@@ -945,7 +951,6 @@ void sql_do_server_spam_add(char *target, char *action,
 
 		free(sqlaction);
 		free(sqlreason);
-
 		return;
 	}
 
@@ -953,7 +958,7 @@ void sql_do_server_spam_add(char *target, char *action,
 
 	sqlregex = rdb_escape(regex);
 
-	rdb_query(QUERY_HIGH, "SELECT id FROM %s WHERE regex = \'%s\';",
+	rdb_query(QUERY_HIGH, "SELECT id FROM %s WHERE regex = \'%s\' LIMIT 1",
 	          SpamTable, sqlregex);
 #ifdef USE_MYSQL
 
@@ -973,14 +978,17 @@ void sql_do_server_spam_add(char *target, char *action,
 		{
 			mysql_row = mysql_fetch_row(mysql_res);
 			sqlid = strtol(mysql_row[0], NULL, 10);
-			if (sf)
+			if (sqlid > 0)
 			{
-				sf->sqlid = sqlid;
+				if (sf)
+				{
+					sf->sqlid = sqlid;
+				}
+				rdb_query(QUERY_LOW,
+				          "UPDATE %s SET target=\'%s\', action=\'%s\', setby=\'%s\', expires=%ld, setat=%ld, duration=%ld, reason=\'%s\' WHERE id=\'%d\'",
+				          SpamTable, target, sqlaction, setby, strtoul(expires, NULL, 10), strtoul(setat, NULL, 10),
+				          strtoul(duration, NULL, 10), sqlreason, sqlid);
 			}
-			rdb_query(QUERY_LOW,
-			          "UPDATE %s SET target=\'%s\', action=\'%s\', setby=\'%s\', expires=%ld, setat=%ld, duration=%ld, reason=\'%s\' WHERE id=\'%d\'",
-			          SpamTable, target, sqlaction, setby, strtoul(expires, NULL, 10), strtoul(setat, NULL, 10),
-			          strtoul(duration, NULL, 10), sqlreason, sqlid);
 		}
 		mysql_free_result(mysql_res);
 	}

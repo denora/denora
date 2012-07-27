@@ -497,8 +497,7 @@ Server *do_server(const char *source, char *servername, char *hops,
 		sqluplinkserver = rdb_escape(uplinkserver);
 		upservid = db_getserver(sqluplinkserver);
 
-		if (ServerCacheTime
-		        && ((servid = db_getserver(servername)) != -1))
+		if (ServerCacheTime && ((servid = db_getserver(servername)) > 0))
 		{
 			rdb_query
 			(QUERY_LOW,
@@ -514,7 +513,7 @@ Server *do_server(const char *source, char *servername, char *hops,
 			{
 				rdb_query
 				(QUERY_HIGH,
-				 "INSERT INTO %s (server, country, countrycode, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld))  ON DUPLICATE KEY UPDATE hops=\'%s\', comment=\'%s\', linkedto=%d, connecttime=NOW(), maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld)",
+				 "INSERT INTO %s (server, country, countrycode, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld)) ON DUPLICATE KEY UPDATE hops=\'%s\', comment=\'%s\', linkedto=%d, connecttime=NOW(), maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld)",
 				 ServerTable, servername, serv->country, serv->countrycode, hops, descript, upservid,
 				 serv->ss->maxusers, serv->ss->maxusertime,
 				 serv->ss->lastseen, hops, descript,
