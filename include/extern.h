@@ -1022,7 +1022,6 @@ E QueueEntry *RemoveQueueEntry(QueueEntry *qp);
 E void PrintQueueEntry(QueueEntry *qp);
 E void ClearQueueEntry(QueueEntry *qp);
 E QueueEntry *ExecuteQueue(QueueEntry *qp);
-
 E QueueEntry *qp;
 
 E void insert_admin(Dadmin * a);

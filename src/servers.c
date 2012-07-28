@@ -494,45 +494,48 @@ Server *do_server(const char *source, char *servername, char *hops,
 	{
 		servername = rdb_escape(servername);
 		descript = rdb_escape(descript);
-		sqluplinkserver = rdb_escape(uplinkserver);
-		upservid = db_getserver(sqluplinkserver);
-
-		if (ServerCacheTime && ((servid = db_getserver(servername)) > 0))
+		servid = db_getserver(servername);
+		if (uplinkserver)
 		{
-			rdb_query
-			(QUERY_LOW,
-			 "UPDATE %s SET server=\'%s\', hops=\'%s\', comment=\'%s\', connecttime=NOW(), linkedto=%d, online=\'Y\', maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld) WHERE servid=%d",
-			 ServerTable, servername, hops, descript, upservid,
-			 serv->ss->maxusers, serv->ss->maxusertime,
-			 (long int) serv->ss->lastseen, servid);
+			sqluplinkserver = rdb_escape(uplinkserver);
+			upservid = db_getserver(sqluplinkserver);
+			free(sqluplinkserver);
+		}
+
+		if (ServerCacheTime && servid > 0)
+		{
+			rdb_query(QUERY_LOW,
+			          "UPDATE %s SET server=\'%s\', hops=\'%s\', comment=\'%s\', connecttime=NOW(), linkedto=%d, online=\'Y\', maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld) WHERE servid=%d",
+			          ServerTable, servername, hops, descript, upservid,
+			          serv->ss->maxusers, serv->ss->maxusertime,
+			          (long int) serv->ss->lastseen, servid);
 			add = 0;
 		}
+
 		if (add)
 		{
 			if (KeepServerTable)
 			{
-				rdb_query
-				(QUERY_HIGH,
+				rdb_query(QUERY_HIGH,
 				 "INSERT INTO %s (server, country, countrycode, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld)) ON DUPLICATE KEY UPDATE hops=\'%s\', comment=\'%s\', linkedto=%d, connecttime=NOW(), maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld)",
 				 ServerTable, servername, serv->country, serv->countrycode, hops, descript, upservid,
 				 serv->ss->maxusers, serv->ss->maxusertime,
 				 serv->ss->lastseen, hops, descript,
-				 db_getserver(sqluplinkserver), serv->ss->maxusers,
+				 upservid, serv->ss->maxusers,
 				 serv->ss->maxusertime, (long int) serv->ss->lastseen);
 			}
 			else
 			{
-				rdb_query
-				(QUERY_HIGH,
+				rdb_query(QUERY_HIGH,
 				 "INSERT INTO %s (server, country, countrycode, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld))",
 				 ServerTable, servername, serv->country, serv->countrycode, hops, descript, upservid,
 				 serv->ss->maxusers, serv->ss->maxusertime,
 				 (long int) serv->ss->lastseen);
 			}
+			servid = db_getserver(servername);
 		}
+
 		free(descript);
-		free(sqluplinkserver);
-		servid = db_getserver(servername);
 
 		if (!stricmp(servername, ServerName))
 		{
@@ -599,7 +602,7 @@ void sql_uline(char *server)
 	if (*server != '*')
 	{
 		id = db_getserver(server);
-		if (id)
+		if (id > 0)
 		{
 			rdb_query(QUERY_LOW, "UPDATE %s SET uline=1 WHERE servid=%d",
 			          ServerTable, id);

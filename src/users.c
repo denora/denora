@@ -241,6 +241,11 @@ void sql_do_nick(User * u)
 
 	SET_SEGV_LOCATION();
 
+	if (!u)
+	{
+		return;
+	}
+
 	username = rdb_escape(u->username);
 	account = (u->account) ? rdb_escape(u->account) : NULL;
 	host = rdb_escape(u->host);
@@ -289,10 +294,7 @@ void sql_do_nick(User * u)
 		}
 	}
 
-	if (u)
-	{
-		sql_reset_usermodes(u);
-	}
+	sql_reset_usermodes(u);
 
 	SET_SEGV_LOCATION();
 

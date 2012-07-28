@@ -136,19 +136,19 @@ QueueEntry *AddQueueEntry(QueueEntry * qep, char *sqlmsg)
 {
 	QueueEntry *lp = qep;
 
-	alog(LOG_SQLDEBUG, "Threading Adding Query %s", sqlmsg);
+	alog(LOG_DEBUG, "Threading Adding Query %s", sqlmsg);
 
 	if (qep != NULL)
 	{
 		while (qep && qep->link != NULL)
 		{
+			alog(LOG_DEBUG,"Checking qep %ld : link %ld", (long int) qep, (long int) qep->link);
 			qep = qep->link;
 		}
 		queue_lock();
 		qep->link = (QueueEntry *) malloc(sizeof(QueueEntry));
-		qep = qep->link;
-		qep->link = NULL;
-		qep->msg = sstrdup(sqlmsg);
+		qep->link->link = NULL;
+		qep->link->msg = sstrdup(sqlmsg);
 		queue_signal();
 		queue_unlock(NULL);
 		return lp;
@@ -169,11 +169,11 @@ QueueEntry *AddQueueEntry(QueueEntry * qep, char *sqlmsg)
 
 QueueEntry *RemoveQueueEntry(QueueEntry * qep)
 {
-	QueueEntry *tempp;
+	QueueEntry *tempp = qep->link;
+
 	alog(LOG_EXTRADEBUG, "Removing Queue entry data");
 	alog(LOG_EXTRADEBUG, "SQL %s", qep->msg);
 	free(qep->msg);
-	tempp = qep->link;
 	free(qep);
 	return tempp;
 }
