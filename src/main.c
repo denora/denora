@@ -456,6 +456,7 @@ void save_databases()
 int main(int ac, char **av)
 {
 	int i, j;
+	char *bufres;
 	volatile time_t last_update;
 	volatile time_t last_htmlupdate;
 	volatile time_t last_server_ping;
@@ -660,15 +661,15 @@ int main(int ac, char **av)
 		}
 
 		waiting = 1;
-		i = (long int)sgets2(inbuf, sizeof(inbuf), servsock); 
+		bufres = sgets2(inbuf, sizeof(inbuf), servsock);
 		waiting = 0;
-		if ((i > 0) || (i < (-1)))
+		if (bufres && bufres != (char *) 0 && bufres != (char *) -1)
 		{
 			SET_START_TIME();
 			process();
 			CHECK_END_TIME();
 		}
-		else if (i == 0)
+		else if (bufres == (char *) 0)
 		{
 			int errno_save = errno;
 			denora->qmsg = calloc(BUFSIZE, 1);

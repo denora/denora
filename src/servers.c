@@ -960,9 +960,14 @@ void delete_server(Server * serv, const char *quitreason, int depth)
 					db_removenick(u->sqlnick, (char *) quitreason);
 				delete_user(u);
 			}
+
+			if (!unext)
+			{
+				break;
+			}
+
 			u = unext;
 		}
-		free(u);
 		alog(LOG_DEBUG, "debug: delete_server() cleared all users");
 	}
 	else

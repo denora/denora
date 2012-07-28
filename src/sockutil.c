@@ -458,11 +458,13 @@ char *sgets2(char *buf, int len, deno_socket_t s)
 
 	if (!str || str == (char *) -1)
 		return str;
+
 	str = buf + strlen(buf) - 1;
 	if (*str == '\n')
 		*str-- = 0;
 	if (*str == '\r')
 		*str = 0;
+
 	return buf;
 }
 

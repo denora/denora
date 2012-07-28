@@ -572,12 +572,12 @@ void change_user_host(char *source, char *host)
 			{
 				if(ircd->vhostchar2)
 				{
-					ircsnprintf(&db[strlen(db) - 1], sizeof(db), " mode_l%c=\'Y\',", ircd->vhostchar2);
+					ircsnprintf(&db[strlen(db)], sizeof(db), " mode_l%c=\'Y\',", ircd->vhostchar2);
 				}
-				ircsnprintf(&db[strlen(db) - 1], sizeof(db), " mode_l%c=\'Y\',", ircd->vhostchar);
+				ircsnprintf(&db[strlen(db)], sizeof(db), " mode_l%c=\'Y\',", ircd->vhostchar);
 			}
 			sqlvhost = rdb_escape(user->vhost);
-			ircsnprintf(&db[strlen(db) - 1], sizeof(db), " hiddenhostname=\'%s\' WHERE nickid=%d", sqlvhost, user->sqlid);
+			ircsnprintf(&db[strlen(db)], sizeof(db), " hiddenhostname=\'%s\' WHERE nickid=%d", sqlvhost, user->sqlid);
 			rdb_query(QUERY_LOW, db);
 			free(sqlvhost);
 		}
