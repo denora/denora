@@ -174,9 +174,7 @@ int rdb_query(int i, const char *fmt, ...)
 		{
 			/*
 			 * This should be: qp = AddQueueEntry(qp, buf);
-			 * However, after 16 entries existing in the queue 
-			 * this will SEGV denora, and we can't have that
-			 * for now... *MIST!*
+			 * However this will SEGV denora, and we can't have that for now... *MIST!*
 			 */
 			qp = AddQueueEntry(NULL, buf);
 			res = 1;

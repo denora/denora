@@ -210,16 +210,19 @@ int db_mysql_query(char *sql, int con)
 	if (!pingresult)
 	{
 		result = mysql_query(con ? mysql_thread : mysql, sql);
-		alog(LOG_DEBUG, "[con %d/%s] %s", con, result == 0 ? "Accepted" : "Rejected", sql);
+		if (UseThreading)
+		{
+			alog(LOG_DEBUG, "[con %d/%s] %s", con, result == 0 ? "Accepted" : "Rejected", sql);
 #ifdef USE_MYSQL_BT
-		nptrs = backtrace(buffer, 6);
-		strings = backtrace_symbols(buffer, nptrs);
-		if (strings != NULL) {
-           		for (j = 2; j < nptrs; j++)
-				alog(LOG_DEBUG, "[bt %d/%d] %s", j, nptrs, strings[j]);
-			free(strings);
-		}
+			nptrs = backtrace(buffer, 6);
+			strings = backtrace_symbols(buffer, nptrs);
+			if (strings != NULL) {
+           			for (j = 2; j < nptrs; j++)
+					alog(LOG_DEBUG, "[bt %d/%d] %s", j, nptrs, strings[j]);
+				free(strings);
+			}
 #endif
+		}
 	}
 	else
 	{

@@ -24,6 +24,9 @@ deno_cond_t queuecond;
 #endif
 
 QueueEntry *qp;
+int qp_job_count;
+int qp_exec_count;
+int qp_total;
 
 /*************************************************************************/
 
@@ -137,6 +140,7 @@ QueueEntry *AddQueueEntry(QueueEntry * qep, char *sqlmsg)
 	QueueEntry *lp = qep;
 
 	alog(LOG_DEBUG, "Threading Adding Query %s", sqlmsg);
+	alog(LOG_DEBUG, "Threading Stats: %d Jobs - %d Total - %d Executed", qp_job_count, qp_total, qp_exec_count);
 
 	if (qep != NULL)
 	{
@@ -145,10 +149,12 @@ QueueEntry *AddQueueEntry(QueueEntry * qep, char *sqlmsg)
 			alog(LOG_DEBUG,"Checking qep %ld : link %ld", (long int) qep, (long int) qep->link);
 			qep = qep->link;
 		}
+
 		queue_lock();
-		qep->link = (QueueEntry *) malloc(sizeof(QueueEntry));
+		qep->link = (QueueEntry *) malloc(sizeof(QueueEntry) * ++qp_job_count);
 		qep->link->link = NULL;
 		qep->link->msg = sstrdup(sqlmsg);
+		qp_total++;
 		queue_signal();
 		queue_unlock(NULL);
 		return lp;
@@ -159,6 +165,8 @@ QueueEntry *AddQueueEntry(QueueEntry * qep, char *sqlmsg)
 		qep = (QueueEntry *) malloc(sizeof(QueueEntry));
 		qep->link = NULL;
 		qep->msg = sstrdup(sqlmsg);
+		qp_total++;
+		qp_job_count++;
 		queue_signal();
 		queue_unlock(NULL);
 		return qep;
@@ -173,8 +181,10 @@ QueueEntry *RemoveQueueEntry(QueueEntry * qep)
 
 	alog(LOG_EXTRADEBUG, "Removing Queue entry data");
 	alog(LOG_EXTRADEBUG, "SQL %s", qep->msg);
+
 	free(qep->msg);
 	free(qep);
+	qp_job_count--;
 	return tempp;
 }
 
@@ -207,6 +217,7 @@ QueueEntry *ExecuteQueue(QueueEntry * qep)
 	if (qep != NULL)
 	{
 		rdb_direct_query(qep->msg, 1);
+		qp_exec_count++;
 		return RemoveQueueEntry(qep);
 	}
 	return NULL;
