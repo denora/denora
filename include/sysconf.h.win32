@@ -45,7 +45,7 @@
 
 #define STATS_BUILD		"Windows"
 
-#define USE_THREADS		1
+#define USE_THREADS		0
 
 /* Since windows does not have autoconf */
 #define PACKAGE_NAME		"Denora"
