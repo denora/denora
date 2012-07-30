@@ -112,6 +112,10 @@ the following:
   * Copy the .diff file into the root Denora sources directory.
   * Type patch -p1 <file.diff
 
+If you are using the git version, simply go to your Denora sources directory
+and type:
+  git pull
+
 To upgrade Denora, just follow the installation instructions described in
 section 2.
 

@@ -148,6 +148,11 @@ TABLE OF CONTENTS
         -protocoldebug  Display protocol debug information, very helpful in 
                         supporting ircds.
 
+    Denora also has a feature to crypt passwords to be used in the config file,
+    to encrypt your password use the following command-line option:
+        -mkpass=passwd  Encrypt a password
+
+
 5. CONTACT AND SUPPORT
 ----------------------
 

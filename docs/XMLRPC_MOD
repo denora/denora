@@ -38,7 +38,7 @@ Denora XMLRPC Module Coding
 
     D) The Handler is not ready for use yet; now you must add it to the hash
        with "moduleAddXMLRPCcmd". You will want to pass to this function the
-       return of "createCronEvent"
+       return of "createXMLCommand"
 
         status = moduleAddXMLRPCcmd(xml);
 
