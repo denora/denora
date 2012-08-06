@@ -164,7 +164,7 @@ CAN_QUICK="no"
 REGSCRIPT="no"
 MYSQL="yes"
 MYSQL_BT="no"
-THREAD="yes"
+THREAD="no"
 
 ###########################################################################
 # Check out the options
@@ -501,7 +501,7 @@ echo ""
 ####
 
 ok=0
-DEF=Yes
+DEF=no
 echo "Allow Denora to attempt to build a threading library so that the code can be multithreaded for speed"
 while [ $ok -lt 1 ] ; do
 	echo2 "[$THREAD] "

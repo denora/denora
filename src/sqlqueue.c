@@ -21,7 +21,6 @@ deno_cond_t queuecond = PTHREAD_COND_INITIALIZER;
 deno_mutex_t queuemut;
 deno_cond_t queuecond;
 #endif
-#endif
 
 QueueEntry *qp;
 int qp_job_count;
@@ -32,7 +31,6 @@ int qp_total;
 
 int QueueEntryInit(void)
 {
-#ifdef USE_THREADS
 	deno_thread_t th;
 
 	if (UseThreading)
@@ -45,15 +43,14 @@ int QueueEntryInit(void)
 		{
 			return 0;
 		}
-		alog(LOG_DEBUG, "debug: Creating Queue thread %ld",
-		     (long) th);
+		alog(LOG_DEBUG, "debug: Creating Queue thread 0x%x",
+		     th);
 #ifdef USE_MYSQL
 		db_mysql_init(1);
 #endif
 	}
 
 	alog(LOG_DEBUG, "Queue Thread initialized");
-#endif
 	return 1;
 }
 
@@ -62,44 +59,36 @@ int QueueEntryInit(void)
 void queue_unlock(void *arg)
 {
 	USE_VAR(arg);
-#ifdef USE_THREADS
-	alog(LOG_EXTRADEBUG, "debug: Thread %ld: Unlocking queue mutex",
-	     (long int) deno_thread_self());
+	alog(LOG_EXTRADEBUG, "debug: Thread 0x%x: Unlocking queue mutex",
+	     deno_thread_self());
 	deno_mutex_unlock(queuemut);
-#endif
 }
 
 /*************************************************************************/
 
 void queue_lock(void)
 {
-#ifdef USE_THREADS
-	alog(LOG_EXTRADEBUG, "debug: Thread %ld: Locking proxy queue mutex",
-	     (long int) deno_thread_self());
+	alog(LOG_EXTRADEBUG, "debug: Thread 0x%x: Locking proxy queue mutex",
+	     deno_thread_self());
 	deno_mutex_lock(queuemut);
-#endif
 }
 
 /*************************************************************************/
 
 void queue_wait(void)
 {
-#ifdef USE_THREADS
-	alog(LOG_EXTRADEBUG, "debug: Thread %ld: waiting proxy queue condition",
-	     (long int) deno_thread_self());
+	alog(LOG_EXTRADEBUG, "debug: Thread 0x%x: waiting proxy queue condition",
+	     deno_thread_self());
 	deno_cond_wait(queuecond, queuemut);
-#endif
 }
 
 /*************************************************************************/
 
 void queue_signal(void)
 {
-#ifdef USE_THREADS
-	alog(LOG_EXTRADEBUG, "debug: Thread %ld: Signaling proxy queue condition",
-	     (long int) deno_thread_self());
+	alog(LOG_EXTRADEBUG, "debug: Thread 0x%x: Signaling proxy queue condition",
+	     deno_thread_self());
 	deno_cond_signal(queuecond);
-#endif
 }
 
 /*************************************************************************/
@@ -108,7 +97,6 @@ void *queue_thread_main(void *arg)
 {
 	USE_VAR(arg);
 
-#ifdef USE_THREADS
 	while (1)
 	{
 		deno_cleanup_push(queue_unlock, NULL);
@@ -122,14 +110,13 @@ void *queue_thread_main(void *arg)
 			queue_lock();
 			deno_cleanup_pop(1);
 
-			while (qp != NULL)
+			while (qp)
 			{
 				qp = ExecuteQueue(qp);
 			}
 			break;
 		}
 	}
-#endif
 	return NULL;
 }
 
@@ -137,40 +124,40 @@ void *queue_thread_main(void *arg)
 
 QueueEntry *AddQueueEntry(QueueEntry * qep, char *sqlmsg)
 {
-	QueueEntry *lp = qep;
+	QueueEntry *lp = qep, *qtmp;
 
 	alog(LOG_DEBUG, "Threading Adding Query %s", sqlmsg);
 	alog(LOG_DEBUG, "Threading Stats: %d Jobs - %d Total - %d Executed", qp_job_count, qp_total, qp_exec_count);
 
-	if (qep != NULL)
+	queue_lock();
+
+	/* Create a queue entry */
+	qtmp = (QueueEntry *) malloc(sizeof(QueueEntry));
+	qtmp->link = NULL;
+	qtmp->msg = sstrdup(sqlmsg);
+
+	qp_job_count++;
+	qp_total++;
+
+	/* Find the last member of the queue */
+	if (qep)
 	{
-		while (qep && qep->link != NULL)
+		while (qep && qep->link)
 		{
-			alog(LOG_DEBUG,"Checking qep %ld : link %ld", (long int) qep, (long int) qep->link);
+			alog(LOG_DEBUG,"Checking qep 0x%x : link 0x%x", qep, qep->link);
 			qep = qep->link;
 		}
 
-		queue_lock();
-		qep->link = (QueueEntry *) malloc(sizeof(QueueEntry) * ++qp_job_count);
-		qep->link->link = NULL;
-		qep->link->msg = sstrdup(sqlmsg);
-		qp_total++;
-		queue_signal();
-		queue_unlock(NULL);
-		return lp;
+		qep->link = qtmp;
 	}
 	else
 	{
-		queue_lock();
-		qep = (QueueEntry *) malloc(sizeof(QueueEntry));
-		qep->link = NULL;
-		qep->msg = sstrdup(sqlmsg);
-		qp_total++;
-		qp_job_count++;
-		queue_signal();
-		queue_unlock(NULL);
-		return qep;
+		lp = qtmp;
 	}
+
+	queue_signal();
+	queue_unlock(NULL);
+	return lp;
 }
 
 /***************************************************************************************/
@@ -194,13 +181,13 @@ void PrintQueueEntry(QueueEntry * qep)
 {
 	int i = 0;
 
-	if (qep == NULL)
+	if (!qep)
 	{
 		alog(LOG_DEBUG, "Queue is currently Empty");
 	}
 	else
 	{
-		while (qep != NULL)
+		while (qep)
 		{
 			alog(LOG_DEBUG, "List Entry %d", i);
 			alog(LOG_DEBUG, "Message %s", qep->msg);
@@ -214,7 +201,7 @@ void PrintQueueEntry(QueueEntry * qep)
 
 QueueEntry *ExecuteQueue(QueueEntry * qep)
 {
-	if (qep != NULL)
+	if (qep)
 	{
 		rdb_direct_query(qep->msg, 1);
 		qp_exec_count++;
@@ -227,10 +214,11 @@ QueueEntry *ExecuteQueue(QueueEntry * qep)
 
 void ClearQueueEntry(QueueEntry * qep)
 {
-	while (qep != NULL)
+	while (qep)
 	{
 		qep = RemoveQueueEntry(qep);
 	}
 }
 
 /***************************************************************************************/
+#endif

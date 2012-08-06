@@ -1289,10 +1289,12 @@ int init(int ac, char **av)
 		}
 	}
 #endif
+#ifdef USE_THREADS
 	if (UseThreading)
 	{
 		QueueEntryInit();
 	}
+#endif
 	statserv_int();
 
 	/* Add Core MSG handles */

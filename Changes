@@ -18,6 +18,8 @@ Additions
 11/02/11 r416 Added support for ircd-rizon
 
 Changes
+12/08/05 Threading is now disabled by default (it's only used for mysql and the current implementation
+	 has serious issues)
 12/07/26 Set country to server's country if connection is localhost
 12/07/26 Use geoip's nice ntop/pton wrapper and depend on the existance of the functions, not the OS
 12/07/26 More cleanup and rewrites in src/users.c src/admin.c src/bans.c src/base64.c src/GeoIP.c

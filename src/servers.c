@@ -957,10 +957,12 @@ void delete_server(Server * serv, const char *quitreason, int depth)
 		while (u)
 		{
 			unext = nextuser();
-			if (u->server->name == serv->name)
+			if (u && u->server == serv)
 			{
 				if (denora->do_sql)
+				{
 					db_removenick(u->sqlnick, (char *) quitreason);
+				}
 				delete_user(u);
 			}
 

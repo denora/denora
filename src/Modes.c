@@ -234,11 +234,7 @@ void RemoveUserMode(User * user, char *mode)
 
 void ModuleSetUserMode(int mode, int flag)
 {
-	if (flag == IRCD_ENABLE)
-	{
-		umodes[mode] = flag;
-	}
-	else if (flag == IRCD_DISABLE)
+	if (flag == IRCD_DISABLE)
 	{
 		umodes[mode] = flag;
 	}
