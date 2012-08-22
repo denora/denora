@@ -40,13 +40,17 @@ Exclude *find_exclude(char *mask, char *server)
 	SET_SEGV_LOCATION();
 
 	if (!mask)
+	{
 		return NULL;
+	}
+
 	for (e = exlists[EXCLUDEHASH(mask)]; e; e = e->next)
 	{
 		if (stricmp(e->name, mask) == 0)
 		{
 			return e;
 		}
+
 		if (NumExcludeServers && server)
 		{
 			if (isExcludedServer(server))

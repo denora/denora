@@ -107,6 +107,12 @@ int do_set(User * u, int ac, char **av)
 		}
 		if (stricmp(setting, "on") == 0)
 		{
+			if (denora->do_sql)
+			{
+				notice_user(s_StatServ, u, "SQL already on.");
+				return MOD_CONT;
+			}
+
 			if (rdb_init())
 			{
 				notice_lang(s_StatServ, u, STAT_SET_SQL_ON);
