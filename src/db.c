@@ -291,11 +291,11 @@ void db_connect(void)
 
 /*************************************************************************/
 
-/* serv should be db_escape'd before call */
 /* -1 if server not found, servid else */
 int db_getserver(char *serv)
 {
 	Server *s;
+	char *sqlserv;
 	int servid = -1;
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
@@ -319,8 +319,9 @@ int db_getserver(char *serv)
 		return servid;
 	}
 
+	sqlserv = rdb_escape(serv);
 	rdb_query(QUERY_HIGH, "SELECT servid FROM %s WHERE server=\'%s\'",
-	          ServerTable, serv);
+	          ServerTable, sqlserv);
 #ifdef USE_MYSQL
 	mysql_res = mysql_store_result(mysql);
 	if (mysql_res)
@@ -338,6 +339,7 @@ int db_getserver(char *serv)
 	{
 		s->sqlid = servid;
 	}
+	free(sqlserv);
 	return servid;
 }
 

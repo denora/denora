@@ -111,16 +111,13 @@ void m_kill(char *source, char *nick, char *msg)
 		s->serverkills++;
 		send_event(EVENT_SERVER_KILL, 3, source, nick, msg);
 	}
-	do_kill(nick, msg);
 	if (denora->do_sql)
 	{
-		nick = rdb_escape(nick);
 		db_removenick(nick, msg);
 		if (UserCacheTime)
 		{
 			db_cleanuser();
 		}
-		free(nick);
 	}
 	if (s && denora->do_sql)
 	{
@@ -133,6 +130,7 @@ void m_kill(char *source, char *nick, char *msg)
 			 ServerTable, s->ircopskills, s->serverkills, id);
 		}
 	}
+	do_kill(nick, msg);
 	if (nickIsServices(nick))
 	{
 		introduce_user(nick);

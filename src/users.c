@@ -252,7 +252,7 @@ void sql_do_nick(User * u)
 	server = rdb_escape(u->server->name);
 	vhost = (ircd->vhost) ? rdb_escape(u->vhost) : NULL;
 	realname = rdb_escape(u->realname);
-	servid = db_getserver(server);
+	servid = db_getserver(u->server->name);
 
 	countryname = rdb_escape(u->country_name);
 	countrycode = rdb_escape(u->country_code);
@@ -290,7 +290,7 @@ void sql_do_nick(User * u)
 
 		if (u->sqlid < 1 && db_getnick(u->sqlnick) == -1)
 		{
-			alog(LOG_DEBUG, "debug: Line 290 : Something went wrong trying to create user %s", u->sqlnick);
+			alog(LOG_DEBUG, "debug: Line 293 : Something went wrong trying to create user %s", u->sqlnick);
 		}
 	}
 
@@ -349,6 +349,7 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
 	MYSQL_RES *mysql_res;
 	User *u;
 	char *uname = NULL;
+	char *sqlnewnick, *sqloldnick;
 #endif
 
 	SET_SEGV_LOCATION();
@@ -364,9 +365,10 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
 		return;
 	}
 
-	oldnick = rdb_escape(oldnick);
-	newnick = rdb_escape(newnick);
+	sqloldnick = rdb_escape(oldnick);
+	sqlnewnick = rdb_escape(newnick);
 	nickid = db_getnick(newnick);
+	u = user_find(oldnick);
 
 	/* the target nickname might already exist if caching is enabled */
 	if (UserCacheTime && (strcasecmp(newnick, oldnick)) && nickid)
@@ -377,7 +379,7 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
 		rdb_query(QUERY_HIGH, "DELETE from %s WHERE nickid=%d", UserTable, nickid);
 	}
 
-	rdb_query(QUERY_HIGH, "SELECT nick FROM %s WHERE nick = \"%s\";", UserTable, newnick);
+	rdb_query(QUERY_HIGH, "SELECT nick FROM %s WHERE nick = \"%s\";", UserTable, sqlnewnick);
 	SET_SEGV_LOCATION();
 
 #ifdef USE_MYSQL
@@ -387,17 +389,16 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
 		if (mysql_num_rows(mysql_res) != 0)
 		{
 			rdb_query(QUERY_HIGH, "DELETE from %s WHERE nick=\'%s\'",
-				  UserTable, newnick);
+				  UserTable, sqlnewnick);
 		}
 		mysql_free_result(mysql_res);
 	}
+
 	rdb_query(QUERY_HIGH,
 		  "UPDATE %s SET nick=\'%s\' WHERE nick=\'%s\'",
-		  UserTable, newnick, oldnick);
+		  UserTable, sqlnewnick, sqloldnick);
 
 	SET_SEGV_LOCATION();
-
-	u = user_find(oldnick);
 
 	/* we get the current sgroup or uname from aliases */
 	if (u->sgroup)
@@ -411,7 +412,7 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
 		     "We check if oldnick %s already has a uname in aliases (it should)",
 		     oldnick);
 		rdb_query(QUERY_HIGH, "SELECT uname FROM %s WHERE nick=\'%s\' ",
-			  AliasesTable, oldnick);
+			  AliasesTable, sqloldnick);
 		mysql_res = mysql_store_result(mysql);
 		if (mysql_res)
 		{
@@ -436,16 +437,16 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
 	/* we insert a new alias record */
 	rdb_query(QUERY_HIGH,
 		  "INSERT INTO %s (nick, uname) VALUES (\'%s\', \'%s\') ON DUPLICATE KEY UPDATE uname=\'%s\'",
-		  AliasesTable, newnick, uname ? uname : newnick,
-		  uname ? uname : newnick);
+		  AliasesTable, sqlnewnick, uname ? uname : sqlnewnick,
+		  uname ? uname : sqlnewnick);
 
 	if (uname)
 	{
 		free(uname);
 	}
-	free(oldnick);
-	free(newnick);
 #endif
+	free(sqloldnick);
+	free(sqlnewnick);
 	return;
 }
 

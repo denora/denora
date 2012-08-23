@@ -394,7 +394,7 @@ Server *do_server(const char *source, char *servername, char *hops,
                   char *descript, char *numeric)
 {
 	char *uplinkserver;
-	char *sqluplinkserver;
+	char *sqlservername;
 	Server *serv;
 	char buf[BUFSIZ];
 	char mbuf[NET_BUFSIZE];
@@ -492,21 +492,19 @@ Server *do_server(const char *source, char *servername, char *hops,
 	SET_SEGV_LOCATION();
 	if (denora->do_sql)
 	{
-		servername = rdb_escape(servername);
-		descript = rdb_escape(descript);
 		servid = db_getserver(servername);
+		sqlservername = rdb_escape(servername);
+		descript = rdb_escape(descript);
 		if (uplinkserver)
 		{
-			sqluplinkserver = rdb_escape(uplinkserver);
-			upservid = db_getserver(sqluplinkserver);
-			free(sqluplinkserver);
+			upservid = db_getserver(uplinkserver);
 		}
 
 		if (ServerCacheTime && servid > 0)
 		{
 			rdb_query(QUERY_LOW,
 			          "UPDATE %s SET server=\'%s\', hops=\'%s\', comment=\'%s\', connecttime=NOW(), linkedto=%d, online=\'Y\', maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld) WHERE servid=%d",
-			          ServerTable, servername, hops, descript, upservid,
+			          ServerTable, sqlservername, hops, descript, upservid,
 			          serv->ss->maxusers, serv->ss->maxusertime,
 			          (long int) serv->ss->lastseen, servid);
 			add = 0;
@@ -518,7 +516,7 @@ Server *do_server(const char *source, char *servername, char *hops,
 			{
 				rdb_query(QUERY_HIGH,
 				 "INSERT INTO %s (server, country, countrycode, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld)) ON DUPLICATE KEY UPDATE hops=\'%s\', comment=\'%s\', linkedto=%d, connecttime=NOW(), maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld)",
-				 ServerTable, servername, serv->country, serv->countrycode, hops, descript, upservid,
+				 ServerTable, sqlservername, serv->country, serv->countrycode, hops, descript, upservid,
 				 serv->ss->maxusers, serv->ss->maxusertime,
 				 serv->ss->lastseen, hops, descript,
 				 upservid, serv->ss->maxusers,
@@ -528,7 +526,7 @@ Server *do_server(const char *source, char *servername, char *hops,
 			{
 				rdb_query(QUERY_HIGH,
 				 "INSERT INTO %s (server, country, countrycode, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld))",
-				 ServerTable, servername, serv->country, serv->countrycode, hops, descript, upservid,
+				 ServerTable, sqlservername, serv->country, serv->countrycode, hops, descript, upservid,
 				 serv->ss->maxusers, serv->ss->maxusertime,
 				 (long int) serv->ss->lastseen);
 			}
@@ -574,7 +572,6 @@ Server *do_server(const char *source, char *servername, char *hops,
 				}
 			}
 		}
-		free(servername);
 	}
 
 	SET_SEGV_LOCATION();
@@ -584,6 +581,7 @@ Server *do_server(const char *source, char *servername, char *hops,
 	}
 	if (uplinkserver)
 		free(uplinkserver);
+	free(sqlservername);
 	SET_SEGV_LOCATION();
 	do_checkservsmax();
 	return serv;
@@ -1468,8 +1466,8 @@ void sql_do_server_version(char *server, int ac, char **av)
 void sql_do_squit(char *server)
 {
 	int servid;
+	char *sqlserver;
 
-	server = rdb_escape(server);
 	if (ServerCacheTime)
 	{
 		servid = db_getserver(server);
@@ -1481,10 +1479,11 @@ void sql_do_squit(char *server)
 	}
 	else
 	{
+		sqlserver = rdb_escape(server);
 		rdb_query(QUERY_LOW, "DELETE FROM %s WHERE server=\'%s\'",
-		          ServerTable, server);
+		          ServerTable, sqlserver);
+		free(sqlserver);
 	}
-	free(server);
 }
 
 /*************************************************************************/
