@@ -1231,7 +1231,7 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 	      char *modes, char *account)
 {
 
-	User *user = new_user(nick);
+	User *user = NULL;
 	char *newav[5];
 	char *country_code = NULL;
 	char *country_name = NULL;
@@ -1291,6 +1291,7 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 			country_code = sstrdup("??");
 		}
 
+		user = new_user(nick);
 		user->country_name = country_name;
 		user->country_code = country_code;
 
