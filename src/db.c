@@ -322,6 +322,7 @@ int db_getserver(char *serv)
 	sqlserv = rdb_escape(serv);
 	rdb_query(QUERY_HIGH, "SELECT servid FROM %s WHERE server=\'%s\'",
 	          ServerTable, sqlserv);
+	free(sqlserv);
 #ifdef USE_MYSQL
 	mysql_res = mysql_store_result(mysql);
 	if (mysql_res)
@@ -339,13 +340,11 @@ int db_getserver(char *serv)
 	{
 		s->sqlid = servid;
 	}
-	free(sqlserv);
 	return servid;
 }
 
 /*************************************************************************/
 
-/* nick should be db_escape'd before call */
 /* -1 if nick not found, nickid else */
 int db_getnick(char *nick)
 {
@@ -397,7 +396,6 @@ int db_getnick(char *nick)
 
 /*************************************************************************/
 
-/* nick should be db_escape'd before call */
 /* -1 if nick not found, nickid else */
 int db_checknick_nt(char *nick)
 {
@@ -408,7 +406,7 @@ int db_checknick_nt(char *nick)
 	MYSQL_RES *mysql_res2;
 	char *olduname;
 #endif
-	char *username, *host, *queryhost;
+	char *username, *host, *queryhost, *sqlnick;
 
 	SET_SEGV_LOCATION();
 
@@ -476,8 +474,10 @@ int db_checknick_nt(char *nick)
 	}
 	else
 	{
+		sqlnick = rdb_escape(nick);
 		rdb_query(QUERY_HIGH, "SELECT nickid FROM %s WHERE nick=\'%s\'",
-		          UserTable, nick);
+		          UserTable, sqlnick);
+		free(sqlnick);
 #ifdef USE_MYSQL
 		mysql_res = mysql_store_result(mysql);
 		if (mysql_res)
@@ -507,15 +507,18 @@ int db_getservfromnick(char *nick)
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
 #endif
+	char *sqlnick;
 
 	if (!denora->do_sql)
 	{
-		return -1;
+		return res;
 	}
 	SET_SEGV_LOCATION();
 
+	sqlnick = rdb_escape(nick);
 	rdb_query(QUERY_HIGH, "SELECT servid FROM %s WHERE nick=\'%s\'",
-	          UserTable, nick);
+	          UserTable, sqlnick);
+	free(sqlnick);
 #ifdef USE_MYSQL
 	mysql_res = mysql_store_result(mysql);
 	if (mysql_res)
@@ -567,7 +570,7 @@ void db_removenick(char *nick, char *reason)
 		return;
 	}
 
-	if (!u->sqlid && db_getnick(nick) == -1)
+	if (!u->sqlid && db_getnick(u->sqlnick) == -1)
 	{
 		alog(LOG_NONEXISTANT, "Trying to remove nonexistant user %s", nick);
 		return;
@@ -709,6 +712,7 @@ void db_removefromchans(int nickid)
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
 	char **res;
+	char *chan;
 	int chanid;
 #endif
 
@@ -734,7 +738,7 @@ void db_removefromchans(int nickid)
 	{
 		while ((res = mysql_fetch_row(mysql_res)))
 		{
-			char *chan = rdb_escape(res[1]);
+			chan = rdb_escape(res[1]);
 			chanid = db_getchannel(chan);
 			rdb_query(QUERY_LOW,
 			          "UPDATE %s SET currentusers=currentusers-1 WHERE chanid=%d",
@@ -886,11 +890,11 @@ int db_getlusers(int type)
 
 /*************************************************************************/
 
-/* chan should be db_escape'd before call */
 int db_getchannel(char *chan)
 {
 	int chanid = -1;
 	Channel *c;
+	char *sqlchan;
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
 #endif
@@ -911,8 +915,10 @@ int db_getchannel(char *chan)
 		return chanid;
 	}
 
+	sqlchan = rdb_escape(chan);
 	rdb_query(QUERY_HIGH, "SELECT chanid FROM %s WHERE channel=\'%s\'",
-	          ChanTable, chan);
+	          ChanTable, sqlchan);
+	free(sqlchan);
 #ifdef USE_MYSQL
 	mysql_res = mysql_store_result(mysql);
 	if (mysql_res)
@@ -977,10 +983,10 @@ char *db_getchannel_byid(int chanid)
 
 /*************************************************************************/
 
-/* chan should be db_escape'd before call */
 int db_getchannel_users(char *chan)
 {
 	int res = 0;
+	char *sqlchan;
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
 #endif
@@ -993,9 +999,11 @@ int db_getchannel_users(char *chan)
 	}
 	SET_SEGV_LOCATION();
 
+	sqlchan = rdb_escape(chan);
 	rdb_query(QUERY_HIGH,
 	          "SELECT currentusers FROM %s WHERE channel=\'%s\'",
-	          ChanTable, chan);
+	          ChanTable, sqlchan);
+	free(sqlchan);
 #ifdef USE_MYSQL
 	mysql_res = mysql_store_result(mysql);
 	SET_SEGV_LOCATION();
@@ -1019,7 +1027,6 @@ int db_getchannel_users(char *chan)
 
 /*************************************************************************/
 
-/* chan should be db_escape'd before call */
 /* chan is created if not exists */
 int db_getchancreate(char *chan)
 {
@@ -1055,6 +1062,7 @@ int db_getchancreate(char *chan)
 
 	if (!denora->do_sql)
 	{
+		free(channel);
 		return chanid;
 	}
 
@@ -1075,10 +1083,6 @@ int db_getchancreate(char *chan)
 				{
 					newcase = 1;
 				}
-				if (c && chanid > 0)
-				{
-					c->sqlid = chanid;
-				}
 			}
 			mysql_free_result(mysql_res);
 		}
@@ -1089,10 +1093,6 @@ int db_getchancreate(char *chan)
 			rdb_query(QUERY_HIGH, "INSERT INTO %s (channel) VALUES (\'%s\')",
 			          ChanTable, channel);
 			chanid = rdb_insertid();
-			if (c && chanid > 0)
-			{
-				c->sqlid = chanid;	
-			}
 			created = 1;
 		}
 	}
@@ -1112,6 +1112,10 @@ int db_getchancreate(char *chan)
 	}
 	SET_SEGV_LOCATION();
 	free(channel);
+	if (c && chanid > 0)
+	{
+		c->sqlid = chanid;
+	}
 	return chanid;
 }
 

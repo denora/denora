@@ -262,10 +262,9 @@ void sql_channel_quiet(int type, Channel * c, char *mask)
 		{
 			if (mysql_num_rows(mysql_res) == 0)
 			{
-				rdb_query
-				(QUERY_LOW,
-				 "INSERT INTO %s (chan, bans) VALUES (\'%s\', \'%s\')",
-				 ChanQuietTable, c->sqlchan, sqlmask);
+				rdb_query(QUERY_LOW,
+					  "INSERT INTO %s (chan, bans) VALUES (\'%s\', \'%s\')",
+					  ChanQuietTable, c->sqlchan, sqlmask);
 			}
 			mysql_free_result(mysql_res);
 		}
@@ -279,7 +278,8 @@ void sql_channel_quiet(int type, Channel * c, char *mask)
 	}
 	else
 	{
-		rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chan=\'%s\'",
+		rdb_query(QUERY_LOW,
+			  "DELETE FROM %s WHERE chan=\'%s\'",
 		          ChanQuietTable, c->sqlchan);
 	}
 	SET_SEGV_LOCATION();
@@ -334,7 +334,8 @@ void sql_channel_exception(int type, Channel * c, char *mask)
 	}
 	else
 	{
-		rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chan=\'%s\'",
+		rdb_query(QUERY_LOW,
+			  "DELETE FROM %s WHERE chan=\'%s\'",
 		          ChanExceptTable, c->sqlchan);
 	}
 	SET_SEGV_LOCATION();
@@ -389,7 +390,8 @@ void sql_channel_invite(int type, Channel * c, char *mask)
 	}
 	else
 	{
-		rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chan=\'%s\'",
+		rdb_query(QUERY_LOW,
+			  "DELETE FROM %s WHERE chan=\'%s\'",
 		          ChanInviteTable, c->sqlchan);
 	}
 	SET_SEGV_LOCATION();

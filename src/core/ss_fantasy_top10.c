@@ -89,10 +89,9 @@ int do_fantasy(int argc, char **argv)
 		u = finduser(argv[1]);
 		chan = rdb_escape(argv[2]);
 		cs = find_cs(argv[2]);
-		rdb_query
-		(QUERY_HIGH,
-		 "SELECT * FROM %s WHERE chan=\'%s\' AND type=0 ORDER BY letters DESC LIMIT 10;",
-		 UStatsTable, chan);
+		rdb_query(QUERY_HIGH,
+			  "SELECT * FROM %s WHERE chan=\'%s\' AND type=0 ORDER BY letters DESC LIMIT 10;",
+			  UStatsTable, chan);
 		free(chan);
 #ifdef USE_MYSQL
 		mysql_res = mysql_store_result(mysql);

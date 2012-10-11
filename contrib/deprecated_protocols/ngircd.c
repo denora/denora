@@ -304,7 +304,6 @@ int denora_event_chaninfo(char *source, int ac, char **av)
 	char *v[32];
 	char buf[BUFSIZE];
 	Channel *c;
-	char *chan;
 
 	if (denora->protocoldebug)
 	{
@@ -318,9 +317,7 @@ int denora_event_chaninfo(char *source, int ac, char **av)
 		return MOD_CONT;
 	}
 
-	chan = rdb_escape(av[0]);
-	db_getchancreate(chan);
-	free(chan);
+	db_getchancreate(av[0]);
 
 	ircsnprintf(buf, BUFSIZE, "%ld", (long int) time(NULL));
 	v[0] = sstrdup(av[0]);      /* channel */

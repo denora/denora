@@ -298,9 +298,9 @@ void handle_ctcp_version(char *nick, char *version)
 		u->ctcp = sstrdup(version);
 
 		dbversion = rdb_escape(version);
-		rdb_query
-		(QUERY_LOW, "UPDATE %s SET ctcpversion=\'%s\' WHERE nickid=%d",
-		 UserTable, dbversion, db_getnick(u->sqlnick));
+		rdb_query(QUERY_LOW,
+			  "UPDATE %s SET ctcpversion=\'%s\' WHERE nickid=%d",
+			  UserTable, dbversion, db_getnick(u->sqlnick));
 		free(dbversion);
 	}
 }
@@ -321,15 +321,15 @@ void sql_do_ctcp(int type, char *version, int count, int overall)
 		if (type == 1)
 		{
 			SET_SEGV_LOCATION();
-			rdb_query
-			(QUERY_LOW,
-			 "INSERT INTO %s (version, count, overall) VALUES(\'%s\', %d, %d)",
-			 CTCPTable, temp, count, overall);
+			rdb_query(QUERY_LOW,
+				  "INSERT INTO %s (version, count, overall) VALUES(\'%s\', %d, %d)",
+				  CTCPTable, temp, count, overall);
 		}
 		if (type == 4)
 		{
 			SET_SEGV_LOCATION();
-			rdb_query(QUERY_HIGH, "SELECT id FROM %s WHERE version=\'%s\'",
+			rdb_query(QUERY_HIGH,
+				  "SELECT id FROM %s WHERE version=\'%s\'",
 			          CTCPTable, temp);
 #ifdef USE_MYSQL
 			mysql_res = mysql_store_result(mysql);
@@ -337,17 +337,15 @@ void sql_do_ctcp(int type, char *version, int count, int overall)
 			{
 				if (mysql_num_rows(mysql_res))
 				{
-					rdb_query
-					(QUERY_LOW,
-					 "UPDATE %s SET count=%d, overall=%d WHERE version=\'%s\'",
-					 CTCPTable, count, overall, temp);
+					rdb_query(QUERY_LOW,
+						  "UPDATE %s SET count=%d, overall=%d WHERE version=\'%s\'",
+						  CTCPTable, count, overall, temp);
 				}
 				else
 				{
-					rdb_query
-					(QUERY_LOW,
-					 "INSERT INTO %s (version, count, overall) VALUES(\'%s\', %d, %d)",
-					 CTCPTable, temp, count, overall);
+					rdb_query(QUERY_LOW,
+						  "INSERT INTO %s (version, count, overall) VALUES(\'%s\', %d, %d)",
+						  CTCPTable, temp, count, overall);
 				}
 				SET_SEGV_LOCATION();
 				mysql_free_result(mysql_res);

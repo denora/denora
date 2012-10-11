@@ -97,24 +97,26 @@ int do_fantasy(int argc, char **argv)
 		{
 			target = strtok(argv[3], " ");
 			sqltarget = rdb_escape(target);
-			rdb_query(QUERY_HIGH, "SELECT uname FROM %s WHERE nick=\'%s\' ", AliasesTable, sqltarget);
+			rdb_query(QUERY_HIGH,
+				  "SELECT uname FROM %s WHERE nick=\'%s\' ",
+				  AliasesTable, sqltarget);
+			free(sqltarget);
 #ifdef USE_MYSQL
 			mysql_res = mysql_store_result(mysql);
 			if (mysql_res && mysql_num_rows(mysql_res))
 			{
 				mysql_row = mysql_fetch_row(mysql_res);
-				free(sqltarget);
 				sqltarget = rdb_escape(mysql_row[0]);
 			}
 			else
 			{
-				free(sqltarget);
 				return MOD_CONT;
 			}
 #endif
 		}
 		cs = find_cs(argv[2]);
-		rdb_query(QUERY_HIGH, "SELECT * FROM %s WHERE chan=\'global\' AND type=0 AND uname=\'%s\';",
+		rdb_query(QUERY_HIGH,
+			  "SELECT * FROM %s WHERE chan=\'global\' AND type=0 AND uname=\'%s\';",
 		          UStatsTable, sqltarget);
 		free(sqltarget);
 #ifdef USE_MYSQL

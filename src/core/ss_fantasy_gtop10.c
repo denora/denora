@@ -67,7 +67,6 @@ void DenoraFini(void)
 int do_fantasy(int argc, char **argv)
 {
 	User *u;
-	char *chan;
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
 	int i = 1;
@@ -85,12 +84,10 @@ int do_fantasy(int argc, char **argv)
 	if (stricmp(argv[0], "gtop10") == 0)
 	{
 		u = finduser(argv[1]);
-		chan = rdb_escape(argv[2]);
 		cs = find_cs(argv[2]);
-		rdb_query
-		(QUERY_HIGH,
-		 "SELECT * FROM %s WHERE chan=\'global\' AND type=0 ORDER BY letters DESC LIMIT 10;",
-		 UStatsTable);
+		rdb_query(QUERY_HIGH,
+			  "SELECT * FROM %s WHERE chan=\'global\' AND type=0 ORDER BY letters DESC LIMIT 10;",
+			  UStatsTable);
 #ifdef USE_MYSQL
 		mysql_res = mysql_store_result(mysql);
 		if (mysql_num_rows(mysql_res) > 0)
@@ -132,7 +129,6 @@ int do_fantasy(int argc, char **argv)
 		mysql_free_result(mysql_res);
 #endif
 	}
-
 
 	return MOD_CONT;
 }

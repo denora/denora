@@ -1037,6 +1037,9 @@ int denora_event_quit(char *source, int ac, char **av)
 			m_kill(killer, u ? u->nick : source, msg);
 		else
 			m_kill(source, u ? u->nick : source, msg);
+
+		if (msg)
+			free(msg);
 	}
 
 	return MOD_CONT;
@@ -1415,6 +1418,7 @@ int denora_event_nick(char *source, int ac, char **av)
 int denora_event_metadata(char *source, int ac, char **av)
 {
 	User *u;
+	char *sqlaccount = NULL;
 
 	if (denora->protocoldebug)
 	{
@@ -1435,9 +1439,17 @@ int denora_event_metadata(char *source, int ac, char **av)
 			u->account = !BadPtr(av[2]) ? sstrdup(av[2]) : NULL;
 			if (denora->do_sql)
 			{
+				if (av[2])
+				{
+					sqlaccount = rdb_escape(av[2]);
+				}
 				rdb_query(QUERY_LOW,
 				          "UPDATE %s SET account=\'%s\' WHERE nickid=%d",
-				          UserTable, av[2] ? rdb_escape(av[2]) : "", u->sqlid);
+				          UserTable, av[2] ? sqlaccount : "", u->sqlid);
+				if (sqlaccount)
+				{
+					free(sqlaccount);
+				}
 			}
 		}
 	}

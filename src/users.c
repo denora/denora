@@ -246,12 +246,12 @@ void sql_do_nick(User * u)
 		return;
 	}
 
-	username = rdb_escape(u->username);
+	username = (u->username) ? rdb_escape(u->username) : NULL;
 	account = (u->account) ? rdb_escape(u->account) : NULL;
-	host = rdb_escape(u->host);
-	server = rdb_escape(u->server->name);
+	host = (u->host) ? rdb_escape(u->host) : NULL;
+	server = (u->server->name) ? rdb_escape(u->server->name) : NULL;
 	vhost = (ircd->vhost) ? rdb_escape(u->vhost) : NULL;
-	realname = rdb_escape(u->realname);
+	realname = (u->realname) ? rdb_escape(u->realname) : NULL;
 	servid = db_getserver(u->server->name);
 
 	countryname = rdb_escape(u->country_name);
@@ -265,7 +265,7 @@ void sql_do_nick(User * u)
 	}
 	else if (u->sqlid < 1)
 	{
-		db_checknick_nt(u->sqlnick);
+		db_checknick_nt(u->nick);
 	}
 	
 	if (u->sqlid > 0)
@@ -281,12 +281,12 @@ void sql_do_nick(User * u)
 		SET_SEGV_LOCATION();
 		rdb_query(QUERY_HIGH,
 		          "INSERT INTO %s (nick,hopcount,nickip,realname,hostname,hiddenhostname,username,swhois,account,connecttime,servid,server,countrycode,country) VALUES('%s',%d,'%s','%s','%s','%s','%s','','%s',FROM_UNIXTIME(%ld),%d,'%s','%s','%s') ON DUPLICATE KEY UPDATE nick='%s',hopcount=%d,nickip='%s',realname='%s',hostname='%s',hiddenhostname='%s',username='%s',account='%s',connecttime=FROM_UNIXTIME(%ld),servid=%d,server='%s',countrycode='%s',country='%s',lastquit=NULL,online='Y',away='%s',awaymsg='%s'",
-		 UserTable, u->sqlnick, u->hopcount, u->ip, realname,
-		 host, vhost, username, account, (long int) u->timestamp,
-		 servid, server, countrycode, countryname, u->sqlnick,
-		 u->hopcount, u->ip, realname, host, vhost, username,
-		 account, (long int) u->timestamp, servid, server,
-		 countrycode, countryname, u->isaway ? "Y" : "N", u->isaway && u->awaymsg ? u->awaymsg : NULL);
+			  UserTable, u->sqlnick, u->hopcount, u->ip, realname,
+			  host, vhost, username, account, (long int) u->timestamp,
+			  servid, server, countrycode, countryname, u->sqlnick,
+			  u->hopcount, u->ip, realname, host, vhost, username,
+			  account, (long int) u->timestamp, servid, server,
+			  countrycode, countryname, u->isaway ? "Y" : "N", u->isaway && u->awaymsg ? u->awaymsg : NULL);
 
 		if (u->sqlid < 1 && db_getnick(u->sqlnick) == -1)
 		{
@@ -345,11 +345,11 @@ void sql_do_nick(User * u)
 void sql_do_nick_chg(char *newnick, char *oldnick)
 {
 	int nickid;
+	char *sqlnewnick, *sqloldnick;
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
 	User *u;
 	char *uname = NULL;
-	char *sqlnewnick, *sqloldnick;
 #endif
 
 	SET_SEGV_LOCATION();
@@ -367,7 +367,7 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
 
 	sqloldnick = rdb_escape(oldnick);
 	sqlnewnick = rdb_escape(newnick);
-	nickid = db_getnick(newnick);
+	nickid = db_getnick(sqlnewnick);
 	u = user_find(oldnick);
 
 	/* the target nickname might already exist if caching is enabled */
@@ -376,10 +376,14 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
 		/* In this case, we don't keep a record of the old nick. It would be :
 		 * - technically difficult, because we'd have to make a copy of the record
 		 * - dangerous, because it would provide an easy way to fill up the DB */
-		rdb_query(QUERY_HIGH, "DELETE from %s WHERE nickid=%d", UserTable, nickid);
+		rdb_query(QUERY_HIGH,
+			  "DELETE from %s WHERE nickid=%d",
+			  UserTable, nickid);
 	}
 
-	rdb_query(QUERY_HIGH, "SELECT nick FROM %s WHERE nick = \"%s\";", UserTable, sqlnewnick);
+	rdb_query(QUERY_HIGH,
+		  "SELECT nick FROM %s WHERE nick = \"%s\";",
+		  UserTable, sqlnewnick);
 	SET_SEGV_LOCATION();
 
 #ifdef USE_MYSQL
@@ -388,7 +392,8 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
 	{
 		if (mysql_num_rows(mysql_res) != 0)
 		{
-			rdb_query(QUERY_HIGH, "DELETE from %s WHERE nick=\'%s\'",
+			rdb_query(QUERY_HIGH,
+				  "DELETE from %s WHERE nick=\'%s\'",
 				  UserTable, sqlnewnick);
 		}
 		mysql_free_result(mysql_res);
@@ -411,7 +416,8 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
 		alog(LOG_DEBUG,
 		     "We check if oldnick %s already has a uname in aliases (it should)",
 		     oldnick);
-		rdb_query(QUERY_HIGH, "SELECT uname FROM %s WHERE nick=\'%s\' ",
+		rdb_query(QUERY_HIGH,
+			  "SELECT uname FROM %s WHERE nick=\'%s\' ",
 			  AliasesTable, sqloldnick);
 		mysql_res = mysql_store_result(mysql);
 		if (mysql_res)
@@ -635,8 +641,9 @@ void change_user_realname(char *source, char *realname)
 	if (denora->do_sql && (user->sqlid > 0 || db_getnick(user->sqlnick) != -1))
 	{
 		sqlrealname = rdb_escape(user->realname);
-		rdb_query(QUERY_LOW, "UPDATE %s SET realname=\'%s\' WHERE nickid=%d",
-		 UserTable, rdb_escape(user->realname), user->sqlid);
+		rdb_query(QUERY_LOW,
+			  "UPDATE %s SET realname=\'%s\' WHERE nickid=%d",
+			  UserTable, rdb_escape(user->realname), user->sqlid);
 		free(sqlrealname);
 	}
 
@@ -685,7 +692,8 @@ void change_user_username(char *source, char *username)
 	if (denora->do_sql && (user->sqlid < 1 || db_getnick(user->sqlnick) != -1))
 	{
 		sqlusername = rdb_escape(user->username);
-		rdb_query(QUERY_LOW, "UPDATE %s SET username=\'%s\' WHERE nickid=%d",
+		rdb_query(QUERY_LOW,
+			  "UPDATE %s SET username=\'%s\' WHERE nickid=%d",
 			  UserTable, sqlusername, user->sqlid);
 		free(sqlusername);
 	}

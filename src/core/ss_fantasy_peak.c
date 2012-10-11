@@ -123,6 +123,5 @@ int do_fantasy(int argc, char **argv)
 #endif
 	}
 
-
 	return MOD_CONT;
 }

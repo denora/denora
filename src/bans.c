@@ -551,10 +551,7 @@ void sql_do_sgline(char *length, char *mask)
 #endif
 	SET_SEGV_LOCATION();
 
-	if (reason)
-	{
-		free(reason);
-	}
+	free(reason);
 	free(sqlmask);
 
 	return;

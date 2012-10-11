@@ -744,10 +744,7 @@ int denora_event_quit(char *source, int ac, char **av)
 		u = find_byuid(source);
 
 		if (killer)
-		{
 			m_kill(killer, (u ? u->nick : source), msg);
-			free(killer);
-		}
 		else
 			m_kill((u ? u->nick : source), (u ? u->nick : source), msg);
 

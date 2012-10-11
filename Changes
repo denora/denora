@@ -18,6 +18,7 @@ Additions
 11/02/11 r416 Added support for ircd-rizon
 
 Changes
+12/10/04 Cleanup and hopefully less leaks etc
 12/08/23 db_getserver() now escapes servername itself where needed
 12/08/05 Threading is now disabled by default (it's only used for mysql and the current implementation
 	 has serious issues)
@@ -63,6 +64,8 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+12/10/10 Fixed a double free in scarynet.c/denora_event_quit
+12/10/10 Free msg in <protocol>.c/denora_event_quit
 12/07/25 Fixed win32 specific warnings, in some cases the fugly way
 12/07/23 Fixed Config not remembering thread settings
 12/07/23 Threading needed more fixes, hope it works now :) (Now works)

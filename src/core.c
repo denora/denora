@@ -1312,7 +1312,6 @@ void destroy_all(void)
 	Uid *uid, *next17;
 	ServStats *ss, *next18;
 	int i, j;
-	char *sqlnick = NULL;
 
 	if (ircd->ts6 && UseTS6)
 	{
@@ -1346,9 +1345,11 @@ void destroy_all(void)
 		next = nextuser();
 		if (denora->do_sql)
 		{
-			sqlnick = rdb_escape(u->nick);
-			db_removenick(sqlnick, (char *) "Denora shutdown");
-			free(sqlnick);
+			if (!u->sqlnick)
+			{
+				u->sqlnick = rdb_escape(u->nick);
+			}
+			db_removenick(u->sqlnick, (char *) "Denora shutdown");
 		}
 		delete_user(u);
 		u = next;

@@ -87,6 +87,7 @@ void sql_do_tld(int type, char *code, char *country, int count, int overall)
 	{
 		return;
 	}
+
 	sqlcountry = rdb_escape(country);
 
 	SET_SEGV_LOCATION();

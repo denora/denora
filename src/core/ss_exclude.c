@@ -68,10 +68,10 @@ static int do_exclude(User * u, int ac, char **av)
 	Exclude *e;
 	char *tmp = NULL;
 	char *s = NULL;
+	char *name = NULL;
 	int count = 0, from = 0, to = 0;
 	int nnicks = 0, i;
 	int disp = 1;
-	char *name;
 	char *ch = NULL;
 	User *u2;
 
@@ -111,14 +111,20 @@ static int do_exclude(User * u, int ac, char **av)
 		{
 			make_exclude(av[1]);
 			notice_lang(s_StatServ, u, STAT_EXCLUDE_ADDED, av[1]);
-			name = rdb_escape(av[1]);
 			u2 = user_find(av[1]);
+			if (!u2)
+			{
+				name = rdb_escape(av[1]);
+			}
 			rdb_query(QUERY_LOW, "DELETE FROM %s WHERE lower(`uname`)=lower(\'%s\')",
 			          UStatsTable, u2 ? u2->sgroup : name);
 			rdb_query(QUERY_LOW,
 			          "UPDATE `%s` SET `ignore`=\'Y\' WHERE lower(`uname`)=lower(\'%s\')",
 			          AliasesTable, u2 ? u2->sgroup : name);
-			free(name);
+			if (name)
+			{
+				free(name);
+			}
 		}
 		else
 		{
@@ -138,8 +144,11 @@ static int do_exclude(User * u, int ac, char **av)
 			del_exclude(e);
 			u->cstats = 0;
 			notice_lang(s_StatServ, u, STAT_EXCLUDE_DELETED, av[1]);
-			name = rdb_escape(av[1]);
 			u2 = user_find(av[1]);
+			if (!u2)
+			{
+				name = rdb_escape(av[1]);
+			}
 			rdb_query(QUERY_LOW,
 			          "UPDATE `%s` SET `ignore`=\'N\' WHERE lower(`uname`)=lower(\'%s\')",
 			          AliasesTable, u2 ? u2->sgroup : name);
@@ -150,7 +159,10 @@ static int do_exclude(User * u, int ac, char **av)
 				 "INSERT IGNORE INTO %s SET uname=\'%s\', chan=\'global\', type=%i;",
 				 UStatsTable, u2 ? u2->sgroup : name, i);
 			}
-			free(name);
+			if (name)
+			{
+				free(name);
+			}
 		}
 		else
 		{

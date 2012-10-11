@@ -45,6 +45,7 @@ int m_nickcoll(char *user)
 int m_away(char *source, char *msg)
 {
 	User *u;
+	char *sqlmsg;
 
 	if (!source)
 	{
@@ -72,11 +73,13 @@ int m_away(char *source, char *msg)
 	}
 	if (denora->do_sql)
 	{
+		sqlmsg = rdb_escape(u->awaymsg);
 		rdb_query
 		(QUERY_LOW,
 		 "UPDATE %s SET away=\'%s\', awaymsg=\'%s\' WHERE nickid=%d",
 		 UserTable, (u->isaway ? (char *) "Y" : (char *) "N"),
-		 rdb_escape(u->awaymsg), db_getnick(u->sqlnick));
+		 sqlmsg, db_getnick(u->sqlnick));
+		free(sqlmsg);
 	}
 	return MOD_CONT;
 }

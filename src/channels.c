@@ -215,11 +215,9 @@ void InitStatsChanList(void)
 void sql_do_part(char *chan, User * u)
 {
 	int chanid, nickid;
-	char *sqlchan;
 
 	SET_SEGV_LOCATION();
-	sqlchan = rdb_escape(chan);
-	chanid = db_getchannel(sqlchan);
+	chanid = db_getchannel(chan);
 	nickid = db_getnick(u->sqlnick);
 
 	if (chanid > 0)
@@ -237,7 +235,6 @@ void sql_do_part(char *chan, User * u)
 			db_checkemptychan(chanid);
 	}
 	SET_SEGV_LOCATION();
-	free(sqlchan);
 	return;
 }
 
@@ -254,11 +251,9 @@ void sql_do_part(char *chan, User * u)
 void sql_do_partall(char *nick)
 {
 	char *sqlnick;
-
 	if (!BadPtr(nick))
 	{
 		sqlnick = rdb_escape(nick);
-		SET_SEGV_LOCATION();
 		db_removefromchans(db_getnick(sqlnick));
 		free(sqlnick);
 	}
@@ -376,8 +371,8 @@ void sql_do_addusers(int chanid, char *users)
 			*nextusers = '\0';
 		}
 		u = user_find(users);
-		users = rdb_escape((u ? u->nick : users));
-		db_getnick((u ? u->nick : users));
+		users = (u ? u->sqlnick : rdb_escape(users));
+		db_getnick((u ? u->sqlnick : users));
 		if (u && u->sqlid > 0)
 		{
 			/* Build the query dynamically */
@@ -430,7 +425,7 @@ void sql_do_addusers(int chanid, char *users)
 			     langstr(ALOG_DEBUG_NONEXISTANT_USER_JOIN),
 			     (u ? u->nick : users), db_getchannel_byid(chanid));
 		}
-		free(users);
+
 		users = nextusers;
 		if (users)
 		{
@@ -1073,7 +1068,7 @@ void do_p10_kick(const char *source, int ac, char **av)
 void do_kick(const char *source, int ac, char **av)
 {
 	User *user, *kicker;
-	char *s, *t, *chan;
+	char *s, *t;
 	struct u_chanlist *c;
 	Channel *c2;
 	ChannelStats *cs;
@@ -1106,16 +1101,14 @@ void do_kick(const char *source, int ac, char **av)
 			c2->stats->kickcounttime = time(NULL);
 			if (denora->do_sql)
 			{
-				chan = rdb_escape(c2->name);
-				chanid = db_getchannel(chan);
+				chanid = db_getchannel(c2->name);
 				if (chanid > 0)
 				{
 					rdb_query(QUERY_LOW,
 					          "UPDATE %s SET kickcount=%d WHERE chanid=%d",
 					          ChanTable, c2->stats->kickcount, chanid);
 				}
-				sql_do_part(chan, user);
-				free(chan);
+				sql_do_part(c2->name, user);
 			}
 		}
 
@@ -1709,14 +1702,12 @@ void do_topic(int ac, char **av)
 		SET_SEGV_LOCATION();
 		author = rdb_escape(c->topic_setter);
 		topic = (c->topic ? rdb_escape(c->topic) : NULL);
-		chanid = db_getchannel(c->sqlchan);
+		chanid = db_getchannel(c->name);
 		if (chanid > 0)
 		{
-			rdb_query
-			(QUERY_LOW,
-			 "UPDATE %s SET topic=\'%s\', topicauthor=\'%s\', topictime=FROM_UNIXTIME(%ld) WHERE chanid=%d",
-			 ChanTable, (topic ? topic : ""), author,
-			 (long int) c->topic_time, chanid);
+			rdb_query(QUERY_LOW,
+				  "UPDATE %s SET topic=\'%s\', topicauthor=\'%s\', topictime=FROM_UNIXTIME(%ld) WHERE chanid=%d",
+				  ChanTable, (topic ? topic : ""), author, (long int) c->topic_time, chanid);
 		}
 		u = user_find(c->topic_setter);
 		if (u && !LargeNet)

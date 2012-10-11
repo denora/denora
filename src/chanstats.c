@@ -801,10 +801,8 @@ void sumuser(User * u, char *user1, char *user2)
 
 end:
 	SET_SEGV_LOCATION();
-	if (user1_)
-		free(user1_);
-	if (user2_)
-		free(user2_);
+	free(user1_);
+	free(user2_);
 }
 
 /*************************************************************************/

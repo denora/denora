@@ -531,10 +531,10 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 	char db[1000];
 	char tmp[14] = "mode_XX=\"X\", ";
 	char *modes;
+	char *sqlnick;
 	int tmpmode;
 	int argptr = 1;
 	int nickid;
-	char *user;
 
 	c = findchan(chan);
 	if (!c || c->sqlid < 1)
@@ -591,8 +591,9 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 				        )
 				{
 					SET_SEGV_LOCATION();
-					user = rdb_escape(av[argptr++]);
-					nickid = db_getnick(user);
+					sqlnick = rdb_escape(av[argptr++]);
+					nickid = db_getnick(sqlnick);
+					free(sqlnick);
 					tmpmode = tolower(*modes);
 					if (nickid > 0)
 					{
@@ -600,7 +601,6 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 						          "UPDATE %s SET mode_l%c='%c' WHERE chanid=%d AND nickid=%d",
 						          IsOnTable, tmpmode, tmp[9], c->sqlid, nickid);
 					}
-					free(user);
 				}
 				else
 				{

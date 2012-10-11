@@ -181,9 +181,9 @@ static int do_chanstats(User * u, int ac, char **av)
 				             STAT_CHANSTATS_DEL_SYNTAX);
 				return MOD_CONT;
 			}
-			sqlchan = rdb_escape(cmd2);
 			if ((cs = find_cs(cmd2)))
 			{
+				sqlchan = rdb_escape(cmd2);
 				del_cs(cs);
 				save_cs_db();
 				rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chan=\'%s\'",
@@ -207,13 +207,13 @@ static int do_chanstats(User * u, int ac, char **av)
 					                getstring(NULL, STATS_CHANSTATS_PART),
 					                cmd2);
 				}
+				free(sqlchan);
 			}
 			else
 			{
 				notice_lang(s_StatServ, u, STAT_CHANSTATS_CHAN_NOTFOUND,
 				            cmd2);
 			}
-			free(sqlchan);
 		}
 		else if (!stricmp("LIST", cmd1))
 		{

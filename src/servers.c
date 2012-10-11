@@ -258,6 +258,7 @@ void sql_motd_store(Server * s)
 	rdb_query(QUERY_LOW,
 	          "UPDATE %s SET motd=\'%s\' WHERE server=\'%s\'",
 	          ServerTable, string, source);
+
 	free(source);
 	free(string);
 }
@@ -394,7 +395,7 @@ Server *do_server(const char *source, char *servername, char *hops,
                   char *descript, char *numeric)
 {
 	char *uplinkserver;
-	char *sqlservername;
+	char *sqlservername = NULL;
 	Server *serv;
 	char buf[BUFSIZ];
 	char mbuf[NET_BUFSIZE];
@@ -581,7 +582,8 @@ Server *do_server(const char *source, char *servername, char *hops,
 	}
 	if (uplinkserver)
 		free(uplinkserver);
-	free(sqlservername);
+	if (sqlservername)
+		free(sqlservername);
 	SET_SEGV_LOCATION();
 	do_checkservsmax();
 	return serv;
@@ -641,11 +643,9 @@ void server_store_pong(char *source, uint32 ts)
 		{
 			serv = rdb_escape(source);
 			servid = db_getserver(serv);
-			rdb_query
-			(QUERY_LOW,
-			 "UPDATE %s SET ping=%d, highestping=%d, maxpingtime=%ld, lastpingtime=%ld WHERE servid=%d",
-			 ServerTable, s->ping, s->ss->highestping,
-			 (long int) s->ss->maxpingtime, s->lastping, servid);
+			rdb_query(QUERY_LOW,
+				  "UPDATE %s SET ping=%d, highestping=%d, maxpingtime=%ld, lastpingtime=%ld WHERE servid=%d",
+				  ServerTable, s->ping, s->ss->highestping, (long int) s->ss->maxpingtime, s->lastping, servid);
 			free(serv);
 		}
 	}
@@ -663,6 +663,7 @@ void ping_servers(void)
 	{
 		return;
 	}
+
 	serv = server_find(denora->uplink);
 
 	if (serv)
@@ -1282,6 +1283,7 @@ void sql_do_sdesc(char *user, char *msg)
 	{
 		return;
 	}
+
 	user = rdb_escape(user);
 	msg = rdb_escape(msg);
 	rdb_query(QUERY_LOW, "UPDATE %s SET comment=\'%s\' WHERE servid=%d",

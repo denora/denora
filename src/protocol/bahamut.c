@@ -687,6 +687,9 @@ int denora_event_quit(char *source, int ac, char **av)
 			m_kill(killer, source, msg);
 		else
 			m_kill(source, source, msg);
+
+		if (msg)
+			free(msg);
 	}
 
 	return MOD_CONT;
