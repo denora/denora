@@ -167,9 +167,8 @@ char *do_seen(User * u, char *target)
 	time_t time0 = time(NULL);
 	time_t time1 = time(NULL);
 	time_t tt = time(NULL);
-	char *message;
+	char *message = malloc(1024);
 	char *uname = NULL;
-	message = malloc(1024);
 
 	sqltarget = rdb_escape(rdb_escape(target));
 	for (i = 0; sqltarget[i]; i++)

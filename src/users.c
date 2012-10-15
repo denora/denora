@@ -346,9 +346,9 @@ void sql_do_nick_chg(char *newnick, char *oldnick)
 {
 	int nickid;
 	char *sqlnewnick, *sqloldnick;
+	User *u;
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
-	User *u;
 	char *uname = NULL;
 #endif
 

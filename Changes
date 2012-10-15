@@ -64,6 +64,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+12/10/15 Fixed a misplacement of u in users.c
 12/10/10 Fixed a double free in scarynet.c/denora_event_quit
 12/10/10 Free msg in <protocol>.c/denora_event_quit
 12/07/25 Fixed win32 specific warnings, in some cases the fugly way
