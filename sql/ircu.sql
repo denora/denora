@@ -12,6 +12,7 @@ ADD `mode_lp` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lr` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ls` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lt` enum('Y','N') NOT NULL default 'N',
+ADD `mode_ur` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lk_data` varchar(23) NOT NULL default '',
 ADD `mode_ll_data` int(10) NOT NULL default '0';
 

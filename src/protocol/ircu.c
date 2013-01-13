@@ -152,6 +152,7 @@ void IRCDModeInit(void)
 	CreateChanMode(CMODE_s, NULL, NULL);        /* Secret */
 	CreateChanMode(CMODE_t, NULL, NULL);        /* Topic only changeable by ops */
 	CreateChanMode(CMODE_u, NULL, NULL);        /* No Quitmessages */
+	CreateChanMode(CMODE_R, NULL, NULL);        /* Registered channel */
 
 	/* Channel User Modes */
 	ModuleSetChanUMode('+', 'v', STATUS_VOICE); /* Voice */

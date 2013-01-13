@@ -3,6 +3,7 @@ Denora v1.5.0-git
 -------------
 
 Additions
+13/01/13 Added support for ircu's channel mode +R (was missing)
 12/07/27 Added proper mysql backtrace debugging (not for windows)
 12/07/26 Added MAX_ADMINS MAX_UIDS MAX_USERS to denora.h to easily update limits
 12/07/25 Added md5 support to hash passwords
