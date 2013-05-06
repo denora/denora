@@ -1220,7 +1220,8 @@ int ValidPassword(char *plaintext, char *checkvs)
 
 #ifdef HAVE_CRYPT
 	/* Read in the user's password and encrypt it,
-	   passing the expected password in as the salt. */
+	   passing the expected password in as the salt.
+	   the return of crypt() must not be free()'d */
 	result = crypt(plaintext, checkvs);
 	if (!BadPtr(result) && !strcmp(result, checkvs))
 	{

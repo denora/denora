@@ -642,7 +642,6 @@ static int check_db(User * u, Channel * c)
 /*************************************************************************/
 
 /* transfer all stats from user2 to user1 and delete user2 */
-
 void sumuser(User * u, char *user1, char *user2)
 {
 	User *u2;
@@ -790,14 +789,16 @@ void sumuser(User * u, char *user1, char *user2)
 	}
 	mysql_free_result(mysql_res);
 #endif
+
+	notice_lang(s_StatServ, u, STATS_CHANSTATS_SUMUSER_DONE, user2, user1);
+	alog(LOG_NORMAL, "Merged stats user %s with %s", user2, user1);
+
 	while ((u2 = finduser_by_sgroup(user2, user2_)))
 	{
 		if (u2->sgroup)
 			free(u2->sgroup);
 		u2->sgroup = sstrdup(user1_);
 	}
-	notice_lang(s_StatServ, u, STATS_CHANSTATS_SUMUSER_DONE, user2, user1);
-	alog(LOG_NORMAL, "Merged stats user %s with %s", user2, user1);
 
 end:
 	SET_SEGV_LOCATION();
