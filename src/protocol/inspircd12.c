@@ -831,7 +831,8 @@ char *inspircd12_lkill_killer(char *message)
 	killer = strtok(buf, " ");
 	killer = strtok(NULL, " ");
 	killer++;
-
+	killer = sstrdup(killer);
+	free(buf);
 	return killer;
 }
 
@@ -842,7 +843,7 @@ char *inspircd12_lkill_msg(char *message)
 
 	/* Let's get the kill message */
 	msg = strchr(message, '(');
-	msg = strchr(message, '(');
+	msg = strchr(msg+1, '(');
 	msg[strlen(msg) - 2] = '\0';
 	msg++;                      /* removes first character '(' */
 
@@ -1033,13 +1034,8 @@ int denora_event_quit(char *source, int ac, char **av)
 		msg = inspircd12_lkill_msg(av[0]);
 		u = user_find(av[0]);
 
-		if (killer)
-			m_kill(killer, u ? u->nick : source, msg);
-		else
-			m_kill(source, u ? u->nick : source, msg);
-
-		if (msg)
-			free(msg);
+		m_kill(killer, u ? u->nick : source, msg);
+		free(killer);
 	}
 
 	return MOD_CONT;
