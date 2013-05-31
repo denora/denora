@@ -19,6 +19,8 @@ Additions
 11/02/11 r416 Added support for ircd-rizon
 
 Changes
+13/05/31 Improved handling of KILL messages on InspIRCd
+13/05/16 Do not free unallocated memory in InspIRCd protocol
 12/10/04 Cleanup and hopefully less leaks etc
 12/08/23 db_getserver() now escapes servername itself where needed
 12/08/05 Threading is now disabled by default (it's only used for mysql and the current implementation
@@ -65,6 +67,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+13/05/06 Fixed merging users with itself.
 12/11/02 Fixed a misplaced free() in unrealircd.c (#1458)
 12/10/15 Fixed a misplacement of u in users.c
 12/10/10 Fixed a double free in scarynet.c/denora_event_quit

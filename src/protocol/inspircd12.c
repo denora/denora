@@ -1131,6 +1131,20 @@ int denora_event_fmode(char *source, int ac, char **av)
 	return MOD_CONT;
 }
 
+
+/*
+ * When services send a KILL, denora will receive a QUIT and a KILL for that user.
+ * We already process the QUIT message, so we have to ignore KILLs for nonexistent users.
+ *
+ * Received: :971AAAACJ QUIT :NickServ (GHOST command used by DukePyro1ator)
+ * Received: :00AAAAAAF KILL 971AAAACJ :NickServ (GHOST command used by DukePyro1ator)
+ *
+ * Note: this will probably changed/fixed in future InspIRCd releases
+ *
+ * On normal /kills InspIRCd sends an OPERQUIT and a KILL message.
+ * We dont remove users on OPERQUIT, so we still need to do something on KILL.
+ *
+ */
 int denora_event_kill(char *source, int ac, char **av)
 {
 	User *u;
@@ -1142,8 +1156,9 @@ int denora_event_kill(char *source, int ac, char **av)
 	if (ac != 2)
 		return MOD_CONT;
 
-	u = user_find(av[0]);
-	m_kill(source, u ? u->nick : av[0], av[1]);
+	if (u = user_find(av[0]))
+		m_kill(source, u->nick, av[1]);
+
 	return MOD_CONT;
 }
 
