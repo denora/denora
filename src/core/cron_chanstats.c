@@ -202,6 +202,7 @@ int chanstats_month(const char *name)
 				}
 			}
 		}
+		mysql_free_result(mysql_res);
 		save_cs_db();
 	}
 #endif
