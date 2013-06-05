@@ -67,6 +67,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+13/06/05 Fixed the 'command out of sync' error caused by mysql_optimize and mysql_backup
 13/06/02 Fixed a memleak in cron_chanstats.c
 13/05/06 Fixed merging users with itself.
 12/11/02 Fixed a misplaced free() in unrealircd.c (#1458)

@@ -143,11 +143,15 @@ int do_sql_backup(int argc, char **argv)
 #ifdef USE_MYSQL
 void do_mysql_backup(char *table, char *output)
 {
+	MYSQL_RES *mysql_res;
 	if (!denora->do_sql)
 	{
 		alog(LOG_ERROR, "SQL is disabled in the meantime, backup stopped");
 		return;
 	}
-	rdb_query(QUERY_LOW, "BACKUP TABLE %s TO '%s'", table, output);
+	rdb_query(QUERY_HIGH, "BACKUP TABLE %s TO '%s'", table, output);
+	/* catch the result to prevent the "command out of sync" error - DP */
+	mysql_res = mysql_store_result(mysql);
+	mysql_free_result(mysql_res);
 }
 #endif

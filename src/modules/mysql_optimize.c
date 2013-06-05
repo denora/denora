@@ -70,7 +70,7 @@ int db_optimize(const char *name)
 	if (ircd->spamfilter)
 		sprintf(tables, "%s, %s", tables, SpamTable);
 
-	rdb_query(QUERY_LOW, "OPTIMIZE TABLE %s", tables);
+	rdb_query(QUERY_HIGH, "OPTIMIZE TABLE %s", tables);
 
 	/*
 	 * We have to catch the result of the OPTIMIZE TABLE query
