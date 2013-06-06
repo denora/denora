@@ -47,7 +47,9 @@ void DenoraFini(void)
 int db_optimize(const char *name)
 {
 	char tables[512] = "\0";
+#ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
+#endif
 
 	USE_VAR(name);
 
@@ -89,8 +91,9 @@ int db_optimize(const char *name)
 	 * query is fully processed, on large tables and slow sql servers this could
 	 * take a while. a better solution is to use mysql EVENTS.
 	 */
+#ifdef USE_MYSQL
 	mysql_res = mysql_store_result(mysql);
 	mysql_free_result(mysql_res);
-
+#endif
 	return MOD_CONT;
 }
