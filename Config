@@ -357,7 +357,7 @@ echo ""
 
 ok=0
 DEF=yes
-echo "Allow Denora to automatically check for mysql client development libaries?"
+echo "Allow Denora to automatically check for mysql client development libraries?"
 echo "unless you get errors with make, there is no need to change this setting."
 echo "WARNING: You NEED the mysql client devel libraries installed on your system"
 echo "         in order to compile Denora with SQL support."
