@@ -85,24 +85,22 @@ var buildPackages = [{
 	'nmake': ['Program Files (x86)\\Microsoft Visual Studio 10.0\\VC\\bin', ''],
 	'additional_switches': ['/w'],
 	'installedDrive': 'C'
-},
-{
-	'name': 'Microsoft Visual Studio 2008 (with PSDK 2008)',
-	'libpaths': ['Program Files\\Microsoft Visual Studio 9.0\\VC\\Lib', 'Program Files\\Microsoft SDKs\\Windows\\v6.1\\Lib'],
-	'incpaths': ['Program Files\\Microsoft Visual Studio 9.0\\VC\\Include', 'Program Files\\Microsoft SDKs\\Windows\\v6.1\\Include'],
-	'nmake': ['Program Files\\Microsoft Visual Studio 9.0\\VC\\bin', ''],
-	'additional_switches': ['/w'],
-	'installedDrive': 'C'
-},
-{
-	'name': 'Microsoft Visual Studio 2008 (with PSDK 2008)',
-	'libpaths': ['Program Files (x86)\\Microsoft Visual Studio 9.0\\VC\\Lib', 'Program Files\\Microsoft SDKs\\Windows\\v6.1\\Lib'],
-	'incpaths': ['Program Files (x86)\\Microsoft Visual Studio 9.0\\VC\\Include', 'Program Files\\Microsoft SDKs\\Windows\\v6.1\\Include'],
-	'nmake': ['Program Files (x86)\\Microsoft Visual Studio 9.0\\VC\\bin', ],
-	'additional_switches': ['/w'],
-	'installedDrive': 'C'
 }];
 var mysqlVersions = [{
+	'name': 'MySQL 5.6',
+	'libpaths': ['Program Files\\MySQL\\MySQL Server 5.6\\lib'],
+	'incpaths': ['Program Files\\MySQL\\MySQL Server 5.6\\include'],
+	'dllfile': 'Program Files\\MySQL\\MySQL Server 5.6\\lib\\libmysql.dll',
+	'installedDrive': 'C'
+},
+{
+	'name': 'MySQL 5.6',
+	'libpaths': ['Program Files (x86)\\MySQL\\MySQL Server 5.6\\lib'],
+	'incpaths': ['Program Files (x86)\\MySQL\\MySQL Server 5.6\\include'],
+	'dllfile': 'Program Files (x86)\\MySQL\\MySQL Server 5.6\\lib\\libmysql.dll',
+	'installedDrive': 'C'
+},
+{
 	'name': 'MySQL 5.5',
 	'libpaths': ['Program Files\\MySQL\\MySQL Server 5.5\\lib'],
 	'incpaths': ['Program Files\\MySQL\\MySQL Server 5.5\\include'],
@@ -128,20 +126,6 @@ var mysqlVersions = [{
 	'libpaths': ['Program Files (x86)\\MySQL\\MySQL Server 5.1\\lib\\opt'],
 	'incpaths': ['Program Files (x86)\\MySQL\\MySQL Server 5.1\\include'],
 	'dllfile': 'Program Files (x86)\\MySQL\\MySQL Server 5.1\\lib\\opt\\libmySQL.dll',
-	'installedDrive': 'C'
-},
-{
-	'name': 'MySQL 5.0',
-	'libpaths': ['Program Files\\MySQL\\MySQL Server 5.0\\lib\\opt'],
-	'incpaths': ['Program Files\\MySQL\\MySQL Server 5.0\\include'],
-	'dllfile': 'Program Files\\MySQL\\MySQL Server 5.0\\lib\\opt\\libmysql.dll',
-	'installedDrive': 'C'
-},
-{
-	'name': 'MySQL 5.0',
-	'libpaths': ['Program Files (x86)\\MySQL\\MySQL Server 5.0\\lib\\opt'],
-	'incpaths': ['Program Files (x86)\\MySQL\\MySQL Server 5.0\\include'],
-	'dllfile': 'Program Files (x86)\\MySQL\\MySQL Server 5.0\\lib\\opt\\libmysql.dll',
 	'installedDrive': 'C'
 }];
 var bannerReplacements = [{

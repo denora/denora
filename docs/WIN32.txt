@@ -19,31 +19,31 @@ The recommended way to get Denora for Windows is to use our installers, which wi
         * Current Denora source:
             http://www.denorastats.org/
 
-        * Microsoft Visual C++ 2010 Express Edition:
-            http://www.microsoft.com/express/download/
+        * Microsoft Visual C++ 2012 Express for Windows Desktop:
+            http://www.microsoft.com/visualstudio/eng/downloads#d-express-windows-desktop
 
-        * Microsoft Windows SDK 7.1:
-        	http://www.microsoft.com/downloads/en/details.aspx?FamilyID=35AEDA01-421D-4BA5-B44B-543DC8C33A20
+        * Microsoft Windows SDK 8.0:
+        	http://msdn.microsoft.com/en-us/library/windows/desktop/hh852363.aspx
 
-            (NOTE: Although this says for Windows 7, it does infact work on all supported
+            (NOTE: Although this says for Windows 8, it does infact work on all supported
             versions of Windows. When installing, make sure you select "Windows Headers" and "x86 Libraries"
             under the "Windows Headers and Libraries" option. The rest is not needed.)
 
-        * MySQL 5.5 for Windows (only needed if building with MySQL enabled):
+        * MySQL 5.6 for Windows (only needed if building with MySQL enabled):
             http://dev.mysql.com/downloads/mysql/
             
-            (NOTE: Please download the full 32 bit version and ensure to select the Client C API developer component to be installed)
+            (NOTE: Please download the full version and ensure to select the 32-Bit Development Components)
         
         * zlib for Windows (only needed if building with MySQL enabled):
             http://sourceforge.net/projects/gnuwin32/files/zlib/1.2.3/zlib-1.2.3-lib.zip/download
             
-            Move the zlib.lib file to "C:\Program Files (x86)\MySQL\MySQL Server 5.5\lib" or corresponding location
+            Move the zlib.lib file to "C:\Program Files (x86)\MySQL\MySQL Server 5.6\lib" or corresponding location
 
 
     2) Unpack the Denora tarball with your favorite uncompression program
        (winzip or winrar).
 
-    3) Bring up the Visual C++ toolkit command prompt; This will launch a
+    3) Bring up the Developer Command Prompt; This will launch a
        dos command prompt like windows, which will set the environment
        properties need to make Denora. Change directories to where you unpacked
        the source code in step 2.
