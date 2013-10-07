@@ -1024,6 +1024,9 @@ int denora_event_quit(char *source, int ac, char **av)
 	if (ac != 1)
 		return MOD_CONT;
 
+	if (!user_find(source))
+		return MOD_CONT;
+
 	if (inspircd12_parse_lkill(av[0]) == 0)
 	{
 		do_quit(source, ac, av);
