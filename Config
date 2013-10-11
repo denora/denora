@@ -63,25 +63,25 @@ Run_Config () {
 		WITH_PERM=" --with-permissions=$UMASK"
 	fi
 
-	if [ "$MYSQL" == "no" ] ; then
+	if [ "$MYSQL" = "no" ] ; then
 		WITH_MYSQL=" --without-mysql"
 	fi
 
-	if [ "$MYSQL_BT" == "yes" ]; then
-		if [ "$MYSQL" == "no" ] ; then
+	if [ "$MYSQL_BT" = "yes" ]; then
+		if [ "$MYSQL" = "no" ] ; then
 			echo "MySQL Backtrace disabled as denora will be compiled without mysql support"
 		else
 			WITH_MYSQL_BT=" --enable-mysqlbt"
 		fi
 	fi
 
-	if [ "$DMEMORY" == "yes" ] ; then
+	if [ "$DMEMORY" = "yes" ] ; then
 		WITH_MEMORYDEBUG=" --enable-dmalloc"
 	fi
-	if [ "$ENCRYPT" == "yes" ] ; then
+	if [ "$ENCRYPT" = "yes" ] ; then
 		WITH_ENCRYPT=" --enable-crypt"
 	fi
-	if [ "$THREAD" == "yes" ] ; then
+	if [ "$THREAD" = "yes" ] ; then
 		WITH_THREADING=" --enable-threading"
 	fi
   
@@ -387,7 +387,7 @@ echo ""
 
 ####
 
-if [ "$MYSQL" == "yes" ]; then
+if [ "$MYSQL" = "yes" ]; then
 	ok=0
 	DEF=no
 	echo "Do you want to backtrace mysql queries?"
