@@ -414,7 +414,7 @@ void sql_do_addusers(int chanid, char *users)
 			strlcat(valuebuf, ")", sizeof(valuebuf));
 
 			/* Put it together */
-			strlcat(flagbuf, valuebuf, sizeof(valuebuf));
+			strlcat(flagbuf, valuebuf, sizeof(flagbuf));
 
 			/* Execute */
 			rdb_query(QUERY_HIGH, flagbuf);

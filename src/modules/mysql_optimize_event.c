@@ -15,13 +15,11 @@
 
 #include "denora.h"
 
-int db_optimize(const char *name);
 int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
 
 int DenoraInit(int argc, char **argv)
 {
-	CronEvent *evt;
 	char tables[512] = "\0";
 
 	USE_VAR(argc);

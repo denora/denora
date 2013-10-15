@@ -185,6 +185,7 @@ int rdb_query(int i, const char *fmt, ...)
 		res = rdb_direct_query(buf,0);
 	}
 #else
+	i = 0; /* hack to avoid compiler warning that we are not using the varabile */
 	res = rdb_direct_query(buf,0);
 #endif
 	return res;

@@ -69,6 +69,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+13/14/10 Fixed a ton of compiler warnings and errors, can build on Mac OS X
 13/06/05 Fixed the 'command out of sync' error caused by mysql_optimize and mysql_backup
 13/06/02 Fixed a memleak in cron_chanstats.c
 13/05/06 Fixed merging users with itself.
@@ -134,7 +135,7 @@ Denora Team <dev@denorastats.org>
 
 Contributors
 [1] Conti <sojugarden@gmail.com>
-
+[2] Trystan <scott@burkee.org>
 
 Denora v1.4.5
 -------------

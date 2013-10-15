@@ -1159,8 +1159,10 @@ int denora_event_kill(char *source, int ac, char **av)
 	if (ac != 2)
 		return MOD_CONT;
 
-	if (u = user_find(av[0]))
+	if (u = user_find(av[0])) 
+	{
 		m_kill(source, u->nick, av[1]);
+	}
 
 	return MOD_CONT;
 }

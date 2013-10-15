@@ -1661,7 +1661,7 @@ static char *check_quote(char *cur)
 	if (quote)
 	{
 		while ((cur = strchr(cur, '*')))
-			if ((*(++cur) == '/'))
+			if (*(++cur) == '/')
 			{
 				cur++;
 				quote = 0;
@@ -1682,7 +1682,7 @@ static char *check_quote(char *cur)
 		cur += 2;
 		quote = 1;
 		while ((cur = strchr(cur, '*')))
-			if ((*(++cur) == '/'))
+			if (*(++cur) == '/')
 			{
 				cur++;
 				quote = 0;
@@ -1820,7 +1820,7 @@ static char *parse_block(tConf * conftab, tConf * block, char *cur,
 			{
 				while (!BadPtr(cur) && (*cur != ';'))
 				{
-					if ((*cur == ' '))
+					if (*cur == ' ')
 					{
 						*cur = '\0';
 						if (vars[vnum]->loaded == 1)

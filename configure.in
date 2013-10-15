@@ -563,6 +563,7 @@ AC_CHECK_FUNCS(ntohl,AC_DEFINE(HAVE_NTOHL,1))
 AC_CHECK_FUNCS(inet_aton,AC_DEFINE([HAVE_INETATON], [1], [System supports inet_aton]))
 AC_CHECK_FUNCS(setrlimit,AC_DEFINE([HAVE_GETSETRLIMIT], [1], [System supports set/get/rlimit]))
 AC_CHECK_FUNCS(getrlimit,AC_DEFINE([HAVE_GETSETRLIMIT], [1], [System supports set/get/rlimit]))
+AC_CHECK_FUNCS(memcpy, AC_DEFINE(HAVE_MEMCPY,1))
 
 AC_ARG_WITH(rungroup,
     [ --with-rungroup=group  Specify the rungroup for Denora], [ 
@@ -969,6 +970,7 @@ DENORA_GCC_TRY_FLAGS([-Wunknown-pragmas], denora_cv_gcc_unknown_pragmas)
 DENORA_GCC_TRY_FLAGS([-Wdeclaration-after-statement], denora_cv_gcc_declaration_after_statement)
 DENORA_GCC_TRY_FLAGS([-Wsign-compare], denora_cv_gcc_sign_compare)
 DENORA_GCC_TRY_FLAGS([-fstack-protector], denora_cv_gcc_fstack_protector)
+DENORA_GCC_TRY_FLAGS([-Winvalid-source-encoding], denora_cv_invalid_encode)
 if test "$denora_cv_gcc_fstack_protector" = "yes"; then
         STRICT="$STRICT --param=ssp-buffer-size=4 "
 fi

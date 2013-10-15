@@ -249,7 +249,11 @@
 /************************************************************************/
 
 #ifndef _WIN32
-typedef enum { false, true } boolean;
+  #ifdef __APPLE__
+	typedef int boolean;
+  #else
+	typedef enum { false, true } boolean;
+  #endif
 #else
 #ifndef true
 #define true 1
