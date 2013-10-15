@@ -16,8 +16,8 @@ How To Add IRCd Support to Denora                                     v1.0
 1) Introduction
 
 Creating an IRCD Module for Denora is rather simple, however it does 
-require knowledge of both C language, the IRCD protocol. The base API is de
-scribed below, it is meant to guide through the basics of creating IRCD 
+require knowledge of both C language, the IRCD protocol. The base API is 
+described below, it is meant to guide through the basics of creating IRCD 
 Modules. Since IRCD Protocols are complex and very hard to understand, this 
 documentent is not meant to solve these problems just explain how the 
 framework functions.
@@ -32,7 +32,7 @@ to see about supporting your protocol.
 2) Preparing to add new IRCD
 
     In preparing to add an IRCD module to Denora, first you will want to be
-    on the most current SVN version of Denora, to ensure that you are using
+    on the most current GIT version of Denora, to ensure that you are using
     the most current code base, as changes are frequent its best to have the
     most current.
 
@@ -48,8 +48,8 @@ to see about supporting your protocol.
     B) In the sql/ folder there is a sql table file for the ircd, again we will
        take unreal32.sql and rename it to be quakeircd.sql
 
-    C) Open src/protocol/Makefile.win32 and in the SRCS= section append the ircd
-       name set in step A.
+    C) To ensure your module builds on Windows. Open src/protocol/Makefile.win32
+       and in the SRCS= section append the ircd name set in step A.
 
     You are now ready to start getting into the code.
 
@@ -207,6 +207,46 @@ to see about supporting your protocol.
     35) Gagged : Has a channel mode that prevents the user from taking but the
                  user is not banned.
 
+    36) Spamfilters : Some ircds have a spam filter ban system, set to be either
+        IRCD_ENABLE, IRCD_DISABLE
+
+    37) Ban mode character: typically "b" on most IRCD but if yours is different
+        change it here
+
+    38) Ban Exception Character: typically "e" on most IRCD but if yours is different
+        change it here
+
+    39) Ban Invite Character: typically "I" on most IRCD but if yours is different
+        change it here
+
+    40) ZIP compression : whether ircd supports zip compressed links
+        IRCD_ENABLE, IRCD_DISABLE
+
+    41) SSL connection : whether ircd supports ssl encrypted connections
+        IRCD_ENABLE, IRCD_DISABLE
+
+    42) uline : whether ircd supports ulining servers for services
+        IRCD_ENABLE, IRCD_DISABLE
+
+    43) nickchar : Some ircds can set their allowed character strings, if there is one
+        list it here, if you don't know use NULL
+
+    44) svid : whether ircd supports svid
+        IRCD_ENABLE, IRCD_DISABLE
+
+    45) Hidden Oper : whether ircd supports hiding who is an op
+        IRCD_ENABLE, IRCD_DISABLE
+
+    46) extra warning : whether ircd supports extra warning
+        IRCD_ENABLE, IRCD_DISABLE
+
+    47) sync state : whether ircd sends a message and expects one on sync
+        IRCD_ENABLE, IRCD_DISABLE
+
+    46) Persistent channel mode : whether ircd supports Persistent channel mode
+        IRCD_ENABLE, IRCD_DISABLE
+
+
     So we've had this long list. Now there's a second struct to fill. This
     struct isn't as long as the previous one though, so we'll handle it quite
     quick compared to the previous one.
@@ -256,32 +296,37 @@ to see about supporting your protocol.
 
 5) Modes 
 
-    The next thing you should do is defining the user modes. You will want to
-    have your .h file handy for this part.
+	Find the section of code for the following
 
-        unsigned long myumodes[128] = { }
+	void IRCDModeInit(void)
+	{
+	}
 
-    This array goes from 0 to 127 in the ASCII character set. Insert the user
-    modes at the slot where the mode fits. If you are adding a the user mode
-    of +i find the 105th (ASCII code of 'i') character slot in the array, and
-    place the UMODE_i into this slot. Your base .c file should contain a good
-    start for this, as well as a little help locating the characters.
+	Add in user modes simple call the function
 
-    The following mode set is for the channel symbols. During a SJOIN event 
-    the modes are sent usually before the nick. These normally are @, +, %
-    etc.. depending on the ircd. Starting at ASCII 0 and running to 127. 
-    Replace the 0 with the character (o = @, h = %) for the given mode. In the
-    case of halfop which is usually sent as % replace the 37th character with
-    'h', do this until all modes that are possible be received in this manor 
-    have been inserted into the array.
+		ModuleSetUserMode(UMODE_A, IRCD_ENABLE);
 
-    Now that you have that complete, the following array is ready to be dealt
-    with. This is the cmmodes array, like the others it is a ASCII array
-    starting at 0 and going to 127. However at the given letter you will want
-    to enter the add, and delete function for the given mode. In the case of
-    bans (+b) there is add_ban, and del_ban. Denora provides functions for 
-    bans, exceptions and invites, should your ircd have more then these please
-    contact Denora to discuss what can be done to add this mode.
+	All letters for UMODE_* are defined so have no fear, and you can set
+	the default is IRCD_ENABLE
+
+
+	For Channel modes we have two types, modes that are bans and modes that restrict channel actions. 
+	Both functions act the same
+
+		CreateChanBanMode(CMODE_b, add_ban, del_ban);
+
+		CreateChanMode(CMODE_j, set_flood_alt, get_flood_alt);
+	
+	First paramater is the mode, like UMODE_* all the CMODE_* are defined
+        Second parameter is what to do when the IRCD sets the mode if anything, if nothing set to NULL
+        Third parameter is what do when the IRCD unsets the mode, if nothing set to NULL
+		
+	At the end of this function you need to call 
+
+	ModuleUpdateSQLUserMode();
+	ModuleUpdateSQLChanMode();
+
+	These sets up SQL for the various modes your IRCD supports
 
 ============================================================================
 
