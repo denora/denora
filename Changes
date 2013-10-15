@@ -3,8 +3,6 @@ Denora v1.5.0-git
 -------------
 
 Additions
-13/10/11 Fixed an error in the ./Config script
-13/10/06 Fixed the 'kill of nonexistent nick' error in inspircd12
 13/01/13 Added support for ircu's channel mode +R (was missing)
 12/07/27 Added proper mysql backtrace debugging (not for windows)
 12/07/26 Added MAX_ADMINS MAX_UIDS MAX_USERS to denora.h to easily update limits
@@ -69,7 +67,9 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
-13/14/10 Fixed a ton of compiler warnings and errors, can build on Mac OS X
+13/10/14 Fixed a ton of compiler warnings and errors, can build on Mac OS X
+13/10/11 Fixed an error in the ./Config script
+13/10/06 Fixed the 'kill of nonexistent nick' error in inspircd12
 13/06/05 Fixed the 'command out of sync' error caused by mysql_optimize and mysql_backup
 13/06/02 Fixed a memleak in cron_chanstats.c
 13/05/06 Fixed merging users with itself.
