@@ -131,7 +131,7 @@ The recommended way to get Denora for Windows is to use our installers, which wi
 
 4) Credits
 
-    Denora is based on Anope, Epona and IRCServices. See CREDITS for more credits and
+    Denora is based on Anope, Epona and IRCServices. See README for more credits and
     a complete list of all developers.
 
     Anope's Windows-specific code is provided by:

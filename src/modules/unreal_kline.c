@@ -49,7 +49,7 @@ int DenoraInit(int argc, char **argv)
 
 void DenoraFini(void)
 {
-    alog(LOG_NORMAL, "Unloading ircd_port%s", MODULE_EXT);
+    alog(LOG_NORMAL, "Unloading unreal_kline%s", MODULE_EXT);
 }
 
 int my_server(int argc, char **argv)
