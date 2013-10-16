@@ -41,18 +41,16 @@ clean:
 		cd src\protocol && $(MAKE) spotless && cd ..
 		cd src\core && $(MAKE) spotless && cd ..
 
-spotless:
-        cd lang && $(MAKE) spotless && cd ..
-        cd src && $(MAKE) spotless && cd ..
-        cd src\modules && $(MAKE) spotless && cd ..\..
-        cd src\protocol && $(MAKE) spotless && cd ..\..
-		cd src\core && $(MAKE) spotless && cd ..\..
+distclean:
+        cd lang && $(MAKE) distclean && cd ..
+        cd src && $(MAKE) distclean && cd ..
+        cd src\modules && $(MAKE) distclean && cd ..\..
+        cd src\protocol && $(MAKE) distclean && cd ..\..
+	cd src\core && $(MAKE) distclean && cd ..\..
         -@erase include\language.h include\sysconf.h include\version.h *~ denora.exe *.obj  denora.exe.manifest
 
 mypasql: 
         $(MYPASQL_BUILD)
-
-distclean: spotless
 
 dist:
         $(MAKE) clean

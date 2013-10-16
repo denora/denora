@@ -67,6 +67,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+13/10/15 Fixed compiling most of the source under win32/win64 (sql to come soon)
 13/10/14 Fixed a ton of compiler warnings and errors, can build on Mac OS X
 13/10/11 Fixed an error in the ./Config script
 13/10/06 Fixed the 'kill of nonexistent nick' error in inspircd12

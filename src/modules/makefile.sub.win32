@@ -20,12 +20,10 @@ LFLAGS=/nologo ../../denora.lib wsock32.lib $(LIBS) $(LFLAGS) $(MYSQL_LIB_PATH) 
 all: 
     $(CC) $(SRCS) $(CFLAGS) ..\..\mod_version.c /link $(LFLAGS)
 
-distclean: clean spotless
-
 clean:
         -@del *.obj
 
-spotless: clean
+distclean: clean
         -@del *.dll *.lib *.exp *.dll.manifest
         
 install:

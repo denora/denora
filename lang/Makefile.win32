@@ -37,7 +37,7 @@ install: all
 clean:
         -@erase $(LANGOBJS) langcomp.exe langtool.exe *.obj index *.exp *.lib *.suo
 
-spotless: clean
+distclean: clean
         -@erase language.h *.manifest
 
 en_us:    en_us.l    langtool.exe langcomp.exe index

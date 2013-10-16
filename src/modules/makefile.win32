@@ -20,8 +20,6 @@ LFLAGS=/link ../denora.lib wsock32.lib $(LIBS) $(LFLAGS) $(MYSQL_LIB_PATH)  $(PO
 
 all: $(OBJECTS) subs
 
-distclean: clean spotless
-
 .c.dll:
         $(CC) $(CFLAGS) $(IRCTYPE) $< ..\mod_version.c $(LFLAGS)
         
@@ -37,7 +35,7 @@ subs-clean:
 	@for %i in ( $(SUBS) ); do \
 		@if exist %i; @cd %i && $(MAKE) $(MAKEARGS) clean && cd ..
 
-spotless: clean subs-spotless
+distclean: clean subs-spotless
         -@del *.dll *.lib *.exp *.dll.manifest
 
 subs-spotless:

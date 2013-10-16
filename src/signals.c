@@ -23,10 +23,12 @@ VOIDSIG signal_pipe(int signum);
 VOIDSIG signal_die(int signum);
 char segv_location[SEGV_LOCATION_BUFSIZE];
 
-#if !defined(HAVE_STRSIGNAL) && !defined(_WIN32)
-const char* get_signame(int sig);
-#elsif !defined(strsignal) && (!defined(__CYGWIN__) || (__FreeBSD__) || (__OpenBSD__))
-char *strsignal(int sig);
+#ifndef _WIN32 || _WIN64
+	#if !defined(HAVE_STRSIGNAL)
+		const char* get_signame(int sig);
+	#elsif !defined(strsignal) && (!defined(__CYGWIN__) || (__FreeBSD__) || (__OpenBSD__))
+		char *strsignal(int sig);
+	#endif
 #endif
 
 int sigpipecount;
@@ -373,7 +375,7 @@ VOIDSIG signal_int(int signum)
 
 VOIDSIG sighandler(int signum)
 {
-#ifndef _WIN32
+#ifndef _WIN32 || _WIN64 || _WINDOWS
 	if (started)
 	{
 		if (signum == SIGQUIT)
@@ -406,7 +408,11 @@ VOIDSIG sighandler(int signum)
 			}
 			denora_cmd_global(NULL, "PANIC! %s (%s)", buf,
 			                  strsignal(signum));
+#if !defined(HAVE_STRSIGNAL)
+			alog(LOG_NORMAL, "PANIC! %s (%d)", buf, strsignal(signum));
+#else
 			alog(LOG_NORMAL, "PANIC! %s (%s)", buf, strsignal(signum));
+#endif
 		}
 	}
 #endif
@@ -422,8 +428,13 @@ VOIDSIG sighandler(int signum)
 	}
 	else
 	{
+#ifdef _WIN32 || _WIN64
+		ircsnprintf(denora->qmsg, BUFSIZE, "Stats terminating: %d", signum);
+#else
 		ircsnprintf(denora->qmsg, BUFSIZE, "Stats terminating: %s",
 		            strsignal(signum));
+#endif
+
 	}
 	send_event(EVENT_SIGNAL, 2, "unknown", denora->qmsg);
 	if (started)

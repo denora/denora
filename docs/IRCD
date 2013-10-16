@@ -310,18 +310,18 @@ to see about supporting your protocol.
 	the default is IRCD_ENABLE
 
 
-	For Channel modes we have two types, modes that are bans and modes that restrict channel actions. 
+	For Channel modes we have two types, modes that are bans and modes that restrict channel actions.
 	Both functions act the same
 
 		CreateChanBanMode(CMODE_b, add_ban, del_ban);
 
 		CreateChanMode(CMODE_j, set_flood_alt, get_flood_alt);
-	
+
 	First paramater is the mode, like UMODE_* all the CMODE_* are defined
         Second parameter is what to do when the IRCD sets the mode if anything, if nothing set to NULL
         Third parameter is what do when the IRCD unsets the mode, if nothing set to NULL
-		
-	At the end of this function you need to call 
+
+	At the end of this function you need to call
 
 	ModuleUpdateSQLUserMode();
 	ModuleUpdateSQLChanMode();

@@ -22,15 +22,13 @@ LFLAGS=/link ../denora.lib wsock32.lib $(LIBS) $(LFLAGS) $(MYSQL_LIB_PATH) $(POS
 
 all: $(OBJECTS)
 
-distclean: clean spotless
-
 .c.dll:
         $(CC) $(CFLAGS) $< ..\mod_version.c $(LFLAGS)
 
 clean:
         -@del *.obj
 
-spotless: clean
+distclean: clean
         -@del *.dll *.lib *.exp *.dll.manifest
 
 install:

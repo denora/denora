@@ -42,7 +42,7 @@ all: $(PROGRAM)
 $(PROGRAM): $(OBJS) win32.res
         $(CC) $(OBJS) win32.res /link /out:$(PROGRAM) /implib:denora.lib $(LIBS) $(LFLAGS) $(MLIBS) $(ELIBS)
 
-spotless:
+distclean:
         -@erase *.obj *.exe *.exp *.lib *.res win32.rc *.manifest
         
 install:

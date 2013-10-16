@@ -231,13 +231,15 @@ int main(int ac, char **av)
 		return 1;
 	}
 
+	fprintf(stderr, "Starting build of %s -> %s.l\n", filename, filename);
+
 	while (maxerr > 0 && (line = denora_getline(in)) != NULL)
 	{
 		if (*line == '\t')
 		{
 			if (curstring == -2)
 			{
-				fprintf(stderr, "%s:%d: Junk at beginning of file\n",
+				fprintf(stderr, "%s : %d : Junk at beginning of file\n",
 				        filename, linenum);
 				retval = 1;
 			}
@@ -248,7 +250,7 @@ int main(int ac, char **av)
 				if (!(strings[curstring] =
 				            realloc(strings[curstring], i + strlen(line) + 2)))
 				{
-					fprintf(stderr, "%s:%d: Out of memory!\n", filename,
+					fprintf(stderr, "%s : %d: Out of memory!\n", filename,
 					        linenum);
 					return 2;
 				}
@@ -260,7 +262,7 @@ int main(int ac, char **av)
 
 			if ((curstring = stringnum(line)) < 0)
 			{
-				fprintf(stderr, "%s:%d: Unknown string name `%s'\n",
+				fprintf(stderr, " %s : %d : Unknown string name `%s'\n",
 				        filename, linenum, line);
 				retval = 1;
 				maxerr--;
