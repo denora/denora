@@ -521,7 +521,7 @@ void do_html()
 #else
 	ircsnprintf(win32filename, sizeof(win32filename), "%s\\%s", buffer,
 	            "index.tpl");
-	template = win32filename;
+	template = sstrdup(win32filename);
 #endif
 	html_template = sstrdup(template);
 
@@ -537,11 +537,13 @@ void do_html()
 		{
 			alog(LOG_ERROR,
 			     "Can't do HTML Writout as html path is not defined");
+			free(html_template);
 			return;
 		}
 	}
 	else
 	{
+		free(html_template);
 		return;
 	}
 	SET_SEGV_LOCATION();
@@ -549,12 +551,14 @@ void do_html()
 	tpl = html_open(html_template);
 	if (!tpl)
 	{
+		free(html_template);
 		return;
 	}
 	opf = html_open_write(HTMLFilename);
 	if (!opf)
 	{
 		denora->do_html = 0;
+		free(html_template);
 		return;
 	}
 	chmod(HTMLFilename, READ_PERM);
