@@ -527,6 +527,7 @@ void do_html()
 
 	if (!denora->do_html)
 	{
+		free(html_template);
 		return;
 	}
 

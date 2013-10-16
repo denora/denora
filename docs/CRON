@@ -8,9 +8,9 @@ Denora CRON Events
 
 1) Introduction to CRON Events
 
-    Cron Events are setup to give module developers the ablitiy to have code
+    Cron Events are setup to give module developers the ability to have code
     run at given times without having to figure out the time in seconds for
-    which their event is to be trigggered. A list of time events can be found 
+    which their event is to be triggered. A list of time events can be found 
     below. The rest of this document assumes that you are used to writing modules.
 
 2) Cron Events

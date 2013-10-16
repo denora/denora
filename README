@@ -141,7 +141,7 @@ TABLE OF CONTENTS
     the behavior of Denora:
 
         -debug          Enable debugging mode
-        -sql            Enable debuging of sql queries
+        -sql            Enable debugging of sql queries
         -version        Display the version of Denora
         -socketdebug    Display socket write/read info only useful if you want
                         to debug connection problems.

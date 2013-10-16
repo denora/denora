@@ -43,16 +43,16 @@ Denora Modules: Configuration Files
 	};
 
     first parameter must be the variable from the config file that will be looked for. Next is the
-    data type (see above), Next is if the variable is reloadedable, should Denora rehash should this
+    data type (see above), Next is if the variable is reloadable, should Denora rehash should this
     change. Next is the global variable into which the option will be copied to.
 
     for (i = 0; i < 1; i++) {
         moduleGetConfigDirective("test.conf", confvalues[i]);
 	}
 
-    Now you can have the core load you config file and look for the the settings within.
+    Now you can have the core load you config file and look for the settings within.
 
-    **NOTE** Unlike anope this function, has two arguements so you most list what file to parse
+    **NOTE** Unlike anope this function, has two arguments so you most list what file to parse
 
 3. Block Style
 

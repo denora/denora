@@ -131,11 +131,11 @@ Denora Internal Events
     in alphabetical order.
 
     Note that all events are emitted AFTER the action has taken place, so
-    any deleted nick/channel/etc won't exist anymore and any created one will
+    any deleted nick/channel/etc. won't exist anymore and any created one will
     exist when your function is being run, unless noted otherwise.
 
     Also note that EVENT_START and EVENT_STOP should not be matched with an
-    equal sign, but with string comparision. See the bundled events module for
+    equal sign, but with string comparison. See the bundled events module for
     an example on how to do this.
 
 
@@ -153,7 +153,7 @@ Denora Internal Events
     EVENT_CHANNEL_MODE
         This event is sent when a changed mode is changed or updated. 
         Argument 1 - EVENT_MODE_ADD or EVENT_MODE_REMOVE
-        Arugment 2 - Channel
+        Argument 2 - Channel
         Argument 3 - Mode
         Argument 4 - extra data not always sent
 
@@ -263,9 +263,9 @@ Denora Internal Events
         Argument 2 - Channel Name
 
     EVENT_USER_MODE
-        This event is sent when a users mode is changed or updated. 
+        This event is sent when a user's mode is changed or updated. 
         Argument 1 - EVENT_MODE_ADD or EVENT_MODE_REMOVE
-        Arugment 2 - Nick
+        Argument 2 - Nick
         Argument 3 - Mode
         Argument 4 - extra data not always sent
 
@@ -276,10 +276,10 @@ Denora Internal Events
         Argument 3 - Part Message (optional)
 
     EVENT_UPLINK_SYNC_COMPLETE
-        The uplink server has completed syncing
+        The uplink server has completed synchronizing
         Argument 1 - server name
 
     EVENT_SERVER_SYNC_COMPLETE
-        This server has finisehd syncing
-        Arguement 1 - Server name
+        This server has finished syncing
+        Argument 1 - Server name
 
