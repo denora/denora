@@ -1,6 +1,6 @@
 /* Html Map
  *
- * (c) 2004-2012 Denora Team
+ * (c) 2004-2013 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -36,6 +36,10 @@ int DenoraInit(int argc, char **argv)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+	if (!denora->do_html)
+	{
+		return MOD_STOP;
+	}
 	moduleAddAuthor("Denora");
 	moduleAddVersion("");
 	moduleSetType(CORE);
@@ -47,6 +51,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for !MAP! [%d][%s]", status,
 		     ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 
 	h = createHTMLtag("!NETMAPTITLE!", html_netmap_title);
@@ -56,6 +61,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for !NETMAPTITLE! [%d][%s]",
 		     status, ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 
 	return MOD_CONT;

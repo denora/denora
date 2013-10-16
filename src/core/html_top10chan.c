@@ -37,6 +37,10 @@ int DenoraInit(int argc, char **argv)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+	if (!denora->do_html)
+	{
+		return MOD_STOP;
+	}
 	moduleAddAuthor("Denora");
 	moduleAddVersion
 	("");
@@ -49,6 +53,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for !TOP10CHAN! [%d][%s]",
 		     status, ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 
 	h = createHTMLtag("!TOP10CHANEVERTITLE!", html_top10_chanever_title);
@@ -58,6 +63,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for !TOP10CHANEVERTITLE! [%d][%s]",
 		     status, ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 
 	h = createHTMLtag("!POPULARCHANTITLE!", html_popularchan_title);
@@ -67,6 +73,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for !POPULARCHANTITLE! [%d][%s]",
 		     status, ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 
 

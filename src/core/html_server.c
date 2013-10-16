@@ -36,6 +36,10 @@ int DenoraInit(int argc, char **argv)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+	if (!denora->do_html)
+	{
+		return MOD_STOP;
+	}
 	moduleAddAuthor("Denora");
 	moduleAddVersion
 	("");
@@ -48,6 +52,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for !SRVLIST! [%d][%s]",
 		     status, ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 
 	h = createHTMLtag("!SERVERLISTTILE!", html_serverlist_title);
@@ -57,6 +62,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for !SERVERLISTTILE! [%d][%s]",
 		     status, ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 
 

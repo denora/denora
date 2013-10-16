@@ -36,6 +36,10 @@ int DenoraInit(int argc, char **argv)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+	if (!denora->do_html)
+	{
+		return MOD_STOP;
+	}
 	moduleAddAuthor("Denora");
 	moduleAddVersion
 	("");
@@ -48,6 +52,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for !DAILYTOPCHAN! [%d][%s]",
 		     status, ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 
 	h = createHTMLtag("!TOP10ONLINECHANTITLE!",
@@ -58,6 +63,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for !TOP10ONLINECHANTITLE! [%d][%s]",
 		     status, ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 
 

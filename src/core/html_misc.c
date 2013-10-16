@@ -1,6 +1,6 @@
 /* Html Misc
  *
- * (c) 2004-2012 Denora Team
+ * (c) 2004-2013 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -38,6 +38,10 @@ int DenoraInit(int argc, char **argv)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+	if (!denora->do_html)
+	{
+		return MOD_STOP;
+	}
 	moduleAddAuthor("Denora");
 	moduleAddVersion
 	("");
@@ -50,6 +54,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for !VERSION! [%d][%s]",
 		     status, ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 
 	h = createHTMLtag("!TITLE!", html_title);
@@ -59,6 +64,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for !TITLE! [%d][%s]",
 		     status, ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 	h = createHTMLtag("!HTMLLANG!", html_lang);
 	status = addHTMLTag(h);
@@ -67,6 +73,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for !HTMLLANG! [%d][%s]",
 		     status, ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 
 	h = createHTMLtag("!CREDITS!", html_credits);
@@ -76,6 +83,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for !CREDITS! [%d][%s]",
 		     status, ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 
 	h = createHTMLtag("!NETSTATSTITLE!", html_netstats_title);
@@ -85,6 +93,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for !NETSTATSTITLE! [%d][%s]",
 		     status, ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 
 	return MOD_CONT;

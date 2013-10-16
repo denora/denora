@@ -1,6 +1,6 @@
 /* Html Daily
  *
- * (c) 2004-2012 Denora Team
+ * (c) 2004-2013 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -35,9 +35,12 @@ int DenoraInit(int argc, char **argv)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+	if (!denora->do_html)
+	{
+		return MOD_STOP;
+	}
 	moduleAddAuthor("Denora");
-	moduleAddVersion
-	("");
+	moduleAddVersion(VERSION_STRING);
 	moduleSetType(CORE);
 
 	h = createHTMLtag("!DAILYSTATS!", html_dailystats);
@@ -47,6 +50,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for !DAILYSTATS! [%d][%s]",
 		     status, ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 
 	h = createHTMLtag("!DAILYSTATSTITLE!", html_dailystats_title);
@@ -56,6 +60,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for !DAILYSTATSTITLE! [%d][%s]",
 		     status, ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 
 

@@ -67,6 +67,8 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+13/10/16 HTML modules no longer load if html is disabled, and return MOD_STOP if there is an error
+         binding to the command, should save some memory.
 13/10/15 Fixed compiling most of the source under win32/win64 (sql to come soon)
 13/10/14 Fixed a ton of compiler warnings and errors, can build on Mac OS X
 13/10/11 Fixed an error in the ./Config script
