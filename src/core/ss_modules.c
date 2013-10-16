@@ -44,12 +44,12 @@ int DenoraInit(int argc, char **argv)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
-	moduleAddAuthor("Denora");
-	moduleAddVersion
-	("");
-	moduleSetType(CORE);
 
 #ifdef USE_MODULES
+	moduleAddAuthor("Denora");
+	moduleAddVersion("");
+	moduleSetType(CORE);
+
 	c = createCommand("MODLOAD", do_modload, is_stats_admin, -1, -1, -1,
 	                  STAT_HELP_MODLOAD);
 	moduleAddCommand(STATSERV, c, MOD_UNIQUE);
@@ -65,9 +65,11 @@ int DenoraInit(int argc, char **argv)
 	c = createCommand("MODINFO", do_modinfo, is_stats_admin, -1, -1, -1,
 	                  STAT_HELP_MODINFO);
 	moduleAddCommand(STATSERV, c, MOD_UNIQUE);
-#endif
 
 	return MOD_CONT;
+#else
+	return MOD_STOP;
+#endif
 }
 
 /**

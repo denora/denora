@@ -48,6 +48,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for 372 [%d][%s]", status,
 		     ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 
 	m = createMessage("375", denora_event_375);
@@ -57,6 +58,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for 375 [%d][%s]", status,
 		     ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 
 	m = createMessage("376", denora_event_376);
@@ -66,6 +68,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for 376 [%d][%s]", status,
 		     ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 	return MOD_CONT;
 }

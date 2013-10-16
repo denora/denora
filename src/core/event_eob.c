@@ -28,34 +28,35 @@ void DenoraFini(void);
 int DenoraInit(int argc, char **argv)
 {
 	EvtHook *hook;
+	int status;
 
 	if (denora->debug >= 2)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
 
+	if (!ircd->syncstate)
+	{
+		return MOD_STOP;
+	}
+
 	moduleAddAuthor("Denora");
-	moduleAddVersion
-	("");
+	moduleAddVersion("");
 	moduleSetType(CORE);
 
 	hook =
 	    createEventHook(EVENT_UPLINK_SYNC_COMPLETE,
 	                    denora_event_synccomplete);
-	moduleAddEventHook(hook);
-
-#ifdef USE_MYSQL
-	if (ircd->syncstate)
+	status = moduleAddEventHook(hook);
+	if (status != MOD_ERR_OK)
 	{
-		return MOD_CONT;
-	}
-	else
-	{
+		alog(LOG_NORMAL,
+		     "Error Occurred setting message for EVENT_UPLINK_SYNC_COMPLETE [%d][%s]", status,
+		     ModuleGetErrStr(status));
 		return MOD_STOP;
 	}
-#else
-	return MOD_STOP;
-#endif
+	return MOD_CONT;
+
 }
 
 /**

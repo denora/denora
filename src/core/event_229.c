@@ -34,6 +34,12 @@ int DenoraInit(int argc, char **argv)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+	if (!ircd->spamfilter)
+	{
+		return MOD_STOP;
+	}
+
+
 	moduleAddAuthor("Denora");
 	moduleAddVersion
 	("");
@@ -47,15 +53,9 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for 229 [%d][%s]", status,
 		     ModuleGetErrStr(status));
-	}
-	if (ircd->spamfilter)
-	{
-		return MOD_CONT;
-	}
-	else
-	{
 		return MOD_STOP;
 	}
+	return MOD_CONT;
 }
 
 /**

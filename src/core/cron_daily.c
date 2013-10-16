@@ -1,6 +1,6 @@
 /* Cron Daily
  *
- * (c) 2004-2012 Denora Team
+ * (c) 2004-2013 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -28,7 +28,8 @@ void DenoraFini(void);
 int DenoraInit(int argc, char **argv)
 {
 	CronEvent *evt;
-
+	int status;
+	
 	if (denora->debug >= 2)
 	{
 		protocol_debug(NULL, argc, argv);
@@ -39,7 +40,14 @@ int DenoraInit(int argc, char **argv)
 	moduleSetType(CORE);
 
 	evt = createCronEvent(CRON_MIDNIGHT, users_daily);
-	moduleAddCronEvent(evt);
+	status = moduleAddCronEvent(evt);
+	if (status != MOD_ERR_OK)
+	{
+		alog(LOG_NORMAL,
+		     "Error Occurred setting cron->users_daily [%d][%s]", status,
+		     ModuleGetErrStr(status));
+		return MOD_STOP;
+	}
 
 	return MOD_CONT;
 }

@@ -48,6 +48,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for 246 [%d][%s]", status,
 		     ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 
 	/* Most everyone else uses 248 */
@@ -58,6 +59,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for 248 [%d][%s]", status,
 		     ModuleGetErrStr(status));
+		return MOD_STOP;
 	}
 
 	return MOD_CONT;

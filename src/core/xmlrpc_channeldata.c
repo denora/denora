@@ -1,6 +1,6 @@
 /* XMLRPC Channel Data
  *
- * (c) 2004-2012 Denora Team
+ * (c) 2004-2013 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -22,23 +22,31 @@ void DenoraFini(void);
 int DenoraInit(int argc, char **argv)
 {
 	XMLRPCCmd *xml;
+	int status;
 
 	if (denora->debug >= 2)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
-	moduleAddAuthor("Denora");
-	moduleAddVersion
-	("");
-	moduleSetType(CORE);
-
 	if (!XMLRPC_Enable)
 	{
 		return MOD_STOP;
 	}
 
+	moduleAddAuthor("Denora");
+	moduleAddVersion
+	("");
+	moduleSetType(CORE);
+
 	xml = createXMLCommand("denora.channeldata", xmlrpc_channeldata);
-	moduleAddXMLRPCcmd(xml);
+	status = moduleAddXMLRPCcmd(xml);
+	if (status != MOD_ERR_OK)
+	{
+		alog(LOG_NORMAL,
+		     "Error Occurred setting xmlrpc message for denora.channeldata [%d][%s]", status,
+		     ModuleGetErrStr(status));
+		return MOD_STOP;
+	}
 
 	return MOD_CONT;
 }
