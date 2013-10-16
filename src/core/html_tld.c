@@ -15,8 +15,8 @@
 
 #include "denora.h"
 
-E void html_tld_table(FILE * ptr);
-E void html_tld_title(FILE * ptr);
+void html_tld_table(FILE * ptr);
+void html_tld_title(FILE * ptr);
 int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
 
