@@ -315,6 +315,8 @@ void add_sqladmin(char *name, char *passwd, int level, char *host, int lang)
 	return;
 }
 
+/*************************************************************************/
+
 int del_sqladmin(char *name)
 {
 	SET_SEGV_LOCATION();
@@ -328,6 +330,8 @@ int del_sqladmin(char *name)
 	          AdminTable, name);
 	return 0;
 }
+
+/*************************************************************************/
 
 void reset_sqladmin(void)
 {
