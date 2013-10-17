@@ -46,7 +46,7 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL,
 		     "Error Occurred setting message for 351 [%d][%s]", status,
 		     ModuleGetErrStr(status));
-		return MOD_STOP
+		return MOD_STOP;
 	}
 	return MOD_CONT;
 }
