@@ -65,6 +65,7 @@ static int do_admin(User * u, int ac, char **av)
 	User *u2;
 	int i;
 	int disp = 1;
+	int crypted = 0;
 
 	if (denora->protocoldebug)
 	{
@@ -78,8 +79,6 @@ static int do_admin(User * u, int ac, char **av)
 	}
 	if (!stricmp(av[0], "ADD"))
 	{
-		alog(LOG_NORMAL, "%s: %s: ADMIN ADD %s ****", s_StatServ, u->nick,
-		     av[1]);
 		if (!u->confadmin)
 		{
 			notice_lang(s_StatServ, u, PERMISSION_DENIED);
@@ -90,6 +89,9 @@ static int do_admin(User * u, int ac, char **av)
 			syntax_error(s_StatServ, u, "ADMIN", STAT_ADMIN_SYNTAX);
 			return MOD_CONT;
 		}
+		alog(LOG_NORMAL, "%s: %s: ADMIN ADD %s ****", s_StatServ, u->nick,
+		     av[1]);
+
 		a = find_admin_byname(av[1]);
 		if (a)
 		{
@@ -119,13 +121,16 @@ static int do_admin(User * u, int ac, char **av)
 			}
 			a->passwd = sstrdup(MakePassword(av[2]));
 			add_sqladmin(a->name, a->passwd, 0, a->hosts[0], a->language);
+			u2 = user_find(av[1]);
+			if (u2)
+			{
+				u2->admin = 1;
+			}
 			notice_lang(s_StatServ, u, STAT_ADMIN_CREATED, av[1]);
 		}
 	}
 	else if (!stricmp(av[0], "DEL"))
 	{
-		alog(LOG_NORMAL, "%s: %s: ADMIN DEL %s", s_StatServ, u->nick,
-		     av[1]);
 		if (!u->confadmin)
 		{
 			notice_lang(s_StatServ, u, PERMISSION_DENIED);
@@ -136,6 +141,10 @@ static int do_admin(User * u, int ac, char **av)
 			syntax_error(s_StatServ, u, "ADMIN", STAT_ADMIN_SYNTAX);
 			return MOD_CONT;
 		}
+
+		alog(LOG_NORMAL, "%s: %s: ADMIN DEL %s", s_StatServ, u->nick,
+		     av[1]);
+
 		a = find_admin_byname(av[1]);
 		if (a)
 		{
@@ -161,8 +170,6 @@ static int do_admin(User * u, int ac, char **av)
 	}
 	else if (!stricmp(av[0], "SETPASS"))
 	{
-		alog(LOG_NORMAL, "%s: %s: ADMIN SETPASS %s ****", s_StatServ,
-		     u->nick, av[1]);
 		if (!u->confadmin)
 		{
 			notice_lang(s_StatServ, u, PERMISSION_DENIED);
@@ -173,6 +180,8 @@ static int do_admin(User * u, int ac, char **av)
 			syntax_error(s_StatServ, u, "ADMIN", STAT_ADMIN_SYNTAX);
 			return MOD_CONT;
 		}
+		alog(LOG_NORMAL, "%s: %s: ADMIN SETPASS %s ****", s_StatServ, u->nick, av[1]);
+
 		a = find_admin_byname(av[1]);
 		if (a)
 		{
@@ -183,22 +192,28 @@ static int do_admin(User * u, int ac, char **av)
 			}
 			free(a->passwd);
 			a->passwd = sstrdup(MakePassword(av[2]));
+			if (denora->do_sql) 
+			{
+				crypted = is_crypted(a->passwd);
+				rdb_query(QUERY_LOW, "UPDATE %s SET passwd=%s%s%s WHERE uname = '%s'", AdminTable, crypted ? "'" : "MD5('", passwd, crypted ? "'" : "')", a->name);
+			}
 			notice_lang(s_StatServ, u, STAT_CHGPASS_OK, av[1]);
 		}
 		else
 		{
 			notice_lang(s_StatServ, u, STAT_ADMIN_NOTADMIN, av[1]);
 		}
+		return MOD_CONT;
 	}
 	else if (!stricmp(av[0], "SHOW"))
 	{
-		alog(LOG_NORMAL, "%s: %s: ADMIN SHOW %s", s_StatServ, u->nick,
-		     av[1]);
 		if (ac < 2)
 		{
 			syntax_error(s_StatServ, u, "ADMIN", STAT_ADMIN_SYNTAX);
 			return MOD_CONT;
 		}
+		alog(LOG_NORMAL, "%s: %s: ADMIN SHOW %s", s_StatServ, u->nick, av[1]);
+
 		a = find_admin_byname(av[1]);
 		if (a)
 		{
@@ -209,6 +224,7 @@ static int do_admin(User * u, int ac, char **av)
 		{
 			notice_lang(s_StatServ, u, STAT_ADMIN_NOTADMIN, av[1]);
 		}
+		return MOD_CONT;
 	}
 	else if (!stricmp(av[0], "LIST"))
 	{
@@ -220,6 +236,7 @@ static int do_admin(User * u, int ac, char **av)
 				notice(s_StatServ, u->nick, "%d %s", disp++, a->name);
 			}
 		}
+		return MOD_CONT;
 	}
 	else
 	{
