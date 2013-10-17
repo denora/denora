@@ -288,9 +288,6 @@
 /* 'Enable Perl Support' */
 #undef USE_PERL
 
-/* "Use RDB" */
-#undef USE_RDB
-
 /* "Use threads" */
 #undef USE_THREADS
 

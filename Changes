@@ -19,6 +19,7 @@ Additions
 11/02/11 r416 Added support for ircd-rizon
 
 Changes
+13/10/17 Removed USE_RDB define from config, this was legacy Anope code for when rdb was an option.
 13/05/31 Improved handling of KILL messages on InspIRCd
 13/05/16 Do not free unallocated memory in InspIRCd protocol
 12/10/04 Cleanup and hopefully less leaks etc

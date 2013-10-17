@@ -644,7 +644,6 @@ PTHREAD_CFLAGS
 PTHREAD_LIBS
 PTHREAD_CC
 acx_pthread_config
-RDB
 MYSQL
 MYSQLCONF
 HAVE_SSL
@@ -5182,12 +5181,7 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 
 
-cat >>confdefs.h <<_ACEOF
-#define USE_RDB 1
-_ACEOF
-
 			MYSQL=" mysql.c "
-			RDB=" rdb.c "
 
 
 			DIS_MYSQL="MySQL: Yes"
