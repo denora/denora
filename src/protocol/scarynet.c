@@ -1,7 +1,10 @@
 /* ScaryNet ircu IRCD functions
  *
- * (c) 2004-2012 Denora Team
+ * (c) 2004-2013 Denora Team
  * Contact us at info@nomadirc.net
+ *
+ * (C) 2006 Alexander Maassen
+ * Contact me at outsider@scarynet.org
  *
  * Please read COPYING and README for furhter details.
  *

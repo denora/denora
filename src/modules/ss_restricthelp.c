@@ -15,12 +15,21 @@ int do_help(User * u, int argc, char **argv);
 int DenoraInit(int argc, char **argv)
 {
 	Command *c;
+	int status;
 
 	USE_VAR(argc);
 	USE_VAR(argv);
 
 	c = createCommand("HELP", do_help, is_oper, -1, -1, -1, -1);
-	moduleAddCommand(STATSERV, c, MOD_HEAD);
+	status = moduleAddCommand(STATSERV, c, MOD_HEAD);
+	if (status != MOD_ERR_OK)
+	{
+		alog(LOG_NORMAL,
+		     "Error Occurred ss_stricthelp [%d][%s]", status,
+		     ModuleGetErrStr(status));
+		return MOD_STOP;
+	}
+
 
 	moduleAddAuthor(AUTHOR);
 	moduleAddVersion(VERSION);

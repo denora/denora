@@ -1,6 +1,6 @@
 # Make file for Win32
 #
-# (c) 2004-2012 Denora Team
+# (c) 2004-2013 Denora Team
 # Contact us at info@denorastats.org
 #
 # Please read COPYING and README for further details.
@@ -16,9 +16,7 @@
 clean: 
 	-@erase language.h
 
-spotless: clean
+distclean: clean
 	-@erase sysconf.h version.h
-
-distclean: spotless
 
 FRC:

@@ -1,7 +1,7 @@
 //
 // version.js - Grab version information from the version control file.
 //
-// (c) 2004-2012 Denora Team
+// (c) 2004-2013 Denora Team
 // Contact us at info@denorastats.org
 //
 // This program is free but copyrighted software; see the file COPYING for

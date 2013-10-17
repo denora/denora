@@ -1,6 +1,6 @@
 /*
  * seen module for Denora 1.4.3+
- * (c) 2006-2009 Hal9000 (hal9000@denorastats.org)
+ * (c) 2006-2013 Hal9000 (hal9000@denorastats.org)
  */
 
 #include "denora.h"
@@ -48,15 +48,15 @@ int DenoraInit(int argc, char **argv)
 	if (denora->debug)
 	    protocol_debug(NULL, argc, argv);
 
-	moduleAddAuthor(AUTHOR);
-	moduleAddVersion(VERSION);
-	moduleSetType(THIRD);
-
 	if ((VERSION_MAJOR != 1) && (VERSION_MINOR < 4)) {
 	    alog(LOG_ERROR,
 	         "[seen] Your Denora version is incompatible with this module.");
 	    return MOD_STOP;
 	}
+
+	moduleAddAuthor(AUTHOR);
+	moduleAddVersion(VERSION);
+	moduleSetType(THIRD);
 
 	hook = createEventHook(EVENT_FANTASY, do_fantasy_seen);
 	moduleAddEventHook(hook);

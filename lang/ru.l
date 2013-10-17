@@ -1,6 +1,6 @@
 # Russian language file.
 #
-# Denora (c) 2004-2012 Denora Team
+# Denora (c) 2004-2013 Denora Team
 # Contact us at dev@denorastats.org
 #
 # This program is free but copyrighted software; see the file COPYING for

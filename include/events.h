@@ -1,17 +1,16 @@
-/*************************************************************************/
-/* Internal Events                                                       */
-/*                                                                       */
-/* (c) 2004-2012 Denora Team                                             */
-/* Contact us at info@denorastats.org                                       */
-/*                                                                       */
-/* Please read COPYING and README for furhter details.                   */
-/*                                                                       */
-/* Based on the original code of Anope by Anope Team.                    */
-/* Based on the original code of Thales by Lucas.                        */
-/*                                                                       */
-/*                       */
-/*                                                                       */
-/*************************************************************************/
+/*
+ * Internal Events                                                       
+ *                                                                       
+ * (c) 2004-2013 Denora Team                                             
+ * Contact us at info@denorastats.org                                    
+ *                                                                      
+ * Please read COPYING and README for furhter details.                  
+ *                                                                      
+ * Based on the original code of Anope by Anope Team.                   
+ * Based on the original code of Thales by Lucas.
+ *
+ *                     
+ */
 
 #define EVENT_START "start"
 #define EVENT_STOP  "stop"

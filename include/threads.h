@@ -1,12 +1,12 @@
 /*
  *
- * (C) 2004-2008 Anope Team
- * Contact us at info@anope.org
+ * (c) 2004-2013 Denora Team
+ * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
  *
- * Based on the original code of Epona by Lara.
- * Based on the original code of Services by Andy Church.
+ * Based on the original code of Anope by Anope Team.
+ * Based on the original code of Thales by Lucas.
  *
  *
  *

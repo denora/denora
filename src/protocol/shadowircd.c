@@ -1,6 +1,6 @@
 /* ShadowIRCd 6.0+ functions
  *
- * (c) 2004-2012 Denora Team
+ * (c) 2004-2013 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for further details.
@@ -8,7 +8,6 @@
  * Based on the original code of Anope by Anope Team.
  * Based on the original code of Thales by Lucas.
  *
- * $Id: shadowircd.c ??? 2012-07-06 20:25:27Z Joah $
  *
  */
 
