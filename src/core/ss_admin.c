@@ -1,6 +1,6 @@
 /* StatServ core functions
  *
- * (c) 2004-2012 Denora Team
+ * (c) 2004-2013 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -19,6 +19,8 @@ static int do_admin(User * u, int ac, char **av);
 int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
 
+
+/*************************************************************************/
 /**
  * Create the command, and tell Denora about it.
  * @param argc Argument count
@@ -28,21 +30,32 @@ void DenoraFini(void);
 int DenoraInit(int argc, char **argv)
 {
 	Command *c;
-
+	int status;
+	
 	if (denora->debug >= 2)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+
 	moduleAddAuthor("Denora");
 	moduleAddVersion("");
 	moduleSetType(CORE);
 
 	c = createCommand("ADMIN", do_admin, is_stats_admin, -1, -1, -1,
 	                  STAT_HELP_ADMIN);
-	moduleAddCommand(STATSERV, c, MOD_UNIQUE);
+	status = moduleAddCommand(STATSERV, c, MOD_UNIQUE);
+	if (status != MOD_ERR_OK)
+	{
+		alog(LOG_NORMAL,
+		     "Error Occurred setting Command for ADMIN [%d][%s]",
+		     status, ModuleGetErrStr(status));
+		return MOD_STOP;
+	}
 
 	return MOD_CONT;
 }
+
+/*************************************************************************/
 
 /**
  * Unload the module
@@ -51,6 +64,8 @@ void DenoraFini(void)
 {
 
 }
+
+/*************************************************************************/
 
 /*
   0 1 add | del
@@ -96,6 +111,7 @@ static int do_admin(User * u, int ac, char **av)
 		if (a)
 		{
 			notice_lang(s_StatServ, u, STAT_ADMIN_ALREADY, av[1]);
+			return MOD_CONT;
 		}
 		else
 		{
@@ -120,13 +136,17 @@ static int do_admin(User * u, int ac, char **av)
 				}
 			}
 			a->passwd = sstrdup(MakePassword(av[2]));
-			add_sqladmin(a->name, a->passwd, 0, a->hosts[0], a->language);
+			if (denora->do_sql) 
+			{
+				add_sqladmin(a->name, a->passwd, 0, a->hosts[0], a->language);
+			}
 			u2 = user_find(av[1]);
 			if (u2)
 			{
 				u2->admin = 1;
 			}
 			notice_lang(s_StatServ, u, STAT_ADMIN_CREATED, av[1]);
+			return MOD_CONT;
 		}
 	}
 	else if (!stricmp(av[0], "DEL"))
@@ -160,13 +180,17 @@ static int do_admin(User * u, int ac, char **av)
 			{
 				u2->admin = 0;
 			}
-			del_sqladmin(av[1]);
+			if (denora->do_sql) 
+			{
+				del_sqladmin(av[1]);
+			}
 			notice_lang(s_StatServ, u, STAT_ADMIN_DELETED, av[1]);
 		}
 		else
 		{
 			notice_lang(s_StatServ, u, STAT_ADMIN_NOTADMIN, av[1]);
 		}
+		return MOD_CONT;
 	}
 	else if (!stricmp(av[0], "SETPASS"))
 	{
