@@ -68,6 +68,7 @@ Changes
 11/02/11 r416 Updated Windows installer
 
 Fixes
+13/10/17 Fixed StatServ HELP in special case, Stats Admin help would never be shown.
 13/10/17 StatServ ADMIN ADD now updates User struct to show they are an admin (we did it in DEL)
 13/10/17 StatServ ADMIN SETPASS now updates SQL with the password
 13/10/16 cron_chanstats.c does not load if sql is disabled, all cron_* and xmlrpc_* mods now 

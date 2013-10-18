@@ -1,6 +1,6 @@
 /* StatServ core functions
  *
- * (c) 2004-2012 Denora Team
+ * (c) 2004-2013 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -45,7 +45,6 @@ int DenoraInit(int argc, char **argv)
 		protocol_debug(NULL, argc, argv);
 	}
 
-#ifdef USE_MODULES
 	moduleAddAuthor("Denora");
 	moduleAddVersion("");
 	moduleSetType(CORE);
@@ -67,9 +66,6 @@ int DenoraInit(int argc, char **argv)
 	moduleAddCommand(STATSERV, c, MOD_UNIQUE);
 
 	return MOD_CONT;
-#else
-	return MOD_STOP;
-#endif
 }
 
 /**

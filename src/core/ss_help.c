@@ -1,6 +1,6 @@
 /* StatServ core functions
  *
- * (c) 2004-2012 Denora Team
+ * (c) 2004-2013 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -28,6 +28,7 @@ void DenoraFini(void);
 int DenoraInit(int argc, char **argv)
 {
 	Command *c;
+	int status;
 
 	if (denora->debug >= 2)
 	{
@@ -38,7 +39,15 @@ int DenoraInit(int argc, char **argv)
 	moduleSetType(CORE);
 
 	c = createCommand("HELP", do_help, NULL, -1, -1, -1, -1);
-	moduleAddCommand(STATSERV, c, MOD_UNIQUE);
+	status = moduleAddCommand(STATSERV, c, MOD_UNIQUE);
+	if (status != MOD_ERR_OK)
+	{
+		alog(LOG_NORMAL,
+		     "Error Occurred setting Command for HELP [%d][%s]",
+		     status, ModuleGetErrStr(status));
+		return MOD_STOP;
+	}
+
 
 	return MOD_CONT;
 }
@@ -62,10 +71,10 @@ static int do_help(User * u, int ac, char **av)
 	if (ac < 1)
 	{
 		notice_help(s_StatServ, u, STAT_HELP);
-#ifdef USE_MODULES
 		if (is_stats_admin(u))
+		{
 			notice_help(s_StatServ, u, STAT_HELP_ADMIN_CMD);
-#endif
+		}
 		moduleDisplayHelp(1, u);
 	}
 	else
