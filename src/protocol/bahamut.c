@@ -837,6 +837,8 @@ void bahamut_cmd_quit(char *source, char *buf)
 	}
 }
 
+/*************************************************************************/
+
 int bahamut_parse_lkill(char *message)
 {
 	const char *localkillmsg = "Local kill by";
@@ -849,6 +851,8 @@ int bahamut_parse_lkill(char *message)
 	return 0;
 }
 
+/*************************************************************************/
+
 char *bahamut_lkill_killer(char *message)
 {
 	char *buf, *killer = NULL;
@@ -856,11 +860,25 @@ char *bahamut_lkill_killer(char *message)
 	/* Let's get the killer nickname */
 	killer = strchr(message, 'y');
 	buf = sstrdup(killer);
+
+
+	/* note to self remove this and replace with 
+           myStrGetToken()
+           its why Certus wrote the function to avoid crap
+           like this
+        */
 	killer = strtok(buf, " ");
 	killer = strtok(NULL, " ");
 
+	if (buf)
+	{
+		free(buf);
+	}
+
 	return killer;
 }
+
+/*************************************************************************/
 
 char *bahamut_lkill_msg(char *message)
 {
@@ -873,6 +891,10 @@ char *bahamut_lkill_msg(char *message)
 	msg = strtok(NULL, " ");
 	msg = strtok(NULL, " ");
 
+	if (buf)
+	{
+		free(buf);
+	}
 	return msg;
 }
 

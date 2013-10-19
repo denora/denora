@@ -976,6 +976,8 @@ int ircu_parse_lkill(char *message)
 	return 0;
 }
 
+/*************************************************************************/
+
 char *ircu_lkill_killer(char *message)
 {
 	char *buf, *killer = NULL;
@@ -985,6 +987,10 @@ char *ircu_lkill_killer(char *message)
 	killer = strtok(buf, " ");
 	killer = strtok(NULL, " ");
 	killer++;
+	if (buf)
+	{
+		free(buf);
+	}
 
 	return killer;
 }

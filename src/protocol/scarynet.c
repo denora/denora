@@ -992,7 +992,10 @@ char *scarynet_lkill_killer(char *message)
 	killer = strtok(buf, " ");
 	killer = strtok(NULL, " ");
 	killer++;
-	free(buf);
+	if (buf)
+	{
+		free(buf);
+	}
 	return killer;
 }
 

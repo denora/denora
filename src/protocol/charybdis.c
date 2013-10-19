@@ -160,6 +160,8 @@ void IRCDModeInit(void)
 	ModuleUpdateSQLChanMode();
 }
 
+/*************************************************************************/
+
 void charybdis_cmd_notice(char *source, char *dest, char *buf)
 {
 	Uid *ud;
@@ -170,6 +172,8 @@ void charybdis_cmd_notice(char *source, char *dest, char *buf)
 	send_cmd((ud ? ud->uid : source),
 	         "NOTICE %s :%s", (u ? u->uid : dest), buf);
 }
+
+/*************************************************************************/
 
 void charybdis_cmd_privmsg(char *source, char *dest, char *buf)
 {
@@ -182,15 +186,21 @@ void charybdis_cmd_privmsg(char *source, char *dest, char *buf)
 	         (ud2 ? ud2->uid : dest), buf);
 }
 
+/*************************************************************************/
+
 void charybdis_cmd_serv_notice(char *source, char *dest, char *msg)
 {
 	send_cmd(source, "NOTICE $$%s :%s", dest, msg);
 }
 
+/*************************************************************************/
+
 void charybdis_cmd_serv_privmsg(char *source, char *dest, char *msg)
 {
 	send_cmd(source, "PRIVMSG $$%s :%s", dest, msg);
 }
+
+/*************************************************************************/
 
 void charybdis_cmd_stats(char *sender, const char *letter, char *server)
 {
@@ -202,6 +212,8 @@ void charybdis_cmd_stats(char *sender, const char *letter, char *server)
 	send_cmd((ud ? ud->uid : sender), "STATS %s %s", letter,
 	         (s ? (s->suid ? s->suid : server) : server));
 }
+
+/*************************************************************************/
 
 void charybdis_cmd_global(char *source, char *buf)
 {
@@ -225,6 +237,8 @@ void charybdis_cmd_global(char *source, char *buf)
 	}
 }
 
+/*************************************************************************/
+
 int denora_event_sjoin(char *source, int ac, char **av)
 {
 	if (denora->protocoldebug)
@@ -234,6 +248,8 @@ int denora_event_sjoin(char *source, int ac, char **av)
 	do_sjoin(source, ac, av);
 	return MOD_CONT;
 }
+
+/*************************************************************************/
 
 /*
    TS6
@@ -301,6 +317,9 @@ int denora_event_nick(char *source, int ac, char **av)
 	return MOD_CONT;
 }
 
+/*************************************************************************/
+
+
 /*
    TS6
    av[0] = nick
@@ -338,6 +357,8 @@ int denora_event_euid(char *source, int ac, char **av)
 	return MOD_CONT;
 }
 
+/*************************************************************************/
+
 /* :42XAAAAAB TOPIC #testchan :test test test */
 int denora_event_topic(char *source, int ac, char **av)
 {
@@ -371,6 +392,8 @@ int denora_event_topic(char *source, int ac, char **av)
 	return MOD_CONT;
 }
 
+/*************************************************************************/
+
 int denora_event_tburst(char *source, int ac, char **av)
 {
 	char *scratch;
@@ -389,6 +412,8 @@ int denora_event_tburst(char *source, int ac, char **av)
 
 	return MOD_CONT;
 }
+
+/*************************************************************************/
 
 int denora_event_436(char *source, int ac, char **av)
 {

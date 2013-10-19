@@ -320,7 +320,10 @@ char *unreal32_lkill_killer(char *message)
 	buf = sstrdup(killer);
 	killer = strtok(buf, " ");
 	killer = strtok(NULL, " ");
-
+	if (buf)
+	{
+		free(buf);
+	}
 	return killer; /* possible memleak at this position */
 }
 
@@ -335,7 +338,10 @@ char *unreal32_lkill_servername(char *message)
 	servername = strtok(buf, " "); /* the servername in brackets */
 	servername[strlen(servername) - 1] = '\0'; /* last bracket removed */
 	servername++; /* first bracket removed */
-	free(buf);
+	if (buf)
+	{
+		free(buf);
+	}
 	return servername;
 }
 

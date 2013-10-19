@@ -1200,7 +1200,10 @@ char *nefarious_lkill_killer(char *message)
 	killer = strtok(buf, " ");
 	killer = strtok(NULL, " ");
 	killer++;
-
+	if (buf)
+	{
+		free(buf);
+	}
 	return killer;
 }
 
