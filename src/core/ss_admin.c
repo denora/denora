@@ -219,7 +219,7 @@ static int do_admin(User * u, int ac, char **av)
 			if (denora->do_sql) 
 			{
 				crypted = is_crypted(a->passwd);
-				rdb_query(QUERY_LOW, "UPDATE %s SET passwd=%s%s%s WHERE uname = '%s'", AdminTable, crypted ? "'" : "MD5('", passwd, crypted ? "'" : "')", a->name);
+				rdb_query(QUERY_LOW, "UPDATE %s SET passwd=%s%s%s WHERE uname = '%s'", AdminTable, crypted ? "'" : "MD5('", a->passwd, crypted ? "'" : "')", a->name);
 			}
 			notice_lang(s_StatServ, u, STAT_CHGPASS_OK, av[1]);
 		}
