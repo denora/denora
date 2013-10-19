@@ -363,6 +363,7 @@ void denora_cmd_join(char *user, char *channel, time_t chantime)
 		{
 			chan[0] = sstrdup(channel);
 			do_join(user, 1, chan);
+			free(chan[0]);
 		}
 		if (AutoOp && AutoMode)
 			denora_automode(channel);
