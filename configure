@@ -4908,6 +4908,14 @@ $as_echo "#define HAVE_POLL_H 1" >>confdefs.h
 fi
 
 
+ac_fn_c_check_header_mongrel "$LINENO" "regex.h" "ac_cv_header_regex_h" "$ac_includes_default"
+if test "x$ac_cv_header_regex_h" = xyes; then :
+
+$as_echo "#define HAVE_REGEX_H 1" >>confdefs.h
+
+fi
+
+
 ac_fn_c_check_header_mongrel "$LINENO" "perl.h" "ac_cv_header_perl_h" "$ac_includes_default"
 if test "x$ac_cv_header_perl_h" = xyes; then :
 
@@ -5180,9 +5188,7 @@ cat >>confdefs.h <<_ACEOF
 #define USE_MYSQL 1
 _ACEOF
 
-
 			MYSQL=" mysql.c "
-
 
 			DIS_MYSQL="MySQL: Yes"
 		else

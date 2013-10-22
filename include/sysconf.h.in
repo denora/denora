@@ -119,6 +119,9 @@
 /* "" */
 #undef HAVE_POLL_H
 
+/* "" */
+#undef HAVE_REGEX_H
+
 /* Define if the C complier supports __PRETTY_FUNCTION__ */
 #undef HAVE_PRETTY_FUNCTION
 

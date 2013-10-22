@@ -38,6 +38,7 @@
 #define HAVE_GETNAMEINFO	1
 #define HAVE_FREEADDRINFO	1
 #define HAVE_STRSIGNAL		0
+#define HAVE_REGEX_H            1
 
 /* Enable Module support */
 #define USE_MODULES

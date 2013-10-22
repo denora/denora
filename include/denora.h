@@ -68,6 +68,14 @@
 #include <poll.h>		/* Include poll header			*/
 #endif				/* end if				*/
 
+#ifdef HAVE_REGEX_H
+#ifdef _WINDOWS
+ #include <regex>               /* Not a typo, MSDN doesn't have the .h */
+#else
+ #include <regex.h>
+#endif
+#endif
+
 /************************************************************************/
 /* Include the header for modules as long as we can and its not win32	*/
 /************************************************************************/
