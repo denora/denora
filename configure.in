@@ -23,7 +23,7 @@ touch install-sh
 
 m4_include([m4/ext_have_lib.m4])
 m4_include([m4/mysql.m4])
-
+m4_include([m4/libxml2.m4])
 
 
 AC_CANONICAL_BUILD
@@ -113,7 +113,6 @@ AC_CHECK_HEADER(malloc.h,AC_DEFINE(HAVE_MALLOC_H,1,""))
 AC_CHECK_HEADER(signal.h,AC_DEFINE(HAVE_SIGNAL_H,1,""))
 AC_CHECK_HEADER(poll.h,AC_DEFINE(HAVE_POLL_H,1,""))
 AC_CHECK_HEADER(regex.h,AC_DEFINE(HAVE_REGEX_H,1,""))
-AC_CHECK_HEADER(libxml/xmlreader.h,AC_DEFINE(HAVE_LIBXML_H,1,""))
 
 AC_C_INLINE
 
@@ -155,6 +154,8 @@ DIS_MYSQL="MySQL: No"
 
 AX_CHECK_MYSQL
 DENORALIBS="$DENORALIBS $LIBS"
+
+AM_PATH_XML2(2.4.0)
 
 DIS_MYSQLBT="Mysql backtrace debug: No"
 AC_ARG_ENABLE(mysqlbt,

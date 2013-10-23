@@ -282,6 +282,13 @@
 /* "Use Mysql" */
 #undef USE_MYSQL
 
+/* "Use sqlite" */
+#undef HAVE_SQLITE3
+
+/* "Use LIBXML" */
+#undef USE_LIBXML
+
+
 /* "Backtrace mysql queries" */
 #undef USE_MYSQL_BT
 
