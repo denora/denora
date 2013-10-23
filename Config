@@ -42,6 +42,7 @@ Run_Config () {
 	WITH_PERM=""
 	WITH_MYSQL=""
 	WITH_MYSQL_BT=""
+        WITH_SQLITE=""
 	WITH_MEMORYDEBUG=""
 	WITH_ENCRYPT=""
 	WITH_THREADING=""
@@ -81,13 +82,16 @@ Run_Config () {
 	if [ "$ENCRYPT" = "yes" ] ; then
 		WITH_ENCRYPT=" --enable-crypt"
 	fi
+	if [ "$SQLITE" = "yes" ] ; then
+		WITH_SQLITE=" --enable-sqlite3"
+	fi
 	if [ "$THREAD" = "yes" ] ; then
 		WITH_THREADING=" --enable-threading"
 	fi
   
-	echo "./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_THREADING $WITH_MYSQL_BT"
+	echo "./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_THREADING $WITH_MYSQL_BT $WITH_SQLITE"
 	
-	./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_THREADING $WITH_MYSQL_BT
+	./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_THREADING $WITH_MYSQL_BT $WITH_SQLITE
 	if [ "$REGSCRIPT" = "yes" ] ; then
 		src/bin/register
 	fi
@@ -114,6 +118,9 @@ Load_Cache () {
 		fi
 		if [ "$MYSQL" = "" ] ; then
 			MYSQL="yes"
+                fi
+		if [ "$SQLITE" = "" ] ; then
+			SQLITE="yes"
 		fi
 		if [ "$MYSQL_BT" = "" ] ; then
 			MYSQL_BT="no"
@@ -165,6 +172,7 @@ REGSCRIPT="no"
 MYSQL="yes"
 MYSQL_BT="no"
 THREAD="no"
+SQLITE="yes"
 
 ###########################################################################
 # Check out the options

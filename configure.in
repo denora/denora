@@ -21,6 +21,11 @@ fi
 
 touch install-sh
 
+m4_include([m4/ext_have_lib.m4])
+m4_include([m4/mysql.m4])
+
+
+
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CONFIG_HEADER(include/sysconf.h)
@@ -108,7 +113,7 @@ AC_CHECK_HEADER(malloc.h,AC_DEFINE(HAVE_MALLOC_H,1,""))
 AC_CHECK_HEADER(signal.h,AC_DEFINE(HAVE_SIGNAL_H,1,""))
 AC_CHECK_HEADER(poll.h,AC_DEFINE(HAVE_POLL_H,1,""))
 AC_CHECK_HEADER(regex.h,AC_DEFINE(HAVE_REGEX_H,1,""))
-AC_CHECK_HEADER(perl.h,AC_DEFINE(HAVE_PERL_H,1,""))
+AC_CHECK_HEADER(libxml/xmlreader.h,AC_DEFINE(HAVE_LIBXML_H,1,""))
 
 AC_C_INLINE
 
@@ -130,55 +135,26 @@ else
    DIS_ENCRYPT="Crypted Passwords: No"
 fi
 
-DIS_MYSQL="MySQL: No"
-AC_ARG_WITH(mysql, 
-    [  --without-mysql       Do not use MySQL or attempt to find it],,[
-	AC_ARG_WITH(mysqlconfig-path, [  --with-mysqlconfig-path=PATH Complete path to the mysql_config executable],
-	mysql_config_path="$withval", mysql_config_path="")
-	MYSQLCONF=""
-	if test "$mysql_config_path" != ""; then
-		if test -x "$mysql_config_path"; then
-			MYSQLCONF="$mysql_config_path"
-			echo "checking for mysql_config... $MYSQLCONF" >&6
-		fi
-	fi
-	if test "$MYSQLCONF" = ""; then
-		AC_PATH_PROG(MYSQLCONF,mysql_config, "")
-	fi
-	if test "$MYSQLCONF" != ""; then
-		hold_cflags="$CFLAGS"
-		hold_ldflags="$LDFLAGS"
-		if test "$MYSQL_CFLAGS" = ""; then
-			MYSQL_CFLAGS="`$MYSQLCONF --cflags`"
-		fi
-		if test "$MYSQL_LDFLAGS" = ""; then
-			MYSQL_LDFLAGS="`$MYSQLCONF --libs`"
-		fi
-		CFLAGS="$CFLAGS $MYSQL_CFLAGS"
-		LDFLAGS="$LDFLAGS $MYSQL_LDFLAGS"
-		echo $ECHO_N "checking if mysql_config produces valid values... $ECHO_C" >&6
-		AC_TRY_RUN([
-#include <mysql.h>
+AC_ARG_ENABLE(sqlite3,
+    [  --enable-sqlite3          compiles source with sqlite3],
+    [ac_cv_sqlite3="$enableval"],
+    [ac_cv_sqlite3="no"])
 
-int main()
-{
-	MYSQL *mysql = mysql_init(0);
-	
-	return 0;
-}
-		], ac_cv_mysql_valid=yes, ac_cv_mysql_valid=no)
-		echo $ac_cv_mysql_valid >&6
-		if test "$ac_cv_mysql_valid" = "yes"; then
-			AC_DEFINE_UNQUOTED(USE_MYSQL,1,"Use Mysql")
-			MYSQL=" mysql.c "
-			AC_SUBST(MYSQL)
-			DIS_MYSQL="MySQL: Yes"
-		else
-			CFLAGS="$hold_cflags"
-			LDFLAGS="$hold_ldflags"
-		fi
-	fi
-])
+if test "$ac_cv_sqlite3" = "yes"; then
+   AC_CHECK_HEADER(sqlite3.h,AC_DEFINE(HAVE_SQLITE3_H,1,""))
+   AC_CHECK_LIB(sqlite3, sqlite3_open,[
+     DENORALIBS="$DENORALIBS-lsqlite3 "
+     AC_DEFINE(HAVE_SQLITE3,1,"")
+   ])
+   DIS_SQLITE="SQLite3: Yes"
+else
+   DIS_SQLITE="Sqlite3 : No"
+fi
+
+DIS_MYSQL="MySQL: No"
+
+AX_CHECK_MYSQL
+DENORALIBS="$DENORALIBS $LIBS"
 
 DIS_MYSQLBT="Mysql backtrace debug: No"
 AC_ARG_ENABLE(mysqlbt,
@@ -224,78 +200,6 @@ if test "$ac_cv_dmalloc" = "yes"; then
 else
   DIS_DMALLOC="Memory debugging: No"
 fi
-
-
-AC_ARG_ENABLE(perl,
-	[  --enable-perl           Build the perl plugin],
-	        perl=$enableval, perl=no)
-
-	if test "$perl" = yes; then
-		echo "Configuring for Perl Modules Now"
-		AC_PATH_PROG(sedpath, sed)
-		if test "_$sedpath" = _; then
-			AC_MSG_ERROR("Cannot find sed: I need it\!")
-		fi
-
-		AC_PATH_PROG(perlpath, perl)
-
-		AC_MSG_CHECKING(for Perl compile flags)
-		PERL_CFLAGS=`$perlpath -MExtUtils::Embed -e ccopts 2>/dev/null`
-		if test "_$PERL_CFLAGS" = _ ; then
-			AC_MSG_RESULT([not found, building without perl.])
-			perl=no
-		else
-			PERL_LDFLAGS=`$perlpath -MExtUtils::Embed -e ldopts |$sedpath 's/-lgdbm //'`
-			PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-ldb //'`
-			PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lndbm //'`
-			if test "$system" = "Linux"; then
-				PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lnsl //'`
-				PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lposix //'`
-			fi
-			PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lc //'`
-			AC_MSG_RESULT(ok)
-
-			AC_MSG_CHECKING(for $perlpath >= 5.8.0)
-			PERL_VER=`$perlpath -e 'print $]>= 5.008?"yes":"no"'`
-
-			if test "$PERL_VER" = "yes"; then
-				AC_MSG_RESULT(yes)
-				AC_MSG_CHECKING([Checking for perl compiler, linker, libraries and headers])
-	    			PERL_CC=`$perlpath -MConfig -e 'print $Config{cc},"\n";'`
-			    	PERL_LD=`$perlpath -MConfig -e 'print $Config{ld},"\n";'`
-
-				rm -f testperl$ac_exeext testperl.$ac_objext testperl.c testperl.err
-	    			cat > testperl.c <<EOF
-#include "EXTERN.h"
-#include "perl.h"
-#include "XSUB.h"
-int main () { (void)&perl_construct; return 0; }
-EOF
-				$PERL_CC $PERL_CFLAGS -c testperl.c >testperl.err 2>&1 &&
-	   	 		$PERL_LD -o testperl testperl.o $PERL_LDFLAGS >testperl.err 2>&1 &&
-	    			test -x testperl &&
-	    			have_perl=yes
-				if test "$have_perl" = "yes"; then
-					AC_MSG_RESULT(ok)
-					AC_DEFINE_UNQUOTED(USE_PERL, 1, 'Enable Perl Support')
-				else
-					PERL_LDFLAGS=""
-					PERL_CFLAGS=""
-					AC_MSG_RESULT([Failed. Perl Support Disabled.])
-				fi
-			else
-				AC_MSG_RESULT(no)
-				PERL_LDFLAGS=""
-				PERL_CFLAGS=""
-				perl=no
-			fi
-		fi
-	rm testperl testperl.*
-fi
-
-
-AC_SUBST(PERL_CFLAGS)
-AC_SUBST(PERL_LDFLAGS)
 
 TYPE_SOCKLEN_T
 
@@ -680,6 +584,52 @@ AC_DEFINE([BSD_RELIABLE_SIGNALS], [], [Setting to BSD style signals])
 else
 AC_DEFINE([SYSV_UNRELIABLE_SIGNALS], [], [Setting to SYSV style signals])
 fi
+
+AC_DEFUN([AX_PYTHON],
+[AC_MSG_CHECKING(for python build information)
+AC_MSG_RESULT([])
+for python in python3.3 python3.2 python3.1 python3.0 python2.7 python2.6 python2.5 python2.4 python2.3 python2.2 python2.1 python; do
+AC_CHECK_PROGS(PYTHON_BIN, [$python])
+ax_python_bin=$PYTHON_BIN
+if test x$ax_python_bin != x; then
+   AC_CHECK_LIB($ax_python_bin, main, ax_python_lib=$ax_python_bin, ax_python_lib=no)
+   if test x$ax_python_lib == xno; then
+     AC_CHECK_LIB(${ax_python_bin}m, main, ax_python_lib=${ax_python_bin}m, ax_python_lib=no)
+   fi
+   if test x$ax_python_lib != xno; then
+     ax_python_header=`$ax_python_bin -c "from distutils.sysconfig import *; print(get_config_var('CONFINCLUDEPY'))"`
+     if test x$ax_python_header != x; then
+       break;
+     fi
+   fi
+fi
+done
+if test x$ax_python_bin = x; then
+   ax_python_bin=no
+fi
+if test x$ax_python_header = x; then
+   ax_python_header=no
+fi
+if test x$ax_python_lib = x; then
+   ax_python_lib=no
+fi
+
+AC_MSG_RESULT([  results of the Python check:])
+AC_MSG_RESULT([    Binary:      $ax_python_bin])
+AC_MSG_RESULT([    Library:     $ax_python_lib])
+AC_MSG_RESULT([    Include Dir: $ax_python_header])
+
+if test x$ax_python_header != xno; then
+  PYTHON_INCLUDE_DIR=$ax_python_header
+  AC_SUBST(PYTHON_INCLUDE_DIR)
+fi
+if test x$ax_python_lib != xno; then
+  PYTHON_LIB=$ax_python_lib
+  AC_SUBST(PYTHON_LIB)
+fi
+])dnl
+
+#AX_PYTHON
 
 echo "Checking best optimization compiler flags"
 echo "Host CPU : $host_cpu"

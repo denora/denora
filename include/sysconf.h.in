@@ -114,9 +114,6 @@
 #undef HAVE_NTOHL
 
 /* "" */
-#undef HAVE_PERL_H
-
-/* "" */
 #undef HAVE_POLL_H
 
 /* "" */
@@ -287,9 +284,6 @@
 
 /* "Backtrace mysql queries" */
 #undef USE_MYSQL_BT
-
-/* 'Enable Perl Support' */
-#undef USE_PERL
 
 /* "Use threads" */
 #undef USE_THREADS

@@ -1,0 +1,111 @@
+Denora v1.5.0-git
+-------------
+
+Additions
+13/10/21 Added regex.h to the build, core and modules can now use this to pattern 
+         match with regular expressions. 
+13/01/13 Added support for ircu's channel mode +R (was missing)
+
+Changes
+12/10/04 Cleanup and hopefully less leaks etc
+12/08/23 db_getserver() now escapes servername itself where needed
+12/08/05 Threading is now disabled by default (it's only used for mysql and the current implementation
+	 has serious issues)
+12/07/26 Set country to server's country if connection is localhost
+12/07/26 Use geoip's nice ntop/pton wrapper and depend on the existance of the functions, not the OS
+12/07/26 More cleanup and rewrites in src/users.c src/admin.c src/bans.c src/base64.c src/GeoIP.c
+         src/ChanBanMode.c src/ChanMode.c src/channels.c
+12/07/25 More cleanup and rewrite
+12/07/24 Lots of cleanup in src/db.c
+12/07/23 Rewrote db file handling a little
+12/07/23 Automode handled in denora_cmd_join now, removed from other obsolete places (fixed #1433)
+12/07/23 Updated sql specific code, more preparations for threadin
+12/07/18 Fixed persistent channel support by actually setting the modes in the protocols.
+12/07/18 Applied denora_automode to several protocols
+12/07/18 Moved automode handler into a separate void and marked some todo's regarding it for later
+12/07/18 Added automode handler for logchannel into inspircd11
+12/07/17 p10 wants 391 replies (RPL_TIME) in another way. 'Fixed', just need to calc offset somehow.
+12/07/17 Don't call events if (umode = o && ((add && was_oper) || (!add && !was_oper)) (should fix #1264)
+12/07/17 Updated README
+12/07/15 used #ifdef USE_MYSQL in modules seen/lastspoke/ircd_ports (should fix #1429)
+12/07/15 File permission detection in mysql_backup.c (should fix #1127)
+12/07/15 Added automode for logchan in bahamut
+12/07/15 Adding automode for logchan in inspircd12.c (should fix #1418)
+12/07/15 Don't init something to NULL after free if you gonna sstrdup something over it anyways.
+12/07/15 More free/sstrdup usage / Cleaned up seen.c and made it ^M free
+12/07/14 Revoked change to DenoraFree() and removed that macro entirely
+12/07/09 Updated ScaryNet Protocol
+12/07/06 Changed delete_user to properly and warning free cleanup the channels
+12/07/05 Changed a lot of free()'s into DenoraFree() in order to prevent double free()'s
+12/06/29 Undone a few changes as I might see issues
+12/06/27 Commented out a little more at src/db.c
+12/06/27 Bumped to 1.5.0-git-501
+12/06/26 Use inet_ntop for decode_ip function
+12/06/26 Reduced mysql_backup.c by 27%
+12/04/25 Channel names no longer forced to lowercase (#1403)
+12/04/24 Updated GeoIP databases
+12/04/11 Added 'cron' function to denorarc for crontab usage 
+12/04/11 Updated ScaryNet protocol
+11/05/04 r435 Fixed formatting of docs/EVENTS
+11/04/10 r428 documented the -protocoldebug option in the -help output
+11/04/10 r428 made denora accept options that start with --
+11/02/11 r419 Updated Denora icon
+11/02/11 r416 Updated Windows installer
+
+Fixes
+12/11/02 Fixed a misplaced free() in unrealircd.c (#1458)
+12/10/15 Fixed a misplacement of u in users.c
+12/10/10 Fixed a double free in scarynet.c/denora_event_quit
+12/10/10 Free msg in <protocol>.c/denora_event_quit
+12/07/25 Fixed win32 specific warnings, in some cases the fugly way
+12/07/23 Fixed Config not remembering thread settings
+12/07/23 Threading needed more fixes, hope it works now :) (Now works)
+12/07/22 Fixed threading by actually documenting it in conf (duh)
+12/07/22 Several more warnings and fixes in sysconf.h.in / configure(.in)
+12/07/17 Fixed some warnings on x86_64
+12/07/17 Hybrid kills denora after sending PONG the wrong way (hopefully fixes #1420)
+12/07/17 Added account support to charybdis and shadowircd (fixes #1426)
+12/07/17 Made ss_exclude use lower() in queries (fixes #1240)
+12/07/17 Removed fnmatch from mysql_backup and now check result of file permission check properly
+12/07/17 Found a couple of missing free()'s
+12/07/16 #1418 is no more. Sorry for the many pushes, but it was worth it ;)
+12/07/16 Removed is_md5 (no longer need it) and properly fix #1176 using #ifdef HAVE_CRYPT
+12/07/15 Added is_md5() and used it to fix #1176 
+12/07/15 Fixed double presence of REGSCRIPT in config.cache (fixes #1428)
+12/07/15 xmlrpc didn't like free(av) which caused #1128
+12/07/15 Fixed some memleaks in lastspoke.c and converted it to unix format
+12/07/09 More warning fixes
+12/07/08 Lots of changes in users.c/channels.c/ctcp.c
+12/07/08 Fixed p10_gline to support 2.10.12's 6 arg gline format
+12/07/02 Fixed Config not respecting DMEMORY settings, also did MYSQL the correct way now
+12/07/02 Fixed debug output regarding nick changes
+12/06/27 Fixed a few possible memleaks (thx cedric for the valgrind report)
+12/06/26 Fixed a few compiler warnings 
+12/06/12 Fixed topichandler for scarynet protocol
+12/04/06 [1] Fixed geoipupd script breaking geoip (#1406)
+12/03/31 Fixed grammar errors (#1260)
+12/02/05 r436 Fixed ADMIN ADD command ignoring supplied host mask
+11/04/10 r431 Fixed duplicate call to denora_set_umode() in ircdrizon protocol
+11/04/10 r430 Fixed duplicate call to denora_set_umode() in charybdis protocol
+11/04/10 r429 Fixed unknown user mode Z in charybdis protocol
+11/03/30 r427 Fixed crash on nickchange in ngircd protocol (#1257)
+11/02/13 r426 Fixed erroneous ','s in SQL queries in do_account()
+11/02/12 r424 Fixed support for accounts on Charybdis at burst (oops)
+11/02/12 r422 Fixed compile errors
+11/02/12 r421 Fixed memleaks and crashbug in do_p10account
+11/02/11 r417 Fixed Denora not running on Windows XP/2003 anymore
+11/02/11 r416 Scarynet module was not compiled on windows
+
+Removed
+12/07/25 Removed adns - if resolve does no longer work for you, tell me
+12/07/23 Removed threadcount - we only will need ONE
+12/07/17 Removed commented out unused code
+12/06/26 Removed defs for strndup as it's not used at all
+11/02/11 r418 Removed support for Nefarious ircd 1.0-1.2
+11/02/11 r416 Removed support for Asuka ircd
+11/02/11 r416 Removed support for Hybrid ircd
+11/02/11 r416 Removed support for Hyperion ircd
+11/02/11 r416 Removed support for ngircd
+11/02/11 r416 Removed support for Plexus3 ircd
+11/02/11 r416 Removed support for Solidircd
+11/02/11 r416 Removed support for Ultimate3 ircd
