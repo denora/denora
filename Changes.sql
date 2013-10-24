@@ -4,6 +4,8 @@ ALTER TABLE server ADD country VARCHAR( 255 ) NOT NULL DEFAULT '' AFTER server;
 ALTER TABLE server ADD countrycode VARCHAR( 3 ) NOT NULL DEFAULT '' AFTER country;
 ALTER TABLE `chan` CHANGE `channel` `channel` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
 ALTER TABLE `chan` ADD `mode_ur` ENUM('Y','N') NOT NULL DEFAULT 'N' AFTER `mode_lt`;
+ALTER TABLE  `cstats` CHANGE  `letters`  `letters` BIGINT( 20 ) UNSIGNED NULL DEFAULT  '0';
+ALTER TABLE  `ustats` CHANGE  `letters`  `letters` BIGINT( 20 ) UNSIGNED NULL DEFAULT  '0';
 
 -- Denora Version 1.4.5
 -- --------------------

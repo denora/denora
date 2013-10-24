@@ -294,6 +294,13 @@ int db_mysql_query(char *sql, int con)
 				db_mysql_error(SQL_ERROR, "Mysql returned errno code, disabling mysql", con);
 				closesql = 1;
 				break;
+			case ER_WARN_DATA_OUT_OF_RANGE:
+				alog(LOG_ERROR, "MYSQL reported Error Code %d", mysql_errno(con ? mysql_thread : mysql));
+				alog(LOG_ERROR, "MYSQL said %s", mysql_error(con ? mysql_thread : mysql));
+				alog(LOG_ERROR, "The field is to small, attempt to change the field from INT TO BIGINT");
+				alog(LOG_ERROR, "Until this is done Denora can not update this table");
+				alog(LOG_ERROR, "Report this to Denora Developers");
+				break;
 			default:
 				alog(LOG_ERROR, "MYSQL reported Error Code %d", mysql_errno(con ? mysql_thread : mysql));
 				alog(LOG_ERROR, "MYSQL said %s", mysql_error(con ? mysql_thread : mysql));
