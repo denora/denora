@@ -148,6 +148,13 @@
 #include <sqlite3.h>
 #endif
 
+/************************************************************************/
+/* SQLite headers							*/
+/************************************************************************/
+
+#ifdef USE_LIBXML
+#include <libxml/xmlreader.h>
+#endif
 
 /************************************************************************/
 /* Include the zlib header file if the system can has it		*/

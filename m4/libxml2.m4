@@ -182,8 +182,8 @@ main()
      XML_LIBS=""
      ifelse([$3], , :, [$3])
   fi
-  AC_SUBST(XML_CPPFLAGS)
-  AC_SUBST(XML_LIBS)
+  CFLAGS="$CFLAGS $XML_CPPFLAGS"
+  LIBS="${LIBS} $XML_LIBS"
   AC_DEFINE_UNQUOTED(USE_LIBXML,1,"Use LIBXML")
   rm -f conf.xmltest
 ])

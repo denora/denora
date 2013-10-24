@@ -640,8 +640,6 @@ PTHREAD_CFLAGS
 PTHREAD_LIBS
 PTHREAD_CC
 acx_pthread_config
-XML_LIBS
-XML_CPPFLAGS
 XML2_CONFIG
 MYSQL_55
 MYSQL_PLUGIN_OK
@@ -6558,8 +6556,8 @@ rm -f core conftest.err conftest.$ac_objext \
      XML_LIBS=""
      :
   fi
-
-
+  CFLAGS="$CFLAGS $XML_CPPFLAGS"
+  LIBS="${LIBS} $XML_LIBS"
 
 cat >>confdefs.h <<_ACEOF
 #define USE_LIBXML 1
@@ -6567,6 +6565,7 @@ _ACEOF
 
   rm -f conf.xmltest
 
+DENORALIBS="$DENORALIBS $LIBS"
 
 DIS_MYSQLBT="Mysql backtrace debug: No"
 # Check whether --enable-mysqlbt was given.
