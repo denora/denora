@@ -1,6 +1,6 @@
 # Make file for Win32
 #
-# (c) 2004-2012 Denora Team
+# (c) 2004-2013 Denora Team
 # Contact us at info@denorastats.org
 #
 # Please read COPYING and README for further details.
@@ -20,17 +20,15 @@ include ../Makefile.inc.win32
 OBJS =  admin.obj base64.obj bans.obj channels.obj chanstats.obj ChanBanMode.obj ChanMode.obj config.obj core.obj cron.obj \
 		ctcp.obj datafiles.obj db.obj exclude.obj extsock.obj events.obj FileIO.obj GeoIP.obj markup.obj network.obj \
 		list.obj log.obj ircd.obj main.obj messages.obj md5.obj numerics.obj send.obj servers.obj sqlqueue.obj \
-		modules.obj moduleapi.obj moddata.obj Modes.obj mod_version.obj \
+		mysql.obj modules.obj moduleapi.obj moddata.obj Modes.obj mod_version.obj \
 		privmsg.obj statserv.obj strings.obj sockutil.obj signals.obj tld.obj rdb.obj language.obj \
 		spamfilter.obj users.obj xmlrpc.obj zip.obj win32.obj \
-        $(MYSQL_O) $(POSTGRE_O)
         
 SRCS =  admin.c base64.c bans.c channels.c chanstats.c ChanBanMode.c ChanMode.c config.c core.c cron.c ctcp.c \
 		datafiles.c db.c events.c exclude.c extsock.c FileIO.c GeoIP.c list.c log.c ircd.c main.c markup.c \
 		messages.c md5.c network.c numerics.c send.c servers.c statserv.c sockutil.c sqlqueue.c \
-		modules.c moduleapi.c moddata.c Modes.c mod_version.c \
+		modules.c moduleapi.c moddata.c Modes.c mod_version.c mysql.c \
         spamfilter.c privmsg.c rdb.c strings.c signals.c tld.c language.c users.c xmlrpc.c zip.c win32.c \
-        $(MYSQL_C) $(POSTGRE_C)
 
 ###########################################################################
         

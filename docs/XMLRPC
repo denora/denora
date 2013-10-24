@@ -9,12 +9,12 @@ Denora XMLRPC Support
     to get real time data from it without the use of SQL or any other database
     method.
 
-    Note this is a bit slower then SQL but provides a valid alternative to SQL
+    Note this is a bit slower than SQL but provides a valid alternative to SQL
 
 
 2) Requirements
 
-    1. Ablitiy to bind to an IP address and port other then the one used to connect to IRC
+    1. Ability to bind to an IP address and port other than the one used to connect to IRC
     2. Denora 1.1.x or higher
     3. XMLRPC enabled client code (PHP, ASP, etc)
 
@@ -34,12 +34,12 @@ Denora XMLRPC Support
     xmlrpc_accept - IP address to accept requests from, this prevents flooding form unwanted addresses
                     there can be up to 128 different entries.
 
-    Start denora as normal, the XMLRPC default modules will load and be listening for incoming
+    Start Denora as normal, the XMLRPC default modules will load and be listening for incoming
     connections.
 
 4) Methods already defined in Denora
 
-   Denora comes with a few XMLRPC methods predefined, see XMLRPC_MOD for how to code your own methods
+   Denora comes with a few XMLRPC methods predefined; see XMLRPC_MOD for how to code your own methods
 
    denora.getstat - returns the current user or channel count
      av[0] = [users|chans]

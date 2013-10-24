@@ -1,7 +1,7 @@
 
 /* signals
  *
- * (c) 2004-2012 Denora Team
+ * (c) 2004-2013 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -23,7 +23,7 @@ VOIDSIG signal_pipe(int signum);
 VOIDSIG signal_die(int signum);
 char segv_location[SEGV_LOCATION_BUFSIZE];
 
-#ifndef _WIN32 || _WIN64
+#ifndef _WINDOWS
 	#if !defined(HAVE_STRSIGNAL)
 		const char* get_signame(int sig);
 	#elsif !defined(strsignal) && (!defined(__CYGWIN__) || (__FreeBSD__) || (__OpenBSD__))
@@ -375,7 +375,7 @@ VOIDSIG signal_int(int signum)
 
 VOIDSIG sighandler(int signum)
 {
-#ifndef _WIN32 || _WIN64 || _WINDOWS
+#ifndef _WINDOWS
 	if (started)
 	{
 		if (signum == SIGQUIT)
@@ -418,7 +418,7 @@ VOIDSIG sighandler(int signum)
 #endif
 	if (
 #if !defined(USE_THREADS)
-#ifndef _WIN32
+#ifndef _WINDOWS
 	    signum == SIGUSR1 ||
 #endif
 #endif
@@ -428,7 +428,7 @@ VOIDSIG sighandler(int signum)
 	}
 	else
 	{
-#ifdef _WIN32 || _WIN64
+#ifdef _WINDOWS
 		ircsnprintf(denora->qmsg, BUFSIZE, "Stats terminating: %d", signum);
 #else
 		ircsnprintf(denora->qmsg, BUFSIZE, "Stats terminating: %s",

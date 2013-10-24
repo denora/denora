@@ -606,11 +606,6 @@ E void dbMySQLPrepareForQuery(int con);
 
 #endif
 
-#ifdef USE_POSTGRE
-E PGconn *postgre;
-E char *db_postgre_quote(char *sql);
-#endif
-
 /**** signals.c ****/
 
 E void do_backtrace(int header);

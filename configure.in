@@ -1,6 +1,6 @@
 dnl autoconf.in for Stats.
 dnl
-dnl Denora (c) 2004-2012 Denora Team
+dnl Denora (c) 2004-2013 Denora Team
 dnl Contact us at info@denorastats.org
 
 dnl This program is free but copyrighted software; see the file COPYING for
@@ -23,7 +23,7 @@ touch install-sh
 
 m4_include([m4/ext_have_lib.m4])
 m4_include([m4/mysql.m4])
-m4_include([m4/libxml2.m4])
+dnl m4_include([m4/libxml2.m4])
 
 
 AC_CANONICAL_BUILD
@@ -134,29 +134,29 @@ else
    DIS_ENCRYPT="Crypted Passwords: No"
 fi
 
-AC_ARG_ENABLE(sqlite3,
-    [  --enable-sqlite3          compiles source with sqlite3],
-    [ac_cv_sqlite3="$enableval"],
-    [ac_cv_sqlite3="no"])
+# AC_ARG_ENABLE(sqlite3,
+#    [  --enable-sqlite3          compiles source with sqlite3],
+#   [ac_cv_sqlite3="$enableval"],
+#    [ac_cv_sqlite3="no"])
 
-if test "$ac_cv_sqlite3" = "yes"; then
-   AC_CHECK_HEADER(sqlite3.h,AC_DEFINE(HAVE_SQLITE3_H,1,""))
-   AC_CHECK_LIB(sqlite3, sqlite3_open,[
-     DENORALIBS="$DENORALIBS-lsqlite3 "
-     AC_DEFINE(HAVE_SQLITE3,1,"")
-   ])
-   DIS_SQLITE="SQLite3: Yes"
-else
-   DIS_SQLITE="Sqlite3 : No"
-fi
+# if test "$ac_cv_sqlite3" = "yes"; then
+#   AC_CHECK_HEADER(sqlite3.h,AC_DEFINE(HAVE_SQLITE3_H,1,""))
+#   AC_CHECK_LIB(sqlite3, sqlite3_open,[
+#     DENORALIBS="$DENORALIBS-lsqlite3 "
+#     AC_DEFINE(HAVE_SQLITE3,1,"")
+#   ])
+#   DIS_SQLITE="SQLite3: Yes"
+# else
+#  DIS_SQLITE="Sqlite3 : No"
+# fi
 
 DIS_MYSQL="MySQL: No"
 
 AX_CHECK_MYSQL
 DENORALIBS="$DENORALIBS $LIBS"
 
-AM_PATH_XML2(2.4.0)
-DENORALIBS="$DENORALIBS $LIBS"
+# AM_PATH_XML2(2.4.0)
+#DENORALIBS="$DENORALIBS $LIBS"
 
 DIS_MYSQLBT="Mysql backtrace debug: No"
 AC_ARG_ENABLE(mysqlbt,

@@ -8,13 +8,13 @@ Denora XMLRPC Module Coding
 
 1) Introduction to XMLRPC Module Coding
 
-    XMLRPC is a powerful tool to get information from denora, this document
+    XMLRPC is a powerful tool to get information from Denora, this document
     covers how to create your own methods and handle returning data to the
     requestor.
 
 2) Basics
 
-    A) All functions most be formatted as:
+    A) All functions must be formatted like this:
 
         int functioname(deno_socket_t xmlsocket, int ac, char **av);
 

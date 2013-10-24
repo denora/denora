@@ -1,6 +1,6 @@
 /* Ultimate IRCD 2
  *
- * (C) 2004-2007 Denora Team
+ * (C) 2004-2013 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.

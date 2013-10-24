@@ -1,7 +1,7 @@
 
 /*
  *
- * (c) 2004-2012 Denora Team
+ * (c) 2004-2013 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -28,13 +28,6 @@ int rdb_init()
 	}
 	SET_SEGV_LOCATION();
 #endif
-#ifdef USE_POSTGRE
-	if (sqltype == SQL_POSTGRE)
-	{
-		res = db_postgre_init();
-	}
-	SET_SEGV_LOCATION();
-#endif
 	if (res)
 	{
 		db_connect();
@@ -57,13 +50,6 @@ int rdb_close()
 		return 1;
 	}
 #endif
-#ifdef USE_POSTGRE
-	if (sqltype == SQL_POSTGRE)
-	{
-		db_postgre_close();
-		return 1;
-	}
-#endif
 	return 0;
 }
 
@@ -71,7 +57,7 @@ int rdb_close()
 
 int rdb_clear_table(char *table)
 {
-#if defined(USE_MYSQL) || defined(USE_POSTGRE)
+#if defined(USE_MYSQL)
 	static char buf[1024];
 
 	SET_SEGV_LOCATION();
@@ -94,10 +80,7 @@ int rdb_clear_table(char *table)
 	if (sqltype == SQL_MYSQL)
 		return db_mysql_query(buf,0);
 #endif
-#ifdef USE_POSTGRE
-	if (sqltype == SQL_POSTGRE)
-		return db_postgre_query(buf);
-#endif
+
 #else
 	USE_VAR(table);
 #endif
@@ -108,7 +91,7 @@ int rdb_clear_table(char *table)
 
 int rdb_direct_query(char *query, int con)
 {
-#if !defined(USE_MYSQL) && !defined(USE_POSTGRE)
+#if !defined(USE_MYSQL)
 	USE_VAR(query);
 	USE_VAR(con);
 #endif
@@ -129,12 +112,6 @@ int rdb_direct_query(char *query, int con)
 		 */
 		if (con == 1)
 			dbMySQLPrepareForQuery(con);
-	}
-#endif
-#ifdef USE_POSTGRE
-	if (sqltype == SQL_POSTGRE)
-	{
-		return db_postgre_query(query);
 	}
 #endif
 	return 0;
@@ -197,18 +174,12 @@ int rdb_query(int i, const char *fmt, ...)
 char *rdb_escape(char *ch)
 {
 	char *ret = NULL;
-#if defined(USE_MYSQL) || defined(USE_POSTGRE)
+#if defined(USE_MYSQL)
 	char *result = NULL;
 #ifdef USE_MYSQL
 	if (sqltype == SQL_MYSQL)
 	{
 		result = db_mysql_quote(ch);
-	}
-#endif
-#ifdef USE_POSTGRE
-	if (sqltype == SQL_POSTGRE)
-	{
-		result = db_postgre_quote(ch);
 	}
 #endif
 	if (result)
@@ -234,12 +205,6 @@ int rdb_insertid()
 		return mysql_insert_id(mysql);
 	}
 #endif
-#ifdef USE_POSTGRE
-	if (sqltype == SQL_POSTGRE)
-	{
-		return 0;
-	}
-#endif
 	return 0;
 }
 
@@ -254,12 +219,6 @@ char *rdb_error_msg()
 	if (sqltype == SQL_MYSQL)
 	{
 		rdb_errmsg = sstrdup(mysql_error(mysql));
-	}
-#endif
-#ifdef USE_POSTGRE
-	if (sqltype == SQL_POSTGRE)
-	{
-		rdb_errmsg = sstrdup(PQerrorMessage(postgre));
 	}
 #endif
 	return rdb_errmsg;

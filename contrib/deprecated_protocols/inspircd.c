@@ -2,7 +2,7 @@
 /* InspIRCd 1.0 Beta 6 functions
  *
  * (C) 2005-2006 Craig Edwards <brain@inspircd.org>
- * (C) 2004-2007 Denora Team
+ * (C) 2004-2013 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.

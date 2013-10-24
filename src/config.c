@@ -1112,10 +1112,6 @@ int confadd_sql(cVar * vars[], int lnum)
 			{
 				sqltype = SQL_MYSQL;
 			}
-			if (!stricmp(tmp->value, "postgre"))
-			{
-				sqltype = SQL_POSTGRE;
-			}
 		}
 		else if (tmp->type && (tmp->type->flag & SQLFF_HOST))
 		{

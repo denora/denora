@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
  ###########################################################################
- #   Copyright (C) 2005-2007 by Hal9000                                    #
+ #   Copyright (C) 2005-2013 by Hal9000                                    #
  #   hal9000@denorastats.org                                               #
  #                                                                         #
  #   This program is free software; you can redistribute it and/or modify  #

@@ -11,6 +11,8 @@ Additions
 
 
 Changes
+13/10/24 Removes some future features so 1.5 can roll
+13/10/24 Removes Postgre from the code, was never used or really compiled for, maybe in the futre
 13/10/22 Removed configure searches to embed perl in the code
 13/10/17 Removed USE_RDB define from config, this was legacy Anope code for when rdb was an option.
 13/05/31 Improved handling of KILL messages on InspIRCd

@@ -1,6 +1,6 @@
 # Makefile for Denora.
 #
-# (c) 2004-2012 Denora Team
+# (c) 2004-2013 Denora Team
 # Contact us at info@denorastats.org
 #
 # Please read COPYING and README for further details.
@@ -11,19 +11,16 @@
 # 
 #
 
-MYSQL_OBJ = $(MYSQL:.c=.o)
-POSTGRE_OBJ = $(POSTGRE:.c=.o)
-
 OBJS =  admin.o base64.o bans.o channels.o chanstats.o ChanBanMode.o ChanMode.o core.o cron.o ctcp.o config.o db.o datafiles.o \
         exclude.o events.o extsock.o FileIO.o GeoIP.o language.o list.o log.o ircd.o main.o markup.o modules.o moddata.o moduleapi.o \
         messages.o md5.o mod_version.o Modes.o mysql.o network.o numerics.o privmsg.o rdb.o send.o servers.o signals.o sockutil.o statserv.o \
         spamfilter.o sqlqueue.o strings.o tld.o users.o xmlrpc.o zip.o \
-        $(POSTGRE_OBJ)
+        
 SRCS =  admin.c base64.c bans.c channels.c chanstats.c ChanBanMode.c ChanMode.c core.c cron.c ctcp.c config.c db.c datafiles.c \
         exclude.c events.c extsock.c FileIO.c GeoIP.c language.c list.c log.c ircd.c main.c markup.c  modules.c moddata.c moduleapi.c \
         messages.c md5.c mod_version.c Modes.c mysql.c network.c numerics.c privmsg.c rdb.c send.c servers.c signals.c sockutil.c statserv.c \
         spamfilter.c sqlqueue.c strings.c tld.c users.c xmlrpc.o zip.c \
-        $(POSTGRE)
+        
 
 INCLUDES = ../include/language.h ../include/sysconf.h \
 		   ../include/denora.h ../include/extern.h ../include/modules.h
@@ -33,7 +30,7 @@ MAKEARGS = 'CFLAGS=${CFLAGS}' 'CC=${CC}' 'DENORALIBS=${DENORALIBS}' \
 	   'LDFLAGS=${LDFLAGS}' 'BINDEST=${BINDEST}' 'INSTALL=${INSTALL}' \
            'INCLUDEDIR=${INCLUDEDIR}' 'RM=${RM}' 'CP=${CP}' \
       	   'TOUCH=${TOUCH}' 'SHELL=${SHELL}' 'DATDEST=${DATDEST}' \
-  	   'RUNGROUP=${RUNGROUP}' 'MODULE_PATH=${MODULE_PATH}' 'POSTGRE=${POSTGRE}'\
+  	   'RUNGROUP=${RUNGROUP}' 'MODULE_PATH=${MODULE_PATH}' \
 	   'MYSQL=${MYSQL}' 'SHARED=${SHARED}' 'MODULEFLAGS=${MODULEFLAGS}' 'RDYNAMNIC=${RDYNAMNIC}'
 
 
@@ -94,7 +91,6 @@ users.o:        users.c     $(INCLUDES)
 xmlrpc.o:       xmlrpc.c    $(INCLUDES)
 zip.o:          zip.c       $(INCLUDES)
 mysql.o:        mysql.c     $(INCLUDES)
-postgre.o:      postgre.c   $(INCLUDES)
 rdb.o:          rdb.c       $(INCLUDES)
 
 modules: DUMMY

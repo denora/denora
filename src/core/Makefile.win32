@@ -1,6 +1,6 @@
 # Make file
 #
-# (c) 2004-2012 Denora Team
+# (c) 2004-2013 Denora Team
 # Contact us at info@denorastats.org
 #
 # Please read COPYING and README for further details.
@@ -23,7 +23,7 @@ SRCS=ss_admin.c ss_chanstats.c ss_core.c ss_envinfo.c ss_exclude.c ss_export.c s
     html_topchan.c 
 OBJECTS= $(SRCS:.c=.dll)
 CFLAGS=/LD /MD /D MODULE_COMPILE $(CFLAGS) /I"../../include"
-LFLAGS=/link ../denora.lib wsock32.lib $(LIBS) $(LFLAGS) $(MYSQL_LIB_PATH) $(POSTGRE_LIB_PATH) /export:DenoraInit /export:DenoraFini
+LFLAGS=/link ../denora.lib wsock32.lib $(LIBS) $(LFLAGS) $(MYSQL_LIB_PATH) /export:DenoraInit /export:DenoraFini
 
 all: $(OBJECTS)
 

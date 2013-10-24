@@ -343,11 +343,15 @@ static void make_stats(User * u, char *receiver, char *msg)
 
 void count_kicks(User * kicker, User * kicked, Channel * c)
 {
-#ifdef USE_MYSQL
 	if (!c)
 	{
 		return;
 	}
+	if (!denora->do_sql)
+	{
+		return;
+	}
+
 	if (!find_cs(c->name))
 	{
 		return;
@@ -384,11 +388,6 @@ void count_kicks(User * kicker, User * kicked, Channel * c)
 			 UStatsTable, kicked->sgroup, c->sqlchan);
 		}
 	}
-#else
-	USE_VAR(kicker);
-	USE_VAR(kicked);
-	USE_VAR(c);
-#endif
 }
 
 /*************************************************************************/
