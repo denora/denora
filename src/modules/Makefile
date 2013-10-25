@@ -1,4 +1,4 @@
-# Make file
+# Makefile for Denora.
 #
 # (c) 2004-2013 Denora Team
 # Contact us at info@denorastats.org
@@ -17,14 +17,14 @@ MAKEARGS = 'CFLAGS=${CFLAGS}' 'CC=${CC}' 'DENORALIBS=${DENORALIBS}' \
 	   'LDFLAGS=${LDFLAGS}' 'BINDEST=${BINDEST}' 'INSTALL=${INSTALL}' \
            'INCLUDEDIR=${INCLUDEDIR}' 'RM=${RM}' 'CP=${CP}' \
       	   'TOUCH=${TOUCH}' 'SHELL=${SHELL}' 'DATDEST=${DATDEST}' \
-   	   'RUNGROUP=${RUNGROUP}' 'MODULE_PATH=${MODULE_PATH}' \
-		'PROFILE=${PROFILE}' 'MODULEFLAGS=${MODULEFLAGS}' 'RDYNAMNIC=${RDYNAMNIC}'
+  	   'RUNGROUP=${RUNGROUP}' 'MODULE_PATH=${MODULE_PATH}'\
+	   'SHARED=${SHARED}' 'MODULEFLAGS=${MODULEFLAGS}' 'RDYNAMNIC=${RDYNAMNIC}'
 
 OBJECTS= $(SRCS:.c=.o)
 SO_FILES=$(OBJECTS:.o=.s)
 CDEFS= 
 
-all: modules  subs
+all: modules subs
 
 modules: $(OBJECTS) $(SO_FILES)
 
@@ -37,7 +37,7 @@ distclean: spotless
 	$(CC) ${CFLAGS} ${CDEFS} ${RDYNAMNIC} ${MODULEFLAGS} -I../${INCLUDEDIR} -c $<
 
 .o.s:
-	$(CC) -shared ../mod_version.o $< -o $*.so ${PROFILE}
+	$(CC) ${SHARED} ../mod_version.o $< -o $*.so ${PROFILE}
 
 subs:
 	@for i in $(SUBS); do \
@@ -49,9 +49,9 @@ subs_clean:
 	echo "cleaning in $$i..."; \
 	(cd $$i; $(MAKE) clean); done
 
-clean:
+clean: subs_clean
 	rm -f *.o *.so *.c~ core
 
-spotless:
+spotless: subs_clean
 	rm -f *.o *.so *.c~ core *.so Makefile.inc
 
