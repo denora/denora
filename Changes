@@ -19,6 +19,10 @@ Changes
 13/05/16 Do not free unallocated memory in InspIRCd protocol
 
 Fixes
+13/10/29 Rewrote dmalloc checks of the code, this should avoid the ./configure script saying its
+         building with dmalloc when its not installed.
+13/10/29 ./Config script clean up and bug fix, where some questions it did not use the cache setting
+         for a defaulting answer, it would default back to script settings.
 13/10/29 Fixed memory leak in P10 ircds.
 13/10/28 Fixed lang files to prevent possible segfault.
 13/10/23 MySQL int is to small in some cases, need to change to BIGINT, update sql from changes.sql

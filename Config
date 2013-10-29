@@ -42,7 +42,6 @@ Run_Config () {
 	WITH_PERM=""
 	WITH_MYSQL=""
 	WITH_MYSQL_BT=""
-#        WITH_SQLITE=""
 	WITH_MEMORYDEBUG=""
 	WITH_ENCRYPT=""
 	WITH_THREADING=""
@@ -82,9 +81,6 @@ Run_Config () {
 	if [ "$ENCRYPT" = "yes" ] ; then
 		WITH_ENCRYPT=" --enable-crypt"
 	fi
-#	if [ "$SQLITE" = "yes" ] ; then
-#		WITH_SQLITE=" --enable-sqlite3"
-#	fi
 	if [ "$THREAD" = "yes" ] ; then
 		WITH_THREADING=" --enable-threading"
 	fi
@@ -107,8 +103,11 @@ exists () {			 # because some shells don't have test -e
 
 Load_Cache () {
 	if [ -f config.cache -a -r config.cache -a ! "$NOCACHE" ] ; then
+
 		echo "Using defaults from config.cache. To ignore, rm config.cache"
 		. ./config.cache
+
+
 		CAN_QUICK="yes"
 		if [ "$BINDEST" = "" ] ; then
 			BINDEST=$HOME/stats
@@ -141,19 +140,6 @@ Load_Cache () {
 		CAN_QUICK="no"
 	fi
 }
-
-ECHO2SUF=''
-if [ "`echo -n a ; echo -n b`" = "ab" ] ; then
-	ECHO2='echo -n'
-elif [ "`echo 'a\c' ; echo 'b\c'`" = "ab" ] ; then
-	ECHO2='echo' ; ECHO2SUF='\c'
-elif [ "`printf 'a' 2>&1 ; printf 'b' 2>&1`" = "ab" ] ; then
-	ECHO2='printf "%s"'
-else
-	# oh well...
-	ECHO2='echo'
-fi
-export ECHO2 ECHO2SUF
 
 ###########################################################################
 # Init values
@@ -239,7 +225,7 @@ ok=0
 echo "Note: press Return for the default, or enter a new value."
 echo "In what directory do you want the binaries to be installed?"
 while [ $ok -lt 1 ] ; do
-	echo2 "[$BINDEST] "
+	echo "[$BINDEST] "
 	if read INPUT ; then : ; else echo "" ; exit 1 ; fi
 	if [ ! "$INPUT" ] ; then
 		INPUT=$BINDEST
@@ -249,7 +235,7 @@ while [ $ok -lt 1 ] ; do
 			echo "$INPUT exists, but is not a directory!"
 		else
 			echo "$INPUT does not exist.  Create it?"
-			echo2 "[y] "
+			echo "[y] "
 			read YN
 			if [ "$YN" != "n" ] ; then
 				if mkdir -p $INPUT ; then
@@ -272,7 +258,7 @@ echo ""
 ok=0
 echo "Where do you want the data files to be installed?"
 while [ $ok -lt 1 ] ; do
-	echo2 "[$DATDEST] "
+	echo "[$DATDEST] "
 	if read INPUT ; then : ; else echo "" ; exit 1 ; fi
 	if [ ! "$INPUT" ] ; then
 		INPUT=$DATDEST
@@ -282,7 +268,7 @@ while [ $ok -lt 1 ] ; do
 			echo "$INPUT exists, but is not a directory!"
 		else
 			echo "$INPUT does not exist.  Create it?"
-			echo2 "[y] "
+			echo "[y] "
 			read YN
 			if [ "$YN" != "n" ] ; then
 				if mkdir -p $INPUT ; then
@@ -312,7 +298,7 @@ else
 	echo "should not force files to be owned by a particular group, just press"
 	echo "Return.)"
 fi
-echo2 "[$RUNGROUP] "
+echo "[$RUNGROUP] "
 if read INPUT ; then : ; else echo "" ; exit 1 ; fi
 if [ "$INPUT" ] ; then
 	lcfile=`echo $INPUT | tr A-Z a-z`
@@ -342,7 +328,7 @@ ok=0
 echo "What should the default umask for data files be (in octal)?"
 echo "(077 = only accessible by owner; 007 = accessible by owner and group)"
 while [ $ok -lt 1 ] ; do
-	echo2 "[$UMASK] "
+	echo "[$UMASK] "
 	if read INPUT ; then : ; else echo "" ; exit 1 ; fi
 	if [ ! "$INPUT" ] ; then
 		INPUT=$UMASK
@@ -372,10 +358,10 @@ echo "         in order to compile Denora with SQL support."
 echo "         On Debian/Ubuntu systems for example, you need to install the"
 echo "         libmysqlclient15-dev package or similar."
 while [ $ok -lt 1 ] ; do
-	echo2 "[$MYSQL] "
+	echo "[$MYSQL] "
 	if read INPUT ; then : ; else echo "" ; exit 1 ; fi
 	if [ ! "$INPUT" ] ; then
-		INPUT=$DEF
+		INPUT=$MYSQL
 	fi
 	case $INPUT in
 		n*|N*)
@@ -401,10 +387,10 @@ if [ "$MYSQL" = "yes" ]; then
 	echo "Do you want to backtrace mysql queries?"
 	echo "WARNING: This will make your logs grow hugely."
 	while [ $ok -lt 1 ] ; do
-		echo2 "[$MYSQL_BT] "
+		echo "[$MYSQL_BT] "
 		if read INPUT ; then : ; else echo "" ; exit 1 ; fi
 		if [ ! "$INPUT" ] ; then
-			INPUT=$DEF
+			INPUT=$MYSQL_BT
 		fi
 		case $INPUT in
 			n*|N*)
@@ -430,10 +416,10 @@ DEF=no
 echo "Would you like to register your network with Denora?"
 echo "Doing this will allow us to better focus our project"
 while [ $ok -lt 1 ] ; do
-	echo2 "[$REGSCRIPT] "
+	echo "[$REGSCRIPT] "
 	if read INPUT ; then : ; else echo "" ; exit 1 ; fi
 	if [ ! "$INPUT" ] ; then
-		INPUT=$DEF
+		INPUT=$REGSCRIPT
 	fi
 	case $INPUT in
 		n*|N*)
@@ -458,10 +444,10 @@ DEF=No
 echo "Allow Denora to attempt to build a dmalloc library and use dmalloc memory debugging tools."
 echo "Should only enable this if you are attempting to locate memory problems"
 while [ $ok -lt 1 ] ; do
-	echo2 "[$DMEMORY] "
+	echo "[$DMEMORY] "
 	if read INPUT ; then : ; else echo "" ; exit 1 ; fi
 	if [ ! "$INPUT" ] ; then
-		INPUT=$DEF
+		INPUT=$DMEMORY
 	fi
 	case $INPUT in
 		n*|N*)
@@ -485,10 +471,10 @@ ok=0
 DEF=Yes
 echo "Allow Denora to attempt to build a crypt library so that admin passwords can be encrypted in the config and db files"
 while [ $ok -lt 1 ] ; do
-	echo2 "[$ENCRYPT] "
+	echo "[$ENCRYPT] "
 	if read INPUT ; then : ; else echo "" ; exit 1 ; fi
 	if [ ! "$INPUT" ] ; then
-		INPUT=$DEF
+		INPUT=$ENCRYPT
 	fi
 	case $INPUT in
 		n*|N*)
@@ -512,14 +498,14 @@ ok=0
 DEF=no
 echo "Allow Denora to attempt to build a threading library so that the code can be multithreaded for speed"
 while [ $ok -lt 1 ] ; do
-	echo2 "[$THREAD] "
+	echo "[$THREAD] "
 	if read INPUT ; then : ; else echo "" ; exit 1 ; fi
 	if [ ! "$INPUT" ] ; then
-		INPUT=$DEF
+		INPUT=$THREAD
 	fi
 	case $INPUT in
 		n*|N*)
-			THREAD=
+			THREAD="no"
 			ok=1
 			;;
 		y*|Y*)
@@ -536,7 +522,7 @@ echo ""
 ################################################################################
 # Store values
 ################################################################################
-echo2 "Saving configuration results in config.cache... "
+echo "Saving configuration results in config.cache... "
 
 cat <<EOT >config.cache
 BINDEST="$BINDEST"
