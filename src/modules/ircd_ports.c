@@ -152,6 +152,7 @@ int get_port(char *source, int ac, char **av)
             free(port);
             free(portnum);
             free(type);
+            return MOD_CONT;
         }
     } else if (denora_get_ircd() == IRC_UNREAL32) {
         s = server_find(source);
@@ -172,6 +173,7 @@ int get_port(char *source, int ac, char **av)
             free(port);
             free(portnum);
             free(type);
+            return MOD_CONT;
         }
     } else if (denora_get_ircd() == IRC_ASUKA || denora_get_ircd() == IRC_NEFARIOUS || denora_get_ircd() == IRC_IRCU) {
         s = server_find(source);
@@ -194,6 +196,7 @@ int get_port(char *source, int ac, char **av)
                 rdb_query
                  (QUERY_LOW, "INSERT INTO %s (name, portnum, porttype) VALUES(\'%s\',\'%s\',\'%s\')",
                  SERVPORTTABLE, s->name, av[2], type);
+		free(type);
             }
         }
     }

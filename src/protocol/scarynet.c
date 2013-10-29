@@ -1109,6 +1109,8 @@ void scarynet_cmd_pong(char *servname, char *who)
 {
 	char *t, *s;
 	uint32 ts, tsnow, value;
+	char *p10time = militime_float(NULL);
+
 	t = myStrGetToken(who, '!', 1);
 	s = myStrGetToken(t, '.', 0);
 	free(t);
@@ -1128,7 +1130,10 @@ void scarynet_cmd_pong(char *servname, char *who)
 		alog(LOG_PROTOCOL, "PONG: Server Name %s : Who %s", servname, who);
 	}
 	send_cmd(p10id, "Z %s %ld %ld %ld %s", p10id, (long int) ts,
-	         (long int) tsnow, (long int) value, militime_float(NULL));
+	         (long int) tsnow, (long int) value, p10time);
+	free(s);
+	free(t);
+	free(p10time);
 }
 
 void scarynet_cmd_bot_nick(char *nick, char *user, char *host, char *real,

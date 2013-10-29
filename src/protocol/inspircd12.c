@@ -370,6 +370,7 @@ int denora_event_push(char *source, int ac, char **av)
 		s = server_find(source);
 		if (!s)
 		{
+			free(num);
 			return MOD_CONT;
 		}
 		av[1]++;
@@ -393,6 +394,7 @@ int denora_event_push(char *source, int ac, char **av)
 		s = server_find(source);
 		if (!s)
 		{
+			free(num);
 			return MOD_CONT;
 		}
 		sql_motd_store(s);
@@ -408,6 +410,7 @@ int denora_event_push(char *source, int ac, char **av)
 		av[1] = myStrGetToken(av[1], ' ', 1);   /* possible memleak at this position */
 		sql_uline(av[2]);
 	}
+	free(num);
 	return MOD_CONT;
 }
 

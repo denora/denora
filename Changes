@@ -19,6 +19,8 @@ Changes
 13/05/16 Do not free unallocated memory in InspIRCd protocol
 
 Fixes
+13/10/29 Fixed memory leak in P10 ircds.
+13/10/28 Fixed lang files to prevent possible segfault.
 13/10/23 MySQL int is to small in some cases, need to change to BIGINT, update sql from changes.sql
 13/10/23 Total revamp of how we look for MySQL libs and headers, this in theory should fix the problem
          people have had on various systems getting MySQL to be detected

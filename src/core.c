@@ -840,7 +840,7 @@ char *militime_float(char *start)
 	}
 	SET_SEGV_LOCATION();
 
-	return timebuf;
+	return sstrdup(timebuf);
 #else
 	ircsnprintf(timebuf, sizeof(timebuf), "%ld", (long int) time(NULL));
 	return sstrdup(timebuf);
