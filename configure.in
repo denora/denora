@@ -136,12 +136,12 @@ fi
 
 DIS_MYSQL="MySQL: No"
 
-AC_ARG_ENABLE(mysql,
+AC_ARG_WITH(mysql,
     [  --without-mysql          Do not compile with MySQL],
-   [ac_cv_mysql="$enableval"],
-    [ac_cv_mysql="no"])
+    [ac_cv_mysql="no"],
+    [ac_cv_mysql="$enableval"])
 
- if test "$ac_cv_mysql" = "yes"; then
+if test "$ac_cv_mysql" = "yes"; then
 	AX_CHECK_MYSQL
 	DENORALIBS="$DENORALIBS $LIBS"
  else

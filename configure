@@ -722,7 +722,6 @@ with_mysql_command
 with_mysql_source
 with_ssl
 enable_crypt
-enable_mysql
 enable_mysqlbt
 enable_threading
 enable_dmalloc
@@ -1354,7 +1353,6 @@ Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --enable-crypt          Enable Admin encrypted passwords
-  --without-mysql          Do not compile with MySQL
   --enable-mysqlbt        Enable backtrace of mysql queries
   --enable-threading      Enable support for the threading library
   --enable-dmalloc        Enable support for the dmalloc debugging library
@@ -1370,6 +1368,7 @@ Optional Packages:
   --with-ssl enable ssl will check /usr/local/ssl
                             /usr/lib/ssl /usr/ssl /usr/pkg /usr/local /usr
 
+  --without-mysql          Do not compile with MySQL
  --with-rungroup=group  Specify the rungroup for Denora
  --with-permissions=permissions     Specify the default permissions for Denora
  --with-bindir=bindir   Specify the default binary dir for Denora
@@ -5237,15 +5236,16 @@ fi
 
 DIS_MYSQL="MySQL: No"
 
-# Check whether --enable-mysql was given.
-if test "${enable_mysql+set}" = set; then :
-  enableval=$enable_mysql; ac_cv_mysql="$enableval"
+
+# Check whether --with-mysql was given.
+if test "${with_mysql+set}" = set; then :
+  withval=$with_mysql; ac_cv_mysql="no"
 else
-  ac_cv_mysql="no"
+  ac_cv_mysql="$enableval"
 fi
 
 
- if test "$ac_cv_mysql" = "yes"; then
+if test "$ac_cv_mysql" = "yes"; then
 
     mysql_test="no"
 
