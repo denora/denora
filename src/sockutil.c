@@ -520,8 +520,6 @@ int sockprintf(deno_socket_t s, const char *fmt, ...)
 
 /*************************************************************************/
 
-#if !HAVE_GETHOSTBYNAME
-
 /**
  * Translate an IP dotted-quad address to a 4-byte character string.
  * Return NULL if the given string is not in dotted-quad format.
@@ -545,7 +543,6 @@ char *pack_ip(const char *ipaddr)
 	return ipbuf;
 }
 
-#endif
 
 /*************************************************************************/
 

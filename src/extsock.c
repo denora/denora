@@ -27,10 +27,14 @@ fd_set master_fdset, temp_fdset;
  **/
 void extsock_init(char *lhost, int lport)
 {
+#ifdef __STRICT_ANSI__
+	char *addr;
+#else
 #if HAVE_GETHOSTBYNAME
 	struct hostent *hp;
 #else
 	char *addr;
+#endif
 #endif
 	int sockopt = 1;
 	struct sockaddr_in svr_addr;
@@ -56,6 +60,12 @@ void extsock_init(char *lhost, int lport)
 	memset(&svr_addr, 0, sizeof(svr_addr));
 	if (lhost)
 	{
+#ifdef __STRICT_ANSI__
+		if ((addr = pack_ip(lhost)))
+		{
+			memcpy((char *) &svr_addr.sin_addr, addr, 4);
+			svr_addr.sin_family = AF_INET;
+#else
 #if HAVE_GETHOSTBYNAME
 		if ((hp = gethostbyname(lhost)) != NULL)
 		{
@@ -66,6 +76,7 @@ void extsock_init(char *lhost, int lport)
 		{
 			memcpy((char *) &svr_addr.sin_addr, addr, 4);
 			svr_addr.sin_family = AF_INET;
+#endif
 #endif
 		}
 		else

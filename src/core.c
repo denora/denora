@@ -633,7 +633,7 @@ const char *send_token(const char *token1, const char *token2)
  */
 int myNumToken(const char *str, const char dilim)
 {
-	int len, idx, counter = 0, start_pos = 0;
+	int len, idx, counter = 0;
 	if (!str)
 	{
 		return 0;
@@ -645,7 +645,6 @@ int myNumToken(const char *str, const char dilim)
 	{
 		if ((str[idx] == dilim))
 		{
-			start_pos = idx + 1;
 			counter++;
 		}
 	}

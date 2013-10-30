@@ -722,6 +722,7 @@ with_mysql_command
 with_mysql_source
 with_ssl
 enable_crypt
+enable_mysql
 enable_mysqlbt
 enable_threading
 enable_dmalloc
@@ -1353,6 +1354,7 @@ Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --enable-crypt          Enable Admin encrypted passwords
+  --without-mysql          Do not compile with MySQL
   --enable-mysqlbt        Enable backtrace of mysql queries
   --enable-threading      Enable support for the threading library
   --enable-dmalloc        Enable support for the dmalloc debugging library
@@ -5233,24 +5235,17 @@ else
    DIS_ENCRYPT="Crypted Passwords: No"
 fi
 
-# AC_ARG_ENABLE(sqlite3,
-#    [  --enable-sqlite3          compiles source with sqlite3],
-#   [ac_cv_sqlite3="$enableval"],
-#    [ac_cv_sqlite3="no"])
-
-# if test "$ac_cv_sqlite3" = "yes"; then
-#   AC_CHECK_HEADER(sqlite3.h,AC_DEFINE(HAVE_SQLITE3_H,1,""))
-#   AC_CHECK_LIB(sqlite3, sqlite3_open,[
-#     DENORALIBS="$DENORALIBS-lsqlite3 "
-#     AC_DEFINE(HAVE_SQLITE3,1,"")
-#   ])
-#   DIS_SQLITE="SQLite3: Yes"
-# else
-#  DIS_SQLITE="Sqlite3 : No"
-# fi
-
 DIS_MYSQL="MySQL: No"
 
+# Check whether --enable-mysql was given.
+if test "${enable_mysql+set}" = set; then :
+  enableval=$enable_mysql; ac_cv_mysql="$enableval"
+else
+  ac_cv_mysql="no"
+fi
+
+
+ if test "$ac_cv_mysql" = "yes"; then
 
     mysql_test="no"
 
@@ -6228,10 +6223,10 @@ $as_echo "yes" >&6; }
     fi
 
 
-DENORALIBS="$DENORALIBS $LIBS"
-
-# AM_PATH_XML2(2.4.0)
-#DENORALIBS="$DENORALIBS $LIBS"
+	DENORALIBS="$DENORALIBS $LIBS"
+ else
+	DIS_MYSQL="MySQL: No"
+fi
 
 DIS_MYSQLBT="Mysql backtrace debug: No"
 # Check whether --enable-mysqlbt was given.

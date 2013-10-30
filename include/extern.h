@@ -885,9 +885,7 @@ E int zip_init(int compressionlevel);
 E char *unzip_packet(const char *buffer, int length);
 E char *zip_buffer(char *buffer, int *length, int flush);
 
-#if !HAVE_GETHOSTBYNAME
 E char *pack_ip(const char *ipaddr);
-#endif
 
 E int moduleCount(int all);
 E int protocolModuleLoaded(void);

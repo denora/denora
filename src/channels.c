@@ -1272,17 +1272,13 @@ void do_sjoin(const char *source, int ac, char **av)
 {
 	Channel *c;
 	User *user;
-	Server *serv;
 	char *s = NULL;
 	char *buf, *end, cubuf[7], *end2, *cumodes[6];
 	char *sqlusers = NULL;
 	int ts = 0;
-	int is_created = 0;
 	int keep_their_modes = 1;
 
 	SET_SEGV_LOCATION();
-
-	serv = findserver(servlist, source);
 
 	if (ircd->sjb64)
 	{
@@ -1304,8 +1300,6 @@ void do_sjoin(const char *source, int ac, char **av)
 		else if (c->creation_time < ts)
 			keep_their_modes = 0;
 	}
-	else
-		is_created = 1;
 
 	/* Double check to avoid unknown modes that need parameters */
 	if (ac >= 4)

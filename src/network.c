@@ -31,6 +31,17 @@ char *host_resolve(char *host)
 	char *ipreturn;
 #endif
 
+
+#ifndef __STRICT_ANSI__
+	struct in_addr addr;
+	#if HAVE_GETHOSTBYNAME
+		struct hostent hentp;
+		void *ip;
+	#endif
+#else
+	struct in_addr_t addr;
+#endif
+
 	SET_SEGV_LOCATION();
 
 	if (!host)
@@ -52,6 +63,7 @@ char *host_resolve(char *host)
 		}
 	}
 #else
+#ifndef __STRICT_ANSI__
 	hentp = gethostbyname(host);
 
 	if (hentp)
@@ -62,6 +74,12 @@ char *host_resolve(char *host)
 		alog(LOG_DEBUG, "debug: resolved %s to %s", host, ipreturn);
 		return sstrdup(ipreturn);
 	}
+#else
+	addr = inet_addr(host);
+	ipreturn = inet_ntoa(addr);
+	alog(LOG_DEBUG, "debug: resolved %s to %s", host, ipreturn);
+	return sstrdup(ipreturn);
+#endif
 #endif
 	return sstrdup("0.0.0.0");
 }

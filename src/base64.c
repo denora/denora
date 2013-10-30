@@ -66,9 +66,6 @@ void base64_encode(struct buffer_st *b, const char *source, int length)
 {
 	int i, hiteof = 0;
 	int offset = 0;
-	int olen;
-
-	olen = 0;
 
 	buffer_new(b);
 
@@ -137,7 +134,6 @@ void base64_decode(struct buffer_st *bfr, const char *source, int length)
 {
 	int i;
 	int offset = 0;
-	int endoffile;
 	int count;
 
 	buffer_new(bfr);
@@ -162,7 +158,6 @@ void base64_decode(struct buffer_st *bfr, const char *source, int length)
 	dtable['/'] = 63;
 	dtable['='] = 0;
 
-	endoffile = 0;
 
 	/*CONSTANTCONDITION*/
 	while (1)
@@ -176,8 +171,6 @@ void base64_decode(struct buffer_st *bfr, const char *source, int length)
 			{
 				c = *(source++);
 				offset++;
-				if (offset > length)
-					endoffile = 1;
 				if (isspace(c) || c == '\n' || c == '\r')
 					continue;
 				break;

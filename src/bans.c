@@ -684,7 +684,6 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
 {
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
-#endif
 	int sqlid = -1;
 	int checkdur = 0;
 	int expire = 0;
@@ -792,7 +791,7 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
 			rdb_query(QUERY_HIGH,
 			          "SELECT id FROM %s WHERE type = \'%s\' and user=\'%s\' and host=\'%s\' LIMIT 1",
 			           GlineTable, type, sqluser, sqlhost);
-#ifdef USE_MYSQL
+
 			SET_SEGV_LOCATION();
 			mysql_res = mysql_store_result(mysql);
 			if (mysql_res)
@@ -829,7 +828,6 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
 				}
 				mysql_free_result(mysql_res);
 			}
-#endif
 		}
 	}
 	else
@@ -851,7 +849,6 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
 		          "SELECT id FROM %s WHERE user=\'%s\' and host=\'%s\' LIMIT 1",
 		          GlineTable, sqluser, sqlhost);
 
-#ifdef USE_MYSQL
 		mysql_res = mysql_store_result(mysql);
 		if (mysql_res)
 		{
@@ -871,14 +868,13 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
 			}
 			mysql_free_result(mysql_res);
 		}
-#endif
 	}
 	SET_SEGV_LOCATION();
 
 	free(sqlreason);
 	free(sqluser);
 	free(sqlhost);
-
+#endif
 	return;
 }
 
