@@ -1455,7 +1455,7 @@ void sql_do_server_version(char *server, int ac, char **av)
 		{
 			rdb_query(QUERY_LOW,
 			          "UPDATE %s SET version=\'%s\' WHERE servid=%d",
-			          ServerTable, version, servid);
+			          ServerTable, sqlversion, servid);
 		}
 		free(sqlversion);
 	}

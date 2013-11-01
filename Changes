@@ -19,6 +19,7 @@ Changes
 13/05/16 Do not free unallocated memory in InspIRCd protocol
 
 Fixes
+13/10/31 sql_do_server_version() escaped the version reply but never used that when setting updating.
 13/10/29 MySQL checks in configure process are hidden if you say no
 13/10/29 Fixes some "make ansi" problems.. there are still issues building on a system that would
          force us into ansi.. but some of the unused variables are cleaned up.. networking under
