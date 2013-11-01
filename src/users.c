@@ -643,7 +643,7 @@ void change_user_realname(char *source, char *realname)
 		sqlrealname = rdb_escape(user->realname);
 		rdb_query(QUERY_LOW,
 			  "UPDATE %s SET realname=\'%s\' WHERE nickid=%d",
-			  UserTable, rdb_escape(user->realname), user->sqlid);
+			  UserTable, sqlrealname, user->sqlid);
 		free(sqlrealname);
 	}
 
