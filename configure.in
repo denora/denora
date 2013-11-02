@@ -142,8 +142,15 @@ AC_ARG_WITH(mysql,
     [ac_cv_mysql="$enableval"])
 
 if test "$ac_cv_mysql" = "yes"; then
-	AX_CHECK_MYSQL
-	DENORALIBS="$DENORALIBS $LIBS"
+	MYSQL_CLIENT
+	if test -z "$MYSQL_CLIENT_LIBS" ; then
+		DIS_MYSQL="MySQL: No"
+	else
+		DENORALIBS="$DENORALIBS $MYSQL_CLIENT_LIBS"
+		AC_DEFINE_UNQUOTED(USE_MYSQL,1,"Use Mysql")
+		CFLAGS="$CFLAGS $MYSQL_CLIENT_CFLAGS"
+		DIS_MYSQL="MySQL: Yes"
+	fi
  else
 	DIS_MYSQL="MySQL: No"
 fi
