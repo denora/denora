@@ -19,6 +19,8 @@ Changes
 13/05/16 Do not free unallocated memory in InspIRCd protocol
 
 Fixes
+13/11/01 Cleaned up the "nefarious" hack in do_umode(), no longer leaks memory and ANSI standard
+         coding.
 13/10/31 change_user_realname() escaped the user->realname field then called on rdb_escape() again
          in the query, thus leaking memory.
 13/10/31 sql_do_server_version() escaped the version reply but never used that when setting updating.
