@@ -27,8 +27,9 @@ ADD `mode_ut` enum('Y','N') NOT NULL default 'N',
 ADD `mode_uz` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lk_data` varchar(23) NOT NULL default '',
 ADD `mode_ul_data` varchar(33) NOT NULL default '',
-ADD `mode_ll_data` int(10) NOT NULL default '0';
-ADD `mode_ua_data` varchar(23) NOT NULL default '';
+ADD `mode_ll_data` int(10) NOT NULL default '0',
+ADD `mode_ua_data` varchar(23) NOT NULL default '',
+ADD `mode_uu_data` varchar(23) NOT NULL default '';
 
 
 -- --------------------------------------------------------

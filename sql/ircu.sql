@@ -14,7 +14,9 @@ ADD `mode_ls` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lt` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ur` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lk_data` varchar(23) NOT NULL default '',
-ADD `mode_ll_data` int(10) NOT NULL default '0';
+ADD `mode_ll_data` int(10) NOT NULL default '0',
+ADD `mode_ua_data` varchar(23) NOT NULL default '',
+ADD `mode_uu_data` varchar(23) NOT NULL default '';
 
 -- --------------------------------------------------------
 
@@ -26,4 +28,5 @@ ADD `mode_lo` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lr` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ls` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lx` enum('Y','N') NOT NULL default 'N',
-ADD `mode_lw` enum('Y','N') NOT NULL default 'N';
+ADD `mode_lw` enum('Y','N') NOT NULL default 'N',
+ADD `mode_ld` enum('Y','N') NOT NULL default 'N';

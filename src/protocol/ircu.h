@@ -12,6 +12,9 @@
  *
  */
 
+#define PROTO_VERSION "1.0"
+#define PROTO_NAME "ircu"
+
 void ircu_cmd_nick(char *nick, char *name, const char *modes);
 void ircu_cmd_mode(char *source, char *dest, char *buf);
 void ircu_cmd_bot_nick(char *nick, char *user, char *host, char *real, char *modes);
@@ -79,3 +82,9 @@ char *ircu_nickip(char *host);
 int ircu_parse_lkill(char *message);
 char *ircu_lkill_killer(char *message);
 char *ircu_lkill_msg(char *message);
+
+char *ircu_chan_mode_ua_get(Channel * chan);
+void ircu_chan_mode_ua_set(Channel * chan, char *value);
+
+char *ircu_chan_mode_uu_get(Channel * chan);
+void ircu_chan_mode_uu_set(Channel * chan, char *value);

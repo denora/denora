@@ -217,11 +217,13 @@ void IRCDModeInit(void)
 	CreateChanMode(CMODE_t, NULL, NULL);
 	CreateChanMode(CMODE_z, NULL, NULL);
 	CreateChanMode(CMODE_C, NULL, NULL);
+	CreateChanMode(CMODE_D, NULL, NULL);
 	CreateChanMode(CMODE_L, set_redirect, get_redirect);
 	CreateChanMode(CMODE_M, NULL, NULL);
 	CreateChanMode(CMODE_N, NULL, NULL);
 	CreateChanMode(CMODE_O, NULL, NULL);
 	CreateChanMode(CMODE_Q, NULL, NULL);
+	CreateChanMode(CMODE_R, NULL, NULL);
 	CreateChanMode(CMODE_S, NULL, NULL);
 	CreateChanMode(CMODE_T, NULL, NULL);
 	CreateChanMode(CMODE_Z, NULL, NULL);
@@ -255,16 +257,15 @@ void nef2_chan_mode_u_set(Channel * chan, char *value)
 	moduleAddData(PROTO_NAME, &chan->moduleData, "mode_u", value);
 }
 
-
-
 char *nefarious_nickip(char *host)
 {
-	struct in_addr addr;
-	int decoded;
+	char ipaddr[INET6_ADDRSTRLEN];
 
-	decoded = base64toint(host);
-	addr.s_addr = ntohl(decoded);
-	return sstrdup(inet_ntoa(addr));
+	base64toip(host, (char *)&ipaddr);
+
+	alog(LOG_DEBUG, "debug: Decoded base64 %s to %s", host, ipaddr);
+
+	return sstrdup((char *)&ipaddr);
 }
 
 /* On Services connect the modes are given */
@@ -897,7 +898,7 @@ void nefarious_cmd_capab()
 /* SERVER irc.undernet.org 1 933022556 947908144 J10 AA]]] :[127.0.0.1] A Undernet Server */
 void nefarious_cmd_server(char *servname, int hop, char *descript)
 {
-	send_cmd(NULL, "SERVER %s %d %ld %lu J10 %s]]] +s :%s", servname, hop,
+	send_cmd(NULL, "SERVER %s %d %ld %lu J10 %s]]] +s6 :%s", servname, hop,
 	         (long int) denora->start_time, (long int) time(NULL), p10id,
 	         descript);
 }

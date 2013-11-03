@@ -140,8 +140,8 @@ void IRCDModeInit(void)
 	/* Channel Modes */
 	CreateChanMode(CMODE_D, NULL, NULL);        /* Delayed Join */
 	CreateChanMode(CMODE_d, NULL, NULL);        /* Delayed Join */
-	CreateChanMode(CMODE_A, NULL, NULL);        /* Channel Admin Pass */
-	CreateChanMode(CMODE_U, NULL, NULL);        /* Channel User Pass */
+	CreateChanMode(CMODE_A, ircu_chan_mode_ua_set, ircu_chan_mode_ua_get);        /* Channel Admin Pass */
+	CreateChanMode(CMODE_U, ircu_chan_mode_uu_set, ircu_chan_mode_uu_get);        /* Channel User Pass */
 	CreateChanMode(CMODE_i, NULL, NULL);        /* Invite Only */
 	CreateChanMode(CMODE_k, set_key, get_key);  /* Keyed */
 	CreateChanMode(CMODE_l, set_limit, get_limit);      /* Invite Only */
@@ -158,6 +158,27 @@ void IRCDModeInit(void)
 	ModuleSetChanUMode('+', 'v', STATUS_VOICE); /* Voice */
 	ModuleSetChanUMode('@', 'o', STATUS_OP);    /* Operator */
 	ModuleUpdateSQLChanMode();
+}
+
+
+char *ircu_chan_mode_ua_get(Channel * chan)
+{
+	return moduleGetData(PROTO_NAME, &chan->moduleData, "mode_ua");
+}
+
+void ircu_chan_mode_ua_set(Channel * chan, char *value)
+{
+	moduleAddData(PROTO_NAME, &chan->moduleData, "mode_ua", value);
+}
+
+char *ircu_chan_mode_uu_get(Channel * chan)
+{
+	return moduleGetData(PROTO_NAME, &chan->moduleData, "mode_uu");
+}
+
+void ircu_chan_mode_uu_set(Channel * chan, char *value)
+{
+	moduleAddData(PROTO_NAME, &chan->moduleData, "mode_uu", value);
 }
 
 char *ircu_nickip(char *host)
@@ -1265,7 +1286,7 @@ int DenoraInit(int argc, char **argv)
 	}
 
 	moduleAddAuthor("Denora");
-	moduleAddVersion("");
+	moduleAddVersion(PROTO_VERSION);
 	moduleSetType(PROTOCOL);
 
 	pmodule_ircd_version("IRCu 2.10.11+");
