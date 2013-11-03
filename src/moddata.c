@@ -82,11 +82,20 @@ int moduleDataDebug(ModuleData ** md)
  **/
 int moduleAddData(ModuleData ** md, char *key, char *value)
 {
-	char *mod_name = sstrdup(mod_current_module_name);
+	char *mod_name;
 	ModuleData *newData = NULL;
 	ModuleData *tmp = *md;
 
 	SET_SEGV_LOCATION();
+
+	if (mod_current_module_name)
+	{
+		mod_name = sstrdup(mod_current_module_name);
+	}
+	else {
+		mod_name = sstrdup("Unknown");
+	}
+
 
 	if (!key || !value)
 	{
@@ -150,10 +159,18 @@ int moduleAddData(ModuleData ** md, char *key, char *value)
 char *moduleGetData(ModuleData ** md, char *key)
 {
 
-	char *mod_name = sstrdup(mod_current_module_name);
+	char *mod_name; 
 	ModuleData *modcurrent = *md;
 
 	SET_SEGV_LOCATION();
+
+	if (mod_current_module_name)
+	{
+		mod_name = sstrdup(mod_current_module_name);
+	}
+	else {
+		mod_name = sstrdup("Unknown");
+	}
 
 	alog(LOG_DEBUG, "debug: moduleGetData %p : key %s", (void *) md, key);
 	alog(LOG_DEBUG, "debug: Current Module %s", mod_name);
@@ -192,10 +209,19 @@ char *moduleGetData(ModuleData ** md, char *key)
  **/
 void moduleDelData(ModuleData ** md, char *key)
 {
-	char *mod_name = sstrdup(mod_current_module_name);
+	char *mod_name;
 	ModuleData *modcurrent = *md;
 	ModuleData *prev = NULL;
 	ModuleData *next = NULL;
+
+
+	if (mod_current_module_name)
+	{
+		mod_name = sstrdup(mod_current_module_name);
+	}
+	else {
+		mod_name = sstrdup("Unknown");
+	}
 
 	SET_SEGV_LOCATION();
 

@@ -384,6 +384,9 @@ Server *make_server(const char *servername, char *descript,
 		serv->country = (char *)country_name;
 		serv->countrycode = (char *)country_code;
 	}
+	serv->moduleData = NULL;
+
+
 	SET_SEGV_LOCATION();
 
 	return serv;

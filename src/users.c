@@ -1321,6 +1321,7 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 		user->sgroup = NULL;
 		user->lastuname = NULL;
 		user->language = StatsLanguage;
+		user->moduleData = NULL;
 
 		if (!LargeNet)
 		{

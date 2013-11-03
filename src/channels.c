@@ -1907,9 +1907,17 @@ Channel *chan_create(char *chan, time_t ts)
 		c->stats = sc;
 	}
 	SET_SEGV_LOCATION();
-	c->sqlchan = rdb_escape(chan);
+	if (denora->do_sql)
+	{
+		c->sqlchan = rdb_escape(chan);
+	}
+	else 
+	{
+		c->sqlchan = sstrdup(chan);
+	}
 
 	c->stats->in_use = 1;
+	c->moduleData = NULL;
 	stats->chans++;
 	do_checkchansmax();
 	return c;
