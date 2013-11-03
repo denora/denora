@@ -5191,7 +5191,9 @@ fi
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: $mysql_version" >&5
 $as_echo "$mysql_version" >&6; }
 
-	if test -z "$mysql_version" ; then
+	if test -z "$MYSQL_CLIENT_LIBS" ; then
+		DIS_MYSQL="MySQL: No"
+	else
 		DENORALIBS="$DENORALIBS $MYSQL_CLIENT_LIBS"
 
 cat >>confdefs.h <<_ACEOF
@@ -5200,8 +5202,6 @@ _ACEOF
 
 		CFLAGS="$CFLAGS $MYSQL_CLIENT_CFLAGS"
 		DIS_MYSQL="MySQL: Yes"
-	else
-		DIS_MYSQL="MySQL: No"
 	fi
  else
 	DIS_MYSQL="MySQL: No"
