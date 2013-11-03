@@ -11,6 +11,8 @@ Additions
 
 
 Changes
+13/11/03 ModData functions require you to call it with your modules name, since moddata structs
+         were broken up until this point it shouldn't be a huge deal.
 13/10/24 Removes some future features so 1.5 can roll
 13/10/24 Removes Postgre from the code, was never used or really compiled for, maybe in the futre
 13/10/22 Removed configure searches to embed perl in the code

@@ -1493,7 +1493,7 @@ int loadModule(Module * m, User * u)
 			     m->name);
 			return MOD_ERR_NOLOAD;
 		}
-		mod_current_module_name = m->name;
+		mod_current_module_name = sstrdup(m->name);
 		/* argv[0] is the user if there was one, or NULL if not */
 		if (u)
 		{
@@ -1513,17 +1513,18 @@ int loadModule(Module * m, User * u)
 		if (m->type == PROTOCOL && protocolModuleLoaded())
 		{
 			alog(LOG_NORMAL, langstr(ALOG_MOD_BE_ONLY_ONE));
+			free(mod_current_module_name);
 			ret = MOD_STOP;
 		}
 		if (ret == MOD_STOP)
 		{
 			alog(LOG_DEBUG, langstr(ALOG_MOD_UNLOAD_SELF), m->name);
 			unloadModule(m, NULL);
-			mod_current_module_name = NULL;
+			free(mod_current_module_name);
 			return MOD_ERR_NOLOAD;
 		}
+		free(mod_current_module_name);
 
-		mod_current_module_name = NULL;
 	}
 
 	if (u)

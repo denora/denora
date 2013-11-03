@@ -1064,10 +1064,10 @@ E EvtMessage *first_EvtMessage(void);
 E EvtMessage *next_EvtMessage(void);
 E int moduleAddCallback(char *name,time_t when,int (*func)(int argc, char *argv[]),int argc, char **argv);
 E void moduleDelCallback(char *name);
-E char *moduleGetData(ModuleData **md, char *key);			/* Get the value for this key from this struct */
-E int moduleAddData(ModuleData **md, char *key, char *value);		/* Set the value for this key for this struct */
-E void moduleDelData(ModuleData **md, char *key);				/* Delete this key/value pair */
-E void moduleDelAllData(ModuleData **md);					/* Delete all key/value pairs for this module for this struct */
+E char *moduleGetData(char *modname, ModuleData **md, char *key);			/* Get the value for this key from this struct */
+E int moduleAddData(char *modname, ModuleData **md, char *key, char *value);		/* Set the value for this key for this struct */
+E void moduleDelData(char *modname, ModuleData **md, char *key);				/* Delete this key/value pair */
+E void moduleDelAllData(char *modname, ModuleData **md);					/* Delete all key/value pairs for this module for this struct */
 E void moduleDelAllDataMod(Module *m);					/* remove all module data from all structs for this module */
 E int moduleDataDebug(ModuleData **md);					/* Allow for debug output of a moduleData struct */
 E boolean moduleMinVersion(int major,int minor,int patch,int build);	/* Checks if the current version of denora is before or after a given verison */

@@ -80,48 +80,26 @@ int moduleDataDebug(ModuleData ** md)
  * @param value The value for the key/value pair, this is what will be stored for you
  * @return MOD_ERR_OK will be returned on success
  **/
-int moduleAddData(ModuleData ** md, char *key, char *value)
+int moduleAddData(char *mod_name, ModuleData ** md, char *key, char *value)
 {
-	char *mod_name;
 	ModuleData *newData = NULL;
 	ModuleData *tmp = *md;
 
 	SET_SEGV_LOCATION();
-
-	if (mod_current_module_name)
-	{
-		mod_name = sstrdup(mod_current_module_name);
-	}
-	else {
-		mod_name = sstrdup("Unknown");
-	}
-
 
 	if (!key || !value)
 	{
 		alog(LOG_DEBUG,
 		     "debug: A module tried to use ModuleAddData() with one ore more NULL arguments... returning");
 		do_backtrace(0);
-		free(mod_name);
 		return MOD_ERR_PARAMS;
 	}
 
-	if (mod_current_module_name == NULL)
-	{
-		alog(LOG_DEBUG,
-		     "debug: moduleAddData() called with mod_current_module_name being NULL");
-		if (denora->debug)
-		{
-			do_backtrace(0);
-		}
-	}
-
-	moduleDelData(md, key);     /* Remove any existing module data for this module with the same key */
+	moduleDelData(mod_name, md, key);     /* Remove any existing module data for this module with the same key */
 
 	newData = malloc(sizeof(ModuleData));
 	if (!newData)
 	{
-		free(mod_name);
 		return MOD_ERR_MEMORY;
 	}
 
@@ -137,8 +115,6 @@ int moduleAddData(ModuleData ** md, char *key, char *value)
 		newData->next = NULL;
 	}
 	*md = newData;
-
-	free(mod_name);
 
 	if (denora->debug)
 	{
@@ -156,46 +132,24 @@ int moduleAddData(ModuleData ** md, char *key, char *value)
  * @param key The key to find the data for
  * @return the value paired to the given key will be returned, or NULL
  **/
-char *moduleGetData(ModuleData ** md, char *key)
+char *moduleGetData(char *mod_name, ModuleData ** md, char *key)
 {
-
-	char *mod_name; 
 	ModuleData *modcurrent = *md;
 
 	SET_SEGV_LOCATION();
 
-	if (mod_current_module_name)
-	{
-		mod_name = sstrdup(mod_current_module_name);
-	}
-	else {
-		mod_name = sstrdup("Unknown");
-	}
-
 	alog(LOG_DEBUG, "debug: moduleGetData %p : key %s", (void *) md, key);
 	alog(LOG_DEBUG, "debug: Current Module %s", mod_name);
-
-	if (mod_current_module_name == NULL)
-	{
-		alog(LOG_DEBUG,
-		     "moduleGetData() called with mod_current_module_name being NULL");
-		if (denora->debug)
-		{
-			do_backtrace(0);
-		}
-	}
 
 	while (modcurrent)
 	{
 		if ((stricmp(modcurrent->moduleName, mod_name) == 0)
 		        && (stricmp(modcurrent->key, key) == 0))
 		{
-			free(mod_name);
 			return sstrdup(modcurrent->value);
 		}
 		modcurrent = modcurrent->next;
 	}
-	free(mod_name);
 	return NULL;
 }
 
@@ -207,33 +161,13 @@ char *moduleGetData(ModuleData ** md, char *key)
  * @param md The module data for the struct to be used
  * @param key The key to delete the key/value pair for
  **/
-void moduleDelData(ModuleData ** md, char *key)
+void moduleDelData(char *mod_name, ModuleData ** md, char *key)
 {
-	char *mod_name;
 	ModuleData *modcurrent = *md;
 	ModuleData *prev = NULL;
 	ModuleData *next = NULL;
 
-
-	if (mod_current_module_name)
-	{
-		mod_name = sstrdup(mod_current_module_name);
-	}
-	else {
-		mod_name = sstrdup("Unknown");
-	}
-
 	SET_SEGV_LOCATION();
-
-	if (mod_current_module_name == NULL)
-	{
-		alog(LOG_DEBUG,
-		     "debug: moduleDelData() called with mod_current_module_name being NULL");
-		if (denora->debug)
-		{
-			do_backtrace(0);
-		}
-	}
 
 	if (key)
 	{
@@ -268,7 +202,6 @@ void moduleDelData(ModuleData ** md, char *key)
 			modcurrent = next;
 		}
 	}
-	free(mod_name);
 }
 
 /*************************************************************************/
@@ -279,24 +212,13 @@ void moduleDelData(ModuleData ** md, char *key)
  * do just about anything and everything, its safe to use from inside the module.
  * @param md The module data for the struct to be used
  **/
-void moduleDelAllData(ModuleData ** md)
+void moduleDelAllData(char *mod_name, ModuleData ** md)
 {
-	char *mod_name = sstrdup(mod_current_module_name);
 	ModuleData *modcurrent = *md;
 	ModuleData *prev = NULL;
 	ModuleData *next = NULL;
 
 	SET_SEGV_LOCATION();
-
-	if (mod_current_module_name == NULL)
-	{
-		alog(LOG_DEBUG,
-		     "debug: moduleDelAllData() called with mod_current_module_name being NULL");
-		if (denora->debug)
-		{
-			do_backtrace(0);
-		}
-	}
 
 	while (modcurrent)
 	{
@@ -326,7 +248,6 @@ void moduleDelAllData(ModuleData ** md)
 		}
 		modcurrent = next;
 	}
-	free(mod_name);
 }
 
 /*************************************************************************/
@@ -337,30 +258,18 @@ void moduleDelAllData(ModuleData ** md)
  **/
 void moduleDelAllDataMod(Module * m)
 {
-	boolean freeme = false;
 	int i;
 	User *user;
 
 	SET_SEGV_LOCATION();
-
-	if (!mod_current_module_name)
-	{
-		mod_current_module_name = sstrdup(m->name);
-		freeme = true;
-	}
 
 	for (i = 0; i < 1024; i++)
 	{
 		/* Remove the users */
 		for (user = userlist[i]; user; user = user->next)
 		{
-			moduleDelAllData(&user->moduleData);
+			moduleDelAllData(m->name, &user->moduleData);
 		}
 	}
 
-	if (freeme)
-	{
-		free(mod_current_module_name);
-		mod_current_module_name = NULL;
-	}
 }

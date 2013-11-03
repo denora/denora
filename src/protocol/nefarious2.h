@@ -11,6 +11,8 @@
  *
  *
  */
+#define PROTO_VERSION "1.0"
+#define PROTO_NAME "nefarious2"
 
 void nefarious_cmd_nick(char *nick, char *name, const char *modes);
 void nefarious_cmd_mode(char *source, char *dest, char *buf);
@@ -88,3 +90,6 @@ char *nefarious_lkill_msg(char *message);
 
 char *nef2_chan_mode_a_get(Channel * chan);
 void nef2_chan_mode_a_set(Channel * chan, char *value);
+
+char *nef2_chan_mode_u_get(Channel * chan);
+void nef2_chan_mode_u_set(Channel * chan, char *value);

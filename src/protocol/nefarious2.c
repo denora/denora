@@ -226,6 +226,7 @@ void IRCDModeInit(void)
 	CreateChanMode(CMODE_T, NULL, NULL);
 	CreateChanMode(CMODE_Z, NULL, NULL);
 	CreateChanMode(CMODE_A, nef2_chan_mode_a_set, nef2_chan_mode_a_get);
+	CreateChanMode(CMODE_U, nef2_chan_mode_u_set, nef2_chan_mode_u_get);
 	ModuleSetChanUMode('+', 'v', STATUS_VOICE);
 	ModuleSetChanUMode('%', 'h', STATUS_HALFOP);
 	ModuleSetChanUMode('@', 'o', STATUS_OP);
@@ -235,13 +236,25 @@ void IRCDModeInit(void)
 char *nef2_chan_mode_a_get(Channel * chan)
 {
 
-   return moduleGetData(&chan->moduleData, "mode_a");
+   return moduleGetData(PROTO_NAME, &chan->moduleData, "mode_a");
 }
 
 void nef2_chan_mode_a_set(Channel * chan, char *value)
 {
-	moduleAddData(&chan->moduleData, "mode_a", value);
+	moduleAddData(PROTO_NAME, &chan->moduleData, "mode_a", value);
 }
+
+char *nef2_chan_mode_u_get(Channel * chan)
+{
+
+   return moduleGetData(PROTO_NAME, &chan->moduleData, "mode_u");
+}
+
+void nef2_chan_mode_u_set(Channel * chan, char *value)
+{
+	moduleAddData(PROTO_NAME, &chan->moduleData, "mode_u", value);
+}
+
 
 
 char *nefarious_nickip(char *host)
@@ -1569,11 +1582,10 @@ int DenoraInit(int argc, char **argv)
 	}
 
 	moduleAddAuthor("Denora");
-	moduleAddVersion
-	("");
+	moduleAddVersion(PROTO_VERSION);
 	moduleSetType(PROTOCOL);
 
-	pmodule_ircd_version("Nefarious IRCu 1.3");
+	pmodule_ircd_version("Nefarious IRCu 2");
 	pmodule_ircd_cap(myIrcdcap);
 	pmodule_ircd_var(myIrcd);
 	pmodule_ircd_useTSMode(0);
