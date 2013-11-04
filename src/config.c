@@ -161,6 +161,7 @@ char *SqlineTable;
 char *ChanStatsTable;
 char *ServerStatsTable;
 char *AdminTable;
+char *P10OperAccessTable;
 
 char *AliasesTable;
 char *CStatsTable;
@@ -1299,6 +1300,11 @@ int confadd_tables(cVar * vars[], int lnum)
 			tmp->type = NULL;
 			ChanBansTable = sstrdup(tmp->value);
 		}
+		else if (tmp->type && (tmp->type->flag & TABFF_P10OPER))
+		{
+			tmp->type = NULL;
+			P10OperAccessTable = sstrdup(tmp->value);
+		}
 		else if (tmp->type && (tmp->type->flag & TABFF_CHANEXCEPT))
 		{
 			tmp->type = NULL;
@@ -1513,6 +1519,10 @@ int confadd_tables(cVar * vars[], int lnum)
 	if (!AdminTable)
 	{
 		AdminTable = sstrdup("admin");
+	}
+	if (!P10OperAccessTable)
+	{
+		P10OperAccessTable = sstrdup("operaccess");
 	}
 	return lnum;
 }
@@ -2304,6 +2314,20 @@ int initconf(const char *filename, int reload, tConf * conftab)
 }
 
 /*************************************************************************/
+
+Directive *ModuleCreateConfigDirective(const char *name, int type, int flags, void *ptr)
+{
+	Directive *a;
+
+	a = calloc(sizeof(Directive), 1);
+	a->name = sstrdup(name);
+	a->params->type = type;
+	a->params->flags = flags;
+	a->params->ptr = ptr;
+	return a;
+}
+
+/*************************************************************************/
 /**
  * Deal with modules who want to lookup config directives!
  * @param h The Directive to lookup in the config file
@@ -2349,6 +2373,7 @@ int moduleGetConfigDirective(char *configfile, Directive * d)
 				continue;
 			}
 		}
+
 		if (stricmp(dir, d->name) == 0)
 		{
 			if (s)

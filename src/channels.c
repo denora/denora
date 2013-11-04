@@ -233,6 +233,14 @@ void sql_do_part(char *chan, User * u)
 		          ChanTable, chanid);
 		if (!ChanHasMode(chan, ircd->persist_char))
 			db_checkemptychan(chanid);
+
+		if (ircd->p10 && P10OperAccessTable)
+		{
+			rdb_query(QUERY_LOW,
+			          "DELETE FROM %s WHERE user='%s' AND channel='%s'",
+			          P10OperAccessTable, u->sqlnick, chan);
+		}
+
 	}
 	SET_SEGV_LOCATION();
 	return;
@@ -711,12 +719,14 @@ void do_bmask(char **av)
 	return;
 }
 
-char *p10_mode_parse(char *mode, int *nomode)
+char *p10_mode_parse(Channel *c, User *u, char *mode, int *nomode)
 {
 	char *s;
 	char modebuf[15];
 	char *temp = NULL;
 	const char *flag;
+	const char *operlevelchar = "o";
+	int is_operlevel = 0;
 
 	nomode = 0;
 
@@ -741,33 +751,63 @@ char *p10_mode_parse(char *mode, int *nomode)
 			case 'q':
 				flag = "*";
 				break;
-			case '0':
-				flag = "";
-				/* need more details so I can understand these flags */
-				break;
 			default:
-				alog(LOG_ERROR,
-				     "ERROR: Unknown user flag (%s) in p10_mode_parse()", s);
-				flag = "";
-				break;
+				if (isdigit(*s))
+				{
+					if (denora->do_sql)
+					{
+						rdb_query(QUERY_LOW, "INSERT INTO %s (channel, user, level) VALUES ('%s', '%s', %s) \
+							ON DUPLICATE KEY UPDATE level=%s", P10OperAccessTable, c->name, u->nick, s, s);
+						is_operlevel++;
+					}
+					flag = "@";
+					break;
+				} 
+				else 
+				{
+			 		alog(LOG_ERROR,
+					     "ERROR: Unknown user flag (%s) in p10_mode_parse()", s);
+					flag = "";
+					break;
+				}
 		}
 		while (csmodes[(int) *flag] != 0)
 		{
 			nomode++;
 			if (temp)
 			{
-				ircsnprintf(modebuf, sizeof(modebuf), "%s%c", temp, *s);
+				if (is_operlevel) 
+				{
+					ircsnprintf(modebuf, sizeof(modebuf), "%so", temp);
+
+				}
+				else
+				{
+					ircsnprintf(modebuf, sizeof(modebuf), "%s%c", temp, *s);
+				}
 				free(temp);
 				temp = sstrdup(modebuf);
 			}
 			else
 			{
-				ircsnprintf(modebuf, sizeof(modebuf), "+%c", *s);
+				if (is_operlevel) 
+				{
+					ircsnprintf(modebuf, sizeof(modebuf), "+o");
+
+				}
+				else 
+				{
+					ircsnprintf(modebuf, sizeof(modebuf), "+%c", *s);
+				}
 				temp = sstrdup(modebuf);
 			}
 			break;
 		}
 		(void) *s++;
+		if (isdigit(*s))
+		{
+			break;
+		}
 	}
 	return temp;
 }
@@ -935,7 +975,7 @@ void do_p10_burst(char *source, int ac, char **av)
 						if (flag)
 						{
 							x[0] = av[0];
-							x[1] = p10_mode_parse(flag, &nomode);
+							x[1] = p10_mode_parse(c, user, flag, &nomode);
 							if (x[1])
 							{
 								if (*x[1] == '+')
@@ -2060,8 +2100,7 @@ void chan_delete(Channel * c)
 	{
 		free(c->bans);
 	}
-	if (c->sqlchan)
-		free(c->sqlchan);
+
 
 	if (denora->do_sql)
 		sql_channel_ban(ALL, c, NULL);
@@ -2117,7 +2156,8 @@ void chan_delete(Channel * c)
 		}
 	}
 	StatsChannel_delete(c->stats);
-
+	if (c->sqlchan)
+		free(c->sqlchan);
 	if (c->next)
 	{
 		c->next->prev = c->prev;
@@ -2139,6 +2179,7 @@ void chan_delete(Channel * c)
 	}
 
 	SET_SEGV_LOCATION();
+
 	free(c);
 }
 

@@ -532,9 +532,13 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 	char tmp[14] = "mode_XX=\"X\", ";
 	char *modes;
 	char *sqlnick;
+	char *tokennick;
 	int tmpmode;
 	int argptr = 1;
 	int nickid;
+	char *p10nick;
+	char *oplevel;
+	User *u;
 
 	c = findchan(chan);
 	if (!c || c->sqlid < 1)
@@ -591,8 +595,36 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 				        )
 				{
 					SET_SEGV_LOCATION();
-					sqlnick = rdb_escape(av[argptr++]);
-					nickid = db_getnick(sqlnick);
+					if (ircd->p10)
+					{
+						p10nick = sstrdup(av[argptr++]);
+						if (myNumToken(p10nick, ':'))
+						{
+							tokennick = myStrGetToken(p10nick, ':', 0);
+							oplevel = myStrGetTokenRemainder(p10nick, ':', 1);
+							sqlnick = rdb_escape(tokennick);
+							u = user_find(tokennick);
+							nickid = db_getnick(sqlnick);
+							if (denora->do_sql)
+							{
+								rdb_query(QUERY_LOW, "INSERT INTO %s (channel, user, level) VALUES ('%s', '%s', %s) \
+									ON DUPLICATE KEY UPDATE level=%s", P10OperAccessTable, c->name, u->nick, oplevel, oplevel);
+							}
+							free(tokennick);
+							free(oplevel);
+						}
+						else
+						{				
+							sqlnick = rdb_escape(p10nick);
+							nickid = db_getnick(sqlnick);
+						}
+						free(p10nick);
+					}
+					else 
+					{
+						sqlnick = rdb_escape(av[argptr++]);
+						nickid = db_getnick(sqlnick);
+					}
 					free(sqlnick);
 					tmpmode = tolower(*modes);
 					if (nickid > 0)

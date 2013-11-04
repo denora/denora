@@ -80,7 +80,8 @@ E void InitStatsChanList(void);
 E void Fini_ChannelStats(void);
 E void Fini_StatsChannel(void);
 
-E char *p10_mode_parse(char *mode, int *nomode);
+E char *p10_mode_parse(Channel *c, User *u, char *mode, int *nomode);
+char *P10OperAccessTable;
 
 E void add_ban(Channel * chan, char *mask);
 E void chan_adduser2(User * user, Channel * c);
@@ -248,6 +249,7 @@ E void confparse_error(const char *str, int lnum);
 E int is_valid_server(char *name);
 
 E int moduleGetConfigDirective(char *configfile, Directive * d);
+E Directive *ModuleCreateConfigDirective(const char *name, int type, int flags, void *ptr);
 
 E char *RemoteServer;
 E int   RemotePort;

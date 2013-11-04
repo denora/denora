@@ -252,6 +252,9 @@
 #define TABFT_ADMINS      "ADMINS"
 #define TABFF_ADMINS                   0x00400000
 
+#define TABFT_P10OPER      "P10OPER"
+#define TABFF_P10OPER                   0x00800000
+
 
 
 /* these are the strings for options ONLY */
@@ -505,6 +508,7 @@ sConf conftablestab[] =
 	{TABFT_SERVSTATS, TABFF_SERVSTATS, VARTYPE_NAME},
 	{TABFT_CHANQUIET, TABFF_CHANQUIET, VARTYPE_NAME},
 	{TABFT_ADMINS, TABFF_ADMINS, VARTYPE_NAME},
+	{TABFT_P10OPER, TABFF_P10OPER, VARTYPE_NAME},
 	{(char *) 0, 0, 0}
 };
 

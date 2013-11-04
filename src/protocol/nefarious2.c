@@ -244,6 +244,11 @@ char *nef2_chan_mode_a_get(Channel * chan)
 void nef2_chan_mode_a_set(Channel * chan, char *value)
 {
 	moduleAddData(PROTO_NAME, &chan->moduleData, "mode_a", value);
+	if (denora->do_sql)
+	{
+		rdb_query(QUERY_LOW, "UPDATE %s SET mode_ua_data='%s' WHERE chanid=%d", ChanTable, value, chan->sqlid);
+	}
+
 }
 
 char *nef2_chan_mode_u_get(Channel * chan)
@@ -255,6 +260,10 @@ char *nef2_chan_mode_u_get(Channel * chan)
 void nef2_chan_mode_u_set(Channel * chan, char *value)
 {
 	moduleAddData(PROTO_NAME, &chan->moduleData, "mode_u", value);
+	if (denora->do_sql)
+	{
+		rdb_query(QUERY_LOW, "UPDATE %s SET mode_uu_data='%s' WHERE chanid=%d", ChanTable, value, chan->sqlid);
+	}
 }
 
 char *nefarious_nickip(char *host)
@@ -899,9 +908,17 @@ void nefarious_cmd_capab()
 void nefarious_cmd_server(char *servname, int hop, char *descript)
 {
 
-	send_cmd(NULL, "SERVER %s %d %ld %lu J10 %s]]] +s6 :%s", servname, hop,
+	if (SupportOperFlag) {
+		send_cmd(NULL, "SERVER %s %d %ld %lu J10 %s]]] +s6o :%s", servname, hop,
 		         (long int) denora->start_time, (long int) time(NULL), p10id,
 	        	 descript);
+	}
+	else
+	{
+		send_cmd(NULL, "SERVER %s %d %ld %lu J10 %s]]] +s6 :%s", servname, hop,
+		         (long int) denora->start_time, (long int) time(NULL), p10id,
+	        	 descript);
+	}
 }
 
 /* GLOBOPS */
@@ -984,6 +1001,10 @@ int denora_event_quit(char *source, int ac, char **av)
 		msg = nefarious_lkill_msg(av[0]);
 		u = find_byuid(source);
 
+		if (SupportOperFlag && denora->do_sql)
+		{
+			rdb_query(QUERY_LOW, "DELETE FROM %s WHERE user = '%s'", P10OperAccessTable, (u ? u->nick : source));
+		}
 		if (killer)
 			m_kill(killer, (u ? u->nick : source), msg);
 		else
@@ -992,6 +1013,7 @@ int denora_event_quit(char *source, int ac, char **av)
 		if (msg)
 			free(msg);
 	}
+
 
 	return MOD_CONT;
 }
@@ -1002,6 +1024,7 @@ int denora_event_quit(char *source, int ac, char **av)
 /* Channel modes */
 /* ABAAA M #ircops +v ABAAB */
 /* AKAAD M #street -o+b AxC3U *!*@`.users.beirut.com */
+/* ABAAA M #test2 +o ABAAB:10 1383565922 */
 int denora_event_mode(char *source, int ac, char **av)
 {
 	User *u;
@@ -1572,6 +1595,8 @@ void moduleAddIRCDCmds()
 
 int DenoraInit(int argc, char **argv)
 {
+	Directive *dir;
+
 	if (denora->protocoldebug)
 	{
 		protocol_debug(NULL, argc, argv);
@@ -1582,6 +1607,10 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL, langstr(ALOG_MOD_BE_ONLY_ONE));
 		return MOD_STOP;
 	}
+
+	dir = ModuleCreateConfigDirective("SupportOperFlag", PARAM_SET, PARAM_RELOAD, &SupportOperFlag);
+	moduleGetConfigDirective("nefarious2.conf", dir);
+	free(dir);
 
 	moduleAddAuthor("Denora");
 	moduleAddVersion(PROTO_VERSION);

@@ -93,3 +93,6 @@ void nef2_chan_mode_a_set(Channel * chan, char *value);
 
 char *nef2_chan_mode_u_get(Channel * chan);
 void nef2_chan_mode_u_set(Channel * chan, char *value);
+
+int SupportOperFlag;
+
