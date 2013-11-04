@@ -741,9 +741,13 @@ char *p10_mode_parse(char *mode, int *nomode)
 			case 'q':
 				flag = "*";
 				break;
+			case '0':
+				flag = "";
+				/* need more details so I can understand these flags */
+				break;
 			default:
 				alog(LOG_ERROR,
-				     "ERROR: Unknown user flag in p10_mode_parse()");
+				     "ERROR: Unknown user flag (%s) in p10_mode_parse()", s);
 				flag = "";
 				break;
 		}
@@ -842,6 +846,27 @@ void do_p10_burst(char *source, int ac, char **av)
 						pc = pc + 2;
 					}
 					else if (myNumToken(av[pc], 'l') || myNumToken(av[pc], 'k') || myNumToken(av[pc], 'L'))
+					{
+						newav[2] = av[pc + 1];
+						do_cmode(source, 3, newav);
+						pc = pc + 1;
+					}
+					else if (myNumToken(av[pc], 'A') && myNumToken(av[pc], 'U'))
+					{
+						newav[2] = av[pc + 1];
+						newav[3] = av[pc + 2];
+						do_cmode(source, 4, newav);
+						pc = pc + 2;
+					}
+					else if (myNumToken(av[pc], 'A'))
+					{
+						newav[2] = av[pc + 1];
+						do_cmode(source, 3, newav);
+						pc = pc + 1;
+					}
+
+
+					else if (myNumToken(av[pc], 'U'))
 					{
 						newav[2] = av[pc + 1];
 						do_cmode(source, 3, newav);

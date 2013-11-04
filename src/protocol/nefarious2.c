@@ -898,9 +898,10 @@ void nefarious_cmd_capab()
 /* SERVER irc.undernet.org 1 933022556 947908144 J10 AA]]] :[127.0.0.1] A Undernet Server */
 void nefarious_cmd_server(char *servname, int hop, char *descript)
 {
+
 	send_cmd(NULL, "SERVER %s %d %ld %lu J10 %s]]] +s6 :%s", servname, hop,
-	         (long int) denora->start_time, (long int) time(NULL), p10id,
-	         descript);
+		         (long int) denora->start_time, (long int) time(NULL), p10id,
+	        	 descript);
 }
 
 /* GLOBOPS */
