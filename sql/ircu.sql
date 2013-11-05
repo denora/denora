@@ -3,6 +3,15 @@
 -- IMPORTANT: Load denora.sql FIRST!
 -- --------------------------------------------------------
 
+CREATE TABLE IF NOT EXISTS `operaccess` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `channel` varchar(64) NOT NULL default '',
+  `user` varchar(50) NOT NULL default '',
+  `level` int(10) unsigned default '0',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `user` (`user`)
+) ENGINE=MyISAM;
+
 ALTER TABLE `chan` ADD `mode_li` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lk` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ll` enum('Y','N') NOT NULL default 'N',
@@ -12,7 +21,9 @@ ADD `mode_lp` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lr` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ls` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lt` enum('Y','N') NOT NULL default 'N',
+ADD `mode_ua` enum('Y','N') NOT NULL default 'N',
 ADD `mode_ur` enum('Y','N') NOT NULL default 'N',
+ADD `mode_uu` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lk_data` varchar(23) NOT NULL default '',
 ADD `mode_ll_data` int(10) NOT NULL default '0',
 ADD `mode_ua_data` varchar(23) NOT NULL default '',

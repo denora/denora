@@ -169,6 +169,10 @@ char *ircu_chan_mode_ua_get(Channel * chan)
 void ircu_chan_mode_ua_set(Channel * chan, char *value)
 {
 	moduleAddData(PROTO_NAME, &chan->moduleData, "mode_ua", value);
+	if (denora->do_sql)
+	{
+		rdb_query(QUERY_LOW, "UPDATE %s SET mode_ua_data='%s' WHERE chanid=%d", ChanTable, value, chan->sqlid);
+	}
 }
 
 char *ircu_chan_mode_uu_get(Channel * chan)
@@ -179,6 +183,10 @@ char *ircu_chan_mode_uu_get(Channel * chan)
 void ircu_chan_mode_uu_set(Channel * chan, char *value)
 {
 	moduleAddData(PROTO_NAME, &chan->moduleData, "mode_uu", value);
+	if (denora->do_sql)
+	{
+		rdb_query(QUERY_LOW, "UPDATE %s SET mode_uu_data='%s' WHERE chanid=%d", ChanTable, value, chan->sqlid);
+	}
 }
 
 char *ircu_nickip(char *host)
@@ -638,9 +646,17 @@ void ircu_cmd_capab()
 /* SERVER irc.undernet.org 1          933022556    947908144   J10        AA]]]             :[127.0.0.1] A Undernet Server */
 void ircu_cmd_server(char *servname, int hop, char *descript)
 {
-	send_cmd(NULL, "SERVER %s %d %ld %lu J10 %s]]] +s6 :%s", servname, hop,
-	         (long int) denora->start_time, (long int) time(NULL), p10id,
-	         descript);
+	if (SupportOperFlag) {
+		send_cmd(NULL, "SERVER %s %d %ld %lu J10 %s]]] +s6o :%s", servname, hop,
+		         (long int) denora->start_time, (long int) time(NULL), p10id,
+	        	 descript);
+	}
+	else
+	{
+		send_cmd(NULL, "SERVER %s %d %ld %lu J10 %s]]] +s6 :%s", servname, hop,
+		         (long int) denora->start_time, (long int) time(NULL), p10id,
+	        	 descript);
+	}
 }
 
 /* GLOBOPS */
@@ -763,6 +779,10 @@ int denora_event_quit(char *source, int ac, char **av)
 		killer = ircu_lkill_killer(av[0]);
 		msg = ircu_lkill_msg(av[0]);
 		u = find_byuid(source);
+		if (SupportOperFlag && denora->do_sql)
+		{
+			rdb_query(QUERY_LOW, "DELETE FROM %s WHERE user = '%s'", P10OperAccessTable, (u ? u->nick : source));
+		}
 
 		if (killer)
 			m_kill(killer, (u ? u->nick : source), msg);
@@ -1274,6 +1294,8 @@ void moduleAddIRCDCmds()
 
 int DenoraInit(int argc, char **argv)
 {
+	Directive *dir;
+
 	if (denora->protocoldebug)
 	{
 		protocol_debug(NULL, argc, argv);
@@ -1284,6 +1306,10 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL, langstr(ALOG_MOD_BE_ONLY_ONE));
 		return MOD_STOP;
 	}
+
+	dir = ModuleCreateConfigDirective("SupportOperFlag", PARAM_SET, PARAM_RELOAD, &SupportOperFlag);
+	moduleGetConfigDirective("ircu.conf", dir);
+	free(dir);
 
 	moduleAddAuthor("Denora");
 	moduleAddVersion(PROTO_VERSION);
