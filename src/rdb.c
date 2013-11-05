@@ -27,11 +27,16 @@ int rdb_init()
 		res = db_mysql_init(0);
 	}
 	SET_SEGV_LOCATION();
-#endif
 	if (res)
 	{
 		db_connect();
 	}
+#else
+	alog(LOG_DEBUG, "MySQL not found while compiling, SQL queries are disabled");
+	denora->do_sql = 0;
+	res = 1;
+#endif
+
 	return res;
 }
 
