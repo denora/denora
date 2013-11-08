@@ -166,7 +166,6 @@ void db_connect(void)
 	ChannelStats *cs;
 	int tablecount = 0;
 	char *sqlchan;
-	int optionaltable = 1;
 
 	if (!denora->do_sql)
 	{
@@ -223,8 +222,6 @@ void db_connect(void)
 		tablecount++;
 	if (!rdb_check_table(AdminTable))
 		tablecount++;
-	if (!rdb_check_table(P10OperAccessTable))
-		optionaltable--;
 
 	if (tablecount)
 	{
@@ -249,10 +246,6 @@ void db_connect(void)
 	rdb_clear_table(TLDTable);
 	rdb_clear_table(SglineTable);
 	rdb_clear_table(SqlineTable);
-	if (optionaltable)
-	{
-		rdb_clear_table(P10OperAccessTable);
-	}
 
 	e = first_exclude();
 	while (e)

@@ -145,6 +145,7 @@ int rdb_query(int i, const char *fmt, ...)
 	ircvsnprintf(buf, sizeof(buf), fmt, args);
 	va_end(args);
 
+
 #ifdef USE_THREADS
 	if (UseThreading)
 	{

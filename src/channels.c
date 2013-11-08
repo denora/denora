@@ -233,14 +233,6 @@ void sql_do_part(char *chan, User * u)
 		          ChanTable, chanid);
 		if (!ChanHasMode(chan, ircd->persist_char))
 			db_checkemptychan(chanid);
-
-		if (ircd->p10 && P10OperAccessTable)
-		{
-			rdb_query(QUERY_LOW,
-			          "DELETE FROM %s WHERE user='%s' AND channel='%s'",
-			          P10OperAccessTable, u->sqlnick, chan);
-		}
-
 	}
 	SET_SEGV_LOCATION();
 	return;
@@ -728,7 +720,6 @@ char *p10_mode_parse(Channel *c, User *u, char *mode, int *nomode)
 	const char *operlevelchar = "o";
 	int is_operlevel = 0;
 
-	nomode = 0;
 
 	/* We make all the users join */
 	s = sstrdup(mode);
@@ -756,8 +747,7 @@ char *p10_mode_parse(Channel *c, User *u, char *mode, int *nomode)
 				{
 					if (denora->do_sql)
 					{
-						rdb_query(QUERY_LOW, "INSERT INTO %s (channel, user, level) VALUES ('%s', '%s', %s) \
-							ON DUPLICATE KEY UPDATE level=%s", P10OperAccessTable, c->name, u->nick, s, s);
+						rdb_query(QUERY_LOW, "UPDATE %s SET oplevel=%s WHERE chanid=%d and nickid=%d", IsOnTable, s, c->sqlid, u->sqlid);
 						is_operlevel++;
 					}
 					flag = "@";
@@ -771,6 +761,8 @@ char *p10_mode_parse(Channel *c, User *u, char *mode, int *nomode)
 					break;
 				}
 		}
+		nomode = 0;
+
 		while (csmodes[(int) *flag] != 0)
 		{
 			nomode++;
@@ -1686,6 +1678,7 @@ void do_cmode(const char *source, int ac, char **av)
 	{
 		sql_do_chanmodes(chan->name, ac, av);
 	}
+
 	if ((u = user_find(source)))
 	{
 		if (denora->do_sql && !LargeNet)
@@ -1697,6 +1690,7 @@ void do_cmode(const char *source, int ac, char **av)
 			}
 		}
 	}
+	
 
 	return;
 }

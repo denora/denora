@@ -161,7 +161,6 @@ char *SqlineTable;
 char *ChanStatsTable;
 char *ServerStatsTable;
 char *AdminTable;
-char *P10OperAccessTable;
 
 char *AliasesTable;
 char *CStatsTable;
@@ -1300,11 +1299,6 @@ int confadd_tables(cVar * vars[], int lnum)
 			tmp->type = NULL;
 			ChanBansTable = sstrdup(tmp->value);
 		}
-		else if (tmp->type && (tmp->type->flag & TABFF_P10OPER))
-		{
-			tmp->type = NULL;
-			P10OperAccessTable = sstrdup(tmp->value);
-		}
 		else if (tmp->type && (tmp->type->flag & TABFF_CHANEXCEPT))
 		{
 			tmp->type = NULL;
@@ -1519,10 +1513,6 @@ int confadd_tables(cVar * vars[], int lnum)
 	if (!AdminTable)
 	{
 		AdminTable = sstrdup("admin");
-	}
-	if (!P10OperAccessTable)
-	{
-		P10OperAccessTable = sstrdup("operaccess");
 	}
 	return lnum;
 }

@@ -8,23 +8,7 @@ ALTER TABLE  `cstats` CHANGE  `letters`  `letters` BIGINT( 20 ) UNSIGNED NULL DE
 ALTER TABLE  `ustats` CHANGE  `letters`  `letters` BIGINT( 20 ) UNSIGNED NULL DEFAULT  '0';
 
 
-Nefarious and IRCu only
-
-CREATE TABLE IF NOT EXISTS `operaccess` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `channel` varchar(64) NOT NULL default '',
-  `user` varchar(50) NOT NULL default '',
-  `level` int(10) unsigned default '0',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `user` (`user`)
-) ENGINE=MyISAM;
-
-ALTER TABLE chan
-ADD `mode_ua` enum('Y','N') NOT NULL default 'N',
-ADD `mode_uu` enum('Y','N') NOT NULL default 'N',
-ADD `mode_ua_data` varchar(23) NOT NULL default '',
-ADD `mode_uu_data` varchar(23) NOT NULL default '';
-
+All IRCds -> reload your specific sql file to fix ISON table changes
 
 -- Denora Version 1.4.5
 -- --------------------

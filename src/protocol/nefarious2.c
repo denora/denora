@@ -238,28 +238,49 @@ void IRCDModeInit(void)
 char *nef2_chan_mode_a_get(Channel * chan)
 {
 
-   return moduleGetData(PROTO_NAME, &chan->moduleData, "mode_a");
+   return chan->akey;
 }
 
 void nef2_chan_mode_a_set(Channel * chan, char *value)
 {
-	moduleAddData(PROTO_NAME, &chan->moduleData, "mode_a", value);
+	struct c_userlist *u;
+
+	if (chan->akey)
+	{
+		free(chan->akey);
+	}
+        chan->akey = sstrdup(value);
 	if (denora->do_sql)
 	{
 		rdb_query(QUERY_LOW, "UPDATE %s SET mode_ua_data='%s' WHERE chanid=%d", ChanTable, value, chan->sqlid);
 	}
 
+        u = chan->users;
+	if (u)
+	{
+        	while ((u = u->next))
+        	{
+			rdb_query(QUERY_LOW, "UPDATE %s SET oplevel=999 WHERE chanid=%d AND nickid=%d AND mode_lo='Y'", IsOnTable, chan->sqlid, u->user->sqlid);
+
+		}
+        }
+
 }
+
 
 char *nef2_chan_mode_u_get(Channel * chan)
 {
 
-   return moduleGetData(PROTO_NAME, &chan->moduleData, "mode_u");
+   return chan->ukey;
 }
 
 void nef2_chan_mode_u_set(Channel * chan, char *value)
 {
-	moduleAddData(PROTO_NAME, &chan->moduleData, "mode_u", value);
+	if (chan->ukey)
+	{
+		free(chan->ukey);
+	}
+        chan->ukey = sstrdup(value);
 	if (denora->do_sql)
 	{
 		rdb_query(QUERY_LOW, "UPDATE %s SET mode_uu_data='%s' WHERE chanid=%d", ChanTable, value, chan->sqlid);
@@ -1001,10 +1022,6 @@ int denora_event_quit(char *source, int ac, char **av)
 		msg = nefarious_lkill_msg(av[0]);
 		u = find_byuid(source);
 
-		if (SupportOperFlag && denora->do_sql)
-		{
-			rdb_query(QUERY_LOW, "DELETE FROM %s WHERE user = '%s'", P10OperAccessTable, (u ? u->nick : source));
-		}
 		if (killer)
 			m_kill(killer, (u ? u->nick : source), msg);
 		else
@@ -1025,11 +1042,16 @@ int denora_event_quit(char *source, int ac, char **av)
 /* ABAAA M #ircops +v ABAAB */
 /* AKAAD M #street -o+b AxC3U *!*@`.users.beirut.com */
 /* ABAAA M #test2 +o ABAAB:10 1383565922 */
+/* ABAAA M #test +A jobe 1383750513 */
 int denora_event_mode(char *source, int ac, char **av)
 {
-	User *u;
+	User *u, *u2;
 	Server *s;
 	char *sender;
+	Channel *c;
+#ifdef USE_MYSQL
+	MYSQL_RES *mysql_res;
+#endif
 
 	if (denora->protocoldebug)
 		protocol_debug(source, ac, av);
@@ -1051,7 +1073,61 @@ int denora_event_mode(char *source, int ac, char **av)
 	if (*av[0] == '#' || *av[0] == '&')
 	{
 		do_cmode(source, ac, av);
+		if (!strcmp(av[1],"+A"))
+		{
+			if (denora->do_sql)
+			{
+				c = findchan(av[0]);
+				rdb_query(QUERY_LOW, "UPDATE %s SET oplevel=0 WHERE chanid=%d AND nickid=%d", IsOnTable, c->sqlid, u->sqlid);
+			}
+		}
+		else if (!strcmp(av[1], "-A"))
+		{
+			if (denora->do_sql)
+			{
+				c = findchan(av[0]);
+				rdb_query(QUERY_LOW, "UPDATE %s SET oplevel=NULL WHERE chanid=%d", IsOnTable, c->sqlid);
+				rdb_query(QUERY_LOW, "UPDATE %s SET mode_ua_data='' WHERE chanid=%d", ChanTable, c->sqlid);
+			}
+
+		}
+		else if (!strcmp(av[1], "+o"))
+		{
+			if (denora->do_sql)
+			{
+				u2 = find_byuid(av[2]);
+				c = findchan(av[0]);
+#ifdef USE_MYSQL
+				rdb_query(QUERY_LOW, "SELECT oplevel FROM %s WHERE chanid=%d AND nickid=%d", IsOnTable, c->sqlid, u->sqlid);
+				mysql_res = mysql_store_result(mysql);
+				mysql_row = mysql_fetch_row(mysql_res);
+				rdb_query(QUERY_LOW, "UPDATE %s SET oplevel=%s+1 WHERE chanid = %d AND nickid=%d", IsOnTable, mysql_row[0], c->sqlid, u2->sqlid);
+				mysql_free_result(mysql_res);
+#endif
+			}
+
+		}
+		else if (!strcmp(av[1], "-o"))
+		{
+			if (denora->do_sql)
+			{
+				u2 = find_byuid(av[2]);
+				c = findchan(av[0]);
+				rdb_query(QUERY_LOW, "UPDATE %s SET oplevel=NULL WHERE chanid = %d AND nickid=%d", IsOnTable, c->sqlid, u2->sqlid);
+			}
+
+		}
+		else if (!strcmp(av[1], "-U"))
+		{
+			if (denora->do_sql)
+			{
+				c = findchan(av[0]);
+				rdb_query(QUERY_LOW, "UPDATE %s SET mode_uu_data='' WHERE chanid=%d", ChanTable, c->sqlid);
+			}
+
+		}
 	}
+
 	else
 	{
 		s = server_find(source);
@@ -1609,7 +1685,7 @@ int DenoraInit(int argc, char **argv)
 	}
 
 	dir = ModuleCreateConfigDirective("SupportOperFlag", PARAM_SET, PARAM_RELOAD, &SupportOperFlag);
-	moduleGetConfigDirective("nefarious2.conf", dir);
+	moduleGetConfigDirective((const char*) "nefarious2.conf", dir);
 	free(dir);
 
 	moduleAddAuthor("Denora");

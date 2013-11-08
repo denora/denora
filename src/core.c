@@ -117,10 +117,12 @@ int tolower(char c)
 
 	if (isupper(c))
 	{
+		SET_SEGV_LOCATION();
 		return (unsigned char) c + ('a' - 'A');
 	}
 	else
 	{
+		SET_SEGV_LOCATION();
 		return (unsigned char) c;
 	}
 }

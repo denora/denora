@@ -13,6 +13,8 @@ Additions
 
 
 Changes
+13/11/06 denora.sql no longer includes ison table data, all this is move to the ircd based
+         sql files to remove extra columns that we will never set on that ircd.
 13/11/03 ModData functions require you to call it with your modules name, since moddata structs
          were broken up until this point it shouldn't be a huge deal.
 13/10/24 Removes some future features so 1.5 can roll

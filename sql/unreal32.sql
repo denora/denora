@@ -3,6 +3,20 @@
 -- IMPORTANT: Load denora.sql FIRST!
 -- --------------------------------------------------------
 
+DROP TABLE IF EXISTS `ison`;
+CREATE TABLE `ison` (
+  `nickid` int(10) unsigned NOT NULL default '0',
+  `chanid` int(10) unsigned NOT NULL default '0',
+  `mode_la` enum('Y','N') NOT NULL default 'N',
+  `mode_lg` enum('Y','N') NOT NULL default 'N',
+  `mode_lh` enum('Y','N') NOT NULL default 'N',
+  `mode_lo` enum('Y','N') NOT NULL default 'N',
+  `mode_lq` enum('Y','N') NOT NULL default 'N',
+  `mode_lv` enum('Y','N') NOT NULL default 'N',
+  PRIMARY KEY  (`nickid`,`chanid`)
+) ENGINE=MyISAM;
+
+
 ALTER TABLE `chan` ADD `mode_lc` enum('Y','N') NOT NULL default 'N',
 ADD `mode_lf` enum('Y','N') NOT NULL default 'N',
 ADD `mode_li` enum('Y','N') NOT NULL default 'N',

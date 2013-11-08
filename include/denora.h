@@ -853,6 +853,7 @@ struct ModuleData_
 	char *key;			/* The key			*/
 	char *value;			/* The Value			*/
 	ModuleData *next;		/* The next ModuleData record	*/
+	ModuleData *prev;		/* The prev ModuleData record	*/
 };
 
 /************************************************************************/
@@ -1172,6 +1173,8 @@ struct channel_
 	int cstats;	  		/* used for channelstats 	*/
 	int sqlid;
 	int statservon;
+	char *akey;
+	char *ukey;
 
 	time_t server_modetime;		/* Time of last server MODE 	*/
 	int16 server_modecount;		/* Number of server MODEs this second */

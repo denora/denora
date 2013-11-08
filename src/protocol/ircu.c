@@ -163,26 +163,45 @@ void IRCDModeInit(void)
 
 char *ircu_chan_mode_ua_get(Channel * chan)
 {
-	return moduleGetData(PROTO_NAME, &chan->moduleData, "mode_ua");
+	return chan->akey;
 }
 
 void ircu_chan_mode_ua_set(Channel * chan, char *value)
 {
-	moduleAddData(PROTO_NAME, &chan->moduleData, "mode_ua", value);
+	struct c_userlist *u;
+
+	if (chan->akey)
+	{
+		free(chan->akey);
+	}
+        chan->akey = sstrdup(value);
 	if (denora->do_sql)
 	{
 		rdb_query(QUERY_LOW, "UPDATE %s SET mode_ua_data='%s' WHERE chanid=%d", ChanTable, value, chan->sqlid);
 	}
+        u = chan->users;
+	if (u)
+	{
+        	while ((u = u->next))
+        	{
+			rdb_query(QUERY_LOW, "UPDATE %s SET oplevel=999 WHERE chanid=%d AND nickid=%d AND mode_lo='Y'", IsOnTable, chan->sqlid, u->user->sqlid);
+
+		}
+        }
 }
 
 char *ircu_chan_mode_uu_get(Channel * chan)
 {
-	return moduleGetData(PROTO_NAME, &chan->moduleData, "mode_uu");
+	return chan->ukey;
 }
 
 void ircu_chan_mode_uu_set(Channel * chan, char *value)
 {
-	moduleAddData(PROTO_NAME, &chan->moduleData, "mode_uu", value);
+	if (chan->ukey)
+	{
+		free(chan->ukey);
+	}
+        chan->ukey = sstrdup(value);
 	if (denora->do_sql)
 	{
 		rdb_query(QUERY_LOW, "UPDATE %s SET mode_uu_data='%s' WHERE chanid=%d", ChanTable, value, chan->sqlid);
@@ -779,10 +798,6 @@ int denora_event_quit(char *source, int ac, char **av)
 		killer = ircu_lkill_killer(av[0]);
 		msg = ircu_lkill_msg(av[0]);
 		u = find_byuid(source);
-		if (SupportOperFlag && denora->do_sql)
-		{
-			rdb_query(QUERY_LOW, "DELETE FROM %s WHERE user = '%s'", P10OperAccessTable, (u ? u->nick : source));
-		}
 
 		if (killer)
 			m_kill(killer, (u ? u->nick : source), msg);
@@ -803,11 +818,15 @@ int denora_event_quit(char *source, int ac, char **av)
 /* ABAAA M #ircops +v ABAAB */
 int denora_event_mode(char *source, int ac, char **av)
 {
-	User *u;
+	User *u, *u2;
 	User *v;
 	Server *s;
 	char *sender;
 	char hhostbuf[255];
+	Channel *c;
+#ifdef USE_MYSQL
+	MYSQL_RES *mysql_res;
+#endif
 
 	if (denora->protocoldebug)
 		protocol_debug(source, ac, av);
@@ -829,6 +848,58 @@ int denora_event_mode(char *source, int ac, char **av)
 	if (*av[0] == '#' || *av[0] == '&')
 	{
 		do_cmode(source, ac, av);
+		if (!strcmp(av[1],"+A"))
+		{
+			if (denora->do_sql)
+			{
+				c = findchan(av[0]);
+				rdb_query(QUERY_LOW, "UPDATE %s SET oplevel=0 WHERE chanid=%d AND nickid=%d", IsOnTable, c->sqlid, u->sqlid);
+			}
+		}
+		else if (!strcmp(av[1], "-A"))
+		{
+			if (denora->do_sql)
+			{
+				c = findchan(av[0]);
+				rdb_query(QUERY_LOW, "UPDATE %s SET oplevel=NULL WHERE chanid=%d", IsOnTable, c->sqlid);
+			}
+
+		}
+		else if (!strcmp(av[1], "-U"))
+		{
+			if (denora->do_sql)
+			{
+				c = findchan(av[0]);
+				rdb_query(QUERY_LOW, "UPDATE %s SET mode_uu_data='' WHERE chanid=%d", ChanTable, c->sqlid);
+			}
+
+		}
+		else if (!strcmp(av[1], "+o"))
+		{
+			if (denora->do_sql)
+			{
+				u2 = find_byuid(av[2]);
+				c = findchan(av[0]);
+#ifdef USE_MYSQL
+				rdb_query(QUERY_LOW, "SELECT oplevel FROM %s WHERE chanid=%d AND nickid=%d", IsOnTable, c->sqlid, u->sqlid);
+				mysql_res = mysql_store_result(mysql);
+				mysql_row = mysql_fetch_row(mysql_res);
+				rdb_query(QUERY_LOW, "UPDATE %s SET oplevel=%s+1 WHERE chanid = %d AND nickid=%d", IsOnTable, mysql_row[0], c->sqlid, u2->sqlid);
+				mysql_free_result(mysql_res);
+#endif
+			}
+
+		}
+		else if (!strcmp(av[1], "-o"))
+		{
+			if (denora->do_sql)
+			{
+				u2 = find_byuid(av[2]);
+				c = findchan(av[0]);
+				rdb_query(QUERY_LOW, "UPDATE %s SET oplevel=NULL WHERE chanid = %d AND nickid=%d", IsOnTable, c->sqlid, u2->sqlid);
+			}
+
+		}
 	}
 	else
 	{
@@ -1308,7 +1379,7 @@ int DenoraInit(int argc, char **argv)
 	}
 
 	dir = ModuleCreateConfigDirective("SupportOperFlag", PARAM_SET, PARAM_RELOAD, &SupportOperFlag);
-	moduleGetConfigDirective("ircu.conf", dir);
+	moduleGetConfigDirective((const char*) "ircu.conf", dir);
 	free(dir);
 
 	moduleAddAuthor("Denora");

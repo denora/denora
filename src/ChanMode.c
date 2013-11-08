@@ -607,8 +607,7 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 							nickid = db_getnick(sqlnick);
 							if (denora->do_sql)
 							{
-								rdb_query(QUERY_LOW, "INSERT INTO %s (channel, user, level) VALUES ('%s', '%s', %s) \
-									ON DUPLICATE KEY UPDATE level=%s", P10OperAccessTable, c->name, u->nick, oplevel, oplevel);
+								rdb_query(QUERY_LOW, "UPDATE %s SET oplevel=%s WHERE chanid=%d and nickid=%d", IsOnTable, oplevel, c->sqlid, nickid);
 							}
 							free(tokennick);
 							free(oplevel);

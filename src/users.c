@@ -782,7 +782,6 @@ void delete_user(User * user)
 	}
 
 	alog(LOG_EXTRADEBUG, "debug: delete_user(): free founder data");
-	moduleCleanStruct(&user->moduleData);
 
 	alog(LOG_EXTRADEBUG, "debug: delete_user(): cleanups");
 	if (user->isservice)
@@ -971,17 +970,16 @@ User *nextuser(void)
 
 User *find_byuid(const char *uid)
 {
-	User *u, *next;
+	User *u;
 
 	u = first_uid();
 	while (u)
 	{
-		next = next_uid();
 		if (u && u->uid && !strcmp(uid, u->uid))
 		{
 			return u;
 		}
-		u = next;
+		u = next_uid();
 	}
 	return NULL;
 }

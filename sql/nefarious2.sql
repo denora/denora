@@ -3,13 +3,17 @@
 -- IMPORTANT: Load denora.sql FIRST!
 -- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `operaccess` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `channel` varchar(64) NOT NULL default '',
-  `user` varchar(50) NOT NULL default '',
-  `level` int(10) unsigned default '0',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `user` (`user`)
+-- --------------------------------------------------------
+
+DROP TABLE IF EXISTS `ison`;
+CREATE TABLE `ison` (
+  `nickid` int(10) unsigned NOT NULL DEFAULT '0',
+  `chanid` int(10) unsigned NOT NULL DEFAULT '0',
+  `mode_lh` enum('Y','N') NOT NULL DEFAULT 'N',
+  `mode_lo` enum('Y','N') NOT NULL DEFAULT 'N',
+  `mode_lv` enum('Y','N') NOT NULL DEFAULT 'N',
+  `oplevel` int(15) DEFAULT NULL,
+  PRIMARY KEY (`nickid`,`chanid`)
 ) ENGINE=MyISAM;
     
 ALTER TABLE `chan` ADD `mode_la` enum('Y','N') NOT NULL default 'N',

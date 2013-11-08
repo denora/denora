@@ -260,6 +260,7 @@
 #define USERHASH(nick)	(((nick)[0]&31)<<5 | ((nick)[1]&31))
 #define UIDHASH(nick)	(((nick)[0]&31)<<5 | ((nick)[1]&31))
 #define ADMINHASH(nick)	(((nick)[0]&31)<<5 | ((nick)[1]&31))
+#define DATAHASH(nick)	(((nick)[0]&31)<<5 | ((nick)[1]&31))
 #define CMD_HASH(x)      (((x)[0]&31)<<5 | ((x)[1]&31))	/* Will gen a hash from a string :) */
 #define MODEHASH(x)      (((x)[0]&31)<<5 | ((x)[1]&31))
 #define MODEHASH2(x)      (((x)[0]&31)<<6 | ((x)[1]&31))

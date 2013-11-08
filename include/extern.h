@@ -81,7 +81,6 @@ E void Fini_ChannelStats(void);
 E void Fini_StatsChannel(void);
 
 E char *p10_mode_parse(Channel *c, User *u, char *mode, int *nomode);
-char *P10OperAccessTable;
 
 E void add_ban(Channel * chan, char *mask);
 E void chan_adduser2(User * user, Channel * c);
@@ -1066,12 +1065,11 @@ E EvtMessage *first_EvtMessage(void);
 E EvtMessage *next_EvtMessage(void);
 E int moduleAddCallback(char *name,time_t when,int (*func)(int argc, char *argv[]),int argc, char **argv);
 E void moduleDelCallback(char *name);
-E char *moduleGetData(char *modname, ModuleData **md, char *key);			/* Get the value for this key from this struct */
-E int moduleAddData(char *modname, ModuleData **md, char *key, char *value);		/* Set the value for this key for this struct */
-E void moduleDelData(char *modname, ModuleData **md, char *key);				/* Delete this key/value pair */
-E void moduleDelAllData(char *modname, ModuleData **md);					/* Delete all key/value pairs for this module for this struct */
-E void moduleDelAllDataMod(Module *m);					/* remove all module data from all structs for this module */
-E int moduleDataDebug(ModuleData **md);					/* Allow for debug output of a moduleData struct */
+E char *moduleGetData(char *mod_name, ModuleData ** md, char *key);			/* Get the value for this key from this struct */
+E int moduleAddData(char *mod_name, ModuleData ** md, char *key, char *value);		/* Set the value for this key for this struct */
+E void moduleDelData(char *mod_name, ModuleData ** md, char *key);				/* Delete this key/value pair */
+E void moduleDelAllData(char *mod_name, ModuleData ** md);					/* Delete all key/value pairs for this module for this struct */
+E int moduleDataDebug(ModuleData ** md);					/* Allow for debug output of a moduleData struct */
 E boolean moduleMinVersion(int major,int minor,int patch,int build);	/* Checks if the current version of denora is before or after a given verison */
 E EvtMessage *createEventHandler(char *name, int (*func) (char *source, int ac, char **av));
 E EvtMessage *findEventHandler(EvtMessageHash * msgEvtTable[], const char *name);
