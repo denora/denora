@@ -1379,7 +1379,7 @@ int DenoraInit(int argc, char **argv)
 	}
 
 	dir = ModuleCreateConfigDirective("SupportOperFlag", PARAM_SET, PARAM_RELOAD, &SupportOperFlag);
-	moduleGetConfigDirective((const char*) "ircu.conf", dir);
+	moduleGetConfigDirective((char*) "ircu.conf", dir);
 	free(dir);
 
 	moduleAddAuthor("Denora");

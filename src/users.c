@@ -1414,11 +1414,6 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 void do_umode(const char *source, int ac, char **av)
 {
 	User *user;
-	char *sethost = NULL;
-	char *uh = NULL;
-	const char *vhost = "";
-	const char *vident = "";
-	int h = 1;
 
 	SET_SEGV_LOCATION();
 
@@ -1444,24 +1439,6 @@ void do_umode(const char *source, int ac, char **av)
 	if (denora->do_sql)
 	{
 		sql_do_usermodes(user, av[1]);
-	}
-
-	/* Since nefarious sends a parameter with user mode +h, we need this little hack */
-	if (ircd->p10 && ac > 2)
-	{
-		sethost = sstrdup(av[2]);
-		for (uh = strtok(sethost, "@"); uh; uh = strtok(NULL, "@"))
-		{
-			if (h == 1)
-				vident = uh;
-			else if (h == 2)
-				vhost = uh;
-			h++;
-		}
-		h = 1; /* <--- wtf jobe */
-		change_user_username(user->nick, (char *) vident);
-		change_user_host(user->nick, (char *) vhost);
-		free(sethost);
 	}
 
 	return;

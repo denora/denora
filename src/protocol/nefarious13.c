@@ -980,6 +980,11 @@ int denora_event_mode(char *source, int ac, char **av)
 	User *u;
 	Server *s;
 	char *sender;
+	char *sethost = NULL;
+	char *uh = NULL;
+	const char *vhost = "";
+	const char *vident = "";
+	int h = 1;
 
 	if (denora->protocoldebug)
 		protocol_debug(source, ac, av);
@@ -1006,9 +1011,31 @@ int denora_event_mode(char *source, int ac, char **av)
 	{
 		s = server_find(source);
 		if (s)
+		{
 			sender = av[0];
-		do_umode(sender, ac, av);
-	}
+			do_umode(sender, ac, av);
+
+		}
+		else 
+		{
+			do_umode(sender, ac, av);
+			/* Since nefarious sends a parameter with user mode +h, we need this little hack */
+			if (ac > 2 && !strcmp(av[1], "+h"))
+			{
+				sethost = sstrdup(av[2]);
+				for (uh = strtok(sethost, "@"); uh; uh = strtok(NULL, "@"))
+				{
+					if (h == 1)
+						vident = uh;
+					else if (h == 2)
+						vhost = uh;
+					h++;
+				}
+				change_user_username(av[0], (char *) vident);
+				change_user_host(av[0], (char *) vhost);
+				free(sethost);
+			}
+		}	}
 	return MOD_CONT;
 }
 

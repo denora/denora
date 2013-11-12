@@ -1049,6 +1049,11 @@ int denora_event_mode(char *source, int ac, char **av)
 	Server *s;
 	char *sender;
 	Channel *c;
+	char *sethost = NULL;
+	char *uh = NULL;
+	const char *vhost = "";
+	const char *vident = "";
+	int h = 1;
 #ifdef USE_MYSQL
 	MYSQL_RES *mysql_res;
 #endif
@@ -1132,8 +1137,31 @@ int denora_event_mode(char *source, int ac, char **av)
 	{
 		s = server_find(source);
 		if (s)
+		{
 			sender = av[0];
-		do_umode(sender, ac, av);
+			do_umode(sender, ac, av);
+
+		}
+		else 
+		{
+			do_umode(sender, ac, av);
+			/* Since nefarious sends a parameter with user mode +h, we need this little hack */
+			if (ac > 2 && !strcmp(av[1], "+h"))
+			{
+				sethost = sstrdup(av[2]);
+				for (uh = strtok(sethost, "@"); uh; uh = strtok(NULL, "@"))
+				{
+					if (h == 1)
+						vident = uh;
+					else if (h == 2)
+						vhost = uh;
+					h++;
+				}
+				change_user_username(av[0], (char *) vident);
+				change_user_host(av[0], (char *) vhost);
+				free(sethost);
+			}
+		}
 	}
 	return MOD_CONT;
 }
@@ -1685,7 +1713,7 @@ int DenoraInit(int argc, char **argv)
 	}
 
 	dir = ModuleCreateConfigDirective("SupportOperFlag", PARAM_SET, PARAM_RELOAD, &SupportOperFlag);
-	moduleGetConfigDirective((const char*) "nefarious2.conf", dir);
+	moduleGetConfigDirective((char*) "nefarious2.conf", dir);
 	free(dir);
 
 	moduleAddAuthor("Denora");
