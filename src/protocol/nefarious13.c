@@ -1246,7 +1246,7 @@ char *nefarious_lkill_msg(char *message)
 	msg[strlen(msg) - 2] = '\0';
 	msg++;                      /* removes first character '(' */
 
-	return msg;
+	return sstrdup(msg);
 }
 
 /* [NUMERIC PREFIX] N [NICK] [HOPCOUNT] [TIMESTAMP] [USERNAME] [HOST] <+modes> [BASE64 IP] [NUMERIC] :[USERINFO] */
