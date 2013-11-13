@@ -35,7 +35,11 @@ char *host_resolve(char *host)
 #ifndef __STRICT_ANSI__
 	struct in_addr addr;
 	#if HAVE_GETHOSTBYNAME
+#ifdef __sun
+		struct hostent *hentp;
+#else
 		struct hostent hentp;
+#endif
 		void *ip;
 	#endif
 #else

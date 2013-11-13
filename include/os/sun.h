@@ -29,5 +29,22 @@
 #define INADDR_NONE (-1)
 #endif
 
+#ifndef HAVE_GETHOSTBYNAME
+#include <netdb.h>
+#define HAVE_GETHOSTBYNAME 1
+#endif
+
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+#ifndef HAVE_INET_NTOP
+#define HAVE_INET_NTOP 1
+#endif
+
+#ifndef HAVE_INET_PTON
+#define HAVE_INET_PTON 1
+#endif
+
 
 

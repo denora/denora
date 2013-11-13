@@ -26,6 +26,8 @@ Changes
 13/05/16 Do not free unallocated memory in InspIRCd protocol
 
 Fixes
+13/11/13 Denora can compile on Solairs/OpenIndian 
+13/11/13 Fixed crash bug with nefarious ircds
 13/11/05 Fixed rdb_init() if MySQL not found it returns a better error message.
 13/11/04 Fixed chan_delete() it cleared c->sqlname before we called the rest of the clean up, made it the
          last member of the channel struct to be cleaned out.
