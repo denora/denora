@@ -61,7 +61,9 @@
 #endif				/* end if				*/
 
 #ifdef HAVE_SIGNAL_H		/* If system has signal header		*/
+#ifndef __OpenBSD__
 #include <signal.h>		/* Include signal header		*/
+#endif
 #endif				/* end if				*/
 
 #ifdef HAVE_POLL_H		/* If system has poll header		*/

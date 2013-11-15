@@ -3,6 +3,7 @@ Denora v1.5.0-git
 -------------
 
 Additions
+13/11/15 From command line -v (alias of -version) and -? (alias of -help) been added
 13/11/04 Full support for ircu and nefarious channel mode +A/U
 13/11/04 ModuleCreateConfigDirective() cleaner way to pass to moduleGetConfigDirective()
 13/10/23 Adds m4 directory, the configure files are getting nasty, time to move macros where
@@ -13,6 +14,8 @@ Additions
 
 
 Changes
+13/11/15 Denora no longer says "Service not started" if the config file is missing, it gives a
+         better error.
 13/11/11 Moved do_umode() hack from 1.4.0 to the protocol like it should have been.
 13/11/06 denora.sql no longer includes ison table data, all this is move to the ircd based
          sql files to remove extra columns that we will never set on that ircd.
@@ -26,6 +29,7 @@ Changes
 13/05/16 Do not free unallocated memory in InspIRCd protocol
 
 Fixes
+13/11/15 BSD systems fixes
 13/11/13 Denora can compile on Solairs/OpenIndian 
 13/11/13 Fixed crash bug with nefarious ircds
 13/11/05 Fixed rdb_init() if MySQL not found it returns a better error message.

@@ -1069,6 +1069,7 @@ E char *moduleGetData(char *mod_name, ModuleData ** md, char *key);			/* Get the
 E int moduleAddData(char *mod_name, ModuleData ** md, char *key, char *value);		/* Set the value for this key for this struct */
 E void moduleDelData(char *mod_name, ModuleData ** md, char *key);				/* Delete this key/value pair */
 E void moduleDelAllData(char *mod_name, ModuleData ** md);					/* Delete all key/value pairs for this module for this struct */
+E void moduleDelAllDataMod(Module * m);
 E int moduleDataDebug(ModuleData ** md);					/* Allow for debug output of a moduleData struct */
 E boolean moduleMinVersion(int major,int minor,int patch,int build);	/* Checks if the current version of denora is before or after a given verison */
 E EvtMessage *createEventHandler(char *name, int (*func) (char *source, int ac, char **av));
@@ -1234,7 +1235,13 @@ E void init_csmodes(void);
 E int ChanHasMode(char *chan, int m);
 
 #if defined(HAVE_CRYPT) && !defined(HAVE_CRYPT_H)
+#if !defined(__FreeBSD__) || !defined(__NetBSD__)
 E char *crypt (__const char *__key, __const char *__salt);
+#else
+#ifndef HAVE_UNISTD_H 
+E char *crypt (__const char *__key, __const char *__salt);
+#endif
+#endif
 #endif
 
 #endif	/* EXTERN_H */

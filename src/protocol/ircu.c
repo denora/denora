@@ -1268,7 +1268,7 @@ void ircu_cmd_ping(char *server)
 	gettimeofday(&t, NULL);
 	send_cmd(p10id, "RI %s %s %ld %ld :<No client start time>",
 	         ((s && s->suid) ? s->suid : server),
-	         (ud ? ud->uid : s_StatServ), t.tv_sec, t.tv_usec);
+	         (ud ? ud->uid : s_StatServ), (long int) t.tv_sec, (long int) t.tv_usec);
 }
 
 void ircu_cmd_ctcp(char *source, char *dest, char *buf)

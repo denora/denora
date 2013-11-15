@@ -177,7 +177,12 @@ void event_message_process(char *eventbuf)
 		if (!s)
 			return;
 		*s = 0;
+#if defined(__NetBSD__)
+		while (isspace((int) *++s));
+
+#else
 		while (isspace(*++s));
+#endif
 		strlcpy(source, buf + 1, sizeof(source));
 		memmove(buf, s, strlen(s) + 1);
 	}
@@ -191,7 +196,12 @@ void event_message_process(char *eventbuf)
 	if (s)
 	{
 		*s = 0;
+#if defined(__NetBSD__)
+		while (isspace((int) *++s));
+
+#else
 		while (isspace(*++s));
+#endif
 	}
 	else
 		s = buf + strlen(buf);

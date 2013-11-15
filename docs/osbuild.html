@@ -1,0 +1,64 @@
+<html>
+ <title>Denora Build Systems</title>
+ <body>
+   The following are systems that Denora has been compiled to ensure there are no compiler errors, after each build, ./stats -v is run to check that it does execute 
+   without link errors.<br>
+  <br>
+
+<table border=1>
+  <tr>
+   <td>Operating System</td>
+   <td>GCC -v</td>
+   <td>Mysql</td>
+   <td>Notes</td>
+  </tr>
+  <tr>
+   <td>Openbsd<br>
+    OpenBSD openbsd.Home 5.3 GENERIC#50 i386
+   </td>
+   <td>Configured with: OpenBSD/i386 system compiler<br>
+Thread model: posix<br>
+gcc version 4.2.1 20070719<br>
+    </td>
+   <td>mysql v5.1.68</td>
+   <td>make strict, does have warnings with a zlib header, this has nothing to do with our
+       code as its zlib headers attempt to reinclude headers that cause the warning.
+    </td>
+  </tr>
+  <tr>
+   <td>FreeBSD<br>
+    FreeBSD freebsd 9.2-RELEASE FreeBSD 9.2-RELEASE #0 r255898: Fri Sep 27 03:52:52 UTC 2013     root@bake.isc.freebsd.org:/usr/obj/usr/src/sys/GENERIC  i386
+   </td>
+   <td>
+Target: i386-undermydesk-freebsd<br>
+Configured with: FreeBSD/i386 system compiler<br>
+Thread model: posix<br>
+gcc version 4.2.1 20070831 patched [FreeBSD]
+<br>
+    </td>
+   <td>mysql v5.6.12</td>
+   <td>make strict, does have a warning<br>signals.c:528: warning: the address of 'segv_location' will always evaluate as 'true'<br>
+   will fix in the future release
+    </td>
+  </tr>
+  <tr>
+   <td>FreeBSD<br>
+    NetBSD netbsd.Home 6.1.2 NetBSD 6.1.2 (GENERIC) i386
+   </td>
+   <td>
+COLLECT_GCC=gcc
+Target: i486--netbsdelf
+Thread model: posix
+gcc version 4.5.3 (NetBSD nb2 20110806)
+<br>
+    </td>
+   <td>mysql v5.5.33</td>
+   <td>make strict, does have a warning, to be fixed in future release
+    </td>
+  </tr>
+
+
+</table>
+
+</body>
+</html>

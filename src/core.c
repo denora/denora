@@ -92,8 +92,11 @@ char *char_encode(char *s1)
 int toupper(char c)
 {
 	SET_SEGV_LOCATION();
-
+#if defined(__NetBSD__)
+	if (islower((unsigned int) c))
+#else
 	if (islower(c))
+#endif
 	{
 		return (unsigned char) c - ('a' - 'A');
 	}
@@ -115,7 +118,11 @@ int tolower(char c)
 {
 	SET_SEGV_LOCATION();
 
+#if defined(__NetBSD__)
+	if (isupper((unsigned int) c))
+#else
 	if (isupper(c))
+#endif
 	{
 		SET_SEGV_LOCATION();
 		return (unsigned char) c + ('a' - 'A');
@@ -688,7 +695,11 @@ char *normalizeBuffer(char *buf)
 				/* Color ctrl char */
 			case 3:
 				/* If the next character is a digit, its also removed */
+#if defined(__NetBSD__)
+				if (isdigit((int) buf[i + 1]))
+#else
 				if (isdigit(buf[i + 1]))
+#endif
 				{
 					i++;
 
@@ -696,7 +707,11 @@ char *normalizeBuffer(char *buf)
 					 * which are two digit but no worse then
 					 * how the Unreal does with +S - TSL
 					 */
+#if defined(__NetBSD__)
+					if (isdigit((int) buf[i + 1]))
+#else
 					if (isdigit(buf[i + 1]))
+#endif
 					{
 						i++;
 					}
@@ -707,8 +722,11 @@ char *normalizeBuffer(char *buf)
 					if (buf[i + 1] == ',')
 					{
 						i++;
-
+#if defined(__NetBSD__)
+						if (isdigit((int) buf[i + 1]))
+#else
 						if (isdigit(buf[i + 1]))
+#endif
 						{
 							i++;
 						}
@@ -716,7 +734,11 @@ char *normalizeBuffer(char *buf)
 						 * which are two digit but no worse then
 						 * how the Unreal does with +S - TSL
 						 */
+#if defined(__NetBSD__)
+						if (isdigit((int) buf[i + 1]))
+#else
 						if (isdigit(buf[i + 1]))
+#endif
 						{
 							i++;
 						}

@@ -1003,7 +1003,7 @@ static int parse_options(int ac, char **av)
 				}
 				return 0;
 			}
-			else if (!strcmp(value, "version"))
+			else if (!strcmp(value, "version") || !strcmp(value, "v"))
 			{
 				fprintf(stdout,
 				        "Denora-%s %s %s%s -- build #%s, compiled %s %s\n",
@@ -1013,7 +1013,7 @@ static int parse_options(int ac, char **av)
 				        denora->build, denora->date, denora->time);
 				return 0;
 			}
-			else if (!strcmp(value, "help"))
+			else if (!strcmp(value, "help") || !strcmp(value, "?"))
 			{
 				fprintf(stdout,
 				        "Denora-%s %s %s%s -- build #%s, compiled %s %s\n",
@@ -1171,7 +1171,9 @@ int init(int ac, char **av)
 	/* Read configuration file; exit if there are problems. */
 	if (initconf(denora->config, 0, mainconf) == -1)
 	{
-		printf("Server not started\n");
+		printf("denora.conf not found, please rename example.conf to denora.conf\n");
+		printf("try \"mv example.conf denora.conf\"\n");
+		printf("Denora not started\n");
 		exit(-1);
 	}
 
@@ -1181,7 +1183,6 @@ int init(int ac, char **av)
 	/* Parse all remaining command-line options. */
 	if (!parse_options(ac, av))
 	{
-		fprintf(stderr, "Denora not started\n");
 		exit(1);
 	}
 #ifndef _WIN32
