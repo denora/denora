@@ -1235,11 +1235,18 @@ E void init_csmodes(void);
 E int ChanHasMode(char *chan, int m);
 
 #if defined(HAVE_CRYPT) && !defined(HAVE_CRYPT_H)
-#if !defined(__FreeBSD__) || !defined(__NetBSD__)
+
+#ifndef __FreeBSD__
+#ifndef __NetBSD__
+#ifndef __DragonFly__
 E char *crypt (__const char *__key, __const char *__salt);
+
+
 #else
 #ifndef HAVE_UNISTD_H 
 E char *crypt (__const char *__key, __const char *__salt);
+#endif
+#endif
 #endif
 #endif
 #endif

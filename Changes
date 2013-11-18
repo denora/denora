@@ -29,6 +29,9 @@ Changes
 13/05/16 Do not free unallocated memory in InspIRCd protocol
 
 Fixes
+13/11/17 Fixes compiler error when mysql backtrace is enabled, and the system doesn't have backtrace()
+         also properly includes the header for backtrace()
+13/11/17 Fixes compiler warning on DragonFly BSD
 13/11/15 BSD systems fixes
 13/11/13 Denora can compile on Solairs/OpenIndian 
 13/11/13 Fixed crash bug with nefarious ircds

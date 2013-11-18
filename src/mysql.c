@@ -194,9 +194,11 @@ int db_mysql_query(char *sql, int con)
 	int closesql = 0;
 
 #ifdef USE_MYSQL_BT
+#ifdef HAVE_BACKTRACE
 	int nptrs, j;
 	void *buffer[100];
 	char **strings;
+#endif
 #endif
 
 	if (!denora->do_sql)
@@ -214,6 +216,7 @@ int db_mysql_query(char *sql, int con)
 		{
 			alog(LOG_DEBUG, "[con %d/%s] %s", con, result == 0 ? "Accepted" : "Rejected", sql);
 #ifdef USE_MYSQL_BT
+#ifdef HAVE_BACKTRACE
 			nptrs = backtrace(buffer, 6);
 			strings = backtrace_symbols(buffer, nptrs);
 			if (strings != NULL) {
@@ -221,6 +224,7 @@ int db_mysql_query(char *sql, int con)
 					alog(LOG_DEBUG, "[bt %d/%d] %s", j, nptrs, strings[j]);
 				free(strings);
 			}
+#endif
 #endif
 		}
 	}

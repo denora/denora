@@ -717,7 +717,6 @@ char *p10_mode_parse(Channel *c, User *u, char *mode, int *nomode)
 	char modebuf[15];
 	char *temp = NULL;
 	const char *flag;
-	const char *operlevelchar = "o";
 	int is_operlevel = 0;
 
 

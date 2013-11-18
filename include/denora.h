@@ -175,7 +175,9 @@
 #else
 #ifdef HAVE_MALLOC_H
 #ifndef __OpenBSD__
+#ifndef __DragonFly__
 #include <malloc.h>
+#endif
 #endif
 #endif
 #endif
