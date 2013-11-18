@@ -133,7 +133,7 @@ void load_ctcp_db(void)
 			if (!stricmp(key, "version"))
 			{
 				version = sstrdup(value);
-				strnrepl(version, BUFSIZE, "¶", ":");
+				strnrepl(version, BUFSIZE, "\u00B6", ":");
 			}
 			else if (!stricmp(key, "count"))
 			{
@@ -198,7 +198,7 @@ void save_ctcp_db(void)
 		if (c->overall > 1)
 		{
 			version = sstrdup(c->version);
-			strnrepl(version, BUFSIZE, ":", "¶");
+			strnrepl(version, BUFSIZE, ":", "\u00B6");
 			new_write_db_entry("version", dbptr, "%s", version);
 			free(version);
 			new_write_db_entry("count", dbptr, "%u", c->overall);

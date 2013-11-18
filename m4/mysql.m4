@@ -63,7 +63,7 @@ AC_DEFUN([MYSQL_CLIENT],[
 [
     mysql_version=`$mysql_config --version`
     if test -z "$mysql_version" ; then
-      ]AC_MSG_ERROR([Cannot execute $mysql_config])[
+      ]AC_MSG_WARN([Cannot execute $mysql_config])[
     fi
 ]
     ifelse([$1], [], [], [
@@ -92,7 +92,7 @@ dnl
     if test "$mysql_ver" -lt]dnl
 dnl the same as sed transformation above, without suffix-stripping, in m4
     patsubst(patsubst(patsubst(.[$1]., [\.\([0-9]\)\.], [.0\1.]), [\.\([0-9]\)\.], [.0\1.]), [\.], [])[ ; then
-      AC_MSG_ERROR([MySQL version $mysql_version is too low, minimum of $1 is required])
+      AC_MSG_WARN([MySQL version $mysql_version is too low, minimum of $1 is required])
     fi
     ])])
 

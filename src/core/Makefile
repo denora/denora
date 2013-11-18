@@ -22,7 +22,6 @@ MAKEARGS = 'CFLAGS=${CFLAGS}' 'CC=${CC}' 'DENORALIBS=${DENORALIBS}' \
 
 OBJECTS= $(SRCS:.c=.o)
 SO_FILES=$(OBJECTS:.o=.s)
-CDEFS= -rdynamic
 
 all: modules subs
 
@@ -34,7 +33,7 @@ install:
 distclean: spotless
 
 .c.o:
-	$(CC) ${CFLAGS} ${CDEFS} ${MODULEFLAGS} -I../${INCLUDEDIR} -c $<
+	$(CC) ${CFLAGS} ${RDYNAMNIC} ${MODULEFLAGS} -I../${INCLUDEDIR} -c $<
 
 .o.s:
 	$(CC) ${SHARED} ../mod_version.o $< -o $*.so ${PROFILE}

@@ -140,7 +140,7 @@ profile_protocols: profile_build
 
 
 language:
-	(cd lang ; $(MAKE) ${MAKEARGS} all language.h ; cp language.h ../include/)
+	(cd lang ; $(MAKE) ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all language.h ; cp language.h ../include/)
 
 strict_language:
 	(cd lang ; $(MAKE) ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(STRICT)' all language.h ; cp language.h ../include/)

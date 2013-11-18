@@ -14,6 +14,7 @@ Additions
 
 
 Changes
+13/11/18 Not finding mysql_config no longer causes configure to exit on an error, just throw a warning
 13/11/15 Denora no longer says "Service not started" if the config file is missing, it gives a
          better error.
 13/11/11 Moved do_umode() hack from 1.4.0 to the protocol like it should have been.
@@ -29,6 +30,9 @@ Changes
 13/05/16 Do not free unallocated memory in InspIRCd protocol
 
 Fixes
+13/11/18 More Solaris/OpenIndian compiler warnings fixed
+13/11/18 Fixed Compiler warning on OpenSuse where langcomp was not built with -O 
+13/11/18 More MacOSX compiling issues taken care of.
 13/11/17 Fixes compiler error when mysql backtrace is enabled, and the system doesn't have backtrace()
          also properly includes the header for backtrace()
 13/11/17 Fixes compiler warning on DragonFly BSD

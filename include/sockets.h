@@ -104,8 +104,11 @@ struct addrinfo
 #endif /* !HAVE_STRUCT_ADDRINFO */
 
 #if !defined(HAVE_GETADDRINFO)
+struct addrinfo *malloc_ai(int port, uint32 addr);
+#ifndef __sun
 int getaddrinfo(const char *hostname, const char *servname,
                 const struct addrinfo *hints, struct addrinfo **res);
+#endif
 #endif /* !HAVE_GETADDRINFO */
 
 #if !defined(HAVE_GAI_STRERROR)

@@ -371,12 +371,22 @@ if test "$ac_cv_export_dynamic" = "no"; then
 CFLAGS=$hold_cflags
 fi
 
+AC_CACHE_CHECK(Check if MacOSX Darwin remove export-dynamic,ac_cv_darwin,[
+if test "$ac_cv_prog_gcc" = "yes"; then
+	case `uname -s` in
+		Darwin*[)]
+		CFLAGS=$hold_cflags
+		;;
+	esac
+fi
+])
+
 AC_CACHE_CHECK(for compiler option to produce PIC,ac_cv_pic,[
 if test "$ac_cv_prog_gcc" = "yes"; then
         ac_cv_pic="-fPIC -DPIC -shared"
 	case `uname -s` in
 		Darwin*[)]
-		ac_cv_pic="-bundle -flat_namespace -undefined suppress"
+		ac_cv_pic=""
 		;;
 		HP-UX*[)]
 		ac_cv_pic="-fPIC"
@@ -522,6 +532,10 @@ if test "$ac_cv_prog_gcc" = "yes"; then
 		AC_SUBST(RDYNAMNIC)
 		;;
 		SUN*[)]
+		RDYNAMNIC=""
+		AC_SUBST(RDYNAMNIC)
+		;;
+		Darwin*[)]
 		RDYNAMNIC=""
 		AC_SUBST(RDYNAMNIC)
 		;;
