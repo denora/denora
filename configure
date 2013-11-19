@@ -5176,7 +5176,8 @@ fi
 
     mysql_version=`$mysql_config --version`
     if test -z "$mysql_version" ; then
-      as_fn_error $? "Cannot execute $mysql_config" "$LINENO" 5
+      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot execute $mysql_config" >&5
+$as_echo "$as_me: WARNING: Cannot execute $mysql_config" >&2;}
     fi
 
 
@@ -6088,6 +6089,24 @@ if test "$ac_cv_export_dynamic" = "no"; then
 CFLAGS=$hold_cflags
 fi
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking Check if MacOSX Darwin remove export-dynamic" >&5
+$as_echo_n "checking Check if MacOSX Darwin remove export-dynamic... " >&6; }
+if ${ac_cv_darwin+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+if test "$ac_cv_c_compiler_gnu" = "yes"; then
+	case `uname -s` in
+		Darwin*)
+		CFLAGS=$hold_cflags
+		;;
+	esac
+fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_darwin" >&5
+$as_echo "$ac_cv_darwin" >&6; }
+
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for compiler option to produce PIC" >&5
 $as_echo_n "checking for compiler option to produce PIC... " >&6; }
 if ${ac_cv_pic+:} false; then :
@@ -6098,7 +6117,7 @@ if test "$ac_cv_c_compiler_gnu" = "yes"; then
         ac_cv_pic="-fPIC -DPIC -shared"
 	case `uname -s` in
 		Darwin*)
-		ac_cv_pic="-bundle -flat_namespace -undefined suppress"
+		ac_cv_pic=""
 		;;
 		HP-UX*)
 		ac_cv_pic="-fPIC"
@@ -6553,6 +6572,10 @@ if test "$ac_cv_c_compiler_gnu" = "yes"; then
 
 		;;
 		SUN*)
+		RDYNAMNIC=""
+
+		;;
+		Darwin*)
 		RDYNAMNIC=""
 
 		;;
