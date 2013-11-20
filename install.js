@@ -47,9 +47,8 @@ var installerQuestions = [{
 			f.WriteLine("MYSQL_INC_PATH=/I $(MYSQL_INC)");
 			f.WriteLine("MYSQL_C=mysql.c");
 			f.WriteLine("MYSQL_O=mysql.obj");
-			f.WriteLine("BASE_CFLAGS=/D USE_MYSQL /D USE_RDB $(BASE_CFLAGS) /D HAVE_MYSQL_MYSQL_H");
-			f.WriteLine("MYPASQL_BUILD=$(CC) /LD $(MYSQL_INC_PATH) src\\mypasql.c /link $(MYSQL_LIB_PATH) $(LFLAGS) /DEF:src\\mypasql.def libmysql.lib zlib.lib ws2_32.lib advapi32.lib mysqlclient.lib /NODEFAULTLIB:LIBCMTD.lib");
-			f.WriteLine("LIBS=$(LIBS) libmysql.lib zlib.lib");
+			f.WriteLine("BASE_CFLAGS=/D USE_MYSQL $(BASE_CFLAGS)");
+			f.WriteLine("LIBS=$(LIBS) mysqlclient.lib zlib.lib");
 		} else {
 			f.WriteLine("USE_MYSQL=0");
 		}

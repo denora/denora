@@ -23,7 +23,7 @@ VOIDSIG signal_pipe(int signum);
 VOIDSIG signal_die(int signum);
 char segv_location[SEGV_LOCATION_BUFSIZE];
 
-#ifndef _WINDOWS
+#ifndef _WIN32
 	#if !defined(HAVE_STRSIGNAL)
 		const char* get_signame(int sig);
 	#elsif !defined(strsignal) && (!defined(__CYGWIN__) || (__FreeBSD__) || (__OpenBSD__))
@@ -375,7 +375,7 @@ VOIDSIG signal_int(int signum)
 
 VOIDSIG sighandler(int signum)
 {
-#ifndef _WINDOWS
+#ifndef _WIN32
 	if (started)
 	{
 		if (signum == SIGQUIT)
@@ -418,7 +418,7 @@ VOIDSIG sighandler(int signum)
 #endif
 	if (
 #if !defined(USE_THREADS)
-#ifndef _WINDOWS
+#ifndef _WIN32
 	    signum == SIGUSR1 ||
 #endif
 #endif
@@ -428,7 +428,7 @@ VOIDSIG sighandler(int signum)
 	}
 	else
 	{
-#ifdef _WINDOWS
+#ifdef _WIN32
 		ircsnprintf(denora->qmsg, BUFSIZE, "Stats terminating: %d", signum);
 #else
 		ircsnprintf(denora->qmsg, BUFSIZE, "Stats terminating: %s",

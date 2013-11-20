@@ -34,12 +34,12 @@ install:
         -@echo ---
         
 clean:
-        cd src && $(MAKE) spotless && cd ..
-        cd lang && $(MAKE) spotless && cd ..
+        cd src && $(MAKE) clean && cd ..
+        cd lang && $(MAKE) clean && cd ..
         -@erase *.exe version.h *.obj
-        cd src\modules && $(MAKE) spotless && cd ..
-		cd src\protocol && $(MAKE) spotless && cd ..
-		cd src\core && $(MAKE) spotless && cd ..
+        cd src\modules && $(MAKE) clean && cd ..
+		cd src\protocol && $(MAKE) clean && cd ..
+		cd src\core && $(MAKE) clean && cd ..
 
 distclean:
         cd lang && $(MAKE) distclean && cd ..

@@ -42,6 +42,9 @@ $(PROGRAM): $(OBJS) win32.res
 
 distclean:
         -@erase *.obj *.exe *.exp *.lib *.res win32.rc *.manifest
+
+clean:
+        -@erase *.obj *.exe *.exp *.lib *.res win32.rc *.manifest
         
 install:
         -@copy denora.exe ..\denora.exe

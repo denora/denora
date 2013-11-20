@@ -40,3 +40,43 @@ Denora MySQL Support
 
 ** Note on older mysql such as 3.x are no longer fully supported it is recommended that
    you update to a more current version of mysql.
+
+
+Note: Windows builds of Denora with MySQL
+
+	There can be times when trying to builde Denora on Windows systems where you get a compiler error of
+
+		error LNK2001: unresolved external symbol _mysql_
+
+	To resolve do the following, first start with a clean installation
+
+1. Download Connector/C from MySQL located at, select the non-installer version
+
+   http://dev.mysql.com/downloads/connector/c/
+
+2. Unpack the zip file to C:\Program Files\MySQL\mysql_connect
+
+3. Run Config.bat as normal, allowing Denora to generate the Makefile.inc.win32
+
+4. Open Makefile.inc.win32 and change the following lines
+
+MYSQL_LIB="C:\Program Files\MySQL\MySQL Server 5.6\lib"
+MYSQL_INC="C:\Program Files\MySQL\MySQL Server 5.6\include"
+
+needs to read
+
+MYSQL_LIB="C:\Program Files\MySQL\mysql_connect\lib"
+MYSQL_INC="C:\Program Files\MySQL\mysql_connect\include"
+
+and
+
+LIBS=$(LIBS) mysqlclient.lib zlib.lib
+
+to be
+
+LIBS=$(LIBS) libmysql.lib zlib.lib
+
+5. Build as normal
+
+
+
