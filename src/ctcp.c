@@ -133,7 +133,11 @@ void load_ctcp_db(void)
 			if (!stricmp(key, "version"))
 			{
 				version = sstrdup(value);
+#ifdef __APPLE__
 				strnrepl(version, BUFSIZE, "\u00B6", ":");
+#else
+				strnrepl(version, BUFSIZE, "¶", ":");
+#endif
 			}
 			else if (!stricmp(key, "count"))
 			{
@@ -198,7 +202,11 @@ void save_ctcp_db(void)
 		if (c->overall > 1)
 		{
 			version = sstrdup(c->version);
+#ifdef __APPLE__
 			strnrepl(version, BUFSIZE, ":", "\u00B6");
+#else
+			strnrepl(version, BUFSIZE, ":", "¶");
+#endif
 			new_write_db_entry("version", dbptr, "%s", version);
 			free(version);
 			new_write_db_entry("count", dbptr, "%u", c->overall);

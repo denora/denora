@@ -424,7 +424,11 @@ void mAddLanguages(void)
 	    "Stunde und ",
 	    "Minute",
 	    "Sekunde",
+#ifdef __APPLE__
 	    "\0034Keine Ergebnisse\003 f\u00FCr \00310\002%s\002\003",
+#else
+	    "\0034Keine Ergebnisse\003 für \00310\002%s\002\003",
+#endif
 	    "Interner Fehler",
 	};
 
@@ -449,6 +453,7 @@ void mAddLanguages(void)
 	};
 
 	const char *langtable_fr[] = {
+#ifdef __APPLE__
 	    "Utilisation: \00310\002%sseen <pseudo/masque>\002\003",
 	    "\00310\002%s\002\003 (%s@%s) est \0033connect\u00E9(e)\003 depuis %s (%s)",
 	    "\00310\002%s\002\003 (%s@%s) est \0033connect\u00E9(e)\003 depuis %s (%s) et se trouve sur %s",
@@ -456,6 +461,15 @@ void mAddLanguages(void)
 	    "\00310\002%s\002\003 (%s@%s) est \0033connect\u00E9(e)\003 depuis %s (%s), actuellement \0037absent\003 (%s) et se trouve sur %s",
 	    "\00310\002%s\002\003 (%s@%s) est \0034d\u00E9connect\u00E9(e)\003 depuis %s (%s) apr\u00E8s avoir \u00E9t\u00E9 connect\u00E9(e) pendant %s disant (%s)",
 	    "\00310\002%s\002\003 (%s@%s) est \0034d\u00E9connect\u00E9(e)\003 mais je ne sais pas depuis quand.",
+#else
+	    "Utilisation: \00310\002%sseen <pseudo/masque>\002\003",
+	    "\00310\002%s\002\003 (%s@%s) est \0033connecté(e)\003 depuis %s (%s)",
+	    "\00310\002%s\002\003 (%s@%s) est \0033connecté(e)\003 depuis %s (%s) et se trouve sur %s",
+	    "\00310\002%s\002\003 (%s@%s) est \0033connecté(e)\003 depuis %s (%s) et est actuellement \0037absent\003 (%s)",
+	    "\00310\002%s\002\003 (%s@%s) est \0033connecté(e)\003 depuis %s (%s), actuellement \0037absent\003 (%s) et se trouve sur %s",
+	    "\00310\002%s\002\003 (%s@%s) est \0034déconnecté(e)\003 depuis %s (%s) après avoir été connecté(e) pendant %s disant (%s)",
+	    "\00310\002%s\002\003 (%s@%s) est \0034déconnecté(e)\003 mais je ne sais pas depuis quand.",
+#endif
 	    "jours, ",
 	    "heures et ",
 	    "minutes",
@@ -464,18 +478,31 @@ void mAddLanguages(void)
 	    "heure et ",
 	    "minute",
 	    "seconde",
+#ifdef __APPLE__
 	    "\0034Pas de r\u00E9sultat\003 pour \00310\002%s\002\003",
+#else
+	    "\0034Pas de résultat\003 pour \00310\002%s\002\003",
+#endif
 	    "Erreur interne",
 	};
 
 	const char *langtable_it[] = {
 	    "Sintassi: \00310\002%sseen <nick/mask>\002\003",
+#ifdef __APPLE__
 	    "\00310\002%s\002\003 (%s@%s) \u00E8 \0033online\003 da %s (%s)",
 	    "\00310\002%s\002\003 (%s@%s) \u00E8 \0033online\003 da %s (%s) e si trova in %s",
 	    "\00310\002%s\002\003 (%s@%s) \u00E8 \0033online\003 da %s (%s) ed \u00E8 momentaneamente \0037assente\003 (%s)",
 	    "\00310\002%s\002\003 (%s@%s) \u00E8 \0033online\003 da %s (%s), \u00E8 momentaneamente \0037assente\003 (%s) e si trova in %s",
 	    "\00310\002%s\002\003 (%s@%s) \u00E8 \0034offline\003 da %s (%s) dopo una permanenza di %s dicendo (%s)",
 	    "\00310\002%s\002\003 (%s@%s) \u00E8 \0034offline\003 ma non so da quanto",
+#else
+	    "\00310\002%s\002\003 (%s@%s) è \0033online\003 da %s (%s)",
+	    "\00310\002%s\002\003 (%s@%s) è \0033online\003 da %s (%s) e si trova in %s",
+	    "\00310\002%s\002\003 (%s@%s) è \0033online\003 da %s (%s) ed è momentaneamente \0037assente\003 (%s)",
+	    "\00310\002%s\002\003 (%s@%s) è \0033online\003 da %s (%s), è momentaneamente \0037assente\003 (%s) e si trova in %s",
+	    "\00310\002%s\002\003 (%s@%s) è \0034offline\003 da %s (%s) dopo una permanenza di %s dicendo (%s)",
+	    "\00310\002%s\002\003 (%s@%s) è \0034offline\003 ma non so da quanto",
+#endif
 	    "giorni, ",
 	    "ore e ",
 	    "minuti",

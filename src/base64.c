@@ -130,7 +130,7 @@ void base64_encode(struct buffer_st *b, const char *source, int length)
 
 /*************************************************************************/
 
-void base64_decode(struct buffer_st *bfr, const char *source, int length)
+void base64_decode(struct buffer_st *bfr, const char *source)
 {
 	int i;
 	int offset = 0;

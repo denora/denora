@@ -1171,7 +1171,7 @@ char *xmlrpc_decode64(char *value)
 {
 	char *retval;
 	struct buffer_st buf;
-	base64_decode(&buf, value, strlen(value));
+	base64_decode(&buf, value);
 	retval = sstrdup(buf.data);
 	buffer_delete(&buf);
 	return retval;

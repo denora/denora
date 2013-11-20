@@ -698,7 +698,7 @@ E void buffer_new(struct buffer_st *b);
 E void buffer_add(struct buffer_st *b, char c);
 E void buffer_delete(struct buffer_st *b);
 E void base64_encode(struct buffer_st *b, const char *source, int length);
-E void base64_decode(struct buffer_st *bfr, const char *source, int length);
+E void base64_decode(struct buffer_st *bfr, const char *source);
 
 #define dfree(x) do { if (x) free(x); (x) = NULL; } while(0)
 
