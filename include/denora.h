@@ -73,8 +73,6 @@
 #ifdef HAVE_REGEX_H
 #ifndef _WIN32
  #include <regex.h>
-#else
- #include <regex>
 #endif
 #endif
 

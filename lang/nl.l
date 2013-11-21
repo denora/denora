@@ -15,6 +15,7 @@
 # Based on the original code of Thales by Lucas.
 # 
 #
+#
 # When translating this file to another language, keep in mind that the
 # order of parameters for sprintf() is fixed in the source code, so your
 # messages need to take the same parameters in the same order as the
