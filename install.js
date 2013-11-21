@@ -69,7 +69,8 @@ var buildPackages = [{
 	'nmake': ['Program Files (x86)\\Microsoft Visual Studio 11.0\\VC\\bin', ''],
 	'additional_switches': ['/w'],
 	'installedDrive': 'C'
-},{
+},
+{
 	'name': 'Microsoft Visual Studio 2010 (with Windows SDK 7.1)',
 	'libpaths': ['Program Files\\Microsoft Visual Studio 10.0\\VC\\lib', 'Program Files\\Microsoft SDKs\\Windows\\v7.1\\Lib'],
 	'incpaths': ['Program Files\\Microsoft Visual Studio 10.0\\VC\\include', 'Program Files\\Microsoft SDKs\\Windows\\v7.1\\Include'],
@@ -78,9 +79,19 @@ var buildPackages = [{
 	'installedDrive': 'C'
 },
 {
+	'name': 'Microsoft Visual Studio 2010 (with Windows SDK 7.1) ',
+	'libpaths': ['Program Files (x86)\\Microsoft Visual Studio 10.0\\VC\\lib', 'Program Files (x86)\\Microsoft SDKs\\Windows\\v7.0a\\Lib'],
+	'incpaths': ['Program Files (x86)\\Microsoft Visual Studio 10.0\\VC\\include', 'Program Files (x86)\\Microsoft SDKs\\Windows\\v7.0a\\Include'],
+	'nmake': ['Program Files (x86)\\Microsoft Visual Studio 10.0\\VC\\bin', ''],
+	'additional_switches': ['/w'],
+	'installedDrive': 'C'
+},
+
+
+{
 	'name': 'Microsoft Visual Studio 2010 (with Windows SDK 7.1)',
-	'libpaths': ['Program Files (x86)\\Microsoft Visual Studio 10.0\\VC\\lib', 'Program Files\\Microsoft SDKs\\Windows\\v7.1\\Lib'],
-	'incpaths': ['Program Files (x86)\\Microsoft Visual Studio 10.0\\VC\\include', 'Program Files\\Microsoft SDKs\\Windows\\v7.1\\Include'],
+	'libpaths': ['Program Files (x86)\\Microsoft Visual Studio 10.0\\VC\\lib', 'Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1\\Lib'],
+	'incpaths': ['Program Files (x86)\\Microsoft Visual Studio 10.0\\VC\\include', 'Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1\\Include'],
 	'nmake': ['Program Files (x86)\\Microsoft Visual Studio 10.0\\VC\\bin', ''],
 	'additional_switches': ['/w'],
 	'installedDrive': 'C'
