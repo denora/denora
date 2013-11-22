@@ -628,8 +628,16 @@ void hybrid_cmd_svinfo(void)
 */
 void hybrid_cmd_capab(void)
 {
-	send_cmd(NULL,
-	         "CAPAB :TB KNOCK UNKLN KLN GLN ENCAP CHW IE HOPS CLUSTER EOB LL QS HUB EX");
+	if (UseTS6)
+	{
+		send_cmd(NULL,
+		         "CAPAB :TB KNOCK UNKLN KLN GLN ENCAP CHW IE HOPS CLUSTER EOB LL QS HUB EX TS6");
+	}
+	else
+	{
+		send_cmd(NULL,
+		         "CAPAB :TB KNOCK UNKLN KLN GLN ENCAP CHW IE HOPS CLUSTER EOB LL QS HUB EX");
+	}
 }
 
 void hybrid_cmd_stats(char *sender, const char *letter, char *server)

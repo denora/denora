@@ -447,10 +447,10 @@
 #endif
 #endif
 
-#ifndef __STRICT_ANSI__
+#ifdef __STRICT_ANSI__
 #define DENORA_INLINE
 #endif
-#ifndef _WIN32
+#ifdef _WIN32
 #define DENORA_INLINE
 #endif
 #ifdef __clang__

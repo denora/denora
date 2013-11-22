@@ -31,6 +31,7 @@ Changes
 13/05/16 Do not free unallocated memory in InspIRCd protocol
 
 Fixes
+13/11/22 Denora links with hybrid using TS6 enabled.
 13/11/22 Compiling with clang on bsd systems.
 13/11/20 Fixed compiler warnings created by fixing stuff for macosx, so now it will build nicely on
          slackware.
