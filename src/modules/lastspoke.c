@@ -407,7 +407,11 @@ void mAddLanguages(void)
 		"Stunde und ",
 		"Minute",
 		"Sekunde",
+#ifdef __clang__
+		"\0034Keine Ergebnisse\003 f\u00FCr \00310\002%s\002\003",
+#else
 		"\0034Keine Ergebnisse\003 für \00310\002%s\002\003",
+#endif
 		"Interner Fehler",
 	};
 
@@ -432,6 +436,15 @@ void mAddLanguages(void)
 	};
 
 	const char *langtable_it[] = {
+#ifdef __clang__
+		"Usage: \00310\002%slastspoke <nick/mask>\002\003",
+		"\00310\002%s\002\003 (%s@%s) \u00E8 \0033online\003 e ha detto qualcosa %s fa (%s) in %s",
+		"\00310\002%s\002\003 (%s@%s) \u00E8 \0033online\003 e ha detto qualcosa %s fa (%s)",
+		"\00310\002%s\002\003 (%s@%s) \u00E8 \0037assente\003 e ha detto qualcosa %s fa (%s) in %s",
+		"\00310\002%s\002\003 (%s@%s) \u00E8 \0037assente\003 e ha detto qualcosa %s fa (%s)",
+		"\00310\002%s\002\003 (%s@%s) \u00E8 \0034offline\003 e ha detto qualcosa %s fa (%s) in %s",
+		"\00310\002%s\002\003 (%s@%s) \u00E8 \0034offline\003 e ha detto qualcosa %s fa (%s)",
+#else
 		"Usage: \00310\002%slastspoke <nick/mask>\002\003",
 		"\00310\002%s\002\003 (%s@%s) è \0033online\003 e ha detto qualcosa %s fa (%s) in %s",
 		"\00310\002%s\002\003 (%s@%s) è \0033online\003 e ha detto qualcosa %s fa (%s)",
@@ -439,6 +452,7 @@ void mAddLanguages(void)
 		"\00310\002%s\002\003 (%s@%s) è \0037assente\003 e ha detto qualcosa %s fa (%s)",
 		"\00310\002%s\002\003 (%s@%s) è \0034offline\003 e ha detto qualcosa %s fa (%s) in %s",
 		"\00310\002%s\002\003 (%s@%s) è \0034offline\003 e ha detto qualcosa %s fa (%s)",
+#endif
 		"giorni, ",
 		"ore e ",
 		"minuti",

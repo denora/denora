@@ -29,7 +29,8 @@ AC_CANONICAL_HOST
 AC_CONFIG_HEADER(include/sysconf.h)
 AC_PREFIX_DEFAULT(~/stats)
 
-AC_PROG_CC
+AC_PROG_CC([gcc clang cc])
+
 CFLAGS=-g
 if test "$ac_cv_prog_gcc" = "yes"; then
 #    CFLAGS="$CFLAGS -funsigned-char"
@@ -48,6 +49,7 @@ if test "$host_cpu" = "x86_64"; then
     CFLAGS="$CFLAGS -fPIC"
 fi
 
+if test "$CC" == "gcc"; then
 DENORA_CFLAGS_GCC_TRY_FLAGS(-ggdb, denora_cv_ggdb)
 DENORA_CPU_GCC_TRY_FLAGS(-O3, ac_cv_denora_O3)
 
@@ -72,16 +74,20 @@ else
  fi
 fi
 
-AC_C_VAR_PRETTY_FUNC
+fi
 
-if test "$ac_cv_c_var_prettyfunc" = "no"; then
- AC_C_VAR_FUNCTION
- if test "$ac_cv_c_var_function" = "no"; then
-  AC_C_VAR_FUNC
-  if test "$ac_cv_c_var_func" = "no"; then
-   echo "Compiler does not have a define macro to get functions names"
+
+if test "$CC" == "gcc"; then
+ AC_C_VAR_PRETTY_FUNC
+ if test "$ac_cv_c_var_prettyfunc" = "no"; then
+ 	AC_C_VAR_FUNCTION
+	 if test "$ac_cv_c_var_function" = "no"; then
+		  AC_C_VAR_FUNC
+		  if test "$ac_cv_c_var_func" = "no"; then
+			   echo "Compiler does not have a define macro to get functions names"
+  		  fi
+ 	 fi
   fi
- fi
 fi
 
 AC_PATH_PROG(RM,rm)
@@ -180,10 +186,6 @@ if test "$ac_cv_pthread" = "yes"; then
 else
   DIS_THREADING="Threading: No"
 fi
-
-
-
-
 
 AC_ARG_ENABLE(dmalloc,
     [  --enable-dmalloc        Enable support for the dmalloc debugging library],
@@ -369,13 +371,12 @@ if test "$ac_cv_export_dynamic" = "no"; then
 CFLAGS=$hold_cflags
 fi
 
-AC_CACHE_CHECK(Check if MacOSX Darwin remove export-dynamic,ac_cv_darwin,[
-if test "$ac_cv_prog_gcc" = "yes"; then
-	case `uname -s` in
-		Darwin*[)]
+AC_CACHE_CHECK(Check if CLANG/CC compiler remove export-dynamic,ac_cv_darwin,[
+if test "$CC" == "cc"; then
 		CFLAGS=$hold_cflags
-		;;
-	esac
+fi
+if test "$CC" == "clang"; then
+		CFLAGS=$hold_cflags
 fi
 ])
 
@@ -403,6 +404,10 @@ esac
 fi
 
 ])
+if test "$CC" == "clang"; then
+		ac_cv_pic="-fPIC -DPIC"
+fi
+
 
 AC_CACHE_CHECK([for RTLD_LOCAL], ac_cv_have_rtld_local, [
 	AC_TRY_COMPILE(
@@ -523,7 +528,7 @@ AC_DEFINE_UNQUOTED(STATS_BUILD,"$build","stats build")
 AC_DEFINE_UNQUOTED(STATS_OS,"$build_os","stats os")
 AC_DEFINE_UNQUOTED(STATS_CPU,"$build_cpu","stats cpu")
 
-if test "$ac_cv_prog_gcc" = "yes"; then
+if test "$CC" == "gcc"; then
 	case `uname -s` in
 		CYGWIN*[)]
 		RDYNAMNIC=""
@@ -607,6 +612,7 @@ AC_DEFINE([SYSV_UNRELIABLE_SIGNALS], [], [Setting to SYSV style signals])
 fi
 
 
+if test "$CC" == "gcc"; then
 echo "Checking best optimization compiler flags"
 echo "Host CPU : $host_cpu"
 case $host in
@@ -793,7 +799,9 @@ case $host in
     ;;
 
 esac
+fi
 
+if test "$CC" == "gcc"; then
 echo "Checking compiler flags for make strict"
 DENORA_GCC_TRY_FLAGS([-Wextra], denora_cv_gcc_w_extra)
 DENORA_GCC_TRY_FLAGS([-Wall], denora_cv_gcc_w_all)
@@ -837,6 +845,7 @@ if test "$denora_cv_gcc_fstack_protector" = "yes"; then
         STRICT="$STRICT --param=ssp-buffer-size=4 "
 fi
 DENORA_GCC_TRY_FLAGS([-Wp,-D_FORTIFY_SOURCE=2], denora_cv_gcc_fortify_source)
+fi
 
 
 AC_SUBST(DENORALIBS)

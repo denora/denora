@@ -424,7 +424,7 @@ void mAddLanguages(void)
 	    "Stunde und ",
 	    "Minute",
 	    "Sekunde",
-#ifdef __APPLE__
+#ifdef __clang__
 	    "\0034Keine Ergebnisse\003 f\u00FCr \00310\002%s\002\003",
 #else
 	    "\0034Keine Ergebnisse\003 für \00310\002%s\002\003",
@@ -453,7 +453,7 @@ void mAddLanguages(void)
 	};
 
 	const char *langtable_fr[] = {
-#ifdef __APPLE__
+#ifdef __clang__
 	    "Utilisation: \00310\002%sseen <pseudo/masque>\002\003",
 	    "\00310\002%s\002\003 (%s@%s) est \0033connect\u00E9(e)\003 depuis %s (%s)",
 	    "\00310\002%s\002\003 (%s@%s) est \0033connect\u00E9(e)\003 depuis %s (%s) et se trouve sur %s",
@@ -478,7 +478,7 @@ void mAddLanguages(void)
 	    "heure et ",
 	    "minute",
 	    "seconde",
-#ifdef __APPLE__
+#ifdef __clang__
 	    "\0034Pas de r\u00E9sultat\003 pour \00310\002%s\002\003",
 #else
 	    "\0034Pas de résultat\003 pour \00310\002%s\002\003",
@@ -488,7 +488,7 @@ void mAddLanguages(void)
 
 	const char *langtable_it[] = {
 	    "Sintassi: \00310\002%sseen <nick/mask>\002\003",
-#ifdef __APPLE__
+#ifdef __clang__
 	    "\00310\002%s\002\003 (%s@%s) \u00E8 \0033online\003 da %s (%s)",
 	    "\00310\002%s\002\003 (%s@%s) \u00E8 \0033online\003 da %s (%s) e si trova in %s",
 	    "\00310\002%s\002\003 (%s@%s) \u00E8 \0033online\003 da %s (%s) ed \u00E8 momentaneamente \0037assente\003 (%s)",

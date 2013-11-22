@@ -448,13 +448,15 @@
 #endif
 
 #ifndef __STRICT_ANSI__
-#ifndef _WIN32
-#define DENORA_INLINE inline
-#else
 #define DENORA_INLINE
 #endif
-#else
+#ifndef _WIN32
 #define DENORA_INLINE
+#endif
+#ifdef __clang__
+#define DENORA_INLINE
+#else
+#define DENORA_INLINE inline
 #endif
 
 

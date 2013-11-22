@@ -133,7 +133,7 @@ void load_ctcp_db(void)
 			if (!stricmp(key, "version"))
 			{
 				version = sstrdup(value);
-#ifdef __APPLE__
+#ifdef __clang__
 				strnrepl(version, BUFSIZE, "\u00B6", ":");
 #else
 				strnrepl(version, BUFSIZE, "¶", ":");
@@ -202,7 +202,7 @@ void save_ctcp_db(void)
 		if (c->overall > 1)
 		{
 			version = sstrdup(c->version);
-#ifdef __APPLE__
+#ifdef __clang__
 			strnrepl(version, BUFSIZE, ":", "\u00B6");
 #else
 			strnrepl(version, BUFSIZE, ":", "¶");

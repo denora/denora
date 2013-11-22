@@ -26,15 +26,23 @@
 #include <sys/socket.h>
 
 #ifdef HAVE_UNISTD_H
-#ifndef HAS_SYS_TYPES_H
-#ifndef #ifdef HAVE_STDLIB_H
-#include <unistd.h>
-#endif
-#endif
+	#ifndef __clang__
+		#ifndef HAS_SYS_TYPES_H
+		#ifndef HAVE_STDLIB_H
+			#include <unistd.h>
+		#endif
+		#endif
+	#else
+		#include <unistd.h>
+	#endif
 #endif
 
 #ifdef HAVE_BACKTRACE
-#include <execinfo.h>
+#ifndef __clang__
+	#include <execinfo.h>
+#else
+	#undef HAVE_BACKTRACE
+#endif
 #endif
 
 #include <sys/uio.h>

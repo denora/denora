@@ -2579,197 +2579,7 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 if test -n "$ac_tool_prefix"; then
-  # Extract the first word of "${ac_tool_prefix}gcc", so it can be a program name with args.
-set dummy ${ac_tool_prefix}gcc; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_CC+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$CC"; then
-  ac_cv_prog_CC="$CC" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_CC="${ac_tool_prefix}gcc"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-fi
-fi
-CC=$ac_cv_prog_CC
-if test -n "$CC"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CC" >&5
-$as_echo "$CC" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-fi
-if test -z "$ac_cv_prog_CC"; then
-  ac_ct_CC=$CC
-  # Extract the first word of "gcc", so it can be a program name with args.
-set dummy gcc; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_ac_ct_CC+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$ac_ct_CC"; then
-  ac_cv_prog_ac_ct_CC="$ac_ct_CC" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_ac_ct_CC="gcc"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-fi
-fi
-ac_ct_CC=$ac_cv_prog_ac_ct_CC
-if test -n "$ac_ct_CC"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_ct_CC" >&5
-$as_echo "$ac_ct_CC" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-  if test "x$ac_ct_CC" = x; then
-    CC=""
-  else
-    case $cross_compiling:$ac_tool_warned in
-yes:)
-{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
-$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
-ac_tool_warned=yes ;;
-esac
-    CC=$ac_ct_CC
-  fi
-else
-  CC="$ac_cv_prog_CC"
-fi
-
-if test -z "$CC"; then
-          if test -n "$ac_tool_prefix"; then
-    # Extract the first word of "${ac_tool_prefix}cc", so it can be a program name with args.
-set dummy ${ac_tool_prefix}cc; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_CC+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$CC"; then
-  ac_cv_prog_CC="$CC" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_CC="${ac_tool_prefix}cc"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-fi
-fi
-CC=$ac_cv_prog_CC
-if test -n "$CC"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CC" >&5
-$as_echo "$CC" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-  fi
-fi
-if test -z "$CC"; then
-  # Extract the first word of "cc", so it can be a program name with args.
-set dummy cc; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_CC+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$CC"; then
-  ac_cv_prog_CC="$CC" # Let the user override the test.
-else
-  ac_prog_rejected=no
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    if test "$as_dir/$ac_word$ac_exec_ext" = "/usr/ucb/cc"; then
-       ac_prog_rejected=yes
-       continue
-     fi
-    ac_cv_prog_CC="cc"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-if test $ac_prog_rejected = yes; then
-  # We found a bogon in the path, so make sure we never use it.
-  set dummy $ac_cv_prog_CC
-  shift
-  if test $# != 0; then
-    # We chose a different compiler from the bogus one.
-    # However, it has the same basename, so the bogon will be chosen
-    # first if we set CC to just the basename; use the full file name.
-    shift
-    ac_cv_prog_CC="$as_dir/$ac_word${1+' '}$@"
-  fi
-fi
-fi
-fi
-CC=$ac_cv_prog_CC
-if test -n "$CC"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CC" >&5
-$as_echo "$CC" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-fi
-if test -z "$CC"; then
-  if test -n "$ac_tool_prefix"; then
-  for ac_prog in cl.exe
+  for ac_prog in gcc clang cc
   do
     # Extract the first word of "$ac_tool_prefix$ac_prog", so it can be a program name with args.
 set dummy $ac_tool_prefix$ac_prog; ac_word=$2
@@ -2813,7 +2623,7 @@ fi
 fi
 if test -z "$CC"; then
   ac_ct_CC=$CC
-  for ac_prog in cl.exe
+  for ac_prog in gcc clang cc
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -2866,8 +2676,6 @@ ac_tool_warned=yes ;;
 esac
     CC=$ac_ct_CC
   fi
-fi
-
 fi
 
 
@@ -3362,6 +3170,7 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
+
 CFLAGS=-g
 if test "$ac_cv_c_compiler_gnu" = "yes"; then
 #    CFLAGS="$CFLAGS -funsigned-char"
@@ -3405,9 +3214,10 @@ if test "$host_cpu" = "x86_64"; then
     CFLAGS="$CFLAGS -fPIC"
 fi
 
+if test "$CC" == "gcc"; then
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -ggdb" >&5
-$as_echo_n "checking GCC flag(s) -ggdb... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -ggdb" >&5
+$as_echo_n "checking Compiler flag(s) -ggdb... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_ggdb+:} false; then :
@@ -3457,8 +3267,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -O3" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -O3... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -O3" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -O3... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${ac_cv_denora_O3+:} false; then :
@@ -3512,8 +3322,8 @@ if test "$ac_cv_denora_O3" = "yes"; then
  echo "Setting optimization level to -O3"
 else
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -O2" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -O2... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -O2" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -O2... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${ac_cv_denora_O2+:} false; then :
@@ -3566,8 +3376,8 @@ $as_echo "no" >&6; }
   echo "Setting optimization level to -O2"
  else
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -O1" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -O1... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -O1" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -O1... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${ac_cv_denora_O1+:} false; then :
@@ -3621,8 +3431,8 @@ $as_echo "no" >&6; }
   echo "Setting optimization level to -O1"
  else
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -O0" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -O0... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -O0" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -O0... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${ac_cv_denora_O0+:} false; then :
@@ -3679,6 +3489,10 @@ $as_echo "no" >&6; }
  fi
 fi
 
+fi
+
+
+if test "$CC" == "gcc"; then
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC recognizes __PRETTY_FUNCTION__" >&5
 $as_echo_n "checking whether $CC recognizes __PRETTY_FUNCTION__... " >&6; }
@@ -3710,8 +3524,7 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_c_var_prettyfunc" >&5
 $as_echo "$ac_cv_c_var_prettyfunc" >&6; }
 
-
-if test "$ac_cv_c_var_prettyfunc" = "no"; then
+ if test "$ac_cv_c_var_prettyfunc" = "no"; then
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC recognizes __FUNCTION__" >&5
 $as_echo_n "checking whether $CC recognizes __FUNCTION__... " >&6; }
@@ -3743,7 +3556,7 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_c_var_function" >&5
 $as_echo "$ac_cv_c_var_function" >&6; }
 
- if test "$ac_cv_c_var_function" = "no"; then
+	 if test "$ac_cv_c_var_function" = "no"; then
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC recognizes __func__" >&5
 $as_echo_n "checking whether $CC recognizes __func__... " >&6; }
@@ -3775,10 +3588,11 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_c_var_func" >&5
 $as_echo "$ac_cv_c_var_func" >&6; }
 
-  if test "$ac_cv_c_var_func" = "no"; then
-   echo "Compiler does not have a define macro to get functions names"
+		  if test "$ac_cv_c_var_func" = "no"; then
+			   echo "Compiler does not have a define macro to get functions names"
+  		  fi
+ 	 fi
   fi
- fi
 fi
 
 # Extract the first word of "rm", so it can be a program name with args.
@@ -5583,10 +5397,6 @@ else
   DIS_THREADING="Threading: No"
 fi
 
-
-
-
-
 # Check whether --enable-dmalloc was given.
 if test "${enable_dmalloc+set}" = set; then :
   enableval=$enable_dmalloc; ac_cv_dmalloc="$enableval"
@@ -6088,18 +5898,17 @@ if test "$ac_cv_export_dynamic" = "no"; then
 CFLAGS=$hold_cflags
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking Check if MacOSX Darwin remove export-dynamic" >&5
-$as_echo_n "checking Check if MacOSX Darwin remove export-dynamic... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking Check if CLANG/CC compiler remove export-dynamic" >&5
+$as_echo_n "checking Check if CLANG/CC compiler remove export-dynamic... " >&6; }
 if ${ac_cv_darwin+:} false; then :
   $as_echo_n "(cached) " >&6
 else
 
-if test "$ac_cv_c_compiler_gnu" = "yes"; then
-	case `uname -s` in
-		Darwin*)
+if test "$CC" == "cc"; then
 		CFLAGS=$hold_cflags
-		;;
-	esac
+fi
+if test "$CC" == "clang"; then
+		CFLAGS=$hold_cflags
 fi
 
 fi
@@ -6138,6 +5947,10 @@ fi
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_pic" >&5
 $as_echo "$ac_cv_pic" >&6; }
+if test "$CC" == "clang"; then
+		ac_cv_pic="-fPIC -DPIC"
+fi
+
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for RTLD_LOCAL" >&5
 $as_echo_n "checking for RTLD_LOCAL... " >&6; }
@@ -6564,7 +6377,7 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 
 
-if test "$ac_cv_c_compiler_gnu" = "yes"; then
+if test "$CC" == "gcc"; then
 	case `uname -s` in
 		CYGWIN*)
 		RDYNAMNIC=""
@@ -6715,14 +6528,15 @@ $as_echo "#define SYSV_UNRELIABLE_SIGNALS /**/" >>confdefs.h
 fi
 
 
+if test "$CC" == "gcc"; then
 echo "Checking best optimization compiler flags"
 echo "Host CPU : $host_cpu"
 case $host in
 
   hppa*-*-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mpa-risc-1-1" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mpa-risc-1-1... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mpa-risc-1-1" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mpa-risc-1-1... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_cpu+:} false; then :
@@ -6776,8 +6590,8 @@ $as_echo "no" >&6; }
   m68*-*-*)
     case $host in
     m68020-*-*)
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m68020" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m68020... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m68020" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m68020... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_cpu+:} false; then :
@@ -6827,8 +6641,8 @@ $as_echo "no" >&6; }
  fi
  ;;
     m68030-*-*)
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m68030" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m68030... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m68030" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m68030... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_cpu+:} false; then :
@@ -6878,8 +6692,8 @@ $as_echo "no" >&6; }
  fi
  ;;
     m68040-*-*)
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m68040" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m68040... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m68040" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m68040... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_cpu+:} false; then :
@@ -6930,8 +6744,8 @@ $as_echo "no" >&6; }
  ;;
     m68060-*-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m68060" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m68060... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m68060" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m68060... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_cpu+:} false; then :
@@ -6981,8 +6795,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m68000" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m68000... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m68000" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m68000... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_cpu+:} false; then :
@@ -7034,8 +6848,8 @@ $as_echo "no" >&6; }
 		;;
     m68360-*-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m68000" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m68000... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m68000" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m68000... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_cpu+:} false; then :
@@ -7086,8 +6900,8 @@ $as_echo "no" >&6; }
 
 		  ;;
     *)
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m68000" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m68000... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m68000" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m68000... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_cpu+:} false; then :
@@ -7141,8 +6955,8 @@ $as_echo "no" >&6; }
 
   m88110*-*-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m88110" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m88110... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m88110" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m88110... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_cpu+:} false; then :
@@ -7197,8 +7011,8 @@ $as_echo "no" >&6; }
     case $host_cpu in
       powerpc603)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=603" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=603... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=603" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=603... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -7250,8 +7064,8 @@ $as_echo "no" >&6; }
 	  ;;
       powerpc603e)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=603e" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=603e... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=603e" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=603e... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -7303,8 +7117,8 @@ $as_echo "no" >&6; }
 	  ;;
       powerpc604)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=604" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=604... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=604" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=604... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_cpu+:} false; then :
@@ -7356,8 +7170,8 @@ $as_echo "no" >&6; }
 	  ;;
       powerpc740)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=740" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=740... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=740" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=740... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -7409,8 +7223,8 @@ $as_echo "no" >&6; }
 	  ;;
       powerpc7400)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=7400" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=7400... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=7400" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=7400... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -7462,8 +7276,8 @@ $as_echo "no" >&6; }
 	  ;;
       powerpc7450)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=7450" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=7450... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=7450" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=7450... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -7515,8 +7329,8 @@ $as_echo "no" >&6; }
 	  ;;
       powerpc750)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=750" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=750... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=750" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=750... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -7572,8 +7386,8 @@ $as_echo "no" >&6; }
   # POWER
   power-*-* | power[12]-*-* | power2sc-*-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mpower" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mpower... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mpower" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mpower... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_power+:} false; then :
@@ -7630,8 +7444,8 @@ $as_echo "no" >&6; }
    	case $host in
       sparcv8*-*-* | supersparc*-*-* | microsparc*-*-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mv8" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mv8... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mv8" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mv8... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mv8+:} false; then :
@@ -7683,8 +7497,8 @@ $as_echo "no" >&6; }
 	  ;;
       sparcv9*-*-* | ultrasparc*-*-* | sparc64-*-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mv8" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mv8... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mv8" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mv8... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mv8+:} false; then :
@@ -7742,8 +7556,8 @@ $as_echo "no" >&6; }
     case $host in
       i386*-*-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=i386" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=i386... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=i386" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=i386... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -7793,8 +7607,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m32" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m32" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m32+:} false; then :
@@ -7844,8 +7658,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=i386" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=i386... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=i386" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=i386... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -7897,8 +7711,8 @@ $as_echo "no" >&6; }
         ;;
       i586*-*-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=i586" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=i586... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=i586" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=i586... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -7948,8 +7762,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m32" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m32" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m32+:} false; then :
@@ -7999,8 +7813,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=i586" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=i586... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=i586" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=i586... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -8052,8 +7866,8 @@ $as_echo "no" >&6; }
         ;;
       pentium-*-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=pentium" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=pentium... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=pentium" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=pentium... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -8103,8 +7917,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m32" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m32" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m32+:} false; then :
@@ -8154,8 +7968,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=i586" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=i586... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=i586" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=i586... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -8207,8 +8021,8 @@ $as_echo "no" >&6; }
 		;;
       pentiummmx-*-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=pentiummmx" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=pentiummmx... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=pentiummmx" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=pentiummmx... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -8258,8 +8072,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m32" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m32" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m32+:} false; then :
@@ -8311,8 +8125,8 @@ $as_echo "no" >&6; }
         ;;
       pentiumpro-*-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=pentiumpro" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=pentiumpro... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=pentiumpro" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=pentiumpro... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -8362,8 +8176,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m32" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m32" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m32+:} false; then :
@@ -8413,8 +8227,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=i686" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=i686... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=i686" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=i686... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -8466,8 +8280,8 @@ $as_echo "no" >&6; }
         ;;
 	i686*-*-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=i686" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=i686... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=i686" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=i686... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -8517,8 +8331,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m32" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m32" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m32+:} false; then :
@@ -8568,8 +8382,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=i686" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=i686... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=i686" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=i686... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -8621,8 +8435,8 @@ $as_echo "no" >&6; }
         ;;
        pentium3-*-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=i686" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=i686... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=i686" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=i686... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -8672,8 +8486,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m32" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m32" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m32+:} false; then :
@@ -8723,8 +8537,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=i686" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=i686... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=i686" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=i686... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -8776,8 +8590,8 @@ $as_echo "no" >&6; }
         ;;
       pentium2-*-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=pentium2" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=pentium2... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=pentium2" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=pentium2... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -8827,8 +8641,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m32" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m32" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m32+:} false; then :
@@ -8878,8 +8692,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=i686" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=i686... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=i686" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=i686... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -8931,8 +8745,8 @@ $as_echo "no" >&6; }
         ;;
       k6-3-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=k6-3" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=k6-3... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=k6-3" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=k6-3... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -8982,8 +8796,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m32" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m32" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m32+:} false; then :
@@ -9033,8 +8847,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=k6-3" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=k6-3... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=k6-3" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=k6-3... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -9086,8 +8900,8 @@ $as_echo "no" >&6; }
         ;;
       k6-2-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=k6-2" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=k6-2... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=k6-2" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=k6-2... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -9137,8 +8951,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m32" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m32" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m32+:} false; then :
@@ -9188,8 +9002,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=k6-2" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=k6-2... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=k6-2" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=k6-2... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -9241,8 +9055,8 @@ $as_echo "no" >&6; }
         ;;
       k6-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=k6" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=k6... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=k6" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=k6... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -9292,8 +9106,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m32" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m32" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m32+:} false; then :
@@ -9343,8 +9157,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=k6" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=k6... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=k6" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=k6... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -9396,8 +9210,8 @@ $as_echo "no" >&6; }
         ;;
       athlon-4-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=athlon-4" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=athlon-4... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=athlon-4" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=athlon-4... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -9447,8 +9261,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m32" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m32" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m32+:} false; then :
@@ -9498,8 +9312,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=athlon-4" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=athlon-4... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=athlon-4" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=athlon-4... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -9551,8 +9365,8 @@ $as_echo "no" >&6; }
         ;;
       athlon-xp-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=athlon-xp" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=athlon-xp... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=athlon-xp" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=athlon-xp... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -9602,8 +9416,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m32" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m32" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m32+:} false; then :
@@ -9653,8 +9467,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=athlon-xp" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=athlon-xp... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=athlon-xp" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=athlon-xp... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -9706,8 +9520,8 @@ $as_echo "no" >&6; }
         ;;
       athlon-mp-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=athlon-mp" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=athlon-mp... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=athlon-mp" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=athlon-mp... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -9757,8 +9571,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m32" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m32" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m32+:} false; then :
@@ -9808,8 +9622,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=athlon-mp" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=athlon-mp... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=athlon-mp" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=athlon-mp... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -9861,8 +9675,8 @@ $as_echo "no" >&6; }
         ;;
       athlon-tbird-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=athlon-tbird" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=athlon-tbird... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=athlon-tbird" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=athlon-tbird... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -9912,8 +9726,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m32" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m32" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m32+:} false; then :
@@ -9963,8 +9777,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=athlon-tbird" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=athlon-tbird... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=athlon-tbird" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=athlon-tbird... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -10016,8 +9830,8 @@ $as_echo "no" >&6; }
         ;;
       k7-* | athlon-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=athlon" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=athlon... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=athlon" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=athlon... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -10067,8 +9881,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m32" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m32" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m32+:} false; then :
@@ -10118,8 +9932,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=athlon" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=athlon... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=athlon" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=athlon... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -10171,8 +9985,8 @@ $as_echo "no" >&6; }
         ;;
       pentium4-*-* | i786-*-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=pentium4" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=pentium4... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=pentium4" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=pentium4... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -10222,8 +10036,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m32" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m32" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m32+:} false; then :
@@ -10273,8 +10087,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=pentium4" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=pentium4... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=pentium4" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=pentium4... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -10326,8 +10140,8 @@ $as_echo "no" >&6; }
         ;;
       viac32-*-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=c3-2" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=c3-2... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=c3-2" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=c3-2... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -10377,8 +10191,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m32" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m32" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m32+:} false; then :
@@ -10428,8 +10242,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=c3-2" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=c3-2... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=c3-2" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=c3-2... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -10481,8 +10295,8 @@ $as_echo "no" >&6; }
         ;;
       viac3*-*-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=c3" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=c3... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=c3" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=c3... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -10532,8 +10346,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m32" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m32... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m32" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m32... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m32+:} false; then :
@@ -10583,8 +10397,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=c3" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=c3... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=c3" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=c3... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -10636,8 +10450,8 @@ $as_echo "no" >&6; }
         ;;
       x86_64-*-*)
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=k8" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=k8... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=k8" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=k8... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -10687,8 +10501,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=athlon64" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=athlon64... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=athlon64" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=athlon64... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -10738,8 +10552,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -mtune=athlon-fx" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -mtune=athlon-fx... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -mtune=athlon-fx" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -mtune=athlon-fx... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_mtune+:} false; then :
@@ -10789,8 +10603,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -m64" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -m64... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -m64" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -m64... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_m64+:} false; then :
@@ -10840,8 +10654,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=k8" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=k8... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=k8" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=k8... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -10891,8 +10705,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=athlon64" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=athlon64... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=athlon64" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=athlon64... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -10942,8 +10756,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC Optimizing flag(s) -march=athlon-fx" >&5
-$as_echo_n "checking GCC Optimizing flag(s) -march=athlon-fx... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler Optimizing flag(s) -march=athlon-fx" >&5
+$as_echo_n "checking Compiler Optimizing flag(s) -march=athlon-fx... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_march+:} false; then :
@@ -11001,11 +10815,13 @@ $as_echo "no" >&6; }
     ;;
 
 esac
+fi
 
+if test "$CC" == "gcc"; then
 echo "Checking compiler flags for make strict"
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wextra" >&5
-$as_echo_n "checking GCC flag(s) -Wextra... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wextra" >&5
+$as_echo_n "checking Compiler flag(s) -Wextra... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_w_extra+:} false; then :
@@ -11055,8 +10871,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wall" >&5
-$as_echo_n "checking GCC flag(s) -Wall... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wall" >&5
+$as_echo_n "checking Compiler flag(s) -Wall... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_w_all+:} false; then :
@@ -11106,8 +10922,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -pedantic" >&5
-$as_echo_n "checking GCC flag(s) -pedantic... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -pedantic" >&5
+$as_echo_n "checking Compiler flag(s) -pedantic... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_pedantic+:} false; then :
@@ -11157,8 +10973,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wshadow" >&5
-$as_echo_n "checking GCC flag(s) -Wshadow... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wshadow" >&5
+$as_echo_n "checking Compiler flag(s) -Wshadow... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_wshadow+:} false; then :
@@ -11208,8 +11024,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wmissing-declarations" >&5
-$as_echo_n "checking GCC flag(s) -Wmissing-declarations... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wmissing-declarations" >&5
+$as_echo_n "checking Compiler flag(s) -Wmissing-declarations... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_missing_dec+:} false; then :
@@ -11259,8 +11075,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wpointer-arith" >&5
-$as_echo_n "checking GCC flag(s) -Wpointer-arith... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wpointer-arith" >&5
+$as_echo_n "checking Compiler flag(s) -Wpointer-arith... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_pointer_arith+:} false; then :
@@ -11310,8 +11126,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wcast-align" >&5
-$as_echo_n "checking GCC flag(s) -Wcast-align... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wcast-align" >&5
+$as_echo_n "checking Compiler flag(s) -Wcast-align... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_cast_align+:} false; then :
@@ -11361,8 +11177,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wfloat-equal" >&5
-$as_echo_n "checking GCC flag(s) -Wfloat-equal... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wfloat-equal" >&5
+$as_echo_n "checking Compiler flag(s) -Wfloat-equal... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_float_equal+:} false; then :
@@ -11412,8 +11228,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wstrict-prototypes" >&5
-$as_echo_n "checking GCC flag(s) -Wstrict-prototypes... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wstrict-prototypes" >&5
+$as_echo_n "checking Compiler flag(s) -Wstrict-prototypes... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_strict_prototypes+:} false; then :
@@ -11463,8 +11279,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wmissing-prototypes" >&5
-$as_echo_n "checking GCC flag(s) -Wmissing-prototypes... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wmissing-prototypes" >&5
+$as_echo_n "checking Compiler flag(s) -Wmissing-prototypes... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_missing_prototype+:} false; then :
@@ -11514,8 +11330,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wredundant-decls" >&5
-$as_echo_n "checking GCC flag(s) -Wredundant-decls... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wredundant-decls" >&5
+$as_echo_n "checking Compiler flag(s) -Wredundant-decls... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_redundant_decls+:} false; then :
@@ -11565,8 +11381,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wunused-variable" >&5
-$as_echo_n "checking GCC flag(s) -Wunused-variable... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wunused-variable" >&5
+$as_echo_n "checking Compiler flag(s) -Wunused-variable... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_unused_vars+:} false; then :
@@ -11616,8 +11432,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wunused-parameter" >&5
-$as_echo_n "checking GCC flag(s) -Wunused-parameter... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wunused-parameter" >&5
+$as_echo_n "checking Compiler flag(s) -Wunused-parameter... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_unused_params+:} false; then :
@@ -11667,8 +11483,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wuninitialized" >&5
-$as_echo_n "checking GCC flag(s) -Wuninitialized... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wuninitialized" >&5
+$as_echo_n "checking Compiler flag(s) -Wuninitialized... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_uninit+:} false; then :
@@ -11718,8 +11534,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wparentheses" >&5
-$as_echo_n "checking GCC flag(s) -Wparentheses... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wparentheses" >&5
+$as_echo_n "checking Compiler flag(s) -Wparentheses... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_parenthese+:} false; then :
@@ -11769,8 +11585,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wno-long-long" >&5
-$as_echo_n "checking GCC flag(s) -Wno-long-long... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wno-long-long" >&5
+$as_echo_n "checking Compiler flag(s) -Wno-long-long... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_no_long_long+:} false; then :
@@ -11820,8 +11636,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wunused-macros" >&5
-$as_echo_n "checking GCC flag(s) -Wunused-macros... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wunused-macros" >&5
+$as_echo_n "checking Compiler flag(s) -Wunused-macros... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_unused_macro+:} false; then :
@@ -11871,8 +11687,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wwrite-strings" >&5
-$as_echo_n "checking GCC flag(s) -Wwrite-strings... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wwrite-strings" >&5
+$as_echo_n "checking Compiler flag(s) -Wwrite-strings... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_write_strings+:} false; then :
@@ -11922,8 +11738,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wimplicit" >&5
-$as_echo_n "checking GCC flag(s) -Wimplicit... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wimplicit" >&5
+$as_echo_n "checking Compiler flag(s) -Wimplicit... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_implicit+:} false; then :
@@ -11973,8 +11789,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wnested-externs" >&5
-$as_echo_n "checking GCC flag(s) -Wnested-externs... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wnested-externs" >&5
+$as_echo_n "checking Compiler flag(s) -Wnested-externs... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_nested+:} false; then :
@@ -12024,8 +11840,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wno-unused" >&5
-$as_echo_n "checking GCC flag(s) -Wno-unused... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wno-unused" >&5
+$as_echo_n "checking Compiler flag(s) -Wno-unused... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_no_unused+:} false; then :
@@ -12075,8 +11891,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wundef" >&5
-$as_echo_n "checking GCC flag(s) -Wundef... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wundef" >&5
+$as_echo_n "checking Compiler flag(s) -Wundef... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_undef+:} false; then :
@@ -12126,8 +11942,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wpacked" >&5
-$as_echo_n "checking GCC flag(s) -Wpacked... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wpacked" >&5
+$as_echo_n "checking Compiler flag(s) -Wpacked... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_packed+:} false; then :
@@ -12177,8 +11993,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wbad-function-cast" >&5
-$as_echo_n "checking GCC flag(s) -Wbad-function-cast... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wbad-function-cast" >&5
+$as_echo_n "checking Compiler flag(s) -Wbad-function-cast... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_bad_func_cast+:} false; then :
@@ -12228,8 +12044,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wunused-function" >&5
-$as_echo_n "checking GCC flag(s) -Wunused-function... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wunused-function" >&5
+$as_echo_n "checking Compiler flag(s) -Wunused-function... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_unused_func+:} false; then :
@@ -12279,8 +12095,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wunused-label" >&5
-$as_echo_n "checking GCC flag(s) -Wunused-label... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wunused-label" >&5
+$as_echo_n "checking Compiler flag(s) -Wunused-label... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_unused_label+:} false; then :
@@ -12330,8 +12146,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wunused-value" >&5
-$as_echo_n "checking GCC flag(s) -Wunused-value... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wunused-value" >&5
+$as_echo_n "checking Compiler flag(s) -Wunused-value... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_unused_value+:} false; then :
@@ -12381,8 +12197,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wfloat-equal" >&5
-$as_echo_n "checking GCC flag(s) -Wfloat-equal... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wfloat-equal" >&5
+$as_echo_n "checking Compiler flag(s) -Wfloat-equal... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_float_equal+:} false; then :
@@ -12432,8 +12248,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wchar-subscripts" >&5
-$as_echo_n "checking GCC flag(s) -Wchar-subscripts... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wchar-subscripts" >&5
+$as_echo_n "checking Compiler flag(s) -Wchar-subscripts... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_char_sub+:} false; then :
@@ -12483,8 +12299,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wswitch" >&5
-$as_echo_n "checking GCC flag(s) -Wswitch... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wswitch" >&5
+$as_echo_n "checking Compiler flag(s) -Wswitch... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_switch+:} false; then :
@@ -12534,8 +12350,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wmissing-braces" >&5
-$as_echo_n "checking GCC flag(s) -Wmissing-braces... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wmissing-braces" >&5
+$as_echo_n "checking Compiler flag(s) -Wmissing-braces... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_missing_braces+:} false; then :
@@ -12585,8 +12401,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wsequence-point" >&5
-$as_echo_n "checking GCC flag(s) -Wsequence-point... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wsequence-point" >&5
+$as_echo_n "checking Compiler flag(s) -Wsequence-point... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_sequence_point+:} false; then :
@@ -12636,8 +12452,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wunknown-pragmas" >&5
-$as_echo_n "checking GCC flag(s) -Wunknown-pragmas... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wunknown-pragmas" >&5
+$as_echo_n "checking Compiler flag(s) -Wunknown-pragmas... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_unknown_pragmas+:} false; then :
@@ -12687,8 +12503,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wdeclaration-after-statement" >&5
-$as_echo_n "checking GCC flag(s) -Wdeclaration-after-statement... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wdeclaration-after-statement" >&5
+$as_echo_n "checking Compiler flag(s) -Wdeclaration-after-statement... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_declaration_after_statement+:} false; then :
@@ -12738,8 +12554,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wsign-compare" >&5
-$as_echo_n "checking GCC flag(s) -Wsign-compare... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wsign-compare" >&5
+$as_echo_n "checking Compiler flag(s) -Wsign-compare... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_sign_compare+:} false; then :
@@ -12789,8 +12605,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -fstack-protector" >&5
-$as_echo_n "checking GCC flag(s) -fstack-protector... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -fstack-protector" >&5
+$as_echo_n "checking Compiler flag(s) -fstack-protector... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_fstack_protector+:} false; then :
@@ -12840,8 +12656,8 @@ $as_echo "no" >&6; }
  fi
 
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Winvalid-source-encoding" >&5
-$as_echo_n "checking GCC flag(s) -Winvalid-source-encoding... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Winvalid-source-encoding" >&5
+$as_echo_n "checking Compiler flag(s) -Winvalid-source-encoding... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_invalid_encode+:} false; then :
@@ -12894,8 +12710,8 @@ if test "$denora_cv_gcc_fstack_protector" = "yes"; then
         STRICT="$STRICT --param=ssp-buffer-size=4 "
 fi
 
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking GCC flag(s) -Wp,-D_FORTIFY_SOURCE=2" >&5
-$as_echo_n "checking GCC flag(s) -Wp,-D_FORTIFY_SOURCE=2... " >&6; }
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking Compiler flag(s) -Wp,-D_FORTIFY_SOURCE=2" >&5
+$as_echo_n "checking Compiler flag(s) -Wp,-D_FORTIFY_SOURCE=2... " >&6; }
  if test "${GCC-no}" = yes
  then
   if ${denora_cv_gcc_fortify_source+:} false; then :
@@ -12944,6 +12760,7 @@ $as_echo "no" >&6; }
 $as_echo "no" >&6; }
  fi
 
+fi
 
 
 

@@ -69,7 +69,7 @@ define(POWERPC64_PATTERN,
 dnl Borrowed from Atheme
 dnl DENORA_GCC_TRY_FLAGS(<warnings>,<cachevar>)
 AC_DEFUN([DENORA_GCC_TRY_FLAGS],[
- AC_MSG_CHECKING([GCC flag(s) $1])
+ AC_MSG_CHECKING([Compiler flag(s) $1])
  if test "${GCC-no}" = yes
  then
   AC_CACHE_VAL($2,[
@@ -98,7 +98,7 @@ int main(void);
 dnl Borrowed from Atheme
 dnl DENORA_CPU_GCC_TRY_FLAGS(<warnings>,<cachevar>)
 AC_DEFUN([DENORA_CPU_GCC_TRY_FLAGS],[
- AC_MSG_CHECKING([GCC Optimizing flag(s) $1])
+ AC_MSG_CHECKING([Compiler Optimizing flag(s) $1])
  if test "${GCC-no}" = yes
  then
   AC_CACHE_VAL($2,[
@@ -127,7 +127,7 @@ int main(void);
 dnl Borrowed from Atheme
 dnl DENORA_CFLAGS_GCC_TRY_FLAGS(<warnings>,<cachevar>)
 AC_DEFUN([DENORA_CFLAGS_GCC_TRY_FLAGS],[
- AC_MSG_CHECKING([GCC flag(s) $1])
+ AC_MSG_CHECKING([Compiler flag(s) $1])
  if test "${GCC-no}" = yes
  then
   AC_CACHE_VAL($2,[
