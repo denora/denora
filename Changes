@@ -3,6 +3,7 @@ Denora v1.5.0-git
 -------------
 
 Additions
+13/11/22 Exclude now supports wildcard matching.
 13/11/15 From command line -v (alias of -version) and -? (alias of -help) been added
 13/11/04 Full support for ircu and nefarious channel mode +A/U
 13/11/04 ModuleCreateConfigDirective() cleaner way to pass to moduleGetConfigDirective()
@@ -14,6 +15,8 @@ Additions
 
 
 Changes
+13/11/22 Removed mypasql.c and mypasql.def neither have been used in a long time.
+13/11/22 Removed dmalloc, when actually hooked up correctly denora crashed using it.
 13/11/20 base64_decode() removed last parameter of length, was never used.
 13/11/18 Not finding mysql_config no longer causes configure to exit on an error, just throw a warning
 13/11/15 Denora no longer says "Service not started" if the config file is missing, it gives a

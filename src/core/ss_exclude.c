@@ -98,14 +98,7 @@ static int do_exclude(User * u, int ac, char **av)
 			notice(s_StatServ, u->nick, "Invalid nick");
 			return MOD_CONT;
 		}
-		for (ch = av[1]; *ch && (ch - av[1]) < NICKMAX; ch++)
-		{
-			if (!isvalidnick(*ch))
-			{
-				notice(s_StatServ, u->nick, "Invalid nick");
-				return MOD_CONT;
-			}
-		}
+
 		e = find_exclude(av[1], NULL);
 		if (!e)
 		{

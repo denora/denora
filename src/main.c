@@ -471,13 +471,7 @@ int main(int ac, char **av)
 #else
 	char *errbuf;
 #endif
-
 	my_av = av;
-
-#ifdef HAVE_DMALLOC
-	dmalloc_debug_setup("log-stats,log-non-free,log=denora_dmalloc.%p");
-	atexit(dmalloc_shutdown);
-#endif
 
 	SET_SEGV_LOCATION();
 

@@ -164,13 +164,10 @@
 #endif
 
 /************************************************************************/
-/* Include the Dmalloc header file if the system can has it, and user	*/
+/* Include the mcheck header file if the system can has it, and user	*/
 /* had requested it, if not attempt to include the malloc header file	*/
 /************************************************************************/
 
-#ifdef HAVE_DMALLOC
-#include <dmalloc.h>
-#else
 #ifdef HAVE_MALLOC_H
 #ifndef __OpenBSD__
 #ifndef __DragonFly__
@@ -178,7 +175,8 @@
 #endif
 #endif
 #endif
-#endif
+
+
 
 /************************************************************************/
 /* These are our headers that setup various things			*/

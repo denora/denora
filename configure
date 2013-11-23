@@ -714,7 +714,6 @@ with_mysql_config
 with_mysql_library
 enable_mysqlbt
 enable_threading
-enable_dmalloc
 with_rungroup
 with_permissions
 with_bindir
@@ -1345,7 +1344,6 @@ Optional Features:
   --enable-crypt          Enable Admin encrypted passwords
   --enable-mysqlbt        Enable backtrace of mysql queries
   --enable-threading      Enable support for the threading library
-  --enable-dmalloc        Enable support for the dmalloc debugging library
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -4791,6 +4789,15 @@ $as_echo "#define HAVE_REGEX_H 1" >>confdefs.h
 fi
 
 
+ac_fn_c_check_header_mongrel "$LINENO" "mcheck.h" "ac_cv_header_mcheck_h" "$ac_includes_default"
+if test "x$ac_cv_header_mcheck_h" = xyes; then :
+
+$as_echo "#define HAVE_MCHECK 1" >>confdefs.h
+
+fi
+
+
+
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for inline" >&5
 $as_echo_n "checking for inline... " >&6; }
@@ -5395,80 +5402,6 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 else
   DIS_THREADING="Threading: No"
-fi
-
-# Check whether --enable-dmalloc was given.
-if test "${enable_dmalloc+set}" = set; then :
-  enableval=$enable_dmalloc; ac_cv_dmalloc="$enableval"
-else
-  ac_cv_dmalloc="no"
-fi
-
-
-if test "$ac_cv_dmalloc" = "yes"; then
-   ac_fn_c_check_header_mongrel "$LINENO" "dmalloc.h" "ac_cv_header_dmalloc_h" "$ac_includes_default"
-if test "x$ac_cv_header_dmalloc_h" = xyes; then :
-  denora_dmalloch="yes"
-else
-  denora_dmalloch="no"
-fi
-
-
-
-   if test "$denora_dmalloch" = "yes"; then
-     	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for dmalloc_shutdown in -ldmalloc" >&5
-$as_echo_n "checking for dmalloc_shutdown in -ldmalloc... " >&6; }
-if ${ac_cv_lib_dmalloc_dmalloc_shutdown+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-ldmalloc  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char dmalloc_shutdown ();
-int
-main ()
-{
-return dmalloc_shutdown ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_dmalloc_dmalloc_shutdown=yes
-else
-  ac_cv_lib_dmalloc_dmalloc_shutdown=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_dmalloc_dmalloc_shutdown" >&5
-$as_echo "$ac_cv_lib_dmalloc_dmalloc_shutdown" >&6; }
-if test "x$ac_cv_lib_dmalloc_dmalloc_shutdown" = xyes; then :
-  denora_dmalloc="yes"
-else
-  denora_dmalloc="no"
-fi
-
-	   if test "$denora_dmalloc" = "yes"; then
-		   DIS_DMALLOC="Memory debugging: Yes"
-	   else
-		  DIS_DMALLOC="Memory debugging: No"
-   	fi
-   else
-		  DIS_DMALLOC="Memory debugging: No"
-   fi
-
-else
-  DIS_DMALLOC="Memory debugging: No"
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for socklen_t" >&5
@@ -14052,7 +13985,6 @@ cat <<EOT
       $DIS_MODULES
                 $DIS_MYSQL
 $DIS_MYSQLBT
-     $DIS_DMALLOC
     $DIS_ENCRYPT
             $DIS_THREADING
 

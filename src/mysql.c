@@ -192,6 +192,7 @@ int db_mysql_query(char *sql, int con)
 	int result, lcv;
 	int pingresult;
 	int closesql = 0;
+	char *qpass;
 
 #ifdef USE_MYSQL_BT
 #ifdef HAVE_BACKTRACE
@@ -206,7 +207,9 @@ int db_mysql_query(char *sql, int con)
 		return 0;
 	}
 
-	alog(LOG_SQLDEBUG, "sql debug: %s", db_mysql_hidepass(sql));
+	qpass = db_mysql_hidepass(sql);
+	alog(LOG_SQLDEBUG, "sql debug: %s", qpass);
+	free(qpass);
 
 	pingresult = mysql_ping(con ? mysql_thread : mysql);
 	if (!pingresult)

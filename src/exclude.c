@@ -46,7 +46,7 @@ Exclude *find_exclude(char *mask, char *server)
 
 	for (e = exlists[EXCLUDEHASH(mask)]; e; e = e->next)
 	{
-		if (stricmp(e->name, mask) == 0)
+		if (match_wild_nocase(e->name, mask))
 		{
 			return e;
 		}
@@ -91,7 +91,7 @@ DENORA_INLINE int isExcludedServer(char *name)
 
 	for (j = 0; j < NumExcludeServers; j++)
 	{
-		if (stricmp(ExcludeServers[j], name) == 0)
+		if (match_wild_nocase(ExcludeServers[j], name))
 		{
 			return 1;
 		}

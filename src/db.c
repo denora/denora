@@ -425,12 +425,13 @@ int db_checknick_nt(char *nick)
 	{
 		username = rdb_escape(u->username);
 		host = rdb_escape(u->host);
-		queryhost = (myNumToken(host, '.') >= 2) ? strchr(host, '.') : host;
+		queryhost = sstrdup((myNumToken(host, '.') >= 2) ? strchr(host, '.') : host);
 		rdb_query(QUERY_HIGH,
 		          "SELECT nickid,nick FROM %s WHERE (username=\'%s\' AND hostname LIKE \'%%%s\' AND online=\'N\') OR nick=\'%s\' ORDER BY connecttime DESC",
 		          UserTable, username, queryhost, u->sqlnick);
 		free(username);
 		free(host);
+		free(queryhost);
 #ifdef USE_MYSQL
 		mysql_res = mysql_store_result(mysql);
 		if (mysql_res)
@@ -650,7 +651,7 @@ void db_removenick_nt(char *nick, char *reason)
 		{
 			username = rdb_escape(u->username);
 			host = rdb_escape(u->host);
-			queryhost = (myNumToken(host, '.') >= 2) ? strchr(host, '.') : host;
+			queryhost = sstrdup((myNumToken(host, '.') >= 2) ? strchr(host, '.') : host);
 			rdb_query(QUERY_HIGH,
 			          "SELECT nick FROM %s WHERE username=\'%s\' AND hostname LIKE \'%%%s\' AND online=\'Y\' AND nick != \'%s\' ORDER BY connecttime DESC",
 			          UserTable, username, queryhost, u->sqlnick);
