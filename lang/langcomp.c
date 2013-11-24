@@ -102,6 +102,9 @@ int read_index_file()
 	{
 		if (buf[strlen(buf) - 1] == '\n')
 			buf[strlen(buf) - 1] = '\0';
+		if (buf[strlen(buf) - 1] == '\r')
+			buf[strlen(buf) - 1] = '\0';
+
 		if (!(stringnames[i++] = denoraStrDup(buf)))
 		{
 			perror("strdup()");
@@ -130,6 +133,36 @@ int stringnum(const char *name)
 
 /*************************************************************************/
 
+char *strnrepl(char *s, int size, const char *old, const char *new)
+{
+	char *ptr = s;
+	int left = strlen(s);
+	int avail = size - (left + 1);
+	int oldlen = strlen(old);
+	int newlen = strlen(new);
+	int diff = newlen - oldlen;
+
+	while (left >= oldlen)
+	{
+		if (strncmp(ptr, old, oldlen) != 0)
+		{
+			left--;
+			ptr++;
+			continue;
+		}
+		if (diff > avail)
+			break;
+		if (diff != 0)
+			memmove(ptr + oldlen + diff, ptr + oldlen, left + 1 - oldlen);
+		strncpy(ptr, new, newlen);
+		ptr += newlen;
+		left -= oldlen;
+	}
+	return s;
+}
+
+/*************************************************************************/
+
 /* Read a non-comment, non-blank line from the input file.  Return NULL at
  * end of file. */
 
@@ -144,10 +177,9 @@ char *denora_getline(FILE * f)
 			return NULL;
 		linenum++;
 	}
-	while (*buf == '#' || *buf == '\n');
-	s = buf + strlen(buf) - 1;
-	if (*s == '\n')
-		*s = '\0';
+	while (*buf == '#' || *buf == '\r' || *buf == '\n');
+	strnrepl(buf, 1024, "\r", "");
+	strnrepl(buf, 1024, "\n", "");
 	return buf;
 }
 
@@ -231,7 +263,7 @@ int main(int ac, char **av)
 		return 1;
 	}
 
-	fprintf(stderr, "Starting build of %s -> %s.l\n", filename, filename);
+	fprintf(stderr, "Starting build of %s\n", filename);
 
 	while (maxerr > 0 && (line = denora_getline(in)) != NULL)
 	{
@@ -262,7 +294,7 @@ int main(int ac, char **av)
 
 			if ((curstring = stringnum(line)) < 0)
 			{
-				fprintf(stderr, " %s : %d : Unknown string name `%s'\n",
+				fprintf(stderr, " %s : %d : Unknown string name %s\n",
 				        filename, linenum, line);
 				retval = 1;
 				maxerr--;

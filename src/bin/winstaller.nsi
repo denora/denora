@@ -193,6 +193,8 @@ Section "MainSection" SEC01
   File "C:\Users\scott\Documents\GitHub\denora\data\GeoIP.dat"
   File "C:\Users\scott\Documents\GitHub\denora\data\GeoIPv6.dat"
   File "C:\Users\scott\Documents\GitHub\denora\data\index.tpl"
+  File "C:\Users\scott\Documents\GitHub\denora\data\ircu.conf"
+  File "C:\Users\scott\Documents\GitHub\denora\data\nefarious2.conf"
   SetOutPath "$INSTDIR\data\languages"
   File "C:\Users\scott\Documents\GitHub\denora\data\languages\de"
   File "C:\Users\scott\Documents\GitHub\denora\data\languages\en_us"
