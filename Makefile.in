@@ -90,6 +90,11 @@ core: build
 	@echo "*** Building Core modules";
 	(cd src/ ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' core; )
 
+#denoralib: build 
+#	@echo "*** Building Denora Library Code";
+#	(cd denoralib/ ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; )
+
+
 strict_core: strict_build 
 	@echo "*** Building Core modules";
 	(cd src/core ; ./configure ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(STRICT)' all; )

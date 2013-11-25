@@ -18,7 +18,6 @@ lang/language.h
 lang/nl
 lang/pt_br
 lang/ru
-Makefile
 src/*.o
 src/stats
 src/bin/denorarc
