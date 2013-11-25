@@ -366,13 +366,13 @@ char *db_mysql_hidepass(char *sql)
 	buf = strstr(sql, "MD5");
 	if (!buf)
 	{
-		return sql;
+		return sstrdup(sql);
 	}
 
 	buf = strstr(buf, ", ('");
 	if (!buf)
 	{
-		return sql;
+		return sstrdup(sql);
 	}
 
 	slen = strlen(sql);
