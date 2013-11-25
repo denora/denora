@@ -1,0 +1,1232 @@
+Denora v1.5.0
+-------------
+
+Additions
+13/11/22 Exclude now supports wildcard matching.
+13/11/15 From command line -v (alias of -version) and -? (alias of -help) been added
+13/11/04 Full support for ircu and nefarious channel mode +A/U
+13/11/04 ModuleCreateConfigDirective() cleaner way to pass to moduleGetConfigDirective()
+13/10/23 Adds m4 directory, the configure files are getting nasty, time to move macros where
+         they belong.
+13/10/21 Added regex.h to the build, core and modules can now use this to pattern 
+         match with regular expressions. 
+13/01/13 Added support for ircu's channel mode +R (was missing)
+
+Changes
+13/11/22 Removed mypasql.c and mypasql.def neither have been used in a long time.
+13/11/22 Removed dmalloc, when actually hooked up correctly denora crashed using it.
+13/11/20 base64_decode() removed last parameter of length, was never used.
+13/11/18 Not finding mysql_config no longer causes configure to exit on an error, just throw a warning
+13/11/15 Denora no longer says "Service not started" if the config file is missing, it gives a
+         better error.
+13/11/11 Moved do_umode() hack from 1.4.0 to the protocol like it should have been.
+13/11/06 denora.sql no longer includes ison table data, all this is move to the ircd based
+         sql files to remove extra columns that we will never set on that ircd.
+13/11/03 ModData functions require you to call it with your modules name, since moddata structs
+         were broken up until this point it shouldn't be a huge deal.
+13/10/24 Removes some future features so 1.5 can roll
+13/10/24 Removes Postgre from the code, was never used or really compiled for, maybe in the futre
+13/10/22 Removed configure searches to embed perl in the code
+13/10/17 Removed USE_RDB define from config, this was legacy Anope code for when rdb was an option.
+13/05/31 Improved handling of KILL messages on InspIRCd
+13/05/16 Do not free unallocated memory in InspIRCd protocol
+12/10/04 Cleanup and hopefully less leaks etc
+12/08/23 db_getserver() now escapes servername itself where needed
+12/08/05 Threading is now disabled by default (it's only used for mysql and the current implementation
+	 has serious issues)
+12/07/26 Set country to server's country if connection is localhost
+12/07/26 Use geoip's nice ntop/pton wrapper and depend on the existance of the functions, not the OS
+12/07/26 More cleanup and rewrites in src/users.c src/admin.c src/bans.c src/base64.c src/GeoIP.c
+         src/ChanBanMode.c src/ChanMode.c src/channels.c
+12/07/25 More cleanup and rewrite
+12/07/24 Lots of cleanup in src/db.c
+12/07/23 Rewrote db file handling a little
+12/07/23 Automode handled in denora_cmd_join now, removed from other obsolete places (fixed #1433)
+12/07/23 Updated sql specific code, more preparations for threadin
+12/07/18 Fixed persistent channel support by actually setting the modes in the protocols.
+12/07/18 Applied denora_automode to several protocols
+12/07/18 Moved automode handler into a separate void and marked some todo's regarding it for later
+12/07/18 Added automode handler for logchannel into inspircd11
+12/07/17 p10 wants 391 replies (RPL_TIME) in another way. 'Fixed', just need to calc offset somehow.
+12/07/17 Don't call events if (umode = o && ((add && was_oper) || (!add && !was_oper)) (should fix #1264)
+12/07/17 Updated README
+12/07/15 used #ifdef USE_MYSQL in modules seen/lastspoke/ircd_ports (should fix #1429)
+12/07/15 File permission detection in mysql_backup.c (should fix #1127)
+12/07/15 Added automode for logchan in bahamut
+12/07/15 Adding automode for logchan in inspircd12.c (should fix #1418)
+12/07/15 Don't init something to NULL after free if you gonna sstrdup something over it anyways.
+12/07/15 More free/sstrdup usage / Cleaned up seen.c and made it ^M free
+12/07/14 Revoked change to DenoraFree() and removed that macro entirely
+12/07/09 Updated ScaryNet Protocol
+12/07/06 Changed delete_user to properly and warning free cleanup the channels
+12/07/05 Changed a lot of free()'s into DenoraFree() in order to prevent double free()'s
+12/06/29 Undone a few changes as I might see issues
+12/06/27 Commented out a little more at src/db.c
+12/06/27 Bumped to 1.5.0-git-501
+12/06/26 Use inet_ntop for decode_ip function
+12/06/26 Reduced mysql_backup.c by 27%
+12/04/25 Channel names no longer forced to lowercase (#1403)
+12/04/24 Updated GeoIP databases
+12/04/11 Added 'cron' function to denorarc for crontab usage 
+12/04/11 Updated ScaryNet protocol
+11/05/04 r435 Fixed formatting of docs/EVENTS
+11/04/10 r428 documented the -protocoldebug option in the -help output
+11/04/10 r428 made denora accept options that start with --
+11/02/11 r419 Updated Denora icon
+11/02/11 r416 Updated Windows installer
+
+Fixes
+13/11/22 Denora links with hybrid using TS6 enabled.
+13/11/22 Compiling with clang on bsd systems.
+13/11/20 Fixed compiler warnings created by fixing stuff for macosx, so now it will build nicely on
+         slackware.
+13/11/18 More Solaris/OpenIndian compiler warnings fixed
+13/11/18 Fixed Compiler warning on OpenSuse where langcomp was not built with -O 
+13/11/18 More MacOSX compiling issues taken care of.
+13/11/17 Fixes compiler error when mysql backtrace is enabled, and the system doesn't have backtrace()
+         also properly includes the header for backtrace()
+13/11/17 Fixes compiler warning on DragonFly BSD
+13/11/15 BSD systems fixes
+13/11/13 Denora can compile on Solairs/OpenIndian 
+13/11/13 Fixed crash bug with nefarious ircds
+13/11/05 Fixed rdb_init() if MySQL not found it returns a better error message.
+13/11/04 Fixed chan_delete() it cleared c->sqlname before we called the rest of the clean up, made it the
+         last member of the channel struct to be cleaned out.
+13/11/01 Cleaned up the "nefarious" hack in do_umode(), no longer leaks memory and ANSI standard
+         coding.
+13/10/31 change_user_realname() escaped the user->realname field then called on rdb_escape() again
+         in the query, thus leaking memory.
+13/10/31 sql_do_server_version() escaped the version reply but never used that when setting updating.
+13/10/29 MySQL checks in configure process are hidden if you say no
+13/10/29 Fixes some "make ansi" problems.. there are still issues building on a system that would
+         force us into ansi.. but some of the unused variables are cleaned up.. networking under
+         ansi is very hard..
+13/10/29 Rewrote dmalloc checks of the code, this should avoid the ./configure script saying its
+         building with dmalloc when its not installed.
+13/10/29 ./Config script clean up and bug fix, where some questions it did not use the cache setting
+         for a defaulting answer, it would default back to script settings.
+13/10/29 Fixed memory leak in P10 ircds.
+13/10/28 Fixed lang files to prevent possible segfault.
+13/10/23 MySQL int is to small in some cases, need to change to BIGINT, update sql from changes.sql
+13/10/23 Total revamp of how we look for MySQL libs and headers, this in theory should fix the problem
+         people have had on various systems getting MySQL to be detected
+13/10/18 Fixed memory leak in protocol modules in function *_lkill_killer() sadly this needs to be fixed
+         since the core has a strtok() function that will save tons of time.
+13/10/17 Fixed StatServ HELP in special case, Stats Admin help would never be shown.
+13/10/17 StatServ ADMIN ADD now updates User struct to show they are an admin (we did it in DEL)
+13/10/17 StatServ ADMIN SETPASS now updates SQL with the password
+13/10/16 cron_chanstats.c does not load if sql is disabled, all cron_* and xmlrpc_* mods now 
+         use MOD_STOP if there is error binding the commands.
+13/10/16 HTML modules no longer load if html is disabled, and return MOD_STOP if there is an error
+         binding to the command, should save some memory.
+13/10/15 Fixed compiling most of the source under win32/win64 (sql to come soon)
+13/10/14 Fixed a ton of compiler warnings and errors, can build on Mac OS X
+13/10/11 Fixed an error in the ./Config script
+13/10/06 Fixed the 'kill of nonexistent nick' error in inspircd12
+13/06/05 Fixed the 'command out of sync' error caused by mysql_optimize and mysql_backup
+13/06/02 Fixed a memleak in cron_chanstats.c
+13/05/06 Fixed merging users with itself.
+12/11/02 Fixed a misplaced free() in unrealircd.c (#1458)
+12/10/15 Fixed a misplacement of u in users.c
+12/10/10 Fixed a double free in scarynet.c/denora_event_quit
+12/10/10 Free msg in <protocol>.c/denora_event_quit
+12/07/25 Fixed win32 specific warnings, in some cases the fugly way
+12/07/23 Fixed Config not remembering thread settings
+12/07/23 Threading needed more fixes, hope it works now :) (Now works)
+12/07/22 Fixed threading by actually documenting it in conf (duh)
+12/07/22 Several more warnings and fixes in sysconf.h.in / configure(.in)
+12/07/17 Fixed some warnings on x86_64
+12/07/17 Hybrid kills denora after sending PONG the wrong way (hopefully fixes #1420)
+12/07/17 Added account support to charybdis and shadowircd (fixes #1426)
+12/07/17 Made ss_exclude use lower() in queries (fixes #1240)
+12/07/17 Removed fnmatch from mysql_backup and now check result of file permission check properly
+12/07/17 Found a couple of missing free()'s
+12/07/16 #1418 is no more. Sorry for the many pushes, but it was worth it ;)
+12/07/16 Removed is_md5 (no longer need it) and properly fix #1176 using #ifdef HAVE_CRYPT
+12/07/15 Added is_md5() and used it to fix #1176 
+12/07/15 Fixed double presence of REGSCRIPT in config.cache (fixes #1428)
+12/07/15 xmlrpc didn't like free(av) which caused #1128
+12/07/15 Fixed some memleaks in lastspoke.c and converted it to unix format
+12/07/09 More warning fixes
+12/07/08 Lots of changes in users.c/channels.c/ctcp.c
+12/07/08 Fixed p10_gline to support 2.10.12's 6 arg gline format
+12/07/02 Fixed Config not respecting DMEMORY settings, also did MYSQL the correct way now
+12/07/02 Fixed debug output regarding nick changes
+12/06/27 Fixed a few possible memleaks (thx cedric for the valgrind report)
+12/06/26 Fixed a few compiler warnings 
+12/06/12 Fixed topichandler for scarynet protocol
+12/04/06 [1] Fixed geoipupd script breaking geoip (#1406)
+12/03/31 Fixed grammar errors (#1260)
+12/02/05 r436 Fixed ADMIN ADD command ignoring supplied host mask
+11/04/10 r431 Fixed duplicate call to denora_set_umode() in ircdrizon protocol
+11/04/10 r430 Fixed duplicate call to denora_set_umode() in charybdis protocol
+11/04/10 r429 Fixed unknown user mode Z in charybdis protocol
+11/03/30 r427 Fixed crash on nickchange in ngircd protocol (#1257)
+11/02/13 r426 Fixed erroneous ','s in SQL queries in do_account()
+11/02/12 r424 Fixed support for accounts on Charybdis at burst (oops)
+11/02/12 r422 Fixed compile errors
+11/02/12 r421 Fixed memleaks and crashbug in do_p10account
+11/02/11 r417 Fixed Denora not running on Windows XP/2003 anymore
+11/02/11 r416 Scarynet module was not compiled on windows
+
+Removed
+12/07/25 Removed adns - if resolve does no longer work for you, tell me
+12/07/23 Removed threadcount - we only will need ONE
+12/07/17 Removed commented out unused code
+12/06/26 Removed defs for strndup as it's not used at all
+11/02/11 r418 Removed support for Nefarious ircd 1.0-1.2
+11/02/11 r416 Removed support for Asuka ircd
+11/02/11 r416 Removed support for Hybrid ircd
+11/02/11 r416 Removed support for Hyperion ircd
+11/02/11 r416 Removed support for ngircd
+11/02/11 r416 Removed support for Plexus3 ircd
+11/02/11 r416 Removed support for Solidircd
+11/02/11 r416 Removed support for Ultimate3 ircd
+
+
+Denora v1.4.5
+-------------
+
+Additions
+11/01/02 r402 Added cron script to automatically update GeoIP db files monthly
+11/01/11 r391 Win32 compilation: added support for VS 2010, WinSDK 7.1 and MySQL 5.5
+10/12/30 r379 [4] Added GeoIP IPv6 support
+10/12/29 r374 [2] Added support for user IPv6 addresses with scarynet
+10/12/29 r373 [2] Added support for user IPv6 addresses with ircu and unrealircd
+10/05/25 r355 [3] Added Portuguese language file
+
+Changes
+11/02/03 r406 Updated IPv6 GeoIP database
+11/02/02 r404 Updated IPv4 GeoIP database
+11/02/01 r401 The GeoIP databases now get reloaded on rehash
+11/01/04 r388 [4] Cleanup in protocols and assuming first SERVER to be uplink
+11/07/04 r383 Updated german language file
+11/01/03 r381 [4] Updated scarynet module to take advantage of IRCu 2.10.12
+10/12/29 r376 Updated GeoIP API to v1.4.6
+10/07/17 r363 Renamed STATS command to STATUS
+10/07/05 r361 do_p10_burst now supports +L channel mode
+10/07/02 r358 inspircd12 module declared compatible with inspircd 2.0
+
+Fixes
+11/02/07 r411 Fixed KILL parsing in inspircd12 module
+11/02/03 r407 Fixed MOTD request not being sent out correctly in inspircd12 [closes #1242]
+11/02/03 r407 Fixed handling of bogus ADDLINE messages from inspircd12
+11/02/02 r405 [2] Fix for crash when parsing * for NICKIP in unreal32
+11/01/06 r389 [2] Fixed X3 version reply interpretation (again)
+10/12/29 r374 [2] Removed 2 redundant variables and updated ircdcapab for IPv6
+10/12/08 r372 Ignore PRIVMSG messages sent directly from ircds [closes #1186]
+10/09/08 r366 Fixed P10 MODE not using the correct channel creation timestamp
+10/08/12 r365 inspircd12 now sends proper PING messages
+10/08/12 r364 Fixed SQL schema using TYPE which is deprecated
+10/07/10 r362 [2] Fixed crash on module help callbacks
+10/07/05 r361 Fixed nefarious13 module missing channel +L support
+10/07/03 r358 Fixed autoop not working properly on some ircds
+10/03/27 r353 [2] Fixed Nefarious kill message parsing
+10/03/15 r352 [2] Fixed X3 version reply interpretation
+09/09/28 r345 Fixed sql_do_chanmodes crashing on missing parameters
+09/09/21 r340 Fixed crash on P10 ban burst
+09/09/13 r338 inspircd12 now sends TS6SID on BURST
+09/09/13 r336 [1] Fixed issues in the ratbox protocol module
+09/09/13 r333 [1] Fixed crash with ts6 when network contains a non-ts6 server
+
+Removals
+11/01/31 r398 Removed support for VS2003 and VS2005
+
+Developers
+Denora Team <dev@denorastats.org>
+
+Contributors
+[1] Jeremy <jeremy@ssnet.ca>
+[2] Jobe <jobe@mdbnet.co.uk>
+[3] drak (Giovani Roberto Sehnen) <drak@clubeirc.com>
+[4] OUTsider <outsider@scarynet.org>
+
+
+Denora v1.4.4
+-------------
+
+Additions
+09/09/13 r330 Denora now logs when loading db files
+09/09/10 r324 Added support for Nefarious 1.3 (untested) [closes #564]
+09/09/08 r318 Added support for InspIRCd 1.2 METADATA message [closes #566]
+09/09/08 r318 ustatsregistered now also checks for user account [closes #566]
+09/09/08 r314 Added option to exclude +B users from chanstats [closes #546]
+09/09/08 r313 Added chan_clearmodes function to clear given chanmodes
+
+Changes
+09/09/11 r328 Spamfilter actions are no longer translated for compatibility
+09/09/11 r327 /stats letter for getting spamfilters now definable
+09/09/07 r310 Disable nick tracking on NICK if ustatsregistered is enabled
+09/09/03 r304 Updated GeoIP.dat
+
+Fixes
+09/09/13 r330 Fixed segfault introduced in r327
+09/09/08 r321 Ported fixes to Nefarious since last release to all P10 ircds
+09/09/08 r319 Added OM/CM support to all p10 ircds
+09/09/07 r312 Fixed channel part not being parsed if reason missing
+09/09/03 r307 Fixed crash in sumuser if sql query fails [closes #562]
+09/09/03 r306 Implemented nefarious CM mode handling
+09/09/03 r306 [1] Fixed hostname priority in nefarious nick handling
+09/09/03 r305 Denora now warns and exits on missing config for Hybrid [closes #563]
+09/08/24 r303 Fixed inspircd12 not sending ts6sid on ENDBURST
+09/07/27 r293 [1] Fixed first channel users not getting +o on nefarious [closes #557]
+09/07/02 r291 [1] Fixed nefarious not adding some exceptions at burst [closes #555]
+09/05/26 r289 Fixed weekly cron removing ignored records from chanstats
+09/05/17 r287 [1] Fixed nefarious MODE message handling [closes #548]
+09/05/16 r286 Fixed autoop not working anymore on chanstats add [closes #547]
+09/05/07 r286 Fixed segfault on broken configuration file
+09/05/04 r285 Fixed inspircd12 requiring usermode +S [closes #545]
+09/05/03 r283 Fixed ngircd handling of NICK and SERVER messages
+09/05/03 r282 Reverted r267 which broke things on channels without modes
+09/05/03 r281 Fixed crash when setting debug 2 with logchan enabled [closes #539]
+09/04/27 r281 Fixed UMODE r change in Plexus3 [closes #543]
+09/04/21 r279 Fixed inspircd ADDLINE using wrong timestamp [closes #542] 
+09/04/21 r279 Removed handling of SVSNICK from inspircd modules [closes #540]
+09/03/24 r278 Fixed crash on missing channel mode parameter
+
+Removals
+09/09/08 r314 Removed nonicktracking option as it is now useless
+09/09/07 r309 Removed automerge on user quit
+09/07/29 r293 Removed dm script and version.log files
+
+Developers
+Denora Team <dev@denorastats.org>
+
+Contributors
+[1] Jobe <jobe@mdbnet.co.uk>
+
+
+Denora v1.4.3
+-------------
+
+Additions
+09/03/04 r266 Added support for nick change flood chanmode
+09/02/25 r257 Improved nick tracking on nick change for +r users
+09/02/22 r250 Added InspIRCd 1.2 support [closes #527]
+
+Changes
+09/03/10 r270 Updated GeoIP.dat
+09/02/22 r249 CTCP VERSION is now handled by alias if present
+
+Fixes
+09/03/15 r273 Fixed crash on incoming global notice (introduced in r249)
+09/03/13 r272 Fixed autoop not working properly with partonempty disabled
+09/03/13 r272 Fixed crash on restart/shutdown with partonempty enabled
+09/03/12 r271 Always create global ustats record if not existing
+09/03/10 r270 Fixed crash in chanstats [closes #531]
+09/03/09 r268 Fixed inspircd12 counting opers twice
+09/03/06 r267 SQL chans now default to +s to avoid race condition [closes #494]
+09/03/04 r264 Fixed SQL not always working after reinitialization [closes #529]
+09/03/02 r261 Make inspircd12 module check for TS6 and numeric on load
+09/02/26 r256 Fixed missing NICK handling in inspircd12
+09/02/26 r256 Nick tracking no longer removes old nick alias on nick change
+09/02/25 r255 Fixed segfault on missing chan +f parameter in ircd message
+09/02/23 r253 [2] Patch fixing some memleaks
+09/02/22 r250 Added missing AWAY message handling in inspircd11
+09/02/22 r247 Fixed sending broken CAPAB message to Plexus3
+09/02/22 r247 Workaround for missing EOB in Charybdis and NGircd
+09/02/19 r244 Fixed Plexus3 TOPIC, KILL, NICK, EOB handling and chanmode +z
+09/02/17 r242 Fixed handling of Plexus3 UID message in TS6 mode
+09/02/17 r242 Added missing TMODE implementation in Plexus3
+09/02/17 r241 Fixed JOIN message handling in Plexus3
+09/02/17 r241 Fixed user and channel modes in Plexus3 protocol
+09/01/13 r236 admin from denora.conf now overrides admin.db [closes #517]
+09/01/12 r235 mysql backup module now checks for sql connection [closes #524]
+09/01/12 r235 Fixed chanstats problem on some x64 systems
+08/12/18 r235 P10 UIDs are case sensitive [closes #525]
+08/09/15 r233 [1] Fixed nss problems on FreeBSD systems [closes #515]
+
+Removals
+n/a
+
+Developers
+Denora Team <dev@denorastats.org>
+
+Contributors
+[1] Rob <rob@anope.org>
+[2] DukePyrolator
+
+
+Denora v1.4.2a
+--------------
+
+Additions
+n/a
+
+Changes
+08/09/03 r227 Updated GeoIP.dat
+08/08/22 r214 Fixed exclude command assuming ustats user instead of nick
+08/08/22 r204 Channel logging is now enabled even in debug mode
+
+Fixes
+08/09/08 r230 Fixed parsing issue in inspircd11 fjoin [closes #514]
+08/09/08 r230 Fixed issue on empty VERSION inspircd11 message [closes #514]
+08/09/06 r228 Now compiles on 64 bit Windows
+08/09/03 r227 Fixed GeoIP related crash with newer dat files [closes #512]
+08/09/03 r226 Fixed possible screwup of ctcp/tld overall count in db files
+08/09/02 r224 Fixed crash on invalid nick country name [closes #512]
+08/08/26 r223 Fixed wrong logging about weekly/monthly chanstats reset
+08/08/24 r221 Fixed some potential off-by-one overflows
+08/08/24 r217 Fixed erratic description of the exclude command
+08/08/24 r216 Fixed crypt failure causing crash on login
+08/08/24 r215 Fix a potential desync on JOIN overriding TS
+08/08/23 r213 Fixed global ustats record not created after removed from exclude
+08/08/23 r212 Fixed chanstats not re-enabled for users removed from exclude
+08/08/23 r211 Fixed excluded users being readded to chanstats
+08/08/23 r210 Removed pointless code that could cause word count to go backwards
+08/08/22 r208 Windows issue finally fixed: time_t need to be casted [closes #435]
+08/08/22 r207 firstadded was not set for chanstats global channel
+08/08/22 r204 Fixed chanstats values screwing up in some cases [closes #507]
+08/08/21 r203 Set SO_REUSEADDR to avoid a (harmless) socket bind error
+
+Removals
+n/a
+
+Developers
+Denora Team <dev@denorastats.org>
+
+Contributors
+n/a
+
+
+Denora v1.4.1
+-------------
+
+Additions
+08/08/15 r201 Added QUICKSTART documentation for *nix and windows
+08/08/15 r201 [2] Added Windows NSIS installer script
+08/07/14 r191 Added zline/shun/jupe support for p10 ircds [closes #504]
+08/06/27 r188 Added user mode +D to nefarious protocol module [closes #504]
+
+Changes
+08/08/13 r198 Updated GeoIP.dat
+08/07/11 r190 Improved version.log entry generation and added rev to Changes
+08/07/10 r189 Updated MySQL libs detection routine
+08/07/10 r189 Threads and Crypto are now on by default in Config [closes #508]
+08/07/10 r189 Changed layout of the Changes file
+08/05/31 r187 Updated svn url in dm script
+
+Fixes
+08/08/14 r200 Fixed Denora crashing on Windows with SQL enabled [closes #435]
+08/08/14 r200 [1] Fixed crypt libraries detection on BSD
+08/08/13 r199 Fixed incorrect memory handling in strnrepl
+08/08/07 r197 Fixed not resetting server connecttime on startup [closes #510]
+08/07/18 r193 Fixed various Charybdis issues [closes #509]
+08/07/14 r192 Fixed corrupt chanstats counts on some systems [closes #507]
+08/05/31 r187 Fixed LOG_PROTOCOL showing even with protocoldebug off
+08/05/19 r186 Fixed exclude setting wrong flag on db save [closes #496]
+08/05/18 r185 Fixed compiling on Windows
+
+Removals
+n/a
+
+Developers
+Denora Team <dev@denorastats.org>
+
+Contributors
+[1] Jobe <jobe@mdbnet.co.uk>
+[2] katsklaw <katsklaw@ircmojo.net>
+
+
+Denora Version 1.4.0
+--------------------
+Provided by Denora Team <dev@denorastats.org> - 2008
+05/15 A Now should compile on 64 bit Windows systems              [ #00]
+05/15 A PSDK 2008 support                                         [ #00]
+04/28 A Improved channel TS support                               [ #00]
+02/28 A Chan messages from excluded users now counted globally    [ #00]
+05/06 U Updated GeoIP.dat                                         [ #00]
+05/03 F Fixed crash on some kicks for whatever reason             [#491]
+05/03 F Fixed SQL problems with ircds with long channel names     [ #00]
+04/28 F Improved inspircd FJOIN/FMODE support                     [ #00]
+02/29 F Fixed possible segfault on restart                        [ #00]
+02/29 F Fixed MODE not handled correctly in inspircd11            [ #00]
+02/27 F Fixed segfault on certain inspircd11 FMODE events         [#485]
+02/26 F Fixed inspircd11 +j/+J mode data not written to sql       [ #00]
+02/26 F Fixed crash on truncated inspircd11 PUSH message          [#489]
+02/17 F Added missing user modes to UltimateIRCd                  [#488]
+
+Provided by Jobe <jobe@mdbnet.co.uk>
+05/05 F Fixed +f mode handling in nefarious                       [ #00]
+04/28 F Fixed not updating p10 vhost in sql in some cases         [#501] 
+04/22 F Fix persistent channels getting deleted on last user part [#493]
+04/22 F Fixes to server squit routine                     [#481,482,486]
+
+Provided by Kein <kein-of@yandex.ru>
+04/22 U Updated Russian language file                             [ #00]
+
+Provided by OUTsider <outsider@scarynet.org>
+05/03 A Added support for Nefarious 1.2                           [#502]
+
+
+Denora Version 1.4.0-RC2
+------------------------
+Provided by Denora Team <dev@denorastats.org> - 2008
+01/11 A Detection of Windows Vista and Windows Server 2008        [ #00]
+01/10 A Added persistent channel mode support for nefarious       [#466]
+01/09 U Updated GeoIP.dat                                         [ #00]
+01/28 F Fixed sphtml setting not applying for inactive channels   [#473]
+01/27 F Write pid file before loading flatfile db files           [#469]
+01/27 F Fixed wrong wrong ping value stored for juped servers     [ #00]
+01/27 F Fixed slink array not cleaned in uplink struct on squit   [#461]
+01/23 F Fixed memory leak in ss_exclude                           [#480]
+01/23 F Fixed kill handling on P10 ircds                          [#479]
+01/23 F Fixed incorrect non-western characters in html output     [#462]
+01/22 F Handle user mode +h vhost correctly in nefarious          [#463]
+01/14 F Fixed sjoin not handling unrealircd nickchar nicks well   [#468]
+01/11 F Several inspircd11 fixes                                  [ #00]
+01/09 F Fixed p10 account not populated to sql on N message       [#465]
+01/09 F Give denorarc more time for the stats process to start    [#469]
+
+Provided by nenolod - 2008
+01/09 A State-machine driven UID generator for TS6 ircds          [#431]
+
+Provided by Denora Team <dev@denorastats.org> - 2007
+12/02 A New example config file (english)                         [ #00]
+11/26 A New HTML template which now validates against 4.01 strict [ #00]
+11/18 A Added rejoin lock time support for inspircd               [ #00]
+11/18 A Added Invite Exception support to inspircd module         [ #00]
+11/17 U Updated GeoIP database file                               [ #00]
+09/04 U Updated GeoIP database file                               [ #00]
+08/23 U Updated check_db                                          [ #00]
+08/23 U Removed unneccessary rdb_escape usage                     [ #00]
+08/23 U Updated NOQUIT/QS support not to rely on CAPAB            [ #00]
+08/23 U Updated autoconf stuff                                    [ #00]
+12/20 F Fixed segfault in inspircd11 on truncate PUSH messages    [#460]
+12/06 F Fixed some chanstats values going bad on certain systems  [ #00]
+11/29 F Fixed segfault if partonempty was enabled                 [#456]
+11/29 F Fixed servlist not being cleaned after server quit        [#455]
+11/28 F Fixed GeoIP problems on win32                             [#457]
+11/27 F Fixed channel mode hash being case insensitive            [#453]
+11/27 F Improved GeoIP performance and fixed not working on win32 [#452]
+11/26 F Fixed html output file being read-only on windows systems [#451]
+11/26 F Fixed mysql duplicate key errors when keepusers disabled  [#454]
+11/19 F Fixed socket issue that could lead to connection loss     [ #00]
+11/19 F Added some missing user and channel modes to inspircd11   [ #00]
+11/19 F Fixed SVSMODE and SVS2MODE parsing in unreal32 module     [#449]
+11/19 F Fixed only first automode mode being set on the bot       [#447]
+11/19 F Fixed inspircd11 not allowed to /stats                    [#448]
+11/18 F Fixed parsing problem with multiple chan modes            [#426]
+11/18 F Fixed several inspircd11 protocol properties              [ #00]
+11/18 F Fixed many protocol message handlings for inspircd11      [#436]
+11/18 F Fixed user/chan modes in inspircd11 protocol file         [ #00]
+11/18 F Fixed denora not reporting version correctly to inspircd  [ #00]
+11/18 F Fixed inspircd not catching ircd versions                 [ #00]
+11/18 F Fixed wrong characters for aq prefixes for inspircd       [ #00]
+11/18 F Fixed wrong user and chan modes in inspircd sql structure [ #00]
+11/18 F Fixed Stats bot modes not set in sql                      [ #00]
+11/17 F Fixed problem on user quits with some mysql servers       [#446]
+11/14 F Fixed topic setter not handled correctly in asuka         [ #00]
+11/12 F Fixed chanstats problems after removing user from exclude [#427]
+11/12 F Help for CHANSTATS SET was wrong in italian lang file     [ #00]
+11/12 F Fixed Asuka nick parser skipping some nicks               [#445]
+11/12 F Fixed segfault on topic set in Asuka                      [#444]
+11/11 F Fixed sjoin with more than two parameters going wrong     [#443]
+10/07 F Fixed segfault in Asuka topic handling                    [#439]
+09/12 F Fixed SQL structure error of ison table                   [ #00]
+09/04 F Fixed SVSKILL not being handled                           [#421]
+08/30 F Fixed SQL column for server uptime limiting to 97 days    [#428]
+08/30 F Applied Trystan's signals patch                           [#429]
+08/26 F Fixed query problem in chanstats on some x64 boxes        [ #00]
+08/23 F Fixed issue with not registered users on P10              [#416]
+08/19 F Fixed admin table scheme not mysql 4.0 compatible         [ #00]
+
+Denora Version 1.4.0-RC1
+------------------------
+Provided by Denora Team <dev@denorastats.org> - 2007
+08/17 A Admins passwords are now hidden in debug messages         [#414]
+08/16 A Added recompile option to Makefile, make recompile        [ #00]
+08/16 A Added new protocol ScaryNet                               [ #00]
+08/13 A Added XMLRPC documentation                                [#407]
+08/12 A Added option to track only +r users on chanstats          [ #00]
+08/10 A New optional token on connect block for quitprefix        [#404]
+07/25 A Admin passwords are now MD5-encrypted in SQL              [ #00]
+07/18 A Moved deprecated ircd protocol files out of the way       [ #00]
+07/18 A Made the ./Config process more clear about MySQL support  [ #00]
+02/28 A Added swhois support to nefarious                         [ #00]
+02/28 A Added P10 account support                                 [ #00]
+01/11 A Improved P10 hidden host support                          [ #00]
+08/16 U Updated uid and userlist indexes                          [#395]
+08/16 U Updated p10 to do double check before m_notice            [ #00]
+08/15 U Added a new question/answer to docs/FAQ                   [ #00]
+08/14 U Replaced old include/version.sh.c for include/version.js  [ #00]
+08/14 U Replaced old install.vbs for new Anope install.js         [ #00]
+08/14 U Updated Windows paths for SDK and MySQL                   [ #00]
+08/10 U Improved Local Kills detection                            [#404]
+08/09 U Updated FAQ file regarding bug #314                       [#314]
+08/08 U Updated Spanish language file (es.l)                      [ #00]
+08/07 U Updated GeoIP database file                               [ #00]
+07/18 U Updated GeoIP database file                               [ #00]
+01/06 U Updated GeoIP.dat                                         [ #00]
+08/17 F smiley counting was wrong on x64 boxes                    [#411]
+08/16 F Denora can load one protocol each time                    [ #00]
+08/15 F Fixed crash on xmlrpc connection                          [#403]
+08/13 F [nefarious] Local kills are now detected                  [#404]
+08/13 F [bahamut] Local kills are now detected                    [#404]
+08/11 F [inspircd11] CAPAB support                                [ #00]
+08/11 F Fixed SQUIT not handled properly on P10 IRCds             [#395]
+08/10 F [inspircd11] Local kills are now detected                 [#404]
+08/10 F Fixed broken behavior on certain server splits            [#347]
+08/10 F Local kills are now detected by Denora (Unreal32 only)    [#404]
+08/09 F Fixed syntax error in include/version.sh                  [ #00]
+08/08 F Inactive channels now get cleared from chan.db as well    [#355]
+08/08 F [inspircd11] Fixed autoop not working                     [#378]
+08/06 F [inspircd11] Fixed opers counted twice on burst           [#394]
+08/03 F [inspircd11] fixed server uptime not being caught         [ #00]
+08/03 F [inspircd11] fixed server MOTDs not working               [ #00]
+08/03 F [inspircd11] ulined servers not being marked as ulined    [#382]
+08/02 F Fixed admin struct not being cleaned up on reload         [#381]
+08/01 F EVENT_USER_PART referenced freed memory                   [#386]
+08/01 F Passwords are now hidden from log on ADMIN ADD/SETPASS    [#402]
+08/01 F Fixed extreme letter counting on some actions             [#399]
+08/01 F Fixed ./Config not working on some Ubuntu systems         [ #00]
+07/04 F Fixed compiling issue on x86_64 machines                  [#390]
+06/24 F Empty SWHOIS message now clears value instead of error    [#397]
+05/09 F Fixed version message defined twice in InspIRCd 1.1       [#380]
+05/09 F Fixed GeoIP not working correctly on InspIRCd 1.1         [#377]
+02/27 F Fixed AutoMode forced to +o in nefarious                  [ #00]
+01/11 F Fixed wrong handling of chan modes in p10 burst           [ #00]
+01/11 F Improved nefarious nick parser                            [ #00]
+01/11 F Send ip instead of host to GeoIP for improved performance [ #00]
+01/10 F Fixed kicked users not being removed from count and ison  [#371]
+01/08 F Fixed except support in P10 burst function                [ #00]
+01/08 F Fixed channel bans not parsed correctly on P10 burst      [ #00]
+01/08 F Fixed version replies not handled correctly in nefarious  [ #00]
+
+Provided by Nomad Dev. <dev@denorastats.org> - 2006
+09/15 A Added lastping time to the server table                   [#341]
+09/15 A Denora excludes its own clients from stats                [#340]
+08/28 A Added generic linked list code - fixes sorting            [ #00]
+07/23 A Completely rewrote how User/Chan Modes are handled        [ #00]
+07/19 A Added File I/O functions file to handle that stuff        [ #00]
+07/02 A Threading is now an optional, set during ./Config         [ #00]
+07/01 A Made HTML output modularized                              [ #00] 
+07/01 A Added ModuleDatabaseBackup() and ModuleRemoveBackups()    [ #00]
+06/30 A Added chgpass command to allow db admins to change pass   [#278]
+06/24 A Added encrypted admin passwords                           [#275]
+06/22 A Added Admin Database code to add admins on the fly        [#169]
+06/04 A Added option to disalbe MySQL optimizations               [#260]
+05/21 A Changed how -debug works, can now do -debug=2             [ #00]
+05/20 A Added EVENT_SERVER_KILL and EVENT_GLOBAL_KILL             [ #00]
+05/17 A Added ctcpeob so Denora only ctcp new users after burst   [ #00]
+05/13 A Added EVENT_CHANNEL_TOPIC for channel topic changes       [ #00]
+05/13 A Added EVENT_CHANNEL_MODE for channel mode changes         [ #00]
+05/12 A Added network.c a network lib for speed in the code       [ #00]
+05/12 A Added win32.c for win32 specific code                     [ #00]
+05/12 A Added strings.c a string lib for speed in the code        [ #00]
+05/12 A Added AutoMode allowing defining the default chan mode    [ #00]
+05/12 A Added option for block config for modules.                [ #00]
+05/12 A Added option for flat file config for modules             [ #00]
+05/02 A Added denora_cmd_action() to the api                      [ #00]
+05/02 A Added EVENT_USER_MODE for user mode changes               [ #00]
+04/26 A Added list-array functions via list-array.h header        [ #00]
+04/10 A Added support for Quiet/Gagged channel modes              [ #00]
+04/10 A Added EVENT_CHAN_KICK to show kick messages               [ #00]
+04/10 A Added EVENT_SENT_CTCP_VERSION to show sending CTCP        [ #00]
+03/28 A Added ADNS to the core code                               [ #00]
+03/25 A Added the user quit reason to sql files                   [#196]
+03/24 A Added MySQL options set for COMPRESSION/CHARACTER SET     [ #00]
+03/19 A Added EVENT_CHAN_PRIVMSG to handle channel PRIVMSG events [ #00]
+03/17 A Added optional module for handle mysql optimizing         [#178]
+03/15 A Added StatsPage config option to show the web site link   [#180]
+03/15 A ChanStats trigger is now definable in the config file     [#180]
+03/15 A Added away information to the internal user struct        [ #00]
+03/11 A Added GetWindowsVersion() to get the Windows version      [ #00]
+03/07 A Support for flood mode alternative data                   [ #00]
+02/25 A rewrote the conn() function, cleaner and portable         [ #00]
+02/25 A Now builds with pthread library if they are found         [ #00]
+02/13 A Added support for Inspircd SA* commands                   [ #00]
+02/07 A Added moduleNoticeChanLang()                              [ #00]
+02/01 A Added dmalloc support for quick memory debugging          [ #00]
+01/28 A Added NoLogs config directive so no logs are written      [ #00]
+01/25 A Added support for PTLink 6.19.x HALFOP                    [ #00]
+01/17 A Added ModuleGetErrStr()                                   [ #00]
+01/14 A Support for Microsoft VS2005                              [ #00]
+01/13 A .BANNER updates version display automated                 [ #00]
+01/04 A Added support for Charybdis vhosting                      [ #00]
+01/04 A Added check to mydbgen for the missing hybrid mysql stuff [#167]
+01/02 A Added strlcpy and strlcat for later use.                  [ #00]
+01/01 A StatServ parts logchan if its enabled                     [#163]
+08/07 U Updated es.l                                              [ #00]
+08/06 R Removed MAKE GCC4STRICT                                   [ #00]
+12/02 F Part Logchan before sending SQUIT                         [#361]
+12/02 F Channel Mode parser not being case sensitive              [#360]
+12/02 F Fixed Charybdis TOPIC causing segfaults                   [#362]
+09/15 F JUPE Servers are now flagged correctly (see config)       [#325]
+09/12 F Ignore Unreal SVSMODE +d not to be confused with MODE +d  [#337]
+09/10 F Fixed Inspircd TOPIC event, and prevent segfaults         [#333]
+09/03 F Rewrote sql_do_addusers() mode parser, fixes segfault     [#328]
+08/31 F Fixed restarting under Windows                            [ #00]
+08/28 F Fixed segfault with sorting of stuff                      [#302]
+08/28 F Fixed segfault when unloading modules that use commands   [#321]
+08/28 F StatServ no longer requires oper status to use commands   [#322]
+08/24 F Fixed User/Channel Modes not being case sensitive         [#320]
+08/07 F Fixed crash on delayed module load                        [#313]
+08/05 F Applied Anope's gcc hardened patch                        [ #00]
+08/05 F Fixed segfault when freeing xmlrpc and cron events        [#310]
+08/04 F Fixed nickIsServices calling finduser with NULL values    [#309]
+08/01 F Fixed User mode parse not getting the first mode          [#305]
+07/23 F Fixed warning message when mode was just +                [#296]
+07/22 F Fixed segfault with HTML writing.                         [#290]
+07/19 F Fixed Channel Database not being saved                    [#287]
+07/04 F Fixed always calling dlopen() with RTLD_LAZY              [ #00]
+07/02 F Set SIGPIPE to ignore before write() and reset after      [#280]
+06/30 F Fixed HTML Map output being in correct                    [#150]
+06/30 F Rewrote how core handles sorting of structs               [ #00]
+06/24 F Fixed /statserv help not showing admin command            [#275]
+06/24 F Fixed up ircvs*printf() - memory leak, x64 issue          [#274]
+06/23 F Fixed sort() functions scribbling on memory               [#263]
+06/22 F P10 *_event_server uses strlcpy()                         [ #00]
+06/22 F Fixed P10 version/stats command not working               [ #00]
+06/22 F Fixed odd segfault with P10 ircd may have affected others [ #00]
+06/16 F Fixed compiler errors and waring on Solaris/OpenSolaris   [ #00]
+06/15 F Fixed /stats u not returning correct end of message       [#267]
+06/14 F Fixed compiler warnings on x64 systems                    [#268]
+06/10 F Fixed issue with dlsym() on BSD systems                   [ #00]
+06/10 F Fixed compiler warnings with OpenBSD                      [ #00]
+06/10 F Fixed inspircd sanick segfaulting                         [#266]
+06/04 F Fixed segfault when doing -l on a channel                 [#264]
+05/23 F Fixed StatServ Alias not being ignored in chanstats       [#257]
+05/23 F Fixed StatServ not setting modes on add or kick           [#258]
+05/23 F Fixed MYSQL retry if can't restart on the first try       [#259]
+05/21 F Fixed denora_cmd_bot_nick() to act like denora_cmd_nick() [ #00]
+05/14 F Fixed do_svsumode() not handle TSMODE correctly           [ #00]
+05/14 F Fixed memory leak in delete_user() if swhois was set      [ #00]
+05/14 F Fixed memory leak in sql_do_nick_chg()                    [ #00]
+05/13 F Fixed EVENT_USER_MODE was not spend enough params         [ #00]
+05/12 F Fixed dm script to remove autom4te.cache                  [ #00]
+05/12 F Fixed Inspircd cmd_mode() to check for source for FMODE   [ #00]
+05/02 F Fixed Inspircd cmd_ctcp() which was broken                [ #00]
+04/27 F Fixed denora_cmd_numeric() to send to someone again       [#242]
+04/27 F Fixed register script not accepting lower case input      [ #00]
+04/27 F Fixed ping time not being set correctly                   [#235]
+04/26 F Fixed segfault on server squit / due to array clean up    [#237]
+04/26 F Fixed TS6 handling of SJOIN messages where ac = 3         [#239]
+04/25 F Fixed kickcount not being written to sql                  [ #00]
+04/22 F Fixed GetWindowsVersion() not reporting WinXP 64bit       [ #00]
+04/17 F Fixed memory leak & segfault in sql_do_server_bans_add()  [ #00]
+04/17 F Fixed memory leak in sql_do_s*line() functions            [ #00]
+04/17 F Fixed segfault with P10 and freeing memory                [#229]
+04/16 F Fixed RageIRCD user modes                                 [ #00]
+04/10 F Fixed mode handling in P10 burst, where mode is "ov"      [ #00]
+04/10 F Fixed memory leak in do_p10_burst()                       [ #00]
+04/10 F Fixed P10 burst not handling bans correctly               [ #00]
+04/10 F Fixed memory leak in handle_ctcp_version()                [ #00]
+04/10 F Fixed multiple "user joins channel" messages              [ #00]
+04/08 F Fixed compile dmalloc with threading enabled              [ #00]
+04/08 F Fixed Config script not caching answers correctly         [ #00]
+04/06 F Fixed up a few CGYWIN issues (still doesn't compile yet)  [ #00]
+04/03 F Improved segfault message to show how to get real bt      [ #00]
+04/03 F Fixed P10 segfault if nick uses 8 parameters              [#227]
+04/01 F Fixed Win32 not building with threading support           [ #00]
+03/30 F Fixed StatServ Alias not handling privmsg any more        [#225]
+03/29 F statserv login is now case sensitive                      [ #00]
+03/29 F Fixed \r not being stripped with config files             [#221]
+03/29 F Fixed issues relating to MySQL timeout and sigpipe        [#214]
+03/28 F Fixed Freebsd 4.x not compiling due to header includes    [#223]
+03/28 F Fixed Uptime being sent twice                             [#220]
+03/27 F Fixed lang files still showing old trigger                [#222]
+03/24 F Fixed make ansi compiler errors and warnings              [ #00]
+03/24 F Server uptime was broken badly for leaf servers           [#215]
+03/24 F denora->do_sql is not !denora_do_sql chanstats work again [#216]
+03/24 F Fantasy commands did not load even though sql was enabled [#213]
+03/24 F Charybdis ircd DOES SUPPORT NON-TS6 protocol (go figure)  [#218]
+03/20 F "make clean" cleaned up and much simplier                 [ #00]
+03/19 F Fixed make sub files to remove redunant -g switch         [ #00]
+03/19 F make distclean heavly cleaned up and much quicker         [ #00]
+03/19 F Fixed the modules make file to allow subdirectories       [ #00]
+03/19 F Closes file pointers in langtool                          [ #00]
+03/15 F Fixed memory leak in ngircd module                        [ #00]
+03/15 F moduleCount() does not count core unless switch is set    [#201]
+03/15 F NULL checking to xml and xmlrpc tag write functions       [ #00]
+03/14 F Fixed memory leaks in xmlrpc_split_buf()                  [ #00]
+03/11 F GLINE/XLINE/KLINE are updates if already in SQL           [ #00]
+03/11 F Fixed memory leak in sql_do_server_spam_remove()          [ #00]
+03/11 F Fixed xmlrpc_generic_error() when headers disabled        [ #00]
+03/11 F Fix to prevent Win9x from running denora                  [ #00]
+03/11 F Fixed dm to indent src/modules and lang folders           [ #00]
+03/11 F Fixed compiler warnings with XMLRPC code                  [ #00] 
+03/07 F Fixed user and channel modes for Charybdis                [ #00]
+03/05 F Fix to prevent configure from running without params      [#209]
+03/04 F Fixed not removing servers on squit and adjusting stats   [#172]
+02/28 F Fixed segfault in m_away() if user record not found       [#208] 
+02/28 F Fixed problems with Numeric ircds such as P10             [ #00]
+02/20 F Fixed memory leak in sql_do_uptime()                      [ #00]
+02/20 F Fixed memory leak in xmlrpc_method()                      [ #00]
+02/20 F Changed p10_gline() parameters to avoid segfaults         [ #00]
+02/20 F Fixed memory leaks when ctcping statserv                  [ #00]
+02/20 F Fixed segfaults in module*lang() functions                [ #00]
+02/10 F Fixed not escaping chanstats deletion                     [#199]
+02/09 F Fixed not escaping user or host in bans on removal        [#188]
+02/09 F Fixed Current daily_users time field not using its var    [#198]
+02/07 F Fixed SIGPIPE from causing a loop and large logs          [#195]
+02/02 F Fixed alot of memory leaks and invalid free()             [ #00]
+02/01 F Made localhost a tld class for misconfigured systems      [#190]
+01/30 F Fixed SUMUSER not removing nicks with \ in them           [#189]
+01/28 F Switched to looking for id instead of * on SELECT calls   [#188]
+01/28 F Fixed not escaping user or host in bans                   [#188]
+01/28 F Fixed mixed usages of \" and \' in sql statments          [#188]
+01/24 F Fixed topic author not always set on burst                [#187]
+01/21 F Fixed compiler warnings on Fedora Core 5                  [#186]
+01/19 F Cleaned up #ifndef due to older gcc throw errors with it  [ #00]
+01/19 F Fixed __PRETTY_FUNCTION__ warning messages.               [ #00]
+01/19 F Fixed va_copy() warnings on x64 boxes                     [ #00]
+01/17 F Changed UID to "id -u" because of *broken* BSD shells     [#170]
+01/15 F Fixed make ansi errors when mysql disabled                [ #00]
+01/14 F Fixed segfault with moduleNoticeLang() with mixed args    [ #00]
+01/13 F Modules now use a more random filename in the runtime.    [ #00]
+01/13 F Fixed Spamfilters not updating correctly                  [#181]
+01/07 F Fixed topcis so on TS6/P10 the nick not uid is the setter [ #00]
+01/07 F Fixed topics being stored in mysql incorrect with hybrid  [#165]
+01/07 F Updated all sql files to be uniform in the alias table    [ #00]
+01/07 F Removed left over debug message from the code             [#168]
+01/07 F Fixed missing items in the hybrid sql file                [#166]
+01/07 F Fixed usage of va_start() and va_end() on x64             [#164]
+01/07 F Changed inet_addr() to inet_aton() where possible         [ #00]
+01/07 F Fixed compiler warnings on AMD64 bit shell                [ #00]
+01/04 F Fixed internal +k/+l storage                              [ #00]
+01/04 F Fixed crash when non TS6 nick sent when TS6 enabled       [ #00]
+01/03 F Bans cleaned up when expired (when not notifed of event)  [#152]
+01/02 F Fixed segfault with ngircd                                [ #00]
+01/01 F Fixed Shutdown message cut short                          [ #00]
+
+Provided by Nomad Dev. <dev@denorastats.org> - 2005
+12/30 A Moved sjoin +I char to the ircd protocol modules          [ #00]
+12/30 A Cleaned up ircd struct info with IRCD_ENABLE/IRCD_DISABLE [ #00]
+12/30 A Added support for PTLink CHGHOST command                  [ #00]
+12/26 A the "make" batch file under win32 now has options         [ #00]
+12/26 A Added batch file "Config.bat" for win32 builds            [ #00]
+12/26 A Moved operating system specific defs to include/os folder [ #00]
+12/16 A StatServ parts channels on RESTART                        [#157]
+12/12 A Added channel monitoring start time                       [#141]
+12/10 A Added option to hide Uline servers from html/xml output   [#150]
+11/25 A Improved how modules can access PRIVMSG for pseduos       [ #00]
+11/10 A Improved support for channel link modes                   [ #00]
+10/26 A Add support for Unreal +s mode                            [ #00]
+10/16 A StatServ now parts chan stats channels on shutdown        [ #00]
+10/08 A All ! fantasy commands modularized                        [ #00]
+10/07 A Added Charybdis IRCD support                              [ #00]
+10/01 A Made module (un)loading code more friendly for the core.  [ #00]
+09/25 A Added support for RageIRCD's NBURST                       [ #00]
+09/25 A Added support for Hybrid SVSNICK                          [ #00]
+09/25 A Added support for hyperion SETHOST/SETIDENT/SETNAME       [ #00]
+09/25 A Added install.vbs to help with configuring win32          [ #00]
+09/10 A Server Table not retains lastsplit values.                [#116]
+09/10 A SQLRetryOnLost option in the config to attempt reconnect  [#123]
+09/10 A Added support for hybrid RKLINE/RXLINE                    [#132]
+09/10 A Added support for hybrid/ratbox/plexus KLINE              [#132]
+09/10 A Added support for hybrid/ratbox/plexus XLINE              [#132]
+09/04 A Added checks for Config to prevent bad answers.           [ #00]
+08/22 A Added Hybrid vhosting support.                            [ #00]
+08/16 A Added warning for IRCD that have not been fully tested    [ #00]
+08/11 A Added support for ngircd 0.9.1                            [ #00]
+08/09 A Now searches for the best optimized flag from -O3 to O0   [ #00]
+08/08 A Changed how Commands are passed their data.               [ #00]
+08/07 A Added swhois message to user struct.                      [ #00]
+08/06 A Added server_find() replaces various findserver* calls    [ #00]
+08/06 A Aded MAKE OPTIMIZE to throw compiler optimizing flags     [ #00]
+08/03 A Added user_find() replaces various finduser* functions    [ #00]
+08/03 A Added XML RPC Server/Parser code (see XMLRPC for details) [ #00]
+01/02 U Updated XMLRCP system, sync with Atheme whom use our lib  [ #00]
+01/01 U Updated config.guess, config.sub per GNU updates          [ #00]
+12/26 U mydbgen Warn on mysql3.xx, added msg_*(), fixed mysqlshow [ #00]
+09/10 U Updated config.guess file.                                [ #00]
+05/12 R Removed compact.c move stuff to strings.c and network.c   [ #00]
+05/12 R Removed memory.c moved stuff to strings.c                 [ #00]
+05/12 R Removed vsnprintf.c legacy stuff.. replacement shortly    [ #00]
+03/19 R Removed api.html this will be replaced with doxygen       [ #00]
+12/31 F Fixed Ultimate2 modes that were missing in src and sql    [ #00]
+12/31 F Fixed Ultimate3 version reply with their 3.1 dev builds   [ #00]
+12/31 F Fixed Ultimate3 sql file to have sgline                   [ #00]
+12/30 F Fixed segfault with Ptlink and NEWMASK                    [ #00]
+12/27 F Fixed compiler warning with BSD systems on dir.h          [#162]
+12/26 F Generating language.h failed on new version of make.      [ #00]
+12/25 F Fixed compiling ngircd protocol under win32               [ #00]
+12/13 F Fixed CTCP ping replies.                                  [#154]
+12/13 F Check mysql ping status before attempting to query        [#153]
+12/12 F Fixed trying to load non-existant modules                 [#151]
+12/10 F Fixed duplicate servers appear in server struct           [ #32]
+12/07 F Fixed segfault with % being used as commands.             [ #00]
+12/05 F Fixed denora running if invalid command line options      [ #00]
+12/04 F Fixed core_modules_init() called before required inits    [#144]
+11/05 F Fixed sqlnick variable not changing on nick change        [#140]
+11/05 F Fixed Bans/Expections/Invites being stored multiple times [#137]
+10/06 F m_notice() now returns if no source is found              [ #00]
+10/06 F db_getchannel() now avoids segfault checking the argument [ #00]
+08/16 F Fixed chans missing from the Current table scheme.        [ #00]
+08/16 F Fixed hidden oper status, we now reduce oper count.       [#119]
+08/13 F Fixed segfault with Bahamut 1.4.27 and no NICKIP          [ #00]
+08/11 F Fixed if MySQL returns error 1226, we exit out.           [ #00]
+08/07 F Fixed handling of uptime reporting from Sentinel services [ #00]
+08/06 F Fixed EXCLUDE ADD not checking the nick lenghts.          [ #00]
+08/05 F Fixed maxvalues setting on clean installs.                [#122]
+
+Provided by Hal9000 <hal9000@denorastats.org> - 2006
+12/20 F Fixed Denora crashing on certain user quits/parts         [#363]
+12/19 A Added vhost support to Nefarious                          [#346]
+12/19 F Fixed many P10-related bugs, especially on Nefarious      [#348]
+12/19 F Fixed P10 nicks getting truncated in sql_do_addusers      [#364]
+12/15 F SWHOIS is now being reset on reconnect                    [#365]
+12/07 A ADMIN ADD|DEL|SETPASS for config file admins only         [ #00]
+12/06 A Added ADMIN LIST|SHOW|SETPASS commands                    [ #00]
+12/06 A Added support for admin users stored into SQL             [ #00]
+12/04 F Cleaned up user/chan modes in unreal32 module and sql     [ #00]
+12/03 F Fixed topic not being set on P10 ircds                    [ #00]
+12/03 F Fixed user/chan modes in P10 protocol modules and sql     [ #00]
+12/03 A Reorganized, cleaned up and fixed sql files               [ #00]
+11/30 F More fixes to the Charybdis SQL database file             [ #00]
+11/30 F Fixed ustats table for Charybdis and Beware               [ #00]
+11/29 F Fixed not decreasing user count on server kills           [#350]
+11/26 F Fixed user modes not being reset on user reconnect        [#359]
+11/23 F Fixed FMODE parser in InspIRCd 1.1 protocol module        [ #00]
+11/22 F Fixed uplink server not being set with InspIRCd 1.0/1.1   [#357]
+11/22 F Fixed maxvalues table not getting updated in some cases   [#356]
+11/22 A Added InspIRCd 1.1 support                                [#353]
+11/14 F Help now advertises the CHANSTATS EXCLUDE LIST command    [ #00]
+11/11 F Don't care about Unreal's +H mode for oper counting       [#338]
+09/22 A Added configuration option to disable nick tracking       [ #00]
+09/16 U Updated mydbgen                                           [#341]
+09/11 F Fixed do_nick not assigning uid correctly                 [ #00]
+09/11 F Fixed wrong parameter sent in m_privmsg                   [#335]
+09/10 A Added CHANSTATS RENAME command for renaming stats users   [ #00]
+09/10 F Added missing +O umode to unreal32 sql table              [#331]
+09/10 F Fixed wrong version counts in ctcp.db                     [#332]
+09/05 F Wait until denora is synched before running nick tracking [#311]
+08/25 F Fixed sumuser screwing up time fields on fresh dbs        [ #00]
+08/25 F Nick Tracking routines only called when really needed     [ #00]
+08/24 F Fixed max channel value updating when not needed          [ #00]
+08/24 F Fixed channel count not decreasing in sql on chan close   [ #00]
+08/24 F Fixed server count not decreasing in sql on server quit   [ #00]
+08/22 F Fixed chanstats crashbug                                  [#319]
+08/21 F Fix sumuser deleting instead of summing in rare cases     [ #00]
+08/08 F Fixes and improvements to mysql_optimize module           [ #00]
+08/05 A Added missing stats.motd                                  [ #00]
+08/05 F Fixed SQL queries not updating all info on nick update    [ #00]
+08/04 A Improved nick tracking                                    [#298]
+08/04 F Fixed sumuser not working in some cases                   [#298]
+08/04 U Updated de.l                                              [ #00]
+08/04 U Updated example.de.conf                                   [ #00]
+08/04 U Updated it.l                                              [ #00]
+08/04 U Updated example.it.conf                                   [ #00]
+05/17 F Fixed sumuser display problem                             [#254]
+04/03 U Updated mydbgen for lastquit message                      [ #00]
+03/24 U Updated de.l                                              [ #00]
+03/24 U Updated example.de.conf                                   [ #00]
+03/24 U Updated it.l                                              [ #00]
+03/24 U Updated example.it.conf                                   [ #00]
+12/13 U Updated mydbgen to add timeadded                          [ #00]
+04/08 F Fixed problem with mydbgen cause by previous patch        [#228]
+12/07 F Fixes to hourly cron events                               [ #00]
+
+Provided by w00t <robin@barafranca.com>
+01/06 F Fixed inspircd11 module not parsing JOIN correctly        [#372]
+
+Provided by dotslasher <dotslasher@staticbox.com>
+01/04 U Updated nl.l file                    	                  [ #00]
+
+Provided by Alvaro <alvaro@xateros.com>
+01/10 U Updated example.es.conf                                   [ #00]
+01/10 U Updated es.l                                              [ #00]
+
+Provided by illu <illu@icedslash.org>
+11/09 U Updated fr.l                                              [ #00]
+01/24 U Updated fr.l                                              [ #00]
+
+Provided by BarkerJr <BarkerJr@GMail.com>
+03/17 A contrib/optimizetable.php script to optimize from shell   [ #00]
+07/22 F Fixed lastspoke not being set correctly                   [#295]
+
+Provided by Obi_Wan <webmaster@st-city.net>
+05/12 F Fix to sumuser not replying when successful               [#247]
+
+Provided by OUTsider <outsider@scarynet.org>
+08/07 F Updated ircu module to work with 2.10.11+                 [ #00]
+02/27 F Fixed segfault on server/global notice in nefarious       [ #00]
+02/27 F Fixed segfault in m_away                                  [ #00]
+01/05 F Improved query generation in sql_do_addusers              [ #00]
+01/05 F Use strlcpy/strlcat instead of strcpy/strcat              [ #00]
+01/05 F Make P10 send EA only when EOB comes from uplink server   [ #00]
+01/05 U Updated Dutch language file                               [ #00]
+12/04 F Fixed P10 ircds not parting channels                      [ #00]
+
+Provided by nenolod <nenolod@nenolod.net>
+08/24 A implement support for charybdis TBURST mechanism          [#425]
+08/24 F handle charybdis TMODE event correctly                    [#425]
+
+Provided by Kein <kein-of@yandex.ru>
+12/20 A Added Russian example config file and language file       [ #00]
+
+Denora Version 1.1.0
+-------------------
+Provided by Nomad Dev. <dev@denorastats.org> - 2005
+07/25 A pseudo clients op themselves when joining a channel.      [#118]
+07/23 A Added support for Unreal SVS2MODE.                        [ #00]
+07/22 A Added xml_moduleData() to write out module data to xml    [ #00]
+07/22 A XML API is not externed so module coders can user it      [ #00]
+07/16 A Added feature to clear inactive channels after given time [#109]
+07/10 A Added Beware 1.5.x IRCD support.                          [ #00]
+07/10 A Added Channel and Server Stats to hourly.                 [#104]
+07/06 A Added MusIRCD 2.0x support.                               [ #00]
+07/05 A Added Server opers/maxoper/max oper time to sql           [ #00]
+07/04 A StatServ is now modularized.                              [ #00]
+07/03 A Added Hyperion IRCD (formly DancerIRCD) support.          [ #00]
+07/02 A Completed work with "make strict" it now very strict      [ #00]
+07/02 A Added support for P10 ircds NICKIP.                       [ #00]
+07/02 A Added DreamForge IRCD support.                            [ #00]
+07/01 A Added NeoIRCD Support.                                    [ #00]
+06/29 A Added LiquidIRCD support.                                 [ #00]
+06/29 A Added -protocoldebug switch to debug protocols better     [ #00]
+06/28 A Added -ggdb switch to the builds to help GDB debugger     [ #00]
+06/26 A Added support for IrcDreams IRCD.                         [ #00]
+06/26 A Default HTML Template is completely translated            [ #86]
+06/26 A Added the config option to backup the FFF files.          [ #82]
+06/25 A new "make strict" uses gcc strict warning switches.       [ #00]
+06/25 A "make strict" is now "make ansi" - to build code ansi     [ #00]
+06/25 A Added TS6 to Hybrid Protocol (7.1 beta)                   [ #00]
+06/21 A Added SorceryNet IRCD support.                            [ #00]
+06/20 A nickisservice() now works for any psuedo client.          [ #00]
+06/19 A Added NICKCHAR to the ircd struct.                        [ #00]
+06/18 A Added doc/MYSQL documentation.                            [ #00]
+06/18 A HTML Output now writes the correct META data for the lang [ #00]
+06/13 A Added U:line flag, sql flag if the server is ulined       [ #00]
+06/11 A Added ExcludeServ config option to ignore a servers users [ #79]
+06/11 U mydbgen updates the SQL schema now                        [ #00]
+06/10 A Added StatServ EXCLUDE LIST                               [ #79]
+06/06 A Added !peak to the !help output                           [ #00]
+06/06 A Denora now stores its MOTD into SQL.                      [ #00]
+06/06 A Added Server ping times to SQL.                           [ #00]
+06/06 A Added the kick count to sql.                              [ #00]
+06/06 A Added the time when the max user time in channel happened [ #00]
+06/05 A Added Win32.txt to help people throw building for win32.  [ #00]
+06/05 A Added module language functions per updates from Anope.   [ #00]
+06/04 A All SQL Tables are now in the config.                     [ #71]
+06/04 A Max Users in the channel now shown in sql.                [ #00]
+06/01 A Added "register" so we can know how many nets use denora  [ #00]
+06/01 A Added warning if LargeNet on chanstats add.               [ #00]
+06/01 A ChanStats clears inactive users within the given time.    [ #00]
+05/31 A Added new hourly user stats info.                         [ #00]
+05/30 A Added new Cron Events on the hour.                        [ #00]
+07/28 F Win32 STATS_BIN should be denora.exe (sysconf.h.win32)    [ #00]
+07/27 F StatServ exclude list things wont be listed in HTML stats [#120]
+07/23 F Fixed +f data being cut at 20 characters.                 [#117]
+07/23 F Fixed maxvalues not setting on start correctly.           [ #00]
+07/22 F Fixed daily_users begin stored with the wrong value       [#115]
+07/22 F Fixed MOTD being appended to after netsplit.              [#114]
+07/12 F Fixed Hourly stats not updating, now forces it every 15m  [#107]
+07/12 F Fixed Netsplits not being handled correctly.              [#102]
+07/10 F Fixed MOTD code from stripping color codes.               [#101]
+07/09 F Fixed segfault with ctcp ping of statserv                 [ #00]
+07/05 F Max stats are now saved to a db and set on startup.       [ #90]
+07/03 F Fixed db parsing of ctcp with : in their replies          [ #98]
+07/03 F Fixed max oper time not being saved                       [ #88]
+07/03 F Fixed web api not escaping html characters in topics      [ #95]
+07/03 F Fixed stats table not updating                            [ #96]
+07/03 F Fixed a few memory leaks found with valgrind              [ #00]
+07/03 F Fixed segfaults when not compiled for SQL                 [ #00]
+06/28 F Fixed Win32 compiler warning.                             [ #00]
+06/25 F Fixed stats u on Ultimate3.                               [ #00]
+06/25 F Fixed sorting issues, code cleaned up.                    [ #00]
+06/22 F win32.rc is now dynamic and updates per build of binaries [ #00]
+06/22 F HTML now escapes characters just like XML.                [ #00]
+06/19 F Applied fix per the Anope core for Sun Solaris            [ #00]
+06/18 F Fixed KILL messages not being handled currectly.          [ #00]
+06/16 F Fixed mod_current_buffer being null under P10 and TS6     [ #00]
+06/13 F Fixed Stats u on Ultimate2.                               [ #00]
+06/09 F Fixed Unreal3.2 server message showing wrong uplink name  [ #00]
+06/07 F Fixed possible buffer overflow of rdb_query()             [ #00]
+06/07 F Fixed MOTD not fitting into 1024 character space.         [ #00]
+06/07 F Fixed MOTD characters not being escaped.                  [ #74]
+06/05 F Removed requirement to change to /src/bin to run register [ #00]
+06/04 F Fixed segfault due to unescaped channel names.            [ #72]
+06/02 F Fixed ChanStats channel name form being more the CHANMAX  [ #00]
+06/02 F Fixed StatServ not report Unknown Command.                [ #00]
+06/02 F Fixed ChanStats requires a valid channel name be used     [ #00]
+06/02 F Fixed src/Makefile so clean/distclean work on incomplete  [ #00]
+06/02 F Fixed configure script so it generates install-sh         [ #00]
+06/02 F Fixed Config script so it will allow you to disable sql   [ #00]
+06/02 F Fixed ChanStats can not be set to LogChan any more        [ #67]
+06/02 F Fixed ChanStats del leaving sql stats behind              [ #66]
+06/01 F Fixed segfault with html output.                          [ #00]
+06/01 F Fixed segfault with the new hourly code.                  [ #00]
+06/01 F Fixed SPHTML causing LargeNet to trigger.                 [ #00]
+05/30 F Redid how Cron Events take their arguments.               [ #00]
+05/30 F Inspircd Version replies trapped now.                     [ #00]
+05/30 F HTML File chmod correctly.                                [ #00]
+
+Provided by Izlots <Christian.Schroer@gmail.com> - 2005
+06/12 F !peak was case sensetive                                  [ #80]
+
+Provided by Hal9000 <hal9000@denorastats.org> - 2005
+07/05 U Updated it.l and example.it.conf                          [ #00]
+07/02 U Update it.l and convertor to v0.7.0                       [ #00]
+06/11 A Added exapmle.it.conf                                     [ #00]
+06/07 U Update it.l and convertor to v0.6.0                       [ #00]
+06/04 A Added an eggdrop stats.mod to Denora SQL convertor        [ #00]
+07/05 F Fixed minor issues with the pie chart examples.           [ #00]
+07/05 F Fixed minor issues with the web api.                      [ #00]
+
+Provided by MaOaM <MaOaM@gmx.org> - 2005
+06/11 A Added exapmle.de.conf                                     [ #00]
+
+Provided by Alvaro <agonzal@gmail.com> - 2005
+06/28 A Added Spanish example configuration file                  [ #00]
+
+
+Denora Version 1.0.0
+-------------------
+Provided by Nomad Dev. <dev@denorastats.org> - 2004/2005
+05/29 A StatServ display now shows info about the mod better      [ #00]
+05/20 A Added !help, !stats, !gstats.                             [ #57]
+05/19 A Added SQL Ping check so if the server goes way we know    [ #00]
+05/18 A denora_umode() and denora_cmode()                         [ #00]
+05/17 A LargeNet option, disables ALOT of stuff for large nets    [ #00]
+05/17 A StatServs ENVINFO command                                 [ #00]
+05/15 A Added denora_get_ircd() for easy coding for ircd.         [ #00]
+05/14 A Asuka IRCD (QuakeNet) Support.                            [ #00]
+05/14 A Nefarious IRCu Support.                                   [ #00]
+05/14 A QuakeIRCD support.                                        [ #00]
+05/08 A StatServ updates internal info on join/part.              [ #00]
+05/07 A Added FreeQuest IRCd 2.1.3 support.                       [ #00]
+05/07 A Sample Web API example script.                            [ #00]
+05/03 A EXCLUDE help strings                                      [ #00]
+05/03 A More commands added to StatServ HELP                      [ #00]
+05/02 A Support for SolidIRCD SVIDENT and SETIDENT.               [ #00]
+04/30 A New switch -socketdebug for the socket debug log stuff    [ #00]
+04/24 A SQL Password is now optional.                             [ #26]
+04/24 A Exclude system added.                                     [ #00]
+04/24 A es.l synchronization                                      [ #00]
+04/24 A Implemented new database system.                          [ #00]
+04/21 A Added Inspircd support.                                   [ #00]
+04/21 A Added ShadowIRCD support.                                 [ #00]
+04/21 A Switched all free() statments for denora_free()	          [ #00]
+04/19 A Modularized the IRCD Protocols (based off work by Rob)    [ #00]
+04/17 A Cron Events Added.                                        [ #00]
+04/12 A StatServ command for SET added.                           [ #00]
+04/12 A HTML Output is now on a set time schedule.                [ #00]
+04/12 A Now stores the MOTD file to SQL                           [ #00]
+04/09 A Win32 support.                                            [ #00]
+04/09 A Unreal NS support.                                        [ #00]
+03/24 A Added a new token to admin{}: language                    [ #00]
+03/17 A Added a .BANNER file with a nice intro for Config         [ #00]
+03/17 A More options to Config scripts.                           [ #00]
+01/12 A StatServ RELOAD command.                                  [ #00]
+01/09 A New configuration (blocks) system.                        [ #00]
+01/09 A Administrators system in order to have extra powers.      [ #00]
+01/09 A StatServ LOGIN  and LOGOUT command.                       [ #00]
+01/01 A Channel Invites/Exceptions +I are now stored in SQL.      [ #00]
+01/01 A XML Library for exporting data.                           [ #00]
+12/31 A Server Update is now stored into SQL.                     [ #00]
+12/31 A TLD stats are now stored into sql.                        [ #00]
+12/30 A Added country and country code to the sql and struct info [ #00]
+12/30 A GeoIP lib to the code so that we can handle TLD issues    [ #00]
+12/27 A Complete rewrote the signal code.                         [ #00]
+12/24 A StatServ RESTART command.                                 [ #00]
+12/24 A Channel modes hooked up.                                  [ #00]
+12/24 A Added -sql to the command line options                    [ #00]
+12/23 A StatServ STATS command.                                   [ #00]
+12/22 A Records the current users/channels/servers.               [ #00]
+12/21 A StatServ SHUTDOWN command.                                [ #00]
+12/21 A QUIT hooked up, and there is the sql file.                [ #00]
+12/18 A Stores the server name in the user table, not just the id [ #00]
+12/18 A Now records nick ip                                       [ #00]
+12/18 A Now records server glines                                 [ #00]
+12/18 A Now records the version on the servers                    [ #00]
+12/18 A Now records the hop count on the servers                  [ #00]
+12/17 A Added some docs, not completed yet.                       [ #00]
+12/13 A Forked development of Thales to new project Denora        [ #00]
+05/29 F Fixes StatServ MODINFO display on protocols               [ #00]
+05/26 F Fixed overflow in StatsLanguage                           [ #00]
+05/26 F Fixed parsing options from the command line.              [ #00]
+05/25 F Fixed compiling on solaris/amd64 based on fixes to anope  [ #00]
+05/20 F Config now works with INCLUDE                             [ #62]
+05/19 F Unreal Spamfilters are handled correctly now              [ #60]
+05/19 F Fixed StatServ realname parsing in conf                   [ #00]
+05/18 F Fixed /stats l reporting -1                               [ #00]
+05/17 F Wrong time format in UPTIME strings                       [ #00]
+05/16 F Extra tabs in language files.                             [ #00]
+05/15 F QuakeIRCd protocol option added to example.conf           [ #00]
+05/15 F Fixed some flaws in the config parser (thanks GD)         [ #00]
+05/15 F Translated some spanish strings left behind               [ #00]
+05/14 F Compiler warnings if you ever had to compile vsnprintf.c  [ #00]
+05/11 F Fixed the majority of the problems with using IRCu        [ #00]
+05/10 F Fix to prevent attempting to run Denora as root           [ #00]
+05/10 F Fixed languages format                                    [ #00]
+05/09 F Fixed topic author where format is user!ident@host        [ #00]
+05/09 F Fixed warning of finduser() with NULL on TOPIC            [ #55]
+05/09 F Fixed segfault on nick change.                            [ #54]
+05/08 F Fixed segfault when using ShadowIRCD.                     [ #00]
+05/08 F Fixed mydbgen script so it prompts for sql file           [ #00]
+05/08 F Fixed sstrdup() being called with NULL values.            [ #00]
+05/08 F Fixed loading languages under win32, caused a crash.      [ #00]
+05/07 F User being kicked by server caused a segfault.            [ #52]
+05/06 F Max Value / Current table updates the opers field.        [ #00]
+05/06 F TLD now reduces current count when the user logs off      [ #00]
+05/05 F Changed internal event format, and added the messages     [ #00]
+05/05 F Segfault if CTCP Version was NULL.                        [ #51]
+05/04 F Version strings are now escaped when seding to MySQL      [ #48] 
+05/04 F !top10 disabled if no sql                                 [ #00]
+05/04 F If MySQL is disable, do not use it                        [ #47]
+05/03 F Runs under win32 - no crashes and paths are working.      [ #00]
+05/03 F EXCLUDE segfault when no cmd1                             [ #00]
+05/03 F Network language was outputing the wrong lang             [ #00]
+05/02 F StatServ export all showed garbage.                       [ #45]
+05/01 F StatServ HELP command is fixed for Stats Admin help.      [ #00]
+05/01 F TLD update SQL again.                                     [ #00]
+04/30 F TS6 is usable finally.                                    [ #00]
+04/28 F Compiler warnings with GCC4.                              [ #00]
+04/26 F Fixed modes on Ultimate3.                                 [ #38]
+04/26 F ison was not updated if the ircd had protect modes.       [ #39]
+04/26 F htmlupdate and pingfreq are now required tokens           [ #00]
+04/26 F Free'ed bufffers in html.c                                [ #00]
+04/24 F Sqline/Sgline only inserted if not in sql already.        [ #30]
+04/24 F TLD would continue to add unknown host over and over      [ #24]
+04/24 F TLD was hashed incorrectly resulting in mass listing.     [ #24]
+04/24 F Removed IRCds stuff from Config according new protocols   [ #00]
+04/23 F SQL was not updated on SQUIT.                             [ #22]
+04/23 F Building without sql.                                     [ #00]
+04/23 F spelling in example.conf                                  [ #25]
+04/21 F Fixed endless loop caused by r143                         [ #18]
+04/12 F Glines are now removed from SQL correctly                 [ #17]
+04/12 F Admin language setting now respected.                     [ #00]
+04/08 F Can now start Denora without SQL being enabled            [ #00]
+03/24 F Fixed malformed SQL query when updating servers           [ #00]
+03/24 F Fixed bug when using language 2                           [ #00]
+03/16 F Crash on creating channels with non escaped characters.   [ #05]
+03/12 F Memory leaks in the code, reported by DukePyrolator.      [ #00]
+01/11 F Fixed denorarc script and something about signals.        [ #00]
+01/10 F LOGIN now checks for admin hosts.                         [ #00]
+01/10 F Typos in example.conf                                     [ #00]
+01/10 F Missplaced #include line. First bug reported.             [ #01]
+01/09 F Updated modules autoload rutines.                         [ #00]
+12/26 F Removed support for IRCDRU if you want it back email us   [ #00]
+12/21 F Segmentation fault if the MySQL configuration wasn't set. [ #00]
+12/19 F example.conf, example.chk cleaned up. Typos in docs.      [ #00]
+12/18 F Switched from DELETE to TRUNCATE on start up              [ #00]
+05/13 U Updated all files in SVN to propset                       [ #00]
+
+Provided by crazytoon <da.crew@gmx.net> - 2005
+05/25 A Added denorarc.in                                         [ #00]
+05/25 D Deleted the old denorarc                                  [ #00]
+05/25 F mydbgen fix                                               [ #00]
+05/17 F Some missing modes and SQL fields                         [ #00]
+05/16 F Removed all the tabs from the /docs/* files               [ #00]
+05/16 F Changed denorarc script to kill numerics                  [ #00]
+05/09 F SQL files missing fields.                                 [ #56]
+04/09 A Added de.l                                                [ #00]
+
+Provided by BarkerJr <BarkerJr@GMail.com> - 2005
+04/28 F +L data was not correctly stored                          [ #42]
+04/28 F IsON table not updated correctly under Ultimate3.         [ #43]
+
+Provided by Xaf <root@sbird.org> - 2005
+05/04 A French Translation.                                       [ #00]
+
+Provided by GeniusDex <geniusdex@anope.org>
+05/16 A Dutch Translation.                                        [ #00]
+
+Provided by Hal9000 <hal9000@denorastats.org> - 2005
+05/17 A Italian Translation.                                      [ #00]
+
+Provided by Alvaro <agonzal@gmail.com> - 2005
+05/29 F Spanish language typos                                    [ #00]
+05/24 F Spanish language typos and non-translated strings         [ #00]
