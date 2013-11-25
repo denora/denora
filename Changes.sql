@@ -1,3 +1,6 @@
+-- Denora Version 1.5.1
+-- --------------------
+
 -- Denora Version 1.5.0
 -- --------------------
 ALTER TABLE server ADD country VARCHAR( 255 ) NOT NULL DEFAULT '' AFTER server;
