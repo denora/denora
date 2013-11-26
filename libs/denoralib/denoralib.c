@@ -7,6 +7,7 @@
  *
  *
  */
+#include "denoralib.h"
 
 char *DenoraLastError;
 int DenoraLastErrorCode;
