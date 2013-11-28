@@ -1184,7 +1184,7 @@ int is_crypted(const char *passwd)
 	const char *const valid_md5chars = "0123456789abcdef";
 	int i;
 
-#ifdef HAVE_CRYPT
+#if defined(HAVE_CRYPT_H) && defined(HAVE_CRYPT)
 	/* Check if the string matches $1$........$...................... */
 	if (strlen(passwd) == 34 && strncmp("$1$",passwd, 3) == 0 && passwd[11] == '$')
 	{
@@ -1210,7 +1210,7 @@ int is_crypted(const char *passwd)
 
 char *MakePassword(char *plaintext)
 {
-#ifdef HAVE_CRYPT
+#if defined(HAVE_CRYPT_H) && defined(HAVE_CRYPT)
 	unsigned long seed[2];
 	char salt[] = "$1$........";
 	const char *const seedchars =
@@ -1241,7 +1241,7 @@ int ValidPassword(char *plaintext, char *checkvs)
 {
 	char *result;
 
-#ifdef HAVE_CRYPT
+#if defined(HAVE_CRYPT_H) && defined(HAVE_CRYPT)
 	/* Read in the user's password and encrypt it,
 	   passing the expected password in as the salt.
 	   the return of crypt() must not be free()'d */
