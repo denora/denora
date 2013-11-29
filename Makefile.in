@@ -39,7 +39,7 @@ RDYNAMNIC=@RDYNAMNIC@
 MODULEFLAGS=@MODULEFLAGS@
 
 
-all:   language headers build core protocols modules
+all:   denoralib language headers build core protocols modules
 strict: strict_language headers strict_build strict_core strict_protocols strict_modules
 ansi: ansi_language headers ansi_build ansi_core ansi_protocols ansi_modules
 profile: language headers profile_build core profile_protocols profile_modules
@@ -90,9 +90,10 @@ core: build
 	@echo "*** Building Core modules";
 	(cd src/ ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' core; )
 
-#denoralib: build 
-#	@echo "*** Building Denora Library Code";
-#	(cd denoralib/ ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; )
+denoralib: build 
+	@echo "*** Building Denora Library Code";
+	(cd libs/libGeoIP/ ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; )
+	(cd libs/denoralib/ ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; )
 
 
 strict_core: strict_build 
