@@ -234,27 +234,34 @@ void process()
 	/* First check if the ircd proto module overrides this -GD */
 	if (!denora_set_mod_current_buffer(ac, av))
 	{
-		if (ac >= 1 && av[0])
+		if (!is_server) 
 		{
-			if (nickIsServices(av[0]))
+			if (ac >= 1 && av[0])
 			{
-				if (av[1])
+				if (nickIsServices(av[0]))
 				{
-					mod_current_buffer = sstrdup(av[1]);
+					if (av[1])
+					{
+						mod_current_buffer = sstrdup(av[1]);
+					}
+					else
+					{
+						mod_current_buffer = sstrdup(av[0]);
+					}
 				}
 				else
 				{
 					mod_current_buffer = sstrdup(av[0]);
 				}
-			}
+			}	
 			else
 			{
-				mod_current_buffer = sstrdup(av[0]);
+				mod_current_buffer = NULL;
 			}
 		}
 		else
 		{
-			mod_current_buffer = NULL;
+					mod_current_buffer = sstrdup(av[0]);
 		}
 	}
 	/* Do something with the message. */
