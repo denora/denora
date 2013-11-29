@@ -8,7 +8,7 @@ Changes
 
 
 Fixes
-
+11/29/2013 : Removed data from uid struct on user being disconnected.
 
 Removals
 
