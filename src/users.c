@@ -678,7 +678,7 @@ void change_user_username(char *source, char *username)
 	{
 		alog(LOG_NONEXISTANT, langstr(ALOG_CHGIDENT_NONEXISTANT_USER),
 		     source);
-		return;
+			return;
 	}
 
 	if (user->username)
@@ -716,6 +716,7 @@ void delete_user(User * user)
 	struct u_chanlist *c, *c2;
 	struct u_modes *m, *m2;
 	PrivMsg *p;
+	Uid *ud;
 
 	SET_SEGV_LOCATION();
 
@@ -858,6 +859,19 @@ void delete_user(User * user)
 	free(user->realname);
 	free(user->ip);
 	free(user->sqlnick);
+
+	if (ircd->p10 || (UseTS6 && ircd->ts6))
+	{
+		ud = find_uid(user->nick);
+		if (ud)
+		{
+			delete_uid(ud);
+		}
+		if (user->uid)
+		{
+			free(user->uid);
+		}
+	}
 
 	alog(LOG_EXTRADEBUG, "debug: delete_user(): update listpointers");
 	if (user->prev)

@@ -5,6 +5,9 @@ Additions
 Changes
 
 Fixes
+13/11/29 : Cleans out UID struct on user disconnecting
+13/11/29 : Checks if server before calling nickisservices()
+13/11/27 : Fixed crash when crypt.h is missing but the lib is not
 
 Removals
 

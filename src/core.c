@@ -1505,14 +1505,13 @@ void destroy_all(void)
 	alog(LOG_DEBUG, "debug: Clearing UID");
 
 	uid = uid_first();
-	while (e)
+	while (uid)
 	{
-		next17 = uid_next();
 		if (uid)
 		{
 			delete_uid(uid);
 		}
-		uid = next17;
+		uid = uid_next();
 	}
 
 	alog(LOG_DEBUG, "debug: Clearing Stats Chan");
