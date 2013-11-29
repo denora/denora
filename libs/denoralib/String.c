@@ -76,7 +76,6 @@ char *myStrGetToken(const char *str, const char dilim, int token_number)
 	{
 		return NULL;
 	}
-	SET_SEGV_LOCATION();
 
 	len = strlen(str);
 	for (idx = 0; idx <= len; idx++)
@@ -116,7 +115,6 @@ char *myStrGetOnlyToken(const char *str, const char dilim,
 	{
 		return NULL;
 	}
-	SET_SEGV_LOCATION();
 
 	len = strlen(str);
 	for (idx = 0; idx <= len; idx++)
@@ -161,8 +159,6 @@ char *myStrGetTokenRemainder(const char *str, const char dilim,
 	}
 	len = strlen(str);
 
-	SET_SEGV_LOCATION();
-
 	for (idx = 0; idx <= len; idx++)
 	{
 		if ((str[idx] == dilim) || (idx == len))
@@ -199,7 +195,6 @@ char *myStrSubString(const char *src, int start, int end)
 	{
 		return NULL;
 	}
-	SET_SEGV_LOCATION();
 
 	len = strlen(src);
 	if (((start >= 0) && (end <= len)) && (end > start))
@@ -229,7 +224,6 @@ int myNumToken(const char *str, const char dilim)
 	{
 		return 0;
 	}
-	SET_SEGV_LOCATION();
 
 	len = strlen(str);
 	for (idx = 0; idx <= len; idx++)
@@ -240,4 +234,93 @@ int myNumToken(const char *str, const char dilim)
 		}
 	}
 	return counter;
+}
+
+/*************************************************************************/
+
+char *StringDup(const char *src)
+{
+	char *ret = NULL;
+
+	if (src)
+	{
+		if ((ret = (char *) malloc(strlen(src) + 1)))
+		{
+			strcpy(ret, src);
+		}
+		if (!ret)
+#ifndef _WIN32
+			raise(SIGUSR1);
+#else
+			abort();
+#endif
+	}
+	return ret;
+}
+
+
+/*************************************************************************/
+
+/**
+ * Change an unsigned string to a signed string, overwriting the original
+ * string.
+ * @param str is the input string
+ * @return output string, same as input string.
+ */
+char *str_signed(unsigned char *str)
+{
+	char *nstr;
+
+	SET_SEGV_LOCATION();
+
+	nstr = (char *) str;
+	while (*str)
+	{
+		*nstr = (char) *str;
+		str++;
+		nstr++;
+	}
+
+	return nstr;
+}
+
+/**
+ * strnrepl:  Replace occurrences of `old' with `new' in string `s'.  Stop
+ *            replacing if a replacement would cause the string to exceed
+ *            `size' bytes (including the null terminator).  Return the
+ *            string.
+ * @param s String
+ * @param size size of s
+ * @param old character to replace
+ * @param new character to replace with
+ * @return updated s
+ */
+char *strnrepl(char *s, int32 size, const char *old, const char *new)
+{
+	char *ptr = s;
+	int32 left = strlen(s);
+	int32 avail = size - (left + 1);
+	int32 oldlen = strlen(old);
+	int32 newlen = strlen(new);
+	int32 diff = newlen - oldlen;
+
+	SET_SEGV_LOCATION();
+
+	while (left >= oldlen)
+	{
+		if (strncmp(ptr, old, oldlen) != 0)
+		{
+			left--;
+			ptr++;
+			continue;
+		}
+		if (diff > avail)
+			break;
+		if (diff != 0)
+			memmove(ptr + oldlen + diff, ptr + oldlen, left + 1 - oldlen);
+		strncpy(ptr, new, newlen);
+		ptr += newlen;
+		left -= oldlen;
+	}
+	return s;
 }

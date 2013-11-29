@@ -14,7 +14,7 @@
  *
  */
 
-#include "denora.h"
+#include "denoralib.h"
 
 static char *int_to_base64(long);
 static long base64_to_int(char *);
@@ -514,7 +514,7 @@ char *encode_ip(unsigned char *ip)
 	char *s_ip;                 /* Signed ip string */
 
 	if (!ip)
-		return sstrdup("*");
+		return StringDup("*");
 
 	if (strchr((char *) ip, ':'))
 	{
@@ -528,7 +528,7 @@ char *encode_ip(unsigned char *ip)
 		b64_encode((char *) &ipbuf, sizeof(struct in_addr), buf, 25);
 		free(s_ip);
 	}
-	return sstrdup(buf);
+	return StringDup(buf);
 }
 
 /*************************************************************************/

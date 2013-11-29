@@ -7,7 +7,7 @@
  * Please read COPYING and README for furhter details.
  *
  */
-#include <denoralib.h>
+#include "denoralib.h"
 
 /*************************************************************************/
 

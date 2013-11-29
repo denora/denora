@@ -9,12 +9,14 @@
 # 
 #
 
-OBJS =  base64.o DateTime.o Denora_Mem.o Denora_SQL.o denoralib.o FileIO.o markup.o match.o md5.o String.o sqlite3.o xmlparse.o zip.o
-        
-SRCS =  base64.c DateTime.c Denora_Mem.c Denora_SQL.c denoralib.c FileIO.c markup.c match.c md5.c String.c sqlite3.c xmlparse.c zip.c
+OBJS =  base64.o DateTime.o Denora_Mem.o Denora_SQL.o denoralib.o FileIO.o markup.o match.o md5.o String.o sqlite3.o xmlparse.o \
+		xmlconfig.o GeoIP.o GeoIPCity.o regionName.o timeZone.o
+
+SRCS =  base64.c DateTime.c Denora_Mem.c Denora_SQL.c denoralib.c FileIO.c markup.c match.c md5.c String.c sqlite3.c xmlparse.c \
+		xmlconfig.c GeoIP.c GeoIPCity.c regionName.c timeZone.c
         
 
-INCLUDES = denoralib.h denoralib_err.h sqlite.h sqlite3ext.h
+INCLUDES = denoralib.h
 
 
 MAKEARGS = 'CFLAGS=${CFLAGS}' 'CC=${CC}' 'DENORALIBS=${DENORALIBS}' \
@@ -26,7 +28,7 @@ MAKEARGS = 'CFLAGS=${CFLAGS}' 'CC=${CC}' 'DENORALIBS=${DENORALIBS}' \
 
 
 .c.o:
-	$(CC) $(CFLAGS) -I../include/ -c $<
+	$(CC) $(CFLAGS) -I../../include/ -c $<
 
 all: denoralib
 
@@ -49,7 +51,6 @@ md5.o:       md5.c     $(INCLUDES)
 String.o:        String.c     $(INCLUDES)
 sqlite3.o:        sqlite3.c     $(INCLUDES)
 xmlparse.o:        xmlparse.c     $(INCLUDES)
-zip.o:        zip.c     $(INCLUDES)
 
 
 clean:

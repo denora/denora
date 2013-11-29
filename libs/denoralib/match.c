@@ -95,61 +95,6 @@ int match_wild_nocase(const char *pattern, const char *str)
 
 /*************************************************************************/
 
-/**
- * match_usermask:  Match the mask to the users host
- *
- * @param mask To be matched
- * @param user is the user struct to check
- * @return 1 if the string matches the pattern, 0 if not.
- */
-int match_usermask(const char *mask, User * user)
-{
-	char *mask2 = sstrdup(mask);
-	char *nick, *username, *host;
-	int result;
-
-	if (strchr(mask2, '!'))
-	{
-		nick = strtok(mask2, "!");
-		username = strtok(NULL, "@");
-	}
-	else
-	{
-		nick = NULL;
-		username = strtok(mask2, "@");
-	}
-	host = strtok(NULL, "");
-	if (!username || !host)
-	{
-		if (nick)
-			free(nick);
-		if (mask2)
-			free(mask2);
-		return 0;
-	}
-	if (nick)
-	{
-		result = match_wild_nocase(nick, user->nick)
-		         && match_wild_nocase(username, user->username)
-		         && (match_wild_nocase(host, user->host)
-		             || match_wild_nocase(host, user->vhost));
-		free(nick);
-	}
-	else
-	{
-		result = match_wild_nocase(username, user->username)
-		         && (match_wild_nocase(host, user->host)
-		             || match_wild_nocase(host, user->vhost));
-	}
-	if (mask2)
-		free(mask2);
-
-	free(username);
-	return result;
-}
-
-/*************************************************************************/
-
 /*
  * Copyright © 1997 The Open Group
  *

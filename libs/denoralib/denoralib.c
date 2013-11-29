@@ -27,7 +27,7 @@ void DenoraLib_SetLastError(int code, char *msg)
 	DenoraLastErrorCode = code;
 	if (DenoraLastError)
 	{
-		free(DenoraLastError)
+		free(DenoraLastError);
 	}
 	DenoraLastError = StringDup(msg);
 	return;

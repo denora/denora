@@ -18,6 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include "denoralib.h"
 #include "GeoIP.h"
 
 static geoipv6_t IPV6_NULL;
@@ -67,6 +68,7 @@ static geoipv6_t IPV6_NULL;
 #define WORLD_OFFSET 1353
 #define FIPS_RANGE 360
 
+#ifndef CHECK_ERR
 #define CHECK_ERR(err, msg)                              \
     {                                                    \
         if (err != Z_OK) {                               \
@@ -74,6 +76,7 @@ static geoipv6_t IPV6_NULL;
             exit(1);                                     \
         }                                                \
     }
+#endif
 
 #ifndef HAVE_PREAD
 #define pread(fd, buf, count, offset)           \
@@ -721,7 +724,7 @@ char *_GeoIP_full_path_to(const char *file_name)
     if (GeoIP_custom_directory == NULL) {
 #if !defined(_WIN32)
         memset(path, 0, sizeof(char) * 1024);
-        snprintf(path, sizeof(char) * 1024 - 1, "%s/%s", GEOIPDATADIR,
+        snprintf(path, sizeof(char) * 1024 - 1, "%s/%s", STATS_DIR,
                  file_name);
 #else
         char buf[MAX_PATH], *p, *q = NULL;
@@ -2589,7 +2592,7 @@ unsigned GeoIP_num_countries(void)
 
 const char * GeoIP_lib_version(void)
 {
-    return PACKAGE_VERSION;
+    return "1.6";
 }
 
 int GeoIP_cleanup(void)

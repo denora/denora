@@ -15,7 +15,7 @@
  * will fill a supplied 16-byte array with the digest.
  */
 
-#include "denora.h"
+#include "denoralib.h"
 
 #ifndef HIGHFIRST
 /** Bit-reverse bytes in a buffer. */

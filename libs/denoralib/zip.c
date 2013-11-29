@@ -13,7 +13,7 @@
  *
  */
 
-#include "denora.h"
+#include "denoralib.h"
 
 #ifdef HAVE_LIBZ
 

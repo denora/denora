@@ -141,7 +141,7 @@ void DenoraParseXMLConfig(char *filename)
 				{
 			        	strnrepl(rawline, BUFSIZE, "\n", "");
 				        strnrepl(rawline, BUFSIZE, "\t", "");
-					xmldata[x++] = strdup(rawline);
+					xmldata[x++] = StringDup(rawline);
 				}			
 	   		}
 		}

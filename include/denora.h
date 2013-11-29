@@ -139,13 +139,7 @@
 #endif
 #endif
 
-/************************************************************************/
-/* Include the zlib header file if the system can has it		*/
-/************************************************************************/
 
-#ifdef HAVE_LIBZ
-#include <zlib.h>
-#endif
 
 /************************************************************************/
 /* Include the openssl header file if the system can has it		*/
@@ -341,8 +335,6 @@ typedef struct spamfilter_ SpamFilter;
 typedef struct gline_ Gline;
 typedef struct qline_ Qline;
 typedef struct zline_ Zline;
-
-typedef struct MD5Context MD5_CTX;
 
 
 /************************************************************************/
@@ -1280,17 +1272,7 @@ typedef struct ircd_modes_
 	uint32 ircd_var;
 } IRCDModes;
 
-/************************************************************************/
-/* Base64 struct data							*/
-/************************************************************************/
 
-struct buffer_st
-{
-	char *data;
-	int length;
-	char *ptr;
-	int offset;
-};
 
 /************************************************************************/
 /* First In / First Out Queue						*/
@@ -1302,15 +1284,7 @@ struct queueentry_
 	QueueEntry *link;
 };
 
-/************************************************************************/
-/* MD5									*/
-/************************************************************************/
 
-struct MD5Context {
-	uint32 buf[4];		/* Current digest state/value.		*/
-	uint32 bits[2];		/* Number of bits hashed so far.	*/
-	unsigned char in[64];	/* Residual input buffer.		*/
-};
 
 /************************************************************************/
 /* Config File Related Stuff						*/

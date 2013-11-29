@@ -8,7 +8,7 @@
  * Please read COPYING and README for furhter details.
  *
  */
-#include <denoralib.h>
+#include "denoralib.h"
 
 /*************************************************************************/
 
@@ -37,11 +37,11 @@ sqlite3 *DenoraOpenSQL(char *dbname)
 int DenoraExecQuerySQL(sqlite3 *db, const char *fmt, ...)
 {
 	va_list args;
-	char buf[NET_BUFSIZE];      /* should be enough for long queries (don't underestimate :o)) */
+	char *buf;
 	int res;
 
 	va_start(args, fmt);
-	sqlite3_vsnprintf(sizeof(buf), buf, fmt, args);
+	sqlite3_vsnprintf(NET_BUFSIZE, buf, fmt, args);
 	va_end(args);
 
 	res = DenoraExecQueryDirectSQL(db, buf, NULL);
@@ -53,12 +53,12 @@ int DenoraExecQuerySQL(sqlite3 *db, const char *fmt, ...)
 int DenoraSQLQuery(char *dbname, const char *fmt, ...)
 {
 	va_list args;
-	char buf[NET_BUFSIZE];      /* should be enough for long queries (don't underestimate :o)) */
+	char *buf;
 	int res;
 	sqlite3 *db;
 
 	va_start(args, fmt);
-	sqlite3_vsnprintf(sizeof(buf), buf, fmt, args);
+	sqlite3_vsnprintf(NET_BUFSIZE, buf, fmt, args);
 	va_end(args);
 
 
@@ -155,7 +155,7 @@ char *DenoraReturnSQliteValue(sqlite3_stmt *stmt, int column)
 
 /*************************************************************************/
 
-char ***DenoraSQLFetchArray(sqlite3 *db, char *table, sqlite3_stmt* stmt, int type)
+char **DenoraSQLFetchArray(sqlite3 *db, char *table, sqlite3_stmt* stmt, int type)
 {
 	int ret;
 	int i, x;
@@ -177,7 +177,7 @@ char ***DenoraSQLFetchArray(sqlite3 *db, char *table, sqlite3_stmt* stmt, int ty
 				for (i = 0; i < sqlite3_data_count(stmt); i++) 
 				{
 					data = DenoraReturnSQliteValue(stmt, i);
-					SQLDataArray[x][i] = sstrdup(data);
+					SQLDataArray[x][i] = StringDup(data);
 				}
 				break;
 			case SQLITE_DONE:
@@ -198,7 +198,7 @@ char **DenoraSQLFetchRow(sqlite3_stmt* stmt, int type)
 	char **SQLDataArray;
 	char *data;
 
-	SQLDataArray = alloc_array(1);
+	SQLDataArray = DenoraCallocArray(1);
 
 		ret = sqlite3_step(stmt);
 
@@ -207,7 +207,7 @@ char **DenoraSQLFetchRow(sqlite3_stmt* stmt, int type)
 				for (i = 0; i < sqlite3_data_count(stmt); i++) 
 				{
 					data = DenoraReturnSQliteValue(stmt, i);
-					SQLDataArray[i] = sstrdup(data);
+					SQLDataArray[i] = StringDup(data);
 				}
 				break;
 			case SQLITE_DONE:

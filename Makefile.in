@@ -90,9 +90,8 @@ core: build
 	@echo "*** Building Core modules";
 	(cd src/ ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' core; )
 
-denoralib: build 
+denoralib: 
 	@echo "*** Building Denora Library Code";
-	(cd libs/libGeoIP/ ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; )
 	(cd libs/denoralib/ ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; )
 
 

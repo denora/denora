@@ -29,12 +29,12 @@ char *HTML_StringEncode(char *s1)
 
 	if (!s1 || !*s1)
 	{
-		return sstrdup("");
+		return StringDup("");
 	}
 
 	if (BadPtr(s1))
 	{
-		return sstrdup("");
+		return StringDup("");
 	}
 
 	for (i = 0; i <= (int) strlen(s1) - 1; i++)
@@ -42,31 +42,31 @@ char *HTML_StringEncode(char *s1)
 		c = s1[i];
 		if (c == '&')
 		{
-			ircsnprintf(buf3, BUFSIZE, "%s%s", buf4, "&amp;");
-			ircsnprintf(buf4, BUFSIZE, "%s", buf3);
+			snprintf(buf3, BUFSIZE, "%s%s", buf4, "&amp;");
+			snprintf(buf4, BUFSIZE, "%s", buf3);
 		}
 		else if (c == '<')
 		{
-			ircsnprintf(buf3, BUFSIZE, "%s%s", buf4, "&lt;");
-			ircsnprintf(buf4, BUFSIZE, "%s", buf3);
+			snprintf(buf3, BUFSIZE, "%s%s", buf4, "&lt;");
+			snprintf(buf4, BUFSIZE, "%s", buf3);
 		}
 		else if (c == '>')
 		{
-			ircsnprintf(buf3, BUFSIZE, "%s%s", buf4, "&gt;");
-			ircsnprintf(buf4, BUFSIZE, "%s", buf3);
+			snprintf(buf3, BUFSIZE, "%s%s", buf4, "&gt;");
+			snprintf(buf4, BUFSIZE, "%s", buf3);
 		}
 		else if (c == '"')
 		{
-			ircsnprintf(buf3, BUFSIZE, "%s%s", buf4, "&quot;");
-			ircsnprintf(buf4, BUFSIZE, "%s", buf3);
+			snprintf(buf3, BUFSIZE, "%s%s", buf4, "&quot;");
+			snprintf(buf4, BUFSIZE, "%s", buf3);
 		}
 		else
 		{
-			ircsnprintf(buf3, BUFSIZE, "%s%c", buf4, c);
-			ircsnprintf(buf4, BUFSIZE, "%s", buf3);
+			snprintf(buf3, BUFSIZE, "%s%c", buf4, c);
+			snprintf(buf4, BUFSIZE, "%s", buf3);
 		}
 	}
 
-	return sstrdup(buf4);
+	return StringDup(buf4);
 }
 

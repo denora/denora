@@ -16,7 +16,7 @@ void DenoraTime(struct tm *tm, const time_t *timer)
 #ifdef _WIN32
 		localtime_s(&tm, &timer);
 #else
-		tm = *localtime(&timer);
+		tm = localtime(&timer);
 #endif
   return;
 }
@@ -59,7 +59,7 @@ int ConvertToSeconds(const char *s)
 				return amount * 3600;
 			case 'd':
 				return amount * 86400;
-			case 'y'
+			case 'y':
 				return amount * 31536000;
 			default:
 				return -1;
@@ -105,11 +105,10 @@ char *militime_float(char *start)
 		ircsnprintf(timebuf, sizeof(timebuf), "%ld.%ld", tv.tv_sec,
 		            tv.tv_usec);
 	}
-	SET_SEGV_LOCATION();
 
-	return sstrdup(timebuf);
+	return StringDup(timebuf);
 #else
 	ircsnprintf(timebuf, sizeof(timebuf), "%ld", (long int) time(NULL));
-	return sstrdup(timebuf);
+	return StringDup(timebuf);
 #endif
 }
