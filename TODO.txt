@@ -1,0 +1,25 @@
+1. GeoIP moved to GeoIP v2 - uses their library
+2. SQLite replaces structs and flatdb files
+3. XMLparser to replace config files with xml files
+4. SQL modules for mysql and postgre
+5. Socket Engines so we can rip out the old socket code
+6. bopm library included by default
+7. Ruby, Python, Perl extentions
+8. IRCd Protocol modules load parts of the core as needed
+9. mysql_* modules made part of the sql_mysql.c 
+10. language files to use xml format, and load as user wants and not all of them (lower mem usage)
+11. support ssl / zip links (maybe)
+12. port neostats modules to new v2 frame work
+13. zbot ported as a module of v2
+14. ison table rewritten
+15. option to disable items, largenet gone
+16. true threading
+17. ircd protocol move struct to xml config
+18. ircd protocol truely deal with more of the load, less core more sql calls
+19. sql query string to do %q and cleans itself up, less mess and free
+20. ircd protocol support for newer ircds (askua -> snircd)
+21. Start over and build it from scratch! (why not)
+22. Services ported to v2
+23. webpanel
+24. encrypt admin passwords
+25. autoconf - write script file 1) download latest config.guess and config.sub 2) build "autoconf" the configure file 3) copies the new configure into place

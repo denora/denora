@@ -288,6 +288,20 @@
 /* "" */
 #undef HAVE_GETCWD
 
+/* "" */
+#undef GETHOSTBYNAME_R_RETURNS_INT
+
+/* "" */
+#undef HAVE_GETHOSTBYNAME_R
+
+/* "" */
+#undef HAVE_FUNC_GETHOSTBYNAME_R_6
+
+/* "" */
+#undef HAVE_FUNC_GETHOSTBYNAME_R_5
+
+/* "" */
+#undef HAVE_FUNC_GETHOSTBYNAME_R_3
 
 /* Define to `__inline__' or `__inline' if that's what the C compiler
    calls it, or to nothing if 'inline' is not supported under any name.  */

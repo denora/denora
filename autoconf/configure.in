@@ -8,7 +8,7 @@ dnl details.
  
 dnl Based heavily on the Anope configure.in script.
 
-AC_INIT(denora, 1.5.0, info@denorastats.org)
+AC_INIT(denora, 2.0.0, info@denorastats.org)
 
 dnl Sneaky way to get an id into the configure script.
 AC_COPYRIGHT([])
@@ -23,9 +23,9 @@ touch install-sh
 
 m4_include([m4/ext_have_lib.m4])
 m4_include([m4/mysql.m4])
+m4_include([m4/AX_FUNC_WHICH_GETHOSTBYNAME_R.m4])
 
-AC_CANONICAL_BUILD
-AC_CANONICAL_HOST
+AC_CONFIG_AUX_DIR(autoconf)
 AC_CONFIG_HEADER(include/sysconf.h)
 AC_PREFIX_DEFAULT(~/stats)
 
@@ -461,13 +461,22 @@ AC_CHECK_FUNCS(setgrent,AC_DEFINE(HAVE_SETGRENT,1))
 AC_CHECK_FUNCS(umask,AC_DEFINE(HAVE_UMASK,1))
 AC_CHECK_FUNCS(fork,AC_DEFINE(HAVE_FORK,1))
 AC_CHECK_FUNCS(gethostbyname,AC_DEFINE(HAVE_GETHOSTBYNAME,1))
-AC_CHECK_FUNCS(gethostbyname_r,AC_DEFINE(HAVE_GETHOSTBYNAME_R,1))
 AC_CHECK_FUNCS(ntohl,AC_DEFINE(HAVE_NTOHL,1))
 AC_CHECK_FUNCS(getcwd,AC_DEFINE(HAVE_GETCWD,1))
 AC_CHECK_FUNCS(inet_aton,AC_DEFINE([HAVE_INETATON], [1], [System supports inet_aton]))
 AC_CHECK_FUNCS(setrlimit,AC_DEFINE([HAVE_GETSETRLIMIT], [1], [System supports set/get/rlimit]))
 AC_CHECK_FUNCS(getrlimit,AC_DEFINE([HAVE_GETSETRLIMIT], [1], [System supports set/get/rlimit]))
 AC_CHECK_FUNCS(memcpy, AC_DEFINE(HAVE_MEMCPY,1))
+AC_CHECK_FUNC(gethostbyname_r, [
+        AC_DEFINE(HAVE_GETHOSTBYNAME_R)
+        # We look for the one that returns `int'.
+        # Hopefully this check is robust enough.
+        AC_EGREP_HEADER(int.*gethostbyname_r, netdb.h, [
+                AC_DEFINE(GETHOSTBYNAME_R_RETURNS_INT)])
+        ])
+
+AX_FUNC_WHICH_GETHOSTBYNAME_R
+
 
 AC_ARG_WITH(rungroup,
     [ --with-rungroup=group  Specify the rungroup for Denora], [ 
