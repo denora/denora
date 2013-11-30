@@ -42,7 +42,7 @@ all: stats
 distclean: spotless
 
 stats:  $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(DENORALIBS) $(MLIBS) -o $@ $(LDFLAGS) 
+	$(CC) $(CFLAGS) $(OBJS) $(DENORALIBS) -o $@ $(LDFLAGS) 
 
 $(OBJS): Makefile
 admin.o:        admin.c     $(INCLUDES)

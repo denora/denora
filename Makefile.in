@@ -157,11 +157,13 @@ headers:
 	(cd include ; ${MAKE} ${MAKEARGS} )
 
 clean:
+	(cd libs/denoralib ; ${MAKE} clean )
 	(cd lang ; ${MAKE} clean )
 	(cd include ; ${MAKE} clean )
 	(cd src ; ${MAKE} clean )
 
 distclean:
+	(cd libs/denoralib ; ${MAKE} distclean )
 	(cd lang ; ${MAKE} distclean )
 	(cd include ; ${MAKE} distclean )
 	(cd src ; ${MAKE} distclean )

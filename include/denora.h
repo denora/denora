@@ -105,6 +105,8 @@
 #include "os/aix.h"
 #endif
 
+#include "libs/denoralib/denoralib.h"
+
 /************************************************************************/
 /* If system can use threading include headers for threading		*/
 /************************************************************************/

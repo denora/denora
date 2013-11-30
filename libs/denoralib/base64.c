@@ -524,7 +524,7 @@ char *encode_ip(unsigned char *ip)
 	{
 		s_ip = str_signed(ip);
 		inet_aton(s_ip, &ia);
-		ircsnprintf(ipbuf, 50, "%uld", ia.s_addr);
+		snprintf(ipbuf, 50, "%uld", ia.s_addr);
 		b64_encode((char *) &ipbuf, sizeof(struct in_addr), buf, 25);
 		free(s_ip);
 	}
@@ -543,12 +543,12 @@ char* decode_ip(char *buf)
 	if (len == 24)                /* IPv6 */
 	{
 		static char result[INET6_ADDRSTRLEN];
-		return (char *)_GeoIP_inet_ntop(AF_INET6, (const struct in6_addr *)targ, result, INET6_ADDRSTRLEN);
+		return (char *) inet_ntop(AF_INET6, (const struct in6_addr *)targ, result, INET6_ADDRSTRLEN);
 	}
 	else if (len == 8)            /* IPv4 */
 	{
 		static char result[INET_ADDRSTRLEN];
-		return (char *)_GeoIP_inet_ntop(AF_INET, (const struct in_addr *)targ, result, INET_ADDRSTRLEN);
+		return (char *) inet_ntop(AF_INET, (const struct in_addr *)targ, result, INET_ADDRSTRLEN);
 	}
 	else                          /* Error */
 		return 0;
@@ -730,7 +730,7 @@ void base64toip(char* input, char* addr)
 			addrint[0] = htons(in >> 16);
 			addrint[1] = htons(in & 65535);
 		}
-		_GeoIP_inet_ntop(AF_INET, &addrint, addr, INET6_ADDRSTRLEN);
+		inet_ntop(AF_INET, &addrint, addr, INET6_ADDRSTRLEN);
 	}
 	else
 	{
@@ -753,7 +753,7 @@ void base64toip(char* input, char* addr)
 			}
 		}
 		while (pos < 8);
-		_GeoIP_inet_ntop(AF_INET6, &addrint, addr, INET6_ADDRSTRLEN);
+		inet_ntop(AF_INET6, &addrint, addr, INET6_ADDRSTRLEN);
 	}
 }
 

@@ -12,6 +12,10 @@
 char *DenoraLastError;
 int DenoraLastErrorCode;
 
+int main()
+{
+  // Not used but required
+}
 
 char *DenoraLib_GetLastError(void)
 {

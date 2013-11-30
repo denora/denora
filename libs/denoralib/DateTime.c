@@ -44,8 +44,6 @@ int ConvertToSeconds(const char *s)
 		return -1;
 	}
 
-	SET_SEGV_LOCATION();
-
 	amount = strtol(s, (char **) &s, 10);
 	if (*s)
 	{
@@ -92,7 +90,7 @@ char *militime_float(char *start)
 		if ((p = strchr(start, '.')))
 		{
 			p++;
-			ircsnprintf(timebuf, sizeof(timebuf), "%ld",
+			snprintf(timebuf, sizeof(timebuf), "%ld",
 			            (tv.tv_sec - atoi(start)) * 1000 + (tv.tv_usec -
 			                    atoi(p)) /
 			            1000);
@@ -102,13 +100,13 @@ char *militime_float(char *start)
 	}
 	else
 	{
-		ircsnprintf(timebuf, sizeof(timebuf), "%ld.%ld", tv.tv_sec,
+		snprintf(timebuf, sizeof(timebuf), "%ld.%ld", tv.tv_sec,
 		            tv.tv_usec);
 	}
 
 	return StringDup(timebuf);
 #else
-	ircsnprintf(timebuf, sizeof(timebuf), "%ld", (long int) time(NULL));
+	snprintf(timebuf, sizeof(timebuf), "%ld", (long int) time(NULL));
 	return StringDup(timebuf);
 #endif
 }

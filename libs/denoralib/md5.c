@@ -277,7 +277,7 @@ char *md5(const char *str) {
         MD5Final(digest, &c);
 
         for (n = 0; n < 16; ++n)
-                ircsnprintf(&(out[n*2]), 16*2, "%02x", (unsigned int)digest[n]);
+                snprintf(&(out[n*2]), 16*2, "%02x", (unsigned int)digest[n]);
 
         memset(digest, 0, sizeof digest);
         return out;

@@ -271,8 +271,6 @@ char *str_signed(unsigned char *str)
 {
 	char *nstr;
 
-	SET_SEGV_LOCATION();
-
 	nstr = (char *) str;
 	while (*str)
 	{
@@ -304,8 +302,6 @@ char *strnrepl(char *s, int32 size, const char *old, const char *new)
 	int32 newlen = strlen(new);
 	int32 diff = newlen - oldlen;
 
-	SET_SEGV_LOCATION();
-
 	while (left >= oldlen)
 	{
 		if (strncmp(ptr, old, oldlen) != 0)
@@ -324,3 +320,18 @@ char *strnrepl(char *s, int32 size, const char *old, const char *new)
 	}
 	return s;
 }
+
+#if !defined(HAVE_STRLCPY)
+size_t strlcpy(char *dest, const char *src, size_t size)
+{
+	size_t ret = strlen(src);
+
+	if (size)
+	{
+		size_t len = (ret >= size) ? size - 1 : ret;
+		memcpy(dest, src, len);
+		dest[len] = '\0';
+	}
+	return ret;
+}
+#endif

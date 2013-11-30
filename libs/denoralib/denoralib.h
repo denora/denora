@@ -100,6 +100,10 @@
 #include "os/aix.h"
 #endif
 
+#include "GeoIP.h"
+#include "GeoIP_internal.h"
+#include "GeoIPCity.h"
+
 /************************************************************************/
 /* If system can use threading include headers for threading		*/
 /************************************************************************/
@@ -228,3 +232,24 @@ int DenoraParseConnectBlock(int count, char **lines);
 
 #define MAX_CONFIGLIST 1024
 config *configlists[MAX_CONFIGLIST];
+
+/* Length of an array: */
+#define lenof(a) (sizeof(a) / sizeof(*(a)))
+
+/* is a digit ie, 0, to 9 */
+#define IsDigit(c) (char_atribs[(unsigned char)(c)]&DIGIT)
+
+/* check of the pointer is NULL or 0 lenght */
+#define BadPtr(x) (!(x) || (*(x) == '\0'))
+
+/* check if the character is NULL, 0 lenght or begins with % */
+#define BadChar(x) (!(x) || (*(x) == '%') || (*(x) == '\0'))
+
+/* make sure that the channel name begins with # and isn't null */
+#define BadChanName(x) (!(x) || (*(x) != '#') || (*(x) == '\0'))
+
+#define SWAP_CHAR( x, y ) {char c; c = x; x = y; y = c;}
+
+#if !defined(HAVE_STRLCPY)
+size_t strlcpy(char *dest, const char *src, size_t size);
+#endif
