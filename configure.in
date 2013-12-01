@@ -19,13 +19,21 @@ if test $# = 0; then
 	exit 0
 fi
 
-touch install-sh
-
-m4_include([m4/ext_have_lib.m4])
-m4_include([m4/mysql.m4])
-m4_include([m4/AX_FUNC_WHICH_GETHOSTBYNAME_R.m4])
-
 AC_CONFIG_AUX_DIR(autoconf)
+LT_INIT
+AM_INIT_AUTOMAKE(foreign m4_esyscmd([case `automake --version | head -n 1` in
+                                     *1.11*);;
+                                     *) echo serial-tests;;
+                                     esac]))
+AC_PROG_LIBTOOL
+AC_CONFIG_MACRO_DIR([autoconf/m4])
+m4_include([autoconf/m4/ext_have_lib.m4])
+m4_include([autoconf/m4/mysql.m4])
+m4_include([autoconf/m4/AX_FUNC_WHICH_GETHOSTBYNAME_R.m4])
+m4_include([autoconf/m4/denora.m4])
+
+
+touch autoconf/install-sh
 AC_CONFIG_HEADER(include/sysconf.h)
 AC_PREFIX_DEFAULT(~/stats)
 
@@ -90,7 +98,6 @@ if test "$CC" == "gcc"; then
   fi
 fi
 
-AC_PATH_PROG(RM,rm)
 AC_PATH_PROG(CP,cp)
 AC_PATH_PROG(TOUCH,touch)
 AC_PATH_PROG(PERL,perl)
@@ -472,7 +479,7 @@ AC_CHECK_FUNC(gethostbyname_r, [
         # We look for the one that returns `int'.
         # Hopefully this check is robust enough.
         AC_EGREP_HEADER(int.*gethostbyname_r, netdb.h, [
-                AC_DEFINE(GETHOSTBYNAME_R_RETURNS_INT)])
+                AC_DEFINE([GETHOSTBYNAME_R_RETURNS_INT], [1], [gethostbyname_r returns int])])
         ])
 
 AX_FUNC_WHICH_GETHOSTBYNAME_R

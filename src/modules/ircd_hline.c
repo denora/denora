@@ -5,7 +5,7 @@
 
 #include "denora.h"
 #define AUTHOR "Trystan"
-#define VERSION "1.1.2"
+#define MOD_VERSION "1.1.2"
 #define MYNAME "ircd_hline"
 
 int DenoraInit(int argc, char **argv);
@@ -46,7 +46,7 @@ int DenoraInit(int argc, char **argv)
 	create_field();
 
 	moduleAddAuthor(AUTHOR);
-	moduleAddVersion(VERSION);
+	moduleAddVersion(MOD_VERSION);
 	return MOD_CONT;
 }
 

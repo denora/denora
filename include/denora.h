@@ -105,8 +105,6 @@
 #include "os/aix.h"
 #endif
 
-#include "libs/denoralib/denoralib.h"
-
 /************************************************************************/
 /* If system can use threading include headers for threading		*/
 /************************************************************************/
@@ -172,6 +170,33 @@
 #endif
 #endif
 
+#ifdef HAVE_LIBZ
+#include <zlib.h>
+#endif
+
+typedef struct MD5Context MD5_CTX;
+
+/************************************************************************/
+/* MD5									*/
+/************************************************************************/
+
+struct MD5Context {
+	uint32 buf[4];		/* Current digest state/value.		*/
+	uint32 bits[2];		/* Number of bits hashed so far.	*/
+	unsigned char in[64];	/* Residual input buffer.		*/
+};
+
+/************************************************************************/
+/* Base64 struct data							*/
+/************************************************************************/
+
+struct buffer_st
+{
+	char *data;
+	int length;
+	char *ptr;
+	int offset;
+};
 
 
 /************************************************************************/

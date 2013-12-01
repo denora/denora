@@ -14,7 +14,7 @@
 
 #include "denora.h"
 #define AUTHOR "Denora"
-#define VERSION "1.0"
+#define MOD_VERSION "1.0"
 
 int m_do_uptime(User * u, int ac, char **av);
 int DenoraInit(int argc, char **argv);
@@ -32,7 +32,7 @@ int DenoraInit(int argc, char **argv)
 	}
 
 	moduleAddAuthor(AUTHOR);
-	moduleAddVersion(VERSION);
+	moduleAddVersion(MOD_VERSION);
 	return MOD_CONT;
 }
 

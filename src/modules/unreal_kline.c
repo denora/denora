@@ -5,7 +5,7 @@
 
 #include "denora.h"
 #define AUTHOR "Trystan"
-#define VERSION "1.1"
+#define MOD_VERSION "1.1"
 #define MYNAME "unreal_kline"
 
 int DenoraInit(int argc, char **argv);
@@ -43,7 +43,7 @@ int DenoraInit(int argc, char **argv)
     }
 
     moduleAddAuthor(AUTHOR);
-    moduleAddVersion(VERSION);
+    moduleAddVersion(MOD_VERSION);
     return MOD_CONT;
 }
 
