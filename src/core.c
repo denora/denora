@@ -161,6 +161,18 @@ char *merge_args(int argc, char **argv)
 
 /*************************************************************************/
 
+void DenoraTime(struct tm *tm, const time_t *timer)
+{
+#ifdef _WIN32
+		localtime_s(&tm, &timer);
+#else
+		tm = localtime(&timer);
+#endif
+  return;
+}
+
+/*************************************************************************/
+
 /**
  * print_args:  Take an argument count and argument vector and merge them
  *              into a single string in which each argument is separated by
@@ -373,6 +385,8 @@ int dotime(const char *s)
 				return amount * 3600;
 			case 'd':
 				return amount * 86400;
+			case 'y':
+				return amount * 31536000;
 			default:
 				return -2;
 		}
