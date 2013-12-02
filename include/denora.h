@@ -104,6 +104,9 @@
 #ifdef _AIX
 #include "os/aix.h"
 #endif
+#ifdef __minix
+#include "os/minix.h"
+#endif
 
 /************************************************************************/
 /* If system can use threading include headers for threading		*/

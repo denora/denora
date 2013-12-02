@@ -5,6 +5,7 @@ Additions
 Changes
 
 Fixes
+13/12/02 : Some fixes to compile on Minix (not a 100% yet)
 13/11/29 : Cleans out UID struct on user disconnecting
 13/11/29 : Checks if server before calling nickisservices()
 13/11/27 : Fixed crash when crypt.h is missing but the lib is not

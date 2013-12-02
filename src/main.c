@@ -1205,11 +1205,13 @@ int init(int ac, char **av)
 			close(1);
 			close(2);
 		}
+#ifdef HAVE_SETPGID
 		if (setpgid(0, 0) < 0)
 		{
 			perror("setpgid()");
 			return -1;
 		}
+#endif
 	}
 #else
 	/* Initialize winsocks -- codemastr */

@@ -100,8 +100,9 @@ void extsock_init(char *lhost, int lport)
 		XMLRPC_Enable = 0;
 		return;
 	}
-
+#ifndef __minix
 	memset(&(svr_addr.sin_zero), '\0', 8);
+#endif
 	if (bind(svr_fd, (struct sockaddr *) &svr_addr,
 	         sizeof(struct sockaddr)) == -1)
 	{

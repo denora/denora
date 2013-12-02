@@ -467,6 +467,8 @@ AC_CHECK_FUNCS(inet_aton,AC_DEFINE([HAVE_INETATON], [1], [System supports inet_a
 AC_CHECK_FUNCS(setrlimit,AC_DEFINE([HAVE_GETSETRLIMIT], [1], [System supports set/get/rlimit]))
 AC_CHECK_FUNCS(getrlimit,AC_DEFINE([HAVE_GETSETRLIMIT], [1], [System supports set/get/rlimit]))
 AC_CHECK_FUNCS(memcpy, AC_DEFINE(HAVE_MEMCPY,1))
+AC_CHECK_FUNCS(setpgid, AC_DEFINE([HAVE_SETPGID],[1][Check cause minix lacks this]))
+
 
 AC_ARG_WITH(rungroup,
     [ --with-rungroup=group  Specify the rungroup for Denora], [ 
