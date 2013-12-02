@@ -81,16 +81,13 @@ Run_Config () {
 	if [ "$ENCRYPT" = "yes" ] ; then
 		WITH_ENCRYPT=" --enable-crypt"
 	fi
-	if [ "$THREAD" = "yes" ] ; then
-		WITH_THREADING=" --enable-threading"
-	fi
   
 	touch autoconf/install-sh
 	echo "Generating Configuration file and Makefiles, this may take a moment"
 	autoconf 
-	echo "./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_THREADING $WITH_MYSQL_BT"
+	echo "./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_MYSQL_BT"
 	
-	./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_THREADING $WITH_MYSQL_BT
+	./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_MYSQL_BT
 	if [ "$REGSCRIPT" = "yes" ] ; then
 		src/bin/register
 	fi
@@ -136,9 +133,6 @@ Load_Cache () {
 		if [ "$ENCRYPT" = "" ] ; then
 			ENCRYPT="no"
 		fi
-		if [ "$THREAD" = "" ] ; then
-			THREAD="no"
-		fi
 	else
 		CAN_QUICK="no"
 	fi
@@ -160,7 +154,6 @@ CAN_QUICK="no"
 REGSCRIPT="no"
 MYSQL="yes"
 MYSQL_BT="no"
-THREAD="no"
 SQLITE="yes"
 
 ###########################################################################
@@ -469,31 +462,6 @@ echo ""
 
 ####
 
-ok=0
-DEF=no
-echo "Allow Denora to attempt to build a threading library so that the code can be multithreaded for speed"
-while [ $ok -lt 1 ] ; do
-	echo "[$THREAD] "
-	if read INPUT ; then : ; else echo "" ; exit 1 ; fi
-	if [ ! "$INPUT" ] ; then
-		INPUT=$THREAD
-	fi
-	case $INPUT in
-		n*|N*)
-			THREAD="no"
-			ok=1
-			;;
-		y*|Y*)
-			THREAD="yes"
-			ok=1
-			;;
-		*)
-			echo "Please enter 'yes' or 'no'."
-			;;
-	esac
-done
-echo ""
-
 ################################################################################
 # Store values
 ################################################################################
@@ -509,7 +477,6 @@ MYSQL_BT="$MYSQL_BT"
 REGSCRIPT="$REGSCRIPT"
 DMEMORY="$DMEMORY"
 ENCRYPT="$ENCRYPT"
-THREAD="$THREAD"
 EOT
 echo "done."
 

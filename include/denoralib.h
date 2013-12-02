@@ -88,7 +88,7 @@ char *SQLfileLoad(char *filename);
 int DenoraExecQuerySQL(sqlite3 *db, const char *fmt, ...);
 int DenoraExecQueryDirectSQL(sqlite3 *db, const char *querystring, int callback(void *NotUsed, int argc, char **argv, char **azColName));
 sqlite3_stmt *DenoraPrepareQuery(sqlite3 *db, const char *fmt, ...);
-char **DenoraSQLFetchArray(sqlite3 *db, char *table, sqlite3_stmt* stmt, int type);
+char ***DenoraSQLFetchArray(sqlite3 *db, char *table, sqlite3_stmt* stmt, int type);
 
 /* Denora_Mem.c */
 char ***DenoraCallocArray2D(int x, int y);

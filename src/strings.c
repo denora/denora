@@ -855,6 +855,12 @@ size_t denora_strlen(const char *str)
 
 /*************************************************************************/
 
+char *StringDup(const char *src)
+{
+	return sstrdup(src);
+}
+
+
 char *sstrdup(const char *src)
 {
 	char *ret = NULL;

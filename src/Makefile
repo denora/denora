@@ -11,15 +11,15 @@
 # 
 #
 
-OBJS =  admin.o base64.o bans.o channels.o chanstats.o ChanBanMode.o ChanMode.o core.o cron.o ctcp.o config.o db.o datafiles.o \
-        exclude.o events.o extsock.o FileIO.o GeoIP.o GeoIP_deprecated.o language.o list.o log.o ircd.o main.o markup.o modules.o moddata.o moduleapi.o \
+OBJS =  admin.o base64.o bans.o channels.o chanstats.o ChanBanMode.o ChanMode.o core.o cron.o ctcp.o config.o db.o datafiles.o Denora_Mem.o Denora_SQL.o \
+        denoralib.o exclude.o events.o extsock.o FileIO.o GeoIP.o GeoIP_deprecated.o GeoIPCity.o language.o list.o log.o ircd.o main.o markup.o modules.o moddata.o moduleapi.o \
         messages.o md5.o mod_version.o Modes.o mysql.o network.o numerics.o privmsg.o rdb.o send.o servers.o signals.o sockutil.o statserv.o \
-        spamfilter.o sqlqueue.o strings.o tld.o users.o xmlrpc.o zip.o \
+        regionName.o shell.o spamfilter.o sqlqueue.o sqlite3.o strings.o timeZone.o tld.o users.o xmlrpc.o xmlparse.o xmlconfig.o zip.o \
         
-SRCS =  admin.c base64.c bans.c channels.c chanstats.c ChanBanMode.c ChanMode.c core.c cron.c ctcp.c config.c db.c datafiles.c \
-        exclude.c events.c extsock.c FileIO.c GeoIP.c GeoIP_deprecated.c language.c list.c log.c ircd.c main.c markup.c  modules.c moddata.c moduleapi.c \
+SRCS =  admin.c base64.c bans.c channels.c chanstats.c ChanBanMode.c ChanMode.c core.c cron.c ctcp.c config.c db.c datafiles.c Denora_Mem.c Denora_SQL.c \
+        denoralib.c exclude.c events.c extsock.c FileIO.c GeoIP.c GeoIP_deprecated.c GeoIPCity.c language.c list.c log.c ircd.c main.c markup.c  modules.c moddata.c moduleapi.c \
         messages.c md5.c mod_version.c Modes.c mysql.c network.c numerics.c privmsg.c rdb.c send.c servers.c signals.c sockutil.c statserv.c \
-        spamfilter.c sqlqueue.c strings.c tld.c users.c xmlrpc.o zip.c \
+        regionName.c shell.c spamfilter.c sqlqueue.c sqlite3.c strings.c timeZone.c tld.c users.c xmlrpc.o xmlparse.c xmlconfig.c zip.c \
         
 
 INCLUDES = ../include/language.h ../include/sysconf.h \
@@ -50,18 +50,22 @@ base64.o:       base64.c    $(INCLUDES)
 bans.o:         bans.c      $(INCLUDES)
 channels.o:     channels.c  $(INCLUDES) 
 chanstats.o:    chanstats.c $(INCLUDES)
-ChanBanMode.o:  ChanBanMode.c  $(INCLUDES)
-ChanMode.o:     ChanMode.c  $(INCLUDES)
-config.o:       config.c    $(INCLUDES) 
-core.o:         core.c      $(INCLUDES)
-cron.o:         cron.c      $(INCLUDES)
-ctcp.o:         ctcp.c      $(INCLUDES)
-datafiles.o:    datafiles.c $(INCLUDES)
+ChanBanMode.o:  ChanBanMode.c $(INCLUDES)
+ChanMode.o:     ChanMode.c    $(INCLUDES)
+config.o:       config.c      $(INCLUDES) 
+core.o:         core.c        $(INCLUDES)
+cron.o:         cron.c       $(INCLUDES)
+ctcp.o:         ctcp.c       $(INCLUDES)
+datafiles.o:    datafiles.c  $(INCLUDES)
+Denora_Mem.o:   Denora_Mem.c $(INCLUDES)
+Denora_SQL.o:   Denora_SQL.c $(INCLUDES)
+denoralib.o:    denoralib.c  $(INCLUDES)
 db.o:           db.c        $(INCLUDES)
 exclude.o:      exclude.c   $(INCLUDES)
 events.o:       events.c    $(INCLUDES)
 FileIO.o:       FileIO.c    $(INCLUDES)
 GeoIP.o:        GeoIP.c     $(INCLUDES)
+GeoIPCity.o:    GeoIPCity.c $(INCLUDES)
 language.o:     language.c  $(INCLUDES)
 list.o:         list.c      $(INCLUDES)
 log.o:          log.c       $(INCLUDES)
@@ -80,18 +84,25 @@ numerics.o:     numerics.c  $(INCLUDES)
 privmsg.o:      privmsg.c   $(INCLUDES)
 send.o:         send.c      $(INCLUDES)
 servers.o:      servers.c   $(INCLUDES)
+shell.o:        shell.c   $(INCLUDES)
 spamfilter.o:   spamfilter.c $(INCLUDES)
 signals.o:      signals.c   $(INCLUDES)
 sockutil.o:     sockutil.c  $(INCLUDES)
 sqlqueue.o:     sqlqueue.c  $(INCLUDES)
+sqlite3.o:      sqlite3.c  $(INCLUDES)
 strings.o:      strings.c   $(INCLUDES)
 statserv.o:     statserv.c  $(INCLUDES)
 tld.o:          tld.c       $(INCLUDES)
 users.o:        users.c     $(INCLUDES)
 xmlrpc.o:       xmlrpc.c    $(INCLUDES)
+xmlparse.o:     xmlparse.c  $(INCLUDES)
+xmlconfig.o:    xmlconfig.c $(INCLUDES)
 zip.o:          zip.c       $(INCLUDES)
 mysql.o:        mysql.c     $(INCLUDES)
 rdb.o:          rdb.c       $(INCLUDES)
+timeZone.o:     timeZone.c  $(INCLUDES)
+regionName.o:   regionName.c       $(INCLUDES)
+
 
 modules: DUMMY
 	(cd modules ; ./configure ; ${MAKE} ${MAKEARGS} all)
@@ -128,7 +139,9 @@ install: stats
 	test -d $(DATDEST)/backups || mkdir $(DATDEST)/backups
 	test -d $(DATDEST)/logs || mkdir $(DATDEST)/logs
 	test -d $(DATDEST)/sql || mkdir $(DATDEST)/sql
+	test -d $(DATDEST)/ircdconfig || mkdir $(DATDEST)/ircdconfig
 	$(CP) ../sql/* $(DATDEST)/sql
+	$(CP) ../ircdconfig/* $(DATDEST)/ircdconfig
 	test -d $(DATDEST)/core || mkdir $(DATDEST)/core
 	test -d $(DATDEST)/core/runtime || mkdir $(DATDEST)/core/runtime
 	(cd core ; ${MAKE} install)

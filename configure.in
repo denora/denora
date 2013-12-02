@@ -118,7 +118,9 @@ AC_CHECK_HEADER(malloc.h,AC_DEFINE(HAVE_MALLOC_H,1,""))
 AC_CHECK_HEADER(signal.h,AC_DEFINE(HAVE_SIGNAL_H,1,""))
 AC_CHECK_HEADER(poll.h,AC_DEFINE(HAVE_POLL_H,1,""))
 AC_CHECK_HEADER(regex.h,AC_DEFINE(HAVE_REGEX_H,1,""))
-AC_CHECK_HEADER(mcheck.h,AC_DEFINE(HAVE_MCHECK,1,""))
+AC_CHECK_HEADER(editline/editline.h,AC_DEFINE(HAVE_EDITLINE,1,""))
+AC_CHECK_HEADER(readline/readline.h,AC_DEFINE(HAVE_READLINE,1,""))
+
 
 
 AC_C_INLINE
@@ -173,22 +175,12 @@ if test "$ac_cv_mysqlbt" = "yes"; then
   DIS_MYSQLBT="Mysql backtrace debug: Yes"
 fi
 
-DIS_THREADING="Threading: No"
-AC_ARG_ENABLE(threading,
-    [  --enable-threading      Enable support for the threading library],
-    [ac_cv_pthread="$enableval"],
-    [ac_cv_pthread="no"])
-
-if test "$ac_cv_pthread" = "yes"; then
- ACX_PTHREAD([
+ACX_PTHREAD([
     CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
     DENORALIBS="$DENORALIBS$PTHREAD_LIBS "
     AC_DEFINE_UNQUOTED(USE_THREADS,1,"Use threads")
     DIS_THREADING="Threading: Yes"
- ])
-else
-  DIS_THREADING="Threading: No"
-fi
+])
 
 TYPE_SOCKLEN_T
 
@@ -858,7 +850,6 @@ cat <<EOT
                 $DIS_MYSQL
 $DIS_MYSQLBT
     $DIS_ENCRYPT
-            $DIS_THREADING
 
 All done! Above you can see if Modules Support and MySQL Support will be compiled or not.
 If you intended to compile MySQL support and you see "NO", then your system is probably

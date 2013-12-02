@@ -106,12 +106,12 @@ void DenoraCloseSQl(sqlite3 *db)
 sqlite3_stmt *DenoraPrepareQuery(sqlite3 *db, const char *fmt, ...)
 {
 	va_list args;
-	char buf[NET_BUFSIZE];      /* should be enough for long queries (don't underestimate :o)) */
+	char *buf;
 	int res;
 	sqlite3_stmt * stmt;
 
 	va_start(args, fmt);
-	sqlite3_vsnprintf(buf, sizeof(buf), fmt, args);
+	sqlite3_vsnprintf(NET_BUFSIZE, buf, fmt, args);
 	va_end(args);
 
 	res = sqlite3_prepare(db, buf, sizeof(buf) + 1, &stmt, NULL);
@@ -155,7 +155,7 @@ char *DenoraReturnSQliteValue(sqlite3_stmt *stmt, int column)
 
 /*************************************************************************/
 
-char **DenoraSQLFetchArray(sqlite3 *db, char *table, sqlite3_stmt* stmt, int type)
+char ***DenoraSQLFetchArray(sqlite3 *db, char *table, sqlite3_stmt* stmt, int type)
 {
 	int ret;
 	int i, x;
@@ -286,11 +286,10 @@ char *SQLfileLoad(char *filename)
 	    return NULL;
  
 	/* copy all the text into the buffer */
-	fread(buffer, sizeof(char), numbytes, infile);
-	fclose(infile);
- 
-	/* confirm we have read the file by
-	outputing it to the console */
+	if (fread(buffer, sizeof(char), numbytes, infile))
+	{
+		fclose(infile);
+	}
  
 	/* free the memory we used for the buffer */
 	return buffer;

@@ -1230,6 +1230,13 @@ E void init_cmodes(void);
 E void init_csmodes(void);
 E int ChanHasMode(char *chan, int m);
 
+E char *GetConfigStartTagName(char *line);
+E char *GetConfigEndTagName(char *line);
+E char *GetOptionTagData(char *line);
+E char *GetOptionTagName(char *line);
+E void DenoraParseXMLConfig(char *filename);
+
+
 #if defined(HAVE_CRYPT) && !defined(HAVE_CRYPT_H)
 
 #ifndef __FreeBSD__
