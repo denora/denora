@@ -1,3 +1,7 @@
+#include "GeoIP.h"
+#include "GeoIP_internal.h"
+#include "GeoIPCity.h"
+
 
 #define FETCH_ARRAY_NUM 1
 #define FETCH_ARRAY_ASSOC 2
@@ -16,8 +20,8 @@ struct config_
 
 
 /* denoralib.c */
-char *DenoraLib_GetLastError(void);
-int DenoraLastErrorCode;
+E char *DenoraLib_GetLastError(void);
+E int DenoraLastErrorCode;
 
 
 /* Denora_SQL */
