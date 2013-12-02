@@ -74,5 +74,4 @@ int DenoraConfigInit(void)
 	DenoraXMLConfigBlockCreate("connect", DenoraParseConnectBlock, 4);
 	DenoraXMLConfigBlockCreate("identity", DenoraParseConnectBlock, 4);
 
-	exit(EXIT_SUCCESS);
 }

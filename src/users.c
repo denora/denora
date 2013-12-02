@@ -1258,6 +1258,7 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 	Server *s = server_find(server);
 	int country_id;
 	TLD *tld;
+	GeoIPLookup gl;
 
 	SET_SEGV_LOCATION();
 
@@ -1288,11 +1289,11 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 			{
 				if (strstr(ipchar,":") != NULL)
 				{
-					country_id = GeoIP_id_by_addr_v6(gidb_v6, ipchar);
+					country_id = GeoIP_id_by_addr_v6_gl(gidb_v6, ipchar, &gl);
 				}
 				else
 				{
-					country_id = GeoIP_id_by_addr(gidb, ipchar);
+					country_id = GeoIP_id_by_addr_gl(gidb, ipchar, &gl);
 				}
 
 				if (country_id > 0)

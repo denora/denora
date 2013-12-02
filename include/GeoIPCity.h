@@ -18,15 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GEOIPCITY_H
-#define GEOIPCITY_H
-
-#include "GeoIP.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define  GEOIP_UNKNOWN_CONF  ( 0x7f )
 
 typedef struct GeoIPRecordTag {
@@ -65,11 +56,3 @@ int GeoIP_next_record(GeoIP * gi, GeoIPRecord **gir, int *record_iter);
 
 void GeoIPRecord_delete(GeoIPRecord *gir);
 
-/* NULL on failure otherwise a malloced string in utf8 */
-/* char * GeoIP_iso_8859_1__utf8(const char *); */
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* GEOIPCITY_H */

@@ -8,34 +8,6 @@
  *
  */
 
-
-#include "GeoIP.h"
-#include "GeoIP_internal.h"
-#include "GeoIPCity.h"
-
-/************************************************************************/
-/* If system can use threading include headers for threading		*/
-/************************************************************************/
-
-#ifdef USE_THREADS
-#ifndef _WIN32			/* Non Win32				*/
-#include <pthread.h>		/* Include pthread header		*/
-#endif				/* end if				*/
-#include "threads.h"		/* our common threading header		*/
-#endif
-
-/************************************************************************/
-/* Include the zlib header file if the system can has it		*/
-/************************************************************************/
-
-#ifdef HAVE_LIBZ
-#include <zlib.h>
-#endif
-
-#include "sqlite3.h"
-#include "zip.h"
-#include "denoralib_err.h"
-
 #define FETCH_ARRAY_NUM 1
 #define FETCH_ARRAY_ASSOC 2
 
@@ -88,7 +60,7 @@ char *SQLfileLoad(char *filename);
 int DenoraExecQuerySQL(sqlite3 *db, const char *fmt, ...);
 int DenoraExecQueryDirectSQL(sqlite3 *db, const char *querystring, int callback(void *NotUsed, int argc, char **argv, char **azColName));
 sqlite3_stmt *DenoraPrepareQuery(sqlite3 *db, const char *fmt, ...);
-char ***DenoraSQLFetchArray(sqlite3 *db, char *table, sqlite3_stmt* stmt, int type);
+char ***DenoraSQLFetchArray(sqlite3 *db, char *table, sqlite3_stmt *stmt, int type);
 
 /* Denora_Mem.c */
 char ***DenoraCallocArray2D(int x, int y);

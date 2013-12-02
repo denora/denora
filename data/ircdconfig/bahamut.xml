@@ -1,0 +1,81 @@
+<denora>
+  <ircd>
+	<name>BahamutIRCd 1.4.*/1.8.*</name>
+  </ircd>
+  <services>
+	<mode>+io</mode>
+  </services>
+  <features>
+// Vhost and Vident features
+	<vhost>no</vhost>
+	<vident>no</ident>
+// During NICK command do we get the vhost as well
+	<vhost_on_nick>no<vhost_on_nick>
+// sglines and if we dump them to sql modules
+	<sgline>yes</sgline>
+    <sgline_sql>yes<sgline_sql>
+// sqlines and if we dump them to sql modules
+	<sqline>yes</sqline>
+    <sqline_sql>yes<sqline_sql>
+// szlines and if we dump them to sql modules
+	<szline>yes</szline>
+    <szline_sql>yes<szline_sql>
+// supports +e mode
+	<exceptions>yes<exceptions>
+// on NICK command we get an IP address
+	<nickip>yes<nickip>
+
+	<ziplink>no</ziplink>
+	<ssllink>no<sslink>
+
+  </features>
+
+
+
+
+		IRCD_DISABLE,              /* +f                        */
+		IRCD_ENABLE,               /* +j                        */
+		IRCD_DISABLE,              /* +L                        */
+		IRCD_DISABLE,              /* +f Mode                   */
+		CMODE_j,                   /* +j                        */
+		IRCD_DISABLE,              /* +L Mode                   */
+		NULL,                      /* CAPAB Chan Modes          */
+		IRCD_DISABLE,              /* We support TOKENS         */
+		IRCD_ENABLE,               /* TOKENS are CASE Sensitive */
+		IRCD_DISABLE,              /* TIME STAMPS are BASE64    */
+		IRCD_ENABLE,               /* +I support                */
+		IRCD_DISABLE,              /* SJOIN ban char            */
+		IRCD_DISABLE,              /* SJOIN except char         */
+		IRCD_DISABLE,              /* SJOIN invite char         */
+		IRCD_DISABLE,              /* umode for vhost           */
+		IRCD_DISABLE,              /* owner                     */
+		IRCD_DISABLE,              /* protect                   */
+		IRCD_DISABLE,              /* halfop                    */
+		NULL,                      /* user modes        */
+		NULL,                      /* channel modes             */
+		IRCD_DISABLE,              /* flood                     */
+		'j',                       /* flood other               */
+		IRCD_DISABLE,              /* join throttle             */
+		IRCD_DISABLE,              /* nick change flood         */
+		IRCD_DISABLE,              /* vhost                     */
+		IRCD_DISABLE,              /* vhost other               */
+		IRCD_DISABLE,              /* Channel forwarding        */
+		IRCD_DISABLE,              /* p10                       */
+		IRCD_DISABLE,              /* ts6                       */
+		IRCD_ENABLE,               /* numeric                   */
+		IRCD_DISABLE,              /* gagged                    */
+		IRCD_DISABLE,              /* spamfilter                */
+		'b',                       /* ban char                  */
+		'e',                       /* except char               */
+		'I',                       /* invite char               */
+		IRCD_ENABLE,               /* uline                     */
+		NULL,                      /* nickchar                  */
+		IRCD_ENABLE,               /* svid                      */
+		IRCD_DISABLE,              /* hidden oper               */
+		IRCD_ENABLE,               /* extra warning             */
+		IRCD_ENABLE,               /* Report sync state         */
+		IRCD_DISABLE               /* Persistent channel mode   */ 
+
+
+
+</denora>

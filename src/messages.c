@@ -359,8 +359,10 @@ int m_privmsg(char *source, char *receiver, char *msg)
 int m_stats(char *source, int ac, char **av)
 {
 	User *u;
-	Dadmin *a;
 	int i;
+	int rows;
+	sqlite3_stmt *stmt;
+	char ***data;
 
 	if (ac < 1)
 		return MOD_CONT;
@@ -396,14 +398,17 @@ int m_stats(char *source, int ac, char **av)
 			}
 			else
 			{
-				for (i = 0; i < 1024; i++)
+				AdminDatabase = DenoraOpenSQL(AdminDB);
+				rows = DenoraSQLGetNumRows(AdminDatabase, "admin");
+				stmt = DenoraPrepareQuery(AdminDatabase, "SELECT * FROM admin");
+				data = DenoraSQLFetchArray(AdminDatabase, "admin", stmt, FETCH_ARRAY_NUM);
+				for (i = 0; i < rows; i++)
 				{
-					for (a = adminlists[i]; a; a = a->next)
-					{
-						denora_cmd_numeric(source, 243, "O * * %s Admin 0",
-						                   a->name);
-					}
+					denora_cmd_numeric(source, 243, "O * * %s Admin 0",  data[i][0]);
 				}
+				free(data);
+				sqlite3_finalize(stmt);
+				DenoraCloseSQl(AdminDatabase);
 				denora_cmd_219(source, av[0]);
 			}
 

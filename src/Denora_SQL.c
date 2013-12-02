@@ -190,7 +190,7 @@ char ***DenoraSQLFetchArray(sqlite3 *db, char *table, sqlite3_stmt* stmt, int ty
 
 /*************************************************************************/
 
-char **DenoraSQLFetchRow(sqlite3_stmt* stmt, int type)
+char **DenoraSQLFetchRow(sqlite3_stmt *stmt, int type)
 {
 	int ret;
 	int i, x;

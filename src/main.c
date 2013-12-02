@@ -451,7 +451,6 @@ void save_databases()
 	save_ctcp_db();
 	save_chan_db();
 	save_exclude_db();
-	save_admin_db();
 	sql_ban_clean(NULL);
 	send_event(EVENT_DB_SAVING, 1, EVENT_STOP);
 }
@@ -1318,7 +1317,6 @@ int init(int ac, char **av)
 	InitStatsChanList();
 	load_chan_db();
 	load_exclude_db();
-	load_admin_db();
 
 	/* Announce ourselves to the logfile. */
 	alog(LOG_NORMAL,

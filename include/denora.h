@@ -105,7 +105,7 @@
 #include "os/aix.h"
 #endif
 
-#include "denoralib.h"
+
 
 /************************************************************************/
 /* If system can use threading include headers for threading		*/
@@ -172,6 +172,14 @@
 #endif
 #endif
 
+/************************************************************************/
+/* Include the zlib header file if the system can has it		*/
+/************************************************************************/
+
+#ifdef HAVE_LIBZ
+#include <zlib.h>
+#endif
+
 
 
 /************************************************************************/
@@ -181,7 +189,10 @@
 #include "defines.h"
 #include "language.h"
 #include "GeoIP.h"
+#include "GeoIPCity.h"
+#include "sqlite3.h"
 #include "zip.h"
+#include "denoralib_err.h"
 #include "events.h"
 #include "sockets.h"
 #include "version.h"
@@ -189,6 +200,7 @@
 #include "modes.h"
 #include "cron.h"
 #include "list-array.h"
+#include "denoralib.h"
 
 /************************************************************************/
 /* Remove standard C functions and replace with our own functions	*/
@@ -1189,11 +1201,11 @@ struct dadmin_
 {
 	Dadmin *prev, *next;
 
-	char *hosts[MAXHOSTS+1];
+	char *hosts;
 	char *passwd;
 	char *name;
 	uint16 language;
-	int   legal;
+	int   level;
 	int   configfile;		/* Admin was loaded by the config file */
 };
 

@@ -14,47 +14,33 @@
 
 #include "denora.h"
 
-Dadmin *adminlists[MAX_ADMINS];
-static Dadmin *current;
-static int next_index;
-
-/*************************************************************************/
-
-void insert_admin(Dadmin * a)
-{
-	int adminindex = ADMINHASH(a->name);
-
-	SET_SEGV_LOCATION();
-
-	a->prev = NULL;
-	a->next = adminlists[adminindex];
-	if (a->next)
-	{
-		a->next->prev = a;
-	}
-	adminlists[adminindex] = a;
-
-	return;
-}
+sqlite3* AdminDatabase;
 
 /*************************************************************************/
 
 Dadmin *find_admin_byname(char *mask)
 {
 	Dadmin *a;
-
-	SET_SEGV_LOCATION();
+	sqlite3_stmt *stmt;
+	char **sdata;
 
 	if (!mask)
 	{
 		return NULL;
 	}
-	for (a = adminlists[ADMINHASH(mask)]; a; a = a->next)
+
+	AdminDatabase = DenoraOpenSQL(AdminDB);
+	stmt = DenoraPrepareQuery(AdminDatabase, "SELECT * FROM %s WHERE uname='%q'", mask);
+	sdata = DenoraSQLFetchRow(stmt, FETCH_ARRAY_NUM);
+	if (sdata) {
+		a = make_admin(sdata);
+	}
+	sqlite3_finalize(stmt);
+	DenoraCloseSQl(AdminDatabase);
+
+	if (stricmp(a->name, mask) == 0)
 	{
-		if (stricmp(a->name, mask) == 0)
-		{
-			return a;
-		}
+		return a;
 	}
 	return NULL;
 }
@@ -64,18 +50,12 @@ Dadmin *find_admin_byname(char *mask)
 Dadmin *find_admin(char *name, User * u)
 {
 	Dadmin *a;
-	int i;
 
-	for (a = adminlists[ADMINHASH(name)]; a; a = a->next)
+	a = find_admin_byname(name);
+
+	if (match_usermask(a->hosts, u))
 	{
-		for (i = 0; a->hosts[i]; i++)
-		{
-			if ((!strcmp(name, a->name))
-			        && match_usermask(a->hosts[i], u))
-			{
-				return a;
-			}
-		}
+		return a;
 	}
 	return NULL;
 }
@@ -83,130 +63,19 @@ Dadmin *find_admin(char *name, User * u)
 
 /*************************************************************************/
 
-void load_admin_db(void)
-{
-	/* TODO: check if key,value needs free */
-	char *key, *value;
-	DenoraDBFile *dbptr = filedb_open(AdminDB, ADMIN_VERSION, &key, &value);
-	int retval = 0;
-	Dadmin *x = NULL;
-	Dadmin *a = NULL;
-
-        if (!dbptr)
-        {
-                return;                 /* Bang, an error occurred */
-        }
-        SET_SEGV_LOCATION();
-
-	while (1)
-	{
-		/* read a new entry and fill key and value with it -Certus */
-		retval = new_read_db_entry(&key, &value, dbptr->fptr);
-
-		if (retval == DB_READ_ERROR)
-		{
-			alog(LOG_NORMAL, langstr(ALOG_DB_ERROR), dbptr->filename);
-			filedb_close(dbptr, &key, &value);
-			return;
-		}
-		else if (retval == DB_EOF_ERROR)
-		{
-			alog(LOG_EXTRADEBUG, langstr(ALOG_DEBUG_DB_OK),
-			     dbptr->filename);
-			filedb_close(dbptr, &key, &value);
-			return;
-		}
-		else if (retval == DB_READ_BLOCKEND)            /* DB_READ_BLOCKEND */
-		{
-
-
-		}
-		else
-		{
-			/* DB_READ_SUCCESS */
-
-			if (!*value || !*key)
-			{
-				continue;
-			}
-			SET_SEGV_LOCATION();
-
-			if (!stricmp(key, "name"))
-			{
-				a = find_admin_byname(value);
-				if (!a)
-				{
-					x = make_admin(value);
-				}
-				else
-				{
-					alog(LOG_ERROR,
-					     "Admin %s from denora.conf overrides the one in admin.db",
-					     value);
-					return;
-				}
-			}
-			else if (!stricmp(key, "password"))
-			{
-				x->passwd = sstrdup(value);
-			}
-			else if (!stricmp(key, "host"))
-			{
-				x->hosts[0] = sstrdup(value);
-			}
-			else if (!stricmp(key, "lang"))
-			{
-				x->language = atoi(value);
-			}
-		}                       /* else */
-	}                           /* while */
-
-	return;
-}
-
-/*************************************************************************/
-
-void save_admin_db(void)
-{
-	DenoraDBFile *dbptr = filedb_create(AdminDB, ADMIN_VERSION);
-	Dadmin *a;
-	int i;
-
-	SET_SEGV_LOCATION();
-	for (i = 0; i < MAX_ADMINS; i++)
-	{
-		for (a = adminlists[i]; a; a = a->next)
-		{
-			if (!a->configfile)
-			{
-				new_write_db_entry("name", dbptr, "%s", a->name);
-				new_write_db_entry("password", dbptr, "%s", a->passwd);
-				new_write_db_entry("host", dbptr, "%s", a->hosts[0]);
-				new_write_db_entry("lang", dbptr, "%d", a->language);
-				new_write_db_endofblock(dbptr);
-			}
-		}
-	}
-	SET_SEGV_LOCATION();
-
-	filedb_close(dbptr, NULL, NULL);  /* close file */
-
-	return;
-}
-
-
-
-/*************************************************************************/
-
-Dadmin *make_admin(char *mask)
+Dadmin *make_admin(char **data)
 {
 	Dadmin *a;
 
 	a = calloc(sizeof(Dadmin), 1);
-	SET_SEGV_LOCATION();
 
-	a->name = sstrdup(mask);
-	insert_admin(a);
+	a->name = sstrdup(data[0]);
+	a->passwd = sstrdup(data[1]);	
+	a->hosts = sstrdup(data[3]);
+	a->language = atoi(data[4]);
+	a->level = atoi(data[2]);
+	a->configfile = atoi(data[5]);
+
 	return a;
 }
 
@@ -216,26 +85,11 @@ int free_admin(Dadmin * a)
 {
 	int i = 0;
 
-	SET_SEGV_LOCATION();
-
 	if (a)
 	{
-		if (a->prev)
+		if (a->hosts)
 		{
-			a->prev->next = a->next;
-		}
-		else
-		{
-			adminlists[ADMINHASH(a->name)] = a->next;
-		}
-		if (a->next)
-		{
-			a->next->prev = a->prev;
-		}
-		while (a->hosts[i])
-		{
-			free(a->hosts[i]);
-			i++;
+			free(a->hosts);
 		}
 		if (a->passwd)
 		{
@@ -253,82 +107,39 @@ int free_admin(Dadmin * a)
 
 /*************************************************************************/
 
-Dadmin *first_admin(void)
+int add_sqladmin(char *name, char *passwd, int level, char *host, int lang, int configadmin)
 {
-	next_index = 0;
-
-	SET_SEGV_LOCATION();
-
-	while (next_index < MAX_ADMINS && current == NULL)
-	{
-		current = adminlists[next_index++];
-	}
-	SET_SEGV_LOCATION();
-
-	alog(LOG_EXTRADEBUG, "debug: first_admin() returning %s",
-	     current ? current->name : "NULL (end of list)");
-	return current;
-}
-
-/*************************************************************************/
-
-Dadmin *next_admin(void)
-{
-	SET_SEGV_LOCATION();
-
-	if (current)
-	{
-		current = current->next;
-	}
-	if (!current && next_index < MAX_ADMINS)
-	{
-		while (next_index < MAX_ADMINS && current == NULL)
-		{
-			current = adminlists[next_index++];
-		}
-	}
-	SET_SEGV_LOCATION();
-
-	alog(LOG_EXTRADEBUG, "debug: next_admin() returning %s",
-	     current ? current->name : "NULL (end of list)");
-	return current;
-}
-
-/*************************************************************************/
-
-void add_sqladmin(char *name, char *passwd, int level, char *host, int lang)
-{
+	int res;
 	int crypted = is_crypted(passwd);
 
-	SET_SEGV_LOCATION();
+	res = DenoraExecQuerySQL(AdminDatabase, "INSERT INTO %s (uname, passwd, level, host, lang, config) VALUES ('%q', '%q', %d, %s%q%s, %d, %d)", 
+		  AdminTable, name, crypted ? "'" : "MD5('", passwd, crypted ? "'" : "')", level, host, lang, configadmin); 
 
 	if (!denora->do_sql)
 	{
-		return;
-	}
-
-	rdb_query(QUERY_LOW,
-		  "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', '%s', %d, %s%s%s, %d) \
-		   ON DUPLICATE KEY UPDATE passwd=%s%s%s, level=%d, host='%s', lang=%d",
-		  AdminTable, name, crypted ? "'" : "MD5('", passwd, crypted ? "'" : "')", level, host, lang, 
+		rdb_query(QUERY_LOW,
+			  "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', '%s', %d, %s%s%s, %d) \
+			   ON DUPLICATE KEY UPDATE passwd=%s%s%s, level=%d, host='%s', lang=%d",
+		  	   AdminTable, name, crypted ? "'" : "MD5('", passwd, crypted ? "'" : "')", level, host, lang, 
 				    crypted ? "'" : "MD5('", passwd, crypted ? "'" : "')", level, host, lang);
-	return;
+	}
+	return res;
 }
 
 /*************************************************************************/
 
 int del_sqladmin(char *name)
 {
-	SET_SEGV_LOCATION();
+	int res;
 
-	if (!denora->do_sql)
+	res = DenoraExecQuerySQL(AdminDatabase, "DELETE FROM %s WHERE uname = '%q'", AdminTable, name);
+	
+	if (denora->do_sql)
 	{
-		return -1;
+			rdb_query(QUERY_LOW, "DELETE FROM %s WHERE uname = '%s'",  AdminTable, name);
 	}
 
-	rdb_query(QUERY_LOW, "DELETE FROM %s WHERE uname = '%s'",
-	          AdminTable, name);
-	return 0;
+	return res;
 }
 
 /*************************************************************************/
@@ -340,7 +151,10 @@ void reset_sqladmin(void)
 	int crypted;
 
 	SET_SEGV_LOCATION();
-
+/* this was for mysql benefit will probably move it to the mysql module once that work
+   has started
+*/
+#if 0
 	if (denora->do_sql)
 	{
 		rdb_query(QUERY_LOW, "TRUNCATE TABLE %s", AdminTable);
@@ -358,6 +172,23 @@ void reset_sqladmin(void)
 			}
 		}
 	}
-
+#endif
 	return;
+}
+
+
+int AdminSetPassword(Dadmin * a, char *newpass)
+{
+	int crypted;
+
+	free(a->passwd);
+	a->passwd = sstrdup(MakePassword(newpass));
+	crypted = is_crypted(a->passwd);
+	DenoraExecQuerySQL(AdminDatabase, "UPDATE %s SET passwd=%s%q%s WHERE uname = '%q'", AdminTable, crypted ? "'" : "MD5('", a->passwd, crypted ? "'" : "')", a->name);
+
+	if (denora->do_sql)
+	{
+		rdb_query(QUERY_LOW, "UPDATE %s SET passwd=%s%s%s WHERE uname = '%s'", AdminTable, crypted ? "'" : "MD5('", a->passwd, crypted ? "'" : "')", a->name);
+	}
+	return 1;
 }

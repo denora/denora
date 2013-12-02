@@ -1,4 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 2; tab-width: 2 -*- */
 /* GeoIP.h
  *
  * Copyright (C) 2006 MaxMind LLC
@@ -17,34 +16,6 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-#ifndef GEOIP_H
-#define GEOIP_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <sys/types.h>
-#if !defined(_WIN32)
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#else /* !defined(_WIN32) */
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#define snprintf _snprintf
-#define FILETIME_TO_USEC(ft)                      \
-    (((unsigned __int64)ft.dwHighDateTime << 32 | \
-      ft.dwLowDateTime) / 10)
-#endif /* !defined(_WIN32) */
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h> /* for fstat */
-#include <sys/stat.h>  /* for fstat */
-
 #define SEGMENT_RECORD_LENGTH 3
 #define LARGE_SEGMENT_RECORD_LENGTH 4
 #define STANDARD_RECORD_LENGTH 3
@@ -448,9 +419,26 @@ GEOIP_API char *GeoIP_org_by_name_v6(GeoIP * gi, const char *name);
 
 
 
-#
-#ifdef __cplusplus
-}
-#endif
+GEOIP_API unsigned int _GeoIP_seek_record_gl(GeoIP *gi, unsigned long ipnum,
+                                             GeoIPLookup * gl);
+GEOIP_API unsigned int _GeoIP_seek_record_v6_gl(GeoIP *gi, geoipv6_t ipnum,
+                                                GeoIPLookup * gl);
+GEOIP_API geoipv6_t _GeoIP_addr_to_num_v6(const char *addr);
 
-#endif /* GEOIP_H */
+GEOIP_API unsigned long _GeoIP_lookupaddress(const char *host);
+GEOIP_API geoipv6_t _GeoIP_lookupaddress_v6(const char *host);
+GEOIP_API int __GEOIP_V6_IS_NULL(geoipv6_t v6);
+
+GEOIP_API void _GeoIP_setup_dbfilename();
+GEOIP_API char *_GeoIP_full_path_to(const char *file_name);
+
+/* deprecated */
+GEOIP_API unsigned int _GeoIP_seek_record(GeoIP *gi, unsigned long ipnum);
+GEOIP_API unsigned int _GeoIP_seek_record_v6(GeoIP *gi, geoipv6_t ipnum);
+
+
+GEOIP_API char *GeoIP_org_by_ipnum(GeoIP * gi, unsigned long ipnum);
+GEOIP_API int GeoIP_id_by_addr_v6(GeoIP * gi, const char *addr);
+GEOIP_API int GeoIP_id_by_name_v6(GeoIP * gi, const char *name);
+GEOIP_API int GeoIP_id_by_name(GeoIP * gi, const char *name);
+GEOIP_API int GeoIP_id_by_addr(GeoIP * gi, const char *addr);

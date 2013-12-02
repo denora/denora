@@ -81,6 +81,10 @@ static int do_admin(User * u, int ac, char **av)
 	int i;
 	int disp = 1;
 	int crypted = 0;
+	int rows;
+	sqlite3_stmt * stmt;
+	char ***data;
+	int language;
 
 	if (denora->protocoldebug)
 	{
@@ -115,31 +119,20 @@ static int do_admin(User * u, int ac, char **av)
 		}
 		else
 		{
-			a = make_admin(av[1]);
-			if (ac <= 3)
+			if (ac <= 4)
 			{
-				a->hosts[0] = sstrdup("*@*");
-				a->language = StatsLanguage;
-			}
-			else if (ac <= 4)
-			{
-				a->hosts[0] = sstrdup(av[3]);
-				a->language = StatsLanguage;
-			}
-			else
-			{
-				a->hosts[0] = sstrdup(av[3]);
-				a->language = atoi(av[4]);
-				if (a->language < 1 || a->language > NUM_LANGS)
+				language = atoi(av[4]);
+				if (language < 1 || language > NUM_LANGS)
 				{
-					a->language = StatsLanguage;
+					language = StatsLanguage;
 				}
-			}
-			a->passwd = sstrdup(MakePassword(av[2]));
-			if (denora->do_sql) 
+			} 
+			else 
 			{
-				add_sqladmin(a->name, a->passwd, 0, a->hosts[0], a->language);
+					language = StatsLanguage;
 			}
+			add_sqladmin(av[1], MakePassword(av[2]), 0, (ac <= 3 ? "*@*" : av[3]), language, 0);
+
 			u2 = user_find(av[1]);
 			if (u2)
 			{
@@ -172,6 +165,7 @@ static int do_admin(User * u, int ac, char **av)
 			{
 				notice_lang(s_StatServ, u, STAT_ADMIN_DELETE_CONFIG,
 				            av[1]);
+				free_admin(a);
 				return MOD_CONT;
 			}
 			free_admin(a);
@@ -212,15 +206,11 @@ static int do_admin(User * u, int ac, char **av)
 			if (a->configfile)
 			{
 				notice_lang(s_StatServ, u, STAT_CHGPASS_CONFIG, av[1]);
+				free_admin(a);
 				return MOD_CONT;
 			}
-			free(a->passwd);
-			a->passwd = sstrdup(MakePassword(av[2]));
-			if (denora->do_sql) 
-			{
-				crypted = is_crypted(a->passwd);
-				rdb_query(QUERY_LOW, "UPDATE %s SET passwd=%s%s%s WHERE uname = '%s'", AdminTable, crypted ? "'" : "MD5('", a->passwd, crypted ? "'" : "')", a->name);
-			}
+			AdminSetPassword(a, av[2]);
+			free_admin(a);
 			notice_lang(s_StatServ, u, STAT_CHGPASS_OK, av[1]);
 		}
 		else
@@ -243,6 +233,7 @@ static int do_admin(User * u, int ac, char **av)
 		{
 			notice_lang(s_StatServ, u, STAT_ADMIN_SHOW, a->name,
 			            a->hosts[0], a->language);
+			free_admin(a);
 		}
 		else
 		{
@@ -253,13 +244,17 @@ static int do_admin(User * u, int ac, char **av)
 	else if (!stricmp(av[0], "LIST"))
 	{
 		alog(LOG_NORMAL, "%s: %s: ADMIN LIST", s_StatServ, u->nick);
-		for (i = 0; i < 1024; i++)
+		AdminDatabase = DenoraOpenSQL(AdminDB);
+		rows = DenoraSQLGetNumRows(AdminDatabase, "admin");
+		stmt = DenoraPrepareQuery(AdminDatabase, "SELECT * FROM admin");
+		data = DenoraSQLFetchArray(AdminDatabase, "admin", stmt, FETCH_ARRAY_NUM);
+		for (i = 0; i < rows; i++)
 		{
-			for (a = adminlists[i]; a; a = a->next)
-			{
-				notice(s_StatServ, u->nick, "%d %s", disp++, a->name);
-			}
+			notice(s_StatServ, u->nick, "%d %s", disp++, data[0]);
 		}
+		free(data);
+		sqlite3_finalize(stmt);
+		DenoraCloseSQl(AdminDatabase);
 		return MOD_CONT;
 	}
 	else

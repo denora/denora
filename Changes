@@ -12,8 +12,14 @@ Additions
              of stats we will be able to call ./stats -sqlshell and be able to do debugs on the 
              database.
 
-
 Changes
+12/02/2013 : Changed add_sqladmin
+				1. From void to int - so we can trap for errors upstream
+				2. New paramater of "configadmin" since this is how we add admins now, we need to be able to flag them here
+12/02/2013 : Changed admins struct as follows
+				1. Renamed "legal" struct member to level, unused in previous code
+				2. Changed "hosts" struct member to be a char *, instead of an array, previous code
+                   has never used more than 1 host
 12/01/2013 : Removed "configure" script in favor of having config calling autoconf in config
              may add more auto* options in the future so we build denora with the best results
              for the given system
@@ -22,6 +28,13 @@ Fixes
 11/29/2013 : Removed data from uid struct on user being disconnected.
 
 Removals
+12/02/2013 : Removed the following functions, they are not used any more
+                void insert_admin(Dadmin * a);
+			    void load_admin_db(void);
+				void save_admin_db(void);
+				Dadmin *first_admin(void);
+				Dadmin *next_admin(void);
+
 
 Developers
 Denora Team <dev@denorastats.org>

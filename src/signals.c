@@ -303,18 +303,6 @@ VOIDSIG signal_rehash(int signum)
 		}
 		else
 		{
-			/* Remove all config file admins from admin struct before re-reading config file */
-			for (i = 0; i < 1024; i++)
-			{
-				for (a = adminlists[i]; a; a = a->next)
-				{
-					if (a->configfile)
-					{
-						free_admin(a);
-					}
-					break;
-				}
-			}
 			merge_confs();
 		}
 		/* Reload GeoIP db files */

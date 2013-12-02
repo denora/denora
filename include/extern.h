@@ -233,10 +233,6 @@ E int servers_hourly(const char *name);
 E char *AdminDB;
 E Conf_Modules *new_modules;
 E Conf_Modules *modules;
-E Dadmin *find_admin(char * name, User * u);
-E Dadmin *find_admin_byname(char *name);
-E Dadmin *make_admin(char *mask);
-E int free_admin(Dadmin * a);
 E void merge_confs(void);
 E void clear_newconfs(void);
 E void confparse_error(const char *str, int lnum);
@@ -547,8 +543,6 @@ E void ctcp_update(char *version);
 E list_t *CTCPhead;
 E int sortctcp(const void *v, const void *v2);
 E void init_ctcp(void);
-
-E Dadmin *adminlists[1024];
 
 /**** users.c ****/
 
@@ -1014,14 +1008,15 @@ E void ClearQueueEntry(QueueEntry *qp);
 E QueueEntry *ExecuteQueue(QueueEntry *qp);
 E QueueEntry *qp;
 
-E void insert_admin(Dadmin * a);
-E void load_admin_db(void);
-E void save_admin_db(void);
-E Dadmin *first_admin(void);
-E Dadmin *next_admin(void);
-E void add_sqladmin (char *name, char *passwd, int level, char *host, int lang);
+/* Admin.c */
+E int add_sqladmin (char *name, char *passwd, int level, char *host, int lang, int configadmin);
 E int del_sqladmin (char *name);
 E void reset_sqladmin (void);
+E sqlite3* AdminDatabase;
+E Dadmin *find_admin(char * name, User * u);
+E Dadmin *find_admin_byname(char *name);
+E Dadmin *make_admin(char **mask);
+E int free_admin(Dadmin * a);
 
 E char *MakePassword (char *plaintext);
 E int ValidPassword (char *plaintext, char *checkvs);
@@ -1235,6 +1230,8 @@ E char *GetConfigEndTagName(char *line);
 E char *GetOptionTagData(char *line);
 E char *GetOptionTagName(char *line);
 E void DenoraParseXMLConfig(char *filename);
+
+E char **DenoraSQLFetchRow(sqlite3_stmt* stmt, int type);
 
 
 #if defined(HAVE_CRYPT) && !defined(HAVE_CRYPT_H)

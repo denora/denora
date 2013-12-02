@@ -972,29 +972,24 @@ int confadd_options(cVar * vars[], int lnum)
 int confadd_admin(cVar * vars[], int lnum)
 {
 	cVar *tmp;
-	Dadmin *x = NULL;
 	int c = 0, hc = 0;
+	char *name, *passwd, *hosts;
+	int language;
 
 	for (tmp = vars[c]; tmp; tmp = vars[++c])
 	{
 		if (tmp->type && (tmp->type->flag & SCONFF_NAME))
 		{
 			tmp->type = NULL;
-			x = make_admin(tmp->value);
+			name = sstrdup(tmp->value);
 		}
 		else if (tmp->type && (tmp->type->flag & SCONFF_PASSWD))
 		{
 			tmp->type = NULL;
-			x->passwd = sstrdup(tmp->value);
+			passwd = sstrdup(tmp->value);
 		}
 		else if (tmp->type && (tmp->type->flag & SCONFF_HOSTNAME))
 		{
-			if ((hc + 1) > MAXHOSTS)
-			{
-				confparse_error("Excessive host definitions", lnum);
-				free_admin(x);
-				return -1;
-			}
 			tmp->type = NULL;
 			if (!strchr(tmp->value, '@') && *tmp->value != '/')
 			{
@@ -1003,43 +998,40 @@ int confadd_admin(cVar * vars[], int lnum)
 				len += strlen(tmp->value);
 				newhost = (char *) malloc(len);
 				ircsnprintf(newhost, sizeof(newhost), "*@%s", tmp->value);
-				x->hosts[hc] = newhost;
+				hosts = newhost;
 			}
 			else
-				x->hosts[hc] = sstrdup(tmp->value);
-			hc++;
+				hosts = sstrdup(tmp->value);
 		}
 		else if (tmp->type && (tmp->type->flag & SCONFF_LANGUAGE))
 		{
 			tmp->type = NULL;
-			x->language = atoi(tmp->value);
-			if (x->language < 1 || x->language > NUM_LANGS)
+			language = atoi(tmp->value);
+			if (language < 1 || language > NUM_LANGS)
 			{
 				confparse_error(langstring(CONFIG_INVALID_LANG), lnum);
 				return -1;
 			}
-			x->language--;
+			language--;
 		}
 	}
-	if (!x->name)
+	if (!name)
 	{
 		confparse_error(langstring(CONFIG_ADMIN_NAME_ERROR), lnum);
-		free_admin(x);
 		return -1;
 	}
-	if (!x->hosts[0])
+	if (!hosts)
 	{
 		confparse_error(langstring(CONFIG_ADMIN_HOST_ERROR), lnum);
-		free_admin(x);
 		return -1;
 	}
-	if (!x->passwd)
+	if (!passwd)
 	{
 		confparse_error(langstring(CONFIG_ADMIN_PASS_ERROR), lnum);
-		free_admin(x);
 		return -1;
 	}
-	x->configfile = 1;
+	add_sqladmin(name, MakePassword(passwd), 0, hosts, language, 1);
+
 	return lnum;
 }
 
