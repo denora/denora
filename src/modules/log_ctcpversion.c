@@ -5,7 +5,7 @@
 
 #include "denora.h"
 #define AUTHOR "Jobe"
-#define MOD_VERSION "1.0.2"
+#define VERSION "1.0.2"
 #define MYNAME "log_ctcpversion"
 
 /* Define this if you do not want them in the logchannel */
@@ -32,7 +32,7 @@ int DenoraInit(int argc, char **argv)
 	}
 
 	moduleAddAuthor(AUTHOR);
-	moduleAddVersion(MOD_VERSION);
+	moduleAddVersion(VERSION);
 	return MOD_CONT;
 }
 

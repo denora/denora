@@ -6,7 +6,7 @@
 #include "denora.h"
 #include <time.h>
 #define AUTHOR "Hal9000"
-#define MOD_VERSION "1.2.2"
+#define VERSION "1.2.2"
 
 int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
@@ -49,7 +49,7 @@ int DenoraInit(int argc, char **argv)
 		protocol_debug(NULL, argc, argv);
 
 	moduleAddAuthor(AUTHOR);
-	moduleAddVersion(MOD_VERSION);
+	moduleAddVersion(VERSION);
 	moduleSetType(THIRD);
 
 	if ((VERSION_MAJOR != 1) && (VERSION_MINOR < 4)) {

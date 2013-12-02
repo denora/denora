@@ -14,7 +14,7 @@
 
 #include "denora.h"
 #define AUTHOR "Trystan"
-#define MOD_VERSION "1.0"
+#define VERSION "1.0"
 
 int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
@@ -60,7 +60,7 @@ int DenoraInit(int argc, char **argv)
 
 
 	moduleAddAuthor(AUTHOR);
-	moduleAddVersion(MOD_VERSION);
+	moduleAddVersion(VERSION);
 	return MOD_CONT;
 }
 

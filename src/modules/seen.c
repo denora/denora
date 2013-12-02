@@ -6,7 +6,7 @@
 #include "denora.h"
 #include <time.h>
 #define AUTHOR "Hal9000"
-#define MOD_VERSION "1.2.2"
+#define VERSION "1.2.2"
 
 int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
@@ -55,7 +55,7 @@ int DenoraInit(int argc, char **argv)
 	}
 
 	moduleAddAuthor(AUTHOR);
-	moduleAddVersion(MOD_VERSION);
+	moduleAddVersion(VERSION);
 	moduleSetType(THIRD);
 
 	hook = createEventHook(EVENT_FANTASY, do_fantasy_seen);
