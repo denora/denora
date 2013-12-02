@@ -85,6 +85,9 @@ Run_Config () {
 		WITH_THREADING=" --enable-threading"
 	fi
   
+	touch autoconf/install-sh
+	echo "Generating Configuration file and Makefiles, this may take a moment"
+	autoconf 
 	echo "./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_THREADING $WITH_MYSQL_BT"
 	
 	./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_THREADING $WITH_MYSQL_BT

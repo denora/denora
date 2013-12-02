@@ -60,7 +60,7 @@ char *host_resolve(char *host)
  
 	if ((status = getaddrinfo(host, NULL, &hints, &res)) == 0) {
 		for(p = res;p != NULL; p = p->ai_next) {
-			_GeoIP_inet_ntop(p->ai_family, p->ai_addr, ipstr, sizeof ipstr);
+			inet_ntop(p->ai_family, p->ai_addr, ipstr, sizeof ipstr);
 			alog(LOG_DEBUG, "debug: %s resolves to IP address %s", host, ipstr);
 			freeaddrinfo(res);
 			return sstrdup(ipstr);
