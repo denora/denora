@@ -1,4 +1,4 @@
-#include "denoralib.h"
+#include "denora.h"
 
 char *GetConfigStartTagName(char *line)
 {

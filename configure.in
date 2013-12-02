@@ -20,12 +20,6 @@ if test $# = 0; then
 fi
 
 AC_CONFIG_AUX_DIR(autoconf)
-LT_INIT
-AM_INIT_AUTOMAKE(foreign m4_esyscmd([case `automake --version | head -n 1` in
-                                     *1.11*);;
-                                     *) echo serial-tests;;
-                                     esac]))
-AC_PROG_LIBTOOL
 AC_CONFIG_MACRO_DIR([autoconf/m4])
 m4_include([autoconf/m4/ext_have_lib.m4])
 m4_include([autoconf/m4/mysql.m4])

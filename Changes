@@ -5,6 +5,10 @@ Additions
 
 
 Changes
+12/01/2013 : Removed "configure" script in favor of having config calling "autoreconf" to generate
+             system specific configure file and the additional files that come with it, so we do not
+             need to ship them.
+12/01/2013 : Merged denoralib into the main source branch
 
 
 Fixes

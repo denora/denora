@@ -85,6 +85,13 @@ Run_Config () {
 		WITH_THREADING=" --enable-threading"
 	fi
   
+	echo "Generating Configure script and the required files, this may take a moment"
+	touch  autoconf/install-sh
+	aclocal > /dev/null 2>&1
+	autoheader > /dev/null 2>&1
+	autoconf > /dev/null 2>&1
+	echo "Executing configuration script"
+
 	echo "./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_THREADING $WITH_MYSQL_BT"
 	
 	./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_THREADING $WITH_MYSQL_BT
@@ -216,10 +223,6 @@ if [ "`id -u`" = "0" ] ; then
 	echo ""
 	exit 0
 fi
-
-
-# need this file for configure
-touch install-sh
 
 ok=0
 echo "Note: press Return for the default, or enter a new value."

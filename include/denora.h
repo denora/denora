@@ -174,6 +174,9 @@
 #include <zlib.h>
 #endif
 
+
+
+
 typedef struct MD5Context MD5_CTX;
 
 /************************************************************************/
@@ -214,6 +217,9 @@ struct buffer_st
 #include "modes.h"
 #include "cron.h"
 #include "list-array.h"
+#include "sqlite3.h"
+#include "GeoIPCity.h"
+#include "denoralib.h"
 
 /************************************************************************/
 /* Remove standard C functions and replace with our own functions	*/
