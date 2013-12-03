@@ -28,9 +28,7 @@
 /* 128 bit address in network order */
 typedef struct in6_addr geoipv6_t;
 
-#define GEOIP_CHKBIT_V6(bit,                \
-                        ptr) (ptr[((127UL - \
-                                    bit) >> 3)] & (1UL << (~(127 - bit) & 7)))
+#define GEOIP_CHKBIT_V6(bit, ptr) (ptr[((127UL - bit) >> 3)] & (1UL << (~(127 - bit) & 7)))
 
 typedef struct GeoIPTag {
     FILE *GeoIPDatabase;
@@ -74,7 +72,7 @@ typedef enum {
     GEOIP_MEMORY_CACHE = 1,
     GEOIP_CHECK_CACHE = 2,
     GEOIP_INDEX_CACHE = 4,
-    GEOIP_MMAP_CACHE = 8,
+    GEOIP_MMAP_CACHE = 8
 } GeoIPOptions;
 
 typedef enum {
@@ -121,14 +119,14 @@ typedef enum {
 typedef enum {
     GEOIP_ANON_PROXY = 1,
     GEOIP_HTTP_X_FORWARDED_FOR_PROXY = 2,
-    GEOIP_HTTP_CLIENT_IP_PROXY = 3,
+    GEOIP_HTTP_CLIENT_IP_PROXY = 3
 } GeoIPProxyTypes;
 
 typedef enum {
     GEOIP_UNKNOWN_SPEED = 0,
     GEOIP_DIALUP_SPEED = 1,
     GEOIP_CABLEDSL_SPEED = 2,
-    GEOIP_CORPORATE_SPEED = 3,
+    GEOIP_CORPORATE_SPEED = 3
 } GeoIPNetspeedValues;
 
 extern char **GeoIPDBFileName;
@@ -429,7 +427,7 @@ GEOIP_API unsigned long _GeoIP_lookupaddress(const char *host);
 GEOIP_API geoipv6_t _GeoIP_lookupaddress_v6(const char *host);
 GEOIP_API int __GEOIP_V6_IS_NULL(geoipv6_t v6);
 
-GEOIP_API void _GeoIP_setup_dbfilename();
+GEOIP_API void _GeoIP_setup_dbfilename(void);
 GEOIP_API char *_GeoIP_full_path_to(const char *file_name);
 
 /* deprecated */
@@ -437,8 +435,3 @@ GEOIP_API unsigned int _GeoIP_seek_record(GeoIP *gi, unsigned long ipnum);
 GEOIP_API unsigned int _GeoIP_seek_record_v6(GeoIP *gi, geoipv6_t ipnum);
 
 
-GEOIP_API char *GeoIP_org_by_ipnum(GeoIP * gi, unsigned long ipnum);
-GEOIP_API int GeoIP_id_by_addr_v6(GeoIP * gi, const char *addr);
-GEOIP_API int GeoIP_id_by_name_v6(GeoIP * gi, const char *name);
-GEOIP_API int GeoIP_id_by_name(GeoIP * gi, const char *name);
-GEOIP_API int GeoIP_id_by_addr(GeoIP * gi, const char *addr);

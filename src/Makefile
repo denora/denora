@@ -141,7 +141,7 @@ install: stats
 	test -d $(DATDEST)/sql || mkdir $(DATDEST)/sql
 	test -d $(DATDEST)/ircdconfig || mkdir $(DATDEST)/ircdconfig
 	$(CP) ../sql/* $(DATDEST)/sql
-	$(CP) ../ircdconfig/* $(DATDEST)/ircdconfig
+	$(CP) ../data/ircdconfig/* $(DATDEST)/sql/ircdconfig
 	test -d $(DATDEST)/core || mkdir $(DATDEST)/core
 	test -d $(DATDEST)/core/runtime || mkdir $(DATDEST)/core/runtime
 	(cd core ; ${MAKE} install)

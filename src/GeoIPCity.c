@@ -180,17 +180,13 @@ _get_record_gl(GeoIP * gi, unsigned long ipnum, GeoIPLookup * gl)
     return r;
 }
 
-static
-GeoIPRecord *
-_get_record(GeoIP * gi, unsigned long ipnum)
+static GeoIPRecord *_get_record(GeoIP * gi, unsigned long ipnum)
 {
     GeoIPLookup gl;
     return _get_record_gl(gi, ipnum, &gl);
 }
 
-static
-GeoIPRecord *
-_get_record_v6_gl(GeoIP * gi, geoipv6_t ipnum, GeoIPLookup * gl)
+static GeoIPRecord *_get_record_v6_gl(GeoIP * gi, geoipv6_t ipnum, GeoIPLookup * gl)
 {
     GeoIPRecord * r;
     unsigned int seek_record;

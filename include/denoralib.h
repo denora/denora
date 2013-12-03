@@ -70,7 +70,6 @@ char **DenoraCallocArray(int x);
 char *StringDup(const char *src);
 
 config *DenoraXMLConfigFindBlock(char *mask);
-int DenoraParseConnectBlock(int count, char **lines);
 config *DenoraXMLConfigBlockCreate(char *newblockname, int (parser)(int ac, char **av), int options);
 int DenoraConfigInit(void);
 int DenoraParseConnectBlock(int count, char **lines);

@@ -958,6 +958,11 @@ static int parse_options(int ac, char **av)
 				/* Handled by parse_dir_options(), too */
 				i++;            /* Skip parameter */
 			}
+			else if (strcmp(value, "sqlshell") == 0)
+			{
+				sqlite3_shell_main(0, NULL);
+				i++;            /* Skip parameter */
+			}
 			else if (strcmp(value, "debug") == 0)
 			{
 				if (extra)

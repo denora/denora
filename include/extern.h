@@ -1234,6 +1234,8 @@ E void DenoraParseXMLConfig(char *filename);
 E char **DenoraSQLFetchRow(sqlite3_stmt* stmt, int type);
 
 
+E int sqlite3_shell_main(int argc, char **argv);
+
 #if defined(HAVE_CRYPT) && !defined(HAVE_CRYPT_H)
 
 #ifndef __FreeBSD__

@@ -1,6 +1,6 @@
-#include <string.h>
-const char * GeoIP_time_zone_by_country_and_region(const char * country,
-                                                   const char * region)
+#include "denora.h"
+
+const char *GeoIP_time_zone_by_country_and_region(const char * country, const char * region)
 {
     const char * timezone = NULL;
     if (country == NULL) {
