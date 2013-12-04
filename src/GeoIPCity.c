@@ -275,6 +275,8 @@ int
 GeoIP_record_id_by_addr(GeoIP * gi, const char *addr)
 {
     unsigned long ipnum;
+	GeoIPLookup * gl;
+
     if (gi->databaseType != GEOIP_CITY_EDITION_REV0 &&
         gi->databaseType != GEOIP_CITY_EDITION_REV1) {
         printf("Invalid database type %s, expected %s\n",
@@ -286,13 +288,15 @@ GeoIP_record_id_by_addr(GeoIP * gi, const char *addr)
         return 0;
     }
     ipnum = GeoIP_addr_to_num(addr);
-    return _GeoIP_seek_record(gi, ipnum);
+    return _GeoIP_seek_record_gl(gi, ipnum, gl);
 }
 
 int
 GeoIP_record_id_by_addr_v6(GeoIP * gi, const char *addr)
 {
     geoipv6_t ipnum;
+	GeoIPLookup * gl;
+
     if (gi->databaseType != GEOIP_CITY_EDITION_REV0_V6 &&
         gi->databaseType != GEOIP_CITY_EDITION_REV1_V6) {
         printf("Invalid database type %s, expected %s\n",
@@ -304,7 +308,7 @@ GeoIP_record_id_by_addr_v6(GeoIP * gi, const char *addr)
         return 0;
     }
     ipnum = _GeoIP_addr_to_num_v6(addr);
-    return _GeoIP_seek_record_v6(gi, ipnum);
+    return _GeoIP_seek_record_v6_gl(gi, ipnum, gl);
 }
 
 int

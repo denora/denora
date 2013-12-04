@@ -448,7 +448,6 @@ void save_databases()
 	save_tld_db();
 	save_cs_db();
 	save_server_db();
-	save_ctcp_db();
 	save_chan_db();
 	save_exclude_db();
 	sql_ban_clean(NULL);
@@ -1317,8 +1316,6 @@ int init(int ac, char **av)
 	InitCStatsList();
 	load_cs_db();
 	load_server_db();
-	init_ctcp();
-	load_ctcp_db();
 	InitStatsChanList();
 	load_chan_db();
 	load_exclude_db();

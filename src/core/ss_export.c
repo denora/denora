@@ -339,7 +339,10 @@ void xml_export_ctcp(char *file)
 {
 	FILE *ptr;
 	CTCPVerStats *c;
-	lnode_t *tn;
+	int rows;
+	sqlite3_stmt * stmt;
+	char ***data;
+	int i;
 
 	ptr = new_xml(file);
 
@@ -350,18 +353,21 @@ void xml_export_ctcp(char *file)
 		xml_write_header(ptr);
 
 		xml_write_block_top(ptr, "ctcp");
-
-		tn = list_first(CTCPhead);
-		while (tn)
+		CTCPDatabase = DenoraOpenSQL(AdminDB);
+		rows = DenoraSQLGetNumRows(CTCPDatabase, "version");
+		stmt = DenoraPrepareQuery(CTCPDatabase, "SELECT * FROM %s", CTCPTable);
+		data = DenoraSQLFetchArray(CTCPDatabase, CTCPTable, stmt, FETCH_ARRAY_NUM);
+		for (i = 0; i < rows; i++)
 		{
-			c = lnode_get(tn);
 			xml_write_block_top(ptr, "client");
-			xml_write_tag(ptr, "version", c->version);
-			xml_write_tag_int(ptr, "current", c->count);
-			xml_write_tag_int(ptr, "overall", c->overall);
+			xml_write_tag(ptr, "version", data[i][0]);
+			xml_write_tag_int(ptr, "current", data[i][1]);
+			xml_write_tag_int(ptr, "overall", data[i][2]);
 			xml_write_block_bottom(ptr, "client");
-			tn = list_next(CTCPhead, tn);
 		}
+		free(data);
+		sqlite3_finalize(stmt);
+		DenoraCloseSQl(CTCPDatabase);
 		xml_write_block_bottom(ptr, "ctcp");
 		xml_write_footer(ptr);
 	}

@@ -308,6 +308,7 @@ Server *make_server(const char *servername, char *descript,
 	const char *country_name;
 	const char *country_code;
 	int country_id = 0;
+	GeoIPLookup *gl;
 
 	serv = calloc(sizeof(Server), 1);
 	serv->name = sstrdup(servername);
@@ -367,9 +368,9 @@ Server *make_server(const char *servername, char *descript,
 	{
 		if (!LargeNet)
 		{
-			country_id = GeoIP_id_by_name(gidb, servername);
+			country_id = GeoIP_id_by_name_gl(gidb, servername, gl);
 			if (country_id == 0)
-				country_id = GeoIP_id_by_name_v6(gidb_v6, servername);
+				country_id = GeoIP_id_by_name_v6_gl(gidb_v6, servername, gl);
 
 			country_name = GeoIP_name_by_id(country_id);
 			country_code = GeoIP_code_by_id(country_id);

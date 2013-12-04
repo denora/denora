@@ -112,6 +112,7 @@ char *ChannelStatsDB;
 char *TLDDB;
 char *excludeDB;
 char *statsDB;
+char *UserDB;
 
 char *SqlHost;
 char *SqlUser;

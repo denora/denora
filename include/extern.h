@@ -347,6 +347,7 @@ E char *AdminTable;
 
 E char *ChannelDB;
 E char *ctcpDB;
+E char *UserDB;
 E char *ServerDB;
 E char *ChannelStatsDB;
 E char *TLDDB;
@@ -530,19 +531,15 @@ E int sockprintf(deno_socket_t s, const char *fmt, ...);
 E int conn(const char *host, int port, const char *lhost, int lport);
 E void disconn(deno_socket_t s);
 
-E CTCPVerStats *ctcplists[1024];
-E void insert_ctcp(CTCPVerStats * c);
-E CTCPVerStats *makectcp(char *version);
+/**** ctcp.c ****/
+
+E CTCPVerStats *makectcp(char **version);
 E int del_ctcpver(CTCPVerStats * c);
-E void load_ctcp_db(void);
-E void save_ctcp_db(void);
 E CTCPVerStats *find_ctcpver(char *version);
 E void handle_ctcp_version(char *nick, char *version);
 E void sql_do_ctcp(int type, char *version, int count, int overall);
 E void ctcp_update(char *version);
-E list_t *CTCPhead;
-E int sortctcp(const void *v, const void *v2);
-E void init_ctcp(void);
+E sqlite3 *CTCPDatabase;
 
 /**** users.c ****/
 

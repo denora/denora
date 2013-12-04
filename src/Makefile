@@ -12,12 +12,12 @@
 #
 
 OBJS =  admin.o base64.o bans.o channels.o chanstats.o ChanBanMode.o ChanMode.o core.o cron.o ctcp.o config.o db.o datafiles.o Denora_Mem.o Denora_SQL.o \
-        denoralib.o exclude.o events.o extsock.o FileIO.o GeoIP.o GeoIP_deprecated.o GeoIPCity.o language.o list.o log.o ircd.o main.o markup.o modules.o moddata.o moduleapi.o \
+        denoralib.o exclude.o events.o extsock.o FileIO.o GeoIP.o GeoIPCity.o language.o list.o log.o ircd.o main.o markup.o modules.o moddata.o moduleapi.o \
         messages.o md5.o mod_version.o Modes.o mysql.o network.o numerics.o privmsg.o rdb.o send.o servers.o signals.o sockutil.o statserv.o \
         regionName.o shell.o spamfilter.o sqlqueue.o sqlite3.o strings.o timeZone.o tld.o users.o xmlrpc.o xmlparse.o xmlconfig.o zip.o \
         
 SRCS =  admin.c base64.c bans.c channels.c chanstats.c ChanBanMode.c ChanMode.c core.c cron.c ctcp.c config.c db.c datafiles.c Denora_Mem.c Denora_SQL.c \
-        denoralib.c exclude.c events.c extsock.c FileIO.c GeoIP.c GeoIP_deprecated.c GeoIPCity.c language.c list.c log.c ircd.c main.c markup.c  modules.c moddata.c moduleapi.c \
+        denoralib.c exclude.c events.c extsock.c FileIO.c GeoIP.c GeoIPCity.c language.c list.c log.c ircd.c main.c markup.c  modules.c moddata.c moduleapi.c \
         messages.c md5.c mod_version.c Modes.c mysql.c network.c numerics.c privmsg.c rdb.c send.c servers.c signals.c sockutil.c statserv.c \
         regionName.c shell.c spamfilter.c sqlqueue.c sqlite3.c strings.c timeZone.c tld.c users.c xmlrpc.o xmlparse.c xmlconfig.c zip.c \
         

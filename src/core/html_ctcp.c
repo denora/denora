@@ -84,32 +84,29 @@ void DenoraFini(void)
 void html_ctcp_table(FILE * ptr)
 {
 	CTCPVerStats *c;
-	lnode_t *tn;
 	char *tempc;
-	int x = 0;
+	int rows;
+	sqlite3_stmt * stmt;
+	char ***data;
+	int i;
 
 	if (ptr)
 	{
 		fprintf(ptr, "%s", getstring(NULL, HTML_CTCP_HEADER));
-		list_sort(CTCPhead, sortctcp);
-		tn = list_first(CTCPhead);
-		while (tn)
+		CTCPDatabase = DenoraOpenSQL(AdminDB);
+		rows = DenoraSQLGetNumRows(CTCPDatabase, "version");
+		stmt = DenoraPrepareQuery(CTCPDatabase, "SELECT version, overall FROM %s ORDER BY overall LIMIT 10", CTCPTable);
+		data = DenoraSQLFetchArray(CTCPDatabase, CTCPTable, stmt, FETCH_ARRAY_NUM);
+		for (i = 0; i < rows; i++)
 		{
-			c = lnode_get(tn);
-			if (c->overall)
-			{
-				tempc = char_encode(c->version);
+				tempc = char_encode(data[i][0]);
 				dfprintf(ptr, getstring(NULL, HTML_CTCP_CONTENT),
-				         tempc, c->overall);
+				         tempc, data[i][1]);
 				free(tempc);
-				x++;
-				if (x > 10)
-				{
-					break;
-				}
-			}
-			tn = list_next(CTCPhead, tn);
 		}
+		free(data);
+		sqlite3_finalize(stmt);
+		DenoraCloseSQl(CTCPDatabase);
 		fprintf(ptr, "%s", getstring(NULL, HTML_CTCP_FOOTER));
 	}
 }
