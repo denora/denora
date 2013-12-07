@@ -313,6 +313,7 @@ typedef struct statschan_ StatsChannel;		/* Statschan		*/
 typedef struct db_file_ DenoraDBFile;		/* DB File struct	*/
 typedef struct serverbans_ ServerBans;		/* Serverbans		*/
 typedef struct capabinfo_ CapabInfo;		/* CAPAB Info		*/
+typedef struct ircd_mode_array_ ModeArray;
 typedef struct dadmin_ Dadmin;			/* Admins		*/
 typedef struct Conf_Modules Conf_Modules;	/* Config		*/
 typedef struct TopConf tConf;
@@ -751,13 +752,14 @@ struct statvars_
 struct ircdvars_
 {
 	const char *name;		/* Name of the IRCD			*/
-	const char *statservmode;	/* Mode used by StatServ   		*/
+	const char *servicesmode;	/* Mode used by StatServ   		*/
 	int vhost;			/* IRCD supports vhost			*/
 	int sgline;			/* IRCD supports SGline			*/
 	int sgline_table;		/* Whether we need the sgline table	*/
 	int sqline;			/* IRCD supports SQline			*/
 	int sqline_table;		/* Whether we need the sqline table	*/
 	int szline;			/* IRCD supports SZline			*/
+	int szline_table;
 	int except;			/* IRCD supports exception +e		*/
 	int vident;			/* IRCD supports vidents		*/
 	int nickip;			/* IRCD sends IP on NICK		*/
@@ -912,6 +914,13 @@ struct server_
 /************************************************************************/
 
 struct capabinfo_
+{
+	const char *token;
+	uint32 flag;
+};
+
+
+struct ircd_mode_array_
 {
 	const char *token;
 	uint32 flag;

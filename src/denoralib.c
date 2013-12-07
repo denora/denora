@@ -24,11 +24,14 @@ char *DenoraLib_GetLastError(void)
 void DenoraLib_SetLastError(int code, char *msg)
 {
 	DenoraLastErrorCode = code;
-	if (DenoraLastError)
+	if (msg)
 	{
-		free(DenoraLastError);
+		if (DenoraLastError)
+		{
+			free(DenoraLastError);
+		}
+		DenoraLastError = StringDup(msg);
 	}
-	DenoraLastError = StringDup(msg);
 	return;
 }
 

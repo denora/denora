@@ -2,6 +2,10 @@ Denora v2.0 - git-alpha
 -------------
 
 Additions
+12/06/2013 : UnrealIRCd support for User Mode +I and CAPAB support of ESVID while we do not do anything
+             or have data to work with ESVID just have it out there for later.
+12/06/2013 : Most of the IRCd are updated to use xml config files to handle a lot of the settings. 
+			 the rest will be updated in a commit later.
 12/02/2013 : Added xmlparser - its a home brew way for us to parse our new xml config format
 12/02/2013 : Added in the newst GeoIP c API library - this includes GeoCity as well as being able
              to get timezone and region name.
@@ -13,6 +17,9 @@ Additions
              database.
 
 Changes
+12/06/2013 : IRCdVar struct changes
+				1. statservmode changed to servicesmode
+				2. Added szline_table, to be like the rest of the s*line parameters
 12/02/2013 : Changed add_sqladmin
 				1. From void to int - so we can trap for errors upstream
 				2. New paramater of "configadmin" since this is how we add admins now, we need to be able to flag them here
@@ -25,15 +32,11 @@ Changes
              for the given system
 
 Fixes
+12/06/2013 : Fixes sstrdup() warning on some commands this is a result of the fix from 11/29/13
 11/29/2013 : Removed data from uid struct on user being disconnected.
 
 Removals
-12/02/2013 : Removed the following functions, they are not used any more
-                void insert_admin(Dadmin * a);
-			    void load_admin_db(void);
-				void save_admin_db(void);
-				Dadmin *first_admin(void);
-				Dadmin *next_admin(void);
+12/02/2013 : Removed a lot of functions, they are not used any more
 
 
 Developers

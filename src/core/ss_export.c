@@ -361,8 +361,8 @@ void xml_export_ctcp(char *file)
 		{
 			xml_write_block_top(ptr, "client");
 			xml_write_tag(ptr, "version", data[i][0]);
-			xml_write_tag_int(ptr, "current", data[i][1]);
-			xml_write_tag_int(ptr, "overall", data[i][2]);
+			xml_write_tag_int(ptr, "current", atoi(data[i][1]));
+			xml_write_tag_int(ptr, "overall", atoi(data[i][2]));
 			xml_write_block_bottom(ptr, "client");
 		}
 		free(data);

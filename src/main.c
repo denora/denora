@@ -261,7 +261,14 @@ void process()
 		}
 		else
 		{
+			if (ac >= 1 && av[0])
+			{
 					mod_current_buffer = sstrdup(av[0]);
+			}
+			else
+			{
+				mod_current_buffer = NULL;
+			}
 		}
 	}
 	/* Do something with the message. */
@@ -728,7 +735,7 @@ void introduce_user(const char *user)
 	SET_SEGV_LOCATION();
 	if (!user || stricmp(user, s_StatServ) == 0)
 	{
-		denora_cmd_nick(s_StatServ, desc_StatServ, ircd->statservmode);
+		denora_cmd_nick(s_StatServ, desc_StatServ, ircd->servicesmode);
 	}
 
 	if (s_StatServ_alias && !LargeNet)
@@ -737,7 +744,7 @@ void introduce_user(const char *user)
 		if (!user || stricmp(user, s_StatServ_alias) == 0)
 		{
 			denora_cmd_nick(s_StatServ_alias, desc_StatServ_alias,
-			                ircd->statservmode);
+			                ircd->servicesmode);
 		}
 	}
 	SET_SEGV_LOCATION();

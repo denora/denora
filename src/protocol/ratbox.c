@@ -18,141 +18,44 @@
 #include "denora.h"
 #include "ratbox.h"
 
-IRCDVar myIrcd[] =
+int DenoraInit(int argc, char **argv)
 {
+	if (denora->protocoldebug)
 	{
-		"Ratbox 2.0+",             /* ircd name                 */
-		"+o",                      /* StatServ mode             */
-		IRCD_DISABLE,              /* Vhost                     */
-		IRCD_ENABLE,               /* Supports SGlines          */
-		IRCD_ENABLE,               /* sgline sql table          */
-		IRCD_DISABLE,              /* Supports SQlines          */
-		IRCD_DISABLE,              /* sqline sql table          */
-		IRCD_DISABLE,              /* Supports SZlines          */
-		IRCD_ENABLE,               /* Has exceptions +e         */
-		IRCD_DISABLE,              /* vidents                   */
-		IRCD_ENABLE,               /* NICKIP                    */
-		IRCD_DISABLE,              /* VHOST ON NICK             */
-		IRCD_DISABLE,              /* +f                        */
-		IRCD_DISABLE,              /* +j                      */
-		IRCD_DISABLE,              /* +L                        */
-		IRCD_DISABLE,              /* +f Mode                   */
-		IRCD_DISABLE,              /* +j                        */
-		IRCD_DISABLE,              /* +L Mode                   */
-		NULL,                      /* CAPAB Chan Modes          */
-		IRCD_DISABLE,              /* We support TOKENS         */
-		IRCD_ENABLE,               /* TOKENS are CASE Sensitive */
-		IRCD_DISABLE,              /* TIME STAMPS are BASE64    */
-		IRCD_ENABLE,               /* +I support                */
-		IRCD_DISABLE,              /* SJOIN ban char            */
-		IRCD_DISABLE,              /* SJOIN except char         */
-		IRCD_DISABLE,              /* SJOIN invite char         */
-		IRCD_DISABLE,              /* umode for vhost           */
-		IRCD_DISABLE,              /* owner                     */
-		IRCD_DISABLE,              /* protect                   */
-		IRCD_DISABLE,              /* halfop                    */
-		NULL,                      /* user modes                */
-		NULL,                      /* channel modes             */
-		IRCD_DISABLE,              /* flood                     */
-		IRCD_DISABLE,              /* flood other               */
-		IRCD_DISABLE,              /* join throttle             */
-		IRCD_DISABLE,              /* nick change flood         */
-		IRCD_DISABLE,              /* vhost                     */
-		IRCD_DISABLE,              /* vhost other               */
-		IRCD_DISABLE,              /* channek linking           */
-		IRCD_DISABLE,              /* p10                       */
-		IRCD_ENABLE,               /* ts6                       */
-		IRCD_ENABLE,               /* numeric ie.. 350 etc      */
-		IRCD_DISABLE,              /* channel mode gagged       */
-		IRCD_DISABLE,              /* spamfilter                */
-		'b',                       /* ban char                  */
-		'e',                       /* except char               */
-		'I',                       /* invite char               */
-		IRCD_DISABLE,              /* zip                       */
-		IRCD_DISABLE,              /* ssl                       */
-		IRCD_ENABLE,               /* uline                     */
-		NULL,                      /* nickchar                  */
-		IRCD_DISABLE,              /* svid                      */
-		IRCD_DISABLE,              /* hidden oper               */
-		IRCD_ENABLE,               /* extra warning             */
-		IRCD_DISABLE,              /* Report sync state         */
-		IRCD_DISABLE               /* Persistent channel mode   */
+		protocol_debug(NULL, argc, argv);
 	}
-	,
-};
+	/* Only 1 protocol module may be loaded */
+	if (protocolModuleLoaded())
+	{
+		alog(LOG_NORMAL, langstr(ALOG_MOD_BE_ONLY_ONE));
+		return MOD_STOP;
+	}
 
-IRCDCAPAB myIrcdcap[] =
-{
-	{
-		0,                         /* NOQUIT       */
-		0,                         /* TSMODE       */
-		0,                         /* UNCONNECT    */
-		0,                         /* NICKIP       */
-		0,                         /* SJOIN        */
-		CAPAB_ZIP,                 /* ZIP          */
-		0,                         /* BURST        */
-		CAPAB_TS5,                 /* TS5          */
-		0,                         /* TS3          */
-		0,                         /* DKEY         */
-		0,                         /* PT4          */
-		0,                         /* SCS          */
-		CAPAB_QS,                  /* QS           */
-		CAPAB_UID,                 /* UID          */
-		CAPAB_KNOCK,               /* KNOCK        */
-		0,                         /* CLIENT       */
-		0,                         /* IPV6         */
-		0,                         /* SSJ5         */
-		0,                         /* SN2          */
-		0,                         /* TOKEN        */
-		0,                         /* VHOST        */
-		0,                         /* SSJ3         */
-		0,                         /* NICK2        */
-		0,                         /* UMODE2       */
-		0,                         /* VL           */
-		0,                         /* TLKEXT       */
-		0,                         /* DODKEY       */
-		0,                         /* DOZIP        */
-		0, 0, 0
-	}
-};
+	moduleAddAuthor("Denora");
+	moduleAddVersion("2.0");
+	moduleSetType(PROTOCOL);
+
+	DenoraXMLIRCdConfig("ratbox2.xml");
+
+	IRCDModeInit();
+	pmodule_irc_var(IRC_RATBOX);
+	moduleAddIRCDCmds();
+	moduleAddIRCDMsgs();
+	UplinkSynced = 1;
+	return MOD_CONT;
+}
 
 
 /*************************************************************************/
 
 void IRCDModeInit(void)
 {
-	ModuleSetUserMode(UMODE_a, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_b, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_d, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_i, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_g, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_l, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_n, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_o, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_u, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_w, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_x, IRCD_ENABLE);
-	ModuleUpdateSQLUserMode();
-
-	CreateChanBanMode(CMODE_b, add_ban, del_ban);
-	CreateChanBanMode(CMODE_e, add_exception, del_exception);
-	CreateChanBanMode(CMODE_I, add_invite, del_invite);
-
 	/* Channel Modes */
-	CreateChanMode(CMODE_i, NULL, NULL);
-	CreateChanMode(CMODE_k, set_key, get_key);
-	CreateChanMode(CMODE_l, set_limit, get_limit);
-	CreateChanMode(CMODE_m, NULL, NULL);
-	CreateChanMode(CMODE_n, NULL, NULL);
-	CreateChanMode(CMODE_p, NULL, NULL);
-	CreateChanMode(CMODE_r, NULL, NULL);
-	CreateChanMode(CMODE_s, NULL, NULL);
-	CreateChanMode(CMODE_t, NULL, NULL);
+	ModuleChanModeUpdate(CMODE_k, set_key, get_key);
+	ModuleChanModeUpdate(CMODE_l, set_limit, get_limit);
 
 	ModuleSetChanUMode('+', 'v', STATUS_VOICE);
 	ModuleSetChanUMode('@', 'o', STATUS_OP);
-
-	ModuleUpdateSQLChanMode();
 
 }
 
@@ -1139,31 +1042,4 @@ void moduleAddIRCDCmds()
 	pmodule_cmd_ping(ratbox_cmd_ping);
 }
 
-int DenoraInit(int argc, char **argv)
-{
-	if (denora->protocoldebug)
-	{
-		protocol_debug(NULL, argc, argv);
-	}
-	/* Only 1 protocol module may be loaded */
-	if (protocolModuleLoaded())
-	{
-		alog(LOG_NORMAL, langstr(ALOG_MOD_BE_ONLY_ONE));
-		return MOD_STOP;
-	}
 
-	moduleAddAuthor("Denora");
-	moduleAddVersion("");
-	moduleSetType(PROTOCOL);
-	pmodule_ircd_version("Ratbox IRCD 2.0+");
-	pmodule_ircd_cap(myIrcdcap);
-	pmodule_ircd_var(myIrcd);
-	pmodule_ircd_useTSMode(0);
-	IRCDModeInit();
-	pmodule_oper_umode(UMODE_o);
-	pmodule_irc_var(IRC_RATBOX);
-	moduleAddIRCDCmds();
-	moduleAddIRCDMsgs();
-	UplinkSynced = 1;
-	return MOD_CONT;
-}

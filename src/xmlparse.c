@@ -3,37 +3,76 @@
 char *GetConfigStartTagName(char *line)
 {
 	char *linedata;
-	linedata = myStrGetToken(line, '<', 1);
-	linedata = myStrGetToken(linedata, '>', 0);
-	return linedata;
+	if (line)
+	{
+		linedata = myStrGetToken(line, '<', 1);
+		linedata = myStrGetToken(linedata, '>', 0);
+		return linedata;
+	}
+	return NULL;
 }
 
 
 char *GetConfigEndTagName(char *line)
 {
 	char *linedata;
-	linedata = myStrGetToken(line, '<', 1);
-	linedata = myStrGetToken(linedata, '>', 0);
-	linedata = myStrGetToken(linedata, '/', 1);
-	return linedata;
+	if (line)
+	{
+		linedata = myStrGetToken(line, '<', 1);
+		linedata = myStrGetToken(linedata, '>', 0);
+		linedata = myStrGetToken(linedata, '/', 1);
+		return linedata;
+	}
+	return NULL;
 }
 
 char *GetOptionTagData(char *line)
 {
 	char *linedata;
-	linedata = myStrGetToken(line, '>', 1);
-	linedata = myStrGetToken(linedata, '<', 0);
 
-	return linedata;
+	if (line)
+	{
+		linedata = myStrGetToken(line, '>', 1);
+		linedata = myStrGetToken(linedata, '<', 0);
+		return linedata;
+	}
+	return NULL;
 }
 
 char *GetOptionTagName(char *line)
 {
 	char *linedata;
-	linedata = myStrGetToken(line, '<', 1);
-	linedata = myStrGetToken(linedata, '>', 0);
-	return linedata;
+
+	if (line)
+	{
+		linedata = myStrGetToken(line, '<', 1);
+		linedata = myStrGetToken(linedata, '>', 0);
+		return linedata;
+	}
+	return NULL;
 }
+
+void DenoraXMLIRCdConfig(char *file)
+{
+	char buf[512];
+
+	ircd = malloc(sizeof(IRCDVar));
+	ircdcap = malloc(sizeof(IRCDCAPAB));
+
+	DenoraXMLConfigBlockCreate("ircd", DenoraParseProto_IRCdBlock, 4);
+	DenoraXMLConfigBlockCreate("services", DenoraParseProto_ServicesBlock, 1);
+	DenoraXMLConfigBlockCreate("features", DenoraParseProto_FeaturesBlock, 27);
+	DenoraXMLConfigBlockCreate("warning", DenoraParseProto_WarningBlock, 1);
+	DenoraXMLConfigBlockCreate("capab", DenoraParseProto_CapabBlock, 24);
+	DenoraXMLConfigBlockCreate("usermodes", DenoraParseProto_UserModeBlock, 48);
+	DenoraXMLConfigBlockCreate("chanmodes", DenoraParseProto_ChannelModeBlock, 48);
+	DenoraXMLConfigBlockCreate("chanbanmodes", DenoraParseProto_ChannelBanModeBlock, 4);
+	DenoraXMLConfigBlockCreate("channelfeatures", DenoraParseProto_ChannelFeaturesBlock, 22);
+
+	snprintf(buf, sizeof(buf), "ircdconfig/%s", file);
+	DenoraParseXMLConfig(buf);
+}
+
 
 void DenoraParseXMLConfig(char *filename)
 {
@@ -54,13 +93,15 @@ void DenoraParseXMLConfig(char *filename)
 	int x = 0;
 	char **xmldata;
 
+	alog(LOG_DEBUG, "Parsing %s", filename);
+
         fp = FileOpen(filename, "r");
         if (fp == NULL)
            return;
 
 	while ((read = getline(&rawline, &len, fp)) != -1) 
 	{
-		line = strdup(rawline);
+		line = sstrdup(rawline);
 		strnrepl(line, BUFSIZE, "\n", "");
 		strnrepl(line, BUFSIZE, "\t", "");
 
@@ -109,9 +150,9 @@ void DenoraParseXMLConfig(char *filename)
 					if (c)
 					{
 						c->parser(c->numoptions, xmldata);
-						free(xmldata);
 					}
 					free(tag);
+
 					free(line);
 					continue;
 				}
@@ -130,6 +171,7 @@ void DenoraParseXMLConfig(char *filename)
 					free(tag);
 					startblock = 1;
 					x = 0;
+
 					free(line);
 					continue;
 

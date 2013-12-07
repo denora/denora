@@ -18,6 +18,7 @@
 /* IRC Variables */
 E IRCDVar *ircd;
 E IRCDCAPAB *ircdcap;
+E IRCDModes ircd_modes;
 E STATVar stats[];
 E DenoraVar denora[];
 
@@ -1229,6 +1230,23 @@ E char *GetOptionTagName(char *line);
 E void DenoraParseXMLConfig(char *filename);
 
 E char **DenoraSQLFetchRow(sqlite3_stmt* stmt, int type);
+
+
+E char *ReturnModeFromFlag(int mode);
+E int ReturnModeFromToken(char *tag);
+E int XmlConfigSetFeature(char *x);
+E int DenoraParseProto_IRCdBlock(int count, char **lines);
+E int DenoraParseProto_CapabBlock(int count, char **lines);
+E int DenoraParseProto_ServicesBlock(int count, char **lines);
+E int DenoraParseProto_FeaturesBlock(int count, char **lines);
+E int DenoraParseProto_UserModeBlock(int count, char **lines);
+E int DenoraParseProto_ChannelModeBlock(int count, char **lines);
+E int DenoraParseProto_ChannelBanModeBlock(int count, char **lines);
+E int DenoraParseProto_WarningBlock(int count, char **lines);
+E int DenoraParseProto_ChannelFeaturesBlock(int count, char **lines);
+E void DenoraXMLIRCdConfig(char *file);
+E void ModuleChanModeUpdate(int mode, void (*setvalue) (Channel * chan, char *value),  char *(*getvalue) (Channel * chan));
+
 
 
 E int sqlite3_shell_main(int argc, char **argv);

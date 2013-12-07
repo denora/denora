@@ -147,6 +147,182 @@ ChanMode *FindChanMode(char *name)
 
 /*************************************************************************/
 
+void ModuleChanModeUpdate(int mode, void (*setvalue) (Channel * chan, char *value),  char *(*getvalue) (Channel * chan))
+{
+
+	ChanMode *cm;
+	char *mode_token = ReturnModeFromFlag(mode);
+
+	cm = FindChanMode(mode_token);
+	if (cm)
+	{
+		cm->setvalue = setvalue;     /* Handle                   */
+		cm->getvalue = getvalue;
+	}
+}
+
+ModeArray ircd_mode_array[] =
+{
+	{"CMODE_A", CMODE_A},
+	{"CMODE_B", CMODE_B},
+	{"CMODE_C", CMODE_C},
+	{"CMODE_D", CMODE_D},
+	{"CMODE_E", CMODE_E},
+	{"CMODE_F", CMODE_F},
+	{"CMODE_G", CMODE_G},
+	{"CMODE_H", CMODE_H},
+	{"CMODE_I", CMODE_I},
+	{"CMODE_J", CMODE_J},
+	{"CMODE_K", CMODE_K},
+	{"CMODE_L", CMODE_L},
+	{"CMODE_M", CMODE_M},
+	{"CMODE_N", CMODE_N},
+	{"CMODE_O", CMODE_O},
+	{"CMODE_P", CMODE_P},
+	{"CMODE_Q", CMODE_Q},
+	{"CMODE_R", CMODE_R},
+	{"CMODE_S", CMODE_S},
+	{"CMODE_T", CMODE_T},
+	{"CMODE_U", CMODE_U},
+	{"CMODE_V", CMODE_V},
+	{"CMODE_W", CMODE_W},
+	{"CMODE_X", CMODE_X},
+	{"CMODE_Y", CMODE_Y},
+	{"CMODE_Z", CMODE_Z},
+
+	{"CMODE_a", CMODE_a},
+	{"CMODE_b", CMODE_b},
+	{"CMODE_c", CMODE_c},
+	{"CMODE_d", CMODE_d},
+	{"CMODE_e", CMODE_e},
+	{"CMODE_f", CMODE_f},
+	{"CMODE_g", CMODE_g},
+	{"CMODE_h", CMODE_h},
+	{"CMODE_i", CMODE_i},
+	{"CMODE_j", CMODE_j},
+	{"CMODE_k", CMODE_k},
+	{"CMODE_l", CMODE_l},
+	{"CMODE_m", CMODE_m},
+	{"CMODE_n", CMODE_n},
+	{"CMODE_o", CMODE_o},
+	{"CMODE_p", CMODE_p},
+	{"CMODE_q", CMODE_q},
+	{"CMODE_r", CMODE_r},
+	{"CMODE_s", CMODE_s},
+	{"CMODE_t", CMODE_t},
+	{"CMODE_u", CMODE_u},
+	{"CMODE_v", CMODE_v},
+	{"CMODE_w", CMODE_w},
+	{"CMODE_x", CMODE_x},
+	{"CMODE_y", CMODE_y},
+	{"CMODE_z", CMODE_z},
+
+	{"UMODE_A", UMODE_A},
+	{"UMODE_B", UMODE_B},
+	{"UMODE_C", UMODE_C},
+	{"UMODE_D", UMODE_D},
+	{"UMODE_E", UMODE_E},
+	{"UMODE_F", UMODE_F},
+	{"UMODE_G", UMODE_G},
+	{"UMODE_H", UMODE_H},
+	{"UMODE_I", UMODE_I},
+	{"UMODE_J", UMODE_J},
+	{"UMODE_K", UMODE_K},
+	{"UMODE_L", UMODE_L},
+	{"UMODE_M", UMODE_M},
+	{"UMODE_N", UMODE_N},
+	{"UMODE_O", UMODE_O},
+	{"UMODE_P", UMODE_P},
+	{"UMODE_Q", UMODE_Q},
+	{"UMODE_R", UMODE_R},
+	{"UMODE_S", UMODE_S},
+	{"UMODE_T", UMODE_T},
+	{"UMODE_U", UMODE_U},
+	{"UMODE_V", UMODE_V},
+	{"UMODE_W", UMODE_W},
+	{"UMODE_X", UMODE_X},
+	{"UMODE_Y", UMODE_Y},
+	{"UMODE_Z", UMODE_Z},
+
+	{"UMODE_a", UMODE_a},
+	{"UMODE_b", UMODE_b},
+	{"UMODE_c", UMODE_c},
+	{"UMODE_d", UMODE_d},
+	{"UMODE_e", UMODE_e},
+	{"UMODE_f", UMODE_f},
+	{"UMODE_g", UMODE_g},
+	{"UMODE_h", UMODE_h},
+	{"UMODE_i", UMODE_i},
+	{"UMODE_j", UMODE_j},
+	{"UMODE_k", UMODE_k},
+	{"UMODE_l", UMODE_l},
+	{"UMODE_m", UMODE_m},
+	{"UMODE_n", UMODE_n},
+	{"UMODE_o", UMODE_o},
+	{"UMODE_p", UMODE_p},
+	{"UMODE_q", UMODE_q},
+	{"UMODE_r", UMODE_r},
+	{"UMODE_s", UMODE_s},
+	{"UMODE_t", UMODE_t},
+	{"UMODE_u", UMODE_u},
+	{"UMODE_v", UMODE_v},
+	{"UMODE_w", UMODE_w},
+	{"UMODE_x", UMODE_x},
+	{"UMODE_y", UMODE_y},
+	{"UMODE_z", UMODE_z},
+	{"UMODE_0", UMODE_0},
+	{"UMODE_1", UMODE_1},
+	{"UMODE_2", UMODE_2},
+	{"UMODE_3", UMODE_3},
+	{"UMODE_4", UMODE_4},
+	{"UMODE_5", UMODE_5},
+	{"UMODE_6", UMODE_6},
+	{"UMODE_7", UMODE_7},
+	{"UMODE_8", UMODE_8},
+	{"UMODE_9", UMODE_9},
+
+	{NULL, 0}
+};
+
+
+char *ReturnModeFromFlag(int mode)
+{
+	int j;
+
+
+		for (j = 0; ircd_mode_array[j].token; j++)
+		{
+			if (mode == ircd_mode_array[j].flag)
+			{
+				return (char *) ircd_mode_array[j].token;
+			}
+		}
+
+	return NULL;
+}
+
+int ReturnModeFromToken(char *tag)
+{
+	int j;
+
+
+		for (j = 0; ircd_mode_array[j].token; j++)
+		{
+			if (tag)
+			{
+				if (strcmp(tag, ircd_mode_array[j].token) == 0)
+				{
+					return ircd_mode_array[j].flag;
+				}
+			}
+		}
+
+	return 0;
+}
+
+
+/*************************************************************************/
+
 ChanMode *CreateChanMode(int mode,
                          void (*setvalue) (Channel * chan, char *value),
                          char *(*getvalue) (Channel * chan))

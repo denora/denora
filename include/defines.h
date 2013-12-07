@@ -250,7 +250,6 @@
 #define HASH(chan)	((chan)[1] ? ((chan)[1]&31)<<5 | ((chan)[2]&31) : 0)
 #define STATSHASH(chan)	((chan)[1] ? ((chan)[1]&31)<<5 | ((chan)[2]&31) : 0)
 #define NICKHASH(nick)      (((nick)[0]&31)<<5 | ((nick)[1]&31))
-#define CTCPHASH(version)	((tolower((version)[0])&31)<<5 | (tolower((version)[1])&31))
 #define EXCLUDEHASH(name)	((tolower((name)[0])&31)<<5 | (tolower((name)[1])&31))
 #define SERVERHASH(name)	(((name)[0]&31)<<5 | ((name)[1]&31))
 #define STATSSERVERHASH(name)	(((name)[0]&31)<<5 | ((name)[1]&31))
@@ -259,7 +258,6 @@
 #define TLDHASH2(tld)	(((tld)[0]&31)<<5 | ((tld)[1]&31))
 #define USERHASH(nick)	(((nick)[0]&31)<<5 | ((nick)[1]&31))
 #define UIDHASH(nick)	(((nick)[0]&31)<<5 | ((nick)[1]&31))
-#define ADMINHASH(nick)	(((nick)[0]&31)<<5 | ((nick)[1]&31))
 #define DATAHASH(nick)	(((nick)[0]&31)<<5 | ((nick)[1]&31))
 #define CMD_HASH(x)      (((x)[0]&31)<<5 | ((x)[1]&31))	/* Will gen a hash from a string :) */
 #define MODEHASH(x)      (((x)[0]&31)<<5 | ((x)[1]&31))

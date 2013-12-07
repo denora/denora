@@ -134,14 +134,12 @@ install: stats
 	$(INSTALL) bin/denorarc $(BINDEST)/denorarc
 	$(INSTALL) bin/geoipupd $(BINDEST)/geoipupd
 	(cd ../lang ; $(MAKE) install)
-	$(CP) ../data/* $(DATDEST)
+	$(CP) -r ../data/* $(DATDEST)
 	$(INSTALL) bin/mydbgen $(DATDEST)/mydbgen
 	test -d $(DATDEST)/backups || mkdir $(DATDEST)/backups
 	test -d $(DATDEST)/logs || mkdir $(DATDEST)/logs
 	test -d $(DATDEST)/sql || mkdir $(DATDEST)/sql
-	test -d $(DATDEST)/ircdconfig || mkdir $(DATDEST)/ircdconfig
-	$(CP) ../sql/* $(DATDEST)/sql
-	$(CP) ../data/ircdconfig/* $(DATDEST)/sql/ircdconfig
+	$(CP) -r ../sql/* $(DATDEST)/sql
 	test -d $(DATDEST)/core || mkdir $(DATDEST)/core
 	test -d $(DATDEST)/core/runtime || mkdir $(DATDEST)/core/runtime
 	(cd core ; ${MAKE} install)

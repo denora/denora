@@ -41,10 +41,12 @@ CTCPVerStats *find_ctcpver(char *mask)
 	sqlite3_finalize(stmt);
 	DenoraCloseSQl(CTCPDatabase);
 
-
-	if (stricmp(c->version, mask) == 0)
+	if (c)
 	{
-		return c;
+		if (stricmp(c->version, mask) == 0)
+		{
+			return c;
+		}
 	}
 	return NULL;
 }
@@ -57,11 +59,15 @@ CTCPVerStats *makectcp(char **mask)
 {
 	CTCPVerStats *c = NULL;
 
-	c = malloc(sizeof(CTCPVerStats));
-	c->version = sstrdup(mask[0]);
-	c->count = atoi(mask[1]);
-	c->overall = atoi(mask[2]);
-	return c;
+	if (mask)
+	{
+		c = malloc(sizeof(CTCPVerStats));
+		c->version = sstrdup(mask[0]);
+		c->count = atoi(mask[1]);
+		c->overall = atoi(mask[2]);
+		return c;
+	}
+	return NULL;
 }
 
 /*************************************************************************/

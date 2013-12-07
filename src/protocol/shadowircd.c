@@ -14,166 +14,48 @@
 #include "denora.h"
 #include "shadowircd.h"
 
-IRCDVar myIrcd[] = {
-	{"ShadowIRCd 6.0+",		/* ircd name			*/
-	 "+io",				/* StatServ mode		*/
-	 IRCD_ENABLE,			/* Vhost			*/
-	 IRCD_ENABLE,			/* Supports SGlines		*/
-	 IRCD_ENABLE,			/* sgline sql table		*/
-	 IRCD_DISABLE,			/* Supports SQlines		*/
-	 IRCD_DISABLE,			/* sqline sql table		*/
-	 IRCD_DISABLE,			/* Supports SZlines		*/
-	 IRCD_ENABLE,			/* Has exceptions +e		*/
-	 IRCD_DISABLE,			/* vidents			*/
-	 IRCD_ENABLE,			/* NICKIP			*/
-	 IRCD_ENABLE,			/* VHOST ON NICK		*/
-	 IRCD_DISABLE,			/* +f				*/
-	 IRCD_ENABLE,			/* +j				*/
-	 IRCD_DISABLE,			/* +L				*/
-	 IRCD_DISABLE,			/* +f Mode			*/
-	 CMODE_j,			/* +j Mode			*/
-	 CMODE_f,			/* +L Mode			*/
-	 NULL,				/* CAPAB Chan Modes		*/
-	 IRCD_DISABLE,			/* We support TOKENS		*/
-	 IRCD_ENABLE,			/* TOKENS are CASE Sensitive	*/
-	 IRCD_DISABLE,			/* TIME STAMPS are BASE64	*/
-	 IRCD_ENABLE,			/* +I support			*/
-	 IRCD_DISABLE,			/* SJOIN ban char		*/
-	 IRCD_DISABLE,			/* SJOIN except char		*/
-	 IRCD_DISABLE,			/* SJOIN invite char		*/
-	 UMODE_x,			/* umode for vhost		*/
-	 IRCD_DISABLE,			/* owner			*/
-	 IRCD_ENABLE,			/* protect			*/
-	 IRCD_ENABLE,			/* halfop			*/
-	 NULL,				/* user modes			*/
-	 NULL,				/* channel modes		*/
-	 IRCD_DISABLE,			/* flood			*/
-	 'j',				/* flood other			*/
-	 'J',				/* join throttle		*/
-	 IRCD_DISABLE,			/* nick change flood		*/
-	 'x',				/* vhost			*/
-	 IRCD_DISABLE,			/* vhost other			*/
-	 'f',				/* Channel forwarding		*/
-	 IRCD_DISABLE,			/* p10				*/
-	 IRCD_ENABLE,			/* ts6				*/
-	 IRCD_ENABLE,			/* numeric			*/
-	 IRCD_DISABLE,			/* gagged			*/
-	 IRCD_DISABLE,			/* spamfilter			*/
-	 'b',				/* ban char			*/
-	 'e',				/* except char			*/
-	 'I',				/* invite char			*/
-	 IRCD_DISABLE,			/* zip				*/
-	 IRCD_ENABLE,			/* ssl				*/
-	 IRCD_ENABLE,			/* uline			*/
-	 NULL,				/* nickchar			*/
-	 IRCD_DISABLE,			/* svid				*/
-	 IRCD_DISABLE,			/* hidden oper			*/
-	 IRCD_ENABLE,			/* extra warning		*/
-	 IRCD_DISABLE,			/* Report sync state		*/
-	 CMODE_P,			/* Persistent channel mode   	*/
-	}
-};
 
-IRCDCAPAB myIrcdcap[] = {
-	{
-	 0,				/* NOQUIT	*/
-	 0,				/* TSMODE	*/
-	 0,				/* UNCONNECT	*/
-	 0,				/* NICKIP	*/
-	 0,				/* SJOIN	*/
-	 CAPAB_ZIP,			/* ZIP		*/
-	 0,				/* BURST	*/
-	 CAPAB_TS5,			/* TS5		*/
-	 0,				/* TS3		*/
-	 0,				/* DKEY		*/
-	 0,				/* PT4		*/
-	 0,				/* SCS		*/
-	 CAPAB_QS,			/* QS		*/
-	 CAPAB_UID,			/* UID		*/
-	 CAPAB_KNOCK,			/* KNOCK	*/
-	 0,				/* CLIENT	*/
-	 0,				/* IPV6		*/
-	 0,				/* SSJ5		*/
-	 0,				/* SN2		*/
-	 0,				/* TOKEN	*/
-	 0,				/* VHOST	*/
-	 0,				/* SSJ3		*/
-	 0,				/* NICK2	*/
-	 0,				/* UMODE2	*/
-	 0,				/* VL		*/
-	 0,				/* TLKEXT	*/
-	 0,				/* DODKEY	*/
-	 0,				/* DOZIP	*/
-	 0, 0, 0}
-};
+int DenoraInit(int argc, char **argv)
+{
+	if (denora->protocoldebug) {
+		protocol_debug(NULL, argc, argv);
+	}
+	/* Only 1 protocol module may be loaded */
+	if (protocolModuleLoaded()) {
+		alog(LOG_NORMAL, langstr(ALOG_MOD_BE_ONLY_ONE));
+		return MOD_STOP;
+	}
+
+	moduleAddAuthor("Denora");
+	moduleAddVersion("2.0");
+	moduleSetType(PROTOCOL);
+
+	DenoraXMLIRCdConfig("shadowircd.xml");
+
+	IRCDModeInit();
+	pmodule_irc_var(IRC_SHADOWIRCD);
+
+	moduleAddIRCDCmds();
+	moduleAddIRCDMsgs();
+	UseTS6 = 1;
+	UplinkSynced = 1;
+	return MOD_CONT;
+}
 
 /*************************************************************************/
 
 void IRCDModeInit(void)
 {
-	/* User Modes*/
-	ModuleSetUserMode(UMODE_B, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_C, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_D, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_G, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_Q, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_R, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_V, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_Z, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_a, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_g, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_i, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_l, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_o, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_p, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_s, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_w, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_x, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_z, IRCD_ENABLE);
-	ModuleUpdateSQLUserMode();
-
-	/* Channel Modes with args */
-	CreateChanBanMode(CMODE_b, add_ban, del_ban);
-	CreateChanBanMode(CMODE_e, add_exception, del_exception);
-	CreateChanBanMode(CMODE_I, add_invite, del_invite);
-
 	/* Channel Modes */
-	CreateChanMode(CMODE_A, NULL, NULL);
-	CreateChanMode(CMODE_C, NULL, NULL);
-	CreateChanMode(CMODE_D, NULL, NULL);
-	CreateChanMode(CMODE_E, NULL, NULL);
-	CreateChanMode(CMODE_F, NULL, NULL);
-	CreateChanMode(CMODE_G, NULL, NULL);
-	CreateChanMode(CMODE_J, NULL, NULL);
-	CreateChanMode(CMODE_K, NULL, NULL);
-	CreateChanMode(CMODE_L, NULL, NULL);
-	CreateChanMode(CMODE_M, NULL, NULL);
-	CreateChanMode(CMODE_O, NULL, NULL);
-	CreateChanMode(CMODE_P, NULL, NULL);
-	CreateChanMode(CMODE_Q, NULL, NULL);
-	CreateChanMode(CMODE_S, NULL, NULL);
-	CreateChanMode(CMODE_T, NULL, NULL);
-	CreateChanMode(CMODE_c, NULL, NULL);
-	CreateChanMode(CMODE_d, NULL, NULL);
-	CreateChanMode(CMODE_f, set_redirect, get_redirect);
-	CreateChanMode(CMODE_g, NULL, NULL);
-	CreateChanMode(CMODE_i, NULL, NULL);
-	CreateChanMode(CMODE_j, set_flood_alt, get_flood_alt);
-	CreateChanMode(CMODE_k, set_key, get_key);
-	CreateChanMode(CMODE_l, set_limit, get_limit);
-	CreateChanMode(CMODE_m, NULL, NULL);
-	CreateChanMode(CMODE_n, NULL, NULL);
-	CreateChanMode(CMODE_p, NULL, NULL);
-	CreateChanMode(CMODE_r, NULL, NULL);
-	CreateChanMode(CMODE_s, NULL, NULL);
-	CreateChanMode(CMODE_t, NULL, NULL);
-	CreateChanMode(CMODE_z, NULL, NULL);
+	ModuleChanModeUpdate(CMODE_f, set_redirect, get_redirect);
+	ModuleChanModeUpdate(CMODE_j, set_flood_alt, get_flood_alt);
+	ModuleChanModeUpdate(CMODE_k, set_key, get_key);
+	ModuleChanModeUpdate(CMODE_l, set_limit, get_limit);
 
 	ModuleSetChanUMode('%', 'h', STATUS_HALFOP);
 	ModuleSetChanUMode('+', 'v', STATUS_VOICE);
 	ModuleSetChanUMode('@', 'o', STATUS_OP);
 	ModuleSetChanUMode('!', 'a', STATUS_PROTECTED);
-	ModuleUpdateSQLChanMode();
 }
 
 void shadowircd_cmd_notice(char *source, char *dest, char *buf)
@@ -1070,30 +952,4 @@ void moduleAddIRCDCmds()
 	pmodule_cmd_ping(shadowircd_cmd_ping);
 }
 
-int DenoraInit(int argc, char **argv)
-{
-	if (denora->protocoldebug) {
-		protocol_debug(NULL, argc, argv);
-	}
-	/* Only 1 protocol module may be loaded */
-	if (protocolModuleLoaded()) {
-		alog(LOG_NORMAL, langstr(ALOG_MOD_BE_ONLY_ONE));
-		return MOD_STOP;
-	}
 
-	moduleAddAuthor("Denora");
-	moduleAddVersion("1.0");
-	moduleSetType(PROTOCOL);
-	pmodule_ircd_version("ShadowIRCd 6.0+");
-	pmodule_ircd_cap(myIrcdcap);
-	pmodule_ircd_var(myIrcd);
-	pmodule_ircd_useTSMode(0);
-	IRCDModeInit();
-	pmodule_oper_umode(UMODE_o);
-	pmodule_irc_var(IRC_SHADOWIRCD);
-	moduleAddIRCDCmds();
-	moduleAddIRCDMsgs();
-	UseTS6 = 1;
-	UplinkSynced = 1;
-	return MOD_CONT;
-}

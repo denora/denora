@@ -17,7 +17,7 @@
 17. ircd protocol move struct to xml config
 18. ircd protocol truely deal with more of the load, less core more sql calls
 19. sql query string to do %q and cleans itself up, less mess and free
-20. ircd protocol support for newer ircds (askua -> snircd)
+20. ircd protocol support for newer ircds (askua -> snircd) Hybrid 8 / Ratbox 3
 21. Start over and build it from scratch! (why not)
 22. Services ported to v2
 23. webpanel

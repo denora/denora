@@ -112,8 +112,8 @@ int add_sqladmin(char *name, char *passwd, int level, char *host, int lang, int 
 	int res;
 	int crypted = is_crypted(passwd);
 
-	res = DenoraExecQuerySQL(AdminDatabase, "INSERT INTO %s (uname, passwd, level, host, lang, config) VALUES ('%q', '%q', %d, %s%q%s, %d, %d)", 
-		  AdminTable, name, crypted ? "'" : "MD5('", passwd, crypted ? "'" : "')", level, host, lang, configadmin); 
+	res = DenoraExecQuerySQL(AdminDatabase, "INSERT INTO %s (uname, passwd, level, host, lang, config) VALUES ('%q', '%q', %d, %s, %d, %d)", 
+		  AdminTable, name, passwd, level, host, lang, configadmin); 
 
 	if (!denora->do_sql)
 	{

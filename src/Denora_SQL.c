@@ -19,6 +19,8 @@ sqlite3 *DenoraOpenSQL(char *dbname)
    char *zErrMsg = 0;
    int rc;
 
+	sqlite3_initialize();
+
    /* Open database */
    rc = sqlite3_open(dbname, &db);
    if(rc)
@@ -99,6 +101,7 @@ void DenoraCloseSQl(sqlite3 *db)
 	{
 		sqlite3_close(NULL);
 	}
+	sqlite3_shutdown();
 }
 
 /*************************************************************************/
@@ -197,11 +200,14 @@ char **DenoraSQLFetchRow(sqlite3_stmt *stmt, int type)
 	int arraysize;
 	char **SQLDataArray;
 	char *data;
+	int count;
 
-	SQLDataArray = DenoraCallocArray(1);
+	ret = sqlite3_step(stmt);
+	count = sqlite3_data_count(stmt);
 
-		ret = sqlite3_step(stmt);
-
+	if (count)
+	{
+		SQLDataArray = DenoraCallocArray(1);
 		switch (ret) {
 			case SQLITE_ROW:
 				for (i = 0; i < sqlite3_data_count(stmt); i++) 
@@ -213,8 +219,9 @@ char **DenoraSQLFetchRow(sqlite3_stmt *stmt, int type)
 			case SQLITE_DONE:
 				break;
 		}
-		
-	return SQLDataArray;
+		return SQLDataArray;
+	}
+	return NULL;
 }
 
 
