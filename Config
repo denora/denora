@@ -66,6 +66,9 @@ Run_Config () {
 	if [ "$MYSQL" = "no" ] ; then
 		WITH_MYSQL=" --without-mysql"
 	fi
+	if [ "$SSL" = "yes" ] ; then
+		WITH_SSL=" --with-ssl"
+	fi
 
 	if [ "$MYSQL_BT" = "yes" ]; then
 		if [ "$MYSQL" = "no" ] ; then
@@ -81,13 +84,24 @@ Run_Config () {
 	if [ "$ENCRYPT" = "yes" ] ; then
 		WITH_ENCRYPT=" --enable-crypt"
 	fi
+	if [ "$POLLER" = "select" ] ; then
+		WITH_POLLER=" --with-poller=select"
+	fi
+	if [ "$POLLER" = "poll" ] ; then
+		WITH_POLLER=" --with-poller=poll"
+	fi
+	if [ "$POLLER" = "kqueue" ] ; then
+		WITH_POLLER=" --with-poller=kqueue"
+	fi
+
   
+
 	touch autoconf/install-sh
 	echo "Generating Configuration file and Makefiles, this may take a moment"
 	autoconf 
-	echo "./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_MYSQL_BT"
+	echo "./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_ENCRYPT $WITH_MYSQL_BT $WITH_POLLER $WITH_SSL"
 	
-	./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_MEMORYDEBUG $WITH_ENCRYPT $WITH_MYSQL_BT
+	./configure $WITH_BIN $WITH_DATA $WITH_RUN $WITH_PERM $WITH_MYSQL $WITH_ENCRYPT $WITH_MYSQL_BT $WITH_POLLER $WITH_SSL
 	if [ "$REGSCRIPT" = "yes" ] ; then
 		src/bin/register
 	fi
@@ -155,6 +169,7 @@ REGSCRIPT="no"
 MYSQL="yes"
 MYSQL_BT="no"
 SQLITE="yes"
+SSL="yes"
 
 ###########################################################################
 # Check out the options
@@ -461,6 +476,70 @@ done
 echo ""
 
 ####
+
+
+if [ "$SSL" = "yes" ]; then
+	ok=0
+	DEF=no
+	echo "Do you want to build Denora with OpenSSL support?"
+	while [ $ok -lt 1 ] ; do
+		echo "[$SSL] "
+		if read INPUT ; then : ; else echo "" ; exit 1 ; fi
+		if [ ! "$INPUT" ] ; then
+			INPUT=$SSL
+		fi
+		case $INPUT in
+			n*|N*)
+				SSL="no"
+				ok=1
+				;;
+			y*|Y*)
+				SSL="yes"
+				ok=1
+				;;
+			*)
+				echo "Please enter 'yes' or 'no'."
+				;;
+		esac
+	done
+	echo ""
+fi
+
+####
+
+ok=0
+POLLER="select"
+echo "Choose the socket engine that best works for your system?"
+echo "[select] - default and works for most systems"
+echo "[poll]   - solaris/linux"
+echo "[kqueue] - BSD systems"
+while [ $ok -lt 1 ] ; do
+	echo "[$POLLER] "
+	if read INPUT ; then : ; else echo "" ; exit 1 ; fi
+	if [ ! "$INPUT" ] ; then
+		INPUT=$POLLER
+		ok=1
+	fi
+	case $INPUT in
+		poll)
+			POLLER=$INPUT
+			ok=1
+			;;
+		select)
+			POLLER=$INPUT
+			ok=1
+			;;
+		kqueue)
+			POLLER=$INPUT
+			ok=1
+			;;
+		*)
+			echo "Please enter select, poll or kqueue."
+			;;
+	esac
+done
+
+echo ""
 
 ################################################################################
 # Store values

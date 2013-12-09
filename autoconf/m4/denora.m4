@@ -418,12 +418,12 @@ AC_ARG_WITH(ssl,
         fi
     done
     if test x_$found_ssl != x_yes; then
-        AC_MSG_ERROR(Cannot find ssl libraries)
+        AC_MSG_WARN(Cannot find ssl libraries)
     else
         printf "OpenSSL found in $ssldir\n";
         DENORALIBS="$DENORALIBS -lssl -lcrypto ";
         LDFLAGS="$LDFLAGS -L$ssldir/lib";
-        HAVE_SSL=yes
+        AC_DEFINE(HAVE_SSL, 1, [Has OpenSSL])
     fi
     AC_SUBST(HAVE_SSL)
 ],

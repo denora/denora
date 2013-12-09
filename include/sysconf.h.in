@@ -33,6 +33,22 @@
 #undef HAVE_BACKTRACE
 
 /* "" */
+#undef HAVE_SSL
+
+/* The select() system call */
+#undef POLLER_SELECT
+
+/* The poll() system call */
+#undef POLLER_POLL
+
+/* The kqueue() system call */
+#undef POLLER_KQUEUE
+
+/* The /dev/poll device */
+#undef POLLER_DEVPOLL
+
+
+/* "" */
 #undef HAVE_CRYPT
 
 /* "" */

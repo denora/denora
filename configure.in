@@ -594,6 +594,83 @@ AC_DEFINE([SYSV_UNRELIABLE_SIGNALS], [], [Setting to SYSV style signals])
 fi
 
 
+dnl ----
+dnl socket functions
+dnl ----
+AC_CHECK_FUNCS(kqueue poll select socket)
+AC_CHECK_FUNCS(recv send setsockopt)
+ 
+dnl -------------------------------------------------------------------
+dnl Choose our type of socket handling.  the default is to use select()
+dnl we add the --with argument first so the user can manually select,
+dnl if desired.  in this case no checks as to the validity of their
+dnl selection are made.
+dnl -------------------------------------------------------------------
+POLLER=""
+AC_ARG_WITH(poller,
+    AC_HELP_STRING([--with-poller=x],
+        [set the poller to x (one of select, poll, kqueue, devpoll)]),
+    POLLER="$with_poller"
+    denora_cv_poller="$POLLER"
+)
+
+AC_CACHE_CHECK([for which polling function to use], denora_cv_poller,
+[
+
+if test "x$POLLER" = "x" ; then
+    case "$host_os" in
+        freebsd*|netbsd*|openbsd*)
+            if test "$ac_cv_func_kqueue" = "yes" ; then
+                POLLER=kqueue
+            fi
+        ;;
+        solaris*|sunos*|linux*)
+            if test -e /dev/poll ; then
+                POLLER=/dev/poll
+            fi
+        ;;
+    esac
+
+    if test -z "$POLLER" ; then
+        if test "$ac_cv_func_select" = "yes" ; then
+            POLLER=select
+        else
+            if test "$ac_cv_func_poll" = "yes" ; then
+                POLLER=poll
+            else
+                AC_MSG_ERROR(
+        [your system doesn't seem to have select or poll, or any other
+        method by which to check socket activity.  this daemon will not
+        function, sorry.])
+            fi
+        fi
+    fi
+fi
+denora_cv_poller="$POLLER"
+])
+
+POLLER="$denora_cv_poller"
+case "$POLLER" in
+    select)
+        AC_DEFINE(POLLER_SELECT, 1, [The select() system call])
+    ;;
+    poll)
+        AC_DEFINE(POLLER_POLL, 1, [The poll() system call])
+    ;;
+    kqueue)
+        AC_DEFINE(POLLER_KQUEUE, 1, [The kqueue() system call])
+    ;;
+    devpoll)
+        AC_DEFINE(POLLER_DEVPOLL, 1, [The /dev/poll device])
+    ;;
+    *)
+        AC_MSG_ERROR([The poller "$POLLER" is not supported by this system,
+try again?])
+    ;;
+esac
+AC_SUBST(POLLER)
+DIS_POLLER="Socket Engine: $POLLER"
+
 if test "$CC" == "gcc"; then
 echo "Checking best optimization compiler flags"
 echo "Host CPU : $host_cpu"
@@ -845,11 +922,12 @@ AC_CONFIG_FILES(		\
 AC_OUTPUT
 
 cat <<EOT
-
-      $DIS_MODULES
-                $DIS_MYSQL
-$DIS_MYSQLBT
+    $DIS_MODULES
+    $DIS_MYSQL
+	$DIS_MYSQLBT
     $DIS_ENCRYPT
+    $DIS_POLLER
+
 
 All done! Above you can see if Modules Support and MySQL Support will be compiled or not.
 If you intended to compile MySQL support and you see "NO", then your system is probably
