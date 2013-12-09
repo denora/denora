@@ -464,6 +464,7 @@ void sql_do_sjoin(char *chan, char *users, char **modes, int nbmodes)
 	{
 		sql_do_addusers(chanid, users);
 	}
+
 	if (nbmodes)
 	{
 		sql_do_chanmodes(chan, nbmodes, modes);
@@ -1355,6 +1356,8 @@ void do_sjoin(const char *source, int ac, char **av)
 		}
 		else if (c->creation_time < ts)
 			keep_their_modes = 0;
+	} else {
+		 c = chan_create(av[1], ts);
 	}
 
 	/* Double check to avoid unknown modes that need parameters */

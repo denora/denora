@@ -1,10 +1,12 @@
 Denora v1.5.1-git
 -------------
 Additions
+13/12/09 : Support for Unreal Mode +I
 
 Changes
 
 Fixes
+13/12/09 : Fixed issue where do_sjoin() did not create the channel before trying to set modes
 13/12/02 : Some fixes to compile on Minix (not a 100% yet)
 13/11/29 : Cleans out UID struct on user disconnecting
 13/11/29 : Checks if server before calling nickisservices()

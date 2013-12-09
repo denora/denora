@@ -35,7 +35,7 @@ ChanBanMode *FindChanBanMode(char *name)
 	}
 	if (!denora_cmode(*name))
 	{
-		alog(LOG_DEBUG, "Mode %s %c not found", name, *name);
+		alog(LOG_DEBUG, "Mode %s %d not found", name, *name);
 		return NULL;
 	}
 

@@ -261,7 +261,14 @@ void process()
 		}
 		else
 		{
+			if (ac >= 1 && av[0])
+			{
+					mod_current_buffer = sstrdup(av[0]);
+			}
+			else
+			{
 				mod_current_buffer = NULL;
+			}
 		}	
 	}
 	/* Do something with the message. */

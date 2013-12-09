@@ -1,6 +1,10 @@
 -- Denora Version 1.5.1
 -- --------------------
 
+Unreal IRCD
+ALTER TABLE `user` ADD `mode_ui` enum('Y','N') NOT NULL default 'N';
+
+
 -- Denora Version 1.5.0
 -- --------------------
 ALTER TABLE server ADD country VARCHAR( 255 ) NOT NULL DEFAULT '' AFTER server;
