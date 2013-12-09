@@ -3,7 +3,7 @@
 
 Unreal IRCD
 ALTER TABLE `user` ADD `mode_ui` enum('Y','N') NOT NULL default 'N';
-
+ALTER TABLE `chan` ADD `mode_uz` enum('Y','N') NOT NULL default 'N',
 
 -- Denora Version 1.5.0
 -- --------------------

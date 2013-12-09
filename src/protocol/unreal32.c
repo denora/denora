@@ -176,6 +176,7 @@ void IRCDModeInit(void)
 	CreateChanMode(CMODE_S, NULL, NULL);
 	CreateChanMode(CMODE_T, NULL, NULL);
 	CreateChanMode(CMODE_V, NULL, NULL);
+	CreateChanMode(CMODE_Z, NULL, NULL);
 	CreateChanMode(CMODE_c, NULL, NULL);
 	CreateChanMode(CMODE_f, set_flood, get_flood);
 	CreateChanMode(CMODE_i, NULL, NULL);
