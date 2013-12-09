@@ -15,7 +15,6 @@
 #define PROTO_VERSION "1.0"
 #define PROTO_NAME "ircu"
 
-int SupportOperFlag;
 
 void ircu_cmd_nick(char *nick, char *name, const char *modes);
 void ircu_cmd_mode(char *source, char *dest, char *buf);

@@ -17,223 +17,43 @@
 
 int p10nickcnt = 0;
 
-IRCDVar myIrcd[] =
+int DenoraInit(int argc, char **argv)
 {
-	{
-		"Nefarious IRCu 2",      /* ircd name                 */
-		"+iok",                    /* StatServ mode             */
-		IRCD_ENABLE,               /* Vhost                     */
-		IRCD_DISABLE,              /* Supports SGlines          */
-		IRCD_DISABLE,              /* sgline sql table          */
-		IRCD_ENABLE,               /* Supports SQlines          */
-		IRCD_DISABLE,              /* sqline sql table          */
-		IRCD_DISABLE,              /* Supports SZlines          */
-		IRCD_ENABLE,               /* Has exceptions +e         */
-		IRCD_ENABLE,               /* vidents                   */
-		IRCD_ENABLE,               /* NICKIP                    */
-		IRCD_DISABLE,              /* VHOST ON NICK             */
-		IRCD_DISABLE,              /* +f                        */
-		IRCD_DISABLE,              /* +j                        */
-		IRCD_ENABLE,               /* +L                        */
-		IRCD_DISABLE,              /* +f Mode                   */
-		IRCD_DISABLE,              /* +j Mode                   */
-		CMODE_L,                   /* +L Mode                   */
-		NULL,                      /* CAPAB Chan Modes          */
-		IRCD_DISABLE,              /* We support TOKENS         */
-		IRCD_DISABLE,              /* TOKENS are CASE Sensitive */
-		IRCD_DISABLE,              /* TIME STAMPS are BASE64    */
-		IRCD_DISABLE,              /* +I support                */
-		IRCD_DISABLE,              /* SJOIN ban char            */
-		IRCD_DISABLE,              /* SJOIN except char         */
-		IRCD_DISABLE,              /* SJOIN invite char         */
-		's',                       /* umode for vhost           */
-		IRCD_DISABLE,              /* owner                     */
-		IRCD_DISABLE,              /* protect                   */
-		IRCD_ENABLE,               /* halfop                    */
-		NULL,                      /* user modes                */
-		NULL,                      /* channel modes             */
-		IRCD_DISABLE,              /* flood                     */
-		IRCD_DISABLE,              /* flood other               */
-		IRCD_DISABLE,              /* join throttle             */
-		IRCD_DISABLE,              /* nick change flood         */
-		'x',                       /* vhost                     */
-		IRCD_DISABLE,              /* vhost other               */
-		'L',                       /* channel linking           */
-		IRCD_ENABLE,               /* p10                       */
-		IRCD_DISABLE,              /* TS6                       */
-		IRCD_ENABLE,               /* numeric ie.. 350 etc      */
-		IRCD_DISABLE,              /* channel mode gagged       */
-		'C',                       /* spamfilter /stats char    */
-		'b',                       /* ban char                  */
-		'e',                       /* except char               */
-		IRCD_DISABLE,              /* invite char               */
-		IRCD_DISABLE,              /* zip                       */
-		IRCD_DISABLE,              /* ssl                       */
-		IRCD_ENABLE,               /* uline                     */
-		NULL,                      /* nickchar                  */
-		IRCD_DISABLE,              /* svid                      */
-		IRCD_ENABLE,               /* hidden oper               */
-		IRCD_ENABLE,               /* extra warning             */
-		IRCD_ENABLE,               /* Report sync state         */
-		'z'                        /* Persistent channel mode   */
-	},
-};
+	Directive *dir;
 
-IRCDCAPAB myIrcdcap[] =
-{
+	if (denora->protocoldebug)
 	{
-		1,                         /* NOQUIT       */
-		0,                         /* TSMODE       */
-		0,                         /* UNCONNECT    */
-		0,                         /* NICKIP       */
-		0,                         /* SJOIN        */
-		0,                         /* ZIP          */
-		0,                         /* BURST        */
-		0,                         /* TS5          */
-		0,                         /* TS3          */
-		0,                         /* DKEY         */
-		0,                         /* PT4          */
-		0,                         /* SCS          */
-		0,                         /* QS           */
-		0,                         /* UID          */
-		0,                         /* KNOCK        */
-		0,                         /* CLIENT       */
-		0,                         /* IPV6         */
-		0,                         /* SSJ5         */
-		0,                         /* SN2          */
-		0,                         /* TOKEN        */
-		0,                         /* VHOST        */
-		0,                         /* SSJ3         */
-		0,                         /* NICK2        */
-		0,                         /* UMODE2       */
-		0,                         /* VL           */
-		0,                         /* TLKEXT       */
-		0,                         /* DODKEY       */
-		0,                         /* DOZIP        */
-		0,                         /* CHANMODES    */
-		0,                         /* sjb64        */
-		0,                         /* nickchar     */
+		protocol_debug(NULL, argc, argv);
 	}
-};
+	/* Only 1 protocol module may be loaded */
+	if (protocolModuleLoaded())
+	{
+		alog(LOG_NORMAL, langstr(ALOG_MOD_BE_ONLY_ONE));
+		return MOD_STOP;
+	}
+
+	DenoraXMLIRCdConfig("nefarious2.xml");
+
+	moduleAddAuthor("Denora");
+	moduleAddVersion(PROTO_VERSION);
+	moduleSetType(PROTOCOL);
+
+	pmodule_irc_var(IRC_NEFARIOUS2);
+
+	ModuleChanModeUpdate(CMODE_k, set_key, get_key);
+	ModuleChanModeUpdate(CMODE_l, set_limit, get_limit);
+	ModuleChanModeUpdate(CMODE_L, set_redirect, get_redirect);
+	ModuleChanModeUpdate(CMODE_A, nef2_chan_mode_a_set, nef2_chan_mode_a_get);
+	ModuleChanModeUpdate(CMODE_U, nef2_chan_mode_u_set, nef2_chan_mode_u_get);
+
+	moduleAddIRCDCmds();
+	moduleAddIRCDMsgs();
+
+	return MOD_CONT;
+}
+
 
 /*************************************************************************/
-
-void IRCDModeInit(void)
-{
-	/* User Modes
-	 * a - admin
-	 * h - set host
-	 * f - fake host
-	 * n - no chan
-	 * i - marks a users as invisible;
-	 * s - marks a user for receipt of server notices;
-	 * w - user receives wallops;
-	 * o - operator flag.
-	 * q - prevents people who are not in any channels you are on from messaging you
-	 * d - Deaf & Dumb.  This user will not get any channel traffic. Used for bots.
-	 * k - This user cannot be kicked, deop'd or /kill'd.  This usermode may only
-	 *     be set by a server, it may not be set by a user.  This is used by
-	 *     undernet service bots (X/W/UWorld etc)
-	 * g - List channel HACK:'s
-	 * O - local op
-	 * R - account only
-	 * B - bot
-	 * X - xtra op
-	 * H - allows opers to hide "Is An Oper" from their whois messages
-	 * I - no idle
-	 * L - stop autojoins from +L channel modes
-	 * W - whois
-	 * z - SSL
-	 */
-
-	ModuleSetUserMode(UMODE_a, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_c, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_d, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_f, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_g, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_h, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_i, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_k, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_n, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_o, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_q, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_r, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_s, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_x, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_w, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_z, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_B, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_C, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_D, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_H, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_I, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_L, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_O, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_R, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_W, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_X, IRCD_ENABLE);
-	ModuleUpdateSQLUserMode();
-
-	/* Channel Modes
-	 * o - give/take channel operator privileges;
-	 * h - halfop
-	 * p - private channel flag;
-	 * s - secret channel flag;
-	 * i - invite-only channel flag;
-	 * t - topic settable by channel operator only flag;
-	 * n - no messages to channel from clients on the outside;
-	 * m - moderated channel;
-	 * l - set the user limit to channel;
-	 * b - set a ban mask to keep users out;
-	 * v - give/take the ability to speak on a moderated channel;
-	 * k - set a channel key (password).
-	 * r - registered
-	 * e - ban excepts
-	 * c - no colour
-	 * S - strip colour
-	 * C - no ctcp
-	 * M - acconly
-	 * N - no notice
-	 * O - oper only
-	 * a - admin only
-	 * Q - no quit parts
-	 * Z - ssl only
-	 * T - no amsg
-	 * L - no list modes
-	 * z - persist
-	 */
-	CreateChanBanMode(CMODE_b, add_ban, del_ban);
-	CreateChanBanMode(CMODE_e, add_exception, del_exception);
-	CreateChanMode(CMODE_a, NULL, NULL);
-	CreateChanMode(CMODE_c, NULL, NULL);
-	CreateChanMode(CMODE_i, NULL, NULL);
-	CreateChanMode(CMODE_k, set_key, get_key);
-	CreateChanMode(CMODE_l, set_limit, get_limit);
-	CreateChanMode(CMODE_m, NULL, NULL);
-	CreateChanMode(CMODE_n, NULL, NULL);
-	CreateChanMode(CMODE_p, NULL, NULL);
-	CreateChanMode(CMODE_r, NULL, NULL);
-	CreateChanMode(CMODE_s, NULL, NULL);
-	CreateChanMode(CMODE_t, NULL, NULL);
-	CreateChanMode(CMODE_z, NULL, NULL);
-	CreateChanMode(CMODE_C, NULL, NULL);
-	CreateChanMode(CMODE_D, NULL, NULL);
-	CreateChanMode(CMODE_L, set_redirect, get_redirect);
-	CreateChanMode(CMODE_M, NULL, NULL);
-	CreateChanMode(CMODE_N, NULL, NULL);
-	CreateChanMode(CMODE_O, NULL, NULL);
-	CreateChanMode(CMODE_Q, NULL, NULL);
-	CreateChanMode(CMODE_R, NULL, NULL);
-	CreateChanMode(CMODE_S, NULL, NULL);
-	CreateChanMode(CMODE_T, NULL, NULL);
-	CreateChanMode(CMODE_Z, NULL, NULL);
-	CreateChanMode(CMODE_A, nef2_chan_mode_a_set, nef2_chan_mode_a_get);
-	CreateChanMode(CMODE_U, nef2_chan_mode_u_set, nef2_chan_mode_u_get);
-	ModuleSetChanUMode('+', 'v', STATUS_VOICE);
-	ModuleSetChanUMode('%', 'h', STATUS_HALFOP);
-	ModuleSetChanUMode('@', 'o', STATUS_OP);
-	ModuleUpdateSQLChanMode();
-}
 
 char *nef2_chan_mode_a_get(Channel * chan)
 {
@@ -1697,39 +1517,3 @@ void moduleAddIRCDCmds()
 	pmodule_cmd_ping(nefarious_cmd_ping);
 }
 
-int DenoraInit(int argc, char **argv)
-{
-	Directive *dir;
-
-	if (denora->protocoldebug)
-	{
-		protocol_debug(NULL, argc, argv);
-	}
-	/* Only 1 protocol module may be loaded */
-	if (protocolModuleLoaded())
-	{
-		alog(LOG_NORMAL, langstr(ALOG_MOD_BE_ONLY_ONE));
-		return MOD_STOP;
-	}
-
-	dir = ModuleCreateConfigDirective("SupportOperFlag", PARAM_SET, PARAM_RELOAD, &SupportOperFlag);
-	moduleGetConfigDirective((char*) "nefarious2.conf", dir);
-	free(dir);
-
-	moduleAddAuthor("Denora");
-	moduleAddVersion(PROTO_VERSION);
-	moduleSetType(PROTOCOL);
-
-	pmodule_ircd_version("Nefarious IRCu 2");
-	pmodule_ircd_cap(myIrcdcap);
-	pmodule_ircd_var(myIrcd);
-	pmodule_ircd_useTSMode(0);
-	pmodule_irc_var(IRC_NEFARIOUS);
-	IRCDModeInit();
-	pmodule_oper_umode(UMODE_o);
-
-	moduleAddIRCDCmds();
-	moduleAddIRCDMsgs();
-
-	return MOD_CONT;
-}

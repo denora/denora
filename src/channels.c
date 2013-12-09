@@ -334,8 +334,6 @@ void sql_do_addusers(int chanid, char *users)
 		protect = 0;
 		shunned = 0;
 
-		SET_SEGV_LOCATION();
-
 		while ((int) *users >= 0 && sjoinmodes[(int) *users] != 0)
 		{
 			status_flag = sjoinmodes[(int) *users++];
@@ -364,7 +362,6 @@ void sql_do_addusers(int chanid, char *users)
 				shunned++;
 			}
 		}
-
 		nextusers = strchr(users, ' ');
 		if (nextusers)
 		{

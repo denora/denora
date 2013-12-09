@@ -59,7 +59,7 @@ void DenoraXMLIRCdConfig(char *file)
 	ircd = malloc(sizeof(IRCDVar));
 	ircdcap = malloc(sizeof(IRCDCAPAB));
 
-	DenoraXMLConfigBlockCreate("ircd", DenoraParseProto_IRCdBlock, 4);
+	DenoraXMLConfigBlockCreate("ircd", DenoraParseProto_IRCdBlock, 5);
 	DenoraXMLConfigBlockCreate("services", DenoraParseProto_ServicesBlock, 1);
 	DenoraXMLConfigBlockCreate("features", DenoraParseProto_FeaturesBlock, 27);
 	DenoraXMLConfigBlockCreate("warning", DenoraParseProto_WarningBlock, 1);
@@ -68,6 +68,8 @@ void DenoraXMLIRCdConfig(char *file)
 	DenoraXMLConfigBlockCreate("chanmodes", DenoraParseProto_ChannelModeBlock, 48);
 	DenoraXMLConfigBlockCreate("chanbanmodes", DenoraParseProto_ChannelBanModeBlock, 4);
 	DenoraXMLConfigBlockCreate("channelfeatures", DenoraParseProto_ChannelFeaturesBlock, 22);
+	DenoraXMLConfigBlockCreate("chanusermode", DenoraParseProto_ChannelUserModeBlock, 3);
+
 
 	snprintf(buf, sizeof(buf), "ircdconfig/%s", file);
 	DenoraParseXMLConfig(buf);

@@ -56,8 +56,10 @@ void init_csmodes(void)
 
 void ModuleSetChanUMode(int mode, char letter, int status_flag)
 {
-	csmodes[mode] = letter;
-	sjoinmodes[mode] = status_flag;
+	alog(LOG_DEBUG, "%d %c %d", mode, letter, status_flag);
+
+	csmodes[letter] = mode;
+	sjoinmodes[letter] = status_flag;
 	ModuleSetChanMode((int) letter, IRCD_ENABLE);
 	return;
 }
@@ -160,6 +162,19 @@ void ModuleChanModeUpdate(int mode, void (*setvalue) (Channel * chan, char *valu
 		cm->getvalue = getvalue;
 	}
 }
+
+ChanUModeArray chanumode_array[] =
+{
+	{"OP", STATUS_OP},
+	{"HALFOP", STATUS_HALFOP},
+	{"VOICE", STATUS_VOICE},
+	{"OWNER", STATUS_OWNER},
+	{"PROTECTED", STATUS_PROTECTED},
+	{"SHUNNED", STATUS_SHUNNED},
+	{"NONE", STATUS_NONE},
+	{NULL, 0}
+};
+
 
 ModeArray ircd_mode_array[] =
 {
@@ -313,6 +328,26 @@ int ReturnModeFromToken(char *tag)
 				if (strcmp(tag, ircd_mode_array[j].token) == 0)
 				{
 					return ircd_mode_array[j].flag;
+				}
+			}
+		}
+
+	return 0;
+}
+
+
+int ReturnChanUModeFromToken(char *tag)
+{
+	int j;
+
+
+		for (j = 0; chanumode_array[j].token; j++)
+		{
+			if (tag)
+			{
+				if (strcmp(tag, chanumode_array[j].token) == 0)
+				{
+					return chanumode_array[j].flag;
 				}
 			}
 		}

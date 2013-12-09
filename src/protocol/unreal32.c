@@ -1,4 +1,3 @@
-
 /* Unreal 3.2.x
  *
  * (c) 2004-2013 Denora Team
@@ -11,7 +10,7 @@
  *
  *
  *
- * last tested with Unreal 3.2.7
+ * last tested with Unreal3.2.10.2
  *
  */
 
@@ -41,34 +40,18 @@ int DenoraInit(int argc, char **argv)
 
 	DenoraXMLIRCdConfig("unreal32.xml");
 
-	IRCDModeInit();
+	ModuleChanModeUpdate(CMODE_L, set_redirect, get_redirect);
+	ModuleChanModeUpdate(CMODE_f, set_flood, get_flood);
+	ModuleChanModeUpdate(CMODE_j, set_flood_alt, get_flood_alt);
+	ModuleChanModeUpdate(CMODE_k, set_key, get_key);
+	ModuleChanModeUpdate(CMODE_l, set_limit, get_limit);
+
 	pmodule_irc_var(IRC_UNREAL32);
 
 	moduleAddIRCDCmds();
 	moduleAddIRCDMsgs();
 
 	return MOD_CONT;
-}
-
-/*************************************************************************/
-
-void IRCDModeInit(void)
-{
-	/* Channel Modes */
-	ModuleChanModeUpdate(CMODE_L, set_redirect, get_redirect);
-	ModuleChanModeUpdate(CMODE_f, set_flood, get_flood);
-	ModuleChanModeUpdate(CMODE_j, set_flood_alt, get_flood_alt);
-	ModuleChanModeUpdate(CMODE_k, set_key, get_key);
-	ModuleChanModeUpdate(CMODE_l, set_limit, get_limit);
-	ModuleUpdateSQLChanMode();
-
-	ModuleSetChanUMode('%', 'h', STATUS_HALFOP);
-	ModuleSetChanUMode('&', 'b', 0);
-	ModuleSetChanUMode('*', 'q', STATUS_OWNER);
-	ModuleSetChanUMode('+', 'v', STATUS_VOICE);
-	ModuleSetChanUMode('@', 'o', STATUS_OP);
-	ModuleSetChanUMode('~', 'a', STATUS_PROTECTED);
-
 }
 
 /*************************************************************************/

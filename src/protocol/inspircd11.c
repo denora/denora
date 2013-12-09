@@ -1,4 +1,3 @@
-
 /* InspIRCd 1.1 functions
  *
  * (C) 2005-2006 Craig Edwards <brain@inspircd.org>
@@ -21,178 +20,43 @@
 #include "denora.h"
 #include "inspircd11.h"
 
-IRCDVar myIrcd[] =
+
+int DenoraInit(int argc, char **argv)
 {
+	if (denora->protocoldebug)
 	{
-		"InspIRCd 1.1.x",          /* ircd name                    */
-		"+ioS",                    /* StatServ mode                */
-		IRCD_ENABLE,               /* Vhost                        */
-		IRCD_DISABLE,              /* Supports SGlines             */
-		IRCD_DISABLE,              /* sgline sql table             */
-		IRCD_DISABLE,              /* Supports SQlines             */
-		IRCD_DISABLE,              /* sqline sql table             */
-		IRCD_DISABLE,              /* Supports SZlines             */
-		IRCD_ENABLE,               /* Has exceptions +e            */
-		IRCD_ENABLE,               /* vidents                      */
-		IRCD_ENABLE,               /* NICKIP                       */
-		IRCD_ENABLE,               /* VHOST ON NICK                */
-		IRCD_ENABLE,               /* +f                           */
-		IRCD_ENABLE,               /* +j                           */
-		IRCD_ENABLE,               /* +L                           */
-		CMODE_f,                   /* +f Mode                      */
-		CMODE_j,                   /* +j Mode                      */
-		CMODE_L,                   /* +L Mode                      */
-		NULL,                      /* CAPAB Chan Modes             */
-		IRCD_DISABLE,              /* We support Unreal TOKENS     */
-		IRCD_DISABLE,              /* TOKENS are CASE Sensitive    */
-		IRCD_ENABLE,               /* TIME STAMPS are BASE64       */
-		IRCD_ENABLE,               /* +I support                   */
-		IRCD_DISABLE,              /* SJOIN ban char               */
-		IRCD_DISABLE,              /* SJOIN except char            */
-		IRCD_DISABLE,              /* SJOIN invite char            */
-		UMODE_x,                   /* umode for vhost              */
-		IRCD_ENABLE,               /* channel owner                */
-		IRCD_ENABLE,               /* channel mode protect         */
-		IRCD_ENABLE,               /* channel mode halfop          */
-		NULL,
-		NULL,
-		'f',                       /* flood                        */
-		'j',                       /* flood other                  */
-		'J',                       /* join throttle                */
-		IRCD_DISABLE,              /* nick change flood            */
-		'x',                       /* vhost                        */
-		IRCD_DISABLE,              /* vhost other                  */
-		'L',                       /* channek linking              */
-		IRCD_DISABLE,              /* p10 protocol                 */
-		IRCD_DISABLE,              /* ts6 protocol                 */
-		IRCD_DISABLE,              /* numeric ie.. 350 etc         */
-		IRCD_DISABLE,              /* channel mode gagged          */
-		IRCD_DISABLE,              /* spamfilter                   */
-		'b',                       /* ban char                     */
-		'e',                       /* except char                  */
-		'I',                       /* invite char                  */
-		IRCD_DISABLE,              /* zip                          */
-		IRCD_DISABLE,              /* ssl                          */
-		IRCD_ENABLE,               /* uline                        */
-		NULL,                      /* nickchar                     */
-		IRCD_DISABLE,              /* svid                         */
-		IRCD_ENABLE,               /* hidden oper                  */
-		IRCD_DISABLE,              /* extra warning                */
-		IRCD_ENABLE,               /* Report sync state            */
-		IRCD_DISABLE               /* Persistent channel mode   */
+		protocol_debug(NULL, argc, argv);
 	}
-	,
-};
+	/* Only 1 protocol module may be loaded */
+	if (protocolModuleLoaded())
+	{
+		alog(LOG_NORMAL, langstr(ALOG_MOD_BE_ONLY_ONE));
+		return MOD_STOP;
+	}
+
+	moduleAddAuthor("Denora");
+	moduleAddVersion("2.0");
+	moduleSetType(PROTOCOL);
+
+	DenoraXMLIRCdConfig("inspircd11.xml");
+
+	pmodule_irc_var(IRC_INSPIRCD11);
+	ModuleChanModeUpdate(CMODE_J, set_rejoinlock, get_rejoinlock);
+	ModuleChanModeUpdate(CMODE_L, set_redirect, get_redirect);
+	ModuleChanModeUpdate(CMODE_f, set_flood, get_flood);
+	ModuleChanModeUpdate(CMODE_j, set_flood_alt, get_flood_alt);
+	ModuleChanModeUpdate(CMODE_k, set_key, get_key);
+	ModuleChanModeUpdate(CMODE_l, set_limit, get_limit);
 
 
-IRCDCAPAB myIrcdcap[] =
-{
-	{
-		CAPAB_NOQUIT,              /* NOQUIT       */
-		0,                         /* TSMODE       */
-		1,                         /* UNCONNECT    */
-		0,                         /* NICKIP       */
-		0,                         /* SJOIN        */
-		0,                         /* ZIP          */
-		0,                         /* BURST        */
-		0,                         /* TS5          */
-		0,                         /* TS3          */
-		0,                         /* DKEY         */
-		0,                         /* PT4          */
-		0,                         /* SCS          */
-		0,                         /* QS           */
-		0,                         /* UID          */
-		0,                         /* KNOCK        */
-		0,                         /* CLIENT       */
-		0,                         /* IPV6         */
-		0,                         /* SSJ5         */
-		0,                         /* SN2          */
-		0,                         /* TOKEN        */
-		0,                         /* VHOST        */
-		CAPAB_SSJ3,                /* SSJ3         */
-		CAPAB_NICK2,               /* NICK2        */
-		0,                         /* UMODE2       */
-		CAPAB_VL,                  /* VL           */
-		CAPAB_TLKEXT,              /* TLKEXT       */
-		0,                         /* DODKEY       */
-		0,                         /* DOZIP        */
-		0,
-		0,
-		0,
-	}
-};
+	moduleAddIRCDCmds();
+	moduleAddIRCDMsgs();
+
+	return MOD_CONT;
+}
 
 
 /*************************************************************************/
-
-void IRCDModeInit(void)
-{
-	ModuleSetUserMode(UMODE_B, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_G, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_H, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_I, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_Q, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_R, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_S, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_W, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_c, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_d, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_g, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_h, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_i, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_n, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_o, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_r, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_s, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_w, IRCD_ENABLE);
-	ModuleSetUserMode(UMODE_x, IRCD_ENABLE);
-	ModuleUpdateSQLUserMode();
-	CreateChanBanMode(CMODE_b, add_ban, del_ban);
-	CreateChanBanMode(CMODE_e, add_exception, del_exception);
-	CreateChanBanMode(CMODE_I, add_invite, del_invite);
-
-	/* Channel Modes */
-	CreateChanMode(CMODE_C, NULL, NULL);
-	CreateChanMode(CMODE_F, NULL, NULL);
-	CreateChanMode(CMODE_G, NULL, NULL);
-	CreateChanMode(CMODE_J, set_rejoinlock, get_rejoinlock);
-	CreateChanMode(CMODE_K, NULL, NULL);
-	CreateChanMode(CMODE_L, set_redirect, get_redirect);
-	CreateChanMode(CMODE_M, NULL, NULL);
-	CreateChanMode(CMODE_N, NULL, NULL);
-	CreateChanMode(CMODE_O, NULL, NULL);
-	CreateChanMode(CMODE_P, NULL, NULL);
-	CreateChanMode(CMODE_Q, NULL, NULL);
-	CreateChanMode(CMODE_R, NULL, NULL);
-	CreateChanMode(CMODE_S, NULL, NULL);
-	CreateChanMode(CMODE_T, NULL, NULL);
-	CreateChanMode(CMODE_V, NULL, NULL);
-	CreateChanMode(CMODE_c, NULL, NULL);
-	CreateChanMode(CMODE_f, set_flood, get_flood);
-	CreateChanMode(CMODE_g, NULL, NULL);
-	CreateChanMode(CMODE_i, NULL, NULL);
-	CreateChanMode(CMODE_j, set_flood_alt, get_flood_alt);
-	CreateChanMode(CMODE_k, set_key, get_key);
-	CreateChanMode(CMODE_l, set_limit, get_limit);
-	CreateChanMode(CMODE_m, NULL, NULL);
-	CreateChanMode(CMODE_n, NULL, NULL);
-	CreateChanMode(CMODE_p, NULL, NULL);
-	CreateChanMode(CMODE_r, NULL, NULL);
-	CreateChanMode(CMODE_s, NULL, NULL);
-	CreateChanMode(CMODE_t, NULL, NULL);
-	CreateChanMode(CMODE_u, NULL, NULL);
-	CreateChanMode(CMODE_z, NULL, NULL);
-
-	ModuleSetChanUMode('%', 'h', STATUS_HALFOP);
-	ModuleSetChanUMode('+', 'v', STATUS_VOICE);
-	ModuleSetChanUMode('@', 'o', STATUS_OP);
-	ModuleSetChanUMode('&', 'a', STATUS_PROTECTED);
-	ModuleSetChanUMode('~', 'q', STATUS_OWNER);
-
-	ModuleUpdateSQLChanMode();
-
-}
-
 
 /* *INDENT-OFF* */
 void moduleAddIRCDMsgs(void)
@@ -1562,34 +1426,3 @@ void moduleAddIRCDCmds()
 	pmodule_cmd_ping(inspircd_cmd_ping);
 }
 
-int DenoraInit(int argc, char **argv)
-{
-	if (denora->protocoldebug)
-	{
-		protocol_debug(NULL, argc, argv);
-	}
-	/* Only 1 protocol module may be loaded */
-	if (protocolModuleLoaded())
-	{
-		alog(LOG_NORMAL, langstr(ALOG_MOD_BE_ONLY_ONE));
-		return MOD_STOP;
-	}
-
-	moduleAddAuthor("Denora");
-	moduleAddVersion
-	("");
-	moduleSetType(PROTOCOL);
-
-	pmodule_ircd_version("InspIRCd 1.1.x");
-	pmodule_ircd_cap(myIrcdcap);
-	pmodule_ircd_var(myIrcd);
-	pmodule_ircd_useTSMode(0);
-	pmodule_irc_var(IRC_INSPIRCD11);
-	IRCDModeInit();
-	pmodule_oper_umode(UMODE_o);
-
-	moduleAddIRCDCmds();
-	moduleAddIRCDMsgs();
-
-	return MOD_CONT;
-}

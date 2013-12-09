@@ -314,6 +314,8 @@ typedef struct db_file_ DenoraDBFile;		/* DB File struct	*/
 typedef struct serverbans_ ServerBans;		/* Serverbans		*/
 typedef struct capabinfo_ CapabInfo;		/* CAPAB Info		*/
 typedef struct ircd_mode_array_ ModeArray;
+typedef struct chanuser_mode_array_ ChanUModeArray;
+
 typedef struct dadmin_ Dadmin;			/* Admins		*/
 typedef struct Conf_Modules Conf_Modules;	/* Config		*/
 typedef struct TopConf tConf;
@@ -921,6 +923,13 @@ struct capabinfo_
 
 
 struct ircd_mode_array_
+{
+	const char *token;
+	uint32 flag;
+};
+
+
+struct chanuser_mode_array_
 {
 	const char *token;
 	uint32 flag;

@@ -2,10 +2,9 @@ Denora v2.0 - git-alpha
 -------------
 
 Additions
+12/08/2013 : IRCd Protocol files use an xml config file to handle all of their configuration settings.
 12/06/2013 : UnrealIRCd support for User Mode +I and CAPAB support of ESVID while we do not do anything
              or have data to work with ESVID just have it out there for later.
-12/06/2013 : Most of the IRCd are updated to use xml config files to handle a lot of the settings. 
-			 the rest will be updated in a commit later.
 12/02/2013 : Added xmlparser - its a home brew way for us to parse our new xml config format
 12/02/2013 : Added in the newst GeoIP c API library - this includes GeoCity as well as being able
              to get timezone and region name.
@@ -32,6 +31,7 @@ Changes
              for the given system
 
 Fixes
+12/08/2013 : Nefarious2 now has its own define in irc.h
 12/06/2013 : Fixes sstrdup() warning on some commands this is a result of the fix from 11/29/13
 11/29/2013 : Removed data from uid struct on user being disconnected.
 

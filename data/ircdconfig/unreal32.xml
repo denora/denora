@@ -157,6 +157,38 @@
 		<persistchan>no</persistchan>
 		<nickchgflood>no</nickchgflood>
 	</channelfeatures>
+	<chanusermode>
+		<mode>h</mode>
+		<symbol>%</symbol>
+		<flag>HALFOP</flag>
+	</chanusermode>
+	<chanusermode>
+		<mode>b</mode>
+		<symbol>&</symbol>
+		<flag>NONE</flag>
+	</chanusermode>
+	<chanusermode>
+		<mode>q</mode>
+		<symbol>*</symbol>
+		<flag>OWNER</flag>
+	</chanusermode>
+	<chanusermode>
+		<mode>v</mode>
+		<symbol>+</symbol>
+		<flag>VOICE</flag>
+	</chanusermode>
+	<chanusermode>
+		<mode>o</mode>
+		<symbol>@</symbol>
+		<flag>OP</flag>
+	</chanusermode>
+	<chanusermode>
+		<mode>a</mode>
+		<symbol>~</symbol>
+		<flag>PROTECTED</flag>
+	</chanusermode>
+
+
 	<warning>
 		<extra>no</extra>
 	</warning>

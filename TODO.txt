@@ -14,7 +14,7 @@
 14. ison table rewritten
 15. option to disable items, largenet gone
 16. true threading
-17. ircd protocol move struct to xml config
+17. ircd protocol move struct to xml config                                                                   [DONE build 2.0.0.5]
 18. ircd protocol truely deal with more of the load, less core more sql calls
 19. sql query string to do %q and cleans itself up, less mess and free
 20. ircd protocol support for newer ircds (askua -> snircd) Hybrid 8 / Ratbox 3
@@ -22,4 +22,5 @@
 22. Services ported to v2
 23. webpanel
 24. encrypt admin passwords
-25. autoconf - write script file 1) download latest config.guess and config.sub 2) build "autoconf" the configure file 3) copies the new configure into place
+25. autoconf - write script file 1) download latest config.guess and config.sub 
+    2) build "autoconf" the configure file 3) copies the new configure into place

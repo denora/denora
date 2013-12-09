@@ -79,29 +79,36 @@ int DenoraParseProto_IRCdBlock(int count, char **lines)
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
 
-		if (!strcmp(tag, "name"))
+		if (tag)
 		{
-			ircd->name = sstrdup(data);
-			denora->version_protocol = sstrdup(data);
+			if (!strcmp(tag, "name"))
+			{
+				ircd->name = sstrdup(data);
+				denora->version_protocol = sstrdup(data);
+			}
+			else if(!strcmp(tag, "p10"))
+			{
+				ircd->p10 = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "ts6"))
+			{
+				ircd->ts6 = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "usetsmode"))
+			{
+				UseTSMODE = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "supportopmode"))
+			{
+				SupportOperFlag = XmlConfigSetFeature(data);
+			}
+			else
+			{
+				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+			}
+			free(tag);
+			free(data);
 		}
-		else if(!strcmp(tag, "p10"))
-		{
-			ircd->p10 = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "ts6"))
-		{
-			ircd->ts6 = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "usetsmode"))
-		{
-			UseTSMODE = XmlConfigSetFeature(data);
-		}
-		else
-		{
-			alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
-		}
-		free(tag);
-		free(data);
 	}
 	return 1;
 }
@@ -255,6 +262,51 @@ int DenoraParseProto_CapabBlock(int count, char **lines)
 }
 
 
+/*************************************************************************/
+
+
+int DenoraParseProto_ChannelUserModeBlock(int count, char **lines)
+{
+	int i;
+	char *tag;
+	char *data;
+	char *symbol;
+	char *mode;
+	int flag;
+
+
+	for (i = 0; i < count; i++)
+	{
+		tag = GetOptionTagName(lines[i]);
+		data = GetOptionTagData(lines[i]);
+		if (tag)
+		{
+			if (!strcmp(tag, "mode"))
+			{
+				mode = sstrdup(data);
+			}
+			else if(!strcmp(tag, "symbol"))
+			{
+				symbol = sstrdup(data);
+			}
+			else if(!strcmp(tag, "flag"))
+			{
+				flag = ReturnChanUModeFromToken(data);
+			}
+			else
+			{
+				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+			}
+			free(tag);
+			free(data);
+		}
+	}
+	alog(LOG_DEBUG, "Mode %s %d, Symbolw %s, Flag %d", mode, *mode, symbol, flag);
+
+	ModuleSetChanUMode(*mode, *symbol, flag);
+
+	return 1;
+}
 
 /*************************************************************************/
 

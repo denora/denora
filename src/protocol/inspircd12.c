@@ -60,8 +60,14 @@ int DenoraInit(int argc, char **argv)
 
 	DenoraXMLIRCdConfig("inspircd12.xml");
 
+	ModuleChanModeUpdate(CMODE_F, set_nickchgflood, get_nickchgflood);
+	ModuleChanModeUpdate(CMODE_J, set_rejoinlock, get_rejoinlock);
+	ModuleChanModeUpdate(CMODE_L, set_redirect, get_redirect);
+	ModuleChanModeUpdate(CMODE_j, set_flood_alt, get_flood_alt);
+	ModuleChanModeUpdate(CMODE_k, set_key, get_key);
+	ModuleChanModeUpdate(CMODE_l, set_limit, get_limit);
+
 	pmodule_irc_var(IRC_INSPIRCD12);
-	IRCDModeInit();
 	moduleAddIRCDCmds();
 	moduleAddIRCDMsgs();
 
@@ -70,26 +76,6 @@ int DenoraInit(int argc, char **argv)
 
 
 /*************************************************************************/
-
-void IRCDModeInit(void)
-{
-
-	/* Channel Modes */
-	ModuleChanModeUpdate(CMODE_F, set_nickchgflood, get_nickchgflood);
-	ModuleChanModeUpdate(CMODE_J, set_rejoinlock, get_rejoinlock);
-	ModuleChanModeUpdate(CMODE_L, set_redirect, get_redirect);
-	ModuleChanModeUpdate(CMODE_j, set_flood_alt, get_flood_alt);
-	ModuleChanModeUpdate(CMODE_k, set_key, get_key);
-	ModuleChanModeUpdate(CMODE_l, set_limit, get_limit);
-
-	ModuleSetChanUMode('%', 'h', STATUS_HALFOP);
-	ModuleSetChanUMode('+', 'v', STATUS_VOICE);
-	ModuleSetChanUMode('@', 'o', STATUS_OP);
-	ModuleSetChanUMode('&', 'a', STATUS_PROTECTED);
-	ModuleSetChanUMode('~', 'q', STATUS_OWNER);
-
-}
-
 
 /* *INDENT-OFF* */
 void moduleAddIRCDMsgs(void)

@@ -35,6 +35,8 @@ E Qline *findQline(const char *host);
 E void fini_bans(void);
 
 E void initIrcdProto(void);
+int SupportOperFlag;
+
 
 E int UseTSMODE;
 E unsigned long umodes[128];
@@ -1246,7 +1248,8 @@ E int DenoraParseProto_WarningBlock(int count, char **lines);
 E int DenoraParseProto_ChannelFeaturesBlock(int count, char **lines);
 E void DenoraXMLIRCdConfig(char *file);
 E void ModuleChanModeUpdate(int mode, void (*setvalue) (Channel * chan, char *value),  char *(*getvalue) (Channel * chan));
-
+E int DenoraParseProto_ChannelUserModeBlock(int count, char **lines);
+E int ReturnChanUModeFromToken(char *tag);
 
 
 E int sqlite3_shell_main(int argc, char **argv);

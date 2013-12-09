@@ -123,6 +123,16 @@
 		<persistchan>0</persistchan>
 		<nickchgflood>no</nickchgflood>
 	</channelfeatures>
+	<chanusermode>
+		<mode>v</mode>
+		<symbol>+</symbol>
+		<flag>VOICE</flag>
+	</chanusermode>
+	<chanusermode>
+		<mode>o</mode>
+		<symbol>@</symbol>
+		<flag>OP</flag>
+	</chanusermode>
 	<warning>
 		<extra>yes</extra>
 	</warning>

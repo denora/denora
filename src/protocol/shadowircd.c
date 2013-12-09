@@ -32,7 +32,10 @@ int DenoraInit(int argc, char **argv)
 
 	DenoraXMLIRCdConfig("shadowircd.xml");
 
-	IRCDModeInit();
+	ModuleChanModeUpdate(CMODE_f, set_redirect, get_redirect);
+	ModuleChanModeUpdate(CMODE_j, set_flood_alt, get_flood_alt);
+	ModuleChanModeUpdate(CMODE_k, set_key, get_key);
+	ModuleChanModeUpdate(CMODE_l, set_limit, get_limit);
 	pmodule_irc_var(IRC_SHADOWIRCD);
 
 	moduleAddIRCDCmds();
@@ -43,20 +46,6 @@ int DenoraInit(int argc, char **argv)
 }
 
 /*************************************************************************/
-
-void IRCDModeInit(void)
-{
-	/* Channel Modes */
-	ModuleChanModeUpdate(CMODE_f, set_redirect, get_redirect);
-	ModuleChanModeUpdate(CMODE_j, set_flood_alt, get_flood_alt);
-	ModuleChanModeUpdate(CMODE_k, set_key, get_key);
-	ModuleChanModeUpdate(CMODE_l, set_limit, get_limit);
-
-	ModuleSetChanUMode('%', 'h', STATUS_HALFOP);
-	ModuleSetChanUMode('+', 'v', STATUS_VOICE);
-	ModuleSetChanUMode('@', 'o', STATUS_OP);
-	ModuleSetChanUMode('!', 'a', STATUS_PROTECTED);
-}
 
 void shadowircd_cmd_notice(char *source, char *dest, char *buf)
 {

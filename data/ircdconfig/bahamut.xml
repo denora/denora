@@ -1,81 +1,161 @@
 <denora>
   <ircd>
 	<name>BahamutIRCd 1.4.*/1.8.*</name>
+	<p10>no</p10>
+	<ts6>no</ts6>
+	<usetsmode>no</usetsmode>
   </ircd>
   <services>
 	<mode>+io</mode>
   </services>
   <features>
-// Vhost and Vident features
-	<vhost>no</vhost>
-	<vident>no</ident>
-// During NICK command do we get the vhost as well
-	<vhost_on_nick>no<vhost_on_nick>
-// sglines and if we dump them to sql modules
+	<opermode>UMODE_o</opermode>
+	<vhost>0</vhost>
+	<vident>0</ident>
+	<vhost_on_nick>0<vhost_on_nick>
 	<sgline>yes</sgline>
     <sgline_sql>yes<sgline_sql>
-// sqlines and if we dump them to sql modules
 	<sqline>yes</sqline>
     <sqline_sql>yes<sqline_sql>
-// szlines and if we dump them to sql modules
 	<szline>yes</szline>
     <szline_sql>yes<szline_sql>
-// supports +e mode
 	<exceptions>yes<exceptions>
-// on NICK command we get an IP address
-	<nickip>yes<nickip>
-
-	<ziplink>no</ziplink>
-	<ssllink>no<sslink>
-
+	<nickip>1<nickip>
+	<ziplink>0</ziplink>
+	<ssllink>0<sslink>
+	<tokens>0</tokens>
+	<casetokens>1</casetokens>
+	<timestamp64>0</timestampb64>
+	<invitemode>yes</invitemode>
+	<uline>yes</uline>
+	<svid>yes<svid>
+	<hiddenop>0</hiddenop>
+	<syncstate>yes</syncstate>
+	<numerics>yes</numerics>
+	<spamfilterchar>0</spamfilterchar>
+	<vhost_char>0</vhost_char>
+	<vhost_char_other>0</vhost_char_other>
+	<vhostmode>0</vhostmode>
   </features>
-
-
-
-
-		IRCD_DISABLE,              /* +f                        */
-		IRCD_ENABLE,               /* +j                        */
-		IRCD_DISABLE,              /* +L                        */
-		IRCD_DISABLE,              /* +f Mode                   */
-		CMODE_j,                   /* +j                        */
-		IRCD_DISABLE,              /* +L Mode                   */
-		NULL,                      /* CAPAB Chan Modes          */
-		IRCD_DISABLE,              /* We support TOKENS         */
-		IRCD_ENABLE,               /* TOKENS are CASE Sensitive */
-		IRCD_DISABLE,              /* TIME STAMPS are BASE64    */
-		IRCD_ENABLE,               /* +I support                */
-		IRCD_DISABLE,              /* SJOIN ban char            */
-		IRCD_DISABLE,              /* SJOIN except char         */
-		IRCD_DISABLE,              /* SJOIN invite char         */
-		IRCD_DISABLE,              /* umode for vhost           */
-		IRCD_DISABLE,              /* owner                     */
-		IRCD_DISABLE,              /* protect                   */
-		IRCD_DISABLE,              /* halfop                    */
-		NULL,                      /* user modes        */
-		NULL,                      /* channel modes             */
-		IRCD_DISABLE,              /* flood                     */
-		'j',                       /* flood other               */
-		IRCD_DISABLE,              /* join throttle             */
-		IRCD_DISABLE,              /* nick change flood         */
-		IRCD_DISABLE,              /* vhost                     */
-		IRCD_DISABLE,              /* vhost other               */
-		IRCD_DISABLE,              /* Channel forwarding        */
-		IRCD_DISABLE,              /* p10                       */
-		IRCD_DISABLE,              /* ts6                       */
-		IRCD_ENABLE,               /* numeric                   */
-		IRCD_DISABLE,              /* gagged                    */
-		IRCD_DISABLE,              /* spamfilter                */
-		'b',                       /* ban char                  */
-		'e',                       /* except char               */
-		'I',                       /* invite char               */
-		IRCD_ENABLE,               /* uline                     */
-		NULL,                      /* nickchar                  */
-		IRCD_ENABLE,               /* svid                      */
-		IRCD_DISABLE,              /* hidden oper               */
-		IRCD_ENABLE,               /* extra warning             */
-		IRCD_ENABLE,               /* Report sync state         */
-		IRCD_DISABLE               /* Persistent channel mode   */ 
-
-
-
+  <capab>
+	 <noquit>enable</noquit>
+	 <tsmode>1</tsmode>
+	 <unconnect>1</unconnect>
+	 <nickip>0</nickip>
+	 <nsjoin>no</nsjoin>
+	 <zip>0</zip>
+	 <burst>1</burst>
+	 <ts5>0</ts5>
+	 <ts3>0</ts3>
+	 <dkey>1</dkey>
+	 <pt4>0</pt4>
+	 <scs>0</scs>
+	 <qs>0</qs>
+	 <uid>0</uid>
+	 <knock>0</knock>
+	 <client>0</client>
+	 <ipv6>0</ipv6>
+	 <ssj5>0</ssj5>
+	 <sn2>0</sn2>
+	 <token>0</token>
+	 <vhost>0</vhost>
+	 <ssj3>0</ssj3>
+	 <nick2>0</nick2>
+	 <umode2>0</umode2>
+	 <vl>0</vl>
+	 <tlkext>0</tlkext>
+	 <dodkey>0</dodkey>
+	 <dozip>1</dozip>
+	 <chanmodes>0</chanmodes>
+	 <sjb64>0</sjb64>
+	 <nickchars>0</nickchars>
+  </capab>
+  <usermodes>
+	<UMODE_A>yes</UMODE_A>
+	<UMODE_D>yes</UMODE_D>
+	<UMODE_F>yes</UMODE_F>
+	<UMODE_I>yes</UMODE_I>
+	<UMODE_K>yes</UMODE_K>
+	<UMODE_O>yes</UMODE_O>
+	<UMODE_R>yes</UMODE_R>
+	<UMODE_X>yes</UMODE_X>
+	<UMODE_a>yes</UMODE_a>
+	<UMODE_b>yes</UMODE_b>
+	<UMODE_c>yes</UMODE_c>
+	<UMODE_d>yes</UMODE_d>
+	<UMODE_e>yes</UMODE_e>
+	<UMODE_f>yes</UMODE_f>
+	<UMODE_g>yes</UMODE_g>
+	<UMODE_h>yes</UMODE_h>
+	<UMODE_i>yes</UMODE_i>
+	<UMODE_j>yes</UMODE_j>
+	<UMODE_k>yes</UMODE_k>
+	<UMODE_m>yes</UMODE_m>
+	<UMODE_n>yes</UMODE_n>
+	<UMODE_o>yes</UMODE_o>
+	<UMODE_r>yes</UMODE_r>
+	<UMODE_s>yes</UMODE_s>
+	<UMODE_t>yes</UMODE_t>
+	<UMODE_w>yes</UMODE_w>
+	<UMODE_x>yes</UMODE_x>
+	<UMODE_y>yes</UMODE_y>
+  </usermodes>
+  <chanmodes>
+	<CMODE_L>yes</CMODE_L>
+	<CMODE_M>yes</CMODE_M>
+	<CMODE_O>yes</CMODE_O>
+	<CMODE_R>yes</CMODE_R>
+	<CMODE_c>yes</CMODE_c>
+	<CMODE_i>yes</CMODE_i>
+	<CMODE_j>yes</CMODE_j>
+	<CMODE_k>yes</CMODE_k>
+	<CMODE_m>yes</CMODE_m>
+	<CMODE_n>yes</CMODE_n>
+	<CMODE_p>yes</CMODE_p>
+	<CMODE_r>yes</CMODE_r>
+	<CMODE_s>yes</CMODE_s>
+	<CMODE_t>yes</CMODE_t>
+  </chanmodes>
+  <chanbanmodes>
+	<ban>CMODE_b</ban>
+	<exception>CMODE_e</exception>
+	<invite>CMODE_I</invite>
+  </chanbanmodes>
+  <channelfeatures>
+		<owner>0</owner>
+		<protect>0</protect>
+		<halfop>0</halfop>
+		<floodmode>0</floodmode>
+		<floodmodeother>yes</floodmodeother>
+		<chanlink>0</chanlink>
+		<floodmode_char>0</floodmode_char>
+		<floodmodeother_char>j</floodmodeother_char>
+		<chanlink_char>0</chanlink_char>
+		<jointhrottle>no</jointhrottle>
+		<gagged>no</gagged>
+		<sjoin_ban_char>0</sjoin_ban_char>
+		<sjoin_except_char>0</sjoin_except_char>
+		<sjoin_invite_char>0</sjoin_invite_char>
+		<ban_char>b</ban_char>
+		<except_char>e</except_char>
+		<invite_char>I</invite_char>
+		<chan_fmode>0</chan_fmode>
+		<chan_jmode>CMODE_j</chan_jmode>
+		<chan_lmode>CMODE_L</chan_lmode>
+		<persistchan>no</persistchan>
+		<nickchgflood>no</nickchgflood>
+	</channelfeatures>
+	<chanusermode>
+		<mode>v</mode>
+		<symbol>+</symbol>
+		<flag>VOICE</flag>
+	</chanusermode>
+	<chanusermode>
+		<mode>o</mode>
+		<symbol>@</symbol>
+		<flag>OP</flag>
+	</chanusermode>
+	<warning>
+		<extra>1</extra>
+	</warning>
 </denora>

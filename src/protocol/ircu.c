@@ -17,149 +17,39 @@
 
 int p10nickcnt = 0;
 
-IRCDVar myIrcd[] =
+int DenoraInit(int argc, char **argv)
 {
-	{
-		"IRCu 2.10.11+",           /* ircd name                 */
-		"+iok",                    /* StatServ mode             */
-		IRCD_ENABLE,               /* Vhost                     */
-		IRCD_DISABLE,              /* Supports SGlines          */
-		IRCD_DISABLE,              /* sgline sql table          */
-		IRCD_ENABLE,               /* Supports SQlines          */
-		IRCD_DISABLE,              /* sqline sql table          */
-		IRCD_DISABLE,              /* Supports SZlines          */
-		IRCD_DISABLE,              /* Has exceptions +e         */
-		IRCD_DISABLE,              /* vidents                   */
-		IRCD_ENABLE,               /* NICKIP                    */
-		IRCD_DISABLE,              /* VHOST ON NICK             */
-		IRCD_DISABLE,              /* +f                        */
-		IRCD_DISABLE,              /* +j                        */
-		IRCD_DISABLE,              /* +L                        */
-		IRCD_DISABLE,              /* +f Mode                   */
-		IRCD_DISABLE,              /* +j Mode                   */
-		IRCD_DISABLE,              /* +L Mode                   */
-		NULL,                      /* CAPAB Chan Modes          */
-		IRCD_DISABLE,              /* We support TOKENS         */
-		IRCD_DISABLE,              /* TOKENS are CASE Sensitive */
-		IRCD_DISABLE,              /* TIME STAMPS are BASE64    */
-		IRCD_DISABLE,              /* +I support                */
-		IRCD_DISABLE,              /* SJOIN ban char            */
-		IRCD_DISABLE,              /* SJOIN except char         */
-		IRCD_DISABLE,              /* SJOIN invite char         */
-		IRCD_DISABLE,              /* umode for vhost           */
-		IRCD_DISABLE,              /* owner                     */
-		IRCD_DISABLE,              /* protect                   */
-		IRCD_DISABLE,              /* halfop                    */
-		NULL,                      /* User modes                */
-		NULL,                      /* Channel modes             */
-		IRCD_DISABLE,              /* flood                     */
-		IRCD_DISABLE,              /* flood other               */
-		IRCD_DISABLE,              /* join throttle             */
-		IRCD_DISABLE,              /* nick change flood         */
-		'x',                       /* vhost                     */
-		IRCD_DISABLE,              /* vhost other               */
-		IRCD_DISABLE,              /* channel linking           */
-		IRCD_ENABLE,               /* p10                       */
-		IRCD_DISABLE,              /* TS6                       */
-		IRCD_ENABLE,               /* numeric ie.. 350 etc      */
-		IRCD_DISABLE,              /* channel mode gagged       */
-		IRCD_DISABLE,              /* spamfilter                */
-		'b',                       /* ban char                  */
-		IRCD_DISABLE,              /* except char               */
-		IRCD_DISABLE,              /* invite char               */
-		IRCD_DISABLE,              /* zip                       */
-		IRCD_ENABLE,               /* ssl                       */
-		IRCD_ENABLE,               /* uline                     */
-		NULL,                      /* nickchar                  */
-		IRCD_DISABLE,              /* svid                      */
-		IRCD_DISABLE,              /* hidden oper               */
-		IRCD_DISABLE,              /* extra warning             */
-		IRCD_ENABLE,               /* Report sync state         */
-		IRCD_DISABLE               /* Persistent channel mode   */
-	},
-};
+	Directive *dir;
 
-IRCDCAPAB myIrcdcap[] =
-{
+	if (denora->protocoldebug)
 	{
-		1,                         /* NOQUIT       */
-		0,                         /* TSMODE       */
-		0,                         /* UNCONNECT    */
-		0,                         /* NICKIP       */
-		0,                         /* SJOIN        */
-		0,                         /* ZIP          */
-		0,                         /* BURST        */
-		0,                         /* TS5          */
-		0,                         /* TS3          */
-		0,                         /* DKEY         */
-		0,                         /* PT4          */
-		0,                         /* SCS          */
-		0,                         /* QS           */
-		0,                         /* UID          */
-		0,                         /* KNOCK        */
-		0,                         /* CLIENT       */
-		1,                         /* IPV6         */
-		0,                         /* SSJ5         */
-		0,                         /* SN2          */
-		0,                         /* TOKEN        */
-		0,                         /* VHOST        */
-		0,                         /* SSJ3         */
-		0,                         /* NICK2        */
-		0,                         /* UMODE2       */
-		0,                         /* VL           */
-		0,                         /* TLKEXT       */
-		0,                         /* DODKEY       */
-		0,                         /* DOZIP        */
-		0,                         /* CHANMODES    */
-		0,                         /* sjb64        */
-		0,                         /* nickchar     */
+		protocol_debug(NULL, argc, argv);
 	}
-};
+	/* Only 1 protocol module may be loaded */
+	if (protocolModuleLoaded())
+	{
+		alog(LOG_NORMAL, langstr(ALOG_MOD_BE_ONLY_ONE));
+		return MOD_STOP;
+	}
 
-/*************************************************************************/
+	moduleAddAuthor("Denora");
+	moduleAddVersion(PROTO_VERSION);
+	moduleSetType(PROTOCOL);
 
-void IRCDModeInit(void)
-{
-	/* User Modes */
-	ModuleSetUserMode(UMODE_d, IRCD_ENABLE);    /* Deaf Mode */
-	ModuleSetUserMode(UMODE_g, IRCD_ENABLE);    /* Server debug messages */
-	ModuleSetUserMode(UMODE_h, IRCD_ENABLE);    /* */
-	ModuleSetUserMode(UMODE_i, IRCD_ENABLE);    /* Invisible */
-	ModuleSetUserMode(UMODE_k, IRCD_ENABLE);    /* Service */
-	ModuleSetUserMode(UMODE_o, IRCD_ENABLE);    /* Local Operator */
-	ModuleSetUserMode(UMODE_r, IRCD_ENABLE);    /* Registered */
-	ModuleSetUserMode(UMODE_s, IRCD_ENABLE);    /* Server Notices */
-	ModuleSetUserMode(UMODE_w, IRCD_ENABLE);    /* Wallops */
-	ModuleSetUserMode(UMODE_x, IRCD_ENABLE);    /* Hidden Host */
-	ModuleSetUserMode(UMODE_O, IRCD_ENABLE);    /* Global Operator */
-	ModuleUpdateSQLUserMode();
+	DenoraXMLIRCdConfig("ircu.xml");
 
-	/* Channel List Modes */
-	CreateChanBanMode(CMODE_b, add_ban, del_ban);       /* Ban */
+	ModuleChanModeUpdate(CMODE_A, ircu_chan_mode_ua_set, ircu_chan_mode_ua_get);        /* Channel Admin Pass */
+	ModuleChanModeUpdate(CMODE_U, ircu_chan_mode_uu_set, ircu_chan_mode_uu_get);        /* Channel User Pass */
+	ModuleChanModeUpdate(CMODE_k, set_key, get_key);  /* Keyed */
+	ModuleChanModeUpdate(CMODE_l, set_limit, get_limit);      /* Invite Only */
 
-	/* Channel Modes */
-	CreateChanMode(CMODE_D, NULL, NULL);        /* Delayed Join */
-	CreateChanMode(CMODE_d, NULL, NULL);        /* Delayed Join */
-	CreateChanMode(CMODE_A, ircu_chan_mode_ua_set, ircu_chan_mode_ua_get);        /* Channel Admin Pass */
-	CreateChanMode(CMODE_U, ircu_chan_mode_uu_set, ircu_chan_mode_uu_get);        /* Channel User Pass */
-	CreateChanMode(CMODE_i, NULL, NULL);        /* Invite Only */
-	CreateChanMode(CMODE_k, set_key, get_key);  /* Keyed */
-	CreateChanMode(CMODE_l, set_limit, get_limit);      /* Invite Only */
-	CreateChanMode(CMODE_m, NULL, NULL);        /* Moderated */
-	CreateChanMode(CMODE_n, NULL, NULL);        /* No external messages */
-	CreateChanMode(CMODE_p, NULL, NULL);        /* Private */
-	CreateChanMode(CMODE_r, NULL, NULL);        /* Registered Only */
-	CreateChanMode(CMODE_s, NULL, NULL);        /* Secret */
-	CreateChanMode(CMODE_t, NULL, NULL);        /* Topic only changeable by ops */
-	CreateChanMode(CMODE_u, NULL, NULL);        /* No Quitmessages */
-	CreateChanMode(CMODE_R, NULL, NULL);        /* Registered channel */
+	pmodule_irc_var(IRC_IRCU);
 
-	/* Channel User Modes */
-	ModuleSetChanUMode('+', 'v', STATUS_VOICE); /* Voice */
-	ModuleSetChanUMode('@', 'o', STATUS_OP);    /* Operator */
-	ModuleUpdateSQLChanMode();
+	moduleAddIRCDCmds();
+	moduleAddIRCDMsgs();
+
+	return MOD_CONT;
 }
-
 
 char *ircu_chan_mode_ua_get(Channel * chan)
 {
@@ -1363,39 +1253,4 @@ void moduleAddIRCDCmds()
 	pmodule_cmd_ping(ircu_cmd_ping);
 }
 
-int DenoraInit(int argc, char **argv)
-{
-	Directive *dir;
 
-	if (denora->protocoldebug)
-	{
-		protocol_debug(NULL, argc, argv);
-	}
-	/* Only 1 protocol module may be loaded */
-	if (protocolModuleLoaded())
-	{
-		alog(LOG_NORMAL, langstr(ALOG_MOD_BE_ONLY_ONE));
-		return MOD_STOP;
-	}
-
-	dir = ModuleCreateConfigDirective("SupportOperFlag", PARAM_SET, PARAM_RELOAD, &SupportOperFlag);
-	moduleGetConfigDirective((char*) "ircu.conf", dir);
-	free(dir);
-
-	moduleAddAuthor("Denora");
-	moduleAddVersion(PROTO_VERSION);
-	moduleSetType(PROTOCOL);
-
-	pmodule_ircd_version("IRCu 2.10.11+");
-	pmodule_ircd_cap(myIrcdcap);
-	pmodule_ircd_var(myIrcd);
-	pmodule_ircd_useTSMode(0);
-	pmodule_irc_var(IRC_IRCU);
-	IRCDModeInit();
-	pmodule_oper_umode(UMODE_o);
-
-	moduleAddIRCDCmds();
-	moduleAddIRCDMsgs();
-
-	return MOD_CONT;
-}

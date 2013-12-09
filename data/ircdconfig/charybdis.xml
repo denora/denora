@@ -106,6 +106,16 @@
 	<CMODE_t>yes</CMODE_t>
 	<CMODE_z>yes</CMODE_z>
   </chanmodes>
+	<chanusermode>
+		<mode>v</mode>
+		<symbol>+</symbol>
+		<flag>VOICE</flag>
+	</chanusermode>
+	<chanusermode>
+		<mode>o</mode>
+		<symbol>@</symbol>
+		<flag>OP</flag>
+	</chanusermode>
   <chanbanmodes>
 	<ban>CMODE_b</ban>
 	<exception>CMODE_e</exception>

@@ -471,6 +471,7 @@
 
 #define SYNC_COMPLETE 1
 
+#define STATUS_NONE 0
 #define STATUS_OP 1
 #define STATUS_HALFOP 2
 #define STATUS_VOICE 3

@@ -50,7 +50,9 @@ int DenoraInit(int argc, char **argv)
 
 	DenoraXMLIRCdConfig("hybrid7.xml");
 
-	IRCDModeInit();
+	ModuleChanModeUpdate(CMODE_k, set_key, get_key);
+	ModuleChanModeUpdate(CMODE_l, set_limit, get_limit);
+
 	pmodule_irc_var(IRC_HYBRID);
 	moduleAddIRCDCmds();
 	moduleAddIRCDMsgs();
@@ -59,21 +61,7 @@ int DenoraInit(int argc, char **argv)
 }
 
 
-
 /*************************************************************************/
-
-void IRCDModeInit(void)
-{
-	/* Channel Modes */
-	ModuleChanModeUpdate(CMODE_k, set_key, get_key);
-	ModuleChanModeUpdate(CMODE_l, set_limit, get_limit);
-
-	ModuleSetChanUMode('%', 'h', STATUS_HALFOP);
-	ModuleSetChanUMode('+', 'v', STATUS_VOICE);
-	ModuleSetChanUMode('@', 'o', STATUS_OP);
-	ModuleSetChanUMode('!', 'a', STATUS_PROTECTED);
-
-}
 
 void hybrid_cmd_notice(char *source, char *dest, char *buf)
 {

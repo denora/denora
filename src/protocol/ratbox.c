@@ -37,7 +37,8 @@ int DenoraInit(int argc, char **argv)
 
 	DenoraXMLIRCdConfig("ratbox2.xml");
 
-	IRCDModeInit();
+	ModuleChanModeUpdate(CMODE_k, set_key, get_key);
+	ModuleChanModeUpdate(CMODE_l, set_limit, get_limit);
 	pmodule_irc_var(IRC_RATBOX);
 	moduleAddIRCDCmds();
 	moduleAddIRCDMsgs();
@@ -47,17 +48,6 @@ int DenoraInit(int argc, char **argv)
 
 
 /*************************************************************************/
-
-void IRCDModeInit(void)
-{
-	/* Channel Modes */
-	ModuleChanModeUpdate(CMODE_k, set_key, get_key);
-	ModuleChanModeUpdate(CMODE_l, set_limit, get_limit);
-
-	ModuleSetChanUMode('+', 'v', STATUS_VOICE);
-	ModuleSetChanUMode('@', 'o', STATUS_OP);
-
-}
 
 void ratbox_cmd_notice(char *source, char *dest, char *buf)
 {

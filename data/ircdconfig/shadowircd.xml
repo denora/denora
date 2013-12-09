@@ -128,6 +128,26 @@
 	<exception>CMODE_e</exception>
 	<invite>CMODE_I</invite>
   </chanbanmodes>
+	<chanusermode>
+		<mode>h</mode>
+		<symbol>%</symbol>
+		<flag>HALFOP</flag>
+	</chanusermode>
+	<chanusermode>
+		<mode>v</mode>
+		<symbol>+</symbol>
+		<flag>VOICE</flag>
+	</chanusermode>
+	<chanusermode>
+		<mode>o</mode>
+		<symbol>@</symbol>
+		<flag>OP</flag>
+	</chanusermode>
+	<chanusermode>
+		<mode>a</mode>
+		<symbol>!</symbol>
+		<flag>PROTECTED</flag>
+	</chanusermode>
   <channelfeatures>
 		<owner>0</owner>
 		<protect>yes</protect>

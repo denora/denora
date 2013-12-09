@@ -34,7 +34,12 @@ int DenoraInit(int argc, char **argv)
 
 	DenoraXMLIRCdConfig("charybdis.xml");
 
-	IRCDModeInit();
+	ModuleChanModeUpdate(CMODE_c, NULL, NULL);
+	ModuleChanModeUpdate(CMODE_f, set_redirect, get_redirect);
+	ModuleChanModeUpdate(CMODE_j, set_flood_alt, get_flood_alt);
+	ModuleChanModeUpdate(CMODE_k, set_key, get_key);
+	ModuleChanModeUpdate(CMODE_l, set_limit, get_limit);
+
 	pmodule_irc_var(IRC_CHARYBDIS);
 	moduleAddIRCDCmds();
 	moduleAddIRCDMsgs();
@@ -43,21 +48,6 @@ int DenoraInit(int argc, char **argv)
 	return MOD_CONT;
 }
 
-
-/*************************************************************************/
-
-void IRCDModeInit(void)
-{
-	/* Channel Modes */
-	ModuleChanModeUpdate(CMODE_c, NULL, NULL);
-	ModuleChanModeUpdate(CMODE_f, set_redirect, get_redirect);
-	ModuleChanModeUpdate(CMODE_j, set_flood_alt, get_flood_alt);
-	ModuleChanModeUpdate(CMODE_k, set_key, get_key);
-	ModuleChanModeUpdate(CMODE_l, set_limit, get_limit);
-
-	ModuleSetChanUMode('+', 'v', STATUS_VOICE);
-	ModuleSetChanUMode('@', 'o', STATUS_OP);
-}
 
 /*************************************************************************/
 
