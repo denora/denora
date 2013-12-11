@@ -2,6 +2,7 @@ Denora v2.0 - git-alpha
 -------------
 
 Additions
+12/11/2013 : Added Ratbox v3 protocol, retired the Ratbox v2 protocol module
 12/08/2013 : IRCd Protocol files use an xml config file to handle all of their configuration settings.
 12/06/2013 : UnrealIRCd support for User Mode +I and CAPAB support of ESVID while we do not do anything
              or have data to work with ESVID just have it out there for later.
