@@ -52,10 +52,13 @@ Dadmin *find_admin(char *name, User * u)
 	Dadmin *a;
 
 	a = find_admin_byname(name);
-
-	if (match_usermask(a->hosts, u))
+	
+	if (a)
 	{
-		return a;
+		if (match_usermask(a->hosts, u))
+		{
+			return a;
+		}
 	}
 	return NULL;
 }
