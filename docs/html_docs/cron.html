@@ -1,8 +1,11 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252" />
-<title>Untitled Document</title>
+<link rel="icon" href="html_docs/images/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="sdmenu/sdmenu.css" />
+
+<title>Denora IRC Stats v1.5 Documentation</title>
 </head>
 
 <body>
@@ -30,22 +33,22 @@ Denora CRON Events<br />
        this variable that we will create the cron event handler. Here is what
        the base DenoraInit should look like at this point:<br />
 <br />
-<br />
-        int DenoraInit(int argc, char **argv)<br />
-        {<br />
-            CronEvent *cevt = NULL;<br />
-            int status;<br />
-<br />
-            moduleAddAuthor(AUTHOR);<br />
-            moduleAddVersion(VERSION);<br />
-            return MOD_CONT;<br />
-        }<br />
-<br />
+<pre>
+        int DenoraInit(int argc, char **argv)
+        {
+            CronEvent *cevt = NULL;
+            int status;
+
+            moduleAddAuthor(AUTHOR);
+            moduleAddVersion(VERSION);
+            return MOD_CONT;
+        }
+</pre>
     C) Pass "createCronEvent" the name of the event. In this case we are
        going to hook time event of midnight, "CRON_MIDNIGHT".<br />
-<br />
-        cevt = createCronEventHook(CRON_MIDNIGHT, midnight_check);<br />
-<br />
+<pre>
+        cevt = createCronEventHook(CRON_MIDNIGHT, midnight_check);
+</pre>
     D) The Handler is not ready for use yet; now you must add it to the hash
        with "moduleAddCronEvent". You will want to pass to this function the
        return of "createCronEvent"<br />

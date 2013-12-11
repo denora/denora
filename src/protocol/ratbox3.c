@@ -16,7 +16,7 @@
  */
 
 #include "denora.h"
-#include "ratbox.h"
+#include "ratbox3.h"
 
 int DenoraInit(int argc, char **argv)
 {
@@ -463,7 +463,7 @@ void ratbox_cmd_svsinfo(void)
 void ratbox_cmd_capab(void)
 {
 	send_cmd(NULL,
-	         "CAPAB :QS EX CHW IE GLN KNOCK ZIP TB ENCAP SERVICES RSFNC SAVE SAVETS_100");
+	         "CAPAB :QS EX CHW IE GLN KNOCK ZIP TB ENCAP SERVICES");
 }
 
 /* PASS */

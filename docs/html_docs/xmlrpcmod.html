@@ -1,3 +1,6 @@
+<link rel="stylesheet" type="text/css" href="sdmenu/sdmenu.css" />
+
+
 Denora XMLRPC Module Coding<br />
 -- <br />
 ---------------------<br />
@@ -15,57 +18,59 @@ Denora XMLRPC Module Coding<br />
 2) Basics<br />
 <br />
     A) All functions must be formatted like this:<br />
-<br />
+<pre>
         int functioname(deno_socket_t xmlsocket, int ac, char **av);<br />
-<br />
+</pre>
     B) In DenoraInit you must declare XMLRPC Method in some fashion; it is into
        this variable that we will create the method handler. Here is what
        the base DenoraInit should look like at this point:<br />
 <br />
-        int DenoraInit(int argc, char **argv)<br />
-        {<br />
-            XMLRPCCmd *xml = NULL;<br />
-            int status;<br />
-<br />
-            moduleAddAuthor(AUTHOR);<br />
-            moduleAddVersion(VERSION);<br />
-            return MOD_CONT;<br />
-        }<br />
+<pre>
+        int DenoraInit(int argc, char **argv)
+        {
+            XMLRPCCmd *xml = NULL;
+            int status;
+
+            moduleAddAuthor(AUTHOR);
+            moduleAddVersion(VERSION);
+            return MOD_CONT;
+        }
+</pre>
 <br />
     C) Pass "createXMLCommand" the name of the method. <br />
-<br />
+<pre>
         xml = createXMLCommand("denora.getstat", xmlrpc_getstat);<br />
-<br />
+</pre>
     D) The Handler is not ready for use yet; now you must add it to the hash
        with "moduleAddXMLRPCcmd". You will want to pass to this function the
        return of "createXMLCommand"<br />
-<br />
+<pre>
         status = moduleAddXMLRPCcmd(xml);<br />
-<br />
+</pre>
        It will return the same module error codes as adding a regular message,
        which you can use to confirm it was added correctly.<br />
 <br />
     E) With that setup in your function you will be passed a socket that will
        be the user's socket that asked for the info, an array count and an array<br />
-<br />
-           int xmlrpc_getstat(deno_socket_t xmlsocket, int ac, char **av)<br />
-           {<br />
-               char buf[BUFSIZE];<br />
-               *buf = '\0';<br />
-<br />
-               if (!stricmp(av[0], "users")) {<br />
-                   ircsnprintf(buf, BUFSIZE, "<i4>%ld</i4>", (long int) stats->users);<br />
-               } else if (!stricmp(av[0], "chans")) {<br />
-                   ircsnprintf(buf, BUFSIZE, "<i4>%ld</i4>", (long int) stats->chans);<br />
+<pre>
+           int xmlrpc_getstat(deno_socket_t xmlsocket, int ac, char **av)
+           {
+               char buf[BUFSIZE];
+               *buf = '\0';
+
+               if (!stricmp(av[0], "users")) {
+                   ircsnprintf(buf, BUFSIZE, "<i4>%ld</i4>", (long int) stats->users);
+               } else if (!stricmp(av[0], "chans")) {
+                   ircsnprintf(buf, BUFSIZE, "<i4>%ld</i4>", (long int) stats->chans);
                } else {<br />
-                   ircsnprintf(buf, BUFSIZE, "<i4>%ld</i4>", (long int) stats->users);<br />
-               }<br />
-<br />
-               xmlrpc_send(xmlsocket, 1, buf);<br />
-<br />
+                   ircsnprintf(buf, BUFSIZE, "<i4>%ld</i4>", (long int) stats->users);
+               }
+
+               xmlrpc_send(xmlsocket, 1, buf);
+
                return MOD_CONT;
-           }<br />
-<br />
+           }
+</pre>
         note that for a valid XMLRPC method it must have an argument, this is part of the XMLRPC
         standard. Place your data into a buffer and send it to back to the requestor.<br />
 <br />

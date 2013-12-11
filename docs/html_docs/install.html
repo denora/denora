@@ -1,3 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252" />
+<link rel="icon" href="html_docs/images/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="sdmenu/sdmenu.css" />
+<title>Denora IRC Stats v1.5 Documentation</title>
+</head>
+
+<body>
 ================================<br />
 DENORA INSTALLATION INSTRUCTIONS<br />
 ================================<br />
@@ -152,19 +162,19 @@ You also will need to:<br />
     A new trend in ircd configuration is popping all over the place, good
     examples are the latest Hybrid, Unreal and Bahamut, which use a more
     "readable" form of configuration. For those, use something like:<br />
-<br />
-        link stats.localhost.net<br />
-        {<br />
-            username        *;<br />
-            hostname        localhost;<br />
-            bind-ip         *;<br />
-            port            6667;<br />
-            hub             *;<br />
-            password-connect "mypass";<br />
-            password-receive "mypass";<br />
-            class           servers;<br />
-        };<br />
-<br />
+<pre>
+        link stats.localhost.net
+        {
+            username        *;
+            hostname        localhost;
+            bind-ip         *;
+            port            6667;
+            hub             *;
+            password-connect "mypass";
+            password-receive "mypass";
+            class           servers;
+        };
+</pre>
     Note that this block-style configuration files differ heavily, depending
     on the IRCd. Read your IRCd documentation for more details on the exact 
     configuration used by your IRCd.<br />

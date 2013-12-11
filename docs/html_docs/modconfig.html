@@ -1,5 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252" />
+<link rel="icon" href="html_docs/images/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="sdmenu/sdmenu.css" />
+<title>Denora IRC Stats v1.5 Documentation</title>
+</head>
+
+<body>
 Denora Modules: Configuration Files<br />
--- <br />
 -------------<br />
 <br />
 1) Introduction<br />
@@ -38,9 +47,11 @@ Denora Modules: Configuration Files<br />
 <br />
     The flat config files use a struct called "Directive" to load their settings.<br />
 <br />
-    Directive confvalues[][1] = {<br />
-        {{"sqldb", {{PARAM_STRING, 0, &sql_db}}}},<br />
-	};<br />
+<pre>
+    Directive confvalues[][1] = {
+        {{"sqldb", {{PARAM_STRING, 0, &sql_db}}}},
+	};
+</pre>
 <br />
     first parameter must be the variable from the config file that will be looked for. Next is the
     data type (see above), Next is if the variable is reloadable, should Denora rehash should this
