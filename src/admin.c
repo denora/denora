@@ -245,7 +245,6 @@ int free_admin(Dadmin * a)
 		{
 			free(a->name);
 		}
-		free(a);
 		return 1;
 	}
 	return 0;
