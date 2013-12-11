@@ -2,7 +2,6 @@ The contrib directory contains the following directories, in which can be found
 various tools, coding examples, and no longer supported IRCd protocols
 
           chanstats
-          deprecated_protocols
           glines
           pie_chart
           tools
@@ -12,10 +11,6 @@ various tools, coding examples, and no longer supported IRCd protocols
 
 chnanstats : coding example for how to read the chanstats table and display information.
 
-
-deprecated_protocols : IRCd's with lack of support from users and developers have been moved here
-                       if your IRCd is in here and want us to move it back to active please contact
-                       the developers so we know its wanted
 
 glines : print out of glines set by the IRCd
 
@@ -29,3 +24,9 @@ web-api : very rough outline of the features that Denora can store in SQL
 whois : Get whois data back on a user
 
 xmlrpc : PHP coding example of getting XMLRPC data from Denora
+
+
+Legacy IRCD Protocols for IRCd's that once worked with Denora can not be found at
+
+	https://github.com/denora/protocol-legacy
+
