@@ -4,6 +4,7 @@ Additions
 13/12/09 : Support for Unreal User Mode +I / Channel mode +Z
 
 Changes
+13/12/11 : Restructored documentation, added html based documentation
 
 Fixes
 13/12/09 : Fixed issue where do_sjoin() did not create the channel before trying to set modes

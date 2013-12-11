@@ -1,0 +1,62 @@
+Denora Frequently Asked Questions<br />
+-- <br />
+---------------------<br />
+<br />
+1) Remote MOTD doesn't work<br />
+2) I am getting the error "/usr/bin/ld: cannot find -lmysqlclient"<br />
+3) My FreeBSD box complains about 'Shared object "nss_dns.so.1" not found'<br />
+4) Can't connect to local MySQL server through socket '/tmp/mysql.sock'<br />
+5) StatServ doesn't allow me to log in<br />
+<br />
+Q1) Remote MOTD doesn't work<br />
+A1) Some ircds, like Unreal, don't send out remote MOTDs if the filename is different than
+    ircd.motd. A simple solution under *nix based systems is to create a symlink <br />
+<br />
+    ln -s my.custom.motd ~/Unrealxxx/ircd.motd
+<br />
+----------------------------------------------------------------------------------------------<br />
+<br />
+Q2) I am getting the error "/usr/bin/ld: cannot find -lmysqlclient"<br />
+A2) This means that the linker (ld) does not know where the lib of
+    mysqlclient is. <br />
+<br />
+    To resolve<br />
+    1. MySQL libs and development files (usually called libmysql-dev or similar)<br />
+    2. Make sure that the path to mysql lib dir is in /etc/ld.so.conf<br />
+<br />
+----------------------------------------------------------------------------------------------<br />
+<br />
+Q3) My FreeBSD box complains about 'Shared object "nss_dns.so.1" not found'<br />
+A3) This problem hasn't been figured out yet, but a possible fix is:<br />
+<br />
+    Do a soft link for nss_dns.so.1 to one of the following files:<br />
+      * /usr/local/lib/nss_lookupd.so.1<br />
+      * /usr/compat/linux/lib/libnss_dns.so.1<br />
+    e.g: ln -s /usr/local/lib/nss_lookupd.so.1 /usr/local/lib/nss_dns.so.1<br />
+<br />
+    Other solution offered by Anope IRC Services is:<br />
+<br />
+    "... you can delete the /etc/nsswitch.conf file. Please keep in
+     mind that removing a configuration file can be dangerous, so only
+     do this if you know what you are doing."<br />
+<br />
+----------------------------------------------------------------------------------------------<br />
+<br />
+Q4) Can't connect to local MySQL server through socket '/tmp/mysql.sock'<br />
+A4) Either your server is not running, or the MySQL socket is in another location.
+    The following command should tell you where the socket is:<br />
+<br />
+    netstat -ln | grep mysql<br />
+<br />
+    If you get no reply, then your MySQL isn't running or it's configured to use
+    TCP/IP instead of sockets.<br />
+<br />
+    For further information, please visit:
+<br />
+    http://dev.mysql.com/doc/refman/5.0/en/can-not-connect-to-server.html
+<br />
+----------------------------------------------------------------------------------------------
+<br />
+Q5) StatServ doesn't allow me to log in<br />
+A5) You need to be an IRC Operator in order to be allowed to log in to Denora.<br />
+<br />
