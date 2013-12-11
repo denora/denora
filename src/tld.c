@@ -169,6 +169,8 @@ TLD *new_tld(const char *countrycode, const char *country)
 		t = malloc(sizeof(TLD));
 		strlcpy(t->countrycode, countrycode, 5);
 		t->country = sstrdup(country);
+		t->count = 0;
+	    t->overall = 0;
 		tn = lnode_create(t);
 		list_append(Thead, tn);
 	}

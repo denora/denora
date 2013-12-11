@@ -216,7 +216,8 @@ int ircvsnprintf(char *str, size_t size, const char *pattern, va_list vl)
 	const char *p = pattern;
 	char *buf = str, *s, c;
 	va_list ap;
-	unsigned long i, u;
+	unsigned long i = 0;
+	unsigned long u = 0;
 	int len = 0;
 
 	VA_COPY(ap, vl);

@@ -2285,10 +2285,12 @@ int initconf(const char *filename, int reload, tConf * conftab)
 		else
 		{
 			confparse_error("Junk after block name", lnum);
+			fclose(file);
 			return -1;
 		}
 		if ((cur = parse_block(conftab, block, cur, file, &lnum)) == NULL)
 		{
+			fclose(file);
 			return -1;
 		}
 		clear = 0;
@@ -2298,8 +2300,10 @@ int initconf(const char *filename, int reload, tConf * conftab)
 	if (clear)
 	{
 		confparse_error("Unexpected EOF:  Syntax error", blnum);
+		fclose(file);
 		return -1;
 	}
+	fclose(file);
 	return 1;
 }
 

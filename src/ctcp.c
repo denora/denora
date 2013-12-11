@@ -222,7 +222,14 @@ void save_ctcp_db(void)
 
 int del_ctcpver(CTCPVerStats * c)
 {
-	USE_VAR(c);
+	if (c)
+	{
+		if (c->version)
+		{
+			free(c->version);
+		}
+		free(c);
+	}
 	return 0;
 }
 

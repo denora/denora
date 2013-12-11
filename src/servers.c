@@ -1030,6 +1030,8 @@ void delete_server(Server * serv, const char *quitreason, int depth)
 		free(serv->desc);
 	if (serv->version)
 		free(serv->version);
+	if (serv->motd)
+		free(serv->motd);
 	if (serv->suid)
 		free(serv->suid);
 	if (serv->prev)
@@ -1057,6 +1059,7 @@ void delete_server(Server * serv, const char *quitreason, int depth)
 			}
 		}
 	}
+	free(serv);
 
 	if (denora->do_sql)
 	{

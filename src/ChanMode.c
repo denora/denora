@@ -19,7 +19,8 @@ ChanModeHash *CHANMODEHANDLERS[MAX_MODE_HASH];
 unsigned long cmodes[128];
 char csmodes[128];
 unsigned long sjoinmodes[128];
-
+static ChanModeHash *current;
+static int next_index;
 
 /*************************************************************************/
 
@@ -174,6 +175,50 @@ ChanMode *CreateChanMode(int mode,
 	ModuleSetChanMode(mode, IRCD_ENABLE);
 	return m;                   /* return a nice new module */
 }
+
+
+ChanModeHash *first_chanmode(void)
+{
+	next_index = 0;
+
+	SET_SEGV_LOCATION();
+
+	while (next_index < MAX_MODE_HASH && current == NULL)
+	{
+		current = CHANMODEHANDLERS[next_index++];
+	}
+	SET_SEGV_LOCATION();
+
+	alog(LOG_EXTRADEBUG, "debug: first_chanmode() returning %s",
+	     current ? current->mode : "NULL (end of list)");
+	return current;
+}
+
+/*************************************************************************/
+
+ChanModeHash *next_chanmode(void)
+{
+	SET_SEGV_LOCATION();
+
+	if (current)
+	{
+		current = current->next;
+	}
+	if (!current && next_index < MAX_MODE_HASH)
+	{
+		while (next_index < MAX_MODE_HASH && current == NULL)
+		{
+			current = CHANMODEHANDLERS[next_index++];
+		}
+	}
+	SET_SEGV_LOCATION();
+
+	alog(LOG_EXTRADEBUG, "debug: next_chanmode() returning %s",
+	     current ? current->mode : "NULL (end of list)");
+	return current;
+}
+
+
 
 /*************************************************************************/
 

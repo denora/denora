@@ -523,6 +523,18 @@ void filedb_close(DenoraDBFile * dbptr, char **key, char **value)
 		{
 			remove(dbptr->temp_name);
 		}
+		if (dbptr->service)
+		{
+			free(dbptr->service);
+		}
+		if (dbptr->temp_name)
+		{
+			free(dbptr->temp_name);
+		}
+		if (dbptr->filename)
+		{
+			free(dbptr->filename);
+		}
 		SET_SEGV_LOCATION();
 
 		free(dbptr);

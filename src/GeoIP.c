@@ -397,7 +397,7 @@ int _check_mtime(GeoIP *gi)
 	/* stat only has second granularity, so don't
 	   call it more than once a second */
 	gettimeofday(&t, NULL);
-	if (t.tv_sec == gi->last_mtime_check)
+	if (gi && t.tv_sec == gi->last_mtime_check)
 	{
 		return 0;
 	}
@@ -783,7 +783,7 @@ GeoIP* GeoIP_new (int flags)
 GeoIP* GeoIP_open (const char * filename, int flags)
 {
 	struct stat buf;
-	GeoIP * gi;
+	GeoIP *gi = NULL;
 	size_t len;
 
 	gi = (GeoIP *)malloc(sizeof(GeoIP));
@@ -920,6 +920,7 @@ void GeoIP_delete (GeoIP *gi)
 	if (gi->databaseSegments)
 		free(gi->databaseSegments);
 	free(gi);
+
 }
 
 const char *GeoIP_country_code_by_name (GeoIP* gi, const char *name)

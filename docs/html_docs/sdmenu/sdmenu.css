@@ -33,13 +33,13 @@ div.sdmenu div a {
 	background: #eee;
 	display: block;
 	border-bottom: 1px solid #ddd;
-	color: #066;
+	color: #000022;
 }
 div.sdmenu div a.current {
 	background : #ccc;
 }
 div.sdmenu div a:hover {
-	background : #066 url(linkarrow.gif) no-repeat right center;
+	background : #000066 url(linkarrow.gif) no-repeat right center;
 	color: #fff;
 	text-decoration: none;
 }

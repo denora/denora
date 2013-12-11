@@ -799,6 +799,9 @@ E char *xml_encode;
 E char *xml_doctype;
 E char *xml_header;
 
+E ChanModeHash *next_chanmode(void);
+E ChanModeHash *first_chanmode(void);
+
 E void event_message_process(char *eventbuf);
 E void eventprintf(const char *fmt, ...);
 E void event_process_hook(const char *name, int argc, char **argv);

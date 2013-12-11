@@ -867,10 +867,6 @@ void delete_user(User * user)
 		{
 			delete_uid(ud);
 		}
-		if (user->uid)
-		{
-			free(user->uid);
-		}
 	}
 
 	alog(LOG_EXTRADEBUG, "debug: delete_user(): update listpointers");

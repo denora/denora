@@ -1335,6 +1335,8 @@ void destroy_all(void)
 	Exclude *e, *next14;
 	Uid *uid, *next17;
 	ServStats *ss, *next18;
+	Dadmin *a, *next19;
+
 	int i, j;
 
 	if (ircd->ts6 && UseTS6)
@@ -1345,8 +1347,6 @@ void destroy_all(void)
 			free(TS6SID);
 	}
 
-	if (mod_current_buffer)
-		free(mod_current_buffer);
 	if (ircd->chanmodes)
 	{
 		free(ircd->chanmodes);
@@ -1514,6 +1514,17 @@ void destroy_all(void)
 		uid = uid_next();
 	}
 
+
+	a = first_admin();
+	while (a)
+	{
+		if (a)
+		{
+			free_admin(a);
+		}
+		a = next_admin();
+	}
+
 	alog(LOG_DEBUG, "debug: Clearing Stats Chan");
 	Fini_StatsChannel();
 
@@ -1560,6 +1571,10 @@ void destroy_all(void)
 		free(ChanExceptTable);
 	if (IsOnTable)
 		free(IsOnTable);
+	if (AutoMode)
+		free(AutoMode);
+	if (QuitPrefix)
+		free(QuitPrefix);
 	if (ServerTable)
 		free(ServerTable);
 	if (GlineTable)
@@ -1602,6 +1617,12 @@ void destroy_all(void)
 		free(ChannelDB);
 	if (statsDB)
 		free(statsDB);
+	if (AdminDB)
+		free(AdminDB);
+	if (ChanQuietTable)
+		free(ChanQuietTable);
+	if (AdminTable)
+		free(AdminTable);
 	if (SqlHost)
 		free(SqlHost);
 	if (SqlUser)

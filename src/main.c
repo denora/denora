@@ -315,6 +315,11 @@ void process()
 	/* Free argument list we created */
 	if (av)
 		free(av);
+
+	if (mod_current_buffer)
+	{
+		free(mod_current_buffer);
+	}
 }
 
 /*************************************************************************/
