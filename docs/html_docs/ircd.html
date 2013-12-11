@@ -1,0 +1,451 @@
+============================================================================<br />
+How To Add IRCd Support to Denora                                     v1.0<br />
+-- <br />
+============================================================================<br />
+<br />
+1) Introduction<br />
+2) Preparing to add new IRCD<br />
+3) Modifing the Header File<br />
+4) The Code<br />
+5) Modes<br />
+6) Functions / Events<br />
+7) Last part of setup<br />
+<br />
+============================================================================<br />
+<br />
+1) Introduction<br />
+<br />
+Creating an IRCD Module for Denora is rather simple, however it does 
+require knowledge of both C language, the IRCD protocol. The base API is 
+described below, it is meant to guide through the basics of creating IRCD 
+Modules. Since IRCD Protocols are complex and very hard to understand, this 
+documentent is not meant to solve these problems just explain how the 
+framework functions.<br />
+<br />
+Denora supports TSora v3, v5 and v6 (TS3, TS5, TS6), and P10 (ircu)
+protocols. This cover the majority of the current and past ircds. Should
+your ircd not fit within these types please contact the Denora Dev team
+to see about supporting your protocol.<br />
+<br />
+============================================================================<br />
+<br />
+2) Preparing to add new IRCD<br />
+<br />
+    In preparing to add an IRCD module to Denora, first you will want to be
+    on the most current GIT version of Denora, to ensure that you are using
+    the most current code base, as changes are frequent its best to have the
+    most current.<br />
+<br />
+    Before going to far its best to look in toe src/protocol folder and 
+    locate the ircd which most closely matches the ircd that you want to add
+    support for. Make a copy of the .c and .h file from the src/protocol and 
+    name them after the ircd that you are adding. For this example we will be 
+    making an ircd called "quakeircd" (http://sourceforge.net/projects/quakeircd/)<br />
+<br />
+    A) So we would rename the unreal32.c and unreal32.h to be quakeircd.c and
+       quakeircd.h <br />
+<br />
+    B) In the sql/ folder there is a sql table file for the ircd, again we will
+       take unreal32.sql and rename it to be quakeircd.sql<br />
+<br />
+    C) To ensure your module builds on Windows. Open src/protocol/Makefile.win32
+       and in the SRCS= section append the ircd name set in step A.<br />
+<br />
+    You are now ready to start getting into the code.<br />
+<br />
+============================================================================<br />
+<br />
+<br />
+3) Modifying the Header File<br />
+<br />
+    Now that you have gotten past the first part of the creation process, you
+    are into the code. This part is the harder and more complex part. You
+    will need a general understanding of C code to continue. Here are the
+    step by step instructions required to make this work.<br />
+<br />
+    Open the .h file and find the section of code with the User Modes these
+    are a series of UMODE_ based on the letter of the mode, starting with
+    the hex of 0x00000001, add each User mode that with a UMODE_ up to the
+    hex of 0x80000000, do not overlap the modes.<br />
+<br />
+    Do the same with CMODE_ this is the channel modes that Denora will know
+    about, do not include +o (oper), +v (voice), +h (halfop), +q (owner),
+    +a (admin).<br />
+<br />
+    Next there are a series of _cmd_ these are the base commands you must have
+    these in your .c file this will be covered in the next section you will 
+    want to name the first part of the function after your ircd. In our case
+    we are going to rename unreal_cmd_eob(); to be quakeircd_cmd_eob();<br />
+<br />
+    Lastly you need may want to strip down the _event_ functions, or leave them 
+    alone till later till you find any events functions that you are not using.
+    You can also add more events as you feel you need to make the file 100%
+    complaint with the ircd<br />
+<br />
+============================================================================<br />
+<br />
+4) The Code<br />
+<br />
+    Here is where the code of the .c file comes in. Be prepared to spend at
+    least an hour, if not longer, going over the code and getting it right;
+    Especially if you are setting up an ircd that is completely different
+    than the one you used as a base. This section covers the majority of the
+    code that is in use. <br />
+<br />
+    The first bit of code you will face is:<br />
+<br />
+     #include "quakeircd.h"<br />
+<br />
+    You need to include the .h file that you are building with. This is very
+    important.<br />
+<br />
+    Now you've come to the part where you setup your ircd. There are two
+    structs which hold this information; This allows you to quickly setup
+    your specific ircd.<br />
+<br />
+        IRCDVar myircd[] = { }<br />
+<br />
+    This struct contains your basic IRCd functions. Your base source file has
+    the list of all available variables; note that you should not swap any
+    around, or you will break stuff. Here is a brief description of the usage
+    of each.<br />
+<br />
+    1) Name: This member tells Denora about the IRCD's name. It may contain
+             text about it's name and version. This is used to identify the
+             build on startup.<br />
+<br />
+    2) StatServ Mode: This is the user mode set by Denora on StatServ.
+                      Normally you want this to be some form of oper flag,
+                      or a services flag. <br />
+<br />
+    3) VHOST: Can a user's host be changed on the fly? Enabling this allow
+               HostServ online. Use 1 for yes, 0 for no.<br />
+<br />
+    4) SGLINE: Does the IRCd support realname (geocs) bans? Use 1 for yes,
+               0 for no. <br />
+<br />
+    5) SGLINE TABLE : If yes to #4 does the IRCD send the SGLINE as its own 
+                      ban (1 yes), or as part of the general Glines (0 no).<br />
+<br />
+    6) SQLINE: Does the IRCd support nick bans? Use 1 for yes, 0 for no.<br />
+<br />
+    7) SQLINE TABLE: If yes to #4 does the IRCD send the SQLINE as its own 
+                     ban (1 yes), or as part of the general Glines (0 no).<br />
+<br />
+    8) SZLINE: Does the IRCd support SZLINES? Use 1 for yes, 0 for no.<br />
+<br />
+    9) Exceptions: Support for channel exceptions (mode +e). Use 1 for yes,<br />
+                    0 for no.<br />
+<br />
+    10) vIdent: Support for including a user's ident in their vHost. Use
+                1 for yes, 0 for no.<br />
+<br />
+    11) Vhost On Nick: On NICK the IRCd sends the VHOST. Use 1 for yes,
+                       0 for no.<br />
+<br />
+    12) NICKIP: The IP address of new users is being sent along with their
+                hostname when new users are being introduced on the network.
+                Use 1 for yes, 0 for no.<br />
+<br />
+    13) Flood Mode: The IRCd has a channelmode for blocking floods. Use 1 for
+                    yes, 0 for no.<br />
+<br />
+    14) Link Mode: The IRCd has a channelmode for linking a channel to some
+                   other channel. Use 1 for yes, 0 for no.<br />
+<br />
+    15) CMode F: CMODE_ that defines flood mode. Use 0 for no support.<br />
+<br />
+    16) CMode L: CMODE_ that defines link mode. Use 0 for no support.<br />
+<br />
+    17) Tokens: Can we use tokens to talk to the IRCd? Use 1 for yes,
+                0 for no.<br />
+<br />
+    18) Token Case Senstive: Are the IRCd's TOKENS/COMMANDS case sensitive?
+                             Use 1 for yes, 0 for no.<br />
+<br />
+    19) base64 SJOIN TS: Are the timestamps sent with a SJOIN in base64? Use
+                         1 for yes, 0 for no.<br />
+<br />
+    20) Supports +I: Does the IRCd support channelmode +I? Use 1 for yes,
+                     0 for no.<br />
+<br />
+    21) SJOIN Ban Char: Character used to identify bans. Use ''.<br />
+<br />
+    22) SJOIN Except Char: Character used to identify exceptions. use ''.<br />
+<br />
+    23) Vhost Umode: UMODE_ that indicates if the user currently has a vHost.
+                     Use 0 for no support.<br />
+<br />
+    24) Owner: Is channel mode +q for owner supported by the IRCd? Use 1 for
+                yes, 0 for no.<br />
+<br />
+    25) PROTECT: Is channel mode +a for protect/admin supported by the IRCd? Use 1 for
+                yes, 0 for no.<br />
+<br />
+    26) HALFOP: Is channel mode +h for halfop supported by the IRCd? Use 1 for
+                yes, 0 for no.<br />
+<br />
+    27) Flood Mode Character: The character used to represent the channel flood mode, 
+                              if this is supported by the IRCd.<br />
+<br />
+    28) Alt Flood Mode Character: The alternative character used to represent the channel 
+                                  flood mode, if this is supported by the IRCd.<br />
+<br />
+    30) Vhost Character: The character used to represent the vHost mode, if
+                         this is supported by the IRCd.<br />
+<br />
+    31) Alt Vhost Character: The alternative character used to represent the vHost mode,  
+                             if this is supported by the IRCd.<br />
+<br />
+    32) P10: Is this IRCd a P10-style IRCd? Use 1 for yes, 0 for no.<br />
+<br />
+    33) TS6: Is this IRCd a TS6-style IRCd? Use 1 for yes, 0 for no.<br />
+<br />
+    34) Numerics: This ircd uses numerics to respond to things like MOTD, STATS? 
+                  Use 1 for yes, 0 for no.<br />
+<br />
+    35) Gagged : Has a channel mode that prevents the user from taking but the
+                 user is not banned.<br />
+<br />
+    36) Spamfilters : Some ircds have a spam filter ban system, set to be either
+        IRCD_ENABLE, IRCD_DISABLE<br />
+<br />
+    37) Ban mode character: typically "b" on most IRCD but if yours is different
+        change it here<br />
+<br />
+    38) Ban Exception Character: typically "e" on most IRCD but if yours is different
+        change it here<br />
+<br />
+    39) Ban Invite Character: typically "I" on most IRCD but if yours is different
+        change it here<br />
+<br />
+    40) ZIP compression : whether ircd supports zip compressed links
+        IRCD_ENABLE, IRCD_DISABLE<br />
+<br />
+    41) SSL connection : whether ircd supports ssl encrypted connections
+        IRCD_ENABLE, IRCD_DISABLE<br />
+<br />
+    42) uline : whether ircd supports ulining servers for services
+        IRCD_ENABLE, IRCD_DISABLE<br />
+<br />
+    43) nickchar : Some ircds can set their allowed character strings, if there is one
+        list it here, if you don't know use NULL<br />
+<br />
+    44) svid : whether ircd supports svid<br />
+        IRCD_ENABLE, IRCD_DISABLE<br />
+<br />
+    45) Hidden Oper : whether ircd supports hiding who is an op
+        IRCD_ENABLE, IRCD_DISABLE<br />
+<br />
+    46) extra warning : whether ircd supports extra warning
+        IRCD_ENABLE, IRCD_DISABLE<br />
+<br />
+    47) sync state : whether ircd sends a message and expects one on sync
+        IRCD_ENABLE, IRCD_DISABLE<br />
+<br />
+    46) Persistent channel mode : whether ircd supports Persistent channel mode
+        IRCD_ENABLE, IRCD_DISABLE<br />
+<br />
+<br />
+    So we've had this long list. Now there's a second struct to fill. This
+    struct isn't as long as the previous one though, so we'll handle it quite
+    quick compared to the previous one.<br />
+<br />
+        IRCDCAPAB ircdcap[] = { }<br />
+<br />
+    This struct is based on the CAPAB defines. You should review the CAPAB
+    table below to see how this should be done.<br />
+<br />
+        Define Table<br />
+    --------------------------------------------------------------------------<br />
+    Define          | Value      | Token     | Description<br />
+    ----------------|------------|-----------|--------------------------------<br />
+    CAPAB_NOQUIT    | 0x00000001 | NOQUIT    | NOQUIT protocol support<br />
+    CAPAB_TSMODE    | 0x00000002 | TS        | Chanmodes are timestamped<br />
+    CAPAB_UNCONNECT | 0x00000004 | UNCONNECT | UNCONNECT protocol support<br />
+    CAPAB_NICKIP    | 0x00000008 | NICKIP    | IP sent in the NICK line<br />
+    CAPAB_NSJOIN    | 0x00000010 | SSJOIN    | Smart SJOIN support<br />
+    CAPAB_ZIP       | 0x00000020 | ZIP       | Support for gzipped links<br />
+    CAPAB_BURST     | 0x00000040 | BURST     | Supports BURST command<br />
+    CAPAB_TS3       | 0x00000080 | TS3       | Support for TS3 protocol<br />
+    CAPAB_TS5       | 0x00000100 | TS5       | Support for TS5 protocol<br />
+    CAPAB_DKEY      | 0x00000200 | DKEY      | DH-Key exchange using DKEY<br />
+    CAPAB_DOZIP     | 0x00000400 | ZIP       | Link traffic will be gzipped<br />
+    CAPAB_DODKEY    | 0x00000800 | DKEY      | Do DKEY with this link<br />
+    CAPAB_QS        | 0x00001000 | QS        | Supports quit storm removal<br />
+    CAPAB_SCS       | 0x00002000 | SCS       | String Cache System support<br />
+    CAPAB_PT4       | 0x00004000 | PT4       | Support for PT4 protocol<br />
+    CAPAB_UID       | 0x00008000 | UID       | Support for UIDs<br />
+    CAPAB_KNOCK     | 0x00010000 | KNOCK     | Supports KNOCK<br />
+    CAPAB_CLIENT    | 0x00020000 | CLIENT    | Supports CLIENT<br />
+    CAPAB_IPV6      | 0x00040000 | IPV6      | Support for IPv6 addresses<br />
+    CAPAB_SSJ5      | 0x00080000 | SSJ5      | Smart Join protocol 5 support<br />
+    CAPAB_SN2       | 0x00100000 | SN2       | Support for SN2 protocol<br />
+    CAPAB_VHOST     | 0x00200000 | VHOST     | Supports VHOST protocol<br />
+    CAPAB_TOKEN     | 0x00400000 | TOKEN     | Supports s2s tokens<br />
+    CAPAB_SSJ3      | 0x00800000 | SSJ3      | Smart Join protocol 3 support<br />
+    CAPAB_NICK2     | 0x01000000 | NICK2     | Support for extended NICK (v2)<br />
+    CAPAB_UMODE2    | 0x02000000 | UMODE2    | Supports UMODE2 command<br />
+    CAPAB_VL        | 0x04000000 | VL        | VLine information in info field<br />
+    CAPAB_TLKEXT    | 0x08000000 | TLKEXT    | Not 8, but 10 params in TKL's<br />
+    CAPAB_CHANMODE  | 0x10000000 | CHANMODE  | Channel modes are passed here<br />
+    CAPAB_SJB64     | 0x20000000 | SJB64     | SJOIN timestamps are base64 encoded<br />
+    CAPAB_NICKCHARS | 0x40000000 | NICKCHARS | Character set used by the IRCD for nicks<br />
+<br />
+============================================================================<br />
+<br />
+5) Modes <br />
+<br />
+	Find the section of code for the following<br />
+<br />
+	void IRCDModeInit(void)<br />
+	{<br />
+	}<br />
+<br />
+	Add in user modes simple call the function<br />
+<br />
+		ModuleSetUserMode(UMODE_A, IRCD_ENABLE);<br />
+<br />
+	All letters for UMODE_* are defined so have no fear, and you can set
+	the default is IRCD_ENABLE<br />
+<br />
+<br />
+	For Channel modes we have two types, modes that are bans and modes that restrict channel actions.
+	Both functions act the same<br />
+<br />
+		CreateChanBanMode(CMODE_b, add_ban, del_ban);<br />
+<br />
+		CreateChanMode(CMODE_j, set_flood_alt, get_flood_alt);<br />
+<br />
+	First paramater is the mode, like UMODE_* all the CMODE_* are defined
+        Second parameter is what to do when the IRCD sets the mode if anything, if nothing set to NULL
+        Third parameter is what do when the IRCD unsets the mode, if nothing set to NULL<br />
+<br />
+	At the end of this function you need to call<br />
+<br />
+	ModuleUpdateSQLUserMode();<br />
+	ModuleUpdateSQLChanMode();<br />
+<br />
+	These sets up SQL for the various modes your IRCD supports<br />
+<br />
+============================================================================<br />
+<br />
+6) Functions and Events<br />
+<br />
+    A brief word about functions and events. There is more detail below on
+    what events should pass their information to along with what is passed
+    to each Command function. All events are captured using:<br />
+<br />
+        void moduleAddIRCDMsgs(void)<br />
+        {<br />
+            m = createMessage("NICK", denora_event_nick); <br />
+            addCoreMessage(IRCD,m);<br />
+        }<br />
+<br />
+    Each event should have a event handler if its important enough to be
+    processed by services. All event functions should be formed like this:<br />
+<br />
+        int Denora_event_capab(char *source, int ac, char **av)<br />
+        {<br />
+            return MOD_CONT;<br />
+        }<br />
+<br />
+    They will receive the source; this can be NULL at times depending on the
+    event. Next, ac is the number of arguments that are in the event, and av
+    holds the values for each; so av[0] is the first variable, av[1] will be
+    the second one, and so on. Events are likely to pass to various upper
+    level event handlers; see the previous ircd source for how they handle
+    these events.<br />
+<br />
+    All commands are formed like this:<br />
+<br />
+        void quakeircd_cmd_join(char *user, char *channel, time_t chantime)<br />
+        {<br />
+         send_cmd(ServerName, "%s !%s %s :%s",<br />
+             send_token("SJOIN", "~"), base64enc((long int) chantime),<br />
+             channel, user);<br />
+        }<br />
+<br />
+    They may take any number of arguments, depending on the command. They
+    should eventually come to a send_cmd(); this root function is how
+    commands are sent to the IRCd.<br />
+<br />
+       The Commands are setup in the function<br />
+<br />
+       void moduleAddIRCDCmds() <br />
+        {<br />
+         pmodule_cmd_join(quakeircd_cmd_join);<br />
+        }<br /><br />
+    each of the core command functions has a pmodule_cmd which takes the
+    information out of the module and allows the core to use it. Remember 
+    you must have the core set of commands in your module. Even if you
+    have to put in<br />
+<br />
+        void quakeircd_cmd_pass(char *pass)<br />
+        {<br />
+        /* not used */<br />
+        }<br />
+<br />
+============================================================================<br />
+<br />
+7) The last part of Setup<br />
+<br />
+Once you have completed the task of setting up Commands and Events you
+come to the last bit of code that needs to be dealt with and that is the init
+function of your IRCD Module. The DenoraInit has some key variables setup<br />
+<br />
+    moduleAddAuthor("Denora");<br />
+    moduleAddVersion("");<br />
+    moduleSetType(PROTOCOL);<br />
+    pmodule_ircd_version("QuakeIRCD");<br />
+    pmodule_ircd_cap(myIrcdcap);<br />
+    pmodule_ircd_var(myIrcd);<br />
+    pmodule_ircd_useTSMode(0);<br />
+    pmodule_oper_umode(UMODE_o);<br />
+    pmodule_ircd_cbmodeinfos(myCbmodeinfos);<br />
+    pmodule_ircd_cbmodes(myCbmodes);<br />
+    pmodule_ircd_cmmodes(myCmmodes);<br />
+    pmodule_ircd_csmodes(myCsmodes);<br />
+    pmodule_ircd_umodes(myumodes);<br />
+    moduleAddIRCDCmds();<br />
+    moduleAddIRCDMsgs();<br />
+<br />
+<br />
+moduleAddAuthor, allows you to set your name as the author of the module
+this is displayed when viewing the module list.<br />
+<br />
+moduleAddVersion, we recommend setting this to  when impoted to our
+svn it will get the above formatted version, this is best for debugging 
+problems that might come up<br />
+<br />
+moduleSetType, you must set this to PROTOCOL as it tells Denora that you
+are loading in a IRCD Module.<br />
+<br />
+pmodule_ircd_version : sets up the IRC Protocol display that is shown to
+the user as they load your module<br />
+<br />
+pmodule_ircd_cap : setup the capab variables, you should pass the ircdcap
+variable struct to this function so it can be passed up to the core<br />
+<br />
+pmodule_ircd_var : setup the ircd variables, you should pass the ircd
+variable struct to this function so it can be passed up to the core<br />
+<br />
+pmodule_ircd_useTSMode : Should your ircd send time stamped modes but not
+tell us during CAPAB then this must be set to 1, otherwise leave at 0<br />
+<br />
+pmodule_oper_umode : the user mode that defines the base line ircop mode<br />
+<br />
+pmodule_ircd_cbmodeinfos : setup the cbmodeinfo struct<br />
+<br />
+pmodule_ircd_cbmodes : setup the cbmodes
+<br /><br />
+pmodule_ircd_cmmodes : setup the cmmodes
+<br /><br />
+pmodule_ircd_csmodes : setup the csmodes
+<br /><br />
+pmodule_ircd_umodes : setup the umodes
+<br /><br />
+moduleAddIRCDCmds : should be called to setup your commands
+<br /><br />
+moduleAddIRCDMsgs : should be called to setup your events
+<br /><br />

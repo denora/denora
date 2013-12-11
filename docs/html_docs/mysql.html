@@ -1,0 +1,82 @@
+Denora MySQL Support<br />
+-------------------<br />
+<br />
+1) Introduction<br />
+<br />
+    The MySQL support in Denora allows users to get real time statistics through
+    SQL, for example via Web.<br />
+    We suggest you take a look at phpDenora (http://www.denorastats.org/).<br />
+<br />
+2) Requirements<br />
+<br />
+    1. MySQL server version 4.x or greater **<br />
+    2. MySQL libs and development files (usually called libmysql-dev or similar).<br />
+    3. A MySQL user account<br />
+    4. A MySQL database<br />
+<br />
+3) Installation<br />
+<br />
+    1. The ./Config script automatically detects if your system is capable
+       of running Denora with MySQL support. There is no need anymore to
+       answer yes when asked.<br />
+<br />
+       Note: You might need to run "(g)make distclean" prior to running ./Config<br />
+<br />
+    2. Compile Denora as usual. The (g)make process will now compile MySQL
+       support into Denora.<br />
+<br />
+    3. Install Denora as usual. <br />
+<br />
+4) Configuration<br />
+<br />
+    1. Go to your "stats bin directory" (eg: /home/someuser/stats/) and run ./mydbgen 
+       to help on the schema creation and adjustments.<br />
+<br />
+    2. Edit denora.conf and add your MySQL data to the MySQL configuration
+       block. <br />
+<br />
+    3. Start or restart services to make use of the new Denora executable.<br />
+<br />
+<br />
+** Note on older mysql such as 3.x are no longer fully supported it is recommended that
+   you update to a more current version of mysql.<br />
+<br />
+<br />
+Note: Windows builds of Denora with MySQL<br />
+<br />
+	There can be times when trying to builde Denora on Windows systems where you get a compiler error of<br />
+<br />
+		error LNK2001: unresolved external symbol _mysql_<br />
+<br />
+	To resolve do the following, first start with a clean installation<br />
+<br />
+1. Download Connector/C from MySQL located at, select the non-installer version<br />
+<br />
+   http://dev.mysql.com/downloads/connector/c/<br />
+<br />
+2. Unpack the zip file to C:\Program Files\MySQL\mysql_connect<br />
+<br />
+3. Run Config.bat as normal, allowing Denora to generate the Makefile.inc.win32<br />
+<br />
+4. Open Makefile.inc.win32 and change the following lines<br />
+<br />
+MYSQL_LIB="C:\Program Files\MySQL\MySQL Server 5.6\lib"<br />
+MYSQL_INC="C:\Program Files\MySQL\MySQL Server 5.6\include"<br />
+<br />
+needs to read<br />
+<br />
+MYSQL_LIB="C:\Program Files\MySQL\mysql_connect\lib"<br />
+MYSQL_INC="C:\Program Files\MySQL\mysql_connect\include"<br />
+<br />
+and
+<br />
+LIBS=$(LIBS) mysqlclient.lib zlib.lib<br />
+<br />
+to be
+<br />
+LIBS=$(LIBS) libmysql.lib zlib.lib<br />
+<br />
+5. Build as normal<br />
+<br />
+
+

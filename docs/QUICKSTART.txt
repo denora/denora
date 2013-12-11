@@ -1,0 +1,21 @@
+*********************
+* Denora Quickstart *
+*********************
+
+For Windows:
+1. Install Denora with the installer
+2. Install the Microsoft Visual C++ 2008 Redistributable
+   - x86: http://www.microsoft.com/downloads/details.aspx?FamilyID=9b2da534-3e03-4391-8a4d-074b9f2bc1bf&DisplayLang=en
+   - x64: http://www.microsoft.com/downloads/details.aspx?FamilyID=bd2a6171-e2d6-4230-b809-9a8d7548c1b6&DisplayLang=en
+3. Copy data\example.conf to data\denora.conf and edit it to configure Denora
+4. If you want to use MySQL, create a database and import the contents of sql\denora.sql and sql\your-ircd.sql
+5. Start Denora
+6. If you wish to monitor channels use the CHANSTATS ADD command after you logged in
+
+For *nix:
+1. Type ./Config and answer the questions
+2. Type make && make install, then change to the installed directory
+3. Copy example.conf to denora.conf and edit it to configure Denora
+4. If you want to use MySQL, create a database, then type ./mydbgen and follow instructions
+5. Type ./denorarc start to start Denora
+6. If you wish to monitor channels use the CHANSTATS ADD command after you logged in

@@ -1,0 +1,62 @@
+Denora Modules: Configuration Files<br />
+-- <br />
+-------------<br />
+<br />
+1) Introduction<br />
+2) Flat Config<br />
+<br />
+1) Introduction<br />
+<br />
+    Denora 1.2 onwards supports external modules have their own configuration files.
+    So that they need not copy all of the parser into their module or write their own.
+    Denora provides two methods to to parse config files.<br />
+<br />
+    1: Denora config style, this is just like the Denora config file where sections 
+       (blocks) are separated by { } and parsed by its own sections of code.<br />
+<br />
+    2: Flat Config style, this is the old style more common in Anope<br />
+<br />
+<br />
+2) Flat Config<br />
+<br />
+	Flat config files are described line by line, they are not grouped nor do they have
+	any need to be in any order. This document aims to show how a module coder can use this
+    style to load his config variables<br />
+<br />
+    Data Types<br />
+<br />
+    PARAM_INT	       : Integer and will be stored as such<br />
+    PARAM_POSINT       : Positive integer only, no 0 or -1 values allowed<br />
+    PARAM_PORT	       : TCP/IP port (integer) can only be 1..65535<br />
+    PARAM_STRING       : String value between " and "<br />
+    PARAM_TIME	       : Value can be formatted like 3m2d and till be translated to an integer<br />
+    PARAM_STRING_ARRAY : The string is to be broken up on spaces and stored in an array<br />
+    PARAM_SET	       : Boolean value<br />
+<br />
+    **NOTE** the string values are malloc() it is the coders job to free this on the modules
+    unload call.<br />
+<br />
+    The flat config files use a struct called "Directive" to load their settings.<br />
+<br />
+    Directive confvalues[][1] = {<br />
+        {{"sqldb", {{PARAM_STRING, 0, &sql_db}}}},<br />
+	};<br />
+<br />
+    first parameter must be the variable from the config file that will be looked for. Next is the
+    data type (see above), Next is if the variable is reloadable, should Denora rehash should this
+    change. Next is the global variable into which the option will be copied to.<br />
+<br />
+    for (i = 0; i < 1; i++) {<br />
+        moduleGetConfigDirective("test.conf", confvalues[i]);<br />
+	}<br />
+<br />
+    Now you can have the core load you config file and look for the settings within.<br />
+<br />
+    **NOTE** Unlike anope this function, has two arguments so you must list what file to parse<br />
+<br />
+3. Block Style<br />
+<br />
+	To be done..<br />
+<br />
+
+

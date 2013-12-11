@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252" />
+<title>Untitled Document</title>
+</head>
+
+<body>
+
+DENORA COMMANDS<br />
+===============<br />
+<br />
+Denora has a pseudo client, which is usually named StatServ.<br />
+StatServ accepts both public and private commands.<br />
+PLEASE NOTE:<br />
+- For public commands, the StatServ bot must be in the channel.
+  To add a channel, see the CHANSTATS ADD private command<br />
+- For private commands: most private commands are reserved to
+  Stats Admins only. You need to be an identified IRC Operator
+  and LOGIN to StatServ to use those commands.<br />
+<br /><br />
+Public commands<br />
+---------------<br />
+  !top10  :   The top 10 users of the current channel<br />
+  !top    :   The top 3  users of the current channel<br />
+  !gtop10 :   The top 10 users of the whole network<br />
+  !gtop   :   The top 3  users of the whole network<br />
+  !stats  :   User stats for the channel<br />
+  !gstats :   User stats for the network<br />
+  !peak   :   User peak for the current channel<br />
+<br />
+<br />
+Private commands<br />
+----------------<br />
+<br />
+Usage: /msg StatServ COMMAND [parameters]<br />
+<br />
+Commands for everyone:<br />
+    STATS       Show status of network<br />
+    LOGIN       Makes you a Stats Administrator<br />
+    LOGOUT      Logout from your admin account<br />
+Commands for Stats Administrators:<br />
+    ADMIN       Manage Stats Admins<br />
+    CHANSTATS   Manage Monitored Channels for Stats<br />
+    ENVINFO     Show environment information<br />
+    EXCLUDE     Exclude users from chanstats<br />
+    EXPORT      Export data to XML<br />
+    HTML        Forces to create the HTML file<br />
+    MODLOAD     Load a module<br />
+    MODUNLOAD   Un-Load a module<br />
+    MODLIST     List loaded modules<br />
+    MODINFO     Info about a loaded module<br />
+    RESTART     Causes Denora to restart<br />
+    RELOAD      Causes Denora to reload the configuration file<br />
+    SET         Set various run time options<br />
+    SHUTDOWN    Terminate the Stats program with save <br />
+<br />
+Some commands may require one or more parameters.<br />
+For more information about a command, type /msg StatServ HELP COMMAND<br />
+</body>
+</html>

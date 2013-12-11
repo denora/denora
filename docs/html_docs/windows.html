@@ -1,0 +1,142 @@
+Denora for Windows<br />
+------------------<br />
+<br />
+PLEASE READ: you only need this if you intend to compile Denora on your own.<br />
+The recommended way to get Denora for Windows is to use our installers, which will install a compiled Denora version for you, which is ready to go.<br />
+<br />
+1) Building the Source<br />
+2) Installation<br />
+3) Compiling Modules<br />
+4) Credits<br />
+<br />
+1) Building the Source<br />
+<br />
+	Currently, 64-bit compilation is not supported. You can however, compile Denora on a 64 bit Windows OS.
+        If you want to build Denora from source on a Win32 system, you will need to follow these instructions:<br />
+<br />
+    1) Download the required files:<br />
+<br />
+        * Current Denora source:<br />
+            http://www.denorastats.org/<br />
+<br />
+        * Microsoft Visual C++ 2012 Express for Windows Desktop:<br />
+            http://www.microsoft.com/visualstudio/eng/downloads#d-express-windows-desktop<br />
+<br />
+        * Microsoft Windows SDK 8.0:<br />
+        	http://msdn.microsoft.com/en-us/library/windows/desktop/hh852363.aspx<br />
+<br />
+            (NOTE: Although this says for Windows 8, it does in fact work on all supported
+            versions of Windows. When installing, make sure you select "Windows Headers" and "x86 Libraries"
+            under the "Windows Headers and Libraries" option. The rest is not needed.)<br />
+<br />
+        * MySQL 5.6 for Windows (only needed if building with MySQL enabled):<br />
+            http://dev.mysql.com/downloads/mysql/<br />
+            <br />
+            (NOTE: Please download the full version and ensure to select the 32-Bit Development Components)<br />
+        <br />
+        * zlib for Windows (only needed if building with MySQL enabled):<br />
+            http://sourceforge.net/projects/gnuwin32/files/zlib/1.2.3/zlib-1.2.3-lib.zip/download<br />
+            <br />
+            Move the zlib.lib file to "C:\Program Files (x86)\MySQL\MySQL Server 5.6\lib" or corresponding location<br />
+<br />
+<br />
+    2) Unpack the Denora tarball with your favorite uncompression program
+       (winzip or winrar).<br />
+<br />
+    3) Bring up the Developer Command Prompt; this will launch a
+       DOS command prompt like windows, which will set the environment
+       properties need to make Denora. Change directories to where you unpacked
+       the source code in step 2.<br />
+       <br />
+    4) You now need to configure Denora to your requirements. At the prompt type:<br />
+    <br />
+        Config.bat<br />
+        <br />
+       An interactive configuration program should guide you through the install
+       options, and then detect your Microsoft Visual C++ Library files. If it
+       fails to detect them, you can manually specify a path. Please refer to
+       your compilers documentation if you need to specify a manual path.<br />
+ <br />
+    5) You are now ready to compile. At the prompt type:<br />
+<br />
+        nmake -f Makefile.win32<br />
+<br />
+       Once you are back at the command prompt again, if there have been no
+       errors, you are ready to go. If there are errors check how to
+       adjust the Makefile.inc.win32 to help resolve the issue. If those
+       changes in Makefile.inc.win32 didn't help, file a bug report.<br />
+<br />
+    6) Denora will install the files where they belong. The only thing you need
+       to do is rename "data/example.conf" to be "denora.conf".<br />
+<br />
+       You have now completed the building phase of Denora for Windows. You can
+       now move on to the next section, which is related to setting up Denora.<br />
+<br />
+2) Installation<br />
+<br />
+    Since Denora for Windows does not use a visual interface, you must do the
+    configuration with a text editor before proceeding with running Denora
+    itself.<br />
+<br />
+    Open denora.conf, and read through it carefully and adjust the settings
+    you think you need to adjust. Pay special attention to these settings:<br />
+<br />
+    A) protocol:     This is the name of an IRCd Module that Denora will use
+                     to communicate with your server. Denora supports various
+                     IRCds, so ensure you set the right value here.<br />
+    B) hostname:     This is the address to your ircd, along with the port
+                     and password. You should consult your ircd
+                     documentation on how to link ircds.<br />
+    C) admin:        Within Denora you can be a stats admin, which gives you access
+                     to do various options. These are recommend but not required<br />
+<br />
+    If you are unsure of the settings, you can go to the dos command prompt
+    and run "denora.exe -nofork -debug" and watch the information as it
+    attempts to connect.<br />
+<br />
+    You can launch stats in two ways. If you are sure that the entered
+    configuration information is correct, simply double clicking the Denora
+    executable will cause it to start; no window will pop up. If you'd rather
+    have a more textual output, you can start at the dos prompt and type in
+    "denora.exe". If stats are successfully started up the dos prompt will
+    seem to hang; at this point you can safely close the dos window.<br />
+<br />
+3) Compiling Modules<br />
+<br />
+    If you want to build other modules than the ones shipped by default, you
+    will need to modify the Makefile.inc.win32 file, in the src\modules folder.<br />
+<br />
+    A) Add modules; find the line stating "SRCS=" and add the name of the
+       file to the end of the line. So if you have two files:<br />
+<br />
+        SRCS=file.c file2.c<br />
+        <br />
+       If you are compiling a folder of module components, such as the example
+       "catserv", you will need to add/change the "SUBS=" line. If you were
+       compiling the "catserv" example, the line would look like this:<br />
+       <br />
+        SUBS=catserv<br />
+<br />
+    B) When you have done this, use the same command prompt you set up in part
+       1, change directories to the src\modules folder, and type:<br />
+<br />
+        nmake -f Makefile.win32<br />
+        <br />
+       followed afterwards, by:<br /><br />
+
+        nmake -f Makefile.win32 install<br />
+        <br />
+    C) You should now be able to load your modules on IRC via StatServ, or via
+       the denora.conf file.<br />
+<br />
+4) Credits<br />
+<br />
+    Denora is based on Anope, Epona and IRCServices. See README for more credits and
+    a complete list of all developers.<br />
+<br />
+    Anope's Windows-specific code is provided by:<br />
+<br />
+        * Dominick Meglio       <codemastr@unrealircd.com><br />
+        * Trystan Scott Lee     <trystan@nomadirc.net><br />
+        * Chris Hogben          <heinz@anope.org><br />
+        <br />

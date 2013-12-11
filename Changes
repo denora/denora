@@ -16,6 +16,7 @@ Additions
              database.
 
 Changes
+12/11/2013 : Restructored documentation, added html based documentation
 12/06/2013 : IRCdVar struct changes
 				1. statservmode changed to servicesmode
 				2. Added szline_table, to be like the rest of the s*line parameters

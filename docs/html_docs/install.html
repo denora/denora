@@ -1,0 +1,255 @@
+================================<br />
+DENORA INSTALLATION INSTRUCTIONS<br />
+================================<br />
+<br />
+***<br />
+PLEASE READ:<br />
+This document is intended for Unix-based systems ONLY.
+To install the Denora binareis on Windows, please see the QUICKSTART.txt file.
+To self-compile Denora on Windows, please see the docs/WIN32.txt file.
+***<br />
+<br />
+Table of contents<br />
+-----------------<br />
+  1. Requirements<br />
+  2. Installing Denora<br />
+    2.1 Quick install<br />
+    2.2 Detailed instructions<br />
+  3. Upgrading Denora<br />
+  4. Setting up the IRCd<br />
+  5. Setting up the MySQL server<br />
+  6. Starting Denora<br />
+  7. Setting up a crontab<br />
+<br />
+You should also read the README and FAQ files!<br />
+<br />
+1. Requirements<br />
+---------------<br />
+<br />
+    A. C compiler, Denora should be able to compile with gcc3/4, cc, and win32 cl 
+       (note gcc2 althought may work is not 100% supported any more)<br />
+    B. *nix or Windows operating systems (sorry Mac OS 9 users)<br />
+    C. If you want MySQL support you need to have mysql development libs installed,
+       v4 or later<br />
+<br />
+2. Installing Denora<br />
+--------------------<br />
+<br />
+IMPORTANT NOTE: it is not recommended to use (and therefore install)
+Denora as root. Use an unprivileged user instead -- the one you're
+using for the ircd or a dedicated one will be good enough.<br />
+<br />
+2.1 Quick Install in 10 steps<br />
+-----------------------------<br />
+   1. Download the latest Denora package from http://www.denorastats.org/<br />
+   2. Unpack it using the non-root user that will run it later<br />
+   3. Change to the Denora directory (cd denora)<br />
+   4. Type ./Config and follow instructions on-screen<br />
+   5. Type make<br />
+   6. Type make install<br />
+   7. Change to the directory Denora was installed to (specified during
+      ./Config)<br />
+   8. Copy example.conf to denora.conf<br />
+   9. Edit denora.conf (read the file carefully!)<br />
+  10. Start Denora by typing ./stats<br />
+      Read the COMMANDS file for a list of commands you can use.<br />
+<br />
+If you get lost at any point, just read the detailed installation instructions
+just below.<br />
+<br />
+2.2 Detailed Install instructions<br />
+---------------------------------<br />
+The very first thing you need to do is to get the Denora package
+(if not already done). You can find it at the following place:<br />
+<br />
+    http://www.denorastats.org/<br />
+<br />
+Next, unpack the package in your home directory, and go into the
+created directory.<br />
+<br />
+Now type ./Config to start the configuration script. It will
+ask you a few questions, and figure out how to compile Denora on
+your system. If you are unsure about the answer to a question,
+use the default value.<br />
+<br />
+NOTE: although you may specify different binary and data paths,
+      it is RECOMMENDED that you use the same value for both.<br />
+<br />
+You can now type make to compile Denora. If there are errors in the
+Makefile, *try to use gmake* instead. If it still doesn't work, you
+(or the system administrator if it's a shell) must install GNU
+make. You may find it at ftp://prep.ai.mit.edu/pub/gnu/.<br />
+<br />
+Now type make install (or gmake install; see above). This will
+install all the needed files in the paths you specified with the
+configure script, and setup file permissions. You should ensure
+that the data directory is not accessible by other users, as malicious
+users may cause troubles on your network if passwords are not
+encrypted, or read the memos of any user.<br />
+<br />
+If you see errors during this process, please mail us with the
+*complete* error output, and don't forget to mention your OS,
+compiler and C library versions.<br />
+<br />
+Now go into the data directory (by default, ~/stats). Copy the
+example.conf file to denora.conf, and open the latter with your
+favorite text editor. It contains all the configuration
+directives Denora will use at startup. Read the instructions contained
+in the file carefully. Using the default values is NOT a good idea,
+and will most likely not work!<br />
+<br />
+<br />
+If you need help, you could join the Denora support channel and try to
+solve your doubts or get help from other users.<br />
+See the README file for more information.<br />
+<br />
+<br />
+3. Upgrading Denora<br />
+-------------------<br />
+<br />
+If you got a .diff file and want to patch the old Denora sources with it, do
+the following:<br />
+  * Copy the .diff file into the root Denora sources directory.<br />
+  * Type patch -p1 <file.diff<br />
+<br />
+If you are using the git version, simply go to your Denora sources directory
+and type:<br />
+  git pull<br />
+<br />
+To upgrade Denora, just follow the installation instructions described in
+section 2.<br />
+<br />
+You also will need to:<br />
+ * run ./mydbgen script again to update missing MySQL tables and columns <br />
+ * update your denora.conf ( see the Changes.conf file and also the example.conf )<br />
+<br />
+4. Setting up the IRCd<br />
+----------------------<br />
+<br />
+    Stats acts as an IRC server with pseudo-clients on it. To link them to
+    your network, you'll need to add some lines in the ircd.conf of their hub
+    server (as stated in the Connect:hostname configuration directive).<br />
+<br />
+    For samples below we'll take stats.localhost.net as the name of the
+    Stats (as stated in the identity:name configuration directive). Note that
+    this samples are made to be as generic as possible, but there might be
+    small variations, depending on your IRCd. For IRCd-specific help with
+    configuration, read near the end of this section.<br />
+<br />
+    First, the C/N lines, that allow Stats to link. They also need a
+    Y:line to work correctly.<br />
+<br />
+        Y:27:180:0:0:4000000<br />
+        C:127.0.0.1:mypass:services.localhost.net::30<br />
+        N:127.0.0.1:mypass:services.localhost.net::30<br />
+<br />
+    "mypass" is the same password you mentioned in the Connect:passwd
+    configuration directive. 127.0.0.1 is the IP from which Stats connect
+    from (linking in localhost is the most efficient way to run Stats).<br />
+<br />
+    Don't forget to /rehash your IRCd to apply changes.<br />
+<br />
+    A new trend in ircd configuration is popping all over the place, good
+    examples are the latest Hybrid, Unreal and Bahamut, which use a more
+    "readable" form of configuration. For those, use something like:<br />
+<br />
+        link stats.localhost.net<br />
+        {<br />
+            username        *;<br />
+            hostname        localhost;<br />
+            bind-ip         *;<br />
+            port            6667;<br />
+            hub             *;<br />
+            password-connect "mypass";<br />
+            password-receive "mypass";<br />
+            class           servers;<br />
+        };<br />
+<br />
+    Note that this block-style configuration files differ heavily, depending
+    on the IRCd. Read your IRCd documentation for more details on the exact 
+    configuration used by your IRCd.<br />
+<br />
+5. Setting up the MySQL server<br />
+------------------------------<br />
+<br />
+    Provided with Denora is a simple configuration script which will guide 
+    you through the creation of the tables. "mydbgen", this can be found in
+    the *binaries installation directory ( by default this is ~/stats ).
+    To use the script type : ./mydbgen in your *binaries directory and answer 
+    the questions.<br />
+<br />
+    * On installations with data directory you need to run "mydbgen"
+    from your data directory.<br />
+<br />
+    The sql schedume files can be found in the installation directory in a
+    folder called "sql", you can use this to directly import the tables into
+    sql via command line utilities or web interfaces.
+    IMPORTANT: first import denora.sql, then the .sql file corresponding to
+    your ircd!<br />
+<br />
+<br />
+6. Starting Denora<br />
+------------------<br />
+<br />
+    Go into the directory where binaries were installed (by default, this is
+    ~/stats). Type ./stats to launch Denora.<br />
+<br />
+    If there are syntax errors in the configuration file they will be
+    displayed on the screen. Correct them until there are no errors anymore.
+    A successful startup won't generate any message. <br />
+<br />
+    Give Stats at least one minute to link to your network, as certain
+    IRCds on some OSes may be really slow for the link process. If nothing
+    happens after about a minute, it is probably a configuration problem. Try
+    to launch Denora with ./stats -debug -nofork to see any errors that it
+    encounters, and try to correct them.<br />
+<br />
+    If you need help to solve errors, feel free to join our support channel,
+    ask for help there. See the README file for details.<br />
+<br />
+<br />
+7. Setting up a crontab<br />
+-----------------------<br />
+<br />
+    A crontab entry will allow you to check periodically whether Denora is
+    still running, and restart it if not. You'll need to have Denora binaries
+    and data installed in the same directory for this to work without
+    modification.<br />
+<br />
+    First rename the example.chk script that is in Denora path (by default,
+    this is ~/stats) to stats.chk and edit it. You'll need to modify
+    the CONFIGURATION part of the file. Then ensure that the file is marked
+    as executable by typing chmod +x stats.chk, and try to launch the
+    script to see if it works (Denora must not be running when you do this ;))<br />
+<br />
+    When this is done, you'll have to add the crontab entry. Type crontab -e.
+    This will open the default text editor with the crontab file. Enter the
+    following (with correct path):<br />
+<br />
+        */5 * * * * /home/ircd/stats/stats.chk >/dev/null 2>&1<br />
+<br />
+    The */5 at the beginning means "check every 5 minutes". You may replace
+    the 5 with other another number if you want (but less than 60). Consult
+    your system's manual pages for more details on the syntax of the crontab
+    file. Interesting manpages are crontab(5), crontab(1) and cron(8).<br />
+<br />
+    Save and exit, and it's installed.<br />
+<br />
+8. Languages<br />
+-----------------------<br />
+<br />
+Languages are set in two places, the general network language this is used for messages
+on the network and logs. The other is the admin language for when StatServ talks back
+to the user<br />
+<br />
+1. English<br />
+2. Spanish<br />
+3. German<br />
+4. French<br />
+5. Dutch<br />
+6. Italian<br />
+7. Russian<br />
+8. Portuguese<br />
+<br />
+-- <br />
+<br />
