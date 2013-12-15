@@ -28,7 +28,7 @@ static int findspamfilter(const void *v, const void *cc)
 void init_spamfilter(void)
 {
 	SpamFilter *t;
-	SET_SEGV_LOCATION();
+	
 
 	Spamhead = list_create(-1);
 	t = malloc(sizeof(SpamFilter));
@@ -50,7 +50,7 @@ SpamFilter *new_SpamFilter(char *target, char *action,
 {
 	lnode_t *tn;
 	SpamFilter *sf = NULL;
-	SET_SEGV_LOCATION();
+	
 
 	tn = list_find(Spamhead, regex, findspamfilter);
 	if (tn)

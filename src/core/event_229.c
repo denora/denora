@@ -93,7 +93,7 @@ void DenoraFini(void)
  */
 int denora_event_229(char *source, int ac, char **av)
 {
-	SET_SEGV_LOCATION();
+	
 	if (denora->protocoldebug)
 	{
 		protocol_debug(source, ac, av);

@@ -2,6 +2,17 @@ Denora v2.0 - git-alpha
 -------------
 
 Additions
+12/15/2013 : Backtrace lib of execinfo from BSD is built as part of the libs, this will give everyone backtrace()
+12/14/2013 : SQL Backtrace is no longer set in the ./Config 
+12/14/2013 : Autoconf tools for detecting Perl and Python are included just not used yet
+12/14/2013 : As part of the making compiling look pretty we turned off all the MAKE echo's you can see them if you want
+             by doing MAKE verbose
+12/13/2013 : Code builds with CCDV a small util that makes the build process look better, borrowed from neostats 
+			 and UltimateIRCD who got it from ncftp.
+12/13/2013 : With the new xml configs user can define statserv's ident and host separately
+12/13/2013 : Encryption has been made modular, right now we have MD5/Libcrypt and Plain Text
+12/12/2013 : SQL has been moved to modular format, this removes all #ifdef USE_MYSQL from the code base, full
+             documation of how to use sqlmods to come, right now its rough draft.
 12/11/2013 : Added Ratbox v3 protocol, retired the Ratbox v2 protocol module
 12/08/2013 : IRCd Protocol files use an xml config file to handle all of their configuration settings.
 12/06/2013 : UnrealIRCd support for User Mode +I and CAPAB support of ESVID while we do not do anything
@@ -17,6 +28,7 @@ Additions
              database.
 
 Changes
+12/12/2013 : Module Data used sqlite backend, you must pass the module name, what has the value, the key and the value.
 12/11/2013 : Restructored documentation, added html based documentation
 12/06/2013 : IRCdVar struct changes
 				1. statservmode changed to servicesmode
@@ -38,6 +50,8 @@ Fixes
 11/29/2013 : Removed data from uid struct on user being disconnected.
 
 Removals
+12/12/2013 : Removed rdb.c replaced by sqlmod.c which allows us to have sql by what we can build and use.
+12/12/2013 : Removed SET_SEGV_LOCATION() from the majority of the code, this was designed to be a debug tool not to fill the whole code base
 12/02/2013 : Removed a lot of functions, they are not used any more
 
 

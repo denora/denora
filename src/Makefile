@@ -11,15 +11,15 @@
 # 
 #
 
-OBJS =  admin.o base64.o bans.o channels.o chanstats.o ChanBanMode.o ChanMode.o core.o cron.o ctcp.o config.o db.o datafiles.o Denora_Mem.o Denora_SQL.o \
-        denoralib.o exclude.o events.o extsock.o FileIO.o GeoIP.o GeoIPCity.o language.o list.o log.o ircd.o main.o markup.o modules.o moddata.o moduleapi.o \
-        messages.o md5.o mod_version.o Modes.o mysql.o network.o numerics.o privmsg.o rdb.o send.o servers.o signals.o sockutil.o statserv.o \
-        regionName.o shell.o spamfilter.o sqlqueue.o sqlite3.o strings.o timeZone.o tld.o users.o xmlrpc.o xmlparse.o xmlconfig.o zip.o \
+OBJS =  admin.o bans.o base64.o ChanBanMode.o ChanMode.o channels.o chanstats.o config.o core.o cron.o ctcp.o datafiles.o db.o Denora_Mem.o Denora_SQL.o \
+        denoralib.o encmod.o exclude.o events.o extsock.o FileIO.o GeoIP.o GeoIPCity.o language.o list.o log.o ircd.o main.o markup.o modules.o moddata.o moduleapi.o \
+        messages.o mod_version.o Modes.o network.o numerics.o privmsg.o send.o servers.o signals.o sockutil.o statserv.o sqlmod.o \
+        regionName.o shell.o spamfilter.o sqlite3.o strings.o timeZone.o tld.o users.o xmlrpc.o xmlparse.o xmlconfig.o zip.o \
         
-SRCS =  admin.c base64.c bans.c channels.c chanstats.c ChanBanMode.c ChanMode.c core.c cron.c ctcp.c config.c db.c datafiles.c Denora_Mem.c Denora_SQL.c \
-        denoralib.c exclude.c events.c extsock.c FileIO.c GeoIP.c GeoIPCity.c language.c list.c log.c ircd.c main.c markup.c  modules.c moddata.c moduleapi.c \
-        messages.c md5.c mod_version.c Modes.c mysql.c network.c numerics.c privmsg.c rdb.c send.c servers.c signals.c sockutil.c statserv.c \
-        regionName.c shell.c spamfilter.c sqlqueue.c sqlite3.c strings.c timeZone.c tld.c users.c xmlrpc.o xmlparse.c xmlconfig.c zip.c \
+SRCS =  admin.c bans.c base64.c ChanBanMode.c ChanMode.c channels.c chanstats.c core.c cron.c ctcp.c config.c datafiles.c db.c Denora_Mem.c Denora_SQL.c \
+        denoralib.c encmod.c exclude.c events.c extsock.c FileIO.c GeoIP.c GeoIPCity.c language.c list.c log.c ircd.c main.c markup.c  modules.c moddata.c moduleapi.c \
+        messages.c mod_version.c Modes.c network.c numerics.c privmsg.c send.c servers.c signals.c sockutil.c statserv.c sqlmod.c \
+        regionName.c shell.c spamfilter.c sqlite3.c strings.c timeZone.c tld.c users.c xmlrpc.o xmlparse.c xmlconfig.c zip.c \
         
 
 INCLUDES = ../include/language.h ../include/sysconf.h \
@@ -31,7 +31,7 @@ MAKEARGS = 'CFLAGS=${CFLAGS}' 'CC=${CC}' 'DENORALIBS=${DENORALIBS}' \
            'INCLUDEDIR=${INCLUDEDIR}' 'RM=${RM}' 'CP=${CP}' \
       	   'TOUCH=${TOUCH}' 'SHELL=${SHELL}' 'DATDEST=${DATDEST}' \
   	   'RUNGROUP=${RUNGROUP}' 'MODULE_PATH=${MODULE_PATH}' \
-	   'MYSQL=${MYSQL}' 'SHARED=${SHARED}' 'MODULEFLAGS=${MODULEFLAGS}' 'RDYNAMNIC=${RDYNAMNIC}'
+	   'SHARED=${SHARED}' 'MODULEFLAGS=${MODULEFLAGS}' 'RDYNAMNIC=${RDYNAMNIC}'
 
 
 .c.o:
@@ -76,7 +76,6 @@ modules.o:      modules.c   $(INCLUDES)
 moduleapi.o:    moduleapi.c $(INCLUDES)
 moddata.o:      moddata.c   $(INCLUDES)
 messages.o:     messages.c  $(INCLUDES)
-md5.o:          md5.c       $(INCLUDES)
 mod_version.o:  mod_version.c  $(INCLUDES)
 Modes.o:        Modes.c     $(INCLUDES)
 network.o:      network.c   $(INCLUDES)
@@ -98,17 +97,17 @@ xmlrpc.o:       xmlrpc.c    $(INCLUDES)
 xmlparse.o:     xmlparse.c  $(INCLUDES)
 xmlconfig.o:    xmlconfig.c $(INCLUDES)
 zip.o:          zip.c       $(INCLUDES)
-mysql.o:        mysql.c     $(INCLUDES)
-rdb.o:          rdb.c       $(INCLUDES)
 timeZone.o:     timeZone.c  $(INCLUDES)
+encmod.o:		encmod.c  $(INCLUDES)
+sqlmod.o:		sqlmod.c  $(INCLUDES)
 regionName.o:   regionName.c       $(INCLUDES)
 
 
 modules: DUMMY
-	(cd modules ; ./configure ; ${MAKE} ${MAKEARGS} all)
+	@(cd modules ; ./configure ; ${MAKE} ${MAKEARGS} all)
 
 core: DUMMY
-	(cd core ; ./configure ; ${MAKE} ${MAKEARGS} all)
+	@(cd core ; ./configure ; ${MAKE} ${MAKEARGS} all)
 
 clean:
 	@touch modules/Makefile.inc # Horribly ugly...
@@ -159,3 +158,4 @@ install: stats
 	fi
 
 DUMMY:
+	

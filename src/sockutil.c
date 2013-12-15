@@ -42,7 +42,7 @@ static int lastchar = EOF;
  */
 int32 read_buffer_len()
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (read_bufend >= read_curpos)
 	{
@@ -70,7 +70,7 @@ static int buffered_read(deno_socket_t fd, char *buf, int len)
 	struct timeval tv = { 0, 0 };
 	int errno_save = deno_sockgeterr();
 
-	SET_SEGV_LOCATION();
+	
 
 	if (fd < 0)
 	{

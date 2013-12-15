@@ -15,7 +15,7 @@ include Makefile.inc.win32
 
 ###########################################################################
 
-all: src core languages protocols modules install
+all: src core languages protocols encmod sqlmod modules install
 
 src: include\version.h include\sysconf.h include\language.h
         cd src && $(MAKE) && cd ..
@@ -28,6 +28,8 @@ install:
         cd src && $(MAKE) install && cd ..
         cd src\protocol && $(MAKE) install && cd ..
         cd src\modules && $(MAKE) install && cd ..
+        cd src\encmod && $(MAKE) install && cd ..
+        cd src\sqlmods && $(MAKE) install && cd ..
 		cd src\core && $(MAKE) install && cd ..
         -@echo ---
         -@echo Denora has been insalled successfully!
@@ -39,6 +41,8 @@ clean:
         -@erase *.exe version.h *.obj
         cd src\modules && $(MAKE) clean && cd ..
 		cd src\protocol && $(MAKE) clean && cd ..
+        cd src\encmod && $(MAKE) clean && cd ..
+		cd src\sqlmods && $(MAKE) clean && cd ..
 		cd src\core && $(MAKE) clean && cd ..
 
 distclean:
@@ -46,17 +50,13 @@ distclean:
         cd src && $(MAKE) distclean && cd ..
         cd src\modules && $(MAKE) distclean && cd ..\..
         cd src\protocol && $(MAKE) distclean && cd ..\..
-	cd src\core && $(MAKE) distclean && cd ..\..
+        cd src\encmod && $(MAKE) distclean && cd ..\..
+        cd src\sqlmods && $(MAKE) distclean && cd ..\..
+		cd src\core && $(MAKE) distclean && cd ..\..
         -@erase include\language.h include\sysconf.h include\version.h *~ denora.exe *.obj  denora.exe.manifest
-
-mypasql: 
-        $(MYPASQL_BUILD)
 
 dist:
         $(MAKE) clean
-
-#Compile mypasql
-        $(MYPASQL_BUILD)
 
 #Cleanup
         $(MAKE) spotless
@@ -66,6 +66,13 @@ dist:
 
 core: FRC
 	cd src\core && $(MAKE) && cd ..\..
+
+encmod: FRC
+	cd src\encmod && $(MAKE) && cd ..\..
+
+sqlmod: FRC
+	cd src\sqlmods && $(MAKE) && cd ..\..
+
 
 languages: FRC
         cd lang && $(MAKE) && cd ..

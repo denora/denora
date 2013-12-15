@@ -33,7 +33,7 @@ EvtMessage *first_EvtMessage(void)
 {
 	next_index = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	while (next_index < 1024 && currentemsg == NULL)
 		currentemsg = EVENT[next_index++];
@@ -51,7 +51,7 @@ EvtMessage *first_EvtMessage(void)
 
 EvtMessage *next_EvtMessage(void)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (currentemsg)
 		currentemsg = currentemsg->next;

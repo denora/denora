@@ -18,15 +18,14 @@
 int do_sql_backup(int argc, char **argv);
 int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
-void do_mysql_backup(char *table, char *output);
+void do_sql_table_backup(char *table, char *output);
 
 int DenoraInit(int argc, char **argv)
 {
 	EvtHook *hook;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
+	SQLres *sql_res;
 	int found = 0;
-#endif
+	char **sql_row;
 
 	if (denora->debug >= 2)
 	{
@@ -37,15 +36,14 @@ int DenoraInit(int argc, char **argv)
 	moduleAddVersion("1.1");
 	moduleSetType(THIRD);
 
-#ifdef USE_MYSQL
 	/* Check if we have the FILE privilege if not, bail out */
-        rdb_query(QUERY_HIGH, "SHOW GRANTS;");
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res && mysql_num_rows(mysql_res))
+        sql_query("SHOW GRANTS;");
+	sql_res = sql_set_result(sqlcon);
+	if (sql_res && sql_num_rows(sql_res))
 	{
-		while ((mysql_row = mysql_fetch_row(mysql_res)))
+		while ((sql_row = sql_fetch_row(sql_res)))
 		{
-			if (strstr(rdb_escape(mysql_row[0]),"GRANT FILE ON "))
+			if (strstr(sql_escape(sql_row[0]),"GRANT FILE ON "))
 			{
 				found = 1;
 				break;
@@ -54,12 +52,11 @@ int DenoraInit(int argc, char **argv)
 		if (found == 0)
 		{
 			alog(LOG_NORMAL, "You do not have FILE privileges enabled. Disabling module");
-			mysql_free_result(mysql_res);
+			sql_free_result(sql_res);
 			return MOD_STOP;
 		}
-		mysql_free_result(mysql_res);
+		sql_free_result(sql_res);
 	}
-#endif
 
 	hook = createEventHook(EVENT_DB_BACKUP, do_sql_backup);
 	moduleAddEventHook(hook);
@@ -77,15 +74,9 @@ void DenoraFini(void)
 
 int do_sql_backup(int argc, char **argv)
 {
-#ifdef USE_MYSQL
 	int i;
 	char output[BUFSIZE];
 	char *table[18];
-#else
-	USE_VAR(argv);
-#endif
-
-	USE_VAR(argc);
 
 	if (!denora->do_sql)
 	{
@@ -93,7 +84,6 @@ int do_sql_backup(int argc, char **argv)
 		return MOD_CONT;
 	}
 
-#ifdef USE_MYSQL
 	table[0] = UserTable;
 	table[1] = ChanBansTable;
 	table[2] = IsOnTable;
@@ -119,39 +109,36 @@ int do_sql_backup(int argc, char **argv)
 		alog(LOG_NORMAL, "Backing up MYSQL tables to '%s'", output);
 
 		for (i=0; i<18; i++)
-			do_mysql_backup(table[i], output);
+			do_sql_table_backup(table[i], output);
 
 		if (ircd->except)
-			do_mysql_backup(ChanExceptTable, output);
+			do_sql_table_backup(ChanExceptTable, output);
 
 		if (ircd->invitemode)
-			do_mysql_backup(ChanInviteTable, output);
+			do_sql_table_backup(ChanInviteTable, output);
 
 		if (ircd->sgline_table)
-			do_mysql_backup(SglineTable, output);
+			do_sql_table_backup(SglineTable, output);
 
 		if (ircd->sqline_table)
-			do_mysql_backup(SqlineTable, output);
+			do_sql_table_backup(SqlineTable, output);
 
 		if (ircd->spamfilter)
-			do_mysql_backup(SpamTable, output);
+			do_sql_table_backup(SpamTable, output);
 	}
-#endif
 	return MOD_CONT;
 }
 
-#ifdef USE_MYSQL
-void do_mysql_backup(char *table, char *output)
+void do_sql_table_backup(char *table, char *output)
 {
-	MYSQL_RES *mysql_res;
+	SQLres *sql_res;
 	if (!denora->do_sql)
 	{
 		alog(LOG_ERROR, "SQL is disabled in the meantime, backup stopped");
 		return;
 	}
-	rdb_query(QUERY_HIGH, "BACKUP TABLE %s TO '%s'", table, output);
+	sql_query("BACKUP TABLE %s TO '%s'", table, output);
 	/* catch the result to prevent the "command out of sync" error - DP */
-	mysql_res = mysql_store_result(mysql);
-	mysql_free_result(mysql_res);
+	sql_res = sql_set_result(sqlcon);
+	sql_free_result(sql_res);
 }
-#endif

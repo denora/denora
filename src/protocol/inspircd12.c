@@ -1343,10 +1343,9 @@ int denora_event_metadata(char *source, int ac, char **av)
 			{
 				if (av[2])
 				{
-					sqlaccount = rdb_escape(av[2]);
+					sqlaccount = sql_escape(av[2]);
 				}
-				rdb_query(QUERY_LOW,
-				          "UPDATE %s SET account=\'%s\' WHERE nickid=%d",
+				sql_query("UPDATE %s SET account=\'%s\' WHERE nickid=%d",
 				          UserTable, av[2] ? sqlaccount : "", u->sqlid);
 				if (sqlaccount)
 				{

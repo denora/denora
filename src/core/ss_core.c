@@ -67,7 +67,7 @@ void DenoraFini(void)
 static int do_shutdown(User * u, int ac, char **av)
 {
 	char buf[BUFSIZE];
-	SET_SEGV_LOCATION();
+	
 
 	if (denora->protocoldebug)
 	{
@@ -93,7 +93,7 @@ static int do_shutdown(User * u, int ac, char **av)
 		denora->qmsg = sstrdup(buf);
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	denora->save_data = 1;
 	denora->delayed_quit = 1;

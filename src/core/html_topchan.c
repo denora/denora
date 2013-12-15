@@ -99,7 +99,7 @@ void html_current_channels(FILE * ptr)
 	if (ptr)
 	{
 		fprintf(ptr, "%s", getstring(NULL, HTML_CHANNEL_HEADER));
-		SET_SEGV_LOCATION();
+		
 		list_sort(StatsChanhead, top10chan_sort);
 		tn = list_first(StatsChanhead);
 		while (tn)
@@ -133,7 +133,7 @@ void html_current_channels(FILE * ptr)
 
 		}
 		fprintf(ptr, "%s", getstring(NULL, HTML_CHANNEL_FOOTER));
-		SET_SEGV_LOCATION();
+		
 	}
 }
 
@@ -141,7 +141,7 @@ void html_current_channels(FILE * ptr)
 
 void html_top10_onlinechan_title(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstr(HTML_TOP10_ONLINE_CHANS_TITLE));

@@ -43,11 +43,7 @@ int DenoraInit(int argc, char **argv)
 	hook = createEventHook(EVENT_FANTASY, do_fantasy);
 	moduleAddEventHook(hook);
 
-#ifdef USE_MYSQL
 	return MOD_CONT;
-#else
-	return MOD_STOP;
-#endif
 }
 
 /**
@@ -68,11 +64,10 @@ int do_fantasy(int argc, char **argv)
 {
 	User *u;
 	char *chan;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
+	SQLres *sql_res;
 	int peak = 0;
-#endif
 	ChannelStats *cs;
+	char **sql_row;
 
 	if (argc < 3)
 		return MOD_CONT;
@@ -85,22 +80,21 @@ int do_fantasy(int argc, char **argv)
 	if (stricmp(argv[0], "peak") == 0)
 	{
 		u = finduser(argv[1]);
-		chan = rdb_escape(argv[2]);
+		chan = sql_escape(argv[2]);
 		cs = find_cs(argv[2]);
 		strtolwr(chan);
-		rdb_query(QUERY_HIGH,
+		sql_query(
 		          "SELECT maxusers FROM %s WHERE channel=\'%s\';",
 		          ChanTable, chan);
 		alog(LOG_DEBUG, "!peak: Searching for %s", chan);
 		free(chan);
-#ifdef USE_MYSQL
-		mysql_res = mysql_store_result(mysql);
-		if (mysql_res)
+		sql_res = sql_set_result(sqlcon);
+		if (sql_res)
 		{
-			if (mysql_num_rows(mysql_res))
+			if (sql_num_rows(sql_res))
 			{
-				SET_SEGV_LOCATION();
-				peak = atoi(*mysql_fetch_row(mysql_res));
+				sql_row = sql_fetch_row(sql_res);
+				peak = atoi(sql_row[0]);
 				alog(LOG_DEBUG, "!peak: peak number is %d", peak);
 				if (cs->flags & CS_NOTICE)
 				{
@@ -114,13 +108,12 @@ int do_fantasy(int argc, char **argv)
 					                   peak);
 				}
 			}
-			SET_SEGV_LOCATION();
+			
 			alog(LOG_DEBUG, "!peak: number of rows found to be 0");
-			mysql_free_result(mysql_res);
+			sql_free_result(sql_res);
 		}
 		alog(LOG_DEBUG, "!peak: the resource was NULL");
 		return MOD_CONT;
-#endif
 	}
 
 	return MOD_CONT;

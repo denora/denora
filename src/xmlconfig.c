@@ -1,3 +1,16 @@
+/*
+ *
+ * (c) 2004-2013 Denora Team
+ * Contact us at info@denorastats.org
+ *
+ * Please read COPYING and README for furhter details.
+ *
+ * Based on the original code of Anope by Anope Team.
+ * Based on the original code of Thales by Lucas.
+ *
+ *
+ *
+ */
 #include "denora.h"
 
 /*
@@ -53,13 +66,567 @@ int DenoraParseConnectBlock(int count, char **lines)
 	{
 	
 		tag = GetOptionTagName(lines[i]);
+		data = GetOptionTagData(lines[i]);
 		if (tag)
 		{
-			data = GetOptionTagData(lines[i]);
-			printf("Config Options %s = %s\n", tag, data);
+			if (!strcmp(tag, "hostname") || !strcmp(tag,"RemoteServer"))
+			{
+				RemoteServer = sstrdup(data);
+			}
+			else if(!strcmp(tag, "port") || !strcmp(tag, "RemotePort"))
+			{
+				RemotePort = atoi(data);
+				if (RemotePort < 1 || RemotePort > 65535)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_PORT_ERROR));
+					return -1;
+				}
+			}
+			else if(!strcmp(tag, "passwd") || !strcmp(tag, "RemotePassword"))
+			{
+				RemotePassword = sstrdup(data);
+			}
+			else if(!strcmp(tag, "protocol") || !strcmp(tag, "IRCDModule"))
+			{
+				IRCDModule = sstrdup(data);
+			}
+			else if(!strcmp(tag, "QuitPrefix"))
+			{
+				QuitPrefix = sstrdup(data);;
+			}
+			else if (!strcmp(tag, "bindhost") || !strcmp(tag,"LocalHost"))
+			{
+				LocalHost = sstrdup(data);
+			}
+			else if(!strcmp(tag, "bindport") || !strcmp(tag, "LocalPort"))
+			{
+				LocalPort = atoi(data);
+				if (LocalPort < 1 || LocalPort > 65535)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_PORT_ERROR));
+					return -1;
+				}
+			}
+			else if (!strcmp(tag, "bindhost") || !strcmp(tag,"LocalHost"))
+			{
+				LocalHost = sstrdup(data);
+			}
+			else
+			{
+				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+			}
 			free(tag);
 			free(data);
 		}
+	}
+	if (!RemoteServer)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_HOSTNAME_ERROR));
+		return -1;
+	}
+	if (BadPtr(IRCDModule))
+	{
+		alog(LOG_ERROR, langstring(CONFIG_PROTOCOL_ERROR));
+		return -1;
+	}
+	if (!QuitPrefix)
+		QuitPrefix = sstrdup("Quit:");
+	if (!RemotePort)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_PORT_ERROR_NOTDEF));
+		return -1;
+	}
+	if (BadPtr(RemotePassword))
+	{
+		alog(LOG_ERROR, langstring(CONFIG_PASSWD_ERROR));
+		return -1;
+	}
+	return 1;
+}
+
+/*************************************************************************/
+
+
+int DenoraParseIdentityBlock(int count, char **lines)
+{
+	int i;
+	char *tag;
+	char *data;
+
+	for (i = 0; i < count; i++)
+	{
+		tag = GetOptionTagName(lines[i]);
+		data = GetOptionTagData(lines[i]);
+
+		if (tag)
+		{
+			if (!strcmp(tag, "ServerName"))
+			{
+				/* validate server name */
+				if (!is_valid_server(data))
+				{
+					alog(LOG_ERROR, "Invalid server name");
+					return -1;
+				}
+				ServerName = sstrdup(data);
+			}
+			else if(!strcmp(tag, "ServerDesc"))
+			{
+				ServerDesc = sstrdup(data);
+			}
+			else if(!strcmp(tag, "ServiceUser"))
+			{
+				char *s;
+				char *temp_userhost = sstrdup(data);
+				/* Strip the user and host from user token */
+				if (!(s = strchr(temp_userhost, '@')))
+				{
+					free(temp_userhost);
+					alog(LOG_ERROR, "Missing `@' for Stats User");
+					return -1;
+				}
+				*s++ = 0;
+				ServiceUser = temp_userhost;
+				ServiceHost = s;
+			}
+
+			else if(!strcmp(tag, "StatsLanguage"))
+			{
+				StatsLanguage = strtol(data, NULL, 10);
+				if (StatsLanguage < 1 || StatsLanguage > NUM_LANGS)
+				{
+					StatsLanguage = 1;
+					alog(LOG_ERROR, langstring(CONFIG_INVALID_LANG));
+					return -1;
+				}
+			}
+			else
+			{
+				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+			}
+			free(tag);
+			free(data);
+		}
+	}
+
+	if (BadPtr(ServerName))
+	{
+		alog(LOG_ERROR, langstring(CONFIG_ID_NAME_ERROR));
+		return -1;
+	}
+	if (BadPtr(ServerDesc) || !ServerDesc)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_ID_DESC_ERROR));
+		return -1;
+	}
+	if (BadPtr(ServiceUser))
+	{
+		alog(LOG_ERROR, langstring(CONFIG_ID_USER_ERROR));
+		return -1;
+	}
+	if (BadPtr(ServiceHost))
+	{
+		alog(LOG_ERROR, langstring(CONFIG_ID_HOST_ERROR));
+		return -1;
+	}
+	if (!StatsLanguage)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_ID_LANG_ERROR));
+		return -1;
+	}
+	if (StatsLanguage)
+	{
+		/* Now we reduce StatsLanguage by 1 */
+		StatsLanguage--;
+	}
+
+
+	return 1;
+}
+
+/*************************************************************************/
+
+
+int DenoraParseStatServBlock(int count, char **lines)
+{
+	int i;
+	char *tag;
+	char *data;
+
+	for (i = 0; i < count; i++)
+	{
+		tag = GetOptionTagName(lines[i]);
+		data = GetOptionTagData(lines[i]);
+
+		if (tag)
+		{
+			if (!strcmp(tag, "StatServNick"))
+			{
+				s_StatServ = sstrdup(data);
+				if (strlen(s_StatServ) > NICKMAX)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_SS_TOLONG));
+					return -1;
+				}
+			}
+			else if(!strcmp(tag, "StatServDesc"))
+			{
+				desc_StatServ = sstrdup(data);
+			}
+			else if (!strcmp(tag, "StatServNickAlias"))
+			{
+				s_StatServ_alias = sstrdup(data);
+				if (strlen(s_StatServ_alias) > NICKMAX)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_SS_TOLONG));
+					return -1;
+				}
+			}
+			else if(!strcmp(tag, "StatServDescAlias"))
+			{
+				desc_StatServ_alias = sstrdup(data);
+			}
+			else if(!strcmp(tag, "AutoOp"))
+			{
+				AutoOp = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "AutoMode"))
+			{
+				AutoMode = sstrdup(data);
+			}
+			else if(!strcmp(tag, "PartOnEmpty"))
+			{
+				PartOnEmpty = XmlConfigSetFeature(data);
+			}
+			else
+			{
+				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+			}
+			free(tag);
+			free(data);
+		}
+	}
+
+	if (BadPtr(s_StatServ))
+	{
+		alog(LOG_ERROR, langstring(CONFIG_SS_NAME_ERROR));
+		return -1;
+	}
+	if (BadPtr(desc_StatServ))
+	{
+		alog(LOG_ERROR, langstring(CONFIG_SS_DESC_ERROR));
+		return -1;
+	}
+	if (s_StatServ_alias && BadPtr(desc_StatServ_alias))
+	{
+		alog(LOG_ERROR, langstring(CONFIG_SS_ALIASDESC_ERROR));
+		return -1;
+	}
+	if (s_StatServ_alias)
+	{
+		if (BadPtr(s_StatServ_alias))
+		{
+			alog(LOG_ERROR, langstring(CONFIG_SS_ALIASDESC_ERROR));
+			return -1;
+		}
+	}
+
+	return 1;
+}
+
+/*************************************************************************/
+
+
+int DenoraParseFileNamesBlock(int count, char **lines)
+{
+	int i;
+	char *tag;
+	char *data;
+
+	for (i = 0; i < count; i++)
+	{
+		tag = GetOptionTagName(lines[i]);
+		data = GetOptionTagData(lines[i]);
+
+		if (tag)
+		{
+			if (!strcmp(tag, "PIDFilename"))
+			{
+				PIDFilename = sstrdup(data);
+			}
+			else if(!strcmp(tag, "MOTDFilename"))
+			{
+				MOTDFilename = sstrdup(data);
+			}
+			else if(!strcmp(tag, "HTMLFilename"))
+			{
+				HTMLFilename = sstrdup(data);
+			}
+			else if(!strcmp(tag, "ChannelDB"))
+			{
+				ChannelDB = sstrdup(data);
+			}
+			else if(!strcmp(tag, "statsDB"))
+			{
+				statsDB = sstrdup(data);
+			}
+			else if(!strcmp(tag, "ctcpDB"))
+			{
+				ctcpDB = sstrdup(data);
+			}
+			else if(!strcmp(tag, "AdminDB"))
+			{
+				AdminDB = sstrdup(data);
+			}
+			else if(!strcmp(tag, "ServerDB"))
+			{
+				ServerDB = sstrdup(data);
+			}
+			else if(!strcmp(tag, "ChannelStatsDB"))
+			{
+				ChannelStatsDB = sstrdup(data);
+			}
+			else if(!strcmp(tag, "TLDDB"))
+			{
+				TLDDB = sstrdup(data);
+			}
+			else if(!strcmp(tag, "excludeDB"))
+			{
+				excludeDB = sstrdup(data);
+			}
+			else
+			{
+				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+			}
+			free(tag);
+			free(data);
+		}
+	}
+	if (!PIDFilename)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_FILENAME_PID_ERROR));
+		return -1;
+	}
+	if (HTMLFilename)
+	{
+		denora->do_html = 1;
+	}
+	if (!ChannelDB)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_FILENAME_CHANDB_ERROR));
+		return -1;
+	}
+	if (!ctcpDB)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_FILENAME_CTCP_ERROR));
+		return -1;
+	}
+	if (!ServerDB)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_FILENAME_SERVER_ERROR));
+		return -1;
+	}
+	if (!ChannelStatsDB)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_FILENAME_CHANSTATS_ERROR));
+		return -1;
+	}
+	if (!TLDDB)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_FILENAME_TLD_ERROR));
+		return -1;
+	}
+	if (!excludeDB)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_FILENAME_EXCLUDE_ERROR));
+		return -1;
+	}
+	if (!statsDB)
+	{
+		alog(LOG_ERROR, "statsDB is not defined");
+		return -1;
+	}
+	if (!AdminDB)
+	{
+		alog(LOG_ERROR, "AdminDB is not defined");
+		return -1;
+	}
+
+	return 1;
+}
+
+/*************************************************************************/
+
+int DenoraParseBackUpBlock(int count, char **lines)
+{
+	int i;
+	char *tag;
+	char *data;
+
+	for (i = 0; i < count; i++)
+	{
+		tag = GetOptionTagName(lines[i]);
+		data = GetOptionTagData(lines[i]);
+
+		if (tag)
+		{
+			if (!strcmp(tag, "KeepBackups"))
+			{
+				KeepBackups = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "KeepBackupsFor"))
+			{
+				KeepBackupsFor = dotime(data);
+			}
+			else if(!strcmp(tag, "BackupFreq"))
+			{
+				BackupFreq = dotime(data);
+			}
+			else
+			{
+				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+			}
+			free(tag);
+			free(data);
+		}
+	}
+	if (KeepBackups && !KeepBackupsFor)
+	{
+		alog(LOG_ERROR, "KeepBackupsFor is not defined");
+		return -1;
+	}
+	if (KeepBackups && !BackupFreq)
+	{
+		alog(LOG_ERROR, "BackupFreq is not defined");
+		return -1;
+	}
+	return 1;
+}
+
+
+/*************************************************************************/
+
+int DenoraParseNetInfoBlock(int count, char **lines)
+{
+	int i;
+	char *tag;
+	char *data;
+	int optag;
+
+	for (i = 0; i < count; i++)
+	{
+		tag = GetOptionTagName(lines[i]);
+		data = GetOptionTagData(lines[i]);
+		optag = IsOptionTag(lines[i]);
+
+		if (tag)
+		{
+			if (!strcmp(tag, "NetworkName"))
+			{
+				NetworkName = sstrdup(data);
+			}
+			else if(!strcmp(tag, "Numeric"))
+			{
+				Numeric = sstrdup(data);
+			}
+			else if(!strcmp(tag, "UserStatsRegistered"))
+			{
+				if (optag)
+				{
+					UserStatsRegistered = 1;
+				}
+				else
+				{
+					UserStatsRegistered = XmlConfigSetFeature(data);
+				}
+			}
+			else if(!strcmp(tag, "UserStatsExcludeBots"))
+			{
+				if (optag)
+				{
+					UserStatsExcludeBots = 1;
+				}
+				else
+				{
+					UserStatsExcludeBots = XmlConfigSetFeature(data);
+				}
+			}
+			else if(!strcmp(tag, "SP_HTML"))
+			{
+				if (optag)
+				{
+					SP_HTML = 1;
+				}
+				else
+				{
+					SP_HTML = XmlConfigSetFeature(data);
+				}
+			}
+			else if(!strcmp(tag, "ExcludeServers"))
+			{
+				ExcludeServers = buildStringList(data, &NumExcludeServers);
+			}
+			else if(!strcmp(tag, "StatsPage"))
+			{
+				StatsPage = sstrdup(data);
+			}
+			else if(!strcmp(tag, "NickChar"))
+			{
+				NickChar = sstrdup(data);
+			}
+			else if(!strcmp(tag, "HiddenPrefix"))
+			{
+				HiddenPrefix = sstrdup(data);
+			}
+			else if(!strcmp(tag, "HiddenSuffix"))
+			{
+				HiddenSuffix = sstrdup(data);
+			}
+
+			else if(!strcmp(tag, "CTCPUsers"))
+			{
+				if (optag)
+				{
+					CTCPUsers = 1;
+				}
+				else
+				{
+					CTCPUsers = XmlConfigSetFeature(data);
+				}
+			}
+			else if(!strcmp(tag, "CTCPUsersEOB"))
+			{
+				if (optag)
+				{
+					CTCPUsersEOB = 1;
+				}
+				else
+				{
+					CTCPUsersEOB = XmlConfigSetFeature(data);
+				}
+			}
+
+
+			else
+			{
+				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+			}
+			free(tag);
+			free(data);
+		}
+	}
+	if (BadPtr(NetworkName))
+	{
+		alog(LOG_ERROR, langstring(CONFIG_NETINFO_NAME_ERROR));
+		return -1;
+	}
+	if (!HiddenPrefix)
+	{
+		HiddenPrefix = "";
+	}
+	if (!HiddenSuffix)
+	{
+		HiddenSuffix = sstrdup(".users.mynet.tld");
 	}
 	return 1;
 }
@@ -767,9 +1334,3 @@ config *DenoraXMLConfigBlockCreate(char *newblockname, int (parser)(int ac, char
 }
 
 
-int DenoraConfigInit(void)
-{
-	DenoraXMLConfigBlockCreate("connect", DenoraParseConnectBlock, 4);
-	DenoraXMLConfigBlockCreate("identity", DenoraParseConnectBlock, 4);
-
-}

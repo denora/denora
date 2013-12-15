@@ -157,7 +157,7 @@ void xml_export_channels(char *file)
 
 	ptr = new_xml(file);
 
-	SET_SEGV_LOCATION();
+	
 
 	if (ptr)
 	{
@@ -301,7 +301,7 @@ void xml_export_tld(char *file)
 
 	ptr = new_xml(file);
 
-	SET_SEGV_LOCATION();
+	
 
 	if (ptr)
 	{
@@ -346,7 +346,7 @@ void xml_export_ctcp(char *file)
 
 	ptr = new_xml(file);
 
-	SET_SEGV_LOCATION();
+	
 
 	if (ptr)
 	{
@@ -389,7 +389,7 @@ void xml_export_servers(char *file)
 
 	ptr = new_xml(file);
 
-	SET_SEGV_LOCATION();
+	
 
 	if (ptr)
 	{
@@ -475,7 +475,7 @@ void xml_export_users(char *file)
 
 	ptr = new_xml(file);
 
-	SET_SEGV_LOCATION();
+	
 
 	if (ptr)
 	{
@@ -483,12 +483,12 @@ void xml_export_users(char *file)
 
 		xml_write_block_top(ptr, "users");
 		u = firstuser();
-		SET_SEGV_LOCATION();
+		
 		while (u)
 		{
 			next = nextuser();
 			denora_cmd_pong(ServerName, ServerName);
-			SET_SEGV_LOCATION();
+			
 			xml_write_block_top(ptr, "user");
 			xml_write_tag(ptr, "name", u->nick);
 			xml_write_tag(ptr, "username", u->username);
@@ -558,7 +558,7 @@ void xml_export_stats(char *file)
 	FILE *ptr;
 	ptr = new_xml(file);
 
-	SET_SEGV_LOCATION();
+	
 
 	if (ptr)
 	{
@@ -604,7 +604,7 @@ void xml_export_all(char *file)
 
 	ptr = new_xml(file);
 
-	SET_SEGV_LOCATION();
+	
 
 	if (ptr)
 	{
@@ -623,7 +623,7 @@ void xml_export_all(char *file)
 
 		xml_write_block_top(ptr, "users");
 		u = firstuser();
-		SET_SEGV_LOCATION();
+		
 		while (u)
 		{
 			next = nextuser();
@@ -632,7 +632,7 @@ void xml_export_all(char *file)
 				denora_cmd_pong(ServerName, ServerName);
 				ping = 0;
 			}
-			SET_SEGV_LOCATION();
+			
 			xml_write_block_top(ptr, "user");
 			xml_write_tag(ptr, "name", u->nick);
 			xml_write_tag(ptr, "username", u->username);

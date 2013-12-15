@@ -874,9 +874,8 @@ int denora_event_mode(char *source, int ac, char **av)
 	const char *vhost = "";
 	const char *vident = "";
 	int h = 1;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
+	SQLres *sql_res;
+	char **sql_row;
 
 	if (denora->protocoldebug)
 		protocol_debug(source, ac, av);
@@ -922,13 +921,11 @@ int denora_event_mode(char *source, int ac, char **av)
 			{
 				u2 = find_byuid(av[2]);
 				c = findchan(av[0]);
-#ifdef USE_MYSQL
-				rdb_query(QUERY_LOW, "SELECT oplevel FROM %s WHERE chanid=%d AND nickid=%d", IsOnTable, c->sqlid, u->sqlid);
-				mysql_res = mysql_store_result(mysql);
-				mysql_row = mysql_fetch_row(mysql_res);
-				rdb_query(QUERY_LOW, "UPDATE %s SET oplevel=%s+1 WHERE chanid = %d AND nickid=%d", IsOnTable, mysql_row[0], c->sqlid, u2->sqlid);
-				mysql_free_result(mysql_res);
-#endif
+				sql_query("SELECT oplevel FROM %s WHERE chanid=%d AND nickid=%d", IsOnTable, c->sqlid, u->sqlid);
+				sql_res = sql_set_result(sqlcon);
+				sql_row = sql_fetch_row(sql_res);
+				sql_query("UPDATE %s SET oplevel=%s+1 WHERE chanid = %d AND nickid=%d", IsOnTable, sql_row[0], c->sqlid, u2->sqlid);
+				sql_free_result(sql_res);
 			}
 
 		}
@@ -938,7 +935,7 @@ int denora_event_mode(char *source, int ac, char **av)
 			{
 				u2 = find_byuid(av[2]);
 				c = findchan(av[0]);
-				rdb_query(QUERY_LOW, "UPDATE %s SET oplevel=NULL WHERE chanid = %d AND nickid=%d", IsOnTable, c->sqlid, u2->sqlid);
+				sql_query("UPDATE %s SET oplevel=NULL WHERE chanid = %d AND nickid=%d", IsOnTable, c->sqlid, u2->sqlid);
 			}
 
 		}
@@ -947,7 +944,7 @@ int denora_event_mode(char *source, int ac, char **av)
 			if (denora->do_sql)
 			{
 				c = findchan(av[0]);
-				rdb_query(QUERY_LOW, "UPDATE %s SET mode_uu_data='' WHERE chanid=%d", ChanTable, c->sqlid);
+				sql_query("UPDATE %s SET mode_uu_data='' WHERE chanid=%d", ChanTable, c->sqlid);
 			}
 
 		}

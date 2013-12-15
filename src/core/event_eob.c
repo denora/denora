@@ -77,7 +77,7 @@ int denora_event_synccomplete(int ac, char **av)
 	USE_VAR(ac);
 	USE_VAR(av);
 
-	SET_SEGV_LOCATION();
+	
 
 	tn = list_first(Thead);
 	while (tn != NULL)

@@ -43,7 +43,7 @@ void init_bans(void)
 	Gline *g;
 	Zline *z;
 	Qline *q;
-	SET_SEGV_LOCATION();
+	
 
 	Glinehead = list_create(-1);
 	g = malloc(sizeof(Gline));
@@ -66,7 +66,7 @@ Gline *new_Gline(char *user, char *host, char *setby, char *setat,
 {
 	lnode_t *tn;
 	Gline *g = NULL;
-	SET_SEGV_LOCATION();
+	
 
 	tn = list_find(Glinehead, host, find_gline);
 	if (tn)
@@ -95,7 +95,7 @@ Zline *new_Zline(char *user, char *host, char *setby, char *setat,
 {
 	lnode_t *tn;
 	Zline *z = NULL;
-	SET_SEGV_LOCATION();
+	
 
 	tn = list_find(Zlinehead, host, find_zline);
 	if (tn)
@@ -124,7 +124,7 @@ Qline *new_Qline(char *user, char *host, char *setby, char *setat,
 {
 	lnode_t *tn;
 	Qline *q = NULL;
-	SET_SEGV_LOCATION();
+	
 
 	tn = list_find(Qlinehead, host, find_qline);
 	if (tn)
@@ -286,7 +286,7 @@ void p10_gline(char *type, char *source, int ac, char **av)
 	char *setby;
 	char expires[12];
 
-	SET_SEGV_LOCATION();
+	
 
 	if (ac < 4 || ac > 6)
 	{
@@ -323,7 +323,7 @@ void p10_gline(char *type, char *source, int ac, char **av)
 		return;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	address = (*av[1] == '!') ? myStrGetToken(av[1], '!', 1) : av[1];
 	if (*address == '+')
@@ -346,7 +346,7 @@ void p10_gline(char *type, char *source, int ac, char **av)
 		host = sstrdup(address);
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	if (*av[1] == '+')
 	{
@@ -376,7 +376,7 @@ void p10_gline(char *type, char *source, int ac, char **av)
 	{
 		sql_do_server_bans_remove(type, user, host);
 	}
-	SET_SEGV_LOCATION();
+	
 
 	/*
 	 * Free the data that was allocated
@@ -401,13 +401,11 @@ void p10_gline(char *type, char *source, int ac, char **av)
  */
 void sql_do_sqline(char *mask, char *reason)
 {
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
+	SQLres *sql_res;
 	char *sqlreason;
-#endif
 	char *sqlmask;
 
-	SET_SEGV_LOCATION();
+	
 
 	/* Do not execute if
 	 * SQL is disabled
@@ -420,36 +418,27 @@ void sql_do_sqline(char *mask, char *reason)
 		return;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
-	sqlmask = rdb_escape(mask);
+	sqlmask = sql_escape(mask);
 
-	rdb_query
-	(QUERY_HIGH, "SELECT mask FROM %s WHERE mask = \'%s\' LIMIT 1",
+	sql_query("SELECT mask FROM %s WHERE mask = \'%s\' LIMIT 1",
 	 SqlineTable, sqlmask);
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
+	sql_res = sql_set_result(sqlcon);
+	if (sql_res)
 	{
-		sqlreason = rdb_escape(reason);
-		if (mysql_num_rows(mysql_res) == 0)
+		sqlreason = sql_escape(reason);
+		if (sql_num_rows(sql_res) == 0)
 		{
-			rdb_query
-			(QUERY_LOW,
-			 "INSERT INTO %s (mask, reason) values('%s', '%s')",
-			 SqlineTable, sqlmask, sqlreason);
+			sql_query("INSERT INTO %s (mask, reason) values('%s', '%s')", SqlineTable, sqlmask, sqlreason);
 		}
 		else
 		{
-			rdb_query(QUERY_LOW,
-			          "UPDATE %s SET reason=\'%s\' WHERE mask=\'%s\'",
-			          SqlineTable, sqlreason, sqlmask);
+			sql_query("UPDATE %s SET reason=\'%s\' WHERE mask=\'%s\'", SqlineTable, sqlreason, sqlmask);
 		}
-		mysql_free_result(mysql_res);
+		sql_free_result(sql_res);
 		free(sqlreason);
 	}
-#endif
-	SET_SEGV_LOCATION();
 
 	free(sqlmask);
 
@@ -473,11 +462,8 @@ void sql_do_sgline(char *length, char *mask)
 	char *reason;               /* reason for sgline                */
 	char *sqlmask;
 	int errsave;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
+	SQLres *sql_res;
 	char *sqlreason;
-#endif
-	SET_SEGV_LOCATION();
 
 	/*
 	 * Do not execute if
@@ -490,8 +476,6 @@ void sql_do_sgline(char *length, char *mask)
 	{
 		return;
 	}
-
-	SET_SEGV_LOCATION();
 
 	errsave = errno;            /* temp copy the variable so we can reset the error state */
 	errno = 0;                  /* make the errno 0 so we don't report wrong errors */
@@ -508,7 +492,7 @@ void sql_do_sgline(char *length, char *mask)
 	}
 	errno = errsave;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (((int) strlen(mask) > len) && (mask[len]) == ':')
 	{
@@ -520,36 +504,28 @@ void sql_do_sgline(char *length, char *mask)
 		return;
 	}
 
-	SET_SEGV_LOCATION();
+	sqlmask = sql_escape(mask);
 
-	sqlmask = rdb_escape(mask);
-
-	rdb_query
-	(QUERY_HIGH, "SELECT mask FROM %s WHERE mask = \'%s\' LIMIT 1",
+	sql_query("SELECT mask FROM %s WHERE mask = \'%s\' LIMIT 1",
 	 SglineTable, sqlmask);
 
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
+	sql_res = sql_set_result(sqlcon);
+	if (sql_res)
 	{
-		sqlreason = rdb_escape(reason);
-		if (mysql_num_rows(mysql_res) == 0)
+		sqlreason = sql_escape(reason);
+		if (sql_num_rows(sql_res) == 0)
 		{
-			rdb_query(QUERY_LOW,
-			          "INSERT INTO %s (mask, reason) values('%s', '%s')",
+			sql_query("INSERT INTO %s (mask, reason) values('%s', '%s')",
 			          SglineTable, sqlmask, sqlreason);
 		}
 		else
 		{
-			rdb_query(QUERY_LOW,
-			          "UPDATE %s SET reason=\'%s\' WHERE mask=\'%s\'",
+			sql_query("UPDATE %s SET reason=\'%s\' WHERE mask=\'%s\'",
 			          SglineTable, sqlreason, sqlmask);
 		}
-		mysql_free_result(mysql_res);
+		sql_free_result(sql_res);
 		free(sqlreason);
 	}
-#endif
-	SET_SEGV_LOCATION();
 
 	free(reason);
 	free(sqlmask);
@@ -569,14 +545,10 @@ void sql_do_sgline(char *length, char *mask)
  */
 void sql_do_xline(char *geos, char *reason)
 {
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
+	SQLres *sql_res;
 	char *sqlreason;
-#else
-	USE_VAR(reason);
-#endif
 	char *sqlgeos;
-	SET_SEGV_LOCATION();
+	
 
 	/*
 	 * Do not execute if
@@ -588,36 +560,30 @@ void sql_do_xline(char *geos, char *reason)
 		return;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
-	sqlgeos = rdb_escape(geos);
+	sqlgeos = sql_escape(geos);
 
-	rdb_query
-	(QUERY_HIGH, "SELECT mask FROM %s WHERE mask = \'%s\' LIMIT 1",
+	sql_query("SELECT mask FROM %s WHERE mask = \'%s\' LIMIT 1",
 	 SglineTable, sqlgeos);
 
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
+	sql_res = sql_set_result(sqlcon);
+	if (sql_res)
 	{
-		sqlreason = rdb_escape(reason);
-		if (mysql_num_rows(mysql_res) == 0)
+		sqlreason = sql_escape(reason);
+		if (sql_num_rows(sql_res) == 0)
 		{
-			rdb_query(QUERY_LOW,
-			          "INSERT INTO %s (mask, reason) values('%s', '%s')",
+			sql_query("INSERT INTO %s (mask, reason) values('%s', '%s')",
 			          SglineTable, sqlgeos, sqlreason);
 		}
 		else
 		{
-			rdb_query(QUERY_LOW,
-			          "UPDATE %s SET reason=\'%s\' WHERE mask=\'%s\'",
+			sql_query("UPDATE %s SET reason=\'%s\' WHERE mask=\'%s\'",
 			          SglineTable, sqlreason, sqlgeos);
 		}
-		mysql_free_result(mysql_res);
+		sql_free_result(sql_res);
 		free(sqlreason);
 	}
-#endif
-	SET_SEGV_LOCATION();
 
 	free(sqlgeos);
 
@@ -634,7 +600,7 @@ void sql_do_xline(char *geos, char *reason)
 void sql_do_unxline(char *geos)
 {
 	char *sqlgeos;
-	SET_SEGV_LOCATION();
+	
 
 	/*
 	 * Do not execute if
@@ -646,14 +612,14 @@ void sql_do_unxline(char *geos)
 	{
 		return;
 	}
-	SET_SEGV_LOCATION();
+	
 
-	sqlgeos = rdb_escape(geos);
+	sqlgeos = sql_escape(geos);
 
-	rdb_query(QUERY_LOW, "DELETE FROM %s WHERE mask=\'%s\'",
+	sql_query("DELETE FROM %s WHERE mask=\'%s\'",
 		  SglineTable, sqlgeos);
 
-	SET_SEGV_LOCATION();
+	
 
 	free(sqlgeos);
 
@@ -682,8 +648,7 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
                             char *setby, char *setat, char *expires,
                             char *reason)
 {
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
+	SQLres *sql_res;
 	int sqlid = -1;
 	int checkdur = 0;
 	int expire = 0;
@@ -692,9 +657,7 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
 	Gline *g = NULL;
 	Qline *q = NULL;
 	Zline *z = NULL;
-
-
-	SET_SEGV_LOCATION();
+	char **sql_row;
 
 	/*
 	 * Do not execute if
@@ -757,11 +720,9 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
 	}
 
 
-	SET_SEGV_LOCATION();
-
-	sqlreason = rdb_escape(reason);
-	sqluser   = rdb_escape(user);
-	sqlhost   = rdb_escape(host);
+	sqlreason = sql_escape(reason);
+	sqluser   = sql_escape(user);
+	sqlhost   = sql_escape(host);
 
 	if (type)
 	{
@@ -781,32 +742,30 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
 			}
 			if (sqlid > 0)
 			{
-				rdb_query(QUERY_LOW,
-				         "UPDATE %s SET setat=%ld, expires=%ld, reason=\'%s\' WHERE id = \'%d\'",
+				sql_query("UPDATE %s SET setat=%ld, expires=%ld, reason=\'%s\' WHERE id = \'%d\'",
 				         GlineTable, strtoul(setat, NULL, 10), strtoul(expires, NULL, 10), sqlreason, sqlid);
 			}
 		}
 		else
 		{
-			rdb_query(QUERY_HIGH,
-			          "SELECT id FROM %s WHERE type = \'%s\' and user=\'%s\' and host=\'%s\' LIMIT 1",
+			sql_query("SELECT id FROM %s WHERE type = \'%s\' and user=\'%s\' and host=\'%s\' LIMIT 1",
 			           GlineTable, type, sqluser, sqlhost);
 
-			SET_SEGV_LOCATION();
-			mysql_res = mysql_store_result(mysql);
-			if (mysql_res)
+			
+			sql_res = sql_set_result(sqlcon);
+			if (sql_res)
 			{
-				if (mysql_num_rows(mysql_res) == 0)
+				if (sql_num_rows(sql_res) == 0)
 				{
-					rdb_query(QUERY_LOW,
+					sql_query(
 					 "INSERT INTO %s (type, user, host, setby, setat, expires, reason) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',%ld,%ld,\'%s\')",
 					 GlineTable, type, sqluser, sqlhost, setby,
 					 strtoul(setat, NULL, 10), strtoul(expires, NULL, 10), sqlreason);
 				}
 				else
 				{
-					mysql_row = mysql_fetch_row(mysql_res);
-					sqlid = strtol(mysql_row[0], NULL, 10);
+					sql_row = sql_fetch_row(sql_res);
+					sqlid = strtol(sql_row[0], NULL, 10);
 					if (sqlid > 0)
 					{
 						if (g)
@@ -821,18 +780,17 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
 						{
 							z->sqlid = sqlid;
 						}
-						rdb_query(QUERY_LOW,
-						         "UPDATE %s SET setat=%ld, expires=%ld, reason=\'%s\' WHERE id = \'%d\'",
+						sql_query("UPDATE %s SET setat=%ld, expires=%ld, reason=\'%s\' WHERE id = \'%d\'",
 						         GlineTable, strtoul(setat, NULL, 10), strtoul(expires, NULL, 10), sqlreason, sqlid);
 					}
 				}
-				mysql_free_result(mysql_res);
+				sql_free_result(sql_res);
 			}
 		}
 	}
 	else
 	{
-		SET_SEGV_LOCATION();
+		
 
 		checkdur = strtoul(expires, NULL, 10);
 		setattime = strtoul(setat, NULL, 10);
@@ -845,36 +803,33 @@ void sql_do_server_bans_add(char *type, char *user, char *host,
 			expire = checkdur;
 		}
 
-		rdb_query(QUERY_HIGH,
-		          "SELECT id FROM %s WHERE user=\'%s\' and host=\'%s\' LIMIT 1",
+		sql_query("SELECT id FROM %s WHERE user=\'%s\' and host=\'%s\' LIMIT 1",
 		          GlineTable, sqluser, sqlhost);
 
-		mysql_res = mysql_store_result(mysql);
-		if (mysql_res)
+		sql_res = sql_set_result(sqlcon);
+		if (sql_res)
 		{
-			if (mysql_num_rows(mysql_res) == 0)
+			if (sql_num_rows(sql_res) == 0)
 			{
-				rdb_query
-				(QUERY_LOW,
-				 "INSERT INTO %s (user, host, setby, setat, expires, reason) VALUES(\'%s\',\'%s\',\'%s\',%ld,%ld,\'%s\')",
+				sql_query
+				("INSERT INTO %s (user, host, setby, setat, expires, reason) VALUES(\'%s\',\'%s\',\'%s\',%ld,%ld,\'%s\')",
 				 GlineTable, sqluser, sqlhost, setby, setattime, expire, sqlreason);
 			}
 			else
 			{
-				rdb_query
-				(QUERY_LOW,
+				sql_query
+				(
 				 "UPDATE %s SET setat=%ld, expires=%ld, reason=\'%s\' WHERE user=\'%s\' and host=\'%s\'",
 				 GlineTable, setattime, expire, sqlreason, sqluser, sqlhost);
 			}
-			mysql_free_result(mysql_res);
+			sql_free_result(sql_res);
 		}
 	}
-	SET_SEGV_LOCATION();
+	
 
 	free(sqlreason);
 	free(sqluser);
 	free(sqlhost);
-#endif
 	return;
 }
 
@@ -898,14 +853,12 @@ void sql_do_server_spam_add(char *target, char *action,
                             char *setby, char *expires, char *setat,
                             char *duration, char *reason, char *regex)
 {
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
+	SQLres *sql_res;
 	int sqlid;
-#endif
 	SpamFilter *sf;
 	char *sqlaction, *sqlreason, *sqlregex;
-
-	SET_SEGV_LOCATION();
+	char **sql_row;
+	
 
 	/*
 	 * Do not execute if
@@ -931,14 +884,14 @@ void sql_do_server_spam_add(char *target, char *action,
 		               reason, regex);
 	}
 
-	SET_SEGV_LOCATION();
+	
 
-	sqlaction = rdb_escape(action);
-	sqlreason = rdb_escape(reason);
+	sqlaction = sql_escape(action);
+	sqlreason = sql_escape(reason);
 
 	if (sf && sf->sqlid > 0)
 	{
-		rdb_query(QUERY_LOW,
+		sql_query(
 			 "UPDATE %s SET target=\'%s\', action=\'%s\', setby=\'%s\', expires=%ld, setat=%ld, duration=%ld, reason=\'%s\' WHERE id=\'%d\'",
 			 SpamTable, target, sqlaction, setby, strtoul(expires, NULL, 10),
 			 strtoul(setat, NULL, 10), strtoul(duration, NULL, 10),
@@ -949,47 +902,43 @@ void sql_do_server_spam_add(char *target, char *action,
 		return;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
-	sqlregex = rdb_escape(regex);
+	sqlregex = sql_escape(regex);
 
-	rdb_query(QUERY_HIGH, "SELECT id FROM %s WHERE regex = \'%s\' LIMIT 1",
+	sql_query("SELECT id FROM %s WHERE regex = \'%s\' LIMIT 1",
 	          SpamTable, sqlregex);
-#ifdef USE_MYSQL
 
-	SET_SEGV_LOCATION();
+	
 
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
+	sql_res = sql_set_result(sqlcon);
+	if (sql_res)
 	{
-		if (mysql_num_rows(mysql_res) == 0)
+		if (sql_num_rows(sql_res) == 0)
 		{
-			rdb_query(QUERY_LOW,
-			          "INSERT INTO %s (target, action, setby, expires, setat, duration, reason, regex) VALUES(\'%s\',\'%s\',\'%s\',%ld, %ld,%ld, \'%s\', \'%s\')",
+			sql_query("INSERT INTO %s (target, action, setby, expires, setat, duration, reason, regex) VALUES(\'%s\',\'%s\',\'%s\',%ld, %ld,%ld, \'%s\', \'%s\')",
 			          SpamTable, target, sqlaction, setby, strtoul(expires, NULL, 10), strtoul(setat, NULL, 10), 
 			          strtoul(duration, NULL, 10), sqlreason, sqlregex);
 		}
 		else
 		{
-			mysql_row = mysql_fetch_row(mysql_res);
-			sqlid = strtol(mysql_row[0], NULL, 10);
+			sql_row = sql_fetch_row(sql_res);
+			sqlid = strtol(sql_row[0], NULL, 10);
 			if (sqlid > 0)
 			{
 				if (sf)
 				{
 					sf->sqlid = sqlid;
 				}
-				rdb_query(QUERY_LOW,
-				          "UPDATE %s SET target=\'%s\', action=\'%s\', setby=\'%s\', expires=%ld, setat=%ld, duration=%ld, reason=\'%s\' WHERE id=\'%d\'",
+				sql_query("UPDATE %s SET target=\'%s\', action=\'%s\', setby=\'%s\', expires=%ld, setat=%ld, duration=%ld, reason=\'%s\' WHERE id=\'%d\'",
 				          SpamTable, target, sqlaction, setby, strtoul(expires, NULL, 10), strtoul(setat, NULL, 10),
 				          strtoul(duration, NULL, 10), sqlreason, sqlid);
 			}
 		}
-		mysql_free_result(mysql_res);
+		sql_free_result(sql_res);
 	}
-#endif
 
-	SET_SEGV_LOCATION();
+	
 
 	free(sqlreason);
 	free(sqlaction);
@@ -1013,7 +962,7 @@ void sql_do_server_spam_add(char *target, char *action,
 void sql_do_server_bans_remove(char *type, char *user, char *host)
 {
 	char *sqluser, *sqlhost;
-	SET_SEGV_LOCATION();
+	
 
 	/*
 	 * Do not execute if
@@ -1025,23 +974,23 @@ void sql_do_server_bans_remove(char *type, char *user, char *host)
 		return;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
-	sqluser = rdb_escape(user);
-	sqlhost = rdb_escape(host);
+	sqluser = sql_escape(user);
+	sqlhost = sql_escape(host);
 
 	if (type)
 	{
-		rdb_query(QUERY_LOW,
+		sql_query(
 		          "DELETE FROM %s WHERE type=\'%s\' and user=\'%s\' and host=\'%s\'",
 		          GlineTable, type, sqluser, sqlhost);
 	}
 	else
 	{
-		rdb_query(QUERY_LOW, "DELETE FROM %s WHERE user=\'%s\' and host=\'%s\'",
+		sql_query("DELETE FROM %s WHERE user=\'%s\' and host=\'%s\'",
 		          GlineTable, sqluser, sqlhost);
 	}
-	SET_SEGV_LOCATION();
+	
 
 	free(sqluser);
 	free(sqlhost);
@@ -1063,7 +1012,7 @@ void sql_do_server_bans_remove(char *type, char *user, char *host)
 void sql_do_server_spam_remove(char *target, char *action, char *regex)
 {
 	char *sqltarget, *sqlaction, *sqlregex;
-	SET_SEGV_LOCATION();
+	
 
 	/*
 	 * Do not execute if
@@ -1078,11 +1027,11 @@ void sql_do_server_spam_remove(char *target, char *action, char *regex)
 		return;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
-	sqltarget = rdb_escape(target);
-	sqlaction = rdb_escape(action);
-	sqlregex = rdb_escape(regex);
+	sqltarget = sql_escape(target);
+	sqlaction = sql_escape(action);
+	sqlregex = sql_escape(regex);
 
 	/*
 	 * Query the spam table and remove bans that match the following
@@ -1090,11 +1039,10 @@ void sql_do_server_spam_remove(char *target, char *action, char *regex)
 	 * 2. Action text
 	 * 3. Regex
 	 */
-	rdb_query(QUERY_LOW,
-	          "DELETE FROM %s WHERE target=\'%s\' and action=\'%s\' and regex=\'%s'",
+	sql_query("DELETE FROM %s WHERE target=\'%s\' and action=\'%s\' and regex=\'%s'",
 	          SpamTable, sqltarget, sqlaction, sqlregex);
 
-	SET_SEGV_LOCATION();
+	
 
 	free(sqltarget);
 	free(sqlaction);
@@ -1120,7 +1068,7 @@ int sql_ban_clean(const char *name)
 	 */
 	USE_VAR(name);
 
-	SET_SEGV_LOCATION();
+	
 
 	/*
 	 * Do not execute if
@@ -1132,14 +1080,14 @@ int sql_ban_clean(const char *name)
 		return MOD_CONT;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	/*
 	 * Query the gline table and remove bans that the expiration is
 	 * 1. Not 0 (ie.. no expire)
 	 * 2. Less then the current time
 	 */
-	rdb_query(QUERY_LOW,
+	sql_query(
 	          "DELETE FROM %s WHERE expires !=0 AND expires < %ld",
 	          GlineTable, time(NULL));
 
@@ -1147,7 +1095,7 @@ int sql_ban_clean(const char *name)
 	 * Check if the ircd supports spamfilter and if so we should clean that
 	 * up as well
 	 */
-	SET_SEGV_LOCATION();
+	
 
 	if (ircd->spamfilter)
 	{
@@ -1156,11 +1104,11 @@ int sql_ban_clean(const char *name)
 		 * 1. Not 0 (ie.. no expire)
 		 * 2. Less then the current time
 		 */
-		rdb_query(QUERY_LOW,
+		sql_query(
 		          "DELETE FROM %s WHERE expires != 0 AND expires < %ld",
 		          SpamTable, time(NULL));
 	}
-	SET_SEGV_LOCATION();
+	
 
 	/*
 	 * return MOD_CONT when we are all done.

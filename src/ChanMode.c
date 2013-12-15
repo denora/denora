@@ -134,7 +134,7 @@ ChanMode *FindChanMode(char *name)
 	}
 	idx = MODEHASHSENSITVE(name);
 
-	SET_SEGV_LOCATION();
+	
 
 	for (privcurrent = CHANMODEHANDLERS[idx]; privcurrent;
 	        privcurrent = privcurrent->next)
@@ -370,7 +370,7 @@ ChanMode *CreateChanMode(int mode,
 		return NULL;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	ircsnprintf(modebuf, sizeof(modebuf), "%c", mode);
 
@@ -395,7 +395,7 @@ int addChanMode(ChanMode * m)
 	ChanModeHash *newHash = NULL;
 	ChanModeHash *lastHash = NULL;
 
-	SET_SEGV_LOCATION();
+	
 
 	modindex = MODEHASHSENSITVE(m->mode);
 
@@ -569,7 +569,7 @@ void chan_set_modes(Channel * chan, int ac, char **av)
 	     merge_args(ac, av));
 
 	ac--;
-	SET_SEGV_LOCATION();
+	
 
 	chan->stats->modecount++;
 	chan->stats->modecounttime++;
@@ -592,7 +592,7 @@ void chan_set_modes(Channel * chan, int ac, char **av)
 			alog(LOG_DEBUG, langstr(ALOG_DEBUG_BAD_CHAN_MODE), chan->name);
 			continue;
 		}
-		SET_SEGV_LOCATION();
+		
 
 		ircsnprintf(modebuf, sizeof(modebuf), "%c", mode);
 
@@ -615,7 +615,7 @@ void chan_set_modes(Channel * chan, int ac, char **av)
 				ac--;
 				av++;
 				cm->setvalue(chan, add ? *av : NULL);
-				SET_SEGV_LOCATION();
+				
 				if (ac > 0 && *av)
 				{
 					send_event(EVENT_CHANNEL_MODE, 4,
@@ -696,7 +696,7 @@ char *chan_get_modes(Channel * chan, int complete)
 	char *temp = NULL;
 	ChanMode *cm;
 
-	SET_SEGV_LOCATION();
+	
 
 
 	for (um = chan->modes; um; um = um->next)
@@ -763,7 +763,7 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 		return;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	*db = '\0';
 	ircsnprintf(db, sizeof(db), "UPDATE %s SET ", ChanTable);
@@ -805,7 +805,7 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 						*modes == 'v'
 				        )
 				{
-					SET_SEGV_LOCATION();
+					
 					if (ircd->p10)
 					{
 						p10nick = sstrdup(av[argptr++]);
@@ -813,33 +813,33 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 						{
 							tokennick = myStrGetToken(p10nick, ':', 0);
 							oplevel = myStrGetTokenRemainder(p10nick, ':', 1);
-							sqlnick = rdb_escape(tokennick);
+							sqlnick = sql_escape(tokennick);
 							u = user_find(tokennick);
 							nickid = db_getnick(sqlnick);
 							if (denora->do_sql)
 							{
-								rdb_query(QUERY_LOW, "UPDATE %s SET oplevel=%s WHERE chanid=%d and nickid=%d", IsOnTable, oplevel, c->sqlid, nickid);
+								sql_query("UPDATE %s SET oplevel=%s WHERE chanid=%d and nickid=%d", IsOnTable, oplevel, c->sqlid, nickid);
 							}
 							free(tokennick);
 							free(oplevel);
 						}
 						else
 						{				
-							sqlnick = rdb_escape(p10nick);
+							sqlnick = sql_escape(p10nick);
 							nickid = db_getnick(sqlnick);
 						}
 						free(p10nick);
 					}
 					else 
 					{
-						sqlnick = rdb_escape(av[argptr++]);
+						sqlnick = sql_escape(av[argptr++]);
 						nickid = db_getnick(sqlnick);
 					}
 					free(sqlnick);
 					tmpmode = tolower(*modes);
 					if (nickid > 0)
 					{
-						rdb_query(QUERY_LOW,
+						sql_query(
 						          "UPDATE %s SET mode_l%c='%c' WHERE chanid=%d AND nickid=%d",
 						          IsOnTable, tmpmode, tmp[9], c->sqlid, nickid);
 					}
@@ -852,10 +852,10 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 					ircsnprintf(&db[strlen(db)], sizeof(db), "%s", tmp);
 					if (*modes == 'k')
 					{
-						SET_SEGV_LOCATION();
+						
 						if (tmp[9] == 'Y' && argptr < ac)
 						{
-							char *key = rdb_escape(av[argptr++]);
+							char *key = sql_escape(av[argptr++]);
 							ircsnprintf(&db[strlen(db)], sizeof(db), 
 							            "mode_lk_data='%s', ",
 							            (HidePasswords ? "HIDDEN" : key));
@@ -870,10 +870,10 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 					}
 					else if (ircd->Lmode && *modes == ircd->chanforward)
 					{
-						SET_SEGV_LOCATION();
+						
 						if (tmp[9] == 'Y' && argptr < ac)
 						{
-							char *ch = rdb_escape(av[argptr++]);
+							char *ch = sql_escape(av[argptr++]);
 							ircsnprintf(&db[strlen(db)], sizeof(db), 
 							            "mode_%s%c_data='%s', ",
 							            (ircd->chanforward <= 90 ? "u" : "l"),
@@ -896,7 +896,7 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 							(ircd->nickchgfloodchar && *modes == ircd->nickchgfloodchar)
 						)
 					{
-						SET_SEGV_LOCATION();
+						
 						tmpmode = tolower(*modes);
 						if (tmp[9] == 'Y' && argptr < ac)
 						{
@@ -919,7 +919,7 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 	if (atleastone)
 	{
 		ircsnprintf(&db[strlen(db) - 2], sizeof(db), " WHERE chanid=%d", c->sqlid);
-		rdb_query(QUERY_LOW, db);
+		sql_query(db);
 	}
 	return;
 }
@@ -928,7 +928,7 @@ void sql_do_chanmodes(char *chan, int ac, char **av)
 
 char *get_flood(Channel * chan)
 {
-	SET_SEGV_LOCATION();
+	
 	return chan ? chan->flood : NULL;
 }
 
@@ -936,7 +936,7 @@ char *get_flood(Channel * chan)
 
 char *get_flood_alt(Channel * chan)
 {
-	SET_SEGV_LOCATION();
+	
 	return chan ? chan->flood_alt : NULL;
 }
 
@@ -944,7 +944,7 @@ char *get_flood_alt(Channel * chan)
 
 char *get_key(Channel * chan)
 {
-	SET_SEGV_LOCATION();
+	
 	return chan ? chan->key : NULL;
 }
 
@@ -974,7 +974,7 @@ char *get_rejoinlock(Channel * chan)
 
 char *get_nickchgflood(Channel * chan)
 {
-	SET_SEGV_LOCATION();
+	
 	return chan ? chan->nickchgflood : NULL;
 }
 
@@ -982,7 +982,7 @@ char *get_nickchgflood(Channel * chan)
 
 char *get_redirect(Channel * chan)
 {
-	SET_SEGV_LOCATION();
+	
 	return chan ? chan->redirect : NULL;
 }
 
@@ -990,7 +990,7 @@ char *get_redirect(Channel * chan)
 
 void set_flood(Channel * chan, char *value)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!chan)
 	{
@@ -1011,7 +1011,7 @@ void set_flood(Channel * chan, char *value)
 
 void set_flood_alt(Channel * chan, char *value)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!chan)
 	{
@@ -1034,7 +1034,7 @@ void set_flood_alt(Channel * chan, char *value)
 
 void set_key(Channel * chan, char *value)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!chan)
 	{
@@ -1055,7 +1055,7 @@ void set_key(Channel * chan, char *value)
 
 void set_limit(Channel * chan, char *value)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!chan)
 	{
@@ -1073,7 +1073,7 @@ void set_limit(Channel * chan, char *value)
 
 void set_rejoinlock(Channel * chan, char *value)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!chan)
 	{
@@ -1092,7 +1092,7 @@ void set_rejoinlock(Channel * chan, char *value)
 
 void set_nickchgflood(Channel * chan, char *value)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!chan)
 	{
@@ -1113,7 +1113,7 @@ void set_nickchgflood(Channel * chan, char *value)
 
 void set_redirect(Channel * chan, char *value)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!chan)
 	{

@@ -104,8 +104,8 @@ void ctcp_update(char *version)
 
 	if (denora->do_sql)
 	{
-		dbversion = rdb_escape(version);
-		rdb_query(QUERY_LOW,
+		dbversion = sql_escape(version);
+		sql_query(
 	          "UPDATE %s SET count=%u, overall=%u WHERE version=\'%s\'",
 	          CTCPTable, c->count, c->overall, dbversion);
 		free(dbversion);
@@ -162,8 +162,8 @@ void handle_ctcp_version(char *nick, char *version)
 
 		if (denora->do_sql)
 		{
-			dbversion = rdb_escape(version);
-			rdb_query(QUERY_LOW,
+			dbversion = sql_escape(version);
+			sql_query(
 			  "UPDATE %s SET ctcpversion=\'%s\' WHERE nickid=%d",
 			  UserTable, dbversion, db_getnick(u->sqlnick));
 			free(dbversion);
@@ -179,18 +179,18 @@ void sql_do_ctcp(int type, char *version, int count, int overall)
 
 	if (version)
 	{
-		temp = rdb_escape(version);
+		temp = sql_escape(version);
 
 		if (type == 1)
 		{
-			SET_SEGV_LOCATION();
-			rdb_query(QUERY_LOW,
+			
+			sql_query(
 				  "INSERT INTO %s (version, count, overall) VALUES(\'%s\', %d, %d)",
 				  CTCPTable, temp, count, overall);
 		}
 		if (type == 4)
 		{
-					rdb_query(QUERY_LOW,
+					sql_query(
 						  "INSERT INTO %s (version, count, overall) VALUES(\'%s\', %d, %d) \
 							ON DUPLICATE KEY UPDATE count=%d, overall=%d",
 						  CTCPTable, temp, count, overall, count, overall);

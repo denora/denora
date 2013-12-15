@@ -29,7 +29,7 @@ void send_cmd(const char *source, const char *fmt, ...)
 {
 	va_list args;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (fmt && !denora->quitting)
 	{
@@ -53,7 +53,7 @@ void vsend_cmd(const char *source, const char *fmt, va_list args)
 	char buf[BUFSIZE];
 	*buf = '\0';
 
-	SET_SEGV_LOCATION();
+	
 	total_sendmsg++;
 
 	if (!BadPtr(fmt))
@@ -100,7 +100,7 @@ void notice_server(char *source, Server * s, char *fmt, ...)
 	char buf[BUFSIZE];
 	*buf = '\0';
 
-	SET_SEGV_LOCATION();
+	
 
 	if (fmt)
 	{
@@ -188,12 +188,12 @@ void notice_lang(char *source, User * dest, int message, ...)
 		return;
 	}
 	va_start(args, message);
-	SET_SEGV_LOCATION();
+	
 	fmt = getstring(dest, message);
 	if (!fmt)
 		return;
 	memset(buf, 0, 4096);
-	SET_SEGV_LOCATION();
+	
 	ircvsnprintf(buf, sizeof(buf), fmt, args);
 	va_end(args);
 	s = buf;

@@ -107,11 +107,11 @@ static int do_exclude(User * u, int ac, char **av)
 			u2 = user_find(av[1]);
 			if (!u2)
 			{
-				name = rdb_escape(av[1]);
+				name = sql_escape(av[1]);
 			}
-			rdb_query(QUERY_LOW, "DELETE FROM %s WHERE lower(`uname`)=lower(\'%s\')",
+			sql_query( "DELETE FROM %s WHERE lower(`uname`)=lower(\'%s\')",
 			          UStatsTable, u2 ? u2->sgroup : name);
-			rdb_query(QUERY_LOW,
+			sql_query(
 			          "UPDATE `%s` SET `ignore`=\'Y\' WHERE lower(`uname`)=lower(\'%s\')",
 			          AliasesTable, u2 ? u2->sgroup : name);
 			if (name)
@@ -140,15 +140,15 @@ static int do_exclude(User * u, int ac, char **av)
 			u2 = user_find(av[1]);
 			if (!u2)
 			{
-				name = rdb_escape(av[1]);
+				name = sql_escape(av[1]);
 			}
-			rdb_query(QUERY_LOW,
+			sql_query(
 			          "UPDATE `%s` SET `ignore`=\'N\' WHERE lower(`uname`)=lower(\'%s\')",
 			          AliasesTable, u2 ? u2->sgroup : name);
 			for (i = 0; i < 4; i++)
 			{
-				rdb_query
-				(QUERY_LOW,
+				sql_query
+				(
 				 "INSERT IGNORE INTO %s SET uname=\'%s\', chan=\'global\', type=%i;",
 				 UStatsTable, u2 ? u2->sgroup : name, i);
 			}

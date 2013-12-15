@@ -48,9 +48,9 @@ int DenoraInit(int argc, char **argv)
 
 	alog(LOG_NORMAL, "Installing MYSQL Optimizing Event, this will run daily on your MySQL Server.");
 
-	rdb_query(QUERY_LOW, "DROP EVENT IF EXISTS `DENORA_EVENT_OPTIMIZE`");
+	sql_query("DROP EVENT IF EXISTS `DENORA_EVENT_OPTIMIZE`");
 
-	rdb_query(QUERY_LOW, "CREATE EVENT `DENORA_EVENT_OPTIMIZE` "
+	sql_query("CREATE EVENT `DENORA_EVENT_OPTIMIZE` "
 				"ON SCHEDULE EVERY 1 DAY STARTS CURRENT_DATE "
 				"DO OPTIMIZE TABLE %s", tables);
 
@@ -62,6 +62,6 @@ int DenoraInit(int argc, char **argv)
  **/
 void DenoraFini(void)
 {
-	rdb_query(QUERY_LOW,"DROP EVENT IF EXISTS `DENORA_EVENT_OPTIMIZE`");
+	sql_query("DROP EVENT IF EXISTS `DENORA_EVENT_OPTIMIZE`");
 }
 

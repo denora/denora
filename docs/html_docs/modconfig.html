@@ -56,11 +56,11 @@ Denora Modules: Configuration Files<br />
     first parameter must be the variable from the config file that will be looked for. Next is the
     data type (see above), Next is if the variable is reloadable, should Denora rehash should this
     change. Next is the global variable into which the option will be copied to.<br />
-<br />
+<pre>
     for (i = 0; i < 1; i++) {<br />
         moduleGetConfigDirective("test.conf", confvalues[i]);<br />
 	}<br />
-<br />
+</pre>
     Now you can have the core load you config file and look for the settings within.<br />
 <br />
     **NOTE** Unlike anope this function, has two arguments so you must list what file to parse<br />

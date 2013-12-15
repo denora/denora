@@ -115,7 +115,7 @@ void html_ctcp_table(FILE * ptr)
 
 void html_top10client_title(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstring(HTML_TOP10_CLIENT_TITLE));

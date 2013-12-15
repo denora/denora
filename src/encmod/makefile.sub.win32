@@ -1,0 +1,30 @@
+# Make file
+#
+# (c) 2004-2013 Denora Team
+# Contact us at info@denorastats.org
+#
+# Please read COPYING and README for further details.
+#
+# Based on the original code of Anope by Anope Team.
+# Based on the original code of Thales by Lucas.
+#
+# 
+#
+
+include ../../../Makefile.inc.win32
+
+OBJECTS= $(SRCS:.c=.obj)
+CFLAGS=/nologo /LD /MD /D MODULE_COMPILE $(CFLAGS) /I"../../../include" /I "../"
+LFLAGS=/nologo ../../denora.lib wsock32.lib $(LIBS) $(LFLAGS) $(MYSQL_LIB_PATH) /export:DenoraInit /export:DenoraFini /OUT:$(TARGET)
+
+all: 
+    $(CC) $(SRCS) $(CFLAGS) ..\..\mod_version.c /link $(LFLAGS)
+
+clean:
+        -@del *.obj
+
+distclean: clean
+        -@del *.dll *.lib *.exp *.dll.manifest
+        
+install:
+        -@copy *.dll ..\..\..\$(DATDEST)\modules

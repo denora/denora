@@ -384,7 +384,7 @@ char *stristr(char *s1, char *s2)
 {
 	register char *s = s1, *d = s2;
 
-	SET_SEGV_LOCATION();
+	
 
 	while (*s1)
 	{
@@ -426,7 +426,7 @@ char *strnrepl(char *s, int32 size, const char *old, const char *new)
 	int32 newlen = strlen(new);
 	int32 diff = newlen - oldlen;
 
-	SET_SEGV_LOCATION();
+	
 
 	while (left >= oldlen)
 	{
@@ -463,7 +463,7 @@ char *strnrepl(char *s, int32 size, const char *old, const char *new)
 int stricmp(const char *s1, const char *s2)
 {
 	register int c;
-	SET_SEGV_LOCATION();
+	
 
 	if (!s1 || !*s1 || !s2 || !*s2)
 	{
@@ -499,7 +499,7 @@ int stricmp(const char *s1, const char *s2)
 int strnicmp(const char *s1, const char *s2, size_t len)
 {
 	register int c;
-	SET_SEGV_LOCATION();
+	
 
 	if (!len)
 		return 0;
@@ -533,7 +533,7 @@ int strnicmp(const char *s1, const char *s2, size_t len)
 size_t strspn(const char *s, const char *accept)
 {
 	size_t i = 0;
-	SET_SEGV_LOCATION();
+	
 
 	while (*s && strchr(accept, *s))
 		++i, ++s;
@@ -790,7 +790,7 @@ size_t strlcpy(char *dest, const char *src, size_t size)
  */
 void strtolwr(char *ch)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!BadPtr(ch))
 	{
@@ -814,7 +814,7 @@ char *str_signed(unsigned char *str)
 {
 	char *nstr;
 
-	SET_SEGV_LOCATION();
+	
 
 	nstr = (char *) str;
 	while (*str)
@@ -902,7 +902,7 @@ char *sstrndup(const char *src, size_t n)
 {
 	char *ret = NULL;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (src)
 	{

@@ -85,11 +85,11 @@ void html_server_details(FILE * ptr)
 	char timebuf[64];
 	struct tm tm;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (ptr)
 	{
-		SET_SEGV_LOCATION();
+		
 		s = first_statsserver();
 		while (s)
 		{
@@ -179,7 +179,7 @@ void html_server_details(FILE * ptr)
 
 			s = next;
 		}
-		SET_SEGV_LOCATION();
+		
 	}
 }
 
@@ -187,7 +187,7 @@ void html_server_details(FILE * ptr)
 
 void html_serverdetails_title(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstring(HTML_SERVERDETAILS_TITLE));

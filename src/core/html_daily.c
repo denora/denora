@@ -87,7 +87,7 @@ void html_dailystats(FILE * ptr)
 	<td colspan="2"> 14839</td></tr>
 	*/
 
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		fprintf(ptr, "%s", getstring(NULL, HTML_DAILY_HEADER));
@@ -129,7 +129,7 @@ void html_dailystats(FILE * ptr)
 
 void html_dailystats_title(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstring(HTML_DAILY_TITLE));

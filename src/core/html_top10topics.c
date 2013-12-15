@@ -108,7 +108,7 @@ void html_top10_topics(FILE * ptr)
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstring(HTML_TOP10_TOPIC_HEADER));
-		SET_SEGV_LOCATION();
+		
 		list_sort(StatsChanhead, top10topic_sort);
 		tn = list_first(StatsChanhead);
 		while (tn)
@@ -151,7 +151,7 @@ void html_top10_topics(FILE * ptr)
 
 		}
 		fprintf(ptr, "%s", langstring(HTML_TOP10_TOPIC_FOOTER));
-		SET_SEGV_LOCATION();
+		
 	}
 }
 
@@ -159,7 +159,7 @@ void html_top10_topics(FILE * ptr)
 
 void html_top10_topics_title(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstring(HTML_TOP10_TOPIC_TITLE));
@@ -171,7 +171,7 @@ void html_top10_topics_title(FILE * ptr)
 
 void html_mosttopic_title(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstring(HTML_MOST_TOPIC_TITLE));

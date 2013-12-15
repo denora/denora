@@ -41,7 +41,7 @@ ChanBanMode *FindChanBanMode(char *name)
 
 	idx = CMD_HASH(name);
 
-	SET_SEGV_LOCATION();
+	
 
 	for (privcurrent = CHANBANMODEHANDLERS[idx]; privcurrent;
 	        privcurrent = privcurrent->next)
@@ -70,7 +70,7 @@ ChanBanMode *CreateChanBanMode(int mode,
 		return NULL;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	ircsnprintf(modebuf, sizeof(modebuf), "%c", mode);
 
@@ -95,7 +95,7 @@ int addChanBanMode(ChanBanMode * m)
 	ChanBanModeHash *newHash = NULL;
 	ChanBanModeHash *lastHash = NULL;
 
-	SET_SEGV_LOCATION();
+	
 
 	modindex = CMD_HASH(m->mode);
 
@@ -181,52 +181,47 @@ int delChanBanMode(ChanBanMode * m)
 
 void sql_channel_ban(int type, Channel * c, char *mask)
 {
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
+	SQLres *sql_res;
 	char *sqlmask;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (LargeNet || !c)
 	{
 		return;
 	}
 
-	sqlmask = rdb_escape(mask);
+	sqlmask = sql_escape(mask);
 
 	if (type == 1)
 	{
-		rdb_query(QUERY_HIGH,
-		          "SELECT id FROM %s WHERE chan = \'%s\' and bans = \'%s\' LIMIT 1",
+		sql_query("SELECT id FROM %s WHERE chan = \'%s\' and bans = \'%s\' LIMIT 1",
 		          ChanBansTable, c->sqlchan, sqlmask);
-#ifdef USE_MYSQL
-		mysql_res = mysql_store_result(mysql);
-		if (mysql_res)
+		sql_res = sql_set_result(sqlcon);
+		if (sql_res)
 		{
-			if (mysql_num_rows(mysql_res) == 0)
+			if (sql_num_rows(sql_res) == 0)
 			{
-				rdb_query(QUERY_LOW,
+				sql_query(
 				          "INSERT INTO %s (chan, bans) VALUES (\'%s\', \'%s\')",
 				          ChanBansTable, c->sqlchan, sqlmask);
 			}
-			mysql_free_result(mysql_res);
+			sql_free_result(sql_res);
 		}
-#endif
 	}
 	else if (type == 2)
 	{
-		rdb_query(QUERY_LOW,
+		sql_query(
 		          "DELETE FROM %s WHERE chan=\'%s\' AND bans=\'%s\'",
 		          ChanBansTable, c->sqlchan, sqlmask);
 	}
 	else
 	{
-		rdb_query(QUERY_LOW,
+		sql_query(
                           "DELETE FROM %s WHERE chan=\'%s\'",
 		          ChanBansTable, c->sqlchan);
 	}
-	SET_SEGV_LOCATION();
+	
 
 	free(sqlmask);
 
@@ -237,52 +232,48 @@ void sql_channel_ban(int type, Channel * c, char *mask)
 
 void sql_channel_quiet(int type, Channel * c, char *mask)
 {
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
+	SQLres *sql_res;
 	char *sqlmask;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (LargeNet || !c)
 	{
 		return;
 	}
 
-	sqlmask = rdb_escape(mask);
+	sqlmask = sql_escape(mask);
 
 	if (type == 1)
 	{
-		rdb_query(QUERY_HIGH,
+		sql_query(
 		          "SELECT id FROM %s WHERE chan = \'%s\' and bans = \'%s\' LIMIT 1",
 		          ChanQuietTable, c->sqlchan, sqlmask);
-#ifdef USE_MYSQL
-		mysql_res = mysql_store_result(mysql);
-		if (mysql_res)
+		sql_res = sql_set_result(sqlcon);
+		if (sql_res)
 		{
-			if (mysql_num_rows(mysql_res) == 0)
+			if (sql_num_rows(sql_res) == 0)
 			{
-				rdb_query(QUERY_LOW,
+				sql_query(
 					  "INSERT INTO %s (chan, bans) VALUES (\'%s\', \'%s\')",
 					  ChanQuietTable, c->sqlchan, sqlmask);
 			}
-			mysql_free_result(mysql_res);
+			sql_free_result(sql_res);
 		}
-#endif
 	}
 	else if (type == 2)
 	{
-		rdb_query(QUERY_LOW,
+		sql_query(
 			  "DELETE FROM %s WHERE chan=\'%s\' AND bans=\'%s\'",
 			  ChanQuietTable, c->sqlchan, sqlmask);
 	}
 	else
 	{
-		rdb_query(QUERY_LOW,
+		sql_query(
 			  "DELETE FROM %s WHERE chan=\'%s\'",
 		          ChanQuietTable, c->sqlchan);
 	}
-	SET_SEGV_LOCATION();
+	
 
 	free(sqlmask);
 
@@ -293,52 +284,44 @@ void sql_channel_quiet(int type, Channel * c, char *mask)
 
 void sql_channel_exception(int type, Channel * c, char *mask)
 {
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
+	SQLres *sql_res;
 	char *sqlmask;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (LargeNet || !c)
 	{
 		return;
 	}
 
-	sqlmask = rdb_escape(mask);
+	sqlmask = sql_escape(mask);
 
 	if (type == 1)
 	{
-		rdb_query(QUERY_HIGH,
+		sql_query(
 		          "SELECT mask FROM %s WHERE chan = \'%s\' and mask = \'%s\' LIMIT 1",
 		          ChanExceptTable, c->sqlchan, sqlmask);
-#ifdef USE_MYSQL
-		mysql_res = mysql_store_result(mysql);
-		if (mysql_res)
+		sql_res = sql_set_result(sqlcon);
+		if (sql_res)
 		{
-			if (mysql_num_rows(mysql_res) == 0)
+			if (sql_num_rows(sql_res) == 0)
 			{
-				rdb_query(QUERY_LOW,
+				sql_query(
 				          "INSERT IGNORE INTO %s (chan, mask) VALUES (\'%s\', \'%s\')",
 				          ChanExceptTable, c->sqlchan, sqlmask);
 			}
-			mysql_free_result(mysql_res);
+			sql_free_result(sql_res);
 		}
-#endif
 	}
 	else if (type == 2)
 	{
-		rdb_query(QUERY_LOW,
-		          "DELETE FROM %s WHERE chan=\'%s\' AND mask=\'%s\'",
+		sql_query("DELETE FROM %s WHERE chan=\'%s\' AND mask=\'%s\'",
 		          ChanExceptTable, c->sqlchan, sqlmask);
 	}
 	else
 	{
-		rdb_query(QUERY_LOW,
-			  "DELETE FROM %s WHERE chan=\'%s\'",
-		          ChanExceptTable, c->sqlchan);
+		sql_query("DELETE FROM %s WHERE chan=\'%s\'", ChanExceptTable, c->sqlchan);
 	}
-	SET_SEGV_LOCATION();
 
 	free(sqlmask);
 
@@ -349,53 +332,47 @@ void sql_channel_exception(int type, Channel * c, char *mask)
 
 void sql_channel_invite(int type, Channel * c, char *mask)
 {
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
+	SQLres *sql_res;
 	char *sqlmask;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (LargeNet || !c)
 	{
 		return;
 	}
 
-	sqlmask = rdb_escape(mask);
+	sqlmask = sql_escape(mask);
 
 	if (type == 1)
 	{
-		rdb_query(QUERY_HIGH,
+		sql_query(
 		          "SELECT mask FROM %s WHERE chan = \'%s\' and mask = \'%s\';",
 		          ChanInviteTable, c->sqlchan, sqlmask);
-#ifdef USE_MYSQL
-		mysql_res = mysql_store_result(mysql);
-		if (mysql_res)
+		sql_res = sql_set_result(sqlcon);
+		if (sql_res)
 		{
-			if (mysql_num_rows(mysql_res) == 0)
+			if (sql_num_rows(sql_res) == 0)
 			{
-				rdb_query(QUERY_LOW,
+				sql_query(
 				          "INSERT IGNORE INTO %s (chan, mask) VALUES (\'%s\', \'%s\')",
 				          ChanInviteTable, c->sqlchan, sqlmask);
 			}
-			mysql_free_result(mysql_res);
+			sql_free_result(sql_res);
 		}
-#endif
 	}
 	else if (type == 2)
 	{
-		rdb_query(QUERY_LOW,
+		sql_query(
 		          "DELETE FROM %s WHERE chan=\'%s\' AND mask=\'%s\'",
 		          ChanInviteTable, c->sqlchan, sqlmask);
 	}
 	else
 	{
-		rdb_query(QUERY_LOW,
+		sql_query(
 			  "DELETE FROM %s WHERE chan=\'%s\'",
 		          ChanInviteTable, c->sqlchan);
 	}
-	SET_SEGV_LOCATION();
-
 	free(sqlmask);
 
 	return;
@@ -405,7 +382,7 @@ void sql_channel_invite(int type, Channel * c, char *mask)
 
 void add_ban(Channel * chan, char *mask)
 {
-	SET_SEGV_LOCATION();
+	
 
 	/* check for NULL values otherwise we will segfault */
 	if (!chan || !mask)
@@ -421,7 +398,7 @@ void add_ban(Channel * chan, char *mask)
 	}
 	chan->bans[chan->bancount++] = sstrdup(mask);
 
-	SET_SEGV_LOCATION();
+	
 
 	alog(LOG_DEBUG, langstr(ALOG_ADD_BAN_ADDED), mask, chan->name);
 
@@ -435,7 +412,7 @@ void add_ban(Channel * chan, char *mask)
 
 void add_exception(Channel * chan, char *mask)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!chan)
 	{
@@ -450,7 +427,7 @@ void add_exception(Channel * chan, char *mask)
 	}
 	chan->excepts[chan->exceptcount++] = sstrdup(mask);
 
-	SET_SEGV_LOCATION();
+	
 
 	alog(LOG_DEBUG, langstr(ALOG_ADD_EXCEPTION_ADDED), mask, chan->name);
 
@@ -464,7 +441,7 @@ void add_exception(Channel * chan, char *mask)
 
 void add_invite(Channel * chan, char *mask)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!chan)
 	{
@@ -480,7 +457,7 @@ void add_invite(Channel * chan, char *mask)
 	chan->invite[chan->invitecount++] = sstrdup(mask);
 
 	alog(LOG_DEBUG, langstr(ALOG_ADD_INVITE_ADDED), mask, chan->name);
-	SET_SEGV_LOCATION();
+	
 
 	if (denora->do_sql)
 	{
@@ -492,7 +469,7 @@ void add_invite(Channel * chan, char *mask)
 
 void add_quiet(Channel * chan, char *mask)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!chan)
 	{
@@ -508,7 +485,7 @@ void add_quiet(Channel * chan, char *mask)
 	chan->quiet[chan->quietcount++] = sstrdup(mask);
 
 	alog(LOG_DEBUG, langstr(ALOG_ADD_INVITE_ADDED), mask, chan->name);
-	SET_SEGV_LOCATION();
+	
 
 	if (denora->do_sql)
 	{
@@ -523,7 +500,7 @@ void del_ban(Channel * chan, char *mask)
 	char **s;
 	int i = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	/* Sanity check as it seems some IRCD will just send -b without a mask */
 	if (!chan || !mask)
@@ -548,7 +525,7 @@ void del_ban(Channel * chan, char *mask)
 		}
 		alog(LOG_DEBUG, langstr(ALOG_BAN_DEL_CHAN), mask, chan->name);
 	}
-	SET_SEGV_LOCATION();
+	
 
 	if (denora->do_sql)
 	{
@@ -563,7 +540,7 @@ void del_exception(Channel * chan, char *mask)
 	int i;
 	int reset = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	/* Sanity check as it seems some IRCD will just send -e without a mask */
 	if (!chan || !mask)
@@ -589,7 +566,7 @@ void del_exception(Channel * chan, char *mask)
 	{
 		chan->exceptcount--;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	alog(LOG_DEBUG, langstr(ALOG_EXCEPTION_DEL_CHAN), mask, chan->name);
 
@@ -612,7 +589,7 @@ void del_invite(Channel * chan, char *mask)
 		return;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	for (i = 0; i < chan->invitecount; i++)
 	{
@@ -634,7 +611,7 @@ void del_invite(Channel * chan, char *mask)
 	}
 
 	alog(LOG_DEBUG, langstr(ALOG_INVITE_DEL_CHAN), mask, chan->name);
-	SET_SEGV_LOCATION();
+	
 	if (denora->do_sql)
 	{
 		sql_channel_invite(DEL, chan, mask);
@@ -654,7 +631,7 @@ void del_quiet(Channel * chan, char *mask)
 		return;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	for (i = 0; i < chan->quietcount; i++)
 	{
@@ -676,7 +653,7 @@ void del_quiet(Channel * chan, char *mask)
 	}
 
 	alog(LOG_DEBUG, langstr(ALOG_INVITE_DEL_CHAN), mask, chan->name);
-	SET_SEGV_LOCATION();
+	
 	if (denora->do_sql)
 	{
 		sql_channel_quiet(DEL, chan, mask);

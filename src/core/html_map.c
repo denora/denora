@@ -194,7 +194,7 @@ void html_map(FILE * ptr)
 
 void html_netmap_title(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstring(HTML_NETMAP_TITLE));

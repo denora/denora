@@ -40,7 +40,7 @@ void load_stats_db(void)
         {
                 return;                 /* Bang, an error occurred */
         }
-        SET_SEGV_LOCATION();
+        
 
 	while (1)
 	{
@@ -72,7 +72,7 @@ void load_stats_db(void)
 			{
 				continue;
 			}
-			SET_SEGV_LOCATION();
+			
 
 			if (!stricmp(key, "usermax"))
 			{
@@ -126,7 +126,7 @@ void save_stats_db(void)
 {
 	DenoraDBFile *dbptr = filedb_create(statsDB, STATSDB_VERSION);
 
-	SET_SEGV_LOCATION();
+	
 	new_write_db_entry("usermax", dbptr, "%ld", stats->users_max);
 	new_write_db_entry("usermaxtime", dbptr, "%ld",
 	                   (long int) stats->users_max_time);
@@ -148,7 +148,7 @@ void save_stats_db(void)
 	                   (long int) stats->opers_max_time);
 	new_write_db_endofblock(dbptr);
 
-	SET_SEGV_LOCATION();
+	
 	filedb_close(dbptr, NULL, NULL);  /* close file */
 }
 
@@ -170,57 +170,57 @@ void db_connect(void)
 	if (!denora->do_sql)
 	{
 		alog(LOG_ERROR, langstring(ALOG_FAILED_SQL_CONNECT),
-		     rdb_error_msg());
+		     SQLErrMsg(sqlcon));
 		return;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	/* Checking for missing tables */
-	if (!rdb_check_table(ChanTable))
+	if (!sql_check_table(ChanTable))
 		tablecount++;
-	if (!rdb_check_table(IsOnTable))
+	if (!sql_check_table(IsOnTable))
 		tablecount++;
-	if (!rdb_check_table(ServerTable))
+	if (!sql_check_table(ServerTable))
 		tablecount++;
-	if (!rdb_check_table(UserTable))
+	if (!sql_check_table(UserTable))
 		tablecount++;
-	if (!rdb_check_table(GlineTable))
+	if (!sql_check_table(GlineTable))
 		tablecount++;
-	if (!rdb_check_table(ChanBansTable))
+	if (!sql_check_table(ChanBansTable))
 		tablecount++;
-	if (!rdb_check_table(CTCPTable))
+	if (!sql_check_table(CTCPTable))
 		tablecount++;
-	if (!rdb_check_table(SpamTable))
+	if (!sql_check_table(SpamTable))
 		tablecount++;
-	if (!rdb_check_table(ChanExceptTable))
+	if (!sql_check_table(ChanExceptTable))
 		tablecount++;
-	if (!rdb_check_table(ChanInviteTable))
+	if (!sql_check_table(ChanInviteTable))
 		tablecount++;
-	if (!rdb_check_table(TLDTable))
+	if (!sql_check_table(TLDTable))
 		tablecount++;
-	if (!rdb_check_table(SglineTable))
+	if (!sql_check_table(SglineTable))
 		tablecount++;
-	if (!rdb_check_table(SqlineTable))
+	if (!sql_check_table(SqlineTable))
 		tablecount++;
-	if (!rdb_check_table(MaxValueTable))
+	if (!sql_check_table(MaxValueTable))
 		tablecount++;
-	if (!rdb_check_table(AliasesTable))
+	if (!sql_check_table(AliasesTable))
 		tablecount++;
-	if (!rdb_check_table(CStatsTable))
+	if (!sql_check_table(CStatsTable))
 		tablecount++;
-	if (!rdb_check_table(UStatsTable))
+	if (!sql_check_table(UStatsTable))
 		tablecount++;
-	if (!rdb_check_table(StatsTable))
+	if (!sql_check_table(StatsTable))
 		tablecount++;
-	if (!rdb_check_table(CurrentTable))
+	if (!sql_check_table(CurrentTable))
 		tablecount++;
-	if (!rdb_check_table(ChanStatsTable))
+	if (!sql_check_table(ChanStatsTable))
 		tablecount++;
-	if (!rdb_check_table(ServerStatsTable))
+	if (!sql_check_table(ServerStatsTable))
 		tablecount++;
-	if (!rdb_check_table(ChanQuietTable))
+	if (!sql_check_table(ChanQuietTable))
 		tablecount++;
-	if (!rdb_check_table(AdminTable))
+	if (!sql_check_table(AdminTable))
 		tablecount++;
 
 	if (tablecount)
@@ -233,33 +233,33 @@ void db_connect(void)
 	}
 
 	/* Cleaning up the database */
-	rdb_clear_table(ChanTable);
-	rdb_clear_table(IsOnTable);
-	rdb_clear_table(ServerTable);
-	rdb_clear_table(UserTable);
-	rdb_clear_table(GlineTable);
-	rdb_clear_table(ChanBansTable);
-	rdb_clear_table(CTCPTable);
-	rdb_clear_table(SpamTable);
-	rdb_clear_table(ChanExceptTable);
-	rdb_clear_table(ChanInviteTable);
-	rdb_clear_table(TLDTable);
-	rdb_clear_table(SglineTable);
-	rdb_clear_table(SqlineTable);
+	sql_clear_table(ChanTable);
+	sql_clear_table(IsOnTable);
+	sql_clear_table(ServerTable);
+	sql_clear_table(UserTable);
+	sql_clear_table(GlineTable);
+	sql_clear_table(ChanBansTable);
+	sql_clear_table(CTCPTable);
+	sql_clear_table(SpamTable);
+	sql_clear_table(ChanExceptTable);
+	sql_clear_table(ChanInviteTable);
+	sql_clear_table(TLDTable);
+	sql_clear_table(SglineTable);
+	sql_clear_table(SqlineTable);
 
 	e = first_exclude();
 	while (e)
 	{
 		next = next_exclude();
-		rdb_query(QUERY_LOW, "DELETE FROM %s WHERE uname=\'%s\'",
+		sql_query("DELETE FROM %s WHERE uname=\'%s\'",
 		          UStatsTable, e->name);
 		e = next;
 	}
-	rdb_query(QUERY_LOW, "DELETE FROM %s WHERE uname=\'%s\'", 
+	sql_query("DELETE FROM %s WHERE uname=\'%s\'", 
 		  UStatsTable,s_StatServ);
 	if (s_StatServ_alias)
 	{
-		rdb_query(QUERY_LOW, "DELETE FROM %s WHERE uname=\'%s\'",
+		sql_query("DELETE FROM %s WHERE uname=\'%s\'",
 		          UStatsTable, s_StatServ_alias);
 	}
 
@@ -271,22 +271,22 @@ void db_connect(void)
 			{
 				del_cs(cs);
 			}
-			sqlchan = rdb_escape(LogChannel);
+			sqlchan = sql_escape(LogChannel);
 			save_cs_db();
-			rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chan=\'%s\'",
+			sql_query("DELETE FROM %s WHERE chan=\'%s\'",
 			          CStatsTable, sqlchan);
-			rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chan=\'%s\'",
+			sql_query("DELETE FROM %s WHERE chan=\'%s\'",
 			          UStatsTable, sqlchan);
 			free(sqlchan);
 		}
 	}
 	if (!db_getcurrent_chans())
 	{
-		rdb_query(QUERY_LOW, "INSERT INTO %s VALUES ('chans', 0, 0); ",
+		sql_query("INSERT INTO %s VALUES ('chans', 0, 0); ",
 		          CurrentTable);
 	}
 
-	SET_SEGV_LOCATION();
+	
 }
 
 /*************************************************************************/
@@ -297,9 +297,8 @@ int db_getserver(char *serv)
 	Server *s;
 	char *sqlserv;
 	int servid = -1;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
+	SQLres *sql_res;
+	char **sql_row;
 
 	if (!serv)
 	{
@@ -312,30 +311,28 @@ int db_getserver(char *serv)
 		return s->sqlid;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!denora->do_sql)
 	{
 		return servid;
 	}
 
-	sqlserv = rdb_escape(serv);
-	rdb_query(QUERY_HIGH, "SELECT servid FROM %s WHERE server=\'%s\'",
-	          ServerTable, sqlserv);
+	sqlserv = sql_escape(serv);
+	sql_query("SELECT servid FROM %s WHERE server=\'%s\'", ServerTable, sqlserv);
 	free(sqlserv);
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
+
+	sql_res = sql_set_result(sqlcon);
+	if (sql_res)
 	{
-		if (mysql_num_rows(mysql_res))
+		if (sql_num_rows(sql_res))
 		{
-			mysql_row = mysql_fetch_row(mysql_res);
-			servid = strtol(mysql_row[0], NULL, 10);
+			sql_row = sql_fetch_row(sql_res);
+			servid = strtol(sql_row[0], NULL, 10);
 		}
-		SET_SEGV_LOCATION();
-		mysql_free_result(mysql_res);
+		
+		sql_free_result(sql_res);
 	}
-#endif
 	if (s && servid > 0)
 	{
 		s->sqlid = servid;
@@ -350,16 +347,15 @@ int db_getnick(char *nick)
 {
 	int nickid = -1;
 	User *u;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
+	SQLres *sql_res;
+	char **sql_row;
 
 	if (!nick)
 	{
 		return nickid;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	u = user_find(nick);
 	if (u && (u->sqlid > 0))
@@ -372,21 +368,18 @@ int db_getnick(char *nick)
 		return nickid;
 	}
 
-	rdb_query(QUERY_HIGH, "SELECT nickid FROM %s WHERE nick=\'%s\'",
-	          UserTable, nick);
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
+	sql_query("SELECT nickid FROM %s WHERE nick=\'%s\'", UserTable, nick);
+	sql_res = sql_set_result(sqlcon);
+	if (sql_res)
 	{
-		if (mysql_num_rows(mysql_res))
+		if (sql_num_rows(sql_res))
 		{
-			mysql_row = mysql_fetch_row(mysql_res);
-			nickid = strtol(mysql_row[0], NULL, 10);
+			sql_row = sql_fetch_row(sql_res);
+			nickid = strtol(sql_row[0], NULL, 10);
 		}
-		SET_SEGV_LOCATION();
-		mysql_free_result(mysql_res);
+		
+		sql_free_result(sql_res);
 	}
-#endif
 	if (u && (nickid > 0))
 	{
 		u->sqlid = nickid;
@@ -401,14 +394,11 @@ int db_checknick_nt(char *nick)
 {
 	int nickid = -1;
 	User *u;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-	MYSQL_RES *mysql_res2;
+	SQLres *sql_res;
+	SQLres *sql_res2;
 	char *olduname;
-#endif
 	char *username, *host, *queryhost, *sqlnick;
-
-	SET_SEGV_LOCATION();
+	char **sql_row;
 
 	u = user_find(nick);
 	if (u && u->sqlid)
@@ -423,75 +413,70 @@ int db_checknick_nt(char *nick)
 
 	if (u)
 	{
-		username = rdb_escape(u->username);
-		host = rdb_escape(u->host);
+		username = sql_escape(u->username);
+		host = sql_escape(u->host);
 		queryhost = sstrdup((myNumToken(host, '.') >= 2) ? strchr(host, '.') : host);
-		rdb_query(QUERY_HIGH,
-		          "SELECT nickid,nick FROM %s WHERE (username=\'%s\' AND hostname LIKE \'%%%s\' AND online=\'N\') OR nick=\'%s\' ORDER BY connecttime DESC",
+		sql_query("SELECT nickid,nick FROM %s WHERE (username=\'%s\' AND hostname LIKE \'%%%s\' AND online=\'N\') OR nick=\'%s\' ORDER BY connecttime DESC",
 		          UserTable, username, queryhost, u->sqlnick);
 		free(username);
 		free(host);
 		free(queryhost);
-#ifdef USE_MYSQL
-		mysql_res = mysql_store_result(mysql);
-		if (mysql_res)
+		sql_res = sql_set_result(sqlcon);
+		if (sql_res)
 		{
-			if (mysql_num_rows(mysql_res))
+			if (sql_num_rows(sql_res))
 			{
-				mysql_row = mysql_fetch_row(mysql_res);
-				nickid = strtol(mysql_row[0], NULL, 10);
-				if (stricmp(mysql_row[1], u->sqlnick) != 0)
+				sql_row = sql_fetch_row(sql_res);
+				nickid = strtol(sql_row[0], NULL, 10);
+				if (stricmp(sql_row[1], u->sqlnick) != 0)
 				{
 					/* Removing old user to avoid duplicate on update, which will happen shortly */
-					rdb_query(QUERY_HIGH,
+					sql_query(
 					          "DELETE FROM %s WHERE nick=\'%s\' ",
 					          UserTable, u->sqlnick);
 					/* Getting uname from alias table with old nick */
-					rdb_query(QUERY_HIGH,
+					sql_query(
 					          "SELECT uname FROM %s WHERE nick=\'%s\' ",
 					          AliasesTable, u->sqlnick);
-					mysql_res2 = mysql_store_result(mysql);
-					if (mysql_res2)
+					sql_res2 = sql_set_result(sqlcon);
+					if (sql_res2)
 					{
-						if (mysql_num_rows(mysql_res2))
+						if (sql_num_rows(sql_res2))
 						{
-							mysql_row = mysql_fetch_row(mysql_res2);
-							olduname = rdb_escape(mysql_row[0]);
+							sql_row = sql_fetch_row(sql_res2);
+							olduname = sql_escape(sql_row[0]);
 							/* Adding alias entry with new nick and old uname to avoid creation of new uname */
-							rdb_query(QUERY_HIGH,
+							sql_query(
 							          "INSERT INTO %s (nick, uname) VALUES (\'%s\', \'%s\') ON DUPLICATE KEY UPDATE uname=\'%s\'",
 							          AliasesTable, u->sqlnick, olduname,
 							          olduname);
 							free(olduname);
 						}
-						mysql_free_result(mysql_res2);
+						sql_free_result(sql_res2);
 					}
 				}
-				mysql_free_result(mysql_res);
+				sql_free_result(sql_res);
 			}
-			SET_SEGV_LOCATION();
+			
 		}
-#endif
 	}
 	else
 	{
-		sqlnick = rdb_escape(nick);
-		rdb_query(QUERY_HIGH, "SELECT nickid FROM %s WHERE nick=\'%s\'",
+		sqlnick = sql_escape(nick);
+		sql_query("SELECT nickid FROM %s WHERE nick=\'%s\'",
 		          UserTable, sqlnick);
 		free(sqlnick);
-#ifdef USE_MYSQL
-		mysql_res = mysql_store_result(mysql);
-		if (mysql_res)
+		sql_res = sql_set_result(sqlcon);
+		if (sql_res)
 		{
-			if (mysql_num_rows(mysql_res))
+			if (sql_num_rows(sql_res))
 			{
-				mysql_row = mysql_fetch_row(mysql_res);
-				nickid = strtol(mysql_row[0], NULL, 10);
+				sql_row = sql_fetch_row(sql_res);
+				nickid = strtol(sql_row[0], NULL, 10);
 			}
-			SET_SEGV_LOCATION();
-			mysql_free_result(mysql_res);
+			
+			sql_free_result(sql_res);
 		}
-#endif
 	}
 	if (u && nickid)
 	{
@@ -505,38 +490,34 @@ int db_checknick_nt(char *nick)
 int db_getservfromnick(char *nick)
 {
 	int res = 0;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
+	SQLres *sql_res;
 	char *sqlnick;
+	char **sql_row;
 
 	if (!denora->do_sql)
 	{
 		return res;
 	}
-	SET_SEGV_LOCATION();
+	
 
-	sqlnick = rdb_escape(nick);
-	rdb_query(QUERY_HIGH, "SELECT servid FROM %s WHERE nick=\'%s\'",
+	sqlnick = sql_escape(nick);
+	sql_query("SELECT servid FROM %s WHERE nick=\'%s\'",
 	          UserTable, sqlnick);
 	free(sqlnick);
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
+	sql_res = sql_set_result(sqlcon);
+	if (sql_res)
 	{
-		if (mysql_num_rows(mysql_res))
+		if (sql_num_rows(sql_res))
 		{
-			mysql_row = mysql_fetch_row(mysql_res);
-			res = strtol(mysql_row[0], NULL, 10);
+			sql_row = sql_fetch_row(sql_res);
+			res = strtol(sql_row[0], NULL, 10);
 		}
 		else
 		{
 			alog(LOG_NONEXISTANT, "nickname not found ! %s", nick);
 		}
-		SET_SEGV_LOCATION();
-		mysql_free_result(mysql_res);
+		sql_free_result(sql_res);
 	}
-#endif
 	return res;
 }
 
@@ -557,7 +538,7 @@ void db_removenick(char *nick, char *reason)
 	char *sqlreason;
 	User *u;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!denora->do_sql)
 	{
@@ -577,25 +558,25 @@ void db_removenick(char *nick, char *reason)
 		return;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	db_removefromchans(u->sqlid);
 	if (UserCacheTime)
 	{
-		sqlreason = rdb_escape(reason);
-		rdb_query(QUERY_LOW,
+		sqlreason = sql_escape(reason);
+		sql_query(
 		          "UPDATE %s SET online=\'N\', lastquit=NOW(), lastquitmsg=\'%s\', servid=0 WHERE nickid=%d",
 		          UserTable, sqlreason, u->sqlid);
 		free(sqlreason);
 	}
 	else
 	{
-		rdb_query(QUERY_LOW, "DELETE FROM %s WHERE nickid=%d",
+		sql_query("DELETE FROM %s WHERE nickid=%d",
 		          UserTable, u->sqlid);
 	}
 
 
-	SET_SEGV_LOCATION();
+	
 }
 
 /*************************************************************************/
@@ -614,13 +595,11 @@ void db_removenick_nt(char *nick, char *reason)
 {
 	char *sqlreason;
 	int nickid = db_getnick(nick);
-
 	User *u;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
+	SQLres *sql_res;
 	char *newnick;
-#endif
 	char *username, *host, *queryhost;
+	char **sql_row;
 
 	if (!nick)
 	{
@@ -628,8 +607,6 @@ void db_removenick_nt(char *nick, char *reason)
 	}
 
 	u = user_find(nick);
-
-	SET_SEGV_LOCATION();
 
 	if (!denora->do_sql)
 	{
@@ -641,149 +618,125 @@ void db_removenick_nt(char *nick, char *reason)
 		alog(LOG_NONEXISTANT, "nickname not found ! %s", nick);
 		return;
 	}
-	SET_SEGV_LOCATION();
-
 	db_removefromchans(nickid);
 	if (UserCacheTime)
 	{
-		sqlreason = rdb_escape(reason);
+		sqlreason = sql_escape(reason);
 		if (u)
 		{
-			username = rdb_escape(u->username);
-			host = rdb_escape(u->host);
+			username = sql_escape(u->username);
+			host = sql_escape(u->host);
 			queryhost = sstrdup((myNumToken(host, '.') >= 2) ? strchr(host, '.') : host);
-			rdb_query(QUERY_HIGH,
-			          "SELECT nick FROM %s WHERE username=\'%s\' AND hostname LIKE \'%%%s\' AND online=\'Y\' AND nick != \'%s\' ORDER BY connecttime DESC",
+			sql_query("SELECT nick FROM %s WHERE username=\'%s\' AND hostname LIKE \'%%%s\' AND online=\'Y\' AND nick != \'%s\' ORDER BY connecttime DESC",
 			          UserTable, username, queryhost, u->sqlnick);
 			free(queryhost);
 			free(username);
 			free(host);
-#ifdef USE_MYSQL
-			mysql_res = mysql_store_result(mysql);
-			if (mysql_res)
+			sql_res = sql_set_result(sqlcon);
+			if (sql_res)
 			{
-				if (mysql_num_rows(mysql_res) > 0)
+				if (sql_num_rows(sql_res) > 0)
 				{
 					/* Getting nickname of user we found */
-					mysql_row = mysql_fetch_row(mysql_res);
-					newnick = rdb_escape(mysql_row[0]);
-					mysql_free_result(mysql_res);
+					sql_row = sql_fetch_row(sql_res);
+					newnick = sql_escape(sql_row[0]);
+					sql_free_result(sql_res);
 
 					/* Deleting user as we got one with a similar mask which is still online */
 					alog(LOG_DEBUG,
 					     "db_removenick_nt(%s): There is %s with similar mask online, so we will delete %s.",
 					     nick, newnick, nick);
-					rdb_query(QUERY_LOW, "DELETE FROM %s WHERE nickid=%d",
+					sql_query("DELETE FROM %s WHERE nickid=%d",
 					          UserTable, nickid);
 
 					free(newnick);
 				}
 				else
 				{
-					mysql_free_result(mysql_res);
-					rdb_query(QUERY_LOW,
+					sql_free_result(sql_res);
+					sql_query(
 					          "UPDATE %s SET online=\'N\', lastquit=NOW(), lastquitmsg=\'%s\', servid=0 WHERE nickid=%d",
 					          UserTable, sqlreason, nickid);
 				}
 			}
-			SET_SEGV_LOCATION();
-#endif
 		}
 		else
 		{
-			rdb_query(QUERY_LOW,
-			          "UPDATE %s SET online=\'N\', lastquit=NOW(), lastquitmsg=\'%s\', servid=0 WHERE nickid=%d",
+			sql_query("UPDATE %s SET online=\'N\', lastquit=NOW(), lastquitmsg=\'%s\', servid=0 WHERE nickid=%d",
 			          UserTable, sqlreason, nickid);
 		}
 		free(sqlreason);
 	}
 	else
 	{
-		rdb_query(QUERY_LOW, "DELETE FROM %s WHERE nickid=%d",
+		sql_query("DELETE FROM %s WHERE nickid=%d",
 		          UserTable, nickid);
 	}
 
-	SET_SEGV_LOCATION();
+	
 }
 
 /*************************************************************************/
 
 void db_removefromchans(int nickid)
 {
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
+	SQLres *sql_res;
 	char **res;
 	char *chan;
 	int chanid;
-#endif
-
-	SET_SEGV_LOCATION();
 
 	if (!denora->do_sql || nickid == -1)
 	{
 		return;
 	}
 
-	rdb_query
-	(QUERY_HIGH,
-	 "SELECT %s.chanid, channel FROM %s, %s WHERE nickid=%d AND %s.chanid = %s.chanid",
+	sql_query("SELECT %s.chanid, channel FROM %s, %s WHERE nickid=%d AND %s.chanid = %s.chanid",
 	 IsOnTable, IsOnTable, ChanTable, nickid, ChanTable, IsOnTable);
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-#endif
-	rdb_query(QUERY_LOW, "DELETE FROM %s WHERE nickid=%d", IsOnTable,
+	sql_res = sql_set_result(sqlcon);
+	sql_query("DELETE FROM %s WHERE nickid=%d", IsOnTable,
 	          nickid);
-	SET_SEGV_LOCATION();
-#ifdef USE_MYSQL
-	if (mysql_res)
+	
+	if (sql_res)
 	{
-		while ((res = mysql_fetch_row(mysql_res)))
+		while ((res = sql_fetch_row(sql_res)))
 		{
-			chan = rdb_escape(res[1]);
+			chan = sql_escape(res[1]);
 			chanid = db_getchannel(chan);
-			rdb_query(QUERY_LOW,
+			sql_query(
 			          "UPDATE %s SET currentusers=currentusers-1 WHERE chanid=%d",
 			          ChanTable, chanid);
 			if (!ChanHasMode(chan, ircd->persist_char))
 				db_checkemptychan(atoi(res[0]));
 			free(chan);
 		}
-		SET_SEGV_LOCATION();
-		mysql_free_result(mysql_res);
+		
+		sql_free_result(sql_res);
 	}
-#endif
 }
 
 /*************************************************************************/
 
 void db_checkemptychan(int chanid)
 {
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
-
-	SET_SEGV_LOCATION();
+	SQLres *sql_res;
 
 	if (!denora->do_sql)
 	{
 		return;
 	}
-	rdb_query(QUERY_HIGH, "SELECT chanid FROM %s WHERE chanid=%d",
+	sql_query("SELECT chanid FROM %s WHERE chanid=%d",
 	          IsOnTable, chanid);
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
+	sql_res = sql_set_result(sqlcon);
+	if (sql_res)
 	{
-		SET_SEGV_LOCATION();
-		if (!mysql_num_rows(mysql_res))
+		
+		if (!sql_num_rows(sql_res))
 		{
-			rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chanid=%d",
+			sql_query("DELETE FROM %s WHERE chanid=%d",
 			          ChanTable, chanid);
 		}
-		SET_SEGV_LOCATION();
-		mysql_free_result(mysql_res);
+		sql_free_result(sql_res);
 	}
-#endif
 }
 
 /*************************************************************************/
@@ -791,35 +744,29 @@ void db_checkemptychan(int chanid)
 int db_getcurrent_chans(void)
 {
 	int retcode = 0;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
+	SQLres *sql_res;
+	char **sql_row;
 
 	if (!denora->do_sql)
 	{
 		return 0;
 	}
-	SET_SEGV_LOCATION();
-
-	rdb_query(QUERY_HIGH, "SELECT COUNT(*) FROM %s WHERE type=\'chans\'",
+	sql_query("SELECT COUNT(*) FROM %s WHERE type=\'chans\'",
 	          CurrentTable);
-	SET_SEGV_LOCATION();
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
+	sql_res = sql_set_result(sqlcon);
+	if (sql_res)
 	{
-		if (mysql_num_rows(mysql_res))
+		if (sql_num_rows(sql_res))
 		{
-			retcode = atoi(*mysql_fetch_row(mysql_res));
+			sql_row = sql_fetch_row(sql_res);
+			retcode = atoi(sql_row[0]);
 		}
 		else
 		{
 			retcode = -1;
 		}
-		SET_SEGV_LOCATION();
-		mysql_free_result(mysql_res);
+		sql_free_result(sql_res);
 	}
-#endif
 	return retcode;
 }
 
@@ -828,64 +775,60 @@ int db_getcurrent_chans(void)
 int db_getlusers(int type)
 {
 	int retcode = 0;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
+	SQLres *sql_res;
+	char **sql_row;
 
 	if (!denora->do_sql)
 	{
 		return 0;
 	}
-	SET_SEGV_LOCATION();
-
 	switch (type)
 	{
 		case LUSERS_USERS:
-			rdb_query(QUERY_HIGH,
+			sql_query(
 			          "SELECT COUNT(*) FROM %s WHERE mode_li=\'N\'",
 			          UserTable);
 			break;
 		case LUSERS_USERSINV:
-			rdb_query(QUERY_HIGH,
+			sql_query(
 			          "SELECT COUNT(*) FROM %s WHERE mode_li=\'Y\'",
 			          UserTable);
 			break;
 		case LUSERS_OPERS:
-			rdb_query(QUERY_HIGH,
+			sql_query(
 			          "SELECT COUNT(*) FROM %s WHERE mode_lo=\'Y\'",
 			          UserTable);
 			break;
 		case LUSERS_CHAN:
-			rdb_query(QUERY_HIGH, "SELECT COUNT(*) FROM %s", ChanTable);
+			sql_query("SELECT COUNT(*) FROM %s", ChanTable);
 			break;
 		case LUSERS_SERV:
-			rdb_query(QUERY_HIGH, "SELECT COUNT(*) FROM %s", ServerTable);
+			sql_query("SELECT COUNT(*) FROM %s", ServerTable);
 			break;
 		case LUSERS_USERSGLOB:
-			rdb_query(QUERY_HIGH, "SELECT COUNT(*) FROM %s", UserTable);
+			sql_query("SELECT COUNT(*) FROM %s", UserTable);
 			break;
 		case LUSERS_USERSMAX:
-			rdb_query(QUERY_HIGH, "SELECT val FROM %s WHERE type='users'",
+			sql_query("SELECT val FROM %s WHERE type='users'",
 			          MaxValueTable);
 			break;
 	}
-	SET_SEGV_LOCATION();
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
+	
+	sql_res = sql_set_result(sqlcon);
+	if (sql_res)
 	{
-		if (mysql_num_rows(mysql_res))
+		if (sql_num_rows(sql_res))
 		{
-			retcode = atoi(*mysql_fetch_row(mysql_res));
+			sql_row = sql_fetch_row(sql_res);
+			retcode = atoi(sql_row[0]);
 		}
 		else
 		{
 			retcode = -1;
 		}
-		SET_SEGV_LOCATION();
-		mysql_free_result(mysql_res);
+		
+		sql_free_result(sql_res);
 	}
-#endif
 	return retcode;
 }
 
@@ -896,14 +839,13 @@ int db_getchannel(char *chan)
 	int chanid = -1;
 	Channel *c;
 	char *sqlchan;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
+	SQLres *sql_res;
+	char **sql_row;
 
 	if (!chan)
 		return chanid;
 
-	SET_SEGV_LOCATION();
+	
 
 	c = findchan(chan);
 	if (c && c->sqlid > 0)
@@ -916,27 +858,25 @@ int db_getchannel(char *chan)
 		return chanid;
 	}
 
-	sqlchan = rdb_escape(chan);
-	rdb_query(QUERY_HIGH, "SELECT chanid FROM %s WHERE channel=\'%s\'",
+	sqlchan = sql_escape(chan);
+	sql_query("SELECT chanid FROM %s WHERE channel=\'%s\'",
 	          ChanTable, sqlchan);
 	free(sqlchan);
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
+	sql_res = sql_set_result(sqlcon);
+	if (sql_res)
 	{
-		if (mysql_num_rows(mysql_res))
+		if (sql_num_rows(sql_res))
 		{
-			mysql_row = mysql_fetch_row(mysql_res);
-			chanid = strtol(mysql_row[0], NULL, 10);
+			sql_row = sql_fetch_row(sql_res);
+			chanid = strtol(sql_row[0], NULL, 10);
 		}
 		else
 		{
 			alog(LOG_NONEXISTANT, "channel not found ! %s", chan);
 		}
-		SET_SEGV_LOCATION();
-		mysql_free_result(mysql_res);
+		
+		sql_free_result(sql_res);
 	}
-#endif
 	if (c && chanid > 0)
 	{
 		c->sqlid = chanid;
@@ -949,36 +889,32 @@ int db_getchannel(char *chan)
 char *db_getchannel_byid(int chanid)
 {
 	char *res = NULL;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-	MYSQL_ROW row;
-#endif
+	SQLres *sql_res;
+	char **row;
 
 	if (!denora->do_sql)
 	{
 		return NULL;
 	}
-	SET_SEGV_LOCATION();
+	
 
-	rdb_query(QUERY_HIGH, "SELECT channel FROM %s WHERE chanid=%d",
+	sql_query("SELECT channel FROM %s WHERE chanid=%d",
 	          ChanTable, chanid);
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
+	sql_res = sql_set_result(sqlcon);
+	if (sql_res)
 	{
-		if (!mysql_num_rows(mysql_res))
+		if (!sql_num_rows(sql_res))
 		{
 			alog(LOG_NONEXISTANT, "channel not found ! %d", chanid);
 		}
 		else
 		{
-			row = mysql_fetch_row(mysql_res);
-			res = rdb_escape(row[0]);
+			row = sql_fetch_row(sql_res);
+			res = sql_escape(row[0]);
 		}
-		SET_SEGV_LOCATION();
-		mysql_free_result(mysql_res);
+		
+		sql_free_result(sql_res);
 	}
-#endif
 	return res;
 }
 
@@ -988,41 +924,37 @@ int db_getchannel_users(char *chan)
 {
 	int res = 0;
 	char *sqlchan;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
-
-	SET_SEGV_LOCATION();
+	SQLres *sql_res;
+	char **sql_row;
 
 	if (!denora->do_sql)
 	{
 		return -1;
 	}
-	SET_SEGV_LOCATION();
+	
 
-	sqlchan = rdb_escape(chan);
-	rdb_query(QUERY_HIGH,
+	sqlchan = sql_escape(chan);
+	sql_query(
 	          "SELECT currentusers FROM %s WHERE channel=\'%s\'",
 	          ChanTable, sqlchan);
 	free(sqlchan);
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	SET_SEGV_LOCATION();
-	if (mysql_res)
+	sql_res = sql_set_result(sqlcon);
+	
+	if (sql_res)
 	{
-		if (mysql_num_rows(mysql_res))
+		if (sql_num_rows(sql_res))
 		{
-			res = strtol(*mysql_fetch_row(mysql_res), NULL, 10);
+			sql_row = sql_fetch_row(sql_res);
+			res = strtol(sql_row[0], NULL, 10);
 		}
 		else
 		{
 			alog(LOG_DEBUG,
 			     "debug: unable to find the requested channel %s", chan);
 		}
-		SET_SEGV_LOCATION();
-		mysql_free_result(mysql_res);
+		
+		sql_free_result(sql_res);
 	}
-#endif
 	return res;
 }
 
@@ -1036,12 +968,8 @@ int db_getchancreate(char *chan)
 	int newcase = 0;
 	Channel *c;
 	char *channel;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-	MYSQL_ROW row;
-#endif
-
-	SET_SEGV_LOCATION();
+	SQLres *sql_res;
+	char **row;
 
 	c = findchan(chan);
 	if (c)
@@ -1057,7 +985,7 @@ int db_getchancreate(char *chan)
 	}
 	else
 	{
-		channel = rdb_escape(chan);
+		channel = sql_escape(chan);
 	}
 
 
@@ -1069,15 +997,14 @@ int db_getchancreate(char *chan)
 
 	if (!c || c->sqlid < 1)
 	{
-		rdb_query(QUERY_HIGH, "SELECT chanid, channel FROM %s WHERE channel=\'%s\'",
+		sql_query("SELECT chanid, channel FROM %s WHERE channel=\'%s\'",
 		          ChanTable, channel);
-#ifdef USE_MYSQL
-		mysql_res = mysql_store_result(mysql);
-		if (mysql_res)
+		sql_res = sql_set_result(sqlcon);
+		if (sql_res)
 		{
-			if (mysql_num_rows(mysql_res))
+			if (sql_num_rows(sql_res))
 			{
-				row = mysql_fetch_row(mysql_res);
+				row = sql_fetch_row(sql_res);
 				alog(LOG_DEBUG, "debug: RESULT: %s %s", row[0], row[1]);
 				chanid = atoi(row[0]);
 				if (channel != row[1])
@@ -1085,15 +1012,13 @@ int db_getchancreate(char *chan)
 					newcase = 1;
 				}
 			}
-			mysql_free_result(mysql_res);
+			sql_free_result(sql_res);
 		}
-#endif
-		SET_SEGV_LOCATION();
 		if (chanid < 1)
 		{
-			rdb_query(QUERY_HIGH, "INSERT INTO %s (channel) VALUES (\'%s\')",
+			sql_query("INSERT INTO %s (channel) VALUES (\'%s\')",
 			          ChanTable, channel);
-			chanid = rdb_insertid();
+			chanid = sql_insertid(sqlcon);
 			created = 1;
 		}
 	}
@@ -1103,15 +1028,15 @@ int db_getchancreate(char *chan)
 		if (!created && chanid != -1)
 		{
 			/* We update the channel name in case casing has changed */
-			rdb_query(QUERY_LOW, "UPDATE %s SET channel=\'%s\' WHERE chanid=%d",
+			sql_query("UPDATE %s SET channel=\'%s\' WHERE chanid=%d",
 			          ChanTable, channel, chanid);
 		}
-		rdb_query(QUERY_LOW, "UPDATE %s SET chan=\'%s\' WHERE chan=\'%s\'",
+		sql_query("UPDATE %s SET chan=\'%s\' WHERE chan=\'%s\'",
 		          CStatsTable, channel, channel);
-		rdb_query(QUERY_LOW, "UPDATE %s SET chan=\'%s\' WHERE chan=\'%s\'",
+		sql_query("UPDATE %s SET chan=\'%s\' WHERE chan=\'%s\'",
 		          UStatsTable, channel, channel);
 	}
-	SET_SEGV_LOCATION();
+	
 	free(channel);
 	if (c && chanid > 0)
 	{
@@ -1125,12 +1050,9 @@ int db_getchancreate(char *chan)
 /* cleanup the server table, removing old entries */
 void db_cleanserver()
 {
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
-	int curtime = time(NULL);
 
-	SET_SEGV_LOCATION();
+	SQLres *sql_res;
+	int curtime = time(NULL);
 
 	if (!denora->do_sql)
 	{
@@ -1141,33 +1063,30 @@ void db_cleanserver()
 	{
 		ServerLastClean = curtime;
 	}
-	SET_SEGV_LOCATION();
+	
 	if (curtime > (ServerLastClean + ServerCleanFreq))
 	{
 		ServerLastClean = curtime;
-		rdb_query
-		(QUERY_HIGH,
+		sql_query
+		(
 		 "SELECT server FROM %s WHERE online=\'N\' AND lastsplit<FROM_UNIXTIME(%d)",
 		 ServerTable, curtime - ServerCacheTime);
-#ifdef USE_MYSQL
-		mysql_res = mysql_store_result(mysql);
-		if (mysql_num_rows(mysql_res))
+
+		sql_res = sql_set_result(sqlcon);
+		if (sql_num_rows(sql_res))
 		{
-			mysql_free_result(mysql_res);
-			rdb_query
-			(QUERY_LOW,
-			 "DELETE FROM %s WHERE online=\'N\' AND lastsplit<FROM_UNIXTIME(%d)",
+			sql_free_result(sql_res);
+			sql_query
+			("DELETE FROM %s WHERE online=\'N\' AND lastsplit<FROM_UNIXTIME(%d)",
 			 ServerTable, curtime - ServerCacheTime);
 		}
 		else
 		{
-			if (mysql_res)
+			if (sql_res)
 			{
-				mysql_free_result(mysql_res);
+				sql_free_result(sql_res);
 			}
 		}
-#endif
-		SET_SEGV_LOCATION();
 	}
 }
 
@@ -1176,9 +1095,7 @@ void db_cleanserver()
 /* cleanup the user table, removing old entries */
 void db_cleanuser()
 {
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
+	SQLres *sql_res;
 	int curtime = time(NULL);
 
 	if (!denora->do_sql)
@@ -1190,30 +1107,26 @@ void db_cleanuser()
 	{
 		UserLastClean = curtime;
 	}
-	SET_SEGV_LOCATION();
 
 	if (curtime > (UserLastClean + UserCleanFreq))
 	{
 		UserLastClean = curtime;
-		rdb_query
-		(QUERY_HIGH,
+		sql_query
+		(
 		 "SELECT nick FROM %s WHERE online=\'N\' AND lastquit<FROM_UNIXTIME(%d)",
 		 UserTable, curtime - UserCacheTime);
-#ifdef USE_MYSQL
-		mysql_res = mysql_store_result(mysql);
-		if (mysql_res)
+		sql_res = sql_set_result(sqlcon);
+		if (sql_res)
 		{
-			if (mysql_num_rows(mysql_res))
+			if (sql_num_rows(sql_res))
 			{
-				rdb_query
-				(QUERY_LOW,
+				sql_query
+				(
 				 "DELETE FROM %s WHERE online=\'N\' AND lastquit<FROM_UNIXTIME(%d)",
 				 UserTable, curtime - UserCacheTime);
 			}
-			mysql_free_result(mysql_res);
+			sql_free_result(sql_res);
 		}
-#endif
-		SET_SEGV_LOCATION();
 	}
 }
 
@@ -1235,20 +1148,20 @@ void do_checkchansmax()
 		stats->chans_max_time = time(NULL);
 		diff1 = 1;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	if (stats->chans > stats->daily_chans)
 	{
 		stats->daily_chans++;
 		stats->daily_chans_time = time(NULL);
 	}
-	rdb_query(QUERY_LOW,
+	sql_query(
 	          "UPDATE %s SET val=%d, time=%ld WHERE type='chans'",
 	          CurrentTable, stats->chans, time(NULL));
 	if (diff1)
 	{
-		rdb_query
-		(QUERY_LOW,
+		sql_query
+		(
 		 "UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='channels'",
 		 MaxValueTable, stats->chans_max,
 		 (long int) stats->chans_max_time);
@@ -1263,7 +1176,7 @@ void add_current_user(Server * s)
 	int diff1 = 0;
 	int diff2 = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!s)
 	{
@@ -1274,7 +1187,7 @@ void add_current_user(Server * s)
 	stats->users++;
 	stats->totalusersever++;
 
-	SET_SEGV_LOCATION();
+	
 	if (stats->users > stats->users_max)
 	{
 		stats->users_max = stats->users;
@@ -1286,7 +1199,7 @@ void add_current_user(Server * s)
 		stats->users_max_time = time(NULL);
 		diff1 = 1;
 	}
-	SET_SEGV_LOCATION();
+	
 	if (stats->users > stats->daily_users)
 	{
 		stats->daily_users++;
@@ -1298,36 +1211,36 @@ void add_current_user(Server * s)
 		stats->daily_users_time = time(NULL);
 		diff2 = 1;
 	}
-	SET_SEGV_LOCATION();
+	
 	if (s->ss->currentusers > s->ss->maxusers)
 	{
 		s->ss->maxusers = s->ss->currentusers;
 		s->ss->maxusertime = time(NULL);
 	}
-	SET_SEGV_LOCATION();
+	
 	if (denora->do_sql)
 	{
-		rdb_query(QUERY_LOW,
+		sql_query(
 		          "UPDATE %s SET val=%d, time=%ld WHERE type='users'",
 		          CurrentTable, stats->users, time(NULL));
 		if (diff2)
 		{
-			rdb_query
-			(QUERY_LOW,
+			sql_query
+			(
 			 "UPDATE %s SET val=%d, time=%ld WHERE type='daily_users'",
 			 CurrentTable, stats->daily_users,
 			 stats->daily_users_time);
 		}
 		if (diff1)
 		{
-			rdb_query
-			(QUERY_LOW,
+			sql_query
+			(
 			 "UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='users'",
 			 MaxValueTable, stats->users_max,
 			 (long int) stats->users_max_time);
 		}
-		rdb_query
-		(QUERY_LOW,
+		sql_query
+		(
 		 "UPDATE %s SET currentusers=%d, maxusers=%d, maxusertime=%d WHERE server='%s'",
 		 ServerTable, s->ss->currentusers, s->ss->maxusers,
 		 s->ss->maxusertime, s->name);
@@ -1338,22 +1251,20 @@ void add_current_user(Server * s)
 
 void del_current_user(Server * s)
 {
-	SET_SEGV_LOCATION();
+	
 	if (!s)
 	{
 		return;
 	}
 	s->ss->currentusers--;
 	stats->users--;
-	SET_SEGV_LOCATION();
+	
 
 	if (denora->do_sql)
 	{
-		rdb_query(QUERY_LOW,
-		          "UPDATE %s SET val=%d, time=%ld WHERE type='users'",
+		sql_query("UPDATE %s SET val=%d, time=%ld WHERE type='users'",
 		          CurrentTable, stats->users, time(NULL));
-		rdb_query(QUERY_LOW,
-		          "UPDATE %s SET currentusers=%d WHERE server='%s'",
+		sql_query("UPDATE %s SET currentusers=%d WHERE server='%s'",
 		          ServerTable, s->ss->currentusers, s->name);
 	}
 }
@@ -1365,7 +1276,7 @@ void do_checkservsmax()
 {
 	int diff1 = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (stats->servers > stats->servers_max)
 	{
@@ -1378,7 +1289,7 @@ void do_checkservsmax()
 		stats->servers_max_time = time(NULL);
 		diff1 = 1;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	if (stats->servers > stats->daily_servers)
 	{
@@ -1387,14 +1298,11 @@ void do_checkservsmax()
 	}
 	if (denora->do_sql)
 	{
-		rdb_query(QUERY_LOW,
-		          "UPDATE %s SET val=%d, time=%ld WHERE type='servers'",
+		sql_query("UPDATE %s SET val=%d, time=%ld WHERE type='servers'",
 		          CurrentTable, stats->servers, time(NULL));
 		if (diff1)
 		{
-			rdb_query
-			(QUERY_LOW,
-			 "UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='servers'",
+			sql_query("UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='servers'",
 			 MaxValueTable, stats->servers_max,
 			 (long int) stats->servers_max_time);
 		}
@@ -1411,13 +1319,13 @@ void add_oper_count(User * u)
 	stats->opers++;
 	s = u->server;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (s)
 	{
 		s->ss->opers++;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	if (stats->opers > stats->opers_max)
 	{
@@ -1431,7 +1339,7 @@ void add_oper_count(User * u)
 		diff1 = 1;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	if (stats->opers > stats->daily_opers)
 	{
@@ -1442,7 +1350,7 @@ void add_oper_count(User * u)
 	{
 		stats->daily_opers_time = time(NULL);
 	}
-	SET_SEGV_LOCATION();
+	
 
 	if (s)
 	{
@@ -1455,20 +1363,20 @@ void add_oper_count(User * u)
 		{
 			s->ss->maxopertime = time(NULL);
 		}
-		rdb_query
-		(QUERY_LOW,
+		sql_query
+		(
 		 "UPDATE %s SET opers=%d, maxopers=%ld, maxopertime=%ld WHERE server='%s'",
 		 ServerTable, s->ss->opers, s->ss->maxopers,
 		 (long int) s->ss->maxopertime, s->name);
 
 	}
-	rdb_query(QUERY_LOW,
+	sql_query(
 	          "UPDATE %s SET val=%d, time=%ld WHERE type='opers'",
 	          CurrentTable, stats->opers, (long int) time(NULL));
 	if (diff1)
 	{
-		rdb_query
-		(QUERY_LOW,
+		sql_query
+		(
 		 "UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='opers'",
 		 MaxValueTable, stats->opers_max,
 		 (long int) stats->opers_max_time);
@@ -1479,23 +1387,19 @@ void add_oper_count(User * u)
 
 void del_oper_count(User * u)
 {
-	SET_SEGV_LOCATION();
 
 	stats->opers--;
 	if (u && u->server && u->server->ss)
 	{
 		u->server->ss->opers--;
-		rdb_query
-		(QUERY_LOW,
+		sql_query
+		(
 		 "UPDATE %s SET opers=%d, maxopers=%ld, maxopertime=%ld WHERE server='%s'",
 		 ServerTable, u->server->ss->opers, u->server->ss->maxopers,
 		 (long int) u->server->ss->maxopertime, u->server->name);
 	}
 
-	SET_SEGV_LOCATION();
-
-	rdb_query(QUERY_LOW,
-	          "UPDATE %s SET val=%d, time=%ld WHERE type='opers'",
+	sql_query("UPDATE %s SET val=%d, time=%ld WHERE type='opers'",
 	          CurrentTable, stats->opers, time(NULL));
 }
 
@@ -1507,9 +1411,7 @@ int chans_hourly(const char *name)
 	time_t ts;
 	int year;
 	int month;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
+	SQLres *sql_res;
 
 	ts = time(NULL);
 
@@ -1532,34 +1434,28 @@ int chans_hourly(const char *name)
 		return MOD_CONT;
 	}
 
-	rdb_query(QUERY_HIGH,
+	sql_query(
 	          "SELECT id FROM %s WHERE day=%d and month=%d and year=%d",
 	          ChanStatsTable, mytime.tm_mday, month, year);
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
+	sql_res = sql_set_result(sqlcon);
+	if (sql_res)
 	{
-		if (mysql_num_rows(mysql_res) > 0)
+		if (sql_num_rows(sql_res) > 0)
 		{
-			rdb_query
-			(QUERY_LOW,
-			 "UPDATE %s SET time_%d=%d WHERE day=%d and month=%d and year=%d",
+			sql_query
+			("UPDATE %s SET time_%d=%d WHERE day=%d and month=%d and year=%d",
 			 ChanStatsTable, mytime.tm_hour, stats->chans,
 			 mytime.tm_mday, month, year);
 		}
 		else
 		{
-			rdb_query
-			(QUERY_LOW,
-			 "INSERT INTO %s (day, month, year, time_%d) VALUES (%d, %d, %d, %d)",
+			sql_query
+			("INSERT INTO %s (day, month, year, time_%d) VALUES (%d, %d, %d, %d)",
 			 ChanStatsTable, mytime.tm_hour, mytime.tm_mday, month,
 			 year, stats->chans);
 		}
-		mysql_free_result(mysql_res);
+		sql_free_result(sql_res);
 	}
-	SET_SEGV_LOCATION();
-#endif
-	SET_SEGV_LOCATION();
 	return MOD_CONT;
 }
 
@@ -1571,9 +1467,7 @@ int servers_hourly(const char *name)
 	time_t ts;
 	int year;
 	int month;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
+	SQLres *sql_res;
 
 	ts = time(NULL);
 #ifdef _WIN32
@@ -1595,34 +1489,28 @@ int servers_hourly(const char *name)
 		return MOD_CONT;
 	}
 
-	rdb_query(QUERY_HIGH,
+	sql_query(
 	          "SELECT id FROM %s WHERE day=%d and month=%d and year=%d",
 	          ServerStatsTable, mytime.tm_mday, month, year);
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
+	sql_res = sql_set_result(sqlcon);
+	if (sql_res)
 	{
-		if (mysql_num_rows(mysql_res) > 0)
+		if (sql_num_rows(sql_res) > 0)
 		{
-			rdb_query
-			(QUERY_LOW,
-			 "UPDATE %s SET time_%d=%d WHERE day=%d and month=%d and year=%d",
+			sql_query
+			("UPDATE %s SET time_%d=%d WHERE day=%d and month=%d and year=%d",
 			 ServerStatsTable, mytime.tm_hour, stats->servers,
 			 mytime.tm_mday, month, year);
 		}
 		else
 		{
-			rdb_query
-			(QUERY_LOW,
-			 "INSERT INTO %s (day, month, year, time_%d) VALUES (%d, %d, %d, %d)",
+			sql_query
+			("INSERT INTO %s (day, month, year, time_%d) VALUES (%d, %d, %d, %d)",
 			 ServerStatsTable, mytime.tm_hour, mytime.tm_mday, month,
 			 year, stats->servers);
 		}
-		mysql_free_result(mysql_res);
+		sql_free_result(sql_res);
 	}
-	SET_SEGV_LOCATION();
-#endif
-	SET_SEGV_LOCATION();
 	return MOD_CONT;
 }
 
@@ -1634,9 +1522,7 @@ int users_hourly(const char *name)
 	time_t ts;
 	int year;
 	int month;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
+	SQLres *sql_res;
 
 	ts = time(NULL);
 #ifdef _WIN32
@@ -1658,33 +1544,29 @@ int users_hourly(const char *name)
 		return MOD_CONT;
 	}
 
-	rdb_query(QUERY_HIGH,
+	sql_query(
 	          "SELECT id FROM %s WHERE day=%d and month=%d and year=%d",
 	          StatsTable, mytime.tm_mday, month, year);
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_res)
+	sql_res = sql_set_result(sqlcon);
+	if (sql_res)
 	{
-		if (mysql_num_rows(mysql_res) > 0)
+		if (sql_num_rows(sql_res) > 0)
 		{
-			rdb_query
-			(QUERY_LOW,
+			sql_query
+			(
 			 "UPDATE %s SET time_%d=%d WHERE day=%d and month=%d and year=%d",
 			 StatsTable, mytime.tm_hour, stats->users, mytime.tm_mday,
 			 month, year);
 		}
 		else
 		{
-			rdb_query
-			(QUERY_LOW,
+			sql_query
+			(
 			 "INSERT INTO %s (day, month, year, time_%d) VALUES (%d, %d, %d, %d)",
 			 StatsTable, mytime.tm_hour, mytime.tm_mday, month, year,
 			 stats->users);
 		}
-		mysql_free_result(mysql_res);
+		sql_free_result(sql_res);
 	}
-	SET_SEGV_LOCATION();
-#endif
-	SET_SEGV_LOCATION();
 	return MOD_CONT;
 }

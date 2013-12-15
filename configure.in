@@ -8,7 +8,20 @@ dnl details.
  
 dnl Based heavily on the Anope configure.in script.
 
+AC_PREREQ(2.57)
 AC_INIT(denora, 2.0.0, info@denorastats.org)
+#Standard Defines for autoconf here
+x_maj=2
+x_min='0'
+x_rev='0'
+x_package='Denora'
+
+x_version=$x_maj.$x_min.$x_rev
+AC_DEFINE_UNQUOTED(MAJOR, $x_maj, "Major Version Number")
+AC_DEFINE_UNQUOTED(MINOR, $x_min, "Minor Version Number")
+AC_DEFINE_UNQUOTED(REV, $x_rev, "Revision Version Number")
+AC_DEFINE_UNQUOTED(DENORA_VERSION, "$x_version", "Full Version")
+
 
 dnl Sneaky way to get an id into the configure script.
 AC_COPYRIGHT([])
@@ -25,6 +38,12 @@ m4_include([autoconf/m4/ext_have_lib.m4])
 m4_include([autoconf/m4/mysql.m4])
 m4_include([autoconf/m4/denora.m4])
 m4_include([autoconf/m4/AX_FUNC_WHICH_GETHOSTBYNAME_R.m4])
+m4_include([autoconf/m4/ccdv.m4])
+m4_include([autoconf/m4/ax_lib_postgresql.m4])
+dnl m4_include([autoconf/m4/perl.m4])
+dnl m4_include([autoconf/m4/python.m4])
+m4_include([autoconf/m4/libevent.m4])
+
 
 AC_CONFIG_AUX_DIR(autoconf)
 AC_CONFIG_HEADER(include/sysconf.h)
@@ -95,12 +114,14 @@ AC_PATH_PROG(RM,rm)
 AC_PATH_PROG(CP,cp)
 AC_PATH_PROG(TOUCH,touch)
 AC_PATH_PROG(PERL,perl)
+AC_CHECK_PROG(MAKER, gmake, gmake, make)
 AC_PATH_PROG(INSTALL,install)
 AC_CHECK_LIB(nsl,inet_ntoa,DENORALIBS="$DENORALIBS-lnsl ")
 AC_CHECK_LIB(socket, socket,DENORALIBS="$DENORALIBS-lsocket ")
 AC_CHECK_LIB(resolv, res_query,DENORALIBS="$DENORALIBS-lresolv ")
 AC_CHECK_LIB(bsd, revoke,DENORALIBS="$DENORALIBS-lbsd ")
 AC_CHECK_LIB(z, inflateEnd,DENORALIBS="$DENORALIBS-lz ")
+AC_CHECK_LIB(m, log10, DENORALIBS="$DENORALIBS-lm ")
 
 AC_CHECK_HEADER(sys/types.h,AC_DEFINE(HAS_SYS_TYPES_H,1,"Has sys/types.h"))
 DENORA_CHECK_TYPE_SIZES
@@ -109,14 +130,12 @@ AC_CHECK_HEADER(string.h,AC_DEFINE(HAVE_STRING_H,1,""))
 AC_CHECK_HEADER(stdint.h,AC_DEFINE(HAVE_STDINT_H,1,""))
 AC_CHECK_HEADER(stdlib.h,AC_DEFINE(HAVE_STDLIB_H,1,""))
 AC_CHECK_HEADER(sys/select.h,AC_DEFINE(HAVE_SYS_SELECT_H,1,""))
-AC_CHECK_HEADER(execinfo.h,AC_DEFINE(HAVE_BACKTRACE,1,""))
 AC_CHECK_HEADER(unistd.h,AC_DEFINE(HAVE_UNISTD_H,1,""))
 AC_CHECK_HEADER(zlib.h,AC_DEFINE(HAVE_LIBZ,1,""))
 AC_CHECK_HEADER(netinet/in.h,AC_DEFINE(HAVE_NETINETIN,1,""))
 AC_CHECK_HEADER(netdb.h,AC_DEFINE(HAVE_NETDBH,1,""))
 AC_CHECK_HEADER(malloc.h,AC_DEFINE(HAVE_MALLOC_H,1,""))
 AC_CHECK_HEADER(signal.h,AC_DEFINE(HAVE_SIGNAL_H,1,""))
-AC_CHECK_HEADER(poll.h,AC_DEFINE(HAVE_POLL_H,1,""))
 AC_CHECK_HEADER(regex.h,AC_DEFINE(HAVE_REGEX_H,1,""))
 AC_CHECK_HEADER(editline/editline.h,AC_DEFINE(HAVE_EDITLINE,1,""))
 AC_CHECK_HEADER(readline/readline.h,AC_DEFINE(HAVE_READLINE,1,""))
@@ -125,54 +144,34 @@ AC_CHECK_HEADER(readline/readline.h,AC_DEFINE(HAVE_READLINE,1,""))
 
 AC_C_INLINE
 
-CHECK_SSL
-
-AC_ARG_ENABLE(crypt,
-    [  --enable-crypt          Enable Admin encrypted passwords],
-    [ac_cv_crypt="$enableval"],
-    [ac_cv_crypt="no"])
-
-if test "$ac_cv_crypt" = "yes"; then
-   AC_CHECK_HEADER(crypt.h,AC_DEFINE(HAVE_CRYPT_H,1,""))
-   AC_CHECK_LIB(crypt, crypt,[
-     DENORALIBS="$DENORALIBS-lcrypt "
+DIS_LIBCRYPT="No"
+AC_CHECK_HEADER(crypt.h,AC_DEFINE(HAVE_CRYPT_H,1,""))
+AC_CHECK_LIB(crypt, crypt,[
+	 DENORALIBS="$DENORALIBS-lcrypt "
+	 DIS_LIBCRYPT="Yes"
      AC_DEFINE(HAVE_CRYPT,1,"")
    ])
-   DIS_ENCRYPT="Crypted Passwords: Yes"
+
+DIS_MYSQL="No"
+MYSQL_CLIENT
+if test -z "$MYSQL_CLIENT_LIBS" ; then
+		DIS_MYSQL="No"
 else
-   DIS_ENCRYPT="Crypted Passwords: No"
-fi
-
-DIS_MYSQL="MySQL: No"
-
-AC_ARG_WITH(mysql,
-    [  --without-mysql          Do not compile with MySQL],
-    [ac_cv_mysql="no"],
-    [ac_cv_mysql="$enableval"])
-
-if test "$ac_cv_mysql" = "yes"; then
-	MYSQL_CLIENT
-	if test -z "$MYSQL_CLIENT_LIBS" ; then
-		DIS_MYSQL="MySQL: No"
-	else
 		DENORALIBS="$DENORALIBS $MYSQL_CLIENT_LIBS"
 		AC_DEFINE_UNQUOTED(USE_MYSQL,1,"Use Mysql")
 		CFLAGS="$CFLAGS $MYSQL_CLIENT_CFLAGS"
-		DIS_MYSQL="MySQL: Yes"
-	fi
- else
-	DIS_MYSQL="MySQL: No"
+		DIS_MYSQL="Yes"
 fi
 
-DIS_MYSQLBT="Mysql backtrace debug: No"
-AC_ARG_ENABLE(mysqlbt,
-    [  --enable-mysqlbt        Enable backtrace of mysql queries],
-    [ac_cv_mysqlbt="$enableval"],
-    [ac_cv_mysqlbt="no"])
-
-if test "$ac_cv_mysqlbt" = "yes"; then
-  AC_DEFINE_UNQUOTED(USE_MYSQL_BT,1,"Backtrace mysql queries")
-  DIS_MYSQLBT="Mysql backtrace debug: Yes"
+DIS_PGSQL="No"
+AX_LIB_POSTGRESQL
+if test -z "$POSTGRESQL_LDFLAGS" ; then
+		DIS_PGSQL="No"
+else
+		DENORALIBS="$DENORALIBS $POSTGRESQL_LDFLAGS"
+		AC_DEFINE_UNQUOTED(USE_POSTGRESQL,1,"Use PostgreSQL")
+		CFLAGS="$CFLAGS $POSTGRESQL_CFLAGS"
+		DIS_PGSQL="Yes"
 fi
 
 ACX_PTHREAD([
@@ -181,6 +180,12 @@ ACX_PTHREAD([
     AC_DEFINE_UNQUOTED(USE_THREADS,1,"Use threads")
     DIS_THREADING="Threading: Yes"
 ])
+
+
+dnl AUTOTOOLS_EMBED_PERL
+dnl AUTOTOOLS_EMBED_PYTHON
+CHECK_SSL
+
 
 TYPE_SOCKLEN_T
 
@@ -318,7 +323,7 @@ if test "x$ac_cv_have___ss_family_in_struct_ss" = "xyes" ; then
 fi
 
 
-DIS_MODULES="Modules Support: Yes"
+DIS_MODULES="Yes"
 
 dnl module checking based on Unreal's module checking code
 AC_DEFUN([AC_ENABLE_DYN],
@@ -327,12 +332,12 @@ AC_CHECK_FUNC(dlopen,, AC_CHECK_LIB(dl,dlopen,[
   DENORALIBS="$DENORALIBS -ldl"
   AC_DEFINE(USE_MODULES,1,"Modules are available")
   USE_MODULES="yes"
-  DIS_MODULES="Modules Support: Yes"
+  DIS_MODULES="Yes"
 ],
 [
 AC_MSG_WARN(Dynamic linking is not enabled because dlopen was not found)
 AC_DEFINE(STATIC_LINKING,"NO_MODULES","modules not available")
-  DIS_MODULES="Modules Support: No"
+  DIS_MODULES="No"
 ]))
 
 hold_cflags=$CFLAGS
@@ -597,80 +602,9 @@ fi
 dnl ----
 dnl socket functions
 dnl ----
-AC_CHECK_FUNCS(kqueue poll select socket)
+AC_CHECK_FUNCS(socket)
 AC_CHECK_FUNCS(recv send setsockopt)
  
-dnl -------------------------------------------------------------------
-dnl Choose our type of socket handling.  the default is to use select()
-dnl we add the --with argument first so the user can manually select,
-dnl if desired.  in this case no checks as to the validity of their
-dnl selection are made.
-dnl -------------------------------------------------------------------
-POLLER=""
-AC_ARG_WITH(poller,
-    AC_HELP_STRING([--with-poller=x],
-        [set the poller to x (one of select, poll, kqueue, devpoll)]),
-    POLLER="$with_poller"
-    denora_cv_poller="$POLLER"
-)
-
-AC_CACHE_CHECK([for which polling function to use], denora_cv_poller,
-[
-
-if test "x$POLLER" = "x" ; then
-    case "$host_os" in
-        freebsd*|netbsd*|openbsd*)
-            if test "$ac_cv_func_kqueue" = "yes" ; then
-                POLLER=kqueue
-            fi
-        ;;
-        solaris*|sunos*|linux*)
-            if test -e /dev/poll ; then
-                POLLER=/dev/poll
-            fi
-        ;;
-    esac
-
-    if test -z "$POLLER" ; then
-        if test "$ac_cv_func_select" = "yes" ; then
-            POLLER=select
-        else
-            if test "$ac_cv_func_poll" = "yes" ; then
-                POLLER=poll
-            else
-                AC_MSG_ERROR(
-        [your system doesn't seem to have select or poll, or any other
-        method by which to check socket activity.  this daemon will not
-        function, sorry.])
-            fi
-        fi
-    fi
-fi
-denora_cv_poller="$POLLER"
-])
-
-POLLER="$denora_cv_poller"
-case "$POLLER" in
-    select)
-        AC_DEFINE(POLLER_SELECT, 1, [The select() system call])
-    ;;
-    poll)
-        AC_DEFINE(POLLER_POLL, 1, [The poll() system call])
-    ;;
-    kqueue)
-        AC_DEFINE(POLLER_KQUEUE, 1, [The kqueue() system call])
-    ;;
-    devpoll)
-        AC_DEFINE(POLLER_DEVPOLL, 1, [The /dev/poll device])
-    ;;
-    *)
-        AC_MSG_ERROR([The poller "$POLLER" is not supported by this system,
-try again?])
-    ;;
-esac
-AC_SUBST(POLLER)
-DIS_POLLER="Socket Engine: $POLLER"
-
 if test "$CC" == "gcc"; then
 echo "Checking best optimization compiler flags"
 echo "Host CPU : $host_cpu"
@@ -906,12 +840,37 @@ fi
 DENORA_GCC_TRY_FLAGS([-Wp,-D_FORTIFY_SOURCE=2], denora_cv_gcc_fortify_source)
 fi
 
+dnl Libs that build without CCDV are routed into dev/null so it looks pretty
+dnl this libs are carry their own configuration system
+cur_dir=`pwd`
+dnl AC_MSG_RESULT(Configuring Event library this can take a few momments)
+dnl cd lib/event
+dnl ./configure --prefix=$BINDEST/libs >> /dev/null 2>&1  || exit 1
+dnl AC_MSG_RESULT(Compiling Event library again this can take a few momments)
+dnl $ac_cv_prog_MAKER >> /dev/null 2>&1 || exit 1
+dnl CFLAGS="$CFLAGS -I$cur_dir/libs/event/include"
+dnl DENORALIBS="$DENORALIBS -L$cur_dir/lib/event/levent"
+
+dnl cd $cur_dir;
+
+wi_ARG_DISABLE_CCDV
+wi_PROG_CCDV
 
 AC_SUBST(DENORALIBS)
 AC_SUBST(CFLAGS)
 AC_SUBST(OPCFLAGS)
 AC_SUBST(STRICT)
+AC_SUBST(CCDV)
 AC_SUBST(LDFLAGS)
+
+AC_MSG_RESULT(Configuring Execinfo library)
+AC_CONFIG_FILES(lib/execinfo/Makefile)
+AC_MSG_RESULT(Compiling Execinfo library)
+$ac_cv_prog_MAKER >> /dev/null 2>&1 || exit 1
+CFLAGS="$CFLAGS -I$cur_dir/libs/execinfo/include"
+DENORALIBS="$DENORALIBS -L$cur_dir/lib/execinfo/lexecinfo"
+
+cd $cur_dir;
 
 AC_CONFIG_FILES(		\
 	Makefile		\
@@ -921,20 +880,27 @@ AC_CONFIG_FILES(		\
 
 AC_OUTPUT
 
-cat <<EOT
-    $DIS_MODULES
-    $DIS_MYSQL
-	$DIS_MYSQLBT
-    $DIS_ENCRYPT
-    $DIS_POLLER
+echo
+echo =================================================================
+echo
+echo Denora IRC Stats $x_version on $host
+echo
+echo Modules ....................: $DIS_MODULES
+echo Socket/Signal Engine .......: libevent
+echo OpenSSL ....................: $cf_enable_openssl
+echo LibCrypt....................: $DIS_LIBCRYPT
+echo MySQL ......................: $DIS_MYSQL
+echo PostGreSQL .................: $DIS_PGSQL
+echo Perl Module ................: $DIS_PERL
+echo Python Module ..............: $ac_cv_show_headers
+echo BackTrace ..................: libexeinfo
+echo
+echo Installation directory......: $prefix
+echo
 
-
-All done! Above you can see if Modules Support and MySQL Support will be compiled or not.
-If you intended to compile MySQL support and you see "NO", then your system is probably
-missing the mysql client development libraries. Please consult your distribution package
-manager and install the required package, then try running ./Config again.
+echo All done! Above you can see if what features will be built into the system. 
+echo If you the feature you require is not enabled please consult your systems documentation about how to install the required
+echo packages. For a full list of what is required for these features you can see the documentation in the docs/BUILDLIB file
  
-Now run "make" (or possibly "gmake") to compile Denora.
-See the INSTALL, README and FAQ files if you have any problems.
-EOT
+echo Now run make or possibly gmake to compile Denora.
 

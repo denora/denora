@@ -28,7 +28,7 @@ int new_read_db_entry(char **key, char **value, FILE * fptr)
 
 	**key = '\0';
 	**value = '\0';
-	SET_SEGV_LOCATION();
+	
 
 	while (1)
 	{
@@ -90,7 +90,7 @@ int new_write_db_entry(const char *key, DenoraDBFile * dbptr,
 	{
 		return DB_WRITE_ERROR;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	va_start(ap, fmt);
 	ircvsnprintf(value, MAXVALLEN, fmt, ap);
@@ -100,7 +100,7 @@ int new_write_db_entry(const char *key, DenoraDBFile * dbptr,
 	{
 		return DB_WRITE_NOVAL;
 	}
-	SET_SEGV_LOCATION();
+	
 	ircsnprintf(string, MAXKEYLEN + MAXVALLEN + 1, "%s%c%s", key,
 		    SEPARATOR, value);
 	length = strlen(string);
@@ -115,7 +115,7 @@ int new_write_db_entry(const char *key, DenoraDBFile * dbptr,
 		dbptr = NULL;
 		return DB_WRITE_ERROR;
 	}
-	SET_SEGV_LOCATION();
+	
 	return DB_WRITE_SUCCESS;
 }
 
@@ -127,7 +127,7 @@ int new_write_db_endofblock(DenoraDBFile * dbptr)
 	{
 		return DB_WRITE_ERROR;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	if (fputc(BLOCKEND, dbptr->fptr) == EOF)
 	{
@@ -135,7 +135,7 @@ int new_write_db_endofblock(DenoraDBFile * dbptr)
 		filedb_close(dbptr, NULL, NULL);
 		return DB_WRITE_ERROR;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	return DB_WRITE_SUCCESS;
 }
@@ -168,7 +168,7 @@ void fill_db_ptr(DenoraDBFile * dbptr, int version, int core_version,
 
 	dbptr->db_version = version;
 	dbptr->core_db_version = core_version;
-	SET_SEGV_LOCATION();
+	
 	if (!BadPtr(service))
 	{
 		dbptr->service = sstrdup(service);
@@ -409,7 +409,7 @@ DenoraDBFile *filedb_open(char *db, int type, char **key, char **value)
 	alog(LOG_NORMAL, "Loading %s", db);
 
 	fill_db_ptr(dbptr, 0, type, s_StatServ, db);
-	SET_SEGV_LOCATION();
+	
 
 	if (!FileExists(dbptr->filename))
 	{
@@ -417,13 +417,13 @@ DenoraDBFile *filedb_open(char *db, int type, char **key, char **value)
 		return NULL;
 	}
 
-	SET_SEGV_LOCATION();
+	
 	if ((dbptr->fptr = FileOpen(dbptr->filename, FILE_READ)) == NULL)
 	{
 		filedb_close(dbptr, key, value);
 		return NULL;
 	}
-	SET_SEGV_LOCATION();
+	
 	dbptr->db_version =
 	    fgetc(dbptr->fptr) << 24 | fgetc(dbptr->fptr) << 16 | fgetc(dbptr->
 		    fptr)
@@ -451,7 +451,7 @@ DenoraDBFile *filedb_open(char *db, int type, char **key, char **value)
 		filedb_close(dbptr, key, value);
 		return NULL;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	return dbptr;
 }
@@ -463,7 +463,7 @@ DenoraDBFile *filedb_create(char * db, int type)
 	DenoraDBFile *dbptr = calloc(1, sizeof(DenoraDBFile));
 
 	fill_db_ptr(dbptr, 0, type, s_StatServ, db);
-	SET_SEGV_LOCATION();
+	
 
 	/* time to backup the old db */
 	rename(db, dbptr->temp_name);
@@ -474,7 +474,7 @@ DenoraDBFile *filedb_create(char * db, int type)
 		free(dbptr);
 		return NULL;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	if (fputc(dbptr->core_db_version >> 24 & 0xFF, dbptr->fptr) < 0 ||
 		fputc(dbptr->core_db_version >> 16 & 0xFF, dbptr->fptr) < 0 ||
@@ -487,7 +487,7 @@ DenoraDBFile *filedb_create(char * db, int type)
 		free(dbptr);
 		return NULL;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	return dbptr;
 }
@@ -496,7 +496,7 @@ DenoraDBFile *filedb_create(char * db, int type)
 
 void filedb_close(DenoraDBFile * dbptr, char **key, char **value)
 {
-	SET_SEGV_LOCATION();
+	
 	if (dbptr)
 	{
 		if (key && *key)
@@ -504,26 +504,26 @@ void filedb_close(DenoraDBFile * dbptr, char **key, char **value)
 			free(*key);
 			*key = NULL;
 		}
-		SET_SEGV_LOCATION();
+		
 
 		if (value && *value)
 		{
 			free(*value);
 			*value = NULL;
 		}
-		SET_SEGV_LOCATION();
+		
 
 		if (dbptr->fptr)
 		{
 			fclose(dbptr->fptr);
 		}
-		SET_SEGV_LOCATION();
+		
 
 		if (FileExists(dbptr->temp_name))
 		{
 			remove(dbptr->temp_name);
 		}
-		SET_SEGV_LOCATION();
+		
 
 		free(dbptr);
 	}

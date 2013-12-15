@@ -53,7 +53,7 @@ void modules_init(void)
 	int status;
 	Conf_Modules *amodules = modules;
 
-	SET_SEGV_LOCATION();
+	
 
 	for (idx = 0; idx < ModulesNumber; idx++)
 	{
@@ -104,7 +104,7 @@ Command *createCommand(const char *name,
 		return NULL;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	if ((c = malloc(sizeof(Command))) == NULL)
 	{
@@ -139,7 +139,7 @@ Command *createCommand(const char *name,
  */
 int destroyCommand(Command * c)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!c)
 	{
@@ -197,7 +197,7 @@ int destroyCommand(Command * c)
  */
 int addCoreCommand(CommandHash * cmdTable[], Command * c)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!cmdTable || !c)
 	{
@@ -223,7 +223,7 @@ int moduleAddCommand(CommandHash * cmdTable[], Command * c, int pos)
 {
 	int status;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!cmdTable || !c)
 	{
@@ -291,7 +291,7 @@ int moduleDelCommand(CommandHash * cmdTable[], char *name)
 	Command *cmd = NULL;
 	int status = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!mod_current_module)
 	{
@@ -339,7 +339,7 @@ int displayCommandFromHash(CommandHash * cmdTable[], char *name)
 	int modindex = 0;
 	modindex = CMD_HASH(name);
 
-	SET_SEGV_LOCATION();
+	
 
 	alog(LOG_EXTRADEBUG, langstr(ALOG_CMD_DISPLAY_START), name);
 
@@ -369,7 +369,7 @@ int displayCommand(Command * c)
 	Command *cmd = NULL;
 	int i = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	alog(LOG_DEBUG, langstr(ALOG_CMD_DISPLAY_LIST), c->name);
 	for (cmd = c; cmd; cmd = cmd->next)
@@ -394,7 +394,7 @@ int displayMessageFromHash(char *name)
 	int modindex = 0;
 	modindex = CMD_HASH(name);
 
-	SET_SEGV_LOCATION();
+	
 
 	alog(LOG_EXTRADEBUG, langstr(ALOG_MSG_DISPLAY_START), name);
 	for (mcurrent = IRCD[modindex]; mcurrent; mcurrent = mcurrent->next)
@@ -421,7 +421,7 @@ int displayMessage(Message * m)
 	Message *msg = NULL;
 	int i = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	alog(LOG_DEBUG, langstr(ALOG_MSG_DISPLAY_LIST), m->name);
 	for (msg = m; msg; msg = msg->next)
@@ -453,7 +453,7 @@ int addCommand(CommandHash * cmdTable[], Command * c, int pos)
 	CommandHash *lastHash = NULL;
 	Command *tail = NULL;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!cmdTable || !c || (pos < 0 || pos > 2))
 	{
@@ -538,7 +538,7 @@ int delCommand(CommandHash * cmdTable[], Command * c, char *mod_name)
 	CommandHash *lastHash = NULL;
 	Command *tail = NULL, *last = NULL;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!c || !cmdTable)
 	{
@@ -632,7 +632,7 @@ Command *findCommand(CommandHash * cmdTable[], const char *name)
 	int idx;
 	CommandHash *ccurrent = NULL;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!cmdTable || !name)
 	{
@@ -666,7 +666,7 @@ Message *createMessage(const char *name,
 {
 	Message *m = NULL;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!name || !func)
 	{
@@ -697,7 +697,7 @@ Message *findMessage(MessageHash * msgTable[], const char *name)
 	int idx;
 	MessageHash *mcurrent = NULL;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!msgTable || !name)
 	{
@@ -1045,7 +1045,7 @@ void modules_delayed_init(void)
 	Conf_Modules *amodules = modules;
 	int status;
 
-	SET_SEGV_LOCATION();
+	
 
 	for (idx = 0; idx < ModulesDelayedNumber; idx++)
 	{
@@ -1086,7 +1086,7 @@ Module *createModule(char *filename)
 		return NULL;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	if ((m = malloc(sizeof(Module))) == NULL)
 	{
@@ -1117,7 +1117,7 @@ Module *createCoreModule(char *filename)
 		return NULL;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	if ((m = malloc(sizeof(Module))) == NULL)
 	{
@@ -1143,7 +1143,7 @@ Module *createCoreModule(char *filename)
  */
 int destroyModule(Module * m)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!m)
 	{
@@ -1176,7 +1176,7 @@ int destroyModule(Module * m)
 
 int destroyModuleHash(ModuleHash * m)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!m)
 	{
@@ -1205,7 +1205,7 @@ int addModule(Module * m)
 	ModuleHash *newHash = NULL;
 	ModuleHash *lastHash = NULL;
 
-	SET_SEGV_LOCATION();
+	
 
 	modindex = CMD_HASH(m->name);
 
@@ -1246,7 +1246,7 @@ int delModule(Module * m)
 	ModuleHash *mcurrent = NULL;
 	ModuleHash *lastHash = NULL;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!m)
 	{
@@ -1296,7 +1296,7 @@ Module *findModule(char *name)
 	}
 	idx = CMD_HASH(name);
 
-	SET_SEGV_LOCATION();
+	
 
 	for (mcurrent = MODULE_HASH[idx]; mcurrent; mcurrent = mcurrent->next)
 	{
@@ -1353,7 +1353,7 @@ int moduleCopyFile(char *name, char *output)
 	}
 #endif
 
-	SET_SEGV_LOCATION();
+	
 
 	if ((source = FileOpen(input, FILE_READ)) == NULL)
 	{
@@ -1634,7 +1634,7 @@ int prepForUnload(Module * m)
 	Message *msg;
 	int status = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!m)
 	{
@@ -1645,7 +1645,7 @@ int prepForUnload(Module * m)
 	moduleCallBackPrepForUnload(m->name);
 
 	/* Remove any stored data this module has */
-	moduleDelAllDataMod(m);
+	moduleDelAllData(m->name);
 
 	/**
 	 * ok, im going to walk every hash looking for commands we own, now, not exactly elegant or efficiant :)
@@ -2006,7 +2006,7 @@ int moduleAddCallback(char *name, time_t when,
 	ModuleCallBack *new, *tmp, *prev;
 	int i;
 
-	SET_SEGV_LOCATION();
+	
 
 	new = malloc(sizeof(ModuleCallBack));
 	if (!new)
@@ -2073,7 +2073,7 @@ void moduleCallBackRun(void)
 {
 	ModuleCallBack *tmp;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!moduleCallBackHead)
 	{
@@ -2106,7 +2106,7 @@ void moduleCallBackDeleteEntry(ModuleCallBack * prev)
 	ModuleCallBack *tmp = NULL;
 	int i;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (prev == NULL)
 	{
@@ -2153,7 +2153,7 @@ ModuleCallBack *moduleCallBackFindEntry(char *mod_name, boolean * found)
 	*found = false;
 	modcurrent = moduleCallBackHead;
 
-	SET_SEGV_LOCATION();
+	
 
 	while (modcurrent != NULL)
 	{
@@ -2191,7 +2191,7 @@ void moduleDelCallback(char *name)
 	ModuleCallBack *prev = NULL, *tmp = NULL;
 	int del = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!mod_current_module_name)
 	{
@@ -2245,7 +2245,7 @@ void moduleCallBackPrepForUnload(char *mod_name)
 	ModuleCallBack *tmp = NULL;
 
 	tmp = moduleCallBackFindEntry(mod_name, &found);
-	SET_SEGV_LOCATION();
+	
 
 	while (found)
 	{
@@ -2263,7 +2263,7 @@ Command *first_command(void)
 {
 	next_index = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	while (next_index < 1024 && currentcmd == NULL)
 		currentcmd = STATSERV[next_index++];
@@ -2274,7 +2274,7 @@ Command *first_command(void)
 
 Command *next_command(void)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (currentcmd)
 		currentcmd = currentcmd->next;
@@ -2299,7 +2299,7 @@ CommandHash *first_commandhash(void)
 {
 	next_index = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	while (next_index < 1024 && currentcmd == NULL)
 		currentcmd = STATSERV[next_index++];
@@ -2310,7 +2310,7 @@ CommandHash *first_commandhash(void)
 
 CommandHash *next_commandhash(void)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (currentcmd)
 		currentcmd = currentcmd->next;
@@ -2335,7 +2335,7 @@ Message *first_message(void)
 {
 	next_index = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	while (next_index < 1024 && current == NULL)
 		current = IRCD[next_index++];
@@ -2346,7 +2346,7 @@ Message *first_message(void)
 
 Message *next_message(void)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (current)
 		current = current->next;
@@ -2371,7 +2371,7 @@ MessageHash *first_messagehash(void)
 {
 	next_index = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	while (next_index < 1024 && current == NULL)
 		current = IRCD[next_index++];
@@ -2382,7 +2382,7 @@ MessageHash *first_messagehash(void)
 
 MessageHash *next_messagehash(void)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (current)
 		current = current->next;
@@ -2421,7 +2421,7 @@ int addMessage(MessageHash * msgTable[], Message * m, int pos)
 	Message *tail = NULL;
 	int match = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!msgTable || !m || (pos < 0 || pos > 2))
 	{
@@ -2495,7 +2495,7 @@ int addMessage(MessageHash * msgTable[], Message * m, int pos)
  **/
 int addCoreMessage(MessageHash * msgTable[], Message * m)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!msgTable || !m)
 	{
@@ -2517,7 +2517,7 @@ int moduleAddMessage(Message * m, int pos)
 {
 	int status;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!m)
 	{
@@ -2555,7 +2555,7 @@ ModuleHash *first_modulehash(void)
 {
 	next_index = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	while (next_index < 1024 && currentmod == NULL)
 		currentmod = MODULE_HASH[next_index++];
@@ -2566,7 +2566,7 @@ ModuleHash *first_modulehash(void)
 
 ModuleHash *next_modulehash(void)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (currentmod)
 		currentmod = currentmod->next;
@@ -2591,7 +2591,7 @@ Module *first_module(void)
 {
 	next_index = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	while (next_index < 1024 && currentmod == NULL)
 		currentmod = MODULE_HASH[next_index++];
@@ -2609,7 +2609,7 @@ Module *first_module(void)
 
 Module *next_module(void)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (currentmod)
 		currentmod = currentmod->next;
@@ -2640,7 +2640,7 @@ int moduleDelMessage(char *name)
 	Message *m;
 	int status;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!mod_current_module)
 	{
@@ -2676,7 +2676,7 @@ int delMessage(MessageHash * msgTable[], Message * m, char *mod_name)
 	MessageHash *lastHash = NULL;
 	Message *tail = NULL, *last = NULL;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!m || !msgTable)
 	{
@@ -2767,7 +2767,7 @@ int delMessage(MessageHash * msgTable[], Message * m, char *mod_name)
  **/
 int destroyMessage(Message * m)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!m)
 	{
@@ -2791,7 +2791,7 @@ int destroyMessage(Message * m)
 
 int destroyMessageHash(MessageHash * mh)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!mh)
 	{
@@ -2811,7 +2811,7 @@ int destroyMessageHash(MessageHash * mh)
 
 int destroyCommandHash(CommandHash * ch)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!ch)
 	{
@@ -2840,7 +2840,7 @@ Command *lookup_cmd(Command * list, char *cmd)
 {
 	Command *c;
 
-	SET_SEGV_LOCATION();
+	
 
 	for (c = list; c->name; c++)
 	{
@@ -2867,7 +2867,7 @@ Command *lookup_cmd(Command * list, char *cmd)
 void run_cmd(char *service, User * u, Command * list, char *cmd, char *str)
 {
 	Command *c;
-	SET_SEGV_LOCATION();
+	
 	c = lookup_cmd(list, cmd);
 	do_run_cmd(service, u, c, cmd, str);
 }
@@ -2888,7 +2888,7 @@ void mod_run_cmd(char *service, User * u, CommandHash * cmdTable[],
                  const char *cmd, char *str)
 {
 	Command *c;
-	SET_SEGV_LOCATION();
+	
 	c = findCommand(cmdTable, cmd);
 	do_run_cmd(service, u, c, cmd, str);
 }
@@ -2912,7 +2912,7 @@ void do_run_cmd(char *service, User * u, Command * c, const char *cmd,
 	Command *cmdcurrent;
 	int ac;
 	char **av;
-	SET_SEGV_LOCATION();
+	
 
 	if (str)
 	{
@@ -2979,7 +2979,7 @@ void do_help_cmd(char *service, User * u, Command * c, const char *cmd)
 	int cont = MOD_CONT;
 	const char *p1 = NULL, *p2 = NULL, *p3 = NULL, *p4 = NULL;
 
-	SET_SEGV_LOCATION();
+	
 
 	for (cmdcurrent = c; (cmdcurrent) && (cont == MOD_CONT);
 	        cmdcurrent = cmdcurrent->next)
@@ -3048,7 +3048,7 @@ void do_help_cmd(char *service, User * u, Command * c, const char *cmd)
 void help_cmd(char *service, User * u, Command * list, char *cmd)
 {
 	Command *c;
-	SET_SEGV_LOCATION();
+	
 	c = lookup_cmd(list, cmd);
 	do_help_cmd(service, u, c, cmd);
 }
@@ -3067,7 +3067,7 @@ void mod_help_cmd(char *service, User * u, CommandHash * cmdTable[],
                   const char *cmd)
 {
 	Command *c;
-	SET_SEGV_LOCATION();
+	
 	c = findCommand(cmdTable, cmd);
 	do_help_cmd(service, u, c, cmd);
 }

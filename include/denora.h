@@ -119,31 +119,6 @@
 #endif
 
 /************************************************************************/
-/* MySQL headers that we want to include and defines that older		*/
-/* versions do not have.						*/
-/* Note that MYSQL_HEADER_PREFIX should be trapped from	sysconf.h	*/
-/************************************************************************/
-
-#ifdef USE_MYSQL
-#ifdef MYSQL_HEADER_PREFIX
-#include <mysql/mysql_version.h>
-#include <mysql/mysql.h>
-#include <mysql/errmsg.h>
-#include <mysql/mysqld_error.h>
-#else
-#include <mysql_version.h>
-#include <mysql.h>
-#include <errmsg.h>
-#include <mysqld_error.h>
-#endif
-#ifndef ER_USER_LIMIT_REACHED
-#define ER_USER_LIMIT_REACHED 1226
-#endif
-#endif
-
-
-
-/************************************************************************/
 /* Include the openssl header file if the system can has it		*/
 /************************************************************************/
 
@@ -192,7 +167,6 @@
 #include "GeoIPCity.h"
 #include "sqlite3.h"
 #include "zip.h"
-#include "denoralib_err.h"
 #include "events.h"
 #include "sockets.h"
 #include "version.h"
@@ -200,7 +174,7 @@
 #include "modes.h"
 #include "cron.h"
 #include "list-array.h"
-#include "denoralib.h"
+#include "sql.h"
 
 /************************************************************************/
 /* Remove standard C functions and replace with our own functions	*/
@@ -281,7 +255,10 @@ typedef enum
 	PROTOCOL,		/* IRCD Protocol Module			*/
 	THIRD,			/* Third Party Module			*/
 	SUPPORTED,		/* Supported (included module)		*/
-	QATESTED		/* QA Team has checked and cleared it	*/
+	QATESTED,		/* QA Team has checked and cleared it	*/
+	ENCMOD,
+	SQLMOD,
+	SOCKET
 } MODType;
 
 typedef enum
@@ -289,6 +266,19 @@ typedef enum
 	MOD_OP_LOAD,
 	MOD_OP_UNLOAD
 } ModuleOperation;
+
+
+/************************************************************************/
+/* Base64 struct data							*/
+/************************************************************************/
+
+struct buffer_st
+{
+	char *data;
+	int length;
+	char *ptr;
+	int offset;
+};
 
 /************************************************************************/
 /* Setup the structs							*/
@@ -352,7 +342,7 @@ typedef struct spamfilter_ SpamFilter;
 typedef struct gline_ Gline;
 typedef struct qline_ Qline;
 typedef struct zline_ Zline;
-
+typedef struct config_ config;
 
 /************************************************************************/
 /* Define out the hash tables						*/
@@ -367,6 +357,25 @@ typedef struct zline_ Zline;
 #define PRIVMSGHANDLERS PRIVMSGHANDLERS_cmdTable
 #define XMLRPCCMD XMLRPCCMD_cmdTable
 #define USERMODEHANDLERS usermode_table
+
+
+#define FETCH_ARRAY_NUM 1
+#define FETCH_ARRAY_ASSOC 2
+
+struct config_
+{
+	config *prev, *next;
+
+	char *name;
+	int (*parser)(int count, char **lines);
+	int numoptions;
+};
+
+#define CONFIGHASH(nick)	(((nick)[0]&31)<<5 | ((nick)[1]&31))
+
+#define MAX_CONFIGLIST 1024
+config *configlists[MAX_CONFIGLIST];
+
 
 /************************************************************************/
 /* Command Struct							*/

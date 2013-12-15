@@ -108,7 +108,7 @@ void html_top10chan(FILE * ptr)
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstring(HTML_CHAN_TOP10_HEADER));
-		SET_SEGV_LOCATION();
+		
 		list_sort(StatsChanhead, top10chan_sort);
 		tn = list_first(StatsChanhead);
 		while (tn)
@@ -154,7 +154,7 @@ void html_top10chan(FILE * ptr)
 
 		}
 		fprintf(ptr, "%s", langstring(HTML_CHAN_TOP10_FOOTER));
-		SET_SEGV_LOCATION();
+		
 	}
 }
 
@@ -162,7 +162,7 @@ void html_top10chan(FILE * ptr)
 
 void html_top10_chanever_title(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstring(HTML_TOP10_CHANEVER_TITLE));
@@ -173,7 +173,7 @@ void html_top10_chanever_title(FILE * ptr)
 
 void html_popularchan_title(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstring(HTML_POPULAR_TITLE));

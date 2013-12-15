@@ -309,7 +309,7 @@ boolean moduleMinVersion(int major, int minor, int patch, int build)
 {
 	boolean ret = false;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (VERSION_MAJOR > major)          /* Def. new */
 	{
@@ -361,7 +361,7 @@ boolean moduleMinVersion(int major, int minor, int patch, int build)
  **/
 int moduleAddAdminHelp(Command * c, int (*func) (User * u))
 {
-	SET_SEGV_LOCATION();
+	
 	if (c)
 	{
 		c->admin_help = func;
@@ -379,7 +379,7 @@ int moduleAddAdminHelp(Command * c, int (*func) (User * u))
   **/
 int moduleAddRegHelp(Command * c, int (*func) (User * u))
 {
-	SET_SEGV_LOCATION();
+	
 	if (c)
 	{
 		c->regular_help = func;
@@ -397,7 +397,7 @@ int moduleAddRegHelp(Command * c, int (*func) (User * u))
   **/
 int moduleAddHelp(Command * c, int (*func) (User * u))
 {
-	SET_SEGV_LOCATION();
+	
 	if (c)
 	{
 		c->all_help = func;
@@ -416,7 +416,7 @@ int moduleAddHelp(Command * c, int (*func) (User * u))
   **/
 void moduleSetOperHelp(void (*func) (User * u))
 {
-	SET_SEGV_LOCATION();
+	
 	if (mod_current_module)
 	{
 		mod_current_module->operHelp = func;
@@ -436,7 +436,7 @@ void moduleDisplayHelp(int service, User * u)
 	int idx;
 	int header_shown = 0;
 	ModuleHash *modcurrent = NULL;
-	SET_SEGV_LOCATION();
+	
 
 	for (idx = 0; idx != MAX_CMD_HASH; idx++)
 	{
@@ -471,7 +471,7 @@ void moduleDisplayHelp(int service, User * u)
 char *moduleGetLastBuffer(void)
 {
 	char *tmp = NULL;
-	SET_SEGV_LOCATION();
+	
 
 	if (mod_current_buffer)
 	{
@@ -499,7 +499,7 @@ char *moduleGetLastBuffer(void)
  **/
 void moduleAddVersion(const char *version)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (mod_current_module && version)
 	{
@@ -515,7 +515,7 @@ void moduleAddVersion(const char *version)
  **/
 void moduleAddAuthor(const char *author)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (mod_current_module && author)
 	{

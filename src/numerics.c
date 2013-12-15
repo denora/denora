@@ -27,7 +27,7 @@
  */
 void denora_cmd_372(char *source, char *msg)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (ircd->numerics)
 	{
@@ -46,7 +46,7 @@ void denora_cmd_372(char *source, char *msg)
  */
 void denora_cmd_422(char *source)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (ircd->numerics)
 	{
@@ -65,7 +65,7 @@ void denora_cmd_422(char *source)
  */
 void denora_cmd_351(char *source)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (ircd->numerics)
 	{
@@ -87,7 +87,7 @@ void denora_cmd_351(char *source)
  */
 void denora_cmd_375(char *source)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (ircd->numerics)
 	{
@@ -107,7 +107,7 @@ void denora_cmd_375(char *source)
  */
 void denora_cmd_376(char *source)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (ircd->numerics)
 	{
@@ -127,7 +127,7 @@ void denora_cmd_376(char *source)
  */
 void denora_cmd_391(char *source, char *timestr)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!timestr)
 	{
@@ -156,7 +156,7 @@ void denora_cmd_391(char *source, char *timestr)
  */
 void denora_cmd_219(char *source, char *letter)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!source)
 	{
@@ -189,7 +189,7 @@ void denora_cmd_219(char *source, char *letter)
  */
 void denora_cmd_401(char *source, char *who)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!source || !who)
 	{
@@ -213,7 +213,7 @@ void denora_cmd_401(char *source, char *who)
  */
 void denora_cmd_318(char *source, char *who)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!source || !who)
 	{
@@ -244,7 +244,7 @@ void denora_cmd_numeric(char *source, int numeric, const char *fmt, ...)
 	char buf[BUFSIZE];
 	*buf = '\0';
 
-	SET_SEGV_LOCATION();
+	
 
 	if (fmt)
 	{

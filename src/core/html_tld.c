@@ -116,7 +116,7 @@ void html_tld_table(FILE * ptr)
 
 void html_tld_title(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstring(HTML_TLD_TITLE));

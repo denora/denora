@@ -25,7 +25,7 @@ int DenoraInit(int argc, char **argv)
 	USE_VAR(argc);
 	USE_VAR(argv);
 
-	if (denora_get_ircd() == IRC_NEFARIOUS) {
+	if (denora_get_ircd() == IRC_NEFARIOUS  || denora_get_ircd() == IRC_NEFARIOUS2) {
 		msg = createMessage("OPER", do_oper);
 		status = moduleAddMessage(msg, MOD_HEAD);
 		if (status != MOD_ERR_OK) {

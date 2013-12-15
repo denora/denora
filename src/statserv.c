@@ -44,7 +44,7 @@ void statserv(User * u, char *buf)
 	cmd = myStrGetToken(buf, ' ', 0);
 	str = myStrGetTokenRemainder(buf, ' ', 1);
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!cmd)
 	{
@@ -58,7 +58,7 @@ void statserv(User * u, char *buf)
 	}
 	else
 	{
-		SET_SEGV_LOCATION();
+		
 		/* CTCP VERSION that arrive this way are not ignored */
 		if (!stricmp(cmd, "\1VERSION"))
 		{

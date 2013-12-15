@@ -84,12 +84,12 @@ void html_server_table(FILE * ptr)
 	ServStats *s, *next;
 	Server *serv;
 	char *tempc;
-	SET_SEGV_LOCATION();
+	
 
 	if (ptr)
 	{
 		fprintf(ptr, "%s", getstring(NULL, HTML_SERVER_HEADER));
-		SET_SEGV_LOCATION();
+		
 		s = first_statsserver();
 		while (s)
 		{
@@ -120,7 +120,7 @@ void html_server_table(FILE * ptr)
 			s = next;
 		}
 		fprintf(ptr, "%s", getstring(NULL, HTML_SERVER_FOOTER));
-		SET_SEGV_LOCATION();
+		
 	}
 }
 
@@ -128,7 +128,7 @@ void html_server_table(FILE * ptr)
 
 void html_serverlist_title(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstr(HTML_SERVERLIST_TITLE));

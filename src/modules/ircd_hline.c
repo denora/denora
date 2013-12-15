@@ -67,7 +67,7 @@ int my_server(int argc, char **argv)
 
 void create_field(void)
 {
-	rdb_query(QUERY_LOW, "ALTER TABLE `%s` ADD `hline` ENUM( 'Y', 'N' ) DEFAULT 'N' NOT NULL;", ServerTable);
+	sql_query("ALTER TABLE `%s` ADD `hline` ENUM( 'Y', 'N' ) DEFAULT 'N' NOT NULL;", ServerTable);
 }
 
 int get_hline(char *source, int ac, char **av)
@@ -86,7 +86,7 @@ int get_hline(char *source, int ac, char **av)
 			if (*av[4] != '*') {
 				id = db_getserver(av[4]);
 				if (id) {
-					rdb_query(QUERY_LOW, "UPDATE %s SET hline=1 WHERE servid=%d", ServerTable, id);
+					sql_query("UPDATE %s SET hline=1 WHERE servid=%d", ServerTable, id);
 				}
 			}
 		}

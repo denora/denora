@@ -280,7 +280,7 @@ static const char convert2y[] =
  */
 char *base64enc(long i)
 {
-	SET_SEGV_LOCATION();
+	
 	return (i < 0 ? (char *) "0" : int_to_base64(i));
 }
 
@@ -293,7 +293,7 @@ char *base64enc(long i)
  */
 long base64dec(char *b64)
 {
-	SET_SEGV_LOCATION();
+	
 	return (b64 ? base64_to_int(b64) : 0);
 }
 
@@ -314,7 +314,7 @@ int b64_encode(char *src, size_t srclength, char *target, size_t targsize)
 	unsigned char output[4];
 	size_t i;
 
-	SET_SEGV_LOCATION();
+	
 
 	while (2 < srclength)
 	{
@@ -327,7 +327,7 @@ int b64_encode(char *src, size_t srclength, char *target, size_t targsize)
 		output[1] = ((input[0] & 0x03) << 4) + (input[1] >> 4);
 		output[2] = ((input[1] & 0x0f) << 2) + (input[2] >> 6);
 		output[3] = input[2] & 0x3f;
-		SET_SEGV_LOCATION();
+		
 		if (datalength + 4 > targsize)
 			return (-1);
 		target[datalength++] = Base64[output[0]];
@@ -347,7 +347,7 @@ int b64_encode(char *src, size_t srclength, char *target, size_t targsize)
 		output[0] = input[0] >> 2;
 		output[1] = ((input[0] & 0x03) << 4) + (input[1] >> 4);
 		output[2] = ((input[1] & 0x0f) << 2) + (input[2] >> 6);
-		SET_SEGV_LOCATION();
+		
 		if (datalength + 4 > targsize)
 			return (-1);
 		target[datalength++] = Base64[output[0]];
@@ -360,7 +360,7 @@ int b64_encode(char *src, size_t srclength, char *target, size_t targsize)
 		{
 			target[datalength++] = Base64[output[2]];
 		}
-		SET_SEGV_LOCATION();
+		
 		target[datalength++] = Pad64;
 	}
 	if (datalength >= targsize)
@@ -383,7 +383,7 @@ int b64_decode(char *src, char *target, size_t targsize)
 	int tarindex, state, ch;
 	char *pos;
 
-	SET_SEGV_LOCATION();
+	
 
 	state = 0;
 	tarindex = 0;
@@ -412,7 +412,7 @@ int b64_decode(char *src, char *target, size_t targsize)
 				state = 1;
 				break;
 			case 1:
-				SET_SEGV_LOCATION();
+				
 				if (target)
 				{
 					if ((size_t) tarindex + 1 >= targsize)
@@ -425,7 +425,7 @@ int b64_decode(char *src, char *target, size_t targsize)
 				state = 2;
 				break;
 			case 2:
-				SET_SEGV_LOCATION();
+				
 				if (target)
 				{
 					if ((size_t) tarindex + 1 >= targsize)
@@ -448,7 +448,7 @@ int b64_decode(char *src, char *target, size_t targsize)
 				state = 0;
 				break;
 			default:
-				SET_SEGV_LOCATION();
+				
 				abort();
 		}
 	}
@@ -486,7 +486,7 @@ int b64_decode(char *src, char *target, size_t targsize)
 				 */
 				for ((void) NULL; ch != '\0'; ch = *src++)
 					if (!isspace(ch))
-						SET_SEGV_LOCATION();
+						
 				return (-1);
 
 				/*
@@ -506,7 +506,7 @@ int b64_decode(char *src, char *target, size_t targsize)
 		 * have no partial bytes lying around.
 		 */
 		if (state != 0)
-			SET_SEGV_LOCATION();
+			
 		return (-1);
 	}
 
@@ -527,14 +527,14 @@ char *encode_ip(unsigned char *ip)
 	struct in_addr ia;          /* For IPv4 */
 	char *s_ip;                 /* Signed ip string */
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!ip)
 		return sstrdup("*");
 
 	if (strchr((char *) ip, ':'))
 	{
-		SET_SEGV_LOCATION();
+		
 		return NULL;
 	}
 	else
@@ -542,7 +542,7 @@ char *encode_ip(unsigned char *ip)
 		s_ip = str_signed(ip);
 		inet_aton(s_ip, &ia);
 		ircsnprintf(ipbuf, 50, "%uld", ia.s_addr);
-		SET_SEGV_LOCATION();
+		
 		b64_encode((char *) &ipbuf, sizeof(struct in_addr), buf, 25);
 		free(s_ip);
 	}
@@ -556,7 +556,7 @@ char* decode_ip(char *buf)
 	int len = strlen(buf);
 	char targ[25];
 
-	SET_SEGV_LOCATION();
+	
 
 	b64_decode(buf, targ, 25);
 
@@ -643,7 +643,7 @@ static char *int_to_base64(long val)
 
 	base64buf[i] = '\0';
 
-	SET_SEGV_LOCATION();
+	
 
 	/* Temporary debugging code.. remove before 2038 ;p.
 	 * This might happen in case of 64bit longs (opteron/ia64),
@@ -660,7 +660,7 @@ static char *int_to_base64(long val)
 		base64buf[--i] = int6_to_base64_map[val & 63];
 	}
 	while (val >>= 6);
-	SET_SEGV_LOCATION();
+	
 
 	return base64buf + i;
 }
@@ -671,7 +671,7 @@ static long base64_to_int(char *b64)
 {
 	int v;
 
-	SET_SEGV_LOCATION();
+	
 
 	v = base64_to_int6_map[(unsigned char) *b64++];
 
@@ -683,7 +683,7 @@ static long base64_to_int(char *b64)
 		v <<= 6;
 		v += base64_to_int6_map[(unsigned char) *b64++];
 	}
-	SET_SEGV_LOCATION();
+	
 
 	return v;
 }
@@ -697,7 +697,7 @@ static long base64_to_int(char *b64)
  */
 long base64dec_ts(char *ts)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!ts)
 	{
@@ -718,7 +718,7 @@ long base64dec_ts(char *ts)
 
 const char *inttobase64(char *buf, unsigned int v, unsigned int count)
 {
-	SET_SEGV_LOCATION();
+	
 
 	buf[count] = '\0';
 	while (count > 0)
@@ -726,7 +726,7 @@ const char *inttobase64(char *buf, unsigned int v, unsigned int count)
 		buf[--count] = convert2y[(v & 63)];
 		v >>= 6;
 	}
-	SET_SEGV_LOCATION();
+	
 	return buf;
 }
 

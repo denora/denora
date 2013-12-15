@@ -64,10 +64,9 @@ int do_fantasy(int argc, char **argv)
 {
 	User *u;
 	char *chan, *target, *sqltarget;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
+	SQLres *sql_res;
 	ChannelStats *cs;
+	char **sql_row;
 
 	if (argc < 3)
 		return MOD_CONT;
@@ -91,55 +90,51 @@ int do_fantasy(int argc, char **argv)
 		else
 		{
 			target = strtok(argv[3], " ");
-			sqltarget = rdb_escape(target);
-			rdb_query(QUERY_HIGH, "SELECT uname FROM %s WHERE nick=\'%s\' ", AliasesTable, sqltarget);
-#ifdef USE_MYSQL
-			mysql_res = mysql_store_result(mysql);
-			if (mysql_res && mysql_num_rows(mysql_res))
+			sqltarget = sql_escape(target);
+			sql_query( "SELECT uname FROM %s WHERE nick=\'%s\' ", AliasesTable, sqltarget);
+			sql_res = sql_set_result(sqlcon);
+			if (sql_res && sql_num_rows(sql_res))
 			{
-				mysql_row = mysql_fetch_row(mysql_res);
+				sql_row = sql_fetch_row(sql_res);
 				free(sqltarget);
-				sqltarget = rdb_escape(mysql_row[0]);
+				sqltarget = sql_escape(sql_row[0]);
 			}
 			else
 			{
 				free(sqltarget);
 				return MOD_CONT;
 			}
-#endif
 		}
-		chan = rdb_escape(argv[2]);
+		chan = sql_escape(argv[2]);
 		cs = find_cs(argv[2]);
-		rdb_query(QUERY_HIGH, "SELECT * FROM %s WHERE chan=\'%s\' AND type=0 AND uname=\'%s\';",
+		sql_query( "SELECT * FROM %s WHERE chan=\'%s\' AND type=0 AND uname=\'%s\';",
 		          UStatsTable, chan, sqltarget);
 		free(chan);
 		free(sqltarget);
-#ifdef USE_MYSQL
-		mysql_res = mysql_store_result(mysql);
-		if (mysql_num_rows(mysql_res) > 0)
+		sql_res = sql_set_result(sqlcon);
+		if (sql_num_rows(sql_res) > 0)
 		{
-			SET_SEGV_LOCATION();
-			while ((mysql_row = mysql_fetch_row(mysql_res)) != NULL)
+			
+			while ((sql_row = sql_fetch_row(sql_res)) != NULL)
 			{
 				if (cs->flags & CS_NOTICE)
 				{
 					notice_lang(s_StatServ, u, STATS_USER_CHANNEL, target, argv[2]);
 					notice_lang(s_StatServ, u, STATS_MESSAGE_ONE,
-					            mysql_row[3], mysql_row[4], mysql_row[5], mysql_row[7], mysql_row[6]);
+					            sql_row[3], sql_row[4], sql_row[5], sql_row[7], sql_row[6]);
 				}
 				else
 				{
 					denora_cmd_privmsg(s_StatServ, argv[2], getstring(NULL, STATS_USER_CHANNEL),
 					                   target, argv[2]);
 					denora_cmd_privmsg(s_StatServ, argv[2], getstring(NULL, STATS_MESSAGE_ONE),
-					                   mysql_row[3], mysql_row[4], mysql_row[5], mysql_row[7], mysql_row[6]);
+					                   sql_row[3], sql_row[4], sql_row[5], sql_row[7], sql_row[6]);
 				}
 
 			}
 		}
-		SET_SEGV_LOCATION();
-		mysql_free_result(mysql_res);
-#endif
+		
+		sql_free_result(sql_res);
 	}
 
 	return MOD_CONT;

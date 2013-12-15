@@ -119,7 +119,7 @@ int denora_event_372(char *source, int ac, char **av)
 	Server *s;
 	char buf[NET_BUFSIZE];
 
-	SET_SEGV_LOCATION();
+	
 	if (denora->protocoldebug)
 	{
 		protocol_debug(source, ac, av);
@@ -161,12 +161,12 @@ int denora_event_372(char *source, int ac, char **av)
  */
 int denora_event_375(char *source, int ac, char **av)
 {
-	SET_SEGV_LOCATION();
+	
 	if (denora->protocoldebug)
 	{
 		protocol_debug(source, ac, av);
 	}
-	rdb_query(QUERY_LOW, "UPDATE %s SET motd=\'\' WHERE server=\'%s\'",
+	sql_query( "UPDATE %s SET motd=\'\' WHERE server=\'%s\'",
 	          ServerTable, source);
 	return MOD_CONT;
 }

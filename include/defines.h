@@ -391,9 +391,6 @@
 #define VARTYPE_NAME    0x0004  /* non-free name        */
 #define VARTYPE_NONE    0x0008  /* doesnt take any var  */
 
-#define QUERY_HIGH 1
-#define QUERY_LOW  2
-
 #define SORT_DESC 1
 #define SORT_ASC  2
 
@@ -417,6 +414,7 @@
 #define MOD_ERR_FILE_IO     11
 #define MOD_ERR_NOSERVICE   12
 #define MOD_ERR_NO_MOD_NAME 13
+#define MOD_ERR_SQL         14
 
 #define MAX_CMD_HASH 1024
 #define MAX_MODE_HASH 26625

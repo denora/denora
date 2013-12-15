@@ -34,7 +34,7 @@ char *char_encode(char *s1)
 	*buf3 = '\0';
 	*buf4 = '\0';
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!s1 || !*s1)
 	{
@@ -76,7 +76,7 @@ char *char_encode(char *s1)
 		}
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	return sstrdup(buf4);
 }
@@ -91,7 +91,7 @@ char *char_encode(char *s1)
  */
 int toupper(char c)
 {
-	SET_SEGV_LOCATION();
+	
 #if defined(__NetBSD__)
 	if (islower((unsigned int) c))
 #else
@@ -116,7 +116,7 @@ int toupper(char c)
  */
 int tolower(char c)
 {
-	SET_SEGV_LOCATION();
+	
 
 #if defined(__NetBSD__)
 	if (isupper((unsigned int) c))
@@ -124,12 +124,12 @@ int tolower(char c)
 	if (isupper(c))
 #endif
 	{
-		SET_SEGV_LOCATION();
+		
 		return (unsigned char) c + ('a' - 'A');
 	}
 	else
 	{
-		SET_SEGV_LOCATION();
+		
 		return (unsigned char) c;
 	}
 }
@@ -150,7 +150,7 @@ char *merge_args(int argc, char **argv)
 	static char s[4096];
 	char *t;
 
-	SET_SEGV_LOCATION();
+	
 
 	t = s;
 	for (i = 0; i < argc; i++)
@@ -173,7 +173,7 @@ char *merge_args(int argc, char **argv)
 void protocol_debug(char *source, int argc, char **argv)
 {
 	int i;
-	SET_SEGV_LOCATION();
+	
 
 	if (source)
 	{
@@ -210,7 +210,7 @@ static int do_match_wild(const char *pattern, const char *str, int docase)
 	char c;
 	const char *s;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (BadPtr(str) || BadPtr(pattern))
 	{
@@ -264,7 +264,7 @@ static int do_match_wild(const char *pattern, const char *str, int docase)
  */
 int match_wild(const char *pattern, const char *str)
 {
-	SET_SEGV_LOCATION();
+	
 	return do_match_wild(pattern, str, 1);
 }
 
@@ -278,7 +278,7 @@ int match_wild(const char *pattern, const char *str)
  */
 int match_wild_nocase(const char *pattern, const char *str)
 {
-	SET_SEGV_LOCATION();
+	
 	return do_match_wild(pattern, str, 0);
 }
 
@@ -316,7 +316,7 @@ int match_usermask(const char *mask, User * user)
 			free(mask2);
 		return 0;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	if (nick)
 	{
@@ -358,7 +358,7 @@ int dotime(const char *s)
 		return -1;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	amount = strtol(s, (char **) &s, 10);
 	if (*s)
@@ -400,7 +400,7 @@ char *myStrGetToken(const char *str, const char dilim, int token_number)
 	{
 		return NULL;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	len = strlen(str);
 	for (idx = 0; idx <= len; idx++)
@@ -440,7 +440,7 @@ char *myStrGetOnlyToken(const char *str, const char dilim,
 	{
 		return NULL;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	len = strlen(str);
 	for (idx = 0; idx <= len; idx++)
@@ -485,7 +485,7 @@ char *myStrGetTokenRemainder(const char *str, const char dilim,
 	}
 	len = strlen(str);
 
-	SET_SEGV_LOCATION();
+	
 
 	for (idx = 0; idx <= len; idx++)
 	{
@@ -523,7 +523,7 @@ char *myStrSubString(const char *src, int start, int end)
 	{
 		return NULL;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	len = strlen(src);
 	if (((start >= 0) && (end <= len)) && (end > start))
@@ -555,7 +555,7 @@ void doCleanBuffer(char *str)
 		return;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	in = str;
 	out = str;
@@ -591,7 +591,7 @@ DENORA_INLINE boolean nickIsServices(char *nick)
 	User *u;
 
 	/* Set the segfault location */
-	SET_SEGV_LOCATION();
+	
 
 	/**
 	 * Check for a bad pointer that might have been passed to us
@@ -607,7 +607,7 @@ DENORA_INLINE boolean nickIsServices(char *nick)
 		/* Find the user */
 		u = user_find(nick);
 		/* reset the segfault location */
-		SET_SEGV_LOCATION();
+		
 		/* if u check if they are flagged as a service */
 		if (u && u->isservice)
 		{
@@ -627,7 +627,7 @@ DENORA_INLINE boolean nickIsServices(char *nick)
  */
 const char *send_token(const char *token1, const char *token2)
 {
-	SET_SEGV_LOCATION();
+	
 
 	return (UseTokens && ircd->token && ircdcap->token ? token2 : token1);
 }
@@ -647,7 +647,7 @@ int myNumToken(const char *str, const char dilim)
 	{
 		return 0;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	len = strlen(str);
 	for (idx = 0; idx <= len; idx++)
@@ -672,7 +672,7 @@ char *normalizeBuffer(char *buf)
 	char *newbuf;
 	int i, len, j = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (BadPtr(buf))
 	{
@@ -790,7 +790,7 @@ int split_buf(char *buf, char ***argv)
 	int argc;
 	char *s;
 
-	SET_SEGV_LOCATION();
+	
 
 	*argv = calloc(sizeof(char *) * argvsize, 1);
 	argc = 0;
@@ -841,7 +841,7 @@ char *militime_float(char *start)
 	char *p;
 	gettimeofday(&tv, NULL);
 
-	SET_SEGV_LOCATION();
+	
 
 	if (start)
 	{
@@ -861,7 +861,7 @@ char *militime_float(char *start)
 		ircsnprintf(timebuf, sizeof(timebuf), "%ld.%ld", tv.tv_sec,
 		            tv.tv_usec);
 	}
-	SET_SEGV_LOCATION();
+	
 
 	return sstrdup(timebuf);
 #else
@@ -891,7 +891,7 @@ void post_config_check(void)
 	{
 		error++;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	if (!ReadTimeout)
 	{
@@ -1127,7 +1127,7 @@ void post_config_check(void)
  */
 int is_stats_admin(User * u)
 {
-	SET_SEGV_LOCATION();
+	
 	if ((is_oper(u)) && (u->admin == 1))
 	{
 		return 1;
@@ -1151,7 +1151,7 @@ int is_valid_server(char *name)
 	unsigned char *s;
 	int valid = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (BadPtr(name))
 	{
@@ -1176,147 +1176,6 @@ int is_valid_server(char *name)
 	}
 	return 1;
 }
-
-/*************************************************************************/
-
-int is_crypted(const char *passwd)
-{
-	const char *const valid_md5chars = "0123456789abcdef";
-	int i;
-
-#if defined(HAVE_CRYPT_H) && defined(HAVE_CRYPT)
-	/* Check if the string matches $1$........$...................... */
-	if (strlen(passwd) == 34 && strncmp("$1$",passwd, 3) == 0 && passwd[11] == '$')
-	{
-		return 1;
-	}
-#endif
-
-	/* Check if string matches a md5 using ^[0-9a-f]{32}$ the non regex fugly way */
-	if (strlen(passwd) == 32)
-	{
-		for (i = 0; i < 32; i++)
-		{
-			if (strchr(valid_md5chars, passwd[i]) == NULL)
-			{
-				return 0;
-			}
-		}
-		return 1;
-        }
-
-	return 0;
-}
-
-char *MakePassword(char *plaintext)
-{
-#if defined(HAVE_CRYPT_H) && defined(HAVE_CRYPT)
-	unsigned long seed[2];
-	char salt[] = "$1$........";
-	const char *const seedchars =
-	    "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	char *password;
-	int i;
-
-	/* Generate a (not very) random seed.
-	   You should do it better than this... */
-	seed[0] = time(NULL);
-	seed[1] = getpid() ^ (seed[0] >> 14 & 0x30000);
-
-	/* Turn it into printable characters from `seedchars'. */
-	for (i = 0; i < 8; i++)
-		salt[3 + i] = seedchars[(seed[i / 5] >> (i % 5) * 6) & 0x3f];
-
-	/* Read in the user's password and encrypt it. */
-	password = crypt(plaintext, (char *) salt);
-	return password;
-#endif
-
-	return md5(plaintext);
-}
-
-/*************************************************************************/
-
-int ValidPassword(char *plaintext, char *checkvs)
-{
-	char *result;
-
-#if defined(HAVE_CRYPT_H) && defined(HAVE_CRYPT)
-	/* Read in the user's password and encrypt it,
-	   passing the expected password in as the salt.
-	   the return of crypt() must not be free()'d */
-	result = crypt(plaintext, checkvs);
-	if (!BadPtr(result) && !strcmp(result, checkvs))
-	{
-		free(result);
-		return 1;
-	}
-#endif
-	result = md5(plaintext);
-	if (!stricmp(result, checkvs))
-	{
-		free(result);
-		return 1;
-	}
-	if (result)
-		free(result);
-
-	if (!strcmp(plaintext, checkvs))
-	{
-		return 1;
-	}
-	return 0;
-}
-
-/*************************************************************************/
-
-#if 0
-void BubbleSortData(temp_data * table, int size, int direction)
-{
-	int i, dum;
-	alog(LOG_DEBUG, "size is %d", size);
-
-	for (dum = 0; dum < size - 1; dum++)
-	{
-		for (i = 0; i < size - 1; i++)
-		{
-			alog(LOG_DEBUG, "count[%d] is from count[%d]", table[i].count,
-			     table[i + 1].count);
-
-			if (direction == SORT_DESC)
-			{
-				if (table[i].count < table[i + 1].count)
-				{
-					SortSwapArray(&table[i], &table[i + 1]);
-				}
-			}
-			else if (direction == SORT_ASC)
-			{
-				if (table[i].count > table[i + 1].count)
-				{
-					SortSwapArray(&table[i + 1], &table[i]);
-				}
-			}
-			else
-			{
-				if (table[i].count < table[i + 1].count)
-				{
-					SortSwapArray(&table[i], &table[i + 1]);
-				}
-			}
-		}
-	}
-}
-
-/* swap: interchange two structs */
-void SortSwapArray(temp_data * table1, temp_data * table2)
-{
-	temp_data *temp;
-	temp = table1;
-	table1 = table2;
-	table2 = temp;
-}
-#endif
 
 /*************************************************************************/
 
@@ -1371,7 +1230,7 @@ void destroy_all(void)
 		{
 			if (!u->sqlnick)
 			{
-				u->sqlnick = rdb_escape(u->nick);
+				u->sqlnick = sql_escape(u->nick);
 			}
 			db_removenick(u->sqlnick, (char *) "Denora shutdown");
 		}
@@ -1670,7 +1529,5 @@ void destroy_all(void)
 	remove_pidfile();
 	if (PIDFilename)
 		free(PIDFilename);
-	if (rdb_errmsg)
-		free(rdb_errmsg);
 	alog(LOG_DEBUG, "debug: Clean up complete");
 }

@@ -72,7 +72,7 @@ static int do_status(User * u, int ac, char **av)
 		what = av[0];
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!what)
 	{

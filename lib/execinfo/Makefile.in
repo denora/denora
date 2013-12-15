@@ -1,0 +1,86 @@
+# Makefile for Denora.
+#
+# (c) 2004-2013 Denora Team
+# Contact us at info@denorastats.org
+#
+# Please read COPYING and README for further details.
+#
+# Based on the original code of Anope by Anope Team.
+# Based on the original code of Thales by Lucas.
+#
+# 
+#
+
+
+CCDV=@CCDV@
+CC=$(CCDV)@CC@
+INCLUDEDIR=../include 
+DENORALIBS=@DENORALIBS@
+BASEOPT=-O2
+CFLAGS=@CFLAGS@
+OPCFLAGS=@OPCFLAGS@
+STRICT=@STRICT@
+ANSI=-Wall -ansi -pedantic
+PROFILE=-pg
+LDPROFILE=
+SHELL=/bin/sh
+SUBDIRS=src
+LIBDIRS=lib
+BINDEST=@BINDEST@
+DATDEST=@DATDEST@
+INSTALL=@INSTALL@
+RM=@RM@
+CP=@CP@
+TOUCH=@TOUCH@
+MODULE_PATH=@MODULE_PATH@
+MYSQL=@MYSQL@
+MYSQL_CLIENT_LIBS=@MYSQL_CLIENT_LIBS@
+LDFLAGS=@LDFLAGS@
+RUNGROUP=@RUNGROUP@
+SHARED=@SHARED@
+RDYNAMNIC=@RDYNAMNIC@
+MODULEFLAGS=@MODULEFLAGS@
+EVNTLIBOBJS=@EVNTLIBOBJS@
+
+OBJS =  execinfo.o stacktraverse.o
+        
+SRCS =  execinfo.c stacktraverse.c
+        
+
+INCLUDES = execinfo.h stacktraverse.h
+
+MAKEARGS = 'CFLAGS=${CFLAGS}' 'CC=${CC}' 'DENORALIBS=${DENORALIBS}' \
+	   'LDFLAGS=${LDFLAGS}' 'BINDEST=${BINDEST}' 'INSTALL=${INSTALL}' \
+           'INCLUDEDIR=${INCLUDEDIR}' 'RM=${RM}' 'CP=${CP}' \
+      	   'TOUCH=${TOUCH}' 'SHELL=${SHELL}' 'DATDEST=${DATDEST}' \
+  	   'RUNGROUP=${RUNGROUP}' 'MODULE_PATH=${MODULE_PATH}' \
+	   'SHARED=${SHARED}' 'MODULEFLAGS=${MODULEFLAGS}' 'RDYNAMNIC=${RDYNAMNIC}'
+
+
+.c.o:
+	$(CC) $(CFLAGS) ${DENORALIBS} -c $<
+
+all: libexecinfo.la
+
+distclean: spotless
+
+libexecinfo.la:  $(OBJS)
+	ar -cvq libexecinfo.a
+	$(CC) -shared -Wl,-soname,libexecinfo.so -o libexecinfo.so  *.o
+
+$(OBJS): Makefile
+execinfo.o:		execinfo.c  $(INCLUDES)
+stacktraverse.o:   stacktraverse.c       $(INCLUDES)
+
+clean:
+	rm -f *.o libexecinfo.so a.out
+
+spotless:
+	rm -f *.o libexecinfo.so a.out
+
+install: libexecinfo.la
+	test -d ${BINDEST}/libs || mkdir ${BINDEST}/libs
+	$(INSTALL) libexecinfo.la $(BINDEST)/libs/libexecinfo.la
+
+DUMMY:
+	

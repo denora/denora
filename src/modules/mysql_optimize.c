@@ -47,9 +47,7 @@ void DenoraFini(void)
 int db_optimize(const char *name)
 {
 	char tables[512] = "\0";
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#endif
+	SQLres *sql_res;
 
 	USE_VAR(name);
 
@@ -72,7 +70,7 @@ int db_optimize(const char *name)
 	if (ircd->spamfilter)
 		sprintf(tables, "%s, %s", tables, SpamTable);
 
-	rdb_query(QUERY_HIGH, "OPTIMIZE TABLE %s", tables);
+	sql_query("OPTIMIZE TABLE %s", tables);
 
 	/*
 	 * We have to catch the result of the OPTIMIZE TABLE query
@@ -82,18 +80,16 @@ int db_optimize(const char *name)
 	 * dev.mysql.com says:
 	 *	If you get "Commands out of sync; you can't run this command now" in
 	 *	your client code, you are calling client functions in the wrong order.
-	 *	This can happen, for example, if you are using mysql_use_result()
-	 *	and try to execute a new query before you have called mysql_free_result().
+	 *	This can happen, for example, if you are using sql_use_result()
+	 *	and try to execute a new query before you have called sql_free_result().
 	 *	It can also happen if you try to execute two queries that return data
-	 *	without calling mysql_use_result() or mysql_store_result() in between.
+	 *	without calling sql_use_result() or sql_set_result() in between.
 	 *
 	 * this "fix" makes denora wait until the OPTIMIZE TABLE
 	 * query is fully processed, on large tables and slow sql servers this could
 	 * take a while. a better solution is to use mysql EVENTS.
 	 */
-#ifdef USE_MYSQL
-	mysql_res = mysql_store_result(mysql);
-	mysql_free_result(mysql_res);
-#endif
+	sql_res = sql_set_result(sqlcon);
+	sql_free_result(sql_res);
 	return MOD_CONT;
 }

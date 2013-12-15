@@ -150,15 +150,15 @@ static int do_chanstats(User * u, int ac, char **av)
 					}
 				}
 
-				rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chan=\'%s\'",
+				sql_query( "DELETE FROM %s WHERE chan=\'%s\'",
 				          CStatsTable, c->sqlchan);
-				rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chan=\'%s\'",
+				sql_query( "DELETE FROM %s WHERE chan=\'%s\'",
 				          UStatsTable, c->sqlchan);
 				cs->timeadded = time(NULL);
 				for (i = 0; i < 4; i++)
 				{
-					rdb_query
-					(QUERY_LOW,
+					sql_query
+					(
 					 "INSERT INTO %s SET chan=\'%s\', type=%i, timeadded=%ld;",
 					 CStatsTable, c->sqlchan, i, cs->timeadded);
 				}
@@ -183,12 +183,12 @@ static int do_chanstats(User * u, int ac, char **av)
 			}
 			if ((cs = find_cs(cmd2)))
 			{
-				sqlchan = rdb_escape(cmd2);
+				sqlchan = sql_escape(cmd2);
 				del_cs(cs);
 				save_cs_db();
-				rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chan=\'%s\'",
+				sql_query( "DELETE FROM %s WHERE chan=\'%s\'",
 				          CStatsTable, sqlchan);
-				rdb_query(QUERY_LOW, "DELETE FROM %s WHERE chan=\'%s\'",
+				sql_query( "DELETE FROM %s WHERE chan=\'%s\'",
 				          UStatsTable, sqlchan);
 				notice_lang(s_StatServ, u, STAT_CHANSTATS_CHAN_DEL, cmd2);
 				if (LogChannel)

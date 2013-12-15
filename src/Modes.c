@@ -57,7 +57,7 @@ UserMode *FindUserMode(char *name)
 	}
 	idx = CMD_HASH(name);
 
-	SET_SEGV_LOCATION();
+	
 
 	for (privcurrent = USERMODEHANDLERS[idx]; privcurrent;
 	        privcurrent = privcurrent->next)
@@ -82,7 +82,7 @@ UserMode *CreateUserModeCallBack(char *mode, int extra,
 		return NULL;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	if ((m = malloc(sizeof(UserMode))) == NULL)
 	{
@@ -104,7 +104,7 @@ int addUserModeCallBack(UserMode * m)
 	UserModeHash *newHash = NULL;
 	UserModeHash *lastHash = NULL;
 
-	SET_SEGV_LOCATION();
+	
 
 	modindex = CMD_HASH(m->mode);
 

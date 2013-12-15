@@ -169,13 +169,13 @@ void lang_init()
 	load_lang(LANG_RU, "ru");
 	load_lang(LANG_PT_BR, "pt_br");
 
-	SET_SEGV_LOCATION();
+	
 
 	for (i = 0; i < NUM_LANGS; i++)
 	{
 		if (langtexts[langorder[i]] != NULL)
 		{
-			SET_SEGV_LOCATION();
+			
 			for (j = 0; j < NUM_STRINGS; j++)
 			{
 				if (!langtexts[langorder[i]][j])
@@ -190,7 +190,7 @@ void lang_init()
 			}
 		}
 	}
-	SET_SEGV_LOCATION();
+	
 
 	if (!langtexts[DEF_LANGUAGE])
 		fatal("Unable to load default language");

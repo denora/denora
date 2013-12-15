@@ -53,8 +53,7 @@ void tld_update(char *country_code)
 		{
 			t->count--;
 		}
-		rdb_query(QUERY_LOW,
-		          "UPDATE %s SET count=%u, overall=%u WHERE code=\'%s\'",
+		sql_query("UPDATE %s SET count=%u, overall=%u WHERE code=\'%s\'",
 		          TLDTable, t->count, t->overall, country_code);
 	}
 }
@@ -75,49 +74,37 @@ void tld_update(char *country_code)
 void sql_do_tld(int type, char *code, char *country, int count, int overall)
 {
 	char *sqlcountry;
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
-#else
-	USE_VAR(code);
-	USE_VAR(count);
-	USE_VAR(overall);
-#endif
+	SQLres *sql_res;
 
 	if (!denora->do_sql)
 	{
 		return;
 	}
 
-	sqlcountry = rdb_escape(country);
+	sqlcountry = sql_escape(country);
 
-	SET_SEGV_LOCATION();
+	
 	if (type == 1 || type == 4)
 	{
-		rdb_query(QUERY_HIGH,
-		          "SELECT country FROM %s WHERE country = \'%s\';",
-		          TLDTable, sqlcountry);
-#ifdef USE_MYSQL
-		mysql_res = mysql_store_result(mysql);
-		if (mysql_res)
+		sql_query("SELECT country FROM %s WHERE country = \'%s\';", TLDTable, sqlcountry);
+		sql_res = sql_set_result(sqlcon);
+		if (sql_res)
 		{
-			if (mysql_num_rows(mysql_res))         /* does the country already exist in the database? */
+			if (sql_num_rows(sql_res))         /* does the country already exist in the database? */
 			{
-				rdb_query(QUERY_LOW,
-					"UPDATE %s SET count=%d, overall=%d WHERE code=\'%s\'",
+				sql_query("UPDATE %s SET count=%d, overall=%d WHERE code=\'%s\'",
 					TLDTable, count, overall, code);
 			}
 			else
 			{
-				rdb_query(QUERY_LOW,
-					"INSERT INTO %s (code, country, count, overall) VALUES(\'%s\', \'%s\', %d, %d)",
+				sql_query("INSERT INTO %s (code, country, count, overall) VALUES(\'%s\', \'%s\', %d, %d)",
 					TLDTable, code, sqlcountry, count, overall);
 			}
-			mysql_free_result(mysql_res);
+			sql_free_result(sql_res);
 		}
-#endif
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	if (sqlcountry)
 	{
@@ -133,7 +120,7 @@ void init_tld(void)
 {
 	TLD *t;
 	lnode_t *tn;
-	SET_SEGV_LOCATION();
+	
 
 	Thead = list_create(-1);
 	t = malloc(sizeof(TLD));
@@ -157,7 +144,7 @@ TLD *new_tld(const char *countrycode, const char *country)
 {
 	lnode_t *tn;
 	TLD *t = NULL;
-	SET_SEGV_LOCATION();
+	
 
 	tn = list_find(Thead, countrycode, findcc);
 	if (tn)
@@ -342,7 +329,7 @@ TLD *do_tld(char *country, char *code)
 		t = findtld(code);
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!t)
 	{

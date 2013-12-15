@@ -120,8 +120,7 @@ int add_sqladmin(char *name, char *passwd, int level, char *host, int lang, int 
 
 	if (!denora->do_sql)
 	{
-		rdb_query(QUERY_LOW,
-			  "INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', '%s', %d, %s%s%s, %d) \
+		sql_query("INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', '%s', %d, %s%s%s, %d) \
 			   ON DUPLICATE KEY UPDATE passwd=%s%s%s, level=%d, host='%s', lang=%d",
 		  	   AdminTable, name, crypted ? "'" : "MD5('", passwd, crypted ? "'" : "')", level, host, lang, 
 				    crypted ? "'" : "MD5('", passwd, crypted ? "'" : "')", level, host, lang);
@@ -139,7 +138,7 @@ int del_sqladmin(char *name)
 	
 	if (denora->do_sql)
 	{
-			rdb_query(QUERY_LOW, "DELETE FROM %s WHERE uname = '%s'",  AdminTable, name);
+			sql_query("DELETE FROM %s WHERE uname = '%s'",  AdminTable, name);
 	}
 
 	return res;
@@ -153,21 +152,20 @@ void reset_sqladmin(void)
 	int i;
 	int crypted;
 
-	SET_SEGV_LOCATION();
+	
 /* this was for mysql benefit will probably move it to the mysql module once that work
    has started
 */
 #if 0
 	if (denora->do_sql)
 	{
-		rdb_query(QUERY_LOW, "TRUNCATE TABLE %s", AdminTable);
+		sql_query("TRUNCATE TABLE %s", AdminTable);
 		for (i = 0; i < MAX_ADMINS; i++)
 		{
 			for (a = adminlists[i]; a; a = a->next)
 			{
 				crypted = is_crypted(a->passwd);
-				rdb_query(QUERY_LOW,
-					"INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', %s%s%s, %d, '%s', %d) \
+				sql_query("INSERT INTO %s (uname, passwd, level, host, lang) VALUES ('%s', %s%s%s, %d, '%s', %d) \
 					ON DUPLICATE KEY UPDATE passwd=%s%s%s, level=%d, host='%s', lang=%d",
 					AdminTable, a->name, crypted ? "'" : "MD5('", a->passwd, crypted ? "'" : "')", a->configfile, 
 					a->hosts[0], a->language, crypted ? "'" : "MD5('", a->passwd, crypted ? "'" : "')", a->configfile,
@@ -191,7 +189,7 @@ int AdminSetPassword(Dadmin * a, char *newpass)
 
 	if (denora->do_sql)
 	{
-		rdb_query(QUERY_LOW, "UPDATE %s SET passwd=%s%s%s WHERE uname = '%s'", AdminTable, crypted ? "'" : "MD5('", a->passwd, crypted ? "'" : "')", a->name);
+		sql_query("UPDATE %s SET passwd=%s%s%s WHERE uname = '%s'", AdminTable, crypted ? "'" : "MD5('", a->passwd, crypted ? "'" : "')", a->name);
 	}
 	return 1;
 }

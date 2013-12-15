@@ -5,7 +5,7 @@
 
 #include "denora.h"
 #define AUTHOR "Trystan"
-#define VERSION "1.0.1"
+#define VERSION "1.0.2"
 #define MYNAME "ircd_ports"
 #define SERVPORTTABLE "serverports"
 
@@ -41,15 +41,7 @@ int DenoraInit(int argc, char **argv)
         return MOD_STOP;
     }
 
-    if (denora_get_ircd() == IRC_SOLIDIRCD) {
-        msg = createMessage("249", get_port);
-        status = moduleAddMessage(msg, MOD_HEAD);
-        if (status != MOD_ERR_OK) {
-            /* something went wrong say something about */
-            alog(LOG_NORMAL, "[%s%s] unable to bind to 249 error [%d][%s]", MYNAME, MODULE_EXT, status, ModuleGetErrStr(status));
-            return MOD_STOP;
-        }
-    } else if (denora_get_ircd() == IRC_UNREAL32) {
+    if (denora_get_ircd() == IRC_UNREAL32) {
         msg = createMessage("NOTICE", get_port);
         status = moduleAddMessage(msg, MOD_HEAD);
         if (status != MOD_ERR_OK) {
@@ -66,7 +58,7 @@ int DenoraInit(int argc, char **argv)
                 return MOD_STOP;
             }
         }
-    } else if (denora_get_ircd() == IRC_ASUKA || denora_get_ircd() == IRC_NEFARIOUS  || denora_get_ircd() == IRC_IRCU) {
+    } else if (denora_get_ircd() == IRC_NEFARIOUS  || denora_get_ircd() == IRC_NEFARIOUS2  || denora_get_ircd() == IRC_IRCU) {
         msg = createMessage("217", get_port);
         status = moduleAddMessage(msg, MOD_HEAD);
         if (status != MOD_ERR_OK) {
@@ -79,7 +71,7 @@ int DenoraInit(int argc, char **argv)
     }
 
     create_table();
-    rdb_clear_table((char*) SERVPORTTABLE);
+    sql_clear_table((char*) SERVPORTTABLE);
 
     moduleAddAuthor(AUTHOR);
     moduleAddVersion(VERSION);
@@ -104,23 +96,21 @@ int my_server(int argc, char **argv)
 int my_squit(int argc, char **argv)
 {
     if (argc >= 2) {
-       rdb_query(QUERY_LOW, "DELETE FROM %s WHERE name=\'%s\'", SERVPORTTABLE, argv[0]);
+       sql_query("DELETE FROM %s WHERE name=\'%s\'", SERVPORTTABLE, argv[0]);
     }
     return MOD_CONT;
 }
 
 void create_table(void)
 {
-#ifdef USE_MYSQL
-	MYSQL_RES *mysql_res;
+	SQLres *sql_res;
 
-	rdb_query(QUERY_HIGH, "SHOW TABLES LIKE '%s';", SERVPORTTABLE);
-	mysql_res = mysql_store_result(mysql);
-	if (mysql_num_rows(mysql_res) == 0) {
-        	rdb_query(QUERY_LOW, "CREATE TABLE %s ( id mediumint(15) NOT NULL auto_increment, name varchar(255), portnum varchar(255), porttype varchar(255), PRIMARY KEY (id) );", SERVPORTTABLE);
+	sql_query("SHOW TABLES LIKE '%s';", SERVPORTTABLE);
+	sql_res = sql_set_result(sqlcon);
+	if (sql_num_rows(sql_res) == 0) {
+        	sql_query("CREATE TABLE %s ( id mediumint(15) NOT NULL auto_increment, name varchar(255), portnum varchar(255), porttype varchar(255), PRIMARY KEY (id) );", SERVPORTTABLE);
 	}
-	mysql_free_result(mysql_res);
-#endif
+	sql_free_result(sql_res);
 }
 
 int get_port(char *source, int ac, char **av)
@@ -134,27 +124,7 @@ int get_port(char *source, int ac, char **av)
 
 	USE_VAR(ac);
 
-    if (denora_get_ircd() == IRC_SOLIDIRCD) {
-        s = server_find(source);
-        if (!s) {
-            return MOD_CONT;
-        }
-        port = myStrGetToken(av[1], ' ', 0);
-        if (!port) {
-            return MOD_CONT;
-        }
-        if (!stricmp(port, "PORT")) {
-            portnum = myStrGetToken(av[1], ' ', 2);
-            type = myStrGetTokenRemainder(av[1], ' ', 3);
-            rdb_query
-                (QUERY_LOW, "INSERT INTO %s (name, portnum, porttype) VALUES(\'%s\',\'%s\',\'%s\')",
-                 SERVPORTTABLE, source, portnum, type);
-            free(port);
-            free(portnum);
-            free(type);
-            return MOD_CONT;
-        }
-    } else if (denora_get_ircd() == IRC_UNREAL32) {
+    if (denora_get_ircd() == IRC_UNREAL32) {
         s = server_find(source);
         if (!s) {
             return MOD_CONT;
@@ -167,15 +137,14 @@ int get_port(char *source, int ac, char **av)
             temp = myStrGetToken(port, ':', 1);
             portnum = myStrGetToken(temp, ',', 0);
             type = myStrGetTokenRemainder(av[1], ' ', 4);
-            rdb_query
-                (QUERY_LOW, "INSERT INTO %s (name, portnum, porttype) VALUES(\'%s\',\'%s\',\'%s\')",
+            sql_query("INSERT INTO %s (name, portnum, porttype) VALUES(\'%s\',\'%s\',\'%s\')",
                  SERVPORTTABLE, source, portnum, type);
             free(port);
             free(portnum);
             free(type);
             return MOD_CONT;
         }
-    } else if (denora_get_ircd() == IRC_ASUKA || denora_get_ircd() == IRC_NEFARIOUS || denora_get_ircd() == IRC_IRCU) {
+    } else if (denora_get_ircd() == IRC_NEFARIOUS2 || denora_get_ircd() == IRC_NEFARIOUS || denora_get_ircd() == IRC_IRCU) {
         s = server_find(source);
         if (!s) {
             return MOD_CONT;
@@ -193,8 +162,7 @@ int get_port(char *source, int ac, char **av)
                 } else {
                     type = sstrdup("Unknown");
                 }
-                rdb_query
-                 (QUERY_LOW, "INSERT INTO %s (name, portnum, porttype) VALUES(\'%s\',\'%s\',\'%s\')",
+                sql_query("INSERT INTO %s (name, portnum, porttype) VALUES(\'%s\',\'%s\',\'%s\')",
                  SERVPORTTABLE, s->name, av[2], type);
 		free(type);
             }

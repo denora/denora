@@ -41,7 +41,7 @@ void load_chan_db(void)
         {
                 return;                 /* Bang, an error occurred */
         }
-        SET_SEGV_LOCATION();
+        
 
 	while (1)
 	{
@@ -73,7 +73,7 @@ void load_chan_db(void)
 			{
 				continue;
 			}
-			SET_SEGV_LOCATION();
+			
 
 			if (!stricmp(key, "name"))
 			{
@@ -152,7 +152,7 @@ void save_chan_db(void)
 	StatsChannel *ss;
 	lnode_t *tn;
 
-	SET_SEGV_LOCATION();
+	
 	tn = list_first(StatsChanhead);
 	while (tn != NULL)
 	{
@@ -189,7 +189,7 @@ void save_chan_db(void)
 		}
 		tn = list_next(StatsChanhead, tn);
 	}
-	SET_SEGV_LOCATION();
+	
 	filedb_close(dbptr, NULL, NULL);  /* close file */
 
 	return;
@@ -200,7 +200,7 @@ void save_chan_db(void)
 void InitStatsChanList(void)
 {
 	StatsChannel *cs;
-	SET_SEGV_LOCATION();
+	
 
 	StatsChanhead = list_create(-1);
 	cs = malloc(sizeof(StatsChannel));
@@ -216,7 +216,7 @@ void sql_do_part(char *chan, User * u)
 {
 	int chanid, nickid;
 
-	SET_SEGV_LOCATION();
+	
 	chanid = db_getchannel(chan);
 	nickid = db_getnick(u->sqlnick);
 
@@ -224,17 +224,17 @@ void sql_do_part(char *chan, User * u)
 	{
 		if (nickid > 0)
 		{
-			rdb_query(QUERY_LOW,
+			sql_query(
 			          "DELETE FROM %s WHERE nickid=%d AND chanid=%d",
 			          IsOnTable, nickid, chanid);
 		}
-		rdb_query(QUERY_LOW,
+		sql_query(
 		          "UPDATE %s SET currentusers=currentusers-1 WHERE chanid=%d",
 		          ChanTable, chanid);
 		if (!ChanHasMode(chan, ircd->persist_char))
 			db_checkemptychan(chanid);
 	}
-	SET_SEGV_LOCATION();
+	
 	return;
 }
 
@@ -253,7 +253,7 @@ void sql_do_partall(char *nick)
 	char *sqlnick;
 	if (!BadPtr(nick))
 	{
-		sqlnick = rdb_escape(nick);
+		sqlnick = sql_escape(nick);
 		db_removefromchans(db_getnick(sqlnick));
 		free(sqlnick);
 	}
@@ -280,7 +280,7 @@ void sql_do_join(char *chan, char *nick)
 	{
 		return;
 	}
-	SET_SEGV_LOCATION();
+	
 	chanid = db_getchancreate(chan);
 	if (chanid > 0)
 	{
@@ -307,7 +307,7 @@ void sql_do_addusers(int chanid, char *users)
 		return;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	while (users && (*users))
 	{
@@ -368,7 +368,7 @@ void sql_do_addusers(int chanid, char *users)
 			*nextusers = '\0';
 		}
 		u = user_find(users);
-		users = (u ? u->sqlnick : rdb_escape(users));
+		users = (u ? u->sqlnick : sql_escape(users));
 		db_getnick((u ? u->sqlnick : users));
 		if (u && u->sqlid > 0)
 		{
@@ -414,7 +414,7 @@ void sql_do_addusers(int chanid, char *users)
 			strlcat(flagbuf, valuebuf, sizeof(flagbuf));
 
 			/* Execute */
-			rdb_query(QUERY_HIGH, flagbuf);
+			sql_query(flagbuf);
 		}
 		else
 		{
@@ -455,7 +455,7 @@ void sql_do_sjoin(char *chan, char *users, char **modes, int nbmodes)
 		return;
 	}
 
-	SET_SEGV_LOCATION();
+	
 	chanid = db_getchancreate(chan);
 	if (chanid > 0)
 	{
@@ -476,7 +476,7 @@ void chan_deluser(User * user, Channel * c)
 	struct c_userlist *u;
 	ChannelStats *cs;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!c->users)
 	{
@@ -513,10 +513,10 @@ void chan_deluser(User * user, Channel * c)
 	{
 		c->users = u->next;
 	}
-	SET_SEGV_LOCATION();
+	
 	free(u);
 	c->stats->usercount--;
-	SET_SEGV_LOCATION();
+	
 
 	cs = find_cs(c->name);
 
@@ -540,7 +540,7 @@ void chan_remove_user_status(Channel * chan, User * user, int16 status)
 {
 	struct u_chanlist *uc;
 
-	SET_SEGV_LOCATION();
+	
 
 	for (uc = user->chans; uc; uc = uc->next)
 	{
@@ -564,7 +564,7 @@ Channel *findchan(const char *chan)
 {
 	Channel *c;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!chan || !*chan)
 	{
@@ -575,7 +575,7 @@ Channel *findchan(const char *chan)
 
 	alog(LOG_EXTRADEBUG, "debug: findchan(%p)", chan);
 	c = chanlist[HASH(chan)];
-	SET_SEGV_LOCATION();
+	
 	while (c)
 	{
 		if (stricmp(c->name, chan) == 0)
@@ -595,7 +595,7 @@ StatsChannel *findstatschan(const char *chan)
 	lnode_t *tn;
 	StatsChannel *c = NULL;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!chan || !*chan)
 	{
@@ -625,13 +625,13 @@ StatsChannel *findstatschan(const char *chan)
 Channel *firstchan(void)
 {
 	next_index = 0;
-	SET_SEGV_LOCATION();
+	
 
 	while (next_index < 1024 && current == NULL)
 	{
 		current = chanlist[next_index++];
 	}
-	SET_SEGV_LOCATION();
+	
 	alog(LOG_EXTRADEBUG, "debug: firstchan() returning %s",
 	     current ? current->name : "NULL (end of list)");
 	return current;
@@ -641,7 +641,7 @@ Channel *firstchan(void)
 
 Channel *nextchan(void)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (current)
 	{
@@ -652,7 +652,7 @@ Channel *nextchan(void)
 		while (next_index < 1024 && current == NULL)
 			current = chanlist[next_index++];
 	}
-	SET_SEGV_LOCATION();
+	
 
 	alog(LOG_EXTRADEBUG, "debug: nextchan() returning %s",
 	     current ? current->name : "NULL (end of list)");
@@ -743,7 +743,7 @@ char *p10_mode_parse(Channel *c, User *u, char *mode, int *nomode)
 				{
 					if (denora->do_sql)
 					{
-						rdb_query(QUERY_LOW, "UPDATE %s SET oplevel=%s WHERE chanid=%d and nickid=%d", IsOnTable, s, c->sqlid, u->sqlid);
+						sql_query("UPDATE %s SET oplevel=%s WHERE chanid=%d and nickid=%d", IsOnTable, s, c->sqlid, u->sqlid);
 						is_operlevel++;
 					}
 					flag = "@";
@@ -1024,7 +1024,7 @@ void do_join(const char *source, int ac, char **av)
 	struct u_chanlist *c, *nextc;
 	time_t ts = time(NULL);
 
-	SET_SEGV_LOCATION();
+	
 
 	if (ac < 1)
 	{
@@ -1047,7 +1047,7 @@ void do_join(const char *source, int ac, char **av)
 		t = s + strcspn(s, ",");
 		if (*t)
 			*t++ = 0;
-		SET_SEGV_LOCATION();
+		
 
 		if (*s == '0')
 		{
@@ -1079,7 +1079,7 @@ void do_join(const char *source, int ac, char **av)
 		{
 			sql_do_join(s, user->nick);
 		}
-		SET_SEGV_LOCATION();
+		
 	}
 
 	return;
@@ -1129,7 +1129,7 @@ void do_kick(const char *source, int ac, char **av)
 	char nickbuf[BUFSIZE];
 	*nickbuf = '\0';
 
-	SET_SEGV_LOCATION();
+	
 
 	t = av[1];
 	while (*(s = t))
@@ -1157,7 +1157,7 @@ void do_kick(const char *source, int ac, char **av)
 				chanid = db_getchannel(c2->name);
 				if (chanid > 0)
 				{
-					rdb_query(QUERY_LOW,
+					sql_query(
 					          "UPDATE %s SET kickcount=%d WHERE chanid=%d",
 					          ChanTable, c2->stats->kickcount, chanid);
 				}
@@ -1172,7 +1172,7 @@ void do_kick(const char *source, int ac, char **av)
 		{
 			count_kicks(kicker, user, c2);
 		}
-		SET_SEGV_LOCATION();
+		
 
 		for (c = user->chans; c && stricmp(av[0], c->chan->name) != 0;
 		        c = c->next);
@@ -1181,7 +1181,7 @@ void do_kick(const char *source, int ac, char **av)
 			send_event(EVENT_CHAN_KICK, 3, user->nick, av[0],
 			           (ac >= 3 ? av[2] : ""));
 			chan_deluser(user, c->chan);
-			SET_SEGV_LOCATION();
+			
 			if (c->next)
 			{
 				c->next->prev = c->prev;
@@ -1194,7 +1194,7 @@ void do_kick(const char *source, int ac, char **av)
 			{
 				user->chans = c->next;
 			}
-			SET_SEGV_LOCATION();
+			
 			/* free(c); disabled to fix #491 */
 		}
 		if ((cs = find_cs(av[0])) && !stricmp(s, s_StatServ))
@@ -1219,7 +1219,7 @@ void do_part(const char *source, int ac, char **av)
 	struct u_chanlist *c;
 	Channel *c2;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (ac < 1)
 	{
@@ -1233,7 +1233,7 @@ void do_part(const char *source, int ac, char **av)
 		     source, merge_args(ac, av));
 		return;
 	}
-	SET_SEGV_LOCATION();
+	
 	t = av[0];
 	while (*(s = t))
 	{
@@ -1251,7 +1251,7 @@ void do_part(const char *source, int ac, char **av)
 				alog(LOG_ERROR, langstr(ALOG_DEBUG_PART_BUG), s);
 				return;
 			}
-			SET_SEGV_LOCATION();
+			
 			send_event(EVENT_USER_PART, 3, user->nick, c->chan->name,
 			           av[1] ? av[1] : "");
 			chan_deluser(user, c->chan);
@@ -1276,7 +1276,7 @@ void do_part(const char *source, int ac, char **av)
 			{
 				user->chans = c->next;
 			}
-			SET_SEGV_LOCATION();
+			
 			free(c);
 		}
 	}
@@ -1331,7 +1331,7 @@ void do_sjoin(const char *source, int ac, char **av)
 	int ts = 0;
 	int keep_their_modes = 1;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (ircd->sjb64)
 	{
@@ -1452,7 +1452,7 @@ void do_sjoin(const char *source, int ac, char **av)
 		{
 			/* We now update the channel mode. */
 			chan_set_modes(c, ac - 3, &av[2]);
-			SET_SEGV_LOCATION();
+			
 		}
 
 		/* Unreal just had to be different */
@@ -1493,7 +1493,7 @@ void do_sjoin(const char *source, int ac, char **av)
 			}
 
 			c = join_user_update(user, c, av[1], ts);
-			SET_SEGV_LOCATION();
+			
 
 			/* We update user mode on the channel */
 			if (end2 - cubuf > 1)
@@ -1505,7 +1505,7 @@ void do_sjoin(const char *source, int ac, char **av)
 					cumodes[i] = user->nick;
 				}
 				chan_set_modes(c, 1 + (end2 - cubuf - 1), cumodes);
-				SET_SEGV_LOCATION();
+				
 			}
 
 			if (!end)
@@ -1551,7 +1551,7 @@ void do_sjoin(const char *source, int ac, char **av)
 			}
 
 			c = join_user_update(user, c, av[1], ts);
-			SET_SEGV_LOCATION();
+			
 
 			/* We update user mode on the channel */
 			if (end2 - cubuf > 1 && keep_their_modes)
@@ -1563,7 +1563,7 @@ void do_sjoin(const char *source, int ac, char **av)
 					cumodes[i] = user->nick;
 				}
 				chan_set_modes(c, 1 + (end2 - cubuf - 1), cumodes);
-				SET_SEGV_LOCATION();
+				
 			}
 
 			if (!end)
@@ -1586,7 +1586,7 @@ void do_sjoin(const char *source, int ac, char **av)
 			     source, av[1]);
 			return;
 		}
-		SET_SEGV_LOCATION();
+		
 		c = join_user_update(user, c, av[1], ts);
 	}
 
@@ -1605,7 +1605,7 @@ void do_cmode(const char *source, int ac, char **av)
 	User *u;
 	Exclude *e;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (ircdcap->tsmode)
 	{
@@ -1651,7 +1651,7 @@ void do_cmode(const char *source, int ac, char **av)
 		alog(LOG_DEBUG, langstr(ALOG_DEBUG_NO_FIND_CHAN), av[0]);
 		return;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	/* This shouldn't trigger on +o, etc. */
 	if (strchr(source, '.') && !av[1][strcspn(av[1], "bovahq")])
@@ -1666,10 +1666,10 @@ void do_cmode(const char *source, int ac, char **av)
 
 	ac--;
 	av++;
-	SET_SEGV_LOCATION();
+	
 
 	chan_set_modes(chan, ac, av);
-	SET_SEGV_LOCATION();
+	
 	if (denora->do_sql)
 	{
 		sql_do_chanmodes(chan->name, ac, av);
@@ -1703,7 +1703,7 @@ void do_topic(int ac, char **av)
 	Exclude *e;
 	char *s, *author, *topic;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!c)
 	{
@@ -1748,13 +1748,13 @@ void do_topic(int ac, char **av)
 
 	if (denora->do_sql)
 	{
-		SET_SEGV_LOCATION();
-		author = rdb_escape(c->topic_setter);
-		topic = (c->topic ? rdb_escape(c->topic) : NULL);
+		
+		author = sql_escape(c->topic_setter);
+		topic = (c->topic ? sql_escape(c->topic) : NULL);
 		chanid = db_getchannel(c->name);
 		if (chanid > 0)
 		{
-			rdb_query(QUERY_LOW,
+			sql_query(
 				  "UPDATE %s SET topic=\'%s\', topicauthor=\'%s\', topictime=FROM_UNIXTIME(%ld) WHERE chanid=%d",
 				  ChanTable, (topic ? topic : ""), author, (long int) c->topic_time, chanid);
 		}
@@ -1771,7 +1771,7 @@ void do_topic(int ac, char **av)
 		if (topic)
 			free(topic);
 	}
-	SET_SEGV_LOCATION();
+	
 	send_event(EVENT_CHANNEL_TOPIC, 3, c->name, c->topic_setter,
 	           (c->topic ? c->topic : (char *) ""));
 }
@@ -1837,8 +1837,8 @@ void chan_clearmodes(const char *source, int ac, char **av)
 				case 'v': /* remove all voices */
 					if (denora->do_sql)
 					{
-						rdb_query
-						(QUERY_LOW,
+						sql_query
+						(
 						 "UPDATE %s SET mode_l%c=\'N\' WHERE chanid=%d",
 						 IsOnTable, mode, c->sqlid);
 					}
@@ -1850,7 +1850,7 @@ void chan_clearmodes(const char *source, int ac, char **av)
 		/* remove all given modes */
 		newav[0] = av[0];
 		newav[1] = sstrdup(modebuf);
-		SET_SEGV_LOCATION();
+		
 		do_cmode(source, 2, newav);
 	}
 }
@@ -1868,7 +1868,7 @@ void chan_adduser2(User * user, Channel * c)
 	ChannelStats *cs;
 	int chanid;
 
-	SET_SEGV_LOCATION();
+	
 
 	u = calloc(sizeof(struct c_userlist), 1);
 	u->next = c->users;
@@ -1893,7 +1893,7 @@ void chan_adduser2(User * user, Channel * c)
 	chanid = db_getchancreate(c->name);
 	if (denora->do_sql && chanid > 0)
 	{
-		rdb_query(QUERY_LOW,
+		sql_query(
 		          "UPDATE %s SET currentusers=%d, maxusers=%d, maxusertime=%ld WHERE chanid=%d",
 		          ChanTable, c->stats->usercount, c->stats->maxusercount,
 		          (long int) c->stats->maxusertime, chanid);
@@ -1912,7 +1912,7 @@ void chan_adduser2(User * user, Channel * c)
 		denora_cmd_join(s_StatServ, c->name, c->creation_time);
 	}
 
-	SET_SEGV_LOCATION();
+	
 }
 
 /*************************************************************************/
@@ -1927,7 +1927,7 @@ Channel *chan_create(char *chan, time_t ts)
 	StatsChannel *sc;
 	Channel **list;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (BadPtr(chan))
 	{
@@ -1946,7 +1946,7 @@ Channel *chan_create(char *chan, time_t ts)
 	{
 		(*list)->prev = c;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	*list = c;
 	c->creation_time = ts;
@@ -1961,10 +1961,10 @@ Channel *chan_create(char *chan, time_t ts)
 		sc = statschan_create(chan);
 		c->stats = sc;
 	}
-	SET_SEGV_LOCATION();
+	
 	if (denora->do_sql)
 	{
-		c->sqlchan = rdb_escape(chan);
+		c->sqlchan = sql_escape(chan);
 	}
 	else 
 	{
@@ -1984,7 +1984,7 @@ StatsChannel *statschan_create(char *chan)
 {
 	lnode_t *tn;
 	StatsChannel *c = NULL;
-	SET_SEGV_LOCATION();
+	
 
 	tn = list_find(StatsChanhead, chan, CompareStatsChan);
 	if (tn)
@@ -2043,7 +2043,7 @@ void chan_delete(Channel * c)
 {
 	int i;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!c)
 	{
@@ -2057,7 +2057,7 @@ void chan_delete(Channel * c)
 
 	if (c->topic)
 		free(c->topic);
-	SET_SEGV_LOCATION();
+	
 
 	if (c->key)
 		free(c->key);
@@ -2073,7 +2073,7 @@ void chan_delete(Channel * c)
 	{
 		free(c->redirect);
 	}
-	SET_SEGV_LOCATION();
+	
 
 	for (i = 0; i < c->bancount; ++i)
 	{
@@ -2094,7 +2094,7 @@ void chan_delete(Channel * c)
 
 	if (denora->do_sql)
 		sql_channel_ban(ALL, c, NULL);
-	SET_SEGV_LOCATION();
+	
 
 	if (ircd->except)
 	{
@@ -2120,7 +2120,7 @@ void chan_delete(Channel * c)
 		}
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	if (ircd->invitemode)
 	{
@@ -2163,12 +2163,12 @@ void chan_delete(Channel * c)
 
 	if (denora->do_sql)
 	{
-		rdb_query(QUERY_LOW,
+		sql_query(
 		          "UPDATE %s SET val=%d, time=%ld WHERE type='chans'",
 		          CurrentTable, stats->chans, time(NULL));
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	free(c);
 }
@@ -2186,7 +2186,7 @@ Channel *join_user_update(User * user, Channel * chan, char *name,
 {
 	struct u_chanlist *c;
 
-	SET_SEGV_LOCATION();
+	
 
 	/* If it's a new channel, so we need to create it first. */
 	if (!chan)
@@ -2199,7 +2199,7 @@ Channel *join_user_update(User * user, Channel * chan, char *name,
 		}
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	if (ircd->p10)
 	{
@@ -2222,7 +2222,7 @@ Channel *join_user_update(User * user, Channel * chan, char *name,
 
 	chan_adduser2(user, chan);
 
-	SET_SEGV_LOCATION();
+	
 
 	return chan;
 }

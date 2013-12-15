@@ -1,4 +1,3 @@
-
 /* XML RPC
  *
  * (c) 2004-2013 Denora Team

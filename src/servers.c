@@ -242,7 +242,7 @@ void sql_motd_store(Server * s)
 {
 	char *string, *source;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (LargeNet)
 	{
@@ -252,10 +252,10 @@ void sql_motd_store(Server * s)
 	{
 		return;
 	}
-	source = rdb_escape(s->name);
-	string = rdb_escape(s->motd);
+	source = sql_escape(s->name);
+	string = sql_escape(s->motd);
 
-	rdb_query(QUERY_LOW,
+	sql_query(
 	          "UPDATE %s SET motd=\'%s\' WHERE server=\'%s\'",
 	          ServerTable, string, source);
 
@@ -274,7 +274,7 @@ ServStats *make_servstats(const char *server)
 {
 	ServStats *s, **list;
 
-	SET_SEGV_LOCATION();
+	
 	s = calloc(sizeof(ServStats), 1);
 	if (!server)
 	{
@@ -350,7 +350,7 @@ Server *make_server(const char *servername, char *descript,
 		servuplink->links = serv;
 	}
 	ss = findserverstats(servername);
-	SET_SEGV_LOCATION();
+	
 	if (!ss)
 	{
 		serv->ss = make_servstats(servername);
@@ -388,7 +388,7 @@ Server *make_server(const char *servername, char *descript,
 	serv->moduleData = NULL;
 
 
-	SET_SEGV_LOCATION();
+	
 
 	return serv;
 }
@@ -413,7 +413,7 @@ Server *do_server(const char *source, char *servername, char *hops,
 
 	*buf = '\0';
 
-	SET_SEGV_LOCATION();
+	
 
 	if ((!source || !*source))
 	{
@@ -453,9 +453,9 @@ Server *do_server(const char *source, char *servername, char *hops,
 		    sstrdup(servername);
 	}
 
-	SET_SEGV_LOCATION();
+	
 	serv = make_server(servername, descript, servuplink, numeric);
-	SET_SEGV_LOCATION();
+	
 
 	if (servuplink && JupeMaster)
 	{
@@ -483,7 +483,7 @@ Server *do_server(const char *source, char *servername, char *hops,
 		denora_motd(s_StatServ, servername);
 	}
 	stats->servers++;
-	SET_SEGV_LOCATION();
+	
 
 	if (juped)
 	{
@@ -494,12 +494,12 @@ Server *do_server(const char *source, char *servername, char *hops,
 		send_event(EVENT_SERVER, 1, servername);
 	}
 
-	SET_SEGV_LOCATION();
+	
 	if (denora->do_sql)
 	{
 		servid = db_getserver(servername);
-		sqlservername = rdb_escape(servername);
-		descript = rdb_escape(descript);
+		sqlservername = sql_escape(servername);
+		descript = sql_escape(descript);
 		if (uplinkserver)
 		{
 			upservid = db_getserver(uplinkserver);
@@ -507,7 +507,7 @@ Server *do_server(const char *source, char *servername, char *hops,
 
 		if (ServerCacheTime && servid > 0)
 		{
-			rdb_query(QUERY_LOW,
+			sql_query(
 			          "UPDATE %s SET server=\'%s\', hops=\'%s\', comment=\'%s\', connecttime=NOW(), linkedto=%d, online=\'Y\', maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld) WHERE servid=%d",
 			          ServerTable, sqlservername, hops, descript, upservid,
 			          serv->ss->maxusers, serv->ss->maxusertime,
@@ -519,7 +519,7 @@ Server *do_server(const char *source, char *servername, char *hops,
 		{
 			if (KeepServerTable)
 			{
-				rdb_query(QUERY_HIGH,
+				sql_query(
 				 "INSERT INTO %s (server, country, countrycode, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld)) ON DUPLICATE KEY UPDATE hops=\'%s\', comment=\'%s\', linkedto=%d, connecttime=NOW(), maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld)",
 				 ServerTable, sqlservername, serv->country, serv->countrycode, hops, descript, upservid,
 				 serv->ss->maxusers, serv->ss->maxusertime,
@@ -529,7 +529,7 @@ Server *do_server(const char *source, char *servername, char *hops,
 			}
 			else
 			{
-				rdb_query(QUERY_HIGH,
+				sql_query(
 				 "INSERT INTO %s (server, country, countrycode, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld))",
 				 ServerTable, sqlservername, serv->country, serv->countrycode, hops, descript, upservid,
 				 serv->ss->maxusers, serv->ss->maxusertime,
@@ -548,8 +548,8 @@ Server *do_server(const char *source, char *servername, char *hops,
 			ircsnprintf(buf, sizeof(buf), "Denora-%s", denora->version);
 			serv->version = sstrdup(buf);
 
-			rdb_query
-			(QUERY_LOW,
+			sql_query
+			(
 			 "UPDATE %s SET uptime=%ld, version=\'%s\' WHERE servid=%d",
 			 ServerTable, uptime, serv->version, servid);
 			if (MOTDFilename)
@@ -579,7 +579,7 @@ Server *do_server(const char *source, char *servername, char *hops,
 		}
 	}
 
-	SET_SEGV_LOCATION();
+	
 	if (ServerCacheTime)
 	{
 		db_cleanserver();
@@ -588,7 +588,7 @@ Server *do_server(const char *source, char *servername, char *hops,
 		free(uplinkserver);
 	if (sqlservername)
 		free(sqlservername);
-	SET_SEGV_LOCATION();
+	
 	do_checkservsmax();
 	return serv;
 }
@@ -608,7 +608,7 @@ void sql_uline(char *server)
 		id = db_getserver(server);
 		if (id > 0)
 		{
-			rdb_query(QUERY_LOW, "UPDATE %s SET uline=1 WHERE servid=%d",
+			sql_query("UPDATE %s SET uline=1 WHERE servid=%d",
 			          ServerTable, id);
 		}
 		s = server_find(server);
@@ -645,9 +645,9 @@ void server_store_pong(char *source, uint32 ts)
 		}
 		if (denora->do_sql)
 		{
-			serv = rdb_escape(source);
+			serv = sql_escape(source);
 			servid = db_getserver(serv);
-			rdb_query(QUERY_LOW,
+			sql_query(
 				  "UPDATE %s SET ping=%d, highestping=%d, maxpingtime=%ld, lastpingtime=%ld WHERE servid=%d",
 				  ServerTable, s->ping, s->ss->highestping, (long int) s->ss->maxpingtime, s->lastping, servid);
 			free(serv);
@@ -661,7 +661,7 @@ void ping_servers(void)
 {
 	Server *serv;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (LargeNet)
 	{
@@ -746,7 +746,7 @@ void uptime_servers()
 	Server *s;
 	uint32 timenow, uptime;
 	int servid = 0;
-	SET_SEGV_LOCATION();
+	
 
 	if (LargeNet)
 	{
@@ -763,7 +763,7 @@ void uptime_servers()
 	uptime = timenow - denora->start_time;
 
 	servid = db_getserver(ServerName);
-	rdb_query(QUERY_LOW, "UPDATE %s SET uptime=%ld WHERE servid=%d",
+	sql_query("UPDATE %s SET uptime=%ld WHERE servid=%d",
 	          ServerTable, uptime, servid);
 }
 
@@ -819,7 +819,7 @@ ServStats *findserverstats(const char *name)
 {
 	ServStats *s;
 
-	SET_SEGV_LOCATION();
+	
 	if (!name || !*name)
 	{
 		alog(LOG_DEBUG, langstr(ALOG_ERR_FINDSERVERSTATS));
@@ -829,13 +829,13 @@ ServStats *findserverstats(const char *name)
 
 	alog(LOG_EXTRADEBUG, "debug: findserverstats(%s) -> 0x%p", name, name);
 	s = servstatlist[STATSSERVERHASH(name)];
-	SET_SEGV_LOCATION();
+	
 
 	while (s && stricmp(s->name, name) != 0)
 	{
 		s = s->next;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	alog(LOG_EXTRADEBUG, "debug: findserverstats(%s) -> 0x%p", name,
 	     (void *) s);
@@ -1061,7 +1061,7 @@ void delete_server(Server * serv, const char *quitreason, int depth)
 
 	if (denora->do_sql)
 	{
-		rdb_query(QUERY_LOW,
+		sql_query(
 		          "UPDATE %s SET val=%d, time=%ld WHERE type='servers'",
 		          CurrentTable, stats->servers, time(NULL));
 	}
@@ -1121,7 +1121,7 @@ ServStats *first_statsserver(void)
 {
 	next_index = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	while (next_index < 1024 && currentss == NULL)
 		currentss = servstatlist[next_index++];
@@ -1134,7 +1134,7 @@ ServStats *first_statsserver(void)
 
 ServStats *next_statserver(void)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (currentss)
 		currentss = currentss->next;
@@ -1261,7 +1261,7 @@ void sql_do_uptime(char *source, char *uptime)
 	total = mins_int + secs_int + hours_int + days_int;
 	servid = db_getserver((s ? s->name : source));
 
-	rdb_query(QUERY_LOW, "UPDATE %s SET uptime=%ld WHERE servid=%d",
+	sql_query("UPDATE %s SET uptime=%ld WHERE servid=%d",
 	          ServerTable, total, servid);
 
 	if (s)
@@ -1288,9 +1288,9 @@ void sql_do_sdesc(char *user, char *msg)
 		return;
 	}
 
-	user = rdb_escape(user);
-	msg = rdb_escape(msg);
-	rdb_query(QUERY_LOW, "UPDATE %s SET comment=\'%s\' WHERE servid=%d",
+	user = sql_escape(user);
+	msg = sql_escape(msg);
+	sql_query("UPDATE %s SET comment=\'%s\' WHERE servid=%d",
 	          ServerTable, msg, db_getservfromnick(user));
 	free(user);
 	free(msg);
@@ -1345,14 +1345,14 @@ void sql_do_server_version(char *server, int ac, char **av)
 	char *tmp2;
 	*buf = '\0';
 
-	SET_SEGV_LOCATION();
+	
 
 	if (LargeNet)
 	{
 		return;
 	}
 	s = server_find(server);
-	SET_SEGV_LOCATION();
+	
 
 	if (!s)
 	{
@@ -1454,10 +1454,10 @@ void sql_do_server_version(char *server, int ac, char **av)
 	}
 	if (denora->do_sql)
 	{
-		sqlversion = rdb_escape(version);
+		sqlversion = sql_escape(version);
 		if (((servid = db_getserver(s->name)) != -1))
 		{
-			rdb_query(QUERY_LOW,
+			sql_query(
 			          "UPDATE %s SET version=\'%s\' WHERE servid=%d",
 			          ServerTable, sqlversion, servid);
 		}
@@ -1477,16 +1477,16 @@ void sql_do_squit(char *server)
 	if (ServerCacheTime)
 	{
 		servid = db_getserver(server);
-		rdb_query
-		(QUERY_LOW,
+		sql_query
+		(
 		 "UPDATE %s SET online=\'N\', lastsplit=NOW(),linkedto=NULL WHERE servid=%d",
 		 ServerTable, servid);
 		db_cleanserver();
 	}
 	else
 	{
-		sqlserver = rdb_escape(server);
-		rdb_query(QUERY_LOW, "DELETE FROM %s WHERE server=\'%s\'",
+		sqlserver = sql_escape(server);
+		sql_query("DELETE FROM %s WHERE server=\'%s\'",
 		          ServerTable, sqlserver);
 		free(sqlserver);
 	}

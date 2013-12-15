@@ -129,6 +129,25 @@ sqlite3_stmt *DenoraPrepareQuery(sqlite3 *db, const char *fmt, ...)
 	}
 }
 
+
+
+sqlite3_stmt *DenoraPrepareStmt(sqlite3 *db, char *buf)
+{
+	int res;
+	sqlite3_stmt * stmt;
+
+	res = sqlite3_prepare(db, buf, sizeof(buf) + 1, &stmt, NULL);
+	if (res == SQLITE_OK) 
+	{
+	 	return stmt;
+	} 
+	else 
+	{
+		DenoraLib_SetLastError(res, sqlite3_errmsg(db));
+		return NULL;
+	}
+}
+
 /*************************************************************************/
 
 char *DenoraReturnSQliteValue(sqlite3_stmt *stmt, int column)
@@ -251,6 +270,57 @@ int DenoraSQLGetNumRows(sqlite3 *db, const char *table)
 	sqlite3_stmt *stmt;
 
 	stmt = DenoraPrepareQuery(db, "SELECT COUNT(*) from %s", table);
+	StepReturn = sqlite3_step(stmt);
+	if (StepReturn == SQLITE_ROW)
+	{
+		result = sqlite3_column_int(stmt, 0);
+	}
+	sqlite3_finalize(stmt);
+	return result;
+}
+
+char **DenoraSQLReturnRow(char *db, const char *query, ...)
+{
+	va_list args;
+	char *buf;
+	int res;
+	sqlite3 *sqldb;
+	char **sdata;
+	sqlite3_stmt *stmt;
+
+	va_start(args, query);
+	sqlite3_vsnprintf(NET_BUFSIZE, buf, query, args);
+	va_end(args);
+
+
+	sqldb = DenoraOpenSQL(db);
+	stmt = DenoraPrepareStmt(sqldb, buf);
+	sdata = DenoraSQLFetchRow(stmt, FETCH_ARRAY_NUM);
+	sqlite3_finalize(stmt);
+	DenoraCloseSQl(sqldb);
+
+	if (sdata && sdata[0])
+	{
+		return sdata;
+	}
+	return NULL;
+}
+
+
+int DenoraSQLGetNumRowsFromQuery(sqlite3 *db, const char *query, ...)
+{
+	int StepReturn;
+	int result = 0;
+	sqlite3_stmt *stmt;
+	va_list args;
+	char *buf;
+	int res;
+
+	va_start(args, query);
+	sqlite3_vsnprintf(NET_BUFSIZE, buf, query, args);
+	va_end(args);
+
+	stmt = DenoraPrepareStmt(db, buf);
 	StepReturn = sqlite3_step(stmt);
 	if (StepReturn == SQLITE_ROW)
 	{

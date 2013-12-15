@@ -46,7 +46,7 @@ char *host_resolve(char *host)
 	struct in_addr_t addr;
 #endif
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!host)
 	{

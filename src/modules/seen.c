@@ -142,7 +142,6 @@ int do_msg_seen(User * u, int argc, char **argv)
  **/
 char *do_seen(User * u, char *target)
 {
-#ifdef USE_MYSQL
 	char *split1 = NULL;
 	char *seenhost = NULL;
 	char *seennick = NULL;
@@ -153,9 +152,10 @@ char *do_seen(User * u, char *target)
 	char *sqltarget;
 	char usrchans[1024] = "\0";
 	time_t tsnow = time(NULL);
-	MYSQL_RES *mysql_res;
-	MYSQL_RES *mysql_res2;
-	MYSQL_ROW mysql_row2;
+	SQLres *sql_res;
+	SQLres *sql_res2;
+	char **sql_row;
+	char **sql_row2;
 	char cmodep[32] = "\0";
 	char cmodes[32] = "\0";
 	char cmodeA[32] = "\0";
@@ -170,7 +170,7 @@ char *do_seen(User * u, char *target)
 	char *message = malloc(1024);
 	char *uname = NULL;
 
-	sqltarget = rdb_escape(rdb_escape(target));
+	sqltarget = sql_escape(sql_escape(target));
 	for (i = 0; sqltarget[i]; i++)
 	    if (sqltarget[i] == '*')
 	        sqltarget[i] = '%';
@@ -192,56 +192,52 @@ char *do_seen(User * u, char *target)
 	if (!strcmp(seennick, "%")) {
 		uname = sstrdup("%");
 	} else {	
-		rdb_query(QUERY_HIGH, "SELECT uname FROM %s WHERE nick LIKE \'%s\' ",
+		sql_query("SELECT uname FROM %s WHERE nick LIKE \'%s\' ",
 					  AliasesTable, seennick);
-		mysql_res = mysql_store_result(mysql);
-		if (mysql_res && mysql_num_rows(mysql_res)) {
-			mysql_row = mysql_fetch_row(mysql_res);
-			uname = rdb_escape(mysql_row[0]);
+		sql_res = sql_set_result(sqlcon);
+		if (sql_res && sql_num_rows(sql_res)) {
+			sql_row = sql_fetch_row(sql_res);
+			uname = sql_escape(sql_row[0]);
 		}
 	}
 	
 	if (uname) {
-		rdb_query(QUERY_HIGH,
-	          "SELECT %s.nickid, %s.nick, %s.hostname, %s.hiddenhostname, %s.username, UNIX_TIMESTAMP(%s.connecttime), %s.away, %s.awaymsg, %s.online, UNIX_TIMESTAMP(%s.lastquit), %s.lastquitmsg FROM %s,%s,%s WHERE %s.uname LIKE \"%s\" AND %s.nick = %s.nick AND %s.username LIKE \"%s\" AND (%s.hostname LIKE \"%s\" OR %s.hiddenhostname LIKE \"%s\") AND %s.server = %s.server AND %s.uline = \"0\" ORDER BY online,lastquit DESC, %s.connecttime ASC LIMIT 1;",
+		sql_query("SELECT %s.nickid, %s.nick, %s.hostname, %s.hiddenhostname, %s.username, UNIX_TIMESTAMP(%s.connecttime), %s.away, %s.awaymsg, %s.online, UNIX_TIMESTAMP(%s.lastquit), %s.lastquitmsg FROM %s,%s,%s WHERE %s.uname LIKE \"%s\" AND %s.nick = %s.nick AND %s.username LIKE \"%s\" AND (%s.hostname LIKE \"%s\" OR %s.hiddenhostname LIKE \"%s\") AND %s.server = %s.server AND %s.uline = \"0\" ORDER BY online,lastquit DESC, %s.connecttime ASC LIMIT 1;",
 	          UserTable, UserTable, UserTable, UserTable, UserTable,
 	          UserTable, UserTable, UserTable, UserTable, UserTable,
 	          UserTable, UserTable, ServerTable, AliasesTable,
 	          AliasesTable, uname, UserTable,
 	          AliasesTable, UserTable, seenuname, UserTable, seenhost,
 	          UserTable, seenhost, UserTable, ServerTable, ServerTable, UserTable);
-#ifdef USE_MYSQL
-		mysql_res = mysql_store_result(mysql);
-#endif
+		sql_res = sql_set_result(sqlcon);
 		free(uname);
 	} else {
-		rdb_query(QUERY_HIGH,
-	          "SELECT %s.nickid, %s.nick, %s.hostname, %s.hiddenhostname, %s.username, UNIX_TIMESTAMP(%s.connecttime), %s.away, %s.awaymsg, %s.online, UNIX_TIMESTAMP(%s.lastquit), %s.lastquitmsg FROM %s,%s WHERE %s.nick LIKE \"%s\" AND %s.username LIKE \"%s\" AND (%s.hostname LIKE \"%s\" OR %s.hiddenhostname LIKE \"%s\") AND %s.server = %s.server AND %s.uline = \"0\" ORDER BY online,lastquit DESC, %s.connecttime ASC LIMIT 1;",
+		sql_query("SELECT %s.nickid, %s.nick, %s.hostname, %s.hiddenhostname, %s.username, UNIX_TIMESTAMP(%s.connecttime), %s.away, %s.awaymsg, %s.online, UNIX_TIMESTAMP(%s.lastquit), %s.lastquitmsg FROM %s,%s WHERE %s.nick LIKE \"%s\" AND %s.username LIKE \"%s\" AND (%s.hostname LIKE \"%s\" OR %s.hiddenhostname LIKE \"%s\") AND %s.server = %s.server AND %s.uline = \"0\" ORDER BY online,lastquit DESC, %s.connecttime ASC LIMIT 1;",
 	          UserTable, UserTable, UserTable, UserTable, UserTable,
 	          UserTable, UserTable, UserTable, UserTable, UserTable,
 	          UserTable, UserTable, ServerTable, UserTable, seennick,
 	          UserTable, seenuname, UserTable, seenhost,
 	          UserTable, seenhost, UserTable, ServerTable, ServerTable, UserTable);
-		mysql_res = mysql_store_result(mysql);
+		sql_res = sql_set_result(sqlcon);
 	}
-	if (mysql_num_rows(mysql_res) > 0) {
-	    SET_SEGV_LOCATION();
-	    while ((mysql_row = mysql_fetch_row(mysql_res)) != NULL) {
+	if (sql_num_rows(sql_res) > 0) {
+	    
+	    while ((sql_row = sql_fetch_row(sql_res)) != NULL) {
 	        double tsdiff;
-	        if (mysql_row[5] != NULL) { 
-	            time0 = atoi(mysql_row[5]); /* connect time */
+	        if (sql_row[5] != NULL) { 
+	            time0 = atoi(sql_row[5]); /* connect time */
 	        }
-	        if (mysql_row[9] != NULL) {   
-	            time1 = atoi(mysql_row[9]); /* quit time */
+	        if (sql_row[9] != NULL) {   
+	            time1 = atoi(sql_row[9]); /* quit time */
 	        }
-	        if (strlen(mysql_row[3]) <= 1)
-	            mysql_row[3] = mysql_row[2];    /* no vhost, so using real host */
-	        if (stricmp(mysql_row[8], "Y") == 0) {
-	            if (mysql_row[5] != NULL) {
-					tt = atoi(mysql_row[5]);
+	        if (strlen(sql_row[3]) <= 1)
+	            sql_row[3] = sql_row[2];    /* no vhost, so using real host */
+	        if (stricmp(sql_row[8], "Y") == 0) {
+	            if (sql_row[5] != NULL) {
+					tt = atoi(sql_row[5]);
 					tm = *localtime(&tt);
 	                strftime(buf, sizeof(buf), "%d.%m %H:%M", &tm);
-	                mysql_row[5] = buf;
+	                sql_row[5] = buf;
 	            }
 
 	            /* Display channels the user is in */
@@ -262,79 +258,73 @@ char *do_seen(User * u, char *target)
 					if (denora_umode(UMODE_I) == 1)
 						sprintf(umodeI, "AND %s.mode_ui = 'N' ", UserTable);
 				}
-	            rdb_query(QUERY_HIGH,
-	                      "SELECT %s.channel FROM %s,%s,%s WHERE %s.nickid =%s AND %s.chanid = %s.chanid AND %s.nickid = %s.nickid %s%s%s%s%s%s%s ORDER BY %s.channel ASC",
+	            sql_query("SELECT %s.channel FROM %s,%s,%s WHERE %s.nickid =%s AND %s.chanid = %s.chanid AND %s.nickid = %s.nickid %s%s%s%s%s%s%s ORDER BY %s.channel ASC",
 	                      ChanTable, ChanTable, UserTable, IsOnTable,
-	                      IsOnTable, mysql_row[0], ChanTable, IsOnTable,
+	                      IsOnTable, sql_row[0], ChanTable, IsOnTable,
 	                      UserTable, IsOnTable, cmodep, cmodes, cmodeA,
 	                      cmodeO, umodep, umodeQ, umodeI, ChanTable);
-	            mysql_res2 = mysql_store_result(mysql);
-	            while ((mysql_row2 = mysql_fetch_row(mysql_res2)) != NULL) {
-	                strlcat(usrchans, mysql_row2[0], sizeof(usrchans));
+	            sql_res2 = sql_set_result(sqlcon);
+	            while ((sql_row2 = sql_fetch_row(sql_res2)) != NULL) {
+	                strlcat(usrchans, sql_row2[0], sizeof(usrchans));
 	                strlcat(usrchans, " ", sizeof(usrchans));
 	            }
-	            mysql_free_result(mysql_res2);
+	            sql_free_result(sql_res2);
 
 	            ctsdiff = difftime(tsnow, time0);       /* total online time */
 
 	            /* Prepare the reply for the user */
-	            if (stricmp(mysql_row[6], "N") == 0) {
+	            if (stricmp(sql_row[6], "N") == 0) {
 	                if (strlen(usrchans) < 3) {
 	                    sprintf(message,
 	                            moduleGetLangString(u, SEEN_ONLINE),
-	                            mysql_row[1], mysql_row[4], mysql_row[3],
-	                            get_timestring(u, ctsdiff), mysql_row[5]);
+	                            sql_row[1], sql_row[4], sql_row[3],
+	                            get_timestring(u, ctsdiff), sql_row[5]);
 	                } else {
 	                    sprintf(message,
 	                            moduleGetLangString(u, SEEN_ONLINEC),
-	                            mysql_row[1], mysql_row[4], mysql_row[3],
-	                            get_timestring(u, ctsdiff), mysql_row[5],
+	                            sql_row[1], sql_row[4], sql_row[3],
+	                            get_timestring(u, ctsdiff), sql_row[5],
 	                            usrchans);
 	                }
 	            } else {
 	                if (strlen(usrchans) < 3) {
 	                    sprintf(message, moduleGetLangString(u, SEEN_AWAY),
-	                            mysql_row[1], mysql_row[4], mysql_row[3],
-	                            get_timestring(u, ctsdiff), mysql_row[5],
-	                            mysql_row[7]);
+	                            sql_row[1], sql_row[4], sql_row[3],
+	                            get_timestring(u, ctsdiff), sql_row[5],
+	                            sql_row[7]);
 	                } else {
 	                    sprintf(message,
 	                            moduleGetLangString(u, SEEN_AWAYC),
-	                            mysql_row[1], mysql_row[4], mysql_row[3],
-	                            get_timestring(u, ctsdiff), mysql_row[5],
-	                            mysql_row[7], usrchans);
+	                            sql_row[1], sql_row[4], sql_row[3],
+	                            get_timestring(u, ctsdiff), sql_row[5],
+	                            sql_row[7], usrchans);
 	                }
 	            }
 	        } else {
 	            double dtsdiff;
-	            if (mysql_row[9] != NULL && mysql_row[5] != NULL) {
-					tt = atoi(mysql_row[9]);
+	            if (sql_row[9] != NULL && sql_row[5] != NULL) {
+					tt = atoi(sql_row[9]);
 					tm = *localtime(&tt);
 	                strftime(buf, sizeof(buf), "%d.%m %H:%M", &tm);
-	                mysql_row[9] = buf;
+	                sql_row[9] = buf;
 	                dtsdiff = difftime(tsnow, time1);   /* total offline time */
 	                tsdiff = difftime(time1, time0);    /* total online time */
 	                sprintf(message, moduleGetLangString(u, SEEN_OFFLINE),
-	                        mysql_row[1], mysql_row[4], mysql_row[3],
-	                        get_timestring(u, dtsdiff), mysql_row[9],
-	                        get_timestring(u, tsdiff), mysql_row[10]);
+	                        sql_row[1], sql_row[4], sql_row[3],
+	                        get_timestring(u, dtsdiff), sql_row[9],
+	                        get_timestring(u, tsdiff), sql_row[10]);
 	            } else {
 	                sprintf(message, moduleGetLangString(u, SEEN_UNKNOWN),
-	                        mysql_row[1], mysql_row[4], mysql_row[3]);
+	                        sql_row[1], sql_row[4], sql_row[3]);
 	            }
 	        }
 	    }
 	} else {
 	    sprintf(message, moduleGetLangString(u, SEEN_EMPTY), target);
 	}
-	SET_SEGV_LOCATION();
-	mysql_free_result(mysql_res);
+	
+	sql_free_result(sql_res);
 	return message;
-#else
-	USE_VAR(u);
-	USE_VAR(target);
-	return NULL;
-#endif
 }
 
 char *get_timestring(User * u, int timestamp)

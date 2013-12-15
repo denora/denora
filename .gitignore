@@ -38,3 +38,4 @@ data/modules/*.dll
 data/bin/*
 data/lang/*
 src/protocol/Makefile.inc
+ccdv

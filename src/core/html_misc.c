@@ -111,7 +111,7 @@ void DenoraFini(void)
 
 void html_version(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		dfprintf(ptr, langstr(HTML_VERSION), denora->version, ircd->name);
@@ -122,7 +122,7 @@ void html_version(FILE * ptr)
 
 void html_title(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		dfprintf(ptr, getstring(NULL, HTML_TITLE), NetworkName);
@@ -133,7 +133,7 @@ void html_title(FILE * ptr)
 
 void html_lang(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstring(HTML_LANG));
@@ -163,7 +163,7 @@ void html_credits(FILE * ptr)
 
 void html_netstats_title(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstring(HTML_NETSTATS_TITLE));

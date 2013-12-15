@@ -57,7 +57,7 @@ int m_away(char *source, char *msg)
 		return MOD_CONT;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	if (msg)
 	{
@@ -73,9 +73,9 @@ int m_away(char *source, char *msg)
 	}
 	if (denora->do_sql)
 	{
-		sqlmsg = rdb_escape(u->awaymsg);
-		rdb_query
-		(QUERY_LOW,
+		sqlmsg = sql_escape(u->awaymsg);
+		sql_query
+		(
 		 "UPDATE %s SET away=\'%s\', awaymsg=\'%s\' WHERE nickid=%d",
 		 UserTable, (u->isaway ? (char *) "Y" : (char *) "N"),
 		 sqlmsg, db_getnick(u->sqlnick));
@@ -127,8 +127,8 @@ void m_kill(char *source, char *nick, char *msg)
 		id = db_getserver(s->name);
 		if (id > 0)
 		{
-			rdb_query
-			(QUERY_LOW,
+			sql_query
+			(
 			 "UPDATE %s SET ircopskills=%d, serverkills=%ld WHERE servid=%d",
 			 ServerTable, s->ircopskills, s->serverkills, id);
 		}
@@ -194,7 +194,7 @@ int m_motd(char *source)
 	char buf[BUFSIZE];
 	*buf = '\0';
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!source)
 	{
@@ -210,7 +210,7 @@ int m_motd(char *source)
 	{
 		if ((f = FileOpen(MOTDFilename, FILE_READ)) != NULL)
 		{
-			SET_SEGV_LOCATION();
+			
 			while (fgets(buf, BUFSIZE - 1, f))
 			{
 				buf[strlen(buf) - 1] = 0;
@@ -223,7 +223,7 @@ int m_motd(char *source)
 			denora_cmd_422(source);
 		}
 	}
-	SET_SEGV_LOCATION();
+	
 	denora_cmd_376(source);
 	return MOD_CONT;
 }
@@ -339,7 +339,7 @@ int m_privmsg(char *source, char *receiver, char *msg)
 		if (p)
 		{
 			p->handler(u, msg);
-			SET_SEGV_LOCATION();
+			
 		}
 	}
 	return MOD_CONT;

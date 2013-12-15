@@ -13,62 +13,8 @@
  */
 
 #include "denora.h"
-
-/*************************************************************************/
-
-/**
- * Remove any data from any module used in the given struct.
- * Useful for cleaning up when a User leave's the net, a NickCore is deleted, etc...
- * @param moduleData the moduleData struct to "clean"
- **/
-void moduleCleanStruct(ModuleData ** moduleData)
-{
-	ModuleData *modcurrent = *moduleData;
-	ModuleData *next = NULL;
-
-	SET_SEGV_LOCATION();
-
-	while (modcurrent)
-	{
-		next = modcurrent->next;
-		if (modcurrent->moduleName)
-			free(modcurrent->moduleName);
-		if (modcurrent->key)
-			free(modcurrent->key);
-		if (modcurrent->value)
-			free(modcurrent->value);
-		modcurrent->next = NULL;
-		free(modcurrent);
-		modcurrent = next;
-	}
-	*moduleData = NULL;
-}
-
-/*************************************************************************/
-
-/**
- * Output module data information into the log file.
- * This is a vwey "debug only" function to dump the whole contents
- * of a moduleData struct into the log files.
- * @param md The module data for the struct to be used
- * @return 0 is always returned;
- **/
-int moduleDataDebug(ModuleData ** md)
-{
-	ModuleData *modcurrent = NULL;
-	alog(LOG_DEBUG, "debug: Dumping module data....");
-
-	SET_SEGV_LOCATION();
-
-	for (modcurrent = *md; modcurrent; modcurrent = modcurrent->next)
-	{
-		alog(LOG_DEBUG, "debug: Module: [%s]", modcurrent->moduleName);
-		alog(LOG_DEBUG, "debug: Key [%s]\tValue [%s]", modcurrent->key,
-		     modcurrent->value);
-	}
-	alog(LOG_DEBUG, "debug: End of module data dump");
-	return 0;
-}
+sqlite3 *ModDataDB;
+char *moddata_db;
 
 /*************************************************************************/
 
@@ -80,12 +26,9 @@ int moduleDataDebug(ModuleData ** md)
  * @param value The value for the key/value pair, this is what will be stored for you
  * @return MOD_ERR_OK will be returned on success
  **/
-int moduleAddData(char *mod_name, ModuleData ** md, char *key, char *value)
+int moduleAddData(char *mod_name, char *what, char *key, char *value)
 {
-	ModuleData *newData = NULL;
-	ModuleData *tmp = *md;
-
-	SET_SEGV_LOCATION();
+	int res;
 
 	if (!key || !value)
 	{
@@ -95,32 +38,20 @@ int moduleAddData(char *mod_name, ModuleData ** md, char *key, char *value)
 		return MOD_ERR_PARAMS;
 	}
 
-	moduleDelData(mod_name, md, key);     /* Remove any existing module data for this module with the same key */
-
-	newData = malloc(sizeof(ModuleData));
-	if (!newData)
+	res = DenoraSQLGetNumRowsFromQuery(ModDataDB, "SELECT * FROM moddata WHERE mod_name=%q and key=%q and what=%q", mod_name, key, what);
+	if (res)
 	{
-		return MOD_ERR_MEMORY;
-	}
-
-	newData->moduleName = sstrdup(mod_name);
-	newData->key = sstrdup(key);
-	newData->value = sstrdup(value);
-	if (tmp)
-	{
-		newData->next = tmp;
+		res = DenoraExecQuerySQL(ModDataDB, "UPDATE moddata SET value=%q WHERE mod_name=%q and key=%q and what=%q", value, mod_name, key, what); 
 	}
 	else
 	{
-		newData->next = NULL;
+		res = DenoraExecQuerySQL(ModDataDB, "INSERT INTO moddata (mod_name, what, key, valye) VALUES ('%q', '%q', '%q', '%q')", mod_name, what, key, value); 
 	}
-	*md = newData;
-
-	if (denora->debug)
+	if (res == SQLITE_OK)
 	{
-		moduleDataDebug(md);
+		return MOD_ERR_OK;
 	}
-	return MOD_ERR_OK;
+	return MOD_ERR_SQL;
 }
 
 /*************************************************************************/
@@ -132,23 +63,15 @@ int moduleAddData(char *mod_name, ModuleData ** md, char *key, char *value)
  * @param key The key to find the data for
  * @return the value paired to the given key will be returned, or NULL
  **/
-char *moduleGetData(char *mod_name, ModuleData ** md, char *key)
+char *moduleGetData(char *mod_name, char *what, char *key)
 {
-	ModuleData *modcurrent = *md;
+	char **data;
 
-	SET_SEGV_LOCATION();
+	data = DenoraSQLReturnRow(moddata_db, "SELECT value FROM moddata WHERE mod_name=%q and key=%q and what=%q", mod_name, what, key);
 
-	alog(LOG_DEBUG, "debug: moduleGetData %p : key %s", (void *) md, key);
-	alog(LOG_DEBUG, "debug: Current Module %s", mod_name);
-
-	while (modcurrent)
+	if (data)
 	{
-		if ((stricmp(modcurrent->moduleName, mod_name) == 0)
-		        && (stricmp(modcurrent->key, key) == 0))
-		{
-			return sstrdup(modcurrent->value);
-		}
-		modcurrent = modcurrent->next;
+		return data[0];
 	}
 	return NULL;
 }
@@ -161,47 +84,11 @@ char *moduleGetData(char *mod_name, ModuleData ** md, char *key)
  * @param md The module data for the struct to be used
  * @param key The key to delete the key/value pair for
  **/
-void moduleDelData(char *mod_name, ModuleData ** md, char *key)
+void moduleDelData(char *mod_name, char *what, char *key)
 {
-	ModuleData *modcurrent = *md;
-	ModuleData *prev = NULL;
-	ModuleData *next = NULL;
 
-	SET_SEGV_LOCATION();
+  DenoraExecQuerySQL(ModDataDB, "DELETE FROM mod_data WHERE mod_name = '%q' and what = %q and key = %q", mod_name, what, key);
 
-	if (key)
-	{
-		while (modcurrent)
-		{
-			next = modcurrent->next;
-			if ((stricmp(modcurrent->moduleName, mod_name) == 0)
-			        && (stricmp(modcurrent->key, key) == 0))
-			{
-				if (prev)
-				{
-					prev->next = modcurrent->next;
-				}
-				else
-				{
-					*md = modcurrent->next;
-				}
-				if (modcurrent->moduleName)
-					free(modcurrent->moduleName);
-				if (modcurrent->key)
-					free(modcurrent->key);
-				if (modcurrent->value)
-					free(modcurrent->value);
-				modcurrent->next = NULL;
-				free(modcurrent);
-			}
-			else
-			{
-				prev = modcurrent;
-			}
-			prev = modcurrent;
-			modcurrent = next;
-		}
-	}
 }
 
 /*************************************************************************/
@@ -212,65 +99,12 @@ void moduleDelData(char *mod_name, ModuleData ** md, char *key)
  * do just about anything and everything, its safe to use from inside the module.
  * @param md The module data for the struct to be used
  **/
-void moduleDelAllData(char *mod_name, ModuleData ** md)
+void moduleDelAllData(char *mod_name)
 {
-	ModuleData *modcurrent = *md;
-	ModuleData *prev = NULL;
-	ModuleData *next = NULL;
 
-	SET_SEGV_LOCATION();
+  DenoraExecQuerySQL(ModDataDB, "DELETE FROM mod_data WHERE mod_name = '%q'", mod_name);
 
-	while (modcurrent)
-	{
-		next = modcurrent->next;
-		if ((stricmp(modcurrent->moduleName, mod_name) == 0))
-		{
-			if (prev)
-			{
-				prev->next = modcurrent->next;
-			}
-			else
-			{
-				*md = modcurrent->next;
-			}
-			if (modcurrent->moduleName)
-				free(modcurrent->moduleName);
-			if (modcurrent->key)
-				free(modcurrent->key);
-			if (modcurrent->value)
-				free(modcurrent->value);
-			modcurrent->next = NULL;
-			free(modcurrent);
-		}
-		else
-		{
-			prev = modcurrent;
-		}
-		modcurrent = next;
-	}
 }
 
-/*************************************************************************/
 
-/**
- * This will delete all module data used in any struct by module m.
- * @param m The module to clear all data for
- **/
-void moduleDelAllDataMod(Module * m)
-{
-	int i;
-	User *user;
-
-	SET_SEGV_LOCATION();
-
-	for (i = 0; i < 1024; i++)
-	{
-		/* Remove the users */
-		for (user = userlist[i]; user; user = user->next)
-		{
-			moduleDelAllData(m->name, &user->moduleData);
-		}
-	}
-
-}
 

@@ -357,13 +357,7 @@ E char *TLDDB;
 E char *excludeDB;
 E char *statsDB;
 
-E int rdb_init(void);
-E int rdb_close(void);
-E int rdb_clear_table(char *table);
-E int rdb_direct_query(char *query, int con);
-E char *rdb_error_msg(void);
-E char *rdb_errmsg;
-E int rdb_check_table(char *table);
+
 
 E char *SqlHost;
 E char *SqlUser;
@@ -580,22 +574,22 @@ E void do_kill(char *source, char *reason);
 E int is_oper(User * user);
 E int has_cmode(char *chan, int m);
 
+E SQLres *sqlres;
+E SQLCon *sqlcon;
 
-#ifdef USE_MYSQL
-/**** mysql.c ****/
-E MYSQL       *mysql;
-E MYSQL_FIELD *mysql_fields;
-E MYSQL_ROW   mysql_row;
-E MYSQL	      *mysql_thread;
-
-E int db_mysql_init(int con);
-E int db_mysql_open(int con);
-E int db_mysql_close(int con);
-E int db_mysql_query(char *sql, int con);
-E char *db_mysql_quote(char *sql);
-E void dbMySQLPrepareForQuery(int con);
-
-#endif
+E int sql_ping(SQLCon *con);
+E int sql_init(void);
+E int sql_close(SQLCon *con);
+E int sql_clear_table(char *table);
+E int sql_direct_query(SQLCon *con, char *query);
+E char *sql_error_msg(void);
+E char *sql_errmsg;
+E int sql_check_table(char *table);
+E SQLres *sql_set_result(SQLCon *con);
+E char **sql_fetch_row(SQLres *res);
+E char *sql_escape(char *ch);
+E int sql_num_rows(SQLres *res);
+E void sql_free_result(SQLres *res);
 
 /**** signals.c ****/
 
@@ -658,11 +652,6 @@ E void denora_cmd_privmsg2(char *source, char *dest, char *msg);
 E void sql_uline(char *server);
 E int denora_event_null(char *source, int ac, char **av);
 
-#if 0
-E void SortSwapArray(temp_data *table1, temp_data *table2);
-E void BubbleSortData(temp_data table[], int size, int direction);
-#endif
-
 E int totalstatschannel;
 E int totalctcpcount;
 
@@ -696,12 +685,12 @@ E char *militime_float(char* start);
 E char *host_resolve(char *host);
 
 E void db_connect(void);
-E int rdb_query(int i, const char *fmt, ...);
+E int sql_query(const char *fmt, ...);
 E int db_getserver(char *serv);
 E int db_getservfromnick(char *nick);
 E int db_getnick(char *nick);
 E int db_checknick_nt(char *nick);
-E int rdb_insertid(void);
+E int sql_insertid(SQLCon *con);
 E int db_getchannel(char *chan);
 E int db_getchancreate(char *chan);
 E void db_removefromchans(int nickid);
@@ -957,7 +946,7 @@ E char *xmlrpc_decode_string(char *buf);
 
 E char *sstrdup(const char *src);
 
-E char *rdb_escape(char *ch);
+E char *sql_escape(char *ch);
 
 E void handleModuleOperationQueue(void);
 E int queueModuleLoad(char *name, User *u);
@@ -1020,7 +1009,6 @@ E int free_admin(Dadmin * a);
 
 E char *MakePassword (char *plaintext);
 E int ValidPassword (char *plaintext, char *checkvs);
-E char *md5 (const char *str);
 E int is_crypted (const char *passwd);
 
 E void ModuleDatabaseBackup(char *dbname);
@@ -1054,14 +1042,15 @@ E CommandHash *first_commandhash(void);
 E CommandHash *next_commandhash(void);
 E EvtMessage *first_EvtMessage(void);
 E EvtMessage *next_EvtMessage(void);
+
 E int moduleAddCallback(char *name,time_t when,int (*func)(int argc, char *argv[]),int argc, char **argv);
 E void moduleDelCallback(char *name);
-E char *moduleGetData(char *mod_name, ModuleData ** md, char *key);			/* Get the value for this key from this struct */
-E int moduleAddData(char *mod_name, ModuleData ** md, char *key, char *value);		/* Set the value for this key for this struct */
-E void moduleDelData(char *mod_name, ModuleData ** md, char *key);				/* Delete this key/value pair */
-E void moduleDelAllData(char *mod_name, ModuleData ** md);					/* Delete all key/value pairs for this module for this struct */
-E void moduleDelAllDataMod(Module * m);
-E int moduleDataDebug(ModuleData ** md);					/* Allow for debug output of a moduleData struct */
+
+E char *moduleGetData(char *mod_name, char *what, char *key);			/* Get the value for this key from this struct */
+E int moduleAddData(char *mod_name, char *what, char *key, char *value);		/* Set the value for this key for this struct */
+E void moduleDelData(char *mod_name, char *what, char *key);				/* Delete this key/value pair */
+E void moduleDelAllData(char *mod_name);					/* Delete all key/value pairs for this module for this struct */
+
 E boolean moduleMinVersion(int major,int minor,int patch,int build);	/* Checks if the current version of denora is before or after a given verison */
 E EvtMessage *createEventHandler(char *name, int (*func) (char *source, int ac, char **av));
 E EvtMessage *findEventHandler(EvtMessageHash * msgEvtTable[], const char *name);
@@ -1204,6 +1193,8 @@ E list_t *Glinehead;
 E list_t *Qlinehead;
 E list_t *Zlinehead;
 
+E char *sql_hidepass(char *sql);
+
 E SpamFilter *findSpamFilter(const char *regex);
 E void fini_SpamFilter(void);
 E void init_spamfilter(void);
@@ -1232,7 +1223,7 @@ E char *GetOptionTagName(char *line);
 E void DenoraParseXMLConfig(char *filename);
 
 E char **DenoraSQLFetchRow(sqlite3_stmt* stmt, int type);
-
+E char **DenoraSQLReturnRow(char *db, const char *query, ...);
 
 E char *ReturnModeFromFlag(int mode);
 E int ReturnModeFromToken(char *tag);
@@ -1251,6 +1242,41 @@ E void ModuleChanModeUpdate(int mode, void (*setvalue) (Channel * chan, char *va
 E int DenoraParseProto_ChannelUserModeBlock(int count, char **lines);
 E int ReturnChanUModeFromToken(char *tag);
 
+E int DenoraParseIdentityBlock(int count, char **lines);
+E int DenoraParseStatServBlock(int count, char **lines);
+E int DenoraParseFileNamesBlock(int count, char **lines);
+E int DenoraParseNetInfoBlock(int count, char **lines);
+E int DenoraParseBackUpBlock(int count, char **lines);
+
+
+E int IsOptionTag(char *line);
+
+/* denoralib.c */
+char *DenoraLib_GetLastError(void);
+int DenoraLastErrorCode;
+
+E char *SQLErrMsg(SQLCon *con);
+
+/* Denora_SQL */
+E sqlite3 *DenoraOpenSQL(char *dbname);
+E void DenoraCloseSQl(sqlite3 *db);
+E char *SQLfileLoad(char *filename);
+E int DenoraExecQuerySQL(sqlite3 *db, const char *fmt, ...);
+E int DenoraExecQueryDirectSQL(sqlite3 *db, const char *querystring, int callback(void *NotUsed, int argc, char **argv, char **azColName));
+E sqlite3_stmt *DenoraPrepareQuery(sqlite3 *db, const char *fmt, ...);
+E char ***DenoraSQLFetchArray(sqlite3 *db, char *table, sqlite3_stmt *stmt, int type);
+
+/* Denora_Mem.c */
+E char ***DenoraCallocArray2D(int x, int y);
+E char **DenoraCallocArray(int x);
+
+/* Strings */
+E char *StringDup(const char *src);
+
+E config *DenoraXMLConfigFindBlock(char *mask);
+E config *DenoraXMLConfigBlockCreate(char *newblockname, int (parser)(int ac, char **av), int options);
+E int DenoraConfigInit(void);
+E int DenoraParseConnectBlock(int count, char **lines);
 
 E int sqlite3_shell_main(int argc, char **argv);
 

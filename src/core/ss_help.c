@@ -66,7 +66,7 @@ void DenoraFini(void)
 
 static int do_help(User * u, int ac, char **av)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (ac < 1)
 	{

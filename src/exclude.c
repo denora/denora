@@ -37,7 +37,7 @@ Exclude *find_exclude(char *mask, char *server)
 {
 	Exclude *e;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!mask)
 	{
@@ -114,7 +114,7 @@ void load_exclude_db(void)
         {
                 return;                 /* Bang, an error occurred */
         }
-        SET_SEGV_LOCATION();
+        
 
 	while (1)
 	{
@@ -207,9 +207,9 @@ void save_exclude_db(void)
 
 int del_exclude(Exclude * e)
 {
-	SET_SEGV_LOCATION();
+	
 
-	SET_SEGV_LOCATION();
+	
 
 	if (e)
 	{
@@ -227,7 +227,7 @@ int del_exclude(Exclude * e)
 		}
 		if (e->name)
 		{
-			SET_SEGV_LOCATION();
+			
 			free(e->name);
 		}
 		free(e);
@@ -242,13 +242,13 @@ Exclude *first_exclude(void)
 {
 	next_index = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	while (next_index < 1024 && current == NULL)
 	{
 		current = exlists[next_index++];
 	}
-	SET_SEGV_LOCATION();
+	
 
 	alog(LOG_EXTRADEBUG, "debug: first_exclude() returning %s",
 	     current ? current->name : "NULL (end of list)");
@@ -259,7 +259,7 @@ Exclude *first_exclude(void)
 
 Exclude *next_exclude(void)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (current)
 		current = current->next;
@@ -270,7 +270,7 @@ Exclude *next_exclude(void)
 			current = exlists[next_index++];
 		}
 	}
-	SET_SEGV_LOCATION();
+	
 
 	alog(LOG_EXTRADEBUG, "debug: next_exclude() returning %s",
 	     current ? current->name : "NULL (end of list)");

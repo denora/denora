@@ -11,7 +11,8 @@
 # 
 #  
 
-CC=@CC@
+CCDV=@CCDV@
+CC=$(CCDV)@CC@
 INCLUDEDIR=../include 
 DENORALIBS=@DENORALIBS@
 BASEOPT=-O2
@@ -23,6 +24,7 @@ PROFILE=-pg
 LDPROFILE=
 SHELL=/bin/sh
 SUBDIRS=src
+LIBDIRS=lib
 BINDEST=@BINDEST@
 DATDEST=@DATDEST@
 INSTALL=@INSTALL@
@@ -39,11 +41,12 @@ RDYNAMNIC=@RDYNAMNIC@
 MODULEFLAGS=@MODULEFLAGS@
 
 
-all:  language headers build core protocols modules
-strict: strict_language headers strict_build strict_core strict_protocols strict_modules
-ansi: ansi_language headers ansi_build ansi_core ansi_protocols ansi_modules
-profile: language headers profile_build core profile_protocols profile_modules
-optimized: language headers optimized_build optimized_core optimized_protocols optimized_modules
+all: language headers build core encmod protocols modules sqlmod end_msg
+verbose: language_v headers_v build_v core_v encmod_v protocols_v modules_v
+strict: strict_language headers strict_build strict_core strict_encmod strict_protocols strict_modules
+ansi: ansi_language headers ansi_build ansi_core ansi_encmod ansi_protocols ansi_modules
+profile: language headers profile_build profile_core profile_encmod profile_protocols profile_modules
+optimized: language headers optimized_build optimized_core optimized_encmod optimized_protocols optimized_modules
 
 MAKEARGS = 'CFLAGS=${CFLAGS}' 'CC=${CC}' 'DENORALIBS=${DENORALIBS}' \
 	   'LDFLAGS=${LDFLAGS}' 'BINDEST=${BINDEST}' 'INSTALL=${INSTALL}' \
@@ -55,101 +58,137 @@ MAKEARGS = 'CFLAGS=${CFLAGS}' 'CC=${CC}' 'DENORALIBS=${DENORALIBS}' \
 build:
 	@for i in $(SUBDIRS); do \
             echo "*** Building $$i";\
-            ( cd $$i; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; ) \
+            ( cd $$i; ${MAKE} -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; ) \
         done
+
+end_msg:
+	@echo "Denora has completed compiling the source code, to install type";
+	@echo "		 (g)make install";
+	@echo "Remember to read the documatation and create your denora.xml config file";
+
 
 strict_build:  
 	@for i in $(SUBDIRS); do \
             echo "*** Strict Building $$i";\
-            ( cd $$i; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(STRICT)' all; ) \
+            ( cd $$i; ${MAKE}  -s  ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(STRICT)' all; ) \
         done
 
 optimized_build:  
 	@for i in $(SUBDIRS); do \
             echo "*** Strict Building $$i";\
-            ( cd $$i; ${MAKE} ${MAKEARGS} 'CFLAGS=${CFLAGS} ${OPCFLAGS}' all; ) \
+            ( cd $$i; ${MAKE} -s  ${MAKEARGS} 'CFLAGS=${CFLAGS} ${OPCFLAGS}' all; ) \
         done
 
 ansi_build:  
 	@for i in $(SUBDIRS); do \
             echo "*** Strict Building $$i";\
-            ( cd $$i; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(ANSI)' all; ) \
+            ( cd $$i; ${MAKE}  -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(ANSI)' all; ) \
         done
 
 profile_build:
 	@for i in $(SUBDIRS); do \
             echo "*** Strict Building $$i";\
-            ( cd $$i; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(PROFILE)' 'LDFLAGS=${LDFLAGS} ${PROFILE}' all; ) \
+            ( cd $$i; ${MAKE}  -s  ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(PROFILE)' 'LDFLAGS=${LDFLAGS} ${PROFILE}' all; ) \
         done
 
 modules: build
-	(cd src/modules ; ./configure ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; )
-	@echo "*** All done, now (g)make install to install Denora/Modules";
+	@echo "*** Building Extra Modules";
+	@(cd src/modules ; ./configure ; ${MAKE}  -s  ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; )
+	@echo "*** All done";
+
+encmod: build
+	@echo "*** Building Encryption Modules";
+	@(cd src/encmod ; ./configure ; ${MAKE}  -s  ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; )
+	@echo "*** All done";
+
+sqlmod: build
+	@echo "*** Building SQL Database Modules";
+	@(cd src/sqlmods ; ./configure ; ${MAKE}  -s  ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; )
+	@echo "*** All done";
 
 core: build 
 	@echo "*** Building Core modules";
-	(cd src/ ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' core; )
+	@(cd src/ ; ${MAKE}  -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' core; )
+
+profile_core: build 
+	@echo "*** Building Core modules";
+	@(cd src/ ; ${MAKE}  -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' 'PROFILE=${PROFILE}' core; )
 
 strict_core: strict_build 
 	@echo "*** Building Core modules";
-	(cd src/core ; ./configure ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(STRICT)' all; )
+	@(cd src/core ; ./configure ; ${MAKE} -s  ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(STRICT)' all; )
 
 optimized_core: optimized_build
 	@echo "*** Building Core modules";
-	(cd src/core ; ./configure ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(CFLAGS) $(OPCFLAGS)' all; )
+	@(cd src/core ; ./configure ; ${MAKE}  -s ${MAKEARGS} 'CFLAGS=$(CFLAGS) $(OPCFLAGS)' all; )
 
 ansi_core: ansi_build
 	@echo "*** Building Core modules";
-	(cd src/core ; ./configure ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(ANSI)' all; )
+	@(cd src/core ; ./configure ; ${MAKE}  -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(ANSI)' all; )
 
 strict_modules: strict_build
-	(cd src/modules ; ./configure ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(STRICT)' all; )
+	@(cd src/modules ; ./configure ; ${MAKE}  -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(STRICT)' all; )
 	@echo "*** All done, now (g)make install to install Denora/Modules";
 
 ansi_modules: ansi_build
-	(cd src/modules ; ./configure ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(ANSI)' all; )
+	@(cd src/modules ; ./configure ; ${MAKE}  -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(ANSI)' all; )
 	@echo "*** All done, now (g)make install to install Denora/Modules";
 
+ansi_encmod: ansi_build
+	@echo "*** Building Encryption Modules";
+	@(cd src/encmod ; ./configure ; ${MAKE}  -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(ANSI)' all; )
+	@echo "*** All done";
+
+
 optimized_modules: optimized_build
-	(cd src/modules ; ./configure ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(CFLAGS) $(OPCFLAGS)' all; )
+	@(cd src/modules ; ./configure ; ${MAKE}  -s ${MAKEARGS} 'CFLAGS=$(CFLAGS) $(OPCFLAGS)' all; )
 	@echo "*** All done, now (g)make install to install Denora/Modules";
 
 profile_modules: profile_build
-	(cd src/modules ; ./configure ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} ${PROFILE}' 'PROFILE=${PROFILE}' all; )
+	@(cd src/modules ; ./configure ; ${MAKE} -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} ${PROFILE}' 'PROFILE=${PROFILE}' all; )
 	@echo "*** All done, now (g)make install to install Denora/Modules";
 
 protocols: build
-	(cd src/protocol ; ./configure ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; )
-	@echo "*** All done, now (g)make install to install Denora/Protocols";
+	@echo "*** Compiling Denora's IRCD Protocols";
+	@(cd src/protocol ; ./configure ; ${MAKE} -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; )
+	@echo "*** All done, with Denora/Protocols";
 
 strict_protocols: strict_build
-	(cd src/protocol ; ./configure ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(STRICT)' all; )
+	@(cd src/protocol ; ./configure ; ${MAKE} -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(STRICT)' all; )
 	@echo "*** All done, now (g)make install to install Denora/Protocols";
 
 optimized_protocols: optimized_build
-	(cd src/protocol ; ./configure ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(CFLAGS) $(OPCFLAGS)' all; )
+	@(cd src/protocol ; ./configure ; ${MAKE} -s ${MAKEARGS} 'CFLAGS=$(CFLAGS) $(OPCFLAGS)' all; )
 	@echo "*** All done, now (g)make install to install Denora/Protocols";
 
 ansi_protocols: ansi_build
-	(cd src/protocol ; ./configure ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(ANSI)' all; )
+	@(cd src/protocol ; ./configure ; ${MAKE} -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(ANSI)' all; )
 	@echo "*** All done, now (g)make install to install Denora/Protocols";
 
 profile_protocols: profile_build
-	(cd src/protocol ; ./configure ; ${MAKE} ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} ${PROFILE}' 'PROFILE=${PROFILE}' all; )
+	@(cd src/protocol ; ./configure ; ${MAKE} -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} ${PROFILE}' 'PROFILE=${PROFILE}' all; )
 	@echo "*** All done, now (g)make install to install Denora/Protocols";
 
 
 language:
-	(cd lang ; $(MAKE) ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all language.h ; cp language.h ../include/)
+	@echo "*** Generating Language Files";
+	@(cd lang ; $(MAKE) -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all language.h ; cp language.h ../include/)
+	@echo "*** All done with Language files";
 
 strict_language:
-	(cd lang ; $(MAKE) ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(STRICT)' all language.h ; cp language.h ../include/)
+	@echo "*** Generating Language Files";
+	@(cd lang ; $(MAKE) -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(STRICT)' all language.h ; cp language.h ../include/)
+	@echo "*** All done with Language files";
 
 ansi_language:
-	(cd lang ; $(MAKE) ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(ANSI)' all language.h ; cp language.h ../include/)
+	@echo "*** Generating Language Files";
+	@(cd lang ; $(MAKE) -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(ANSI)' all language.h ; cp language.h ../include/)
+	@echo "*** All done with Language files";
 
 headers:
-	(cd include ; ${MAKE} ${MAKEARGS} )
+	@echo "*** Generating Required Header Files";
+	@(cd include ; ${MAKE} -s ${MAKEARGS} )
+	@echo "*** All done with headers";
 
 clean:
 	(cd lang ; ${MAKE} clean )
@@ -160,7 +199,7 @@ distclean:
 	(cd lang ; ${MAKE} distclean )
 	(cd include ; ${MAKE} distclean )
 	(cd src ; ${MAKE} distclean )
-	rm -f config.log config.status config.cache Makefile install-sh src/bin/denorarc src/bin/geoipupd
+	rm -f config.log config.status config.cache Makefile install-sh src/bin/denorarc src/bin/geoipupd ccdv
 
 recompile:
 	cp config.cache config.bak

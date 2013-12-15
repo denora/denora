@@ -123,7 +123,7 @@ int do_set(User * u, int ac, char **av)
 				return MOD_CONT;
 			}
 
-			if (rdb_init())
+			if (sql_init())
 			{
 				notice_lang(s_StatServ, u, STAT_SET_SQL_ON);
 				/* we need to restart denora so sql is resynced */
@@ -153,7 +153,7 @@ int do_set(User * u, int ac, char **av)
 		}
 		else if (stricmp(setting, "off") == 0)
 		{
-			rdb_close();
+			sql_close(sqlcon);
 			notice_lang(s_StatServ, u, STAT_SET_SQL_OFF);
 		}
 		else

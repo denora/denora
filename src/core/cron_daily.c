@@ -64,7 +64,7 @@ void DenoraFini(void)
 
 int users_daily(const char *name)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (name)
 	{
@@ -78,7 +78,7 @@ int users_daily(const char *name)
 		stats->daily_chans_time = time(NULL);
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	return MOD_CONT;
 }

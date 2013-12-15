@@ -33,7 +33,7 @@ PrivMsg *findPrivMsg(char *name)
 	}
 	idx = CMD_HASH(name);
 
-	SET_SEGV_LOCATION();
+	
 
 	for (privcurrent = PRIVMSGHANDLERS[idx]; privcurrent;
 	        privcurrent = privcurrent->next)
@@ -58,7 +58,7 @@ PrivMsg *createPrivmsg(char *service, void (*func) (User * u, char *buf))
 		return NULL;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	if ((m = malloc(sizeof(PrivMsg))) == NULL)
 	{
@@ -78,7 +78,7 @@ int addPrivMsg(PrivMsg * m)
 	PrivMsgHash *newHash = NULL;
 	PrivMsgHash *lastHash = NULL;
 
-	SET_SEGV_LOCATION();
+	
 
 	modindex = CMD_HASH(m->service);
 

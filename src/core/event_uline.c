@@ -87,7 +87,7 @@ void DenoraFini(void)
  */
 int denora_event_246(char *source, int ac, char **av)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (denora->protocoldebug)
 	{
@@ -138,7 +138,7 @@ int denora_event_246(char *source, int ac, char **av)
  */
 int denora_event_248(char *source, int ac, char **av)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (denora->protocoldebug)
 	{

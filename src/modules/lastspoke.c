@@ -142,18 +142,18 @@ int do_msg_lastspoke(User * u, int argc, char **argv)
  **/
 char *do_lastspoke(User * u, char *target)
 {
-#ifdef USE_MYSQL
 	char *split1 = NULL;
 	char *lastspokehost = NULL;
 	char *lastspokenick = NULL;
 	char *lastspokeuname = NULL;
 	char buf[255];
 	int i;
-	MYSQL_RES *mysql_res = NULL;
+	SQLres *sql_res;
+	char **sql_row;
 	char *sqltarget;
 	char *usrchan = NULL;
-	MYSQL_RES *mysql_res2;
-	MYSQL_ROW mysql_row2;
+	SQLres *sql_res2;
+	char **sql_row2;
 	char cmodep[32] = "\0";
 	char cmodes[32] = "\0";
 	char cmodeA[32] = "\0";
@@ -170,7 +170,7 @@ char *do_lastspoke(User * u, char *target)
 	time_t tt = time(NULL);
 	message = malloc(1024);
 
-	sqltarget = rdb_escape(rdb_escape(target));
+	sqltarget = sql_escape(sql_escape(target));
 	for (i = 0; sqltarget[i]; i++)
 		if (sqltarget[i] == '*')
 			sqltarget[i] = '%';
@@ -189,18 +189,17 @@ char *do_lastspoke(User * u, char *target)
 	if (!strcmp(lastspokenick, "%")) {
 		uname = sstrdup("%");
 	} else {	
-		rdb_query(QUERY_HIGH, "SELECT uname FROM %s WHERE nick LIKE \'%s\' ",
+		sql_query("SELECT uname FROM %s WHERE nick LIKE \'%s\' ",
 					  AliasesTable, lastspokenick);
-		mysql_res = mysql_store_result(mysql);
-		if (mysql_res && mysql_num_rows(mysql_res)) {
-			mysql_row = mysql_fetch_row(mysql_res);
-			uname = rdb_escape(mysql_row[0]);
+		sql_res = sql_set_result(sqlcon);
+		if (sql_res && sql_num_rows(sql_res)) {
+			sql_row = sql_fetch_row(sql_res);
+			uname = sql_escape(sql_row[0]);
 		}
 	}
 
 	if (uname) {
-		rdb_query(QUERY_HIGH,
-			  "SELECT %s.nick, %s.username, %s.hostname, %s.hiddenhostname, %s.online, %s.away, %s.chan, %s.lastspoke FROM %s, %s, %s, %s WHERE %s.uname LIKE \"%s\" AND %s.nick = %s.nick AND %s.username LIKE \"%s\" AND (%s.hostname LIKE \"%s\" OR %s.hiddenhostname LIKE \"%s\") AND %s.server = %s.server AND %s.uline = \"0\" AND %s.uname = %s.uname AND %s.chan != \"global\" ORDER BY %s.online, %s.lastquit, %s.lastspoke DESC, %s.connecttime ASC LIMIT 1",
+		sql_query("SELECT %s.nick, %s.username, %s.hostname, %s.hiddenhostname, %s.online, %s.away, %s.chan, %s.lastspoke FROM %s, %s, %s, %s WHERE %s.uname LIKE \"%s\" AND %s.nick = %s.nick AND %s.username LIKE \"%s\" AND (%s.hostname LIKE \"%s\" OR %s.hiddenhostname LIKE \"%s\") AND %s.server = %s.server AND %s.uline = \"0\" AND %s.uname = %s.uname AND %s.chan != \"global\" ORDER BY %s.online, %s.lastquit, %s.lastspoke DESC, %s.connecttime ASC LIMIT 1",
 			  UserTable, UserTable, UserTable, UserTable, UserTable,
 			  UserTable, UStatsTable, UStatsTable, UserTable, ServerTable,
 			  AliasesTable, UStatsTable,
@@ -209,15 +208,15 @@ char *do_lastspoke(User * u, char *target)
 			  UserTable, lastspokehost, UserTable, ServerTable,
 			  ServerTable, AliasesTable, UStatsTable, UStatsTable,
 			  UserTable, UserTable, UStatsTable, UserTable);
-		mysql_res = mysql_store_result(mysql);
+		sql_res = sql_set_result(sqlcon);
 	}
 
-	if (mysql_num_rows(mysql_res) > 0) {
-		SET_SEGV_LOCATION();
-		while ((mysql_row = mysql_fetch_row(mysql_res)) != NULL) {
-			if (strlen(mysql_row[3]) <= 1)
-				mysql_row[3] = mysql_row[2];	/* no vhost, so using real host */
-			tt = atoi(mysql_row[7]);
+	if (sql_num_rows(sql_res) > 0) {
+		
+		while ((sql_row = sql_fetch_row(sql_res)) != NULL) {
+			if (strlen(sql_row[3]) <= 1)
+				sql_row[3] = sql_row[2];	/* no vhost, so using real host */
+			tt = atoi(sql_row[7]);
 			tm = *localtime(&tt);
 			strftime(buf, sizeof(buf), "%d.%m %H:%M", &tm);
 			time0 = mktime(&tm);
@@ -240,42 +239,41 @@ char *do_lastspoke(User * u, char *target)
 				if (denora_umode(UMODE_I) == 1)
 					sprintf(umodeI, "AND %s.mode_ui = 'N' ", UserTable);
 			}				
-			rdb_query(QUERY_HIGH,
-					  "SELECT %s.channel FROM %s, %s WHERE %s.nick = \"%s\" AND %s.channel = \"%s\" %s%s%s%s%s%s%s ORDER BY %s.channel ASC LIMIT 1",
+			sql_query("SELECT %s.channel FROM %s, %s WHERE %s.nick = \"%s\" AND %s.channel = \"%s\" %s%s%s%s%s%s%s ORDER BY %s.channel ASC LIMIT 1",
 					  ChanTable, ChanTable, UserTable, UserTable,
-					  mysql_row[0], ChanTable, mysql_row[6], cmodep,
+					  sql_row[0], ChanTable, sql_row[6], cmodep,
 					  cmodes, cmodeA, cmodeO, umodep, umodeQ, umodeI, ChanTable);
-			mysql_res2 = mysql_store_result(mysql);
-			while ((mysql_row2 = mysql_fetch_row(mysql_res2)) != NULL) {
-				usrchan = sstrdup(mysql_row2[0]);
+			sql_res2 = sql_set_result(sqlcon);
+			while ((sql_row2 = sql_fetch_row(sql_res2)) != NULL) {
+				usrchan = sstrdup(sql_row2[0]);
 			}
-			mysql_free_result(mysql_res2);
+			sql_free_result(sql_res2);
 
-			if (stricmp(mysql_row[4], "Y") == 0) {
-				if (stricmp(mysql_row[5], "Y") != 0) {  /* online */
+			if (stricmp(sql_row[4], "Y") == 0) {
+				if (stricmp(sql_row[5], "Y") != 0) {  /* online */
 					if (usrchan) {
 						sprintf(message,
 								moduleGetLangString(u, LASTSPOKE_ONLINE_C),
-								mysql_row[0], mysql_row[1], mysql_row[3],
+								sql_row[0], sql_row[1], sql_row[3],
 								get_timestring(u, tsdiff), buf,
-								mysql_row[6]);
+								sql_row[6]);
 					} else {
 						sprintf(message,
 								moduleGetLangString(u, LASTSPOKE_ONLINE_G),
-								mysql_row[0], mysql_row[1], mysql_row[3],
+								sql_row[0], sql_row[1], sql_row[3],
 								get_timestring(u, tsdiff), buf);
 					}
 				} else {		/* away */
 					if (usrchan) {
 						sprintf(message,
 								moduleGetLangString(u, LASTSPOKE_AWAY_C),
-								mysql_row[0], mysql_row[1], mysql_row[3],
+								sql_row[0], sql_row[1], sql_row[3],
 								get_timestring(u, tsdiff), buf,
-								mysql_row[6]);
+								sql_row[6]);
 					} else {
 						sprintf(message,
 								moduleGetLangString(u, LASTSPOKE_AWAY_G),
-								mysql_row[0], mysql_row[1], mysql_row[3],
+								sql_row[0], sql_row[1], sql_row[3],
 								get_timestring(u, tsdiff), buf);
 					}
 				}
@@ -283,12 +281,12 @@ char *do_lastspoke(User * u, char *target)
 				if (usrchan) {
 					sprintf(message,
 							moduleGetLangString(u, LASTSPOKE_OFFLINE_C),
-							mysql_row[0], mysql_row[1], mysql_row[3],
-							get_timestring(u, tsdiff), buf, mysql_row[6]);
+							sql_row[0], sql_row[1], sql_row[3],
+							get_timestring(u, tsdiff), buf, sql_row[6]);
 				} else {
 					sprintf(message,
 							moduleGetLangString(u, LASTSPOKE_OFFLINE_G),
-							mysql_row[0], mysql_row[1], mysql_row[3],
+							sql_row[0], sql_row[1], sql_row[3],
 							get_timestring(u, tsdiff), buf);
 				}
 			}
@@ -296,8 +294,8 @@ char *do_lastspoke(User * u, char *target)
 	} else {
 		sprintf(message, moduleGetLangString(u, LASTSPOKE_EMPTY), target);
 	}
-	SET_SEGV_LOCATION();
-	mysql_free_result(mysql_res);
+	
+	sql_free_result(sql_res);
 	if (lastspokenick)
 		free(lastspokenick);
 	if (usrchan)
@@ -306,11 +304,6 @@ char *do_lastspoke(User * u, char *target)
 		free(uname);
 
 	return message;
-#else
-	USE_VAR(u);
-	USE_VAR(target);
-	return NULL;
-#endif
 }
 
 char *get_timestring(User * u, int timestamp)

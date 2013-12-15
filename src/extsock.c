@@ -270,7 +270,7 @@ int extsock_val_clnt(struct in_addr iaddr)
 {
 	int i;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (SockIPNumber <= 0)
 	{
@@ -278,7 +278,7 @@ int extsock_val_clnt(struct in_addr iaddr)
 		return 0;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	for (i = 0; i < SockIPNumber; i++)
 	{
@@ -287,7 +287,7 @@ int extsock_val_clnt(struct in_addr iaddr)
 			return 1;
 		}
 	}
-	SET_SEGV_LOCATION();
+	
 
 	return 0;
 }

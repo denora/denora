@@ -32,7 +32,7 @@ FILE *new_xml(char *filename)
 {
 	FILE *xmlfile;
 
-	SET_SEGV_LOCATION();
+	
 
 	if ((xmlfile = FileOpen(filename, FILE_WRITE)) == NULL)
 	{
@@ -53,7 +53,7 @@ FILE *new_xml(char *filename)
  */
 void xml_write_header(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (ptr)
 	{
@@ -70,7 +70,7 @@ void xml_write_header(FILE * ptr)
 		{
 			fprintf(ptr, "%s\n\r", xml_doctype);
 		}
-		SET_SEGV_LOCATION();
+		
 		if (xml_header)
 		{
 			fprintf(ptr, "<%s>\n\r", xml_header);
@@ -80,7 +80,7 @@ void xml_write_header(FILE * ptr)
 			fprintf(ptr, "<denora>\n\r");
 		}
 	}
-	SET_SEGV_LOCATION();
+	
 	xml_encode = 0;
 }
 
@@ -95,7 +95,7 @@ void xml_write_header(FILE * ptr)
  */
 void xml_write_footer(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		if (xml_header)
@@ -125,7 +125,7 @@ void xml_write_tag(FILE * ptr, const char *tag, char *xdata)
 {
 	char *mydata;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (ptr && tag)
 	{
@@ -155,7 +155,7 @@ void xml_write_tag(FILE * ptr, const char *tag, char *xdata)
 void xml_moduleData(FILE * ptr, ModuleData ** md)
 {
 	ModuleData *modcurrent = NULL;
-	SET_SEGV_LOCATION();
+	
 
 	if (ptr)
 	{
@@ -195,7 +195,7 @@ char *xml_prepare_tag(char *tag, char *xdata)
 	char buf[BUFSIZE];
 	*buf = '\0';
 
-	SET_SEGV_LOCATION();
+	
 
 	if (tag)
 	{
@@ -227,7 +227,7 @@ char *xml_prepare_tag(char *tag, char *xdata)
  */
 void xml_write_tag_int(FILE * ptr, const char *tag, long int xdata)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr && tag)
 	{
 		fprintf(ptr, "<%s>%ld</%s>\n\r", tag, (long int) xdata, tag);
@@ -247,7 +247,7 @@ void xml_write_tag_int(FILE * ptr, const char *tag, long int xdata)
  */
 void xml_write_block(FILE * ptr, char *block, char *xdata)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr && block)
 	{
 		if (xdata)
@@ -275,7 +275,7 @@ void xml_write_block(FILE * ptr, char *block, char *xdata)
  */
 void xml_write_block_top(FILE * ptr, const char *block)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr && block)
 	{
 		fprintf(ptr, "<%s>\n\r", block);
@@ -294,7 +294,7 @@ void xml_write_block_top(FILE * ptr, const char *block)
  */
 void xml_write_block_bottom(FILE * ptr, const char *block)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr && block)
 	{
 		fprintf(ptr, "</%s>\n\r", block);
@@ -314,7 +314,7 @@ void xml_write_block_bottom(FILE * ptr, const char *block)
 FILE *html_open(char *filename)
 {
 	FILE *htmlfile;
-	SET_SEGV_LOCATION();
+	
 
 	htmlfile = FileOpen(filename, FILE_READ);
 	if (htmlfile == NULL)
@@ -338,7 +338,7 @@ FILE *html_open_write(char *filename)
 {
 	FILE *htmlfile;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (filename)
 	{
@@ -364,7 +364,7 @@ FILE *html_open_write(char *filename)
  */
 void html_close(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		fclose(ptr);
@@ -382,7 +382,7 @@ HTMLTag *createHTMLtag(const char *word, void (*func) (FILE * ptr))
 		return NULL;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	if ((h = malloc(sizeof(HTMLTag))) == NULL)
 	{
@@ -402,7 +402,7 @@ int addHTMLTag(HTMLTag * h)
 	HTMLHash *newHash = NULL;
 	HTMLHash *lastHash = NULL;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (!h)
 	{
@@ -514,7 +514,7 @@ void do_html()
 	}
 #endif
 
-	SET_SEGV_LOCATION();
+	
 
 #ifndef _WIN32
 	template = STATS_DIR "/index.tpl";
@@ -546,7 +546,7 @@ void do_html()
 		free(html_template);
 		return;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	tpl = html_open(html_template);
 	if (!tpl)
@@ -566,7 +566,7 @@ void do_html()
 	bufold = buf;
 	buf1 = malloc(STARTBUFSIZE * 2);
 	bufold1 = buf1;
-	SET_SEGV_LOCATION();
+	
 
 	while (fgets(buf, STARTBUFSIZE, tpl))
 	{
@@ -586,7 +586,7 @@ void do_html()
 						alog(LOG_DEBUG, "Error writting to HTML file");
 					}
 					hcurrent->h->handler(opf);
-					SET_SEGV_LOCATION();
+					
 					buf = buf1 + strlen(hcurrent->tag);
 				}
 			}
@@ -596,7 +596,7 @@ void do_html()
 
 	fclose(tpl);
 	fclose(opf);
-	SET_SEGV_LOCATION();
+	
 	if (bufold)
 	{
 		free(bufold);

@@ -108,7 +108,7 @@ void html_top10kicks(FILE * ptr)
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstring(HTML_CHAN_TOP10_KICKS_HEADER));
-		SET_SEGV_LOCATION();
+		
 		list_sort(StatsChanhead, top10kicks_sort);
 		tn = list_first(StatsChanhead);
 		while (tn)
@@ -154,7 +154,7 @@ void html_top10kicks(FILE * ptr)
 
 		}
 		fprintf(ptr, "%s", langstring(HTML_CHAN_TOP10_KICKS_FOOTER));
-		SET_SEGV_LOCATION();
+		
 	}
 }
 
@@ -162,7 +162,7 @@ void html_top10kicks(FILE * ptr)
 
 void html_kicks_title(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstring(HTML_CHAN_TOP10_KICKS_TITLE));
@@ -173,7 +173,7 @@ void html_kicks_title(FILE * ptr)
 
 void html_mostkick_title(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstr(HTML_MOST_UNWELCOME_TITLE));

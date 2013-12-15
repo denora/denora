@@ -1,3 +1,16 @@
+/*
+ *
+ * (c) 2004-2013 Denora Team
+ * Contact us at info@denorastats.org
+ *
+ * Please read COPYING and README for furhter details.
+ *
+ * Based on the original code of Anope by Anope Team.
+ * Based on the original code of Thales by Lucas.
+ *
+ *
+ *
+ */
 #include "denora.h"
 
 char *GetConfigStartTagName(char *line)
@@ -42,14 +55,41 @@ char *GetOptionTagData(char *line)
 char *GetOptionTagName(char *line)
 {
 	char *linedata;
+	int optag;
 
 	if (line)
 	{
-		linedata = myStrGetToken(line, '<', 1);
-		linedata = myStrGetToken(linedata, '>', 0);
+		optag = IsOptionTag(line);
+		if (optag)
+		{
+			linedata = myStrGetToken(line, '<', 1);
+			linedata = myStrGetToken(linedata, '>', 0);
+			linedata = myStrGetToken(linedata, '/', 0);
+			strnrepl(linedata, BUFSIZE, " ", "");
+		}
+		else
+		{
+			linedata = myStrGetToken(line, '<', 1);
+			linedata = myStrGetToken(linedata, '>', 0);
+		}
 		return linedata;
 	}
 	return NULL;
+}
+
+int IsOptionTag(char *line)
+{
+	int numgt;
+	char *linedata = sstrdup(line);
+	numgt = myNumToken(linedata, '>');
+
+	if (myNumToken(linedata, '/') && numgt == 1)
+	{
+		free(linedata);
+		return 1;
+	}
+	free(linedata);
+	return 0;
 }
 
 void DenoraXMLIRCdConfig(char *file)
@@ -76,6 +116,16 @@ void DenoraXMLIRCdConfig(char *file)
 }
 
 
+int DenoraConfigInit(void)
+{
+	DenoraXMLConfigBlockCreate("connect", DenoraParseConnectBlock, 7);
+	DenoraXMLConfigBlockCreate("identity", DenoraParseIdentityBlock, 4);
+	DenoraXMLConfigBlockCreate("statserv", DenoraParseStatServBlock, 7);
+	DenoraXMLConfigBlockCreate("filenames", DenoraParseFileNamesBlock, 7);
+	DenoraXMLConfigBlockCreate("backup", DenoraParseBackUpBlock, 3);
+	DenoraXMLConfigBlockCreate("netinfo", DenoraParseNetInfoBlock, 3);
+}
+
 void DenoraParseXMLConfig(char *filename)
 {
 
@@ -92,7 +142,7 @@ void DenoraParseXMLConfig(char *filename)
 	char *data;
 	config *c;
 	int startblock = 0;
-	int x = 0;
+	int x = 0, res = 0;
 	char **xmldata;
 
 	alog(LOG_DEBUG, "Parsing %s", filename);
@@ -151,7 +201,12 @@ void DenoraParseXMLConfig(char *filename)
 					startblock = 0;
 					if (c)
 					{
-						c->parser(c->numoptions, xmldata);
+						res = c->parser(c->numoptions, xmldata);
+						if (res == -1)
+						{
+							alog(LOG_ERROR, "Failed to parse Config File Correctly");
+							return;
+						}
 					}
 					free(tag);
 

@@ -139,7 +139,7 @@ void process()
 	*cmd = '\0';
 	*bufp10 = '\0';
 
-	SET_SEGV_LOCATION();
+	
 
 	/* If debugging, log the buffer */
 	alog(LOG_DEBUG, "debug: Received: %s", inbuf);
@@ -274,7 +274,7 @@ void process()
 	/* Do something with the message. */
 	m = findMessage(IRCD, cmd);
 	total_recmsg++;
-	SET_SEGV_LOCATION();
+	
 	if (m)
 	{
 		if (m->func)
@@ -282,7 +282,7 @@ void process()
 			mod_current_module_name = m->mod_name;
 			retVal = m->func(source, ac, av);
 			mod_current_module_name = NULL;
-			SET_SEGV_LOCATION();
+			
 			if (retVal == MOD_CONT)
 			{
 				if (m->next)
@@ -290,7 +290,7 @@ void process()
 					msgcurrent = m->next;
 					if (msgcurrent)
 					{
-						SET_SEGV_LOCATION();
+						
 						while (msgcurrent && msgcurrent->func
 						        && retVal == MOD_CONT)
 						{
@@ -326,7 +326,7 @@ void denora_restart(void)
 	ChannelStats *cs;
 	lnode_t *tn;
 
-	SET_SEGV_LOCATION();
+	
 	alog(LOG_NORMAL, langstr(RESTARTING));
 	if (!denora->qmsg)
 	{
@@ -373,7 +373,7 @@ void do_restart_denora(void)
 {
 	denora_restart();
 	save_databases();
-	SET_SEGV_LOCATION();
+	
 	exit(1);
 }
 
@@ -386,7 +386,7 @@ void denora_shutdown(void)
 	ChannelStats *cs;
 	lnode_t *tn;
 
-	SET_SEGV_LOCATION();
+	
 
 	send_event(EVENT_SHUTDOWN, 1, EVENT_START);
 	save_databases();
@@ -430,7 +430,7 @@ void denora_shutdown(void)
 	}
 	if (denora->do_sql)
 	{
-		rdb_close();
+		sql_close(sqlcon);
 	}
 	if (gidb)
 	{
@@ -475,9 +475,7 @@ int main(int ac, char **av)
 	volatile time_t last_server_uptime;
 	volatile time_t last_sql_ping;
 	volatile time_t last_backup_ping;
-#ifdef USE_MYSQL
 	int result;
-#endif
 #ifdef _WIN32
 	char errbuf[256];
 #else
@@ -485,7 +483,7 @@ int main(int ac, char **av)
 #endif
 	my_av = av;
 
-	SET_SEGV_LOCATION();
+	
 
 #ifndef _WIN32
 	if (getuid() == ROOT_UID)
@@ -585,10 +583,11 @@ int main(int ac, char **av)
 		{
 			if (denora->do_sql)
 			{
-#ifdef USE_MYSQL
-				result = mysql_ping(mysql);
+				result = sql_ping(sqlcon);
 				if (result && denora->do_sql)
 				{
+#if 0
+// move to sql module
 					if (result == CR_COMMANDS_OUT_OF_SYNC)
 					{
 						alog(LOG_ERROR,
@@ -605,8 +604,8 @@ int main(int ac, char **av)
 					alog(LOG_ERROR, "Disabling MySQL due to an error");
 					denora->do_sql = 0;
 					SQLDisableDueServerLost = 1;
-				}
 #endif
+				}
 				last_sql_ping = t;
 			}
 			else if (SQLDisableDueServerLost && SQLRetryOnServerLost)
@@ -614,8 +613,8 @@ int main(int ac, char **av)
 				for (j = 0; j < SqlRetries; j++)
 				{
 					alog(LOG_NORMAL,
-					     "Trying to reconnect to MySQL server...");
-					if (rdb_init())
+					     "Trying to reconnect to SQL server...");
+					if (sql_init())
 					{
 						SQLDisableDueServerLost = 0;
 						/* we need to restart denora so sql is resynced */
@@ -627,7 +626,7 @@ int main(int ac, char **av)
 					sleep(SqlRetryGap);
 				}
 				alog(LOG_ERROR,
-				     "Giving up trying to reconnect to MySQL server");
+				     "Giving up trying to reconnect to SQL server");
 				SQLDisableDueServerLost = 0;
 			}
 		}
@@ -732,7 +731,7 @@ void introduce_user(const char *user)
 	lasttimes[LTSIZE - 1] = time(NULL);
 #undef LTSIZE
 
-	SET_SEGV_LOCATION();
+	
 	if (!user || stricmp(user, s_StatServ) == 0)
 	{
 		denora_cmd_nick(s_StatServ, desc_StatServ, ircd->servicesmode);
@@ -740,14 +739,14 @@ void introduce_user(const char *user)
 
 	if (s_StatServ_alias && !LargeNet)
 	{
-		SET_SEGV_LOCATION();
+		
 		if (!user || stricmp(user, s_StatServ_alias) == 0)
 		{
 			denora_cmd_nick(s_StatServ_alias, desc_StatServ_alias,
 			                ircd->servicesmode);
 		}
 	}
-	SET_SEGV_LOCATION();
+	
 }
 
 /*************************************************************************/
@@ -761,7 +760,7 @@ static int set_group(void)
 #if defined(RUNGROUP) && defined(HAVE_SETGRENT)
 	struct group *gr;
 
-	SET_SEGV_LOCATION();
+	
 
 	setgrent();
 	while ((gr = getgrent()) != NULL)
@@ -787,7 +786,7 @@ static int set_group(void)
 		return -1;
 	}
 #else
-	SET_SEGV_LOCATION();
+	
 #if defined(RUNGROUP)
 	alog(LOG_DEBUG,
 	     "debug: RUNGROUP listed but system does not support setgid()");
@@ -803,7 +802,7 @@ static int parse_dir_options(int ac, char **av)
 	int i;
 	char *s;
 
-	SET_SEGV_LOCATION();
+	
 
 	for (i = 1; i < ac; i++)
 	{
@@ -846,7 +845,7 @@ static int parse_options(int ac, char **av)
 	char *s, *t;
 	char *extra, *value;
 
-	SET_SEGV_LOCATION();
+	
 
 	for (i = 1; i < ac; i++)
 	{
@@ -1096,7 +1095,7 @@ static void write_pidfile(void)
 {
 	FILE *pidfile;
 
-	SET_SEGV_LOCATION();
+	
 
 	if ((pidfile = FileOpen(PIDFilename, FILE_WRITE)) != NULL)
 	{
@@ -1133,7 +1132,7 @@ int init(int ac, char **av)
 		return -1;
 	}
 
-	SET_SEGV_LOCATION();
+	
 
 	/* Parse command line for -dir option. */
 	parse_dir_options(ac, av);
@@ -1301,12 +1300,6 @@ int init(int ac, char **av)
 		}
 	}
 #endif
-#ifdef USE_THREADS
-	if (UseThreading)
-	{
-		QueueEntryInit();
-	}
-#endif
 	statserv_int();
 
 	/* Add Core MSG handles */
@@ -1338,7 +1331,7 @@ int init(int ac, char **av)
 
 	setup_cron_event();
 
-	if (!rdb_init())
+	if (!sql_init())
 	{
 		alog(LOG_ERROR, "Error: Disabling SQL due to errors with SQL");
 	}
@@ -1401,23 +1394,23 @@ int init(int ac, char **av)
 	/* Dumping stats.db maxvalues to sql */
 	if (denora->do_sql)
 	{
-		rdb_query
-		(QUERY_LOW,
+		sql_query
+		(
 		 "UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='channels'",
 		 MaxValueTable, stats->chans_max,
 		 (long int) stats->chans_max_time);
-		rdb_query
-		(QUERY_LOW,
+		sql_query
+		(
 		 "UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='users'",
 		 MaxValueTable, stats->users_max,
 		 (long int) stats->users_max_time);
-		rdb_query
-		(QUERY_LOW,
+		sql_query
+		(
 		 "UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='servers'",
 		 MaxValueTable, stats->servers_max,
 		 (long int) stats->servers_max_time);
-		rdb_query
-		(QUERY_LOW,
+		sql_query
+		(
 		 "UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='opers'",
 		 MaxValueTable, stats->opers_max,
 		 (long int) stats->opers_max_time);

@@ -84,11 +84,11 @@ void html_netstats(FILE * ptr)
 	char timebuf[64];
 	struct tm tm;
 
-	SET_SEGV_LOCATION();
+	
 
 	if (ptr)
 	{
-		SET_SEGV_LOCATION();
+		
 		fprintf(ptr, "%s", getstring(NULL, HTML_NETSTATS_HEADER));
 #ifdef _WIN32
 		localtime_s(&tm, &stats->users_max_time);
@@ -99,7 +99,7 @@ void html_netstats(FILE * ptr)
 		              STRFTIME_DATE_TIME_FORMAT, &tm);
 		dfprintf(ptr, getstring(NULL, HTML_NETSTATS_USERS), stats->users,
 		         stats->users_max, timebuf);
-		SET_SEGV_LOCATION();
+		
 #ifdef _WIN32
 		localtime_s(&tm, &stats->chans_max_time);
 #else
@@ -114,7 +114,7 @@ void html_netstats(FILE * ptr)
 #else
 		tm = *localtime(&stats->opers_max_time);
 #endif
-		SET_SEGV_LOCATION();
+		
 		strftime_lang(timebuf, sizeof(timebuf), NULL,
 		              STRFTIME_DATE_TIME_FORMAT, &tm);
 		dfprintf(ptr, getstring(NULL, HTML_NETSTATS_OPERS), stats->opers,
@@ -137,7 +137,7 @@ void html_netstats(FILE * ptr)
 
 void html_curnetstats_title(FILE * ptr)
 {
-	SET_SEGV_LOCATION();
+	
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstring(HTML_CUR_NETSTATS_TITLE));

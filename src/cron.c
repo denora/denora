@@ -45,7 +45,7 @@ void denora_cron(time_t ts)
 	{
 		return;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	if (cron_time.tm_hour == 0)         /* midnight */
 	{
@@ -92,7 +92,7 @@ void denora_cron(time_t ts)
 			/* run monthly routines */
 			cron_process_events(CRON_MONTHLY);
 		}
-		SET_SEGV_LOCATION();
+		
 	}
 	else if (cron_time.tm_hour == 1)
 	{
@@ -205,7 +205,7 @@ void cron_process_events(const char *name)
 	CronEvent *ccurrent = NULL;
 	CronEvent *evh;
 
-	SET_SEGV_LOCATION();
+	
 
 	/* Do something with the message. */
 	evh = findCronEvent(CRONEVENT, name);
@@ -225,7 +225,7 @@ void cron_process_events(const char *name)
 			}
 		}
 	}
-	SET_SEGV_LOCATION();
+	
 }
 
 /*************************************************************************/
@@ -238,7 +238,7 @@ CronEvent *createCronEvent(const char *name,
 	{
 		return NULL;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	if ((evm = malloc(sizeof(CronEvent))) == NULL)
 	{
@@ -261,7 +261,7 @@ CronEvent *findCronEvent(CronEventHash * hookEvtTable[], const char *name)
 	{
 		return NULL;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	idx = CMD_HASH(name);
 
@@ -289,7 +289,7 @@ int addCronEvent(CronEventHash * hookEvtTable[], CronEvent * evh)
 	{
 		return MOD_ERR_PARAMS;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	cronindex = CMD_HASH(evh->name);
 
@@ -315,7 +315,7 @@ int addCronEvent(CronEventHash * hookEvtTable[], CronEvent * evh)
 	newHash->next = NULL;
 	newHash->name = sstrdup(evh->name);
 	newHash->evh = evh;
-	SET_SEGV_LOCATION();
+	
 
 	if (lastHash == NULL)
 	{
@@ -341,7 +341,7 @@ int destroyCronEvent(CronEvent * evh)
 	{
 		return MOD_ERR_PARAMS;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	if (evh->name)
 	{
@@ -371,7 +371,7 @@ int delCronEvent(CronEventHash * msgEvtTable[], CronEvent * evm,
 	{
 		return MOD_ERR_PARAMS;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	cronindex = CMD_HASH(evm->name);
 
@@ -452,7 +452,7 @@ int delCronEvent(CronEventHash * msgEvtTable[], CronEvent * evm,
 		}
 		lastHash = ccurrent;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	return MOD_ERR_NOEXIST;
 }
@@ -473,7 +473,7 @@ int moduleCronEventDel(const char *name)
 	{
 		return MOD_ERR_NOEXIST;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	status = delCronEvent(CRONEVENT, evh, mod_current_module->name);
 	if (denora->debug)
@@ -493,7 +493,7 @@ int moduleAddCronEvent(CronEvent * evh)
 	{
 		return MOD_ERR_PARAMS;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	if ((mod_current_module_name) && (!mod_current_module))
 	{
@@ -510,7 +510,7 @@ int moduleAddCronEvent(CronEvent * evh)
 	{
 		evh->mod_name = sstrdup(mod_current_module->name);
 	}
-	SET_SEGV_LOCATION();
+	
 
 	status = addCronEvent(CRONEVENT, evh);
 	if (denora->debug)
@@ -528,7 +528,7 @@ int addCoreCronEvent(CronEventHash * hookEvtTable[], CronEvent * evh)
 	{
 		return MOD_ERR_PARAMS;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	evh->core = 1;
 	return addCronEvent(hookEvtTable, evh);
@@ -543,7 +543,7 @@ int displayCronFromHash(char *name)
 	cronindex = CMD_HASH(name);
 
 	alog(LOG_EXTRADEBUG, langstr(ALOG_TRY_TO_DISPLAY), name);
-	SET_SEGV_LOCATION();
+	
 
 	for (ccurrent = CRONEVENT[cronindex]; ccurrent;
 	        ccurrent = ccurrent->next)
@@ -569,7 +569,7 @@ int displayCronEvent(CronEvent * evh)
 	{
 		alog(LOG_DEBUG, "%d: 0x%p", ++i, (void *) msg);
 	}
-	SET_SEGV_LOCATION();
+	
 
 	alog(LOG_EXTRADEBUG, "debug: end");
 	return 0;
@@ -594,7 +594,7 @@ CronEvent *first_cronevent(void)
 {
 	next_index = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	while (next_index < 1024 && current == NULL)
 		current = CRONEVENT[next_index++];
@@ -605,7 +605,7 @@ CronEvent *first_cronevent(void)
 
 CronEvent *next_cronevent(void)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (current)
 		current = current->next;
@@ -630,7 +630,7 @@ CronEventHash *first_croneventhash(void)
 {
 	next_index = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	while (next_index < 1024 && current == NULL)
 		current = CRONEVENT[next_index++];
@@ -641,7 +641,7 @@ CronEventHash *first_croneventhash(void)
 
 CronEventHash *next_croneventhash(void)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (current)
 		current = current->next;
@@ -664,7 +664,7 @@ CronEventHash *next_croneventhash(void)
 
 int destroyCronEventHash(CronEventHash * mh)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (!mh)
 	{

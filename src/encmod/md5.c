@@ -16,14 +16,28 @@
  */
 
 #include "denora.h"
+#include "md5.h"
 
-#ifndef HIGHFIRST
-/** Bit-reverse bytes in a buffer. */
-#define byteReverse(buf, len)	/* Nothing */
-#else
-static void byteReverse(unsigned char *buf, unsigned longs);
+int DenoraInit(int argc, char **argv)
+{
+	moduleAddAuthor("Denora");
+	moduleAddVersion("2.0");
+	moduleSetType(ENCMOD);
 
-#ifndef ASM_MD5
+	EncryptModSet_Handler(md5);
+	EncryptModSet_IsCrypt(is_md5);
+	return MOD_CONT;
+}
+
+
+/**
+ * Unload the module
+ **/
+void DenoraFini(void)
+{
+
+}
+
 /*
  * Note: this code is harmless on little-endian machines.
  */
@@ -38,30 +52,13 @@ static void byteReverse(unsigned char *buf, unsigned longs)
 	} while (--longs);
 }
 
-#endif
-#endif
 
-#ifndef ASM_MD5
-/* The four core functions - F1 is optimized somewhat */
-/* #define F1(x, y, z) (x & y | ~x & z) */
-/** Helper function for first round of MD5. */
-#define F1(x, y, z) (z ^ (x & (y ^ z)))
-/** Helper function for second round of MD5. */
-#define F2(x, y, z) F1(z, x, y)
-/** Helper function for third round of MD5. */
-#define F3(x, y, z) (x ^ y ^ z)
-/** Helper function for fourth round of MD5. */
-#define F4(x, y, z) (y ^ (x | ~z))
 
-/** Step function for each round of MD5 */
-#define MD5STEP(f, w, x, y, z, data, s) \
-	( w += f(x, y, z) + data,  w = w<<s | w>>(32-s),  w += x )
-#endif
 
 /** Iniitalize MD5 context.
  * @param[out] ctx MD5 context to initialize.
  */
-void MD5Init(struct MD5Context *ctx);
+
 void MD5Init(struct MD5Context *ctx)
 {
 	ctx->buf[0] = 0x67452301U;
@@ -78,7 +75,7 @@ void MD5Init(struct MD5Context *ctx)
  * @param[in,out] buf Hash value.
  * @param[in] in Input buffer.
  */
-void MD5Transform(uint32 buf[4], uint32 const in[16]);
+
 void MD5Transform(uint32 buf[4], uint32 const in[16])
 {
 	register uint32 a, b, c, d;
@@ -167,7 +164,7 @@ void MD5Transform(uint32 buf[4], uint32 const in[16])
  * @param[in] buf Input buffer.
  * @param[in] len Number of bytes in input buffer.
  */
-void MD5Update(struct MD5Context *ctx, unsigned const char *buf, unsigned len);
+
 void MD5Update(struct MD5Context *ctx, unsigned const char *buf, unsigned len)
 {
 	uint32 t;
@@ -216,7 +213,7 @@ void MD5Update(struct MD5Context *ctx, unsigned const char *buf, unsigned len)
  * @param[out] digest Receives output hash value.
  * @param[in,out] ctx MD5 context to finalize.
  */
-void MD5Final(unsigned char digest[16], struct MD5Context *ctx);
+
 void MD5Final(unsigned char digest[16], struct MD5Context *ctx)
 {
 	unsigned count;
@@ -249,16 +246,17 @@ void MD5Final(unsigned char digest[16], struct MD5Context *ctx)
 	byteReverse(ctx->in, 14);
 
 	/* Append length in bits and transform */
-	((uint32 *) ctx->in)[14] = ctx->bits[0];
-	((uint32 *) ctx->in)[15] = ctx->bits[1];
+	(ctx->in)[14] = ctx->bits[0];
+	(ctx->in)[15] = ctx->bits[1];
 
 	MD5Transform(ctx->buf, (uint32 *) ctx->in);
 	byteReverse((unsigned char *) ctx->buf, 4);
 	memcpy(digest, ctx->buf, 16);
-	memset(ctx, 0, sizeof(*ctx));	/* In case it's sensitive */
+	memset(ctx, 0, sizeof(struct MD5Context));	/* In case it's sensitive */
 }
 
-char *md5(const char *str) {
+char *md5(const char *str) 
+{
         int n;
         int length = strlen(str);
         MD5_CTX c;
@@ -283,3 +281,21 @@ char *md5(const char *str) {
         return out;
 }
 
+int is_md5(const char *passwd)
+{
+	const char *const valid_md5chars = "0123456789abcdef";
+	int i;
+	/* Check if string matches a md5 using ^[0-9a-f]{32}$ the non regex fugly way */
+	if (strlen(passwd) == 32)
+	{
+		for (i = 0; i < 32; i++)
+		{
+			if (strchr(valid_md5chars, passwd[i]) == NULL)
+			{
+				return 0;
+			}
+		}
+		return 1;
+    }
+	return 0;
+}
