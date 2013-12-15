@@ -1,0 +1,12 @@
+[submodule "lib/geoip-api-c"]
+	path = lib/geoip-api-c
+	url = https://github.com/maxmind/geoip-api-c
+[submodule "lib/libevent"]
+	path = lib/libevent
+	url = https://github.com/libevent/libevent.git
+[submodule "lib/sqlite3"]
+	path = lib/sqlite3
+	url = https://github.com/denora/sqlite3.git
+[submodule "lib/libexecinfo"]
+	path = lib/libexecinfo
+	url = https://github.com/trystanscott/libexecinfo.git
