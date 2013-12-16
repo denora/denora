@@ -998,7 +998,7 @@ E QueueEntry *ExecuteQueue(QueueEntry *qp);
 E QueueEntry *qp;
 
 /* Admin.c */
-E int add_sqladmin (char *name, char *passwd, int level, char *host, int lang, int configadmin);
+E int add_sqladmin (char *name, char *passwd, int level, char *host, int lang, int configadmin, int encrypttype);
 E int del_sqladmin (char *name);
 E void reset_sqladmin (void);
 E sqlite3* AdminDatabase;
@@ -1165,6 +1165,8 @@ E HTMLHash *HTMLHANDLERS[MAX_CMD_HASH];
 E const char *deno_moderr(void);
 #endif
 
+#define GetArraySize(x)  (sizeof(x) / sizeof(x[0]))
+
 E DENORA_INLINE int FileExists(char * fileName);
 E DENORA_INLINE int FileRename(char * fileName, char *newfilename);
 E DENORA_INLINE FILE *FileOpen(char *file, const char *mode);
@@ -1247,8 +1249,18 @@ E int DenoraParseStatServBlock(int count, char **lines);
 E int DenoraParseFileNamesBlock(int count, char **lines);
 E int DenoraParseNetInfoBlock(int count, char **lines);
 E int DenoraParseBackUpBlock(int count, char **lines);
+E int DenoraParseTimeOutBlock(int count, char **lines);
+E int DenoraParseAdminBlock(int count, char **lines);
+E int DenoraParseSQLBlock(int count, char **lines);
+E int DenoraParseSQLTableBlock(int count, char **lines);
+E int DenoraParseOptionBlock(int count, char **lines);
+E int DenoraParseXMLRPCBlock(int count, char **lines);
+E int DenoraParseModuleBlock(int count, char **lines);
+E int DenoraParseSQLTableBlock(int count, char **lines);
+E int DenoraParseXMLRPCBlock(int count, char **lines);
 
-
+E char *GetAtrribValue(char *line);
+E char *GetAtrribTag(char *line);
 E int IsOptionTag(char *line);
 
 /* denoralib.c */
@@ -1275,7 +1287,7 @@ E char *StringDup(const char *src);
 
 E config *DenoraXMLConfigFindBlock(char *mask);
 E config *DenoraXMLConfigBlockCreate(char *newblockname, int (parser)(int ac, char **av), int options);
-E int DenoraConfigInit(void);
+E void DenoraConfigInit(char *filename);
 E int DenoraParseConnectBlock(int count, char **lines);
 
 E int sqlite3_shell_main(int argc, char **argv);

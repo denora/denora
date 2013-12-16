@@ -506,6 +506,839 @@ int DenoraParseBackUpBlock(int count, char **lines)
 
 /*************************************************************************/
 
+int DenoraParseTimeOutBlock(int count, char **lines)
+{
+	int i;
+	char *tag;
+	char *data;
+
+	alog(LOG_DEBUG,"Lines has %d", GetArraySize(lines));
+
+	for (i = 0; i < count; i++)
+	{
+		tag = GetOptionTagName(lines[i]);
+		data = GetOptionTagData(lines[i]);
+
+		if (tag && data)
+		{
+			if (!strcmp(tag, "ReadTimeout"))
+			{
+				ReadTimeout = dotime(data);
+				if (ReadTimeout < 0)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					return -1;
+				}
+			}
+			else if(!strcmp(tag, "WarningTimeout"))
+			{
+				WarningTimeout = dotime(data);
+				if (WarningTimeout < 0)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					return -1;
+				}
+			}
+			else if(!strcmp(tag, "UpdateTimeout"))
+			{
+				UpdateTimeout = dotime(data);
+				if (UpdateTimeout < 0)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					return -1;
+				}
+			}
+			else if(!strcmp(tag, "HTMLTimeout"))
+			{
+				HTMLTimeout = dotime(data);
+				if (HTMLTimeout < 0)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					return -1;
+				}
+			}
+			else if(!strcmp(tag, "UptimeTimeout"))
+			{
+				UptimeTimeout = dotime(data);
+				if (UptimeTimeout < 0)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					return -1;
+				}
+			}
+			else if(!strcmp(tag, "PingFrequency"))
+			{
+				PingFrequency = dotime(data);
+				if (PingFrequency < 0)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					return -1;
+				}
+			}
+			else if(!strcmp(tag, "SQLPingFreq"))
+			{
+				SQLPingFreq = dotime(data);
+				if (SQLPingFreq < 0)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					return -1;
+				}
+			}
+			else if(!strcmp(tag, "ClearInActive"))
+			{
+				ClearInActive = dotime(data);
+				if (ClearInActive < 0)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					return -1;
+				}
+			}
+			else if(!strcmp(tag, "ClearChanInActive"))
+			{
+				ClearChanInActive = dotime(data);
+				if (ClearChanInActive < 0)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					return -1;
+				}
+			}
+			else if(!strcmp(tag, "UserCacheTime"))
+			{
+				UserCacheTime = dotime(data);
+				if (UserCacheTime < 0)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					return -1;
+				}
+			}
+			else if(!strcmp(tag, "UserCleanFreq"))
+			{
+				UserCleanFreq = dotime(data);
+				if (UserCleanFreq < 0)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					return -1;
+				}
+			}
+			else if(!strcmp(tag, "ServerCacheTime"))
+			{
+				ServerCacheTime = dotime(data);
+				if (ServerCacheTime < 0)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					return -1;
+				}
+			}
+			else if(!strcmp(tag, "ServerCleanFreq"))
+			{
+				ServerCleanFreq = dotime(data);
+				if (ServerCleanFreq < 0)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					return -1;
+				}
+			}
+
+			else
+			{
+				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+			}
+			free(tag);
+			free(data);
+		}
+	}
+	if (!ReadTimeout)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_TIMEOUT_READ_ERROR));
+		return -1;
+	}
+	if (!WarningTimeout)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_TIMEOUT_WARNING_ERROR));
+		return -1;
+	}
+	if (!UpdateTimeout)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_TIMEOUT_UPDATE_ERROR));
+		return -1;
+	}
+	if (!PingFrequency)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_TIMEOUT_PING_ERROR));
+		return -1;
+	}
+	if (!UptimeTimeout)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_TIMEOUT_UPTIME_ERROR));
+		return -1;
+	}
+	if (!HTMLTimeout)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_TIMEOUT_HTML_ERROR));
+		return -1;
+	}
+	if (!SQLPingFreq)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_TIMEOUT_SQL_ERROR));
+		return -1;
+	}
+	if (!ClearInActive)
+	{
+		ClearInActive = dotime("30d");
+	}
+	if (!ClearChanInActive)
+	{
+		ClearChanInActive = dotime("30d");
+	}
+	return 1;
+}
+
+/*************************************************************************/
+
+int DenoraParseOptionBlock(int count, char **lines)
+{
+	int i;
+	char *tag;
+	char *data;
+	int optag;
+
+	alog(LOG_DEBUG,"Lines has %d", GetArraySize(lines));
+
+	for (i = 0; i < count; i++)
+	{
+		tag = GetOptionTagName(lines[i]);
+		data = GetOptionTagData(lines[i]);
+		optag = IsOptionTag(lines[i]);
+
+		if (tag)
+		{
+			if (!strcmp(tag, "KeepLogs"))
+			{
+				KeepLogs = atoi(data);
+				if (KeepLogs < 0)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_ERROR_POSTIVE_VALUE));
+					return -1;
+				}
+			}
+			else if(!strcmp(tag, "LogChannel"))
+			{
+				LogChannel = sstrdup(data);
+			}
+			else if(!strcmp(tag, "Smiley"))
+			{
+				Smiley = sstrdup(data);
+			}
+			else if(!strcmp(tag, "DumpCore"))
+			{
+				if (optag)
+				{
+					DumpCore = 1;
+				}
+				else
+				{
+					DumpCore = XmlConfigSetFeature(data);
+				}
+			}
+			else if(!strcmp(tag, "HideStatsO"))
+			{
+				if (optag)
+				{
+					HideStatsO = 1;
+				}
+				else
+				{
+					HideStatsO = XmlConfigSetFeature(data);
+				}
+			}
+			else if(!strcmp(tag, "HideUline"))
+			{
+				if (optag)
+				{
+					HideUline = 1;
+				}
+				else
+				{
+					HideUline = XmlConfigSetFeature(data);
+				}
+			}
+			else if(!strcmp(tag, "UseTokens"))
+			{
+				if (optag)
+				{
+					UseTokens = 1;
+				}
+				else
+				{
+					UseTokens = XmlConfigSetFeature(data);
+				}
+			}
+			else if(!strcmp(tag, "NoLogs"))
+			{
+				if (optag)
+				{
+					NoLogs = 1;
+				}
+				else
+				{
+					NoLogs = XmlConfigSetFeature(data);
+				}
+			}
+			else if(!strcmp(tag, "ChanStatsTrigger"))
+			{
+				if (strlen(data) == 1)
+				{
+					ChanStatsTrigger = sstrdup(data);
+				}
+				else
+				{
+					alog(LOG_ERROR, "trigger can only be 1 character longer");
+				}
+			}
+			else if(!strcmp(tag, "UseTS6"))
+			{
+				if (optag)
+				{
+					UseTS6 = 1;
+				}
+				else
+				{
+					UseTS6 = XmlConfigSetFeature(data);
+				}
+			}
+			else if(!strcmp(tag, "UseZIP"))
+			{
+				if (optag)
+				{
+					UseZIP = 1;
+				}
+				else
+				{
+					UseZIP = XmlConfigSetFeature(data);
+				}
+			}
+			else if(!strcmp(tag, "JupeMaster"))
+			{
+				JupeMaster = sstrdup(data);
+			}
+			else if(!strcmp(tag, "CSDefFlag"))
+			{
+				if (!stricmp(data, "on"))
+				{
+					CSDefFlag = 1;
+				}
+				else if (!stricmp(data, "notice"))
+				{
+					CSDefFlag = 2;
+				}
+				else
+				{
+					CSDefFlag = 0;
+				}
+			}
+			else
+			{
+				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+			}
+			free(tag);
+			free(data);
+		}
+	}
+	if (!Smiley)
+	{
+		Smiley = sstrdup(SMILEYS);
+	}
+	if (!ChanStatsTrigger)
+	{
+		ChanStatsTrigger = sstrdup("!");
+	}
+	return 1;
+}
+
+/*************************************************************************/
+
+int DenoraParseAdminBlock(int count, char **lines)
+{
+	int i;
+	char *tag;
+	char *data;
+	int optag, language;
+	char *attrib;
+	char *value, *name, *passwd, *hostname;
+	int  encrypttype;
+
+	for (i = 0; i < count; i++)
+	{
+		tag = GetOptionTagName(lines[i]);
+		data = GetOptionTagData(lines[i]);
+
+		if (tag)
+		{
+			if (!strcmp(tag, "name"))
+			{
+				name = sstrdup(data);
+			}
+			else if(!strcmp(tag, "passwd"))
+			{
+				passwd = sstrdup(data);
+				attrib = GetAtrribTag(lines[i]);
+				value = GetAtrribValue(lines[i]);
+				if (!stricmp(attrib,"encode"))
+				{
+					if (!stricmp(value,"plain"))
+					{
+						encrypttype = 1;
+					}
+					else if (!stricmp(value,"crypt"))
+					{
+						encrypttype = 1;
+					}
+					else if (!stricmp(value,"md5"))
+					{
+						encrypttype = 1;
+					}
+					else
+					{
+						encrypttype = 1;
+					}
+					free(attrib);
+					free(value);
+				}
+			}
+			else if(!strcmp(tag, "hostname"))
+			{
+				hostname = sstrdup(data);
+			}
+			else if(!strcmp(tag, "language"))
+			{
+				language = atoi(data);
+				if (language < 1 || language > NUM_LANGS)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_INVALID_LANG));
+					return -1;
+				}
+				language--;
+			}
+			else
+			{
+				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+			}
+			free(tag);
+			free(data);
+		}
+	}
+	if (!name)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_ADMIN_NAME_ERROR));
+		return -1;
+	}
+	if (!hostname)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_ADMIN_HOST_ERROR));
+		return -1;
+	}
+	if (!passwd)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_ADMIN_PASS_ERROR));
+		return -1;
+	}
+	add_sqladmin(name, passwd, 0, hostname, language, 1, encrypttype);
+	free(name);
+	free(passwd);
+	free(hostname);
+	return 1;
+}
+
+/*************************************************************************/
+
+int DenoraParseSQLBlock(int count, char **lines)
+{
+	int i;
+	char *tag;
+	char *data;
+	int optag;
+
+	alog(LOG_DEBUG,"Lines has %d", GetArraySize(lines));
+
+	for (i = 0; i < count; i++)
+	{
+		tag = GetOptionTagName(lines[i]);
+		data = GetOptionTagData(lines[i]);
+		optag = IsOptionTag(lines[i]);
+
+		if (tag)
+		{
+			if (!strcmp(tag, "Module"))
+			{
+				if (!stricmp(data, "mysql"))
+				{
+					sqltype = SQL_MYSQL;
+				}
+				if (!stricmp(data, "postgre"))
+				{
+					sqltype = SQL_PGSQL;
+				}
+			}
+			else if(!strcmp(tag, "SqlHost"))
+			{
+				SqlHost = sstrdup(data);
+			}
+			else if(!strcmp(tag, "SqlPass"))
+			{
+				SqlPass = sstrdup(data);
+			}
+			else if(!strcmp(tag, "SqlName"))
+			{
+				SqlName = sstrdup(data);
+			}
+			else if(!strcmp(tag, "SqlSock"))
+			{
+				SqlSock = sstrdup(data);
+			}
+			else if(!strcmp(tag, "SqlPort"))
+			{
+				SqlPort = atoi(data);
+				if (SqlPort < 1 || SqlPort > 65535)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_PORT_ERROR));
+					return -1;
+				}
+			}
+			else if(!strcmp(tag, "SqlRetries"))
+			{
+				SqlRetries = atoi(data);
+				if (SqlRetries < 0)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_ERROR_POSTIVE_VALUE));
+					return -1;
+				}
+			}
+			else if(!strcmp(tag, "SqlRetryGap"))
+			{
+				SqlRetryGap = atoi(data);
+				if (SqlRetryGap < 0)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_ERROR_POSTIVE_VALUE));
+					return -1;
+				}
+			}
+			else if(!strcmp(tag, "SQLRetryOnServerLost"))
+			{
+				if (optag)
+				{
+					SQLRetryOnServerLost = 1;
+				}
+				else
+				{
+					SQLRetryOnServerLost = XmlConfigSetFeature(data);
+				}
+			}
+			else if(!strcmp(tag, "DisableMySQLOPT"))
+			{
+				if (optag)
+				{
+					DisableMySQLOPT = 1;
+				}
+				else
+				{
+					DisableMySQLOPT = XmlConfigSetFeature(data);
+				}
+			}
+			else if(!strcmp(tag, "KeepUserTable"))
+			{
+				if (optag)
+				{
+					KeepUserTable = 1;
+				}
+				else
+				{
+					KeepUserTable = XmlConfigSetFeature(data);
+				}
+			}
+			else if(!strcmp(tag, "KeepServerTable"))
+			{
+				if (optag)
+				{
+					KeepServerTable = 1;
+				}
+				else
+				{
+					KeepServerTable = XmlConfigSetFeature(data);
+				}
+			}
+			else
+			{
+				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+			}
+			free(tag);
+			free(data);
+		}
+	}
+	if (!SqlHost)
+	{
+		denora->do_sql = 0;
+	}
+	if (SqlHost && !SqlUser)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_SQL_USER_ERROR));
+		return -1;
+	}
+	if (SqlHost && !SqlName)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_SQL_NAME_ERROR));
+		return -1;
+	}
+	if (DisableMySQLOPT)
+	{
+		alog(LOG_NORMAL,
+		     "=============================================================");
+		alog(LOG_NORMAL,
+		     "=== MySQL Optimization Disabled                           ===");
+		alog(LOG_NORMAL,
+		     "You have choosen to run Denora without MySQL optimization");
+		alog(LOG_NORMAL,
+		     "Should only run it like this if you are having problems with");
+		alog(LOG_NORMAL,
+		     "MySQL and zlib being out of sync with each other");
+		alog(LOG_NORMAL,
+		     "=============================================================");
+	}
+
+	return 1;
+}
+
+/*************************************************************************/
+
+int DenoraParseSQLTableBlock(int count, char **lines)
+{
+	int i;
+	char *tag;
+	char *data;
+	int optag;
+
+	alog(LOG_DEBUG,"Lines has %d", GetArraySize(lines));
+
+	for (i = 0; i < count; i++)
+	{
+		tag = GetOptionTagName(lines[i]);
+		data = GetOptionTagData(lines[i]);
+		optag = IsOptionTag(lines[i]);
+
+		if (tag)
+		{
+			if (!strcmp(tag, "UserTable"))
+			{
+				UserTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "ChanBansTable"))
+			{
+				ChanBansTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "ChanExceptTable"))
+			{
+				ChanExceptTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "IsOnTable"))
+			{
+				IsOnTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "ServerTable"))
+			{
+				ServerTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "GlineTable"))
+			{
+				GlineTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "ChanTable"))
+			{
+				ChanTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "MaxValueTable"))
+			{
+				MaxValueTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "ChanInviteTable"))
+			{
+				ChanInviteTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "TLDTable"))
+			{
+				TLDTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "CTCPTable"))
+			{
+				CTCPTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "SglineTable"))
+			{
+				SglineTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "SqlineTable"))
+			{
+				SqlineTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "AliasesTable"))
+			{
+				AliasesTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "CStatsTable"))
+			{
+				CStatsTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "UStatsTable"))
+			{
+				UStatsTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "StatsTable"))
+			{
+				StatsTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "ChanStatsTable"))
+			{
+				ChanStatsTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "ServerStatsTable"))
+			{
+				ServerStatsTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "SpamTable"))
+			{
+				SpamTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "CurrentTable"))
+			{
+				CurrentTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "ChanQuietTable"))
+			{
+				ChanQuietTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "AdminTable"))
+			{
+				AdminTable = sstrdup(data);
+			}
+			else
+			{
+				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+			}
+			free(tag);
+			free(data);
+		}
+	}
+
+	if (!UserTable)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_TABLE_USER_ERROR));
+		return -1;
+	}
+	if (!ChanBansTable)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_TABLE_CHANBANS_ERROR));
+		return -1;
+	}
+	if (!ChanExceptTable)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_TABLE_CHANEXCEPT_ERROR));
+		return -1;
+	}
+	if (!IsOnTable)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_TABLE_ISON_ERROR));
+		return -1;
+	}
+	if (!ServerTable)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_TABLE_SERVER_ERROR));
+		return -1;
+	}
+	if (!GlineTable)
+	{
+		alog(LOG_ERROR, langstring(CONFIG_TABLE_GLINE_ERROR));
+		return -1;
+	}
+	if (!ChanTable)
+	{
+		alog(LOG_ERROR, "Lacking chan definition in tables block");
+		return -1;
+	}
+	if (!MaxValueTable)
+	{
+		alog(LOG_ERROR, "Lacking maxvalue definition in tables block");
+		return -1;
+	}
+	if (!ChanInviteTable)
+	{
+		ChanInviteTable = sstrdup("chaninvites");
+		return -1;
+	}
+	if (!TLDTable)
+	{
+		alog(LOG_ERROR, "Lacking tld definition in tables block");
+		return -1;
+	}
+	if (!CTCPTable)
+	{
+		alog(LOG_ERROR, "Lacking ctcp definition in tables block");
+		return -1;
+	}
+	if (!ChanStatsTable)
+	{
+		alog(LOG_ERROR, "Lacking chanstats definition in tables block");
+		return -1;
+	}
+	if (!ServerStatsTable)
+	{
+		alog(LOG_ERROR, "Lacking servstats definition in tables block");
+		return -1;
+	}
+	if (!SglineTable)
+	{
+		SglineTable = sstrdup("sgline");
+	}
+	if (!SqlineTable)
+	{
+		SqlineTable = sstrdup("sqline");
+	}
+	if (!AliasesTable)
+	{
+		AliasesTable = sstrdup("aliases");
+	}
+	if (!CStatsTable)
+	{
+		CStatsTable = sstrdup("cstats");
+	}
+	if (!UStatsTable)
+	{
+		UStatsTable = sstrdup("ustats");
+	}
+	if (!StatsTable)
+	{
+		StatsTable = sstrdup("stats");
+	}
+	if (!SpamTable)
+	{
+		SpamTable = sstrdup("spamfilters");
+	}
+	if (!CurrentTable)
+	{
+		CurrentTable = sstrdup("current");
+	}
+	if (!ChanQuietTable)
+	{
+		ChanQuietTable = sstrdup("chanquiet");
+	}
+	if (!AdminTable)
+	{
+		AdminTable = sstrdup("admin");
+	}
+
+
+	return 1;
+}
+
+/*************************************************************************/
+
 int DenoraParseNetInfoBlock(int count, char **lines)
 {
 	int i;
@@ -631,6 +1464,82 @@ int DenoraParseNetInfoBlock(int count, char **lines)
 	return 1;
 }
 
+/*************************************************************************/
+
+
+int DenoraParseModuleBlock(int count, char **lines)
+{
+	int i;
+	char *tag;
+	char *data;
+	Conf_Modules *x = new_modules;
+	int c = 0, ac = 0, oc = 0;
+
+	/* we dont free here because we do it if we fail */
+
+	if (!x)
+	{
+		x = (Conf_Modules *) malloc(sizeof(Conf_Modules));
+		memset((char *) x, '\0', sizeof(Conf_Modules));
+		new_modules = x;
+	}
+	else
+	{
+		alog(LOG_ERROR, "Multiple module blocks in config file");
+		return -1;
+	}
+	for (i = 0; i < count; i++)
+	{
+		tag = GetOptionTagName(lines[i]);
+		data = GetOptionTagData(lines[i]);
+
+		if (tag)
+		{
+			if (!strcmp(tag, "autoload"))
+			{
+				if ((ac + 1) > 128)
+				{
+					alog(LOG_ERROR, "Excessive autoloading modules (max 128)");
+					return -1;
+				}
+				x->autoload[ac] = sstrdup(data);
+				ac++;
+			}
+			else if(!strcmp(tag, "delayed"))
+			{
+				if ((oc + 1) > 128)
+				{
+					alog(LOG_ERROR, langstring(CONFIG_DELAYMOD_T0MANY));
+					return -1;
+				}
+				x->delayed[oc] = sstrdup(data);
+				oc++;
+			}
+			else
+			{
+				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+			}
+			free(tag);
+			free(data);
+		}
+	}
+
+	ModulesNumber = ac;
+	ModulesDelayedNumber = oc;
+	if (modules)
+	{
+		for (i = 0; modules->autoload[i]; i++)
+			free(modules->autoload[i]);
+		for (i = 0; modules->delayed[i]; i++)
+			free(modules->delayed[i]);
+		free(modules);
+	}
+	modules = new_modules;
+	new_modules = NULL;
+	return 1;
+}
+
+
 
 /*************************************************************************/
 
@@ -675,6 +1584,75 @@ int DenoraParseProto_IRCdBlock(int count, char **lines)
 			}
 			free(tag);
 			free(data);
+		}
+	}
+	return 1;
+}
+
+/*************************************************************************/
+
+int DenoraParseXMLRPCBlock(int count, char **lines)
+{
+	int i;
+	char *tag;
+	char *data;
+	int optag;
+
+	for (i = 0; i < count; i++)
+	{
+		tag = GetOptionTagName(lines[i]);
+		data = GetOptionTagData(lines[i]);
+		optag = IsOptionTag(lines[i]);
+
+		if (tag)
+		{
+			if (!strcmp(tag, "XMLRPC_Host"))
+			{
+				XMLRPC_Host = sstrdup(data);
+			}
+			else if(!strcmp(tag, "XMLRPC_Port"))
+			{
+				XMLRPC_Port = atoi(data);
+			}
+			else if(!strcmp(tag, "ExtSockIPs"))
+			{
+				SockIPNumber++;
+				ExtSockIPs =
+				    realloc(ExtSockIPs, sizeof(char *) * SockIPNumber);
+				ExtSockIPs[SockIPNumber - 1] = sstrdup(data);
+			}
+			else if(!strcmp(tag, "XMLRPC_Enable"))
+			{
+				if (optag)
+				{
+					XMLRPC_Enable = 1;
+				}
+				else
+				{
+					XMLRPC_Enable = XmlConfigSetFeature(data);
+				}
+			}
+			else
+			{
+				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+			}
+			free(tag);
+			free(data);
+		}
+	}
+	if (XMLRPC_Enable)
+	{
+		if (!XMLRPC_Host)
+		{
+			if (LocalHost)
+			{
+				XMLRPC_Host = sstrdup(LocalHost);
+			}
+			else
+			{
+				alog(LOG_ERROR, "XMLRPC enabled by no host defined");
+				return -1;
+			}
 		}
 	}
 	return 1;

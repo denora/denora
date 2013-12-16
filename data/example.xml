@@ -378,22 +378,22 @@
 #                loop, which will probably slow down Stats too much to be
 #                useful on most networks.
 
-timeout {
+<timeout>
     // required tokens
-    read        5s;
-    warning     4h;
-    update      2m;
-    htmlupdate  2m;
-    pingfreq    2m;
-    uptimefreq  1d;
-    sqlfreq     5m;
-    clearinactive 30d;
-    clearchaninactive 30d;
-    usercache   2d;
-    userfreq    10s;
-    servercache 7d;
-    serverfreq  5s;
-};
+    <ReadTimeout>5s</ReadTimeout>
+    <WarningTimeout>4h<WarningTimeout>
+    <UpdateTimeout>2m<UpdateTimeout>
+    <HTMLTimeout>2m<HTMLTimeout>
+    <PingFrequency>2m<PingFrequency>
+    <UptimeTimeout>1d<UptimeTimeout>
+    <SQLPingFreq>5m<SQLPingFreq>
+    <ClearInActive>30d</ClearInActive>
+    <ClearChanInActive>30d</ClearChanInActive>
+    <UserCacheTime>2d</UserCacheTime>
+    <UserCleanFreq>10s</UserCleanFreq>
+    <ServerCacheTime>7d</ServerCacheTime>
+    <ServerCleanFreq>5s</ServerCleanFreq>
+</timeout>
 
 ###########################################################################
 # Options [OPTIONAL]
@@ -430,21 +430,21 @@ timeout {
 #  trigger     - character to use for triggering chanstats
 #  jupemaster  - name of the server who issues JUPE so leafs can be ignored
 
-options {
+<options>
     // optional tokens
-    keeplogs     7;
-    #logchan      "#denora";
-    #dumpcore;
-    #hidestatso;
-    #tokens;
-    #ts6;
-    #chanstatsdef "off";
-    #smiley " :) ;) :-) ;-) ^_^ :-D :D :-P :P =) ;D :p ";
-    #hideuline;
-    #nologs;
-    #trigger "!";
-    #jupemaster "services.your.net";
-};
+    <KeepLogs>7</KeepLogs>
+    #<LogChannel>#denora</LogChannel>
+    #<DumpCore />
+    #<HideStatsO />
+    #<UseTokens />
+    #<UseTS6>
+    #<CSDefFlag>off</CSDefFlag>
+    #<Smiley>:) ;) :-) ;-) ^_^ :-D :D :-P :P =) ;D :p </Smiley>
+    #<HideUline />
+    #<NoLogs />
+    #<ChanStatsTrigger>!</ChanStatsTrigger>
+    #<JupeMaster>services.your.net</JupeMaster>
+</options>
 
 ###########################################################################
 # Admin [RECOMMENDED]
@@ -471,21 +471,22 @@ options {
 #                  Russian : 7
 #                If not set, the default language will be used.
 
-admin {
+<admin>
     // required tokens
-    name        "DrStein";
-    passwd      "superpass";
-    hostname    "*@*";
+    <name>DrStein</name>
+    <passwd>superpass</passwd>
+    <hostname>*@*</hostname>
 
     // optional tokens
-    #language    1;
-};
+    #<language>1</language>;
+</admin>
 
-admin {
-    name        "Hal9000";
-    passwd      "lamepass";
-    hostname    "Hal9000@*";
-};
+<admin>
+    <name>Hal9000</name>
+    <passwd encode=crypt>$1$hyafG.FI$yHAWrYMQWMcecvlp.MZV41</passwd>
+    <hostname>Hal9000@*</hostname>
+</admin>
+
 
 ###########################################################################
 # SQL [OPTIONAL]
@@ -497,9 +498,10 @@ admin {
 # Please read docs/MYSQL file for more info and details.
 #
 # Required tokens:
-#  type        - SQL server type.
+#  module     - SQL server type.
 #                Available options:
 #                  mysql
+#				   postgre
 #                NOTE: Denora supports MySQL. Future versions may support
 #                other SQL technologies.
 #  host        - SQL server hostname.
@@ -523,24 +525,24 @@ admin {
 #                Use this only in combination with the "servercache"
 #                setting! Only enable this if you really need it.
 
-sql {
+<sql>
     // required tokens
-    type        mysql;
-    host        localhost;
-    user        anonymous;
-    passwd      password;
-    name        denora;
+    <Module>mysql</Module>
+    <SqlHost>localhost</SqlHost>
+    <SqlUser>anonymous</SqlUser>
+    <SqlPass>password</SqlPass>
+    <SqlName>denora</SqlName>
 
     // optional tokens
-    #sock        /tmp/mysql.sock;
-    #port        3306;
-    #retryonlost 0;
-    #retries     6;
-    #retrygap    10;
-    #disableopt;
-    #keepusers;
-    #keepservers;
-};
+    #<SqlSock>/tmp/mysql.sock</SqlSock>
+    #<SqlPort>3306</SqlPort>
+    #<SQLRetryOnServerLost />;
+    #<SqlRetries>6</SqlRetries>
+    #<SqlRetryGap>10</SqlRetryGap>
+    #<DisableMySQLOPT />
+    #<KeepUserTable />
+    #<KeepServerTable />;
+</sql>
 
 ###########################################################################
 # Tables [REQUIRED]
@@ -548,32 +550,32 @@ sql {
 #
 # Don't change the default values unless really needed!
 
-tables {
+<sqltables>
     // required tokens
-    users       user;          # Name of the Users table
-    chanbans    chanbans;      # Name of the Channel Bans table
-    chanexcept  chanexcept;    # Name of the Channel Exceptions table
-    ison        ison;          # Name of the ISON table
-    server      server;        # Name of the Servers table
-    gline       glines;        # Name of the Glines table
-    chan        chan;          # Name of the Channel table
-    maxvalue    maxvalues;     # Name of the Maxvalues table
-    chaninvite  chaninvites;   # Name of the Channel Invites table
-    tld         tld;           # Name of the TLD table
-    ctcp        ctcp;          # Name of the CTCP table
-    sqline      sqline;        # Name of the SQLine table
-    sgline      sgline;        # Name of the SGLine table
-    csaliases   aliases;       # Name of the Chan Stats Aliases table
-    cscstats    cstats;        # Name of the Chan Stats Channel table
-    csustats    ustats;        # Name of the Chan Stats User table
-    stats       stats;         # Name of the Hourly stats table
-    spamfilter  spamfilters;   # Name of the Spam Filter Table
-    current     current;       # Name of the table which holds the current info
-    chanstats   channelstats;  # Name of the Channel Stats by Hour
-    servstats   serverstats;   # Name of the Server Stats by Hour
-    chanquiet   chanquiet;     # Name of the Channel Quiet table
-    admins      admin;         # Name of the Admins table
-};
+    <UserTable>user</UserTable>          		  # Name of the Users table
+    <ChanBansTable>chanbans</ChanBansTable>       # Name of the Channel Bans table
+    <ChanExceptTable>chanexcept</ChanExceptTable> # Name of the Channel Exceptions table
+    <IsOnTable>ison</IsOnTable>			          # Name of the ISON table
+    <ServerTable>server</ServerTable>	          # Name of the Servers table
+    <GlineTable>glines</GlineTable>               # Name of the Glines table
+    <ChanTable>chan<ChanTable>                    # Name of the Channel table
+    <MaxValueTable>maxvalues</MaxValueTable>;     # Name of the Maxvalues table
+    <ChanInviteTable>chaninvites</ChanInviteTable> # Name of the Channel Invites table
+    <TLDTable>tld</TLDTable>                       # Name of the TLD table
+    <CTCPTable>ctcp</CTCPTable>                    # Name of the CTCP table
+    <SqlineTable>sqline</SqlineTable>        # Name of the SQLine table
+    <SglineTable>sgline</SglineTable>        # Name of the SGLine table
+    <AliasesTable>aliases</AliasesTable>       # Name of the Chan Stats Aliases table
+    <CStatsTable>cstats</CStatsTable>        # Name of the Chan Stats Channel table
+    <UStatsTable>ustats</UStatsTable>       # Name of the Chan Stats User table
+    <StatsTable>stats</StatsTable>         # Name of the Hourly stats table
+    <SpamTable>spamfilters</SpamTable>   # Name of the Spam Filter Table
+    <CurrentTable>current</CurrentTable>       # Name of the table which holds the current info
+    <ChanStatsTable>channelstats</ChanStatsTable>  # Name of the Channel Stats by Hour
+    <ServerStatsTable>serverstats</ServerStatsTable>   # Name of the Server Stats by Hour
+    <ChanQuietTable>chanquiet</ChanQuietTable>     # Name of the Channel Quiet table
+    <AdminTable>admin</AdminTable>         # Name of the Admins table
+</sqltables>
 
 ###########################################################################
 # Modules [OPTIONAL]
@@ -589,12 +591,12 @@ tables {
 #                There can be up to 128 delayed tokens.
 
 
-modules {
+<modules>
     // optional tokens
-    #autoload   ss_uptime;
-    #autoload   next_module;
-    #delayed    irc_delay_example;
-    #delayed    mysql_backup;
+    #<autoload>ss_uptime</autoload>
+    #<autoload>next_module</autoload>
+    #<delayed>irc_delay_example</delayed>
+    #<delayed>mysql_backup</delayed>
 
     # Both Modules mysql_optimize and mysql_optimize_event will call
     # OPTIMIZE TABLE each midnight.
@@ -605,9 +607,9 @@ modules {
     #                      even if denora is not running.
     #                      For this module you need the EVENT privilegue
     # YOU NEED TO ACTIVATE ONLY ONE OF THOSE MODULES.
-    #delayed    mysql_optimize;
-    #delayed    mysql_optimize_event;
-};
+    #<delayed>mysql_optimize</delayed>
+    #<delayed>mysql_optimize_event</delayed>
+</modules>
 
 ###########################################################################
 # XML RPC [OPTIONAL]
@@ -625,27 +627,11 @@ modules {
 #  xmlrpc_accept - Accept only data from these hosts.
 #                  There can be up to 128 client host addresses.
 
-xmlrpc {
-    #xmlrpc_enable;
-    #xmlrpc_host 127.0.0.1;
-    #xmlrpc_port 8080;
-    #xmlrpc_accept 127.0.0.1;
-    #xmlrpc_accept 192.168.0.1;
-};
+<xmlrpc>
+    #<XMLRPC_Enable />
+    #<XMLRPC_Host>127.0.0.1</XMLRPC_Host>
+    #<XMLRPC_Port>8080</XMLRPC_Port>
+    #<ExtSockIPs>127.0.0.1</ExtSockIPs>
+    #<ExtSockIPs>192.168.0.1</ExtSockIPs>
+</xmlrpc>
 
-###########################################################################
-# THREADING [OPTIONAL/EXPERIMENTAL]
-#   If you compiled denora using threads, then you also need to enable them
-#   here. Threads will be used to execute non essential db queries at a
-#   later state to prevent denora from timing out on the network.
-#
-# WARNING
-#   This feature is experimental and as of current, it does not work 100%
-#
-# Required tokens:
-#  usethread - You must set this for threading to work 
-#
-
-threading {
-	#usethread;
-};

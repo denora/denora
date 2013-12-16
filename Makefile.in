@@ -24,7 +24,7 @@ PROFILE=-pg
 LDPROFILE=
 SHELL=/bin/sh
 SUBDIRS=src
-LIBDIRS=lib
+LIBDIRS=lib/execinfo
 BINDEST=@BINDEST@
 DATDEST=@DATDEST@
 INSTALL=@INSTALL@
@@ -41,7 +41,7 @@ RDYNAMNIC=@RDYNAMNIC@
 MODULEFLAGS=@MODULEFLAGS@
 
 
-all: language headers build core encmod protocols modules sqlmod end_msg
+all: libs language headers build core encmod protocols modules sqlmod end_msg
 verbose: language_v headers_v build_v core_v encmod_v protocols_v modules_v
 strict: strict_language headers strict_build strict_core strict_encmod strict_protocols strict_modules
 ansi: ansi_language headers ansi_build ansi_core ansi_encmod ansi_protocols ansi_modules
@@ -60,6 +60,14 @@ build:
             echo "*** Building $$i";\
             ( cd $$i; ${MAKE} -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; ) \
         done
+
+libs_build:
+	@for i in $(LIBDIRS); do \
+            echo "*** Building $$i";\
+            ( cd $$i; ${MAKE} -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; ) \
+        done
+
+libs: libs_build
 
 end_msg:
 	@echo "Denora has completed compiling the source code, to install type";

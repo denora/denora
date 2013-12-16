@@ -826,8 +826,18 @@ static int parse_dir_options(int ac, char **av)
 					fprintf(stderr, "-log requires a parameter\n");
 					return -1;
 				}
-				denora->logname = av[i];
+				denora->logname = sstrdup(av[i]);
 			}
+			else if (strcmp(s, "config") == 0)
+			{
+				if (++i >= ac)
+				{
+					fprintf(stderr, "-config requires a parameter\n");
+					return -1;
+				}
+				denora->config = sstrdup(av[i]);
+			}
+
 		}
 	}
 	return 0;
@@ -1051,6 +1061,8 @@ static int parse_options(int ac, char **av)
 				fprintf(stdout, "-log           -log logfilename\n");
 				fprintf(stdout, "-dir           -dir statsdirectory\n");
 				fprintf(stdout, "-mkpass        -mkpass=password\n");
+				fprintf(stdout, "-config        -config=filename\n");
+
 				fprintf(stdout, "\n");
 				fprintf(stdout,
 				        "Further support is available from http://www.denorastats.org/\n");

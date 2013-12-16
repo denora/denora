@@ -1230,6 +1230,7 @@ struct dadmin_
 
 	char *hosts;
 	char *passwd;
+	int encrypttype;  /* 1 plain, 2, crypt 3 md5 */
 	char *name;
 	uint16 language;
 	int   level;

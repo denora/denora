@@ -110,7 +110,7 @@ int free_admin(Dadmin * a)
 
 /*************************************************************************/
 
-int add_sqladmin(char *name, char *passwd, int level, char *host, int lang, int configadmin)
+int add_sqladmin(char *name, char *passwd, int level, char *host, int lang, int configadmin, int encrypt)
 {
 	int res;
 	int crypted = is_crypted(passwd);

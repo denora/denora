@@ -863,19 +863,11 @@ AC_SUBST(STRICT)
 AC_SUBST(CCDV)
 AC_SUBST(LDFLAGS)
 
-AC_MSG_RESULT(Configuring Execinfo library)
-AC_CONFIG_FILES(lib/execinfo/Makefile)
-AC_MSG_RESULT(Compiling Execinfo library)
-$ac_cv_prog_MAKER >> /dev/null 2>&1 || exit 1
-CFLAGS="$CFLAGS -I$cur_dir/libs/execinfo/include"
-DENORALIBS="$DENORALIBS -L$cur_dir/lib/execinfo/lexecinfo"
-
-cd $cur_dir;
-
 AC_CONFIG_FILES(		\
 	Makefile		\
 	src/bin/denorarc	\
 	src/bin/geoipupd	\
+	lib/execinfo/Makefile \
 )
 
 AC_OUTPUT

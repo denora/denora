@@ -1031,7 +1031,7 @@ int confadd_admin(cVar * vars[], int lnum)
 		confparse_error(langstring(CONFIG_ADMIN_PASS_ERROR), lnum);
 		return -1;
 	}
-	add_sqladmin(name, MakePassword(passwd), 0, hosts, language, 1);
+	add_sqladmin(name, MakePassword(passwd), 0, hosts, language, 1, 1);
 
 	return lnum;
 }

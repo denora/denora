@@ -67,17 +67,17 @@ void ircu_chan_mode_ua_set(Channel * chan, char *value)
         chan->akey = sstrdup(value);
 	if (denora->do_sql)
 	{
-		rdb_query(QUERY_LOW, "UPDATE %s SET mode_ua_data='%s' WHERE chanid=%d", ChanTable, value, chan->sqlid);
+		sql_query("UPDATE %s SET mode_ua_data='%s' WHERE chanid=%d", ChanTable, value, chan->sqlid);
 	}
         u = chan->users;
 	if (u)
 	{
         	while ((u = u->next))
         	{
-			rdb_query(QUERY_LOW, "UPDATE %s SET oplevel=999 WHERE chanid=%d AND nickid=%d AND mode_lo='Y'", IsOnTable, chan->sqlid, u->user->sqlid);
-
-		}
-        }
+				sql_query("UPDATE %s SET oplevel=999 WHERE chanid=%d AND nickid=%d AND mode_lo='Y'", IsOnTable, chan->sqlid, u->user->sqlid);
+	
+			}
+     }
 }
 
 char *ircu_chan_mode_uu_get(Channel * chan)
@@ -94,7 +94,7 @@ void ircu_chan_mode_uu_set(Channel * chan, char *value)
         chan->ukey = sstrdup(value);
 	if (denora->do_sql)
 	{
-		rdb_query(QUERY_LOW, "UPDATE %s SET mode_uu_data='%s' WHERE chanid=%d", ChanTable, value, chan->sqlid);
+		sql_query("UPDATE %s SET mode_uu_data='%s' WHERE chanid=%d", ChanTable, value, chan->sqlid);
 	}
 }
 
@@ -742,7 +742,7 @@ int denora_event_mode(char *source, int ac, char **av)
 			if (denora->do_sql)
 			{
 				c = findchan(av[0]);
-				rdb_query(QUERY_LOW, "UPDATE %s SET oplevel=0 WHERE chanid=%d AND nickid=%d", IsOnTable, c->sqlid, u->sqlid);
+				sql_query("UPDATE %s SET oplevel=0 WHERE chanid=%d AND nickid=%d", IsOnTable, c->sqlid, u->sqlid);
 			}
 		}
 		else if (!strcmp(av[1], "-A"))
@@ -750,7 +750,7 @@ int denora_event_mode(char *source, int ac, char **av)
 			if (denora->do_sql)
 			{
 				c = findchan(av[0]);
-				rdb_query(QUERY_LOW, "UPDATE %s SET oplevel=NULL WHERE chanid=%d", IsOnTable, c->sqlid);
+				sql_query("UPDATE %s SET oplevel=NULL WHERE chanid=%d", IsOnTable, c->sqlid);
 			}
 
 		}
@@ -759,7 +759,7 @@ int denora_event_mode(char *source, int ac, char **av)
 			if (denora->do_sql)
 			{
 				c = findchan(av[0]);
-				rdb_query(QUERY_LOW, "UPDATE %s SET mode_uu_data='' WHERE chanid=%d", ChanTable, c->sqlid);
+				sql_query("UPDATE %s SET mode_uu_data='' WHERE chanid=%d", ChanTable, c->sqlid);
 			}
 
 		}

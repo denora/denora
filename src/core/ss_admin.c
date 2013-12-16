@@ -131,7 +131,7 @@ static int do_admin(User * u, int ac, char **av)
 			{
 					language = StatsLanguage;
 			}
-			add_sqladmin(av[1], MakePassword(av[2]), 0, (ac <= 3 ? "*@*" : av[3]), language, 0);
+			add_sqladmin(av[1], av[2], 0, (ac <= 3 ? "*@*" : av[3]), language, 0, 1);
 
 			u2 = user_find(av[1]);
 			if (u2)

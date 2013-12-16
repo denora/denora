@@ -220,7 +220,7 @@ int denora_event_push(char *source, int ac, char **av)
 
 	if (!strcmp(num, "375"))
 	{
-		rdb_query(QUERY_LOW, "UPDATE %s SET motd=\'\' WHERE server=\'%s\'",
+		rdb_query("UPDATE %s SET motd=\'\' WHERE server=\'%s\'",
 		          ServerTable, source);
 	}
 	else if (!strcmp(num, "372"))

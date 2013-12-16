@@ -2,6 +2,7 @@ Denora v2.0 - git-alpha
 -------------
 
 Additions
+12/16/2013 : New command line switch -config=filename this allows you to setup and test configs easier
 12/15/2013 : Backtrace lib of execinfo from BSD is built as part of the libs, this will give everyone backtrace()
 12/14/2013 : SQL Backtrace is no longer set in the ./Config 
 12/14/2013 : Autoconf tools for detecting Perl and Python are included just not used yet

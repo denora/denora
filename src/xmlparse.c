@@ -56,6 +56,7 @@ char *GetOptionTagName(char *line)
 {
 	char *linedata;
 	int optag;
+	int numgt = myNumToken(linedata, '>');
 
 	if (line)
 	{
@@ -66,6 +67,13 @@ char *GetOptionTagName(char *line)
 			linedata = myStrGetToken(linedata, '>', 0);
 			linedata = myStrGetToken(linedata, '/', 0);
 			strnrepl(linedata, BUFSIZE, " ", "");
+		}
+		else if (myNumToken(linedata, '=') && numgt == 2)
+		{
+			linedata = myStrGetToken(line, '<', 1);
+			linedata = myStrGetToken(linedata, '>', 0);
+			linedata = myStrGetToken(linedata, '=', 0);
+			linedata = myStrGetToken(linedata, ' ', 0);
 		}
 		else
 		{
@@ -92,6 +100,47 @@ int IsOptionTag(char *line)
 	return 0;
 }
 
+char *GetAtrribValue(char *line)
+{
+	int numgt;
+	char *linedata = sstrdup(line);
+	char *attrib;
+	numgt = myNumToken(linedata, '>');
+
+	if (myNumToken(linedata, '=') && numgt == 2)
+	{
+		linedata = myStrGetToken(line, '<', 1);
+		linedata = myStrGetToken(linedata, '>', 0);
+		linedata = myStrGetToken(linedata, ' ', 1);
+		attrib = myStrGetToken(linedata, '=', 1);
+		free(linedata);
+		return attrib;
+	}
+	free(linedata);
+	return NULL;
+}
+
+char *GetAtrribTag(char *line)
+{
+	int numgt;
+	char *linedata = sstrdup(line);
+	char *attrib;
+	numgt = myNumToken(linedata, '>');
+
+	if (myNumToken(linedata, '=') && numgt == 2)
+	{
+		linedata = myStrGetToken(line, '<', 1);
+		linedata = myStrGetToken(linedata, '>', 0);
+		linedata = myStrGetToken(linedata, ' ', 1);
+		attrib = myStrGetToken(linedata, '=', 0);
+		free(linedata);
+		return attrib;
+	}
+	free(linedata);
+	return NULL;
+}
+
+
 void DenoraXMLIRCdConfig(char *file)
 {
 	char buf[512];
@@ -116,14 +165,23 @@ void DenoraXMLIRCdConfig(char *file)
 }
 
 
-int DenoraConfigInit(void)
+void DenoraConfigInit(char *conffilename)
 {
 	DenoraXMLConfigBlockCreate("connect", DenoraParseConnectBlock, 7);
 	DenoraXMLConfigBlockCreate("identity", DenoraParseIdentityBlock, 4);
 	DenoraXMLConfigBlockCreate("statserv", DenoraParseStatServBlock, 7);
 	DenoraXMLConfigBlockCreate("filenames", DenoraParseFileNamesBlock, 7);
 	DenoraXMLConfigBlockCreate("backup", DenoraParseBackUpBlock, 3);
-	DenoraXMLConfigBlockCreate("netinfo", DenoraParseNetInfoBlock, 3);
+	DenoraXMLConfigBlockCreate("netinfo", DenoraParseNetInfoBlock, 12);
+	DenoraXMLConfigBlockCreate("timeout", DenoraParseTimeOutBlock, 12);
+	DenoraXMLConfigBlockCreate("options", DenoraParseOptionBlock, 12);
+	DenoraXMLConfigBlockCreate("admin", DenoraParseAdminBlock, 4);
+	DenoraXMLConfigBlockCreate("sql", DenoraParseSQLBlock, 13);
+	DenoraXMLConfigBlockCreate("sqltables", DenoraParseSQLTableBlock, 13);
+	DenoraXMLConfigBlockCreate("modules", DenoraParseModuleBlock, 13);
+	DenoraXMLConfigBlockCreate("xmlrcp", DenoraParseXMLRPCBlock, 13);
+
+	DenoraParseXMLConfig("conffilename");
 }
 
 void DenoraParseXMLConfig(char *filename)
