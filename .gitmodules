@@ -1,9 +1,0 @@
-[submodule "lib/sqlite3"]
-	path = lib/sqlite3
-	url = https://github.com/denora/sqlite3.git
-[submodule "lib/libevent"]
-	path = lib/libevent
-	url = https://github.com/libevent/libevent.git
-[submodule "lib/geoip-api-c"]
-	path = lib/geoip-api-c
-	url = https://github.com/maxmind/geoip-api-c
