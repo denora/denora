@@ -1091,7 +1091,7 @@ void sql_do_server_spam_remove(char *target, char *action, char *regex)
 	 * 3. Regex
 	 */
 	rdb_query(QUERY_LOW,
-	          "DELETE FROM %s WHERE target=\'%s\' and action=\'%s\' and regex=\'%s'",
+	          "DELETE FROM %s WHERE target=\'%s\' and action=\'%s\' and regex=\'%s\'",
 	          SpamTable, sqltarget, sqlaction, sqlregex);
 
 	SET_SEGV_LOCATION();
