@@ -54,7 +54,7 @@ DenoraVar denora[] =
 	{
 		STATS_DIR,                 /* Stats Dir */
 		LOG_FILENAME,              /* Log File Name */
-		STATS_CONF,                /* Config file Name */
+		NULL,                /* Config file Name */
 		VERSION_STRING,            /* Version string */
 		VERSION_STRING_DOTTED,     /* Version string dotted */
 		STATS_BUILD,               /* Version flags OS */
@@ -452,11 +452,9 @@ void save_databases()
 
 	alog(LOG_DEBUG, langstr(SAVING_FFF));
 	save_stats_db();
-	save_tld_db();
 	save_cs_db();
 	save_server_db();
 	save_chan_db();
-	save_exclude_db();
 	sql_ban_clean(NULL);
 	send_event(EVENT_DB_SAVING, 1, EVENT_STOP);
 }
@@ -510,10 +508,6 @@ int main(int ac, char **av)
 	}
 	signal_init();
 	init_bans();
-	if (ircd->spamfilter)
-	{
-		init_spamfilter();
-	}
 
 	/* We have a line left over from earlier, so process it first. */
 	process();
@@ -855,7 +849,7 @@ static int parse_options(int ac, char **av)
 	char *s, *t;
 	char *extra, *value;
 
-	
+	printf("Parse_options");
 
 	for (i = 1; i < ac; i++)
 	{
@@ -971,11 +965,6 @@ static int parse_options(int ac, char **av)
 			else if (strcmp(value, "log") == 0)
 			{
 				/* Handled by parse_dir_options(), too */
-				i++;            /* Skip parameter */
-			}
-			else if (strcmp(value, "sqlshell") == 0)
-			{
-				sqlite3_shell_main(0, NULL);
 				i++;            /* Skip parameter */
 			}
 			else if (strcmp(value, "debug") == 0)
@@ -1134,6 +1123,7 @@ int init(int ac, char **av)
 #else
 	char *errbuf;
 #endif
+	char *progname;
 
 	/* Set file creation mask and group ID. */
 #if defined(DEFUMASK) && HAVE_UMASK
@@ -1143,11 +1133,25 @@ int init(int ac, char **av)
 	{
 		return -1;
 	}
-
-	
-
 	/* Parse command line for -dir option. */
 	parse_dir_options(ac, av);
+
+
+    /* Find program name. */
+    if ((progname = strrchr(av[0], '/')) != NULL)
+        progname++;
+    else
+        progname = av[0];
+
+#ifdef _WIN32
+    if (strcmp(progname, "denoraxmlcheck.exe") == 0)
+#else
+    if (strcmp(progname, "denoraxmlcheck") == 0)
+#endif
+    {
+        denoraxmlcheck(ac, av);
+        return 0;
+    }
 
 	/* Chdir to Denora data directory. */
 	if (chdir(denora->dir) < 0)
@@ -1185,32 +1189,48 @@ int init(int ac, char **av)
 	lang_init();
 	alog(LOG_DEBUG, "debug: Loaded languages");
 
-	/* call it a hack, need to take a static and turn it global
-	   anything else will piss off the compiler.
-	 */
-	initconfsettigs();
+	/* Prepare the config struct for the parser */
+	DenoraConfigInit();
+
+	/* Must Set if not set by the command line */
+	if (!denora->config)
+	{
+		denora->config =  sstrdup(STATS_CONF);
+	}
 
 	/* Read configuration file; exit if there are problems. */
-	if (initconf(denora->config, 0, mainconf) == -1)
+	if (!DenoraParseXMLConfig((char *) denora->config))
 	{
-		printf("denora.conf not found, please rename example.conf to denora.conf\n");
-		printf("try \"mv example.conf denora.conf\"\n");
+		printf("%s not found, please rename example.xml to denora.xml\n", denora->config);
+		printf("try \"mv example.xml denora.xml\"\n");
 		printf("Denora not started\n");
 		exit(-1);
 	}
-
-	/* Let's merge all the config */
-	merge_confs();
 
 	/* Parse all remaining command-line options. */
 	if (!parse_options(ac, av))
 	{
 		exit(1);
 	}
+
+	/* Since you can rem out whole blocks and segfault
+	   denora we run a bad pointer check on variables */
+	post_config_check();
+
+	alog(LOG_NORMAL,"================================================================");
+	alog(LOG_NORMAL, "Denora v%s starting up", VERSION_STRING);
+	alog(LOG_NORMAL, "IRCD Protocol %s, Encryption Module %s", IRCDModule, ENCModule);
+	alog(LOG_NORMAL, "SQLite3 Version %s", SQLITE_VERSION);
+	if (SQLModule)
+	{
+		alog(LOG_NORMAL, "SQL Module %s", SQLModule);
+	}
+
 #ifndef _WIN32
 	/* Detach ourselves if requested. */
 	if (!denora->nofork)
 	{
+		alog(LOG_NORMAL, "Preparing to fork into the back ground");
 		if ((i = fork()) < 0)
 		{
 			perror("fork()");
@@ -1260,9 +1280,7 @@ int init(int ac, char **av)
 	}
 #endif
 
-	/* Since you can rem out whole blocks and segfault
-	   denora we run a bad pointer check on variables */
-	post_config_check();
+
 
 	/* setup user modes array now all at 0, during protocol init they
 	   will be setting these to 1 as needed.
@@ -1276,28 +1294,20 @@ int init(int ac, char **av)
 	{
 		return -1;
 	}
-
 	if (!denora->version_protocol)
 	{
 		denora->version_protocol = sstrdup("Bad No Protocol");
 		return -1;
 	}
-
-	if (ircd->extrawarning)
+	if (encode_module_init() != MOD_ERR_OK)
 	{
-		alog(LOG_NORMAL,
-		     "======================== WARNING =========================");
-		alog(LOG_NORMAL,
-		     "You have choosen to run a ircd protocl module that is very");
-		alog(LOG_NORMAL,
-		     "developemental, we do not have enough users out there to mark");
-		alog(LOG_NORMAL,
-		     "it as stable, if you are willing to test and allow us");
-		alog(LOG_NORMAL,
-		     "mark it as stable please email dev@denorastats.org");
-		alog(LOG_NORMAL,
-		     "======================== WARNING =========================");
+		return -1;
 	}
+	if (sql_module_init() != MOD_ERR_OK)
+	{
+		return -1;
+	}
+
 #ifdef HAVE_LIBZ
 	if (ircd->zip && UseZIP)
 	{
@@ -1323,14 +1333,11 @@ int init(int ac, char **av)
 	write_pidfile();
 
 	load_stats_db();
-	init_tld();
-	load_tld_db();
 	InitCStatsList();
 	load_cs_db();
 	load_server_db();
 	InitStatsChanList();
 	load_chan_db();
-	load_exclude_db();
 
 	/* Announce ourselves to the logfile. */
 	alog(LOG_NORMAL,

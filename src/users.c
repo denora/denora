@@ -1329,6 +1329,7 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 						   tld->overall);
 				}
 			}
+			fini_tld(tld);
 		}
 
 		user->svid = (svid == (uint32) ts ? svid : 1);

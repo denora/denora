@@ -30,14 +30,22 @@ AC_DEFUN([AUTOTOOLS_EMBED_PYTHON], [
                                 AC_MSG_RESULT(ok)
                                 CFLAGS="$CFLAGS $PY_CFLAGS"
                                 LIBS="$LIBS $PY_LIBS"
+								DIS_PYTHON=Yes
+								AC_SUBST(PY_CFLAGS)
+								AC_SUBST(PY_LIBS)
                         else
                                 python=no
                                 AC_MSG_RESULT([Can't find Python.h])
+								DIS_PYTHON=No
+                                PY_LIBS=""
+                                PY_CFLAGS=""
+								AC_SUBST(PY_CFLAGS)
+								AC_SUBST(PY_LIBS)
                         fi
                 else
                         echo "Python too old. Only 2.2 or above is supported."
                         python=no
+						DIS_PYTHON=No
                 fi
         fi
-fi
 ])

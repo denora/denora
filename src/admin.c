@@ -115,7 +115,7 @@ int add_sqladmin(char *name, char *passwd, int level, char *host, int lang, int 
 	int res;
 	int crypted = is_crypted(passwd);
 
-	res = DenoraExecQuerySQL(AdminDatabase, "INSERT INTO %s (uname, passwd, level, host, lang, config) VALUES ('%q', '%q', %d, %s, %d, %d)", 
+	res = DenoraSQLQuery(AdminDB, "INSERT INTO %s (uname, passwd, level, host, lang, config) VALUES ('%q', '%q', %d, %s, %d, %d)", 
 		  AdminTable, name, passwd, level, host, lang, configadmin); 
 
 	if (!denora->do_sql)
@@ -134,7 +134,7 @@ int del_sqladmin(char *name)
 {
 	int res;
 
-	res = DenoraExecQuerySQL(AdminDatabase, "DELETE FROM %s WHERE uname = '%q'", AdminTable, name);
+	res = DenoraSQLQuery(AdminDB, "DELETE FROM %s WHERE uname = '%q'", AdminTable, name);
 	
 	if (denora->do_sql)
 	{
@@ -185,7 +185,7 @@ int AdminSetPassword(Dadmin * a, char *newpass)
 	free(a->passwd);
 	a->passwd = sstrdup(MakePassword(newpass));
 	crypted = is_crypted(a->passwd);
-	DenoraExecQuerySQL(AdminDatabase, "UPDATE %s SET passwd=%s%q%s WHERE uname = '%q'", AdminTable, crypted ? "'" : "MD5('", a->passwd, crypted ? "'" : "')", a->name);
+	DenoraSQLQuery(AdminDB, "UPDATE %s SET passwd=%s%q%s WHERE uname = '%q'", AdminTable, crypted ? "'" : "MD5('", a->passwd, crypted ? "'" : "')", a->name);
 
 	if (denora->do_sql)
 	{

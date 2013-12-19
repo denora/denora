@@ -396,12 +396,8 @@ AC_LANG_RESTORE
 ])dnl ACX_PTHREAD
 
 AC_DEFUN([CHECK_SSL],
-[AC_MSG_CHECKING(if ssl is wanted)
-AC_ARG_WITH(ssl,
-[  --with-ssl enable ssl [will check /usr/local/ssl
-                            /usr/lib/ssl /usr/ssl /usr/pkg /usr/local /usr ]
-],
-[   AC_MSG_RESULT(yes)
+[    AC_MSG_CHECKING(for Openssl library)
+
     for dir in $withval /usr/local/ssl /usr/lib/ssl /usr/ssl /usr/pkg /usr/local /usr; do
         ssldir="$dir"
         if test -f "$dir/include/openssl/ssl.h"; then
@@ -419,16 +415,15 @@ AC_ARG_WITH(ssl,
     done
     if test x_$found_ssl != x_yes; then
         AC_MSG_WARN(Cannot find ssl libraries)
+		DIS_OPENSSL=No
     else
+		AC_MSG_RESULT(Yes)
         printf "OpenSSL found in $ssldir\n";
         DENORALIBS="$DENORALIBS -lssl -lcrypto ";
         LDFLAGS="$LDFLAGS -L$ssldir/lib";
         AC_DEFINE(HAVE_SSL, 1, [Has OpenSSL])
+		DIS_OPENSSL=Yes
     fi
     AC_SUBST(HAVE_SSL)
-],
-[
-    AC_MSG_RESULT(no)
-])
 ])
 

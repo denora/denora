@@ -14,217 +14,112 @@
 
 #include "denora.h"
 
-Exclude *exlists[1024];
-static Exclude *current;
-static int next_index;
+sqlite3 *ExcludeDatabase;
 
 /*************************************************************************/
 
-void insert_exclude(Exclude * e)
-{
-	int exindex = EXCLUDEHASH(e->name);
-
-	e->prev = NULL;
-	e->next = exlists[exindex];
-	if (e->next)
-		e->next->prev = e;
-	exlists[exindex] = e;
-}
-
-/*************************************************************************/
-
-Exclude *find_exclude(char *mask, char *server)
+Exclude *find_exclude(char *mask, int flag)
 {
 	Exclude *e;
-
-	
+	sqlite3_stmt *stmt;
+	char **sdata;
 
 	if (!mask)
 	{
 		return NULL;
 	}
 
-	for (e = exlists[EXCLUDEHASH(mask)]; e; e = e->next)
-	{
-		if (match_wild_nocase(e->name, mask))
+	ExcludeDatabase = DenoraOpenSQL(excludeDB);
+	stmt = DenoraPrepareQuery(ExcludeDatabase, "SELECT * FROM %s WHERE name='%q'", mask);
+	sdata = DenoraSQLFetchRow(stmt, FETCH_ARRAY_NUM);
+	if (sdata) {
+		if (match_wild_nocase(sdata[0], mask) && flag == atoi(sdata[1]))
 		{
-			return e;
-		}
-
-		if (NumExcludeServers && server)
-		{
-			if (isExcludedServer(server))
-			{
-				return e;
-			}
+			return make_exclude(sdata);
 		}
 	}
-	return NULL;
+	sqlite3_finalize(stmt);
+	DenoraCloseSQl(ExcludeDatabase);
+	return NULL;	
 }
 
 /*************************************************************************/
 
-DENORA_INLINE boolean is_excluded(User * u)
+DENORA_INLINE boolean is_excluded_user(User * u)
 {
 	Exclude *e;
-	e = find_exclude(u->nick, u->server->name);
-	return (e ? true : false);
-}
-
-/*************************************************************************/
-
-DENORA_INLINE boolean is_excludedserv(Server * server)
-{
-	if (server && NumExcludeServers && isExcludedServer(server->name))
+	e = find_exclude(u->nick, EXCLUDE_USER);
+	if (e)
 	{
+		del_exclude(e);
 		return true;
 	}
-
 	return false;
 }
 
 /*************************************************************************/
 
-DENORA_INLINE int isExcludedServer(char *name)
+DENORA_INLINE boolean is_excluded_server(Server * server)
 {
-	int j;
-
-	for (j = 0; j < NumExcludeServers; j++)
+	Exclude *e;
+	e = find_exclude(server->name, EXCLUDE_SERVER);
+	if (e)
 	{
-		if (match_wild_nocase(ExcludeServers[j], name))
-		{
-			return 1;
-		}
+		del_exclude(e);
+		return true;
 	}
-	return 0;
+	return false;
 }
 
 /*************************************************************************/
 
-/* Load/save data files. */
-
-void load_exclude_db(void)
-{
-	char *key, *value;
-	DenoraDBFile *dbptr = filedb_open(excludeDB, EXCLUDE_VERSION, &key, &value);
-	Exclude *e = NULL;
-	int retval = 0;
-
-        if (!dbptr)
-        {
-                return;                 /* Bang, an error occurred */
-        }
-        
-
-	while (1)
-	{
-		/* read a new entry and fill key and value with it -Certus */
-		retval = new_read_db_entry(&key, &value, dbptr->fptr);
-
-		if (retval == DB_READ_ERROR)
-		{
-			alog(LOG_NORMAL, "WARNING! DB_READ_ERROR in %s",
-			     dbptr->filename);
-			filedb_close(dbptr, &key, &value);
-			return;
-		}
-		else if (retval == DB_EOF_ERROR)
-		{
-			alog(LOG_EXTRADEBUG, "debug: %s read successfully",
-			     dbptr->filename);
-			filedb_close(dbptr, &key, &value);
-			return;
-		}
-		else if (retval == DB_READ_BLOCKEND)            /* DB_READ_BLOCKEND */
-		{
-			/* a exclude entry has completely been read. put any checks in here! */
-		}
-		else
-		{
-			/* DB_READ_SUCCESS */
-
-			if (!*value || !*key)
-				continue;
-
-			if (!stricmp(key, "name"))
-			{
-				e = make_exclude(value);
-			}
-			else if (!stricmp(key, "flag"))
-			{
-				e->flag = atoi(value);
-				if (!e->flag)
-				{
-					e->flag |= EXCLUDE_USER;
-				}
-			}
-		}                       /* else */
-	}                           /* while */
-}
-
-/*************************************************************************/
-
-Exclude *make_exclude(char *mask)
+Exclude *make_exclude(char **data)
 {
 	Exclude *e;
 	User *u;
 
 	e = calloc(sizeof(Exclude), 1);
-	e->name = sstrdup(mask);
-	e->flag = 1;
-	insert_exclude(e);
+	e->name = sstrdup(data[0]);
+	e->flag = atoi(data[1]);
 
-	u = user_find(mask);
-	if (u)
-	{
-		u->cstats = 0;
-	}
 	return e;
 }
 
-/*************************************************************************/
 
-void save_exclude_db(void)
+void Create_Exclude(char *key, int flag)
 {
-	DenoraDBFile *dbptr = filedb_create(excludeDB, EXCLUDE_VERSION);
-	Exclude *e;
-	int i;
 
-	for (i = 0; i < 1024; i++)
+	DenoraSQLQuery(excludeDB, "INSERT INTO %s (key, flag) VALUES ('%q', %d)", 
+		  ExcludeTable, key, flag); 
+
+	if (denora->do_sql)
 	{
-		for (e = exlists[i]; e; e = e->next)
-		{
-			new_write_db_entry("name", dbptr, "%s", e->name);
-			new_write_db_entry("flag", dbptr, "%d", e->flag);
-			new_write_db_endofblock(dbptr);
-		}
+		sql_query("INSERT INTO %s (key, flag) VALUES ('%q', %d)", 
+		  ExcludeTable, key, flag); 
 	}
 
-	filedb_close(dbptr, NULL, NULL);  /* close file */
 }
+
+void Delete_Exclude(char *key, int flag)
+{
+
+	DenoraSQLQuery(excludeDB, "DELETE FROM %s WHERE key = '%q' and flag = %d", ExcludeTable, key, flag);
+	
+	if (denora->do_sql)
+	{
+			sql_query("DELETE FROM %s WHERE key = '%q' and flag = %d",  ExcludeTable, key, flag);
+	}
+
+}
+
+
 
 /*************************************************************************/
 
 int del_exclude(Exclude * e)
 {
-	
-
-	
-
 	if (e)
 	{
-		if (e->prev)
-		{
-			e->prev->next = e->next;
-		}
-		else
-		{
-			exlists[EXCLUDEHASH(e->name)] = e->next;
-		}
-		if (e->next)
-		{
-			e->next->prev = e->prev;
-		}
 		if (e->name)
 		{
 			
@@ -236,43 +131,3 @@ int del_exclude(Exclude * e)
 	return 0;
 }
 
-/*************************************************************************/
-
-Exclude *first_exclude(void)
-{
-	next_index = 0;
-
-	
-
-	while (next_index < 1024 && current == NULL)
-	{
-		current = exlists[next_index++];
-	}
-	
-
-	alog(LOG_EXTRADEBUG, "debug: first_exclude() returning %s",
-	     current ? current->name : "NULL (end of list)");
-	return current;
-}
-
-/*************************************************************************/
-
-Exclude *next_exclude(void)
-{
-	
-
-	if (current)
-		current = current->next;
-	if (!current && next_index < 1024)
-	{
-		while (next_index < 1024 && current == NULL)
-		{
-			current = exlists[next_index++];
-		}
-	}
-	
-
-	alog(LOG_EXTRADEBUG, "debug: next_exclude() returning %s",
-	     current ? current->name : "NULL (end of list)");
-	return current;
-}

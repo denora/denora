@@ -123,7 +123,7 @@ void html_top10chan(FILE * ptr)
 			{
 				if (s->joincounter)
 				{
-					e = find_exclude(s->name, NULL);
+					e = find_exclude(s->name, EXCLUDE_SERVER);
 					if (!e)
 					{
 						tempc = char_encode(s->name);

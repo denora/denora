@@ -117,12 +117,14 @@ backtrace_symbols(void *const *buffer, int size)
     return rval;
 }
 
-void
-backtrace_symbols_fd(void *const *buffer, int size, int fd)
+#define USE_VAR(var) static char sizeof##var = sizeof(sizeof##var) + sizeof(var)
+
+void backtrace_symbols_fd(void *const *buffer, int size, int fd)
 {
     int i, len, offset;
     char *buf;
     Dl_info info;
+	int res;
 
     for (i = 0; i < size; i++) {
         if (dladdr(buffer[i], &info) != 0) {
@@ -155,6 +157,7 @@ backtrace_symbols_fd(void *const *buffer, int size, int fd)
                 return;
             snprintf(buf, len, "%p\n", buffer[i]);
         }
-        write(fd, buf, len - 1);
+        res = write(fd, buf, len - 1);
+		USE_VAR(res);
     }
 }

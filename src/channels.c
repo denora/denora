@@ -1679,7 +1679,7 @@ void do_cmode(const char *source, int ac, char **av)
 	{
 		if (denora->do_sql && !LargeNet)
 		{
-			e = find_exclude(u->nick, u->server->name);
+			e = find_exclude(u->nick, EXCLUDE_USER);
 			if (!e)
 			{
 				count_modes(u, chan);
@@ -1761,7 +1761,7 @@ void do_topic(int ac, char **av)
 		u = user_find(c->topic_setter);
 		if (u && !LargeNet)
 		{
-			e = find_exclude(u->nick, u->server->name);
+			e = find_exclude(u->nick, EXCLUDE_USER);
 			if (!e)
 			{
 				count_topics(u, c);

@@ -56,17 +56,22 @@ config *DenoraXMLConfigFindBlock(char *mask)
 	return NULL;
 }
 
-int DenoraParseConnectBlock(int count, char **lines)
+int DenoraParseConnectBlock(char **lines)
 {
 	int i;
 	char *tag;
 	char *data;
 
-	for (i = 0; i < count; i++)
+	printf("SizeOfArray(lines) = %d\n", SizeOfArray(lines));
+
+
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
-	
+			
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
+		printf("Tag %s, Data %s\n", tag, data);
+
 		if (tag)
 		{
 			if (!strcmp(tag, "hostname") || !strcmp(tag,"RemoteServer"))
@@ -147,16 +152,17 @@ int DenoraParseConnectBlock(int count, char **lines)
 /*************************************************************************/
 
 
-int DenoraParseIdentityBlock(int count, char **lines)
+int DenoraParseIdentityBlock(char **lines)
 {
 	int i;
 	char *tag;
 	char *data;
 
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
+
 
 		if (tag)
 		{
@@ -165,6 +171,7 @@ int DenoraParseIdentityBlock(int count, char **lines)
 				/* validate server name */
 				if (!is_valid_server(data))
 				{
+					printf("1\n");
 					alog(LOG_ERROR, "Invalid server name");
 					return -1;
 				}
@@ -176,18 +183,11 @@ int DenoraParseIdentityBlock(int count, char **lines)
 			}
 			else if(!strcmp(tag, "ServiceUser"))
 			{
-				char *s;
-				char *temp_userhost = sstrdup(data);
-				/* Strip the user and host from user token */
-				if (!(s = strchr(temp_userhost, '@')))
-				{
-					free(temp_userhost);
-					alog(LOG_ERROR, "Missing `@' for Stats User");
-					return -1;
-				}
-				*s++ = 0;
-				ServiceUser = temp_userhost;
-				ServiceHost = s;
+				ServiceUser = sstrdup(data);
+			}
+			else if(!strcmp(tag, "ServiceHost"))
+			{
+				ServiceHost = sstrdup(data);
 			}
 
 			else if(!strcmp(tag, "StatsLanguage"))
@@ -197,6 +197,7 @@ int DenoraParseIdentityBlock(int count, char **lines)
 				{
 					StatsLanguage = 1;
 					alog(LOG_ERROR, langstring(CONFIG_INVALID_LANG));
+					printf("3\n");
 					return -1;
 				}
 			}
@@ -212,26 +213,31 @@ int DenoraParseIdentityBlock(int count, char **lines)
 	if (BadPtr(ServerName))
 	{
 		alog(LOG_ERROR, langstring(CONFIG_ID_NAME_ERROR));
+					printf("2\n");
 		return -1;
 	}
 	if (BadPtr(ServerDesc) || !ServerDesc)
 	{
 		alog(LOG_ERROR, langstring(CONFIG_ID_DESC_ERROR));
+					printf("4\n");
 		return -1;
 	}
 	if (BadPtr(ServiceUser))
 	{
 		alog(LOG_ERROR, langstring(CONFIG_ID_USER_ERROR));
+					printf("5\n");
 		return -1;
 	}
 	if (BadPtr(ServiceHost))
 	{
 		alog(LOG_ERROR, langstring(CONFIG_ID_HOST_ERROR));
+					printf("6\n");
 		return -1;
 	}
 	if (!StatsLanguage)
 	{
 		alog(LOG_ERROR, langstring(CONFIG_ID_LANG_ERROR));
+					printf("7\n");
 		return -1;
 	}
 	if (StatsLanguage)
@@ -247,13 +253,13 @@ int DenoraParseIdentityBlock(int count, char **lines)
 /*************************************************************************/
 
 
-int DenoraParseStatServBlock(int count, char **lines)
+int DenoraParseStatServBlock(char **lines)
 {
 	int i;
 	char *tag;
 	char *data;
 
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
@@ -337,13 +343,13 @@ int DenoraParseStatServBlock(int count, char **lines)
 /*************************************************************************/
 
 
-int DenoraParseFileNamesBlock(int count, char **lines)
+int DenoraParseFileNamesBlock(char **lines)
 {
 	int i;
 	char *tag;
 	char *data;
 
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
@@ -393,6 +399,10 @@ int DenoraParseFileNamesBlock(int count, char **lines)
 			else if(!strcmp(tag, "excludeDB"))
 			{
 				excludeDB = sstrdup(data);
+			}
+			else if(!strcmp(tag, "spamDB"))
+			{
+				spamDB = sstrdup(data);
 			}
 			else
 			{
@@ -457,13 +467,13 @@ int DenoraParseFileNamesBlock(int count, char **lines)
 
 /*************************************************************************/
 
-int DenoraParseBackUpBlock(int count, char **lines)
+int DenoraParseBackUpBlock(char **lines)
 {
 	int i;
 	char *tag;
 	char *data;
 
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
@@ -506,15 +516,13 @@ int DenoraParseBackUpBlock(int count, char **lines)
 
 /*************************************************************************/
 
-int DenoraParseTimeOutBlock(int count, char **lines)
+int DenoraParseTimeOutBlock(char **lines)
 {
 	int i;
 	char *tag;
 	char *data;
 
-	alog(LOG_DEBUG,"Lines has %d", GetArraySize(lines));
-
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
@@ -695,16 +703,14 @@ int DenoraParseTimeOutBlock(int count, char **lines)
 
 /*************************************************************************/
 
-int DenoraParseOptionBlock(int count, char **lines)
+int DenoraParseOptionBlock(char **lines)
 {
 	int i;
 	char *tag;
 	char *data;
 	int optag;
 
-	alog(LOG_DEBUG,"Lines has %d", GetArraySize(lines));
-
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
@@ -724,6 +730,10 @@ int DenoraParseOptionBlock(int count, char **lines)
 			else if(!strcmp(tag, "LogChannel"))
 			{
 				LogChannel = sstrdup(data);
+			}
+			else if(!strcmp(tag, "ENCModule"))
+			{
+				ENCModule = sstrdup(data);
 			}
 			else if(!strcmp(tag, "Smiley"))
 			{
@@ -852,12 +862,18 @@ int DenoraParseOptionBlock(int count, char **lines)
 	{
 		ChanStatsTrigger = sstrdup("!");
 	}
+
+	if (!ENCModule)
+	{
+		ENCModule = sstrdup("enc_none");
+	}
+
 	return 1;
 }
 
 /*************************************************************************/
 
-int DenoraParseAdminBlock(int count, char **lines)
+int DenoraParseAdminBlock(char **lines)
 {
 	int i;
 	char *tag;
@@ -867,7 +883,7 @@ int DenoraParseAdminBlock(int count, char **lines)
 	char *value, *name, *passwd, *hostname;
 	int  encrypttype;
 
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
@@ -942,7 +958,7 @@ int DenoraParseAdminBlock(int count, char **lines)
 		alog(LOG_ERROR, langstring(CONFIG_ADMIN_PASS_ERROR));
 		return -1;
 	}
-	add_sqladmin(name, passwd, 0, hostname, language, 1, encrypttype);
+	//add_sqladmin(name, passwd, 0, hostname, language, 1, encrypttype);
 	free(name);
 	free(passwd);
 	free(hostname);
@@ -951,20 +967,23 @@ int DenoraParseAdminBlock(int count, char **lines)
 
 /*************************************************************************/
 
-int DenoraParseSQLBlock(int count, char **lines)
+int DenoraParseSQLBlock(char **lines)
 {
 	int i;
 	char *tag;
 	char *data;
 	int optag;
 
-	alog(LOG_DEBUG,"Lines has %d", GetArraySize(lines));
+	printf("Getting this far?\n");
 
-	for (i = 0; i < count; i++)
+
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
 		optag = IsOptionTag(lines[i]);
+
+		printf("Tag %s / Data %s Option %d\n", tag, data, optag);
 
 		if (tag)
 		{
@@ -973,10 +992,12 @@ int DenoraParseSQLBlock(int count, char **lines)
 				if (!stricmp(data, "mysql"))
 				{
 					sqltype = SQL_MYSQL;
+					SQLModule = sstrdup(data);
 				}
 				if (!stricmp(data, "postgre"))
 				{
 					sqltype = SQL_PGSQL;
+					SQLModule = sstrdup(data);
 				}
 			}
 			else if(!strcmp(tag, "SqlHost"))
@@ -1109,16 +1130,14 @@ int DenoraParseSQLBlock(int count, char **lines)
 
 /*************************************************************************/
 
-int DenoraParseSQLTableBlock(int count, char **lines)
+int DenoraParseSQLTableBlock(char **lines)
 {
 	int i;
 	char *tag;
 	char *data;
 	int optag;
 
-	alog(LOG_DEBUG,"Lines has %d", GetArraySize(lines));
-
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
@@ -1217,6 +1236,10 @@ int DenoraParseSQLTableBlock(int count, char **lines)
 			else if(!strcmp(tag, "AdminTable"))
 			{
 				AdminTable = sstrdup(data);
+			}
+			else if(!strcmp(tag, "ExcludeTable"))
+			{
+				ExcludeTable = sstrdup(data);
 			}
 			else
 			{
@@ -1339,18 +1362,20 @@ int DenoraParseSQLTableBlock(int count, char **lines)
 
 /*************************************************************************/
 
-int DenoraParseNetInfoBlock(int count, char **lines)
+int DenoraParseNetInfoBlock(char **lines)
 {
 	int i;
 	char *tag;
 	char *data;
 	int optag;
 
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
 		optag = IsOptionTag(lines[i]);
+
+		printf("Tag %s, Data %s, optag %d", tag, data, optag);
 
 		if (tag)
 		{
@@ -1467,7 +1492,7 @@ int DenoraParseNetInfoBlock(int count, char **lines)
 /*************************************************************************/
 
 
-int DenoraParseModuleBlock(int count, char **lines)
+int DenoraParseModuleBlock(char **lines)
 {
 	int i;
 	char *tag;
@@ -1488,7 +1513,7 @@ int DenoraParseModuleBlock(int count, char **lines)
 		alog(LOG_ERROR, "Multiple module blocks in config file");
 		return -1;
 	}
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
@@ -1544,13 +1569,13 @@ int DenoraParseModuleBlock(int count, char **lines)
 /*************************************************************************/
 
 
-int DenoraParseProto_IRCdBlock(int count, char **lines)
+int DenoraParseProto_IRCdBlock(char **lines)
 {
 	int i;
 	char *tag;
 	char *data;
 
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
@@ -1591,14 +1616,14 @@ int DenoraParseProto_IRCdBlock(int count, char **lines)
 
 /*************************************************************************/
 
-int DenoraParseXMLRPCBlock(int count, char **lines)
+int DenoraParseXMLRPCBlock(char **lines)
 {
 	int i;
 	char *tag;
 	char *data;
 	int optag;
 
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
@@ -1661,147 +1686,151 @@ int DenoraParseXMLRPCBlock(int count, char **lines)
 /*************************************************************************/
 
 
-int DenoraParseProto_CapabBlock(int count, char **lines)
+int DenoraParseProto_CapabBlock(char **lines)
 {
 	int i;
 	char *tag;
 	char *data;
 
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
 
-		if (!strcmp(tag, "noquit"))
+		if (tag)
 		{
-			ircdcap->noquit = (XmlConfigSetFeature(data) == 1 ? CAPAB_NOQUIT : 0);
+	
+			if (!strcmp(tag, "noquit"))
+			{
+				ircdcap->noquit = (XmlConfigSetFeature(data) == 1 ? CAPAB_NOQUIT : 0);
+			}
+			else if(!strcmp(tag, "tsmode"))
+			{
+				ircdcap->tsmode = (XmlConfigSetFeature(data) == 1 ? CAPAB_TSMODE : 0);
+			}
+			else if(!strcmp(tag, "unconnect"))
+			{
+				ircdcap->unconnect = (XmlConfigSetFeature(data) == 1 ? CAPAB_UNCONNECT : 0);
+			}
+			else if(!strcmp(tag, "nickip"))
+			{
+				ircdcap->nickip = (XmlConfigSetFeature(data) == 1 ? CAPAB_NICKIP : 0);
+			}
+			else if(!strcmp(tag, "nsjoin"))
+			{
+				ircdcap->nsjoin = (XmlConfigSetFeature(data) == 1 ? CAPAB_NSJOIN : 0);
+			}
+			else if(!strcmp(tag, "zip"))
+			{
+				ircdcap->zip = (XmlConfigSetFeature(data) == 1 ? CAPAB_ZIP : 0);
+			}
+			else if(!strcmp(tag, "burst"))
+			{
+				ircdcap->burst = (XmlConfigSetFeature(data) == 1 ? CAPAB_BURST : 0);
+			}
+			else if(!strcmp(tag, "ts5"))
+			{
+				ircdcap->ts5 = (XmlConfigSetFeature(data) == 1 ? CAPAB_TS5 : 0);
+			}
+			else if(!strcmp(tag, "ts3"))
+			{
+				ircdcap->ts3 = (XmlConfigSetFeature(data) == 1 ? CAPAB_TS3 : 0);
+			}
+			else if(!strcmp(tag, "dkey"))
+			{
+				ircdcap->dkey = (XmlConfigSetFeature(data) == 1 ? CAPAB_DKEY : 0);
+			}
+			else if(!strcmp(tag, "pt4"))
+			{
+				ircdcap->pt4 = (XmlConfigSetFeature(data) == 1 ? CAPAB_PT4 : 0);
+			}
+			else if(!strcmp(tag, "scs"))
+			{
+				ircdcap->scs = (XmlConfigSetFeature(data) == 1 ? CAPAB_SCS : 0);
+			}
+			else if(!strcmp(tag, "qs"))
+			{
+				ircdcap->qs = (XmlConfigSetFeature(data) == 1 ? CAPAB_QS : 0);
+			}
+			else if(!strcmp(tag, "uid"))
+			{
+				ircdcap->uid = (XmlConfigSetFeature(data) == 1 ? CAPAB_UID : 0);
+			}
+			else if(!strcmp(tag, "knock"))
+			{
+				ircdcap->knock = (XmlConfigSetFeature(data) == 1 ? CAPAB_KNOCK : 0);
+			}
+			else if(!strcmp(tag, "client"))
+			{
+				ircdcap->client = (XmlConfigSetFeature(data) == 1 ? CAPAB_CLIENT : 0);
+			}
+			else if(!strcmp(tag, "ipv6"))
+			{
+				ircdcap->ipv6 = (XmlConfigSetFeature(data) == 1 ? CAPAB_IPV6 : 0);
+			}
+			else if(!strcmp(tag, "ssj5"))
+			{
+				ircdcap->ssj5 = (XmlConfigSetFeature(data) == 1 ? CAPAB_SSJ5 : 0);
+			}
+			else if(!strcmp(tag, "sn2"))
+			{
+				ircdcap->sn2 = (XmlConfigSetFeature(data) == 1 ? CAPAB_SN2 : 0);
+			}
+			else if(!strcmp(tag, "token"))
+			{
+				ircdcap->token = (XmlConfigSetFeature(data) == 1 ? CAPAB_TOKEN : 0);
+			}
+			else if(!strcmp(tag, "vhost"))
+			{
+				ircdcap->vhost = (XmlConfigSetFeature(data) == 1 ? CAPAB_VHOST : 0);
+			}
+			else if(!strcmp(tag, "ssj3"))
+			{
+				ircdcap->ssj3 = (XmlConfigSetFeature(data) == 1 ? CAPAB_SSJ3 : 0);
+			}
+			else if(!strcmp(tag, "nick2"))
+			{
+				ircdcap->nick2 = (XmlConfigSetFeature(data) == 1 ? CAPAB_NICK2 : 0);;
+			}
+			else if(!strcmp(tag, "umode2"))
+			{
+				ircdcap->umode2 = (XmlConfigSetFeature(data) == 1 ? CAPAB_UMODE2 : 0);
+			}
+			else if(!strcmp(tag, "vl"))
+			{
+				ircdcap->vl = (XmlConfigSetFeature(data) == 1 ? CAPAB_VL : 0);
+			}
+			else if(!strcmp(tag, "tlkext"))
+			{
+				ircdcap->tlkext = (XmlConfigSetFeature(data) == 1 ? CAPAB_TLKEXT : 0);
+			}
+			else if(!strcmp(tag, "dodkey"))
+			{
+				ircdcap->dodkey = (XmlConfigSetFeature(data) == 1 ? CAPAB_DODKEY : 0);
+			}
+			else if(!strcmp(tag, "dozip"))
+			{
+				ircdcap->dozip = (XmlConfigSetFeature(data) == 1 ? CAPAB_DOZIP : 0);
+			}
+			else if(!strcmp(tag, "chanmodes"))
+			{
+				ircdcap->chanmodes = (XmlConfigSetFeature(data) == 1 ? CAPAB_CHANMODE : 0);
+			}
+			else if(!strcmp(tag, "sjb64"))
+			{
+				ircdcap->sjb64 = (XmlConfigSetFeature(data) == 1 ? CAPAB_SJB64 : 0);
+			}
+			else if(!strcmp(tag, "nickchars"))
+			{
+				ircdcap->nickchars = (XmlConfigSetFeature(data) == 1 ? CAPAB_NICKCHARS : 0);
+			}
+			else
+			{
+				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+			}
+			free(tag);
+			free(data);
 		}
-		else if(!strcmp(tag, "tsmode"))
-		{
-			ircdcap->tsmode = (XmlConfigSetFeature(data) == 1 ? CAPAB_TSMODE : 0);
-		}
-		else if(!strcmp(tag, "unconnect"))
-		{
-			ircdcap->unconnect = (XmlConfigSetFeature(data) == 1 ? CAPAB_UNCONNECT : 0);
-		}
-		else if(!strcmp(tag, "nickip"))
-		{
-			ircdcap->nickip = (XmlConfigSetFeature(data) == 1 ? CAPAB_NICKIP : 0);
-		}
-		else if(!strcmp(tag, "nsjoin"))
-		{
-			ircdcap->nsjoin = (XmlConfigSetFeature(data) == 1 ? CAPAB_NSJOIN : 0);
-		}
-		else if(!strcmp(tag, "zip"))
-		{
-			ircdcap->zip = (XmlConfigSetFeature(data) == 1 ? CAPAB_ZIP : 0);
-		}
-		else if(!strcmp(tag, "burst"))
-		{
-			ircdcap->burst = (XmlConfigSetFeature(data) == 1 ? CAPAB_BURST : 0);
-		}
-		else if(!strcmp(tag, "ts5"))
-		{
-			ircdcap->ts5 = (XmlConfigSetFeature(data) == 1 ? CAPAB_TS5 : 0);
-		}
-		else if(!strcmp(tag, "ts3"))
-		{
-			ircdcap->ts3 = (XmlConfigSetFeature(data) == 1 ? CAPAB_TS3 : 0);
-		}
-		else if(!strcmp(tag, "dkey"))
-		{
-			ircdcap->dkey = (XmlConfigSetFeature(data) == 1 ? CAPAB_DKEY : 0);
-		}
-		else if(!strcmp(tag, "pt4"))
-		{
-			ircdcap->pt4 = (XmlConfigSetFeature(data) == 1 ? CAPAB_PT4 : 0);
-		}
-		else if(!strcmp(tag, "scs"))
-		{
-			ircdcap->scs = (XmlConfigSetFeature(data) == 1 ? CAPAB_SCS : 0);
-		}
-		else if(!strcmp(tag, "qs"))
-		{
-			ircdcap->qs = (XmlConfigSetFeature(data) == 1 ? CAPAB_QS : 0);
-		}
-		else if(!strcmp(tag, "uid"))
-		{
-			ircdcap->uid = (XmlConfigSetFeature(data) == 1 ? CAPAB_UID : 0);
-		}
-		else if(!strcmp(tag, "knock"))
-		{
-			ircdcap->knock = (XmlConfigSetFeature(data) == 1 ? CAPAB_KNOCK : 0);
-		}
-		else if(!strcmp(tag, "client"))
-		{
-			ircdcap->client = (XmlConfigSetFeature(data) == 1 ? CAPAB_CLIENT : 0);
-		}
-		else if(!strcmp(tag, "ipv6"))
-		{
-			ircdcap->ipv6 = (XmlConfigSetFeature(data) == 1 ? CAPAB_IPV6 : 0);
-		}
-		else if(!strcmp(tag, "ssj5"))
-		{
-			ircdcap->ssj5 = (XmlConfigSetFeature(data) == 1 ? CAPAB_SSJ5 : 0);
-		}
-		else if(!strcmp(tag, "sn2"))
-		{
-			ircdcap->sn2 = (XmlConfigSetFeature(data) == 1 ? CAPAB_SN2 : 0);
-		}
-		else if(!strcmp(tag, "token"))
-		{
-			ircdcap->token = (XmlConfigSetFeature(data) == 1 ? CAPAB_TOKEN : 0);
-		}
-		else if(!strcmp(tag, "vhost"))
-		{
-			ircdcap->vhost = (XmlConfigSetFeature(data) == 1 ? CAPAB_VHOST : 0);
-		}
-		else if(!strcmp(tag, "ssj3"))
-		{
-			ircdcap->ssj3 = (XmlConfigSetFeature(data) == 1 ? CAPAB_SSJ3 : 0);
-		}
-		else if(!strcmp(tag, "nick2"))
-		{
-			ircdcap->nick2 = (XmlConfigSetFeature(data) == 1 ? CAPAB_NICK2 : 0);;
-		}
-		else if(!strcmp(tag, "umode2"))
-		{
-			ircdcap->umode2 = (XmlConfigSetFeature(data) == 1 ? CAPAB_UMODE2 : 0);
-		}
-		else if(!strcmp(tag, "vl"))
-		{
-			ircdcap->vl = (XmlConfigSetFeature(data) == 1 ? CAPAB_VL : 0);
-		}
-		else if(!strcmp(tag, "tlkext"))
-		{
-			ircdcap->tlkext = (XmlConfigSetFeature(data) == 1 ? CAPAB_TLKEXT : 0);
-		}
-		else if(!strcmp(tag, "dodkey"))
-		{
-			ircdcap->dodkey = (XmlConfigSetFeature(data) == 1 ? CAPAB_DODKEY : 0);
-		}
-		else if(!strcmp(tag, "dozip"))
-		{
-			ircdcap->dozip = (XmlConfigSetFeature(data) == 1 ? CAPAB_DOZIP : 0);
-		}
-		else if(!strcmp(tag, "chanmodes"))
-		{
-			ircdcap->chanmodes = (XmlConfigSetFeature(data) == 1 ? CAPAB_CHANMODE : 0);
-		}
-		else if(!strcmp(tag, "sjb64"))
-		{
-			ircdcap->sjb64 = (XmlConfigSetFeature(data) == 1 ? CAPAB_SJB64 : 0);
-		}
-		else if(!strcmp(tag, "nickchars"))
-		{
-			ircdcap->nickchars = (XmlConfigSetFeature(data) == 1 ? CAPAB_NICKCHARS : 0);
-		}
-		else
-		{
-			alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
-		}
-		free(tag);
-		free(data);
 	}
 	return 1;
 }
@@ -1810,7 +1839,7 @@ int DenoraParseProto_CapabBlock(int count, char **lines)
 /*************************************************************************/
 
 
-int DenoraParseProto_ChannelUserModeBlock(int count, char **lines)
+int DenoraParseProto_ChannelUserModeBlock(char **lines)
 {
 	int i;
 	char *tag;
@@ -1820,7 +1849,7 @@ int DenoraParseProto_ChannelUserModeBlock(int count, char **lines)
 	int flag;
 
 
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
@@ -1856,158 +1885,25 @@ int DenoraParseProto_ChannelUserModeBlock(int count, char **lines)
 /*************************************************************************/
 
 
-int DenoraParseProto_ServicesBlock(int count, char **lines)
+int DenoraParseProto_ServicesBlock(char **lines)
 {
 	int i;
 	char *tag;
 	char *data;
 
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
-		if (!strcmp(tag, "modes"))
+		if (tag)
 		{
-			ircd->servicesmode = sstrdup(data);
-		}
-		free(tag);
-		free(data);
-	}
-	return 1;
-}
-
-
-/*************************************************************************/
-
-
-int DenoraParseProto_FeaturesBlock(int count, char **lines)
-{
-	int i;
-	char *tag;
-	char *data;
-
-	for (i = 0; i < count; i++)
-	{
-		tag = GetOptionTagName(lines[i]);
-		data = GetOptionTagData(lines[i]);
-
-		if (!strcmp(tag, "vhost"))
-		{
-			ircd->vhost = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "vident"))
-		{
-			ircd->vident = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "vhostmode"))
-		{
-			if (XmlConfigSetMode(data))
+			if (!strcmp(tag, "modes"))
 			{
-				ircd->vhostmode = ReturnModeFromToken(data);
+				ircd->servicesmode = sstrdup(data);
 			}
+			free(tag);
+			free(data);
 		}
-		else if(!strcmp(tag, "vhost_on_nick"))
-		{
-			ircd->nickvhost = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "opermode"))
-		{
-			ircd_modes.user_oper = ReturnModeFromToken(data);
-		}
-		else if(!strcmp(tag, "sgline"))
-		{
-			ircd->sgline = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "sqline"))
-		{
-			ircd->sqline = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "szline"))
-		{
-			ircd->szline = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "sgline_sql"))
-		{
-			ircd->sgline_table = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "sqline_sql"))
-		{
-			ircd->sqline_table = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "szline_sql"))
-		{
-			ircd->szline_table = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "nickip"))
-		{
-			ircd->nickip = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "ziplink"))
-		{
-			ircd->zip = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "ssllink"))
-		{
-			ircd->ssl = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "exceptions"))
-		{
-			ircd->except = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "tokens"))
-		{
-			ircd->token = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "casetokens"))
-		{
-			ircd->tokencaseless = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "timestamp64"))
-		{
-			ircd->sjb64 = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "invitemode"))
-		{
-			ircd->invitemode = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "uline"))
-		{
-			ircd->uline = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "svid"))
-		{
-			ircd->has_svid = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "hiddenop"))
-		{
-			ircd->hideoper = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "syncstate"))
-		{
-			ircd->syncstate = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "numerics"))
-		{
-			ircd->numerics = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "spamfilterchar"))
-		{
-			ircd->spamfilter = atoi(data);
-		}
-		else if(!strcmp(tag, "vhost_char"))
-		{
-			ircd->vhostchar = atoi(data);
-		}
-		else if(!strcmp(tag, "vhost_char_other"))
-		{
-			ircd->vhostchar2 = atoi(data);
-		}
-		else
-		{
-			alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
-		}
-		free(tag);
-		free(data);
 	}
 	return 1;
 }
@@ -2016,14 +1912,153 @@ int DenoraParseProto_FeaturesBlock(int count, char **lines)
 /*************************************************************************/
 
 
-int DenoraParseProto_UserModeBlock(int count, char **lines)
+int DenoraParseProto_FeaturesBlock(char **lines)
+{
+	int i;
+	char *tag;
+	char *data;
+
+	for (i = 0; i <= SizeOfArray(lines); i++)
+	{
+		tag = GetOptionTagName(lines[i]);
+		data = GetOptionTagData(lines[i]);
+
+		if (tag)
+		{
+			if (!strcmp(tag, "vhost"))
+			{
+				ircd->vhost = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "vident"))
+			{
+				ircd->vident = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "vhostmode"))
+			{
+				if (XmlConfigSetMode(data))
+				{
+					ircd->vhostmode = ReturnModeFromToken(data);
+				}
+			}
+			else if(!strcmp(tag, "vhost_on_nick"))
+			{
+				ircd->nickvhost = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "opermode"))
+			{
+				ircd_modes.user_oper = ReturnModeFromToken(data);
+			}
+			else if(!strcmp(tag, "sgline"))
+			{
+				ircd->sgline = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "sqline"))
+			{
+				ircd->sqline = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "szline"))
+			{
+				ircd->szline = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "sgline_sql"))
+			{
+				ircd->sgline_table = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "sqline_sql"))
+			{
+				ircd->sqline_table = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "szline_sql"))
+			{
+				ircd->szline_table = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "nickip"))
+			{
+				ircd->nickip = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "ziplink"))
+			{
+				ircd->zip = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "ssllink"))
+			{
+				ircd->ssl = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "exceptions"))
+			{
+				ircd->except = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "tokens"))
+			{
+				ircd->token = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "casetokens"))
+			{
+				ircd->tokencaseless = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "timestamp64"))
+			{
+				ircd->sjb64 = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "invitemode"))
+			{
+				ircd->invitemode = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "uline"))
+			{
+				ircd->uline = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "svid"))
+			{
+				ircd->has_svid = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "hiddenop"))
+			{
+				ircd->hideoper = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "syncstate"))
+			{
+				ircd->syncstate = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "numerics"))
+			{
+				ircd->numerics = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "spamfilterchar"))
+			{
+				ircd->spamfilter = atoi(data);
+			}
+			else if(!strcmp(tag, "vhost_char"))
+			{
+				ircd->vhostchar = atoi(data);
+			}
+			else if(!strcmp(tag, "vhost_char_other"))
+			{
+				ircd->vhostchar2 = atoi(data);
+			}
+			else
+			{
+				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+			}
+			free(tag);
+			free(data);
+		}
+	}
+	return 1;
+}
+
+
+/*************************************************************************/
+
+
+int DenoraParseProto_UserModeBlock(char **lines)
 {
 	int i;
 	char *tag;
 	char *data;
 	int res;
 
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
@@ -2055,14 +2090,14 @@ int DenoraParseProto_UserModeBlock(int count, char **lines)
 /*************************************************************************/
 
 
-int DenoraParseProto_ChannelModeBlock(int count, char **lines)
+int DenoraParseProto_ChannelModeBlock(char **lines)
 {
 	int i;
 	char *tag;
 	char *data;
 	int res;
 
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
@@ -2084,14 +2119,14 @@ int DenoraParseProto_ChannelModeBlock(int count, char **lines)
 /*************************************************************************/
 
 
-int DenoraParseProto_ChannelBanModeBlock(int count, char **lines)
+int DenoraParseProto_ChannelBanModeBlock(char **lines)
 {
 	int i;
 	char *tag;
 	char *data;
 	int res;
 
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
@@ -2127,13 +2162,13 @@ int DenoraParseProto_ChannelBanModeBlock(int count, char **lines)
 /*************************************************************************/
 
 
-int DenoraParseProto_WarningBlock(int count, char **lines)
+int DenoraParseProto_WarningBlock(char **lines)
 {
 	int i;
 	char *tag;
 	char *data;
 
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
@@ -2154,13 +2189,13 @@ int DenoraParseProto_WarningBlock(int count, char **lines)
 /*************************************************************************/
 
 
-int DenoraParseProto_ChannelFeaturesBlock(int count, char **lines)
+int DenoraParseProto_ChannelFeaturesBlock(char **lines)
 {
 	int i;
 	char *tag;
 	char *data;
 
-	for (i = 0; i < count; i++)
+	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
@@ -2300,14 +2335,13 @@ void insert_config(config * c)
 	return;
 }
 
-config *DenoraXMLConfigBlockCreate(char *newblockname, int (parser)(int ac, char **av), int options)
+config *DenoraXMLConfigBlockCreate(char *newblockname, int (parser)(char **av))
 {
 	config *c;
 	c = calloc(sizeof(config), 1);
 	c->name = strdup(newblockname);
 	insert_config(c);
 	c->parser = parser;
-	c->numoptions = (options ? options : 25);
 	return c;
 }
 

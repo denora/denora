@@ -301,10 +301,6 @@ VOIDSIG signal_rehash(int signum)
 			denora->quitting = 1;
 			send_event(EVENT_SIGNAL, 2, "SIGHUP", denora->qmsg);
 		}
-		else
-		{
-			merge_confs();
-		}
 		/* Reload GeoIP db files */
 		if (gidb)
 			GeoIP_delete(gidb);

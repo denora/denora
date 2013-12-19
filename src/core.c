@@ -358,8 +358,6 @@ int dotime(const char *s)
 		return -1;
 	}
 
-	
-
 	amount = strtol(s, (char **) &s, 10);
 	if (*s)
 	{
@@ -373,6 +371,10 @@ int dotime(const char *s)
 				return amount * 3600;
 			case 'd':
 				return amount * 86400;
+			case 'M':
+				return amount * 2592000;
+			case 'y':
+				return (amount * (356 * 86400));
 			default:
 				return -2;
 		}
@@ -1346,19 +1348,6 @@ void destroy_all(void)
 			destroyEventHandler(emsg);
 		}
 		emsg = next8;
-	}
-
-	alog(LOG_DEBUG, "debug: Clearing Exclude");
-
-	e = first_exclude();
-	while (e)
-	{
-		next14 = next_exclude();
-		if (e)
-		{
-			del_exclude(e);
-		}
-		e = next14;
 	}
 
 	alog(LOG_DEBUG, "debug: Clearing UID");

@@ -121,7 +121,7 @@ void html_top10_topics(FILE * ptr)
 			}
 			if (s->topic_count)
 			{
-				e = find_exclude(s->name, NULL);
+				e = find_exclude(s->name, EXCLUDE_SERVER);
 				if (!e)
 				{
 					tempc = char_encode(s->name);

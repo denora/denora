@@ -112,7 +112,7 @@ void html_current_channels(FILE * ptr)
 			}
 			if (s)
 			{
-				e = find_exclude(s->name, NULL);
+				e = find_exclude(s->name, EXCLUDE_SERVER);
 				if (!e)
 				{
 					if (s->in_use)

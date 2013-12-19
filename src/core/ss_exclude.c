@@ -74,6 +74,9 @@ static int do_exclude(User * u, int ac, char **av)
 	int disp = 1;
 	char *ch = NULL;
 	User *u2;
+	int rows;
+	sqlite3_stmt * stmt;
+	char ***data;
 
 	if (ac < 1)
 	{
@@ -83,83 +86,101 @@ static int do_exclude(User * u, int ac, char **av)
 
 	if (!stricmp(av[0], "ADD"))
 	{
-		if (ac < 2)
+		if (ac < 3)
 		{
 			notice_lang(s_StatServ, u, STAT_EXCLUDE_SYNTAX);
 			return MOD_CONT;
 		}
-		if (strlen(av[1]) > NICKMAX)
+		if (!stricmp(av[1], "user"))
 		{
-			notice(s_StatServ, u->nick, "Invalid nick length");
-			return MOD_CONT;
+			if (strlen(av[2]) > NICKMAX)
+			{
+				notice(s_StatServ, u->nick, "Invalid nick length");
+				return MOD_CONT;
+			}
+			if (isdigit(av[2][0]) || av[2][0] == '-')
+			{
+				notice(s_StatServ, u->nick, "Invalid nick");
+				return MOD_CONT;
+			}
+	
+			e = find_exclude(av[2], EXCLUDE_USER);
+			if (!e)
+			{
+				Create_Exclude(av[2], EXCLUDE_USER);
+				notice_lang(s_StatServ, u, STAT_EXCLUDE_ADDED, av[2]);
+				u2 = user_find(av[2]);
+				sql_query( "DELETE FROM %s WHERE lower(`uname`)=lower(\'%q\')",
+				          UStatsTable, u2 ? u2->sgroup : av[2]);
+				sql_query(
+				          "UPDATE `%s` SET `ignore`=\'Y\' WHERE lower(`uname`)=lower(\'%q\')",
+				          AliasesTable, u2 ? u2->sgroup : av[2]);
+			}
+			else
+			{
+				del_exclude(e);
+				notice_lang(s_StatServ, u, STAT_EXCLUDE_ALREADY, av[1]);
+			}
 		}
-		if (isdigit(av[1][0]) || av[1][0] == '-')
+		else if (!stricmp(av[1], "server"))
 		{
-			notice(s_StatServ, u->nick, "Invalid nick");
-			return MOD_CONT;
-		}
 
-		e = find_exclude(av[1], NULL);
-		if (!e)
-		{
-			make_exclude(av[1]);
-			notice_lang(s_StatServ, u, STAT_EXCLUDE_ADDED, av[1]);
-			u2 = user_find(av[1]);
-			if (!u2)
+			e = find_exclude(av[1], EXCLUDE_SERVER);
+			if (!e)
 			{
-				name = sql_escape(av[1]);
+				Create_Exclude(av[2], EXCLUDE_SERVER);
+				notice_lang(s_StatServ, u, STAT_EXCLUDE_ADDED, av[2]);
 			}
-			sql_query( "DELETE FROM %s WHERE lower(`uname`)=lower(\'%s\')",
-			          UStatsTable, u2 ? u2->sgroup : name);
-			sql_query(
-			          "UPDATE `%s` SET `ignore`=\'Y\' WHERE lower(`uname`)=lower(\'%s\')",
-			          AliasesTable, u2 ? u2->sgroup : name);
-			if (name)
+			else
 			{
-				free(name);
+				del_exclude(e);
+				notice_lang(s_StatServ, u, STAT_EXCLUDE_ALREADY, av[2]);
 			}
-		}
-		else
-		{
-			notice_lang(s_StatServ, u, STAT_EXCLUDE_ALREADY, av[1]);
 		}
 	}
 	else if (!stricmp(av[0], "DEL"))
 	{
-		if (ac < 2)
+		if (ac < 3)
 		{
 			notice_lang(s_StatServ, u, STAT_EXCLUDE_SYNTAX);
 			return MOD_CONT;
 		}
-		e = find_exclude(av[1], NULL);
-		if (e)
+		if (!stricmp(av[1], "user"))
 		{
-			del_exclude(e);
-			u->cstats = 0;
-			notice_lang(s_StatServ, u, STAT_EXCLUDE_DELETED, av[1]);
-			u2 = user_find(av[1]);
-			if (!u2)
+			e = find_exclude(av[2], EXCLUDE_USER);
+			if (e)
 			{
-				name = sql_escape(av[1]);
+				del_exclude(e);
+				Delete_Exclude(av[2], EXCLUDE_USER);
+				u->cstats = 0;
+				notice_lang(s_StatServ, u, STAT_EXCLUDE_DELETED, av[2]);
+				u2 = user_find(av[1]);
+				sql_query(
+				          "UPDATE `%s` SET `ignore`=\'N\' WHERE lower(`uname`)=lower(\'%q\')",
+				          AliasesTable, u2 ? u2->sgroup : av[2]);
+				for (i = 0; i < 4; i++)
+				{
+					sql_query("INSERT IGNORE INTO %s SET uname=\'%q\', chan=\'global\', type=%i;",
+					 UStatsTable, u2 ? u2->sgroup : av[2], i);
+				}
 			}
-			sql_query(
-			          "UPDATE `%s` SET `ignore`=\'N\' WHERE lower(`uname`)=lower(\'%s\')",
-			          AliasesTable, u2 ? u2->sgroup : name);
-			for (i = 0; i < 4; i++)
+			else
 			{
-				sql_query
-				(
-				 "INSERT IGNORE INTO %s SET uname=\'%s\', chan=\'global\', type=%i;",
-				 UStatsTable, u2 ? u2->sgroup : name, i);
-			}
-			if (name)
-			{
-				free(name);
+				notice_lang(s_StatServ, u, STAT_EXCLUDE_NOT_FOUND, av[2]);
 			}
 		}
-		else
+		else if (!stricmp(av[1], "server"))
 		{
-			notice_lang(s_StatServ, u, STAT_EXCLUDE_NOT_FOUND, av[1]);
+			e = find_exclude(av[2], EXCLUDE_SERVER);
+			if (e)
+			{
+				del_exclude(e);
+				Delete_Exclude(av[2], EXCLUDE_SERVER);
+			}
+			else
+			{
+				notice_lang(s_StatServ, u, STAT_EXCLUDE_NOT_FOUND, av[2]);
+			}
 		}
 	}
 	else if (!stricmp(av[0], "LIST"))
@@ -202,22 +223,18 @@ static int do_exclude(User * u, int ac, char **av)
 		}
 
 		notice_lang(s_StatServ, u, STAT_EXCLUDE_LIST_HEADER);
-
-		for (i = 0; i < 1024; i++)
+		ExcludeDatabase = DenoraOpenSQL(excludeDB);
+		rows = DenoraSQLGetNumRows(ExcludeDatabase, ExcludeTable);
+		stmt = DenoraPrepareQuery(ExcludeDatabase, "SELECT * FROM %s", ExcludeTable);
+		data = DenoraSQLFetchArray(ExcludeDatabase, ExcludeTable, stmt, FETCH_ARRAY_NUM);
+		for (i = 0; i < rows; i++)
 		{
-			for (e = exlists[i]; e; e = e->next)
-			{
-				if ((count + 1 >= from) && (count + 1 <= to))
-				{
-					notice(s_StatServ, u->nick, "%d %s", disp++, e->name);
-				}
-				else if (((from == 0) && (to == 0)) && (++nnicks <= 50))
-				{
-					notice(s_StatServ, u->nick, "%d %s", disp++, e->name);
-				}
-				count++;
-			}
+			notice(s_StatServ, u->nick, "%d %s", disp++, data[0]);
 		}
+		free(data);
+		sqlite3_finalize(stmt);
+		DenoraCloseSQl(ExcludeDatabase);
+		return MOD_CONT;
 	}
 	else
 	{

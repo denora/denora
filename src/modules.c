@@ -1908,9 +1908,103 @@ int protocol_module_init(void)
 	alog(LOG_NORMAL, "IRCD Protocol Version: [%s]",
 	     mod_current_module->version);
 	alog(LOG_EXTRADEBUG, "debug: status: [%d]", ret);
+	if (ircd->extrawarning)
+	{
+		alog(LOG_NORMAL,
+		     "======================== WARNING =========================");
+		alog(LOG_NORMAL,
+		     "You have choosen to run a ircd protocl module that is very");
+		alog(LOG_NORMAL,
+		     "developemental, we do not have enough users out there to mark");
+		alog(LOG_NORMAL,
+		     "it as stable, if you are willing to test and allow us");
+		alog(LOG_NORMAL,
+		     "mark it as stable please email dev@denorastats.org");
+		alog(LOG_NORMAL,
+		     "======================== WARNING =========================");
+	}
+
 	mod_current_module = NULL;
 	return ret;
 }
+
+
+/*************************************************************************/
+
+/**
+ * Load the ircd protocol module up
+ **/
+int encode_module_init(void)
+{
+	int ret = 0;
+	Module *m;
+
+	if (BadPtr(ENCModule))
+	{
+		alog(LOG_NORMAL, "Error: ENCModule is incorrectly defined");
+		return ret;
+	}
+
+	m = createModule(ENCModule);
+	mod_current_module = m;
+	mod_current_user = NULL;
+	moduleSetType(ENCMOD);
+	ret = loadModule(mod_current_module, NULL);
+	if (ret != MOD_ERR_OK)
+	{
+		alog(LOG_NORMAL, "Error Status [%d]", ret);
+		exit(1);
+	}
+	alog(LOG_NORMAL, "Loading ENCModule Protocol Module: [%s]",
+	     mod_current_module->name);
+	alog(LOG_NORMAL, "ENCModule Protocol Author: [%s]",
+	     mod_current_module->author);
+	alog(LOG_NORMAL, "ENCModule Protocol Version: [%s]",
+	     mod_current_module->version);
+	alog(LOG_EXTRADEBUG, "debug: status: [%d]", ret);
+	mod_current_module = NULL;
+	return ret;
+}
+
+
+/*************************************************************************/
+
+/**
+ * Load the ircd protocol module up
+ **/
+int sql_module_init(void)
+{
+	int ret = 0;
+	Module *m;
+
+	if (BadPtr(SQLModule))
+	{
+		alog(LOG_NORMAL, "Error: SQLModule is incorrectly defined");
+		return ret;
+	}
+
+	m = createModule(SQLModule);
+	mod_current_module = m;
+	mod_current_user = NULL;
+	moduleSetType(SQLMOD);
+	ret = loadModule(mod_current_module, NULL);
+	if (ret != MOD_ERR_OK)
+	{
+		alog(LOG_NORMAL, "Error Status [%d]", ret);
+		exit(1);
+	}
+	alog(LOG_NORMAL, "Loading SQL Module: [%s]",
+	     mod_current_module->name);
+	alog(LOG_NORMAL, "SQL Module Author: [%s]",
+	     mod_current_module->author);
+	alog(LOG_NORMAL, "SQL Module Version: [%s]",
+	     mod_current_module->version);
+	alog(LOG_EXTRADEBUG, "debug: status: [%d]", ret);
+	mod_current_module = NULL;
+	return ret;
+}
+
+
 
 /*************************************************************************/
 

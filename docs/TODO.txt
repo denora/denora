@@ -1,25 +1,36 @@
 1. GeoIP moved to GeoIP v2 - uses their library                                                              [DONE build 2.0.0.3]
 2. SQLite replaces structs and flatdb files
-3. XMLparser to replace config files with xml files
+3. XMLparser to replace config files with xml files							     [DONE build 2.0.0.10]
 4. SQL modules for mysql and postgre									     [DONE build 2.0.0.10]			
 5. Socket Engines so we can rip out the old socket code
 6. bopm library included by default
 7. Ruby, Python, Perl extentions modules
-		Perl
-		Python
+		Perl											     [LIBS/HEADER Built in]
+		Python											     [LIBS/HEADER Built in]
 		Ruby
 8. IRCd Protocol modules load parts of the core as needed
-9. mysql_* modules made part of the sql_mysql.c 
+9. mysql_* modules need to check if the right sql mod is loaded 
 10. language files to use xml format, and load as user wants and not all of them (lower mem usage)
 11. support ssl / zip links (maybe)
+        1. OpenSSL
+        2. GnuTLS
+        3. zip link
 12. port neostats modules to new v2 frame work
+       1. ConnectServ
+       2. TextServ (LoveServ/MoralServ)
 13. zbot ported as a module of v2
 14. ison table rewritten
-15. option to disable items, largenet gone
+15. option to disable items, largenet gone								
+       LargeNet out of the Config
+       LargetNet Variable Removed from code
+       Each feature turned off by Largenet gets their own varaible
+		1. Spamfilter
+
+
 16. true threading
 17. ircd protocol move struct to xml config                                                                   [DONE build 2.0.0.5]
 18. ircd protocol truely deal with more of the load, less core more sql calls
-19. sql query string to do %q and cleans itself up, less mess and free
+19. sql query string to do %q and cleans itself up, less mess and free					      [DONE build 2.0.0.10]
 20. ircd protocol support for newer ircds 
 		(askua -> snircd) 
 		Hybrid 8 
@@ -28,7 +39,17 @@
 21. Start over and build it from scratch! (why not)
 22. Services ported to v2
 23. webpanel
-24. encrypt admin passwords
+24. encrypt admin passwords										      [DONE build 2.0.0.10]
 25. autoconf - write script file 1) download latest config.guess and config.sub 
     2) build "autoconf" the configure file 3) copies the new configure into place
-26. Backtrace config option (build with the lib to)
+26. Backtrace config option
+	1. Option in config
+        2. libexecinfo                                                                                        [Building needs to link]
+27. Fully document the project so anyone can take over
+28. Clean up sysconf.h and configure.in so that the two match each other. 
+29. denora.h 
+        1. All structs moved to structs.h
+        2. All defines moved to define.h
+        3. All macros moved to macro.h
+	4. All headers to header.h
+30. Once full sqlite structs no longer require next, prev

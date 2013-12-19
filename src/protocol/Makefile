@@ -42,12 +42,12 @@ distclean: spotless
 subs:
 	@for i in $(SUBS); do \
         echo "make all in $$i..."; \
-        (cd $$i; $(MAKE) $(MAKEARGS) all); done
+        (cd $$i; $(MAKE) -s $(MAKEARGS) all); done
 
 subs_clean:
 	@for i in $(SUBS); do \
 	echo "cleaning in $$i..."; \
-	(cd $$i; $(MAKE) clean); done
+	(cd $$i; $(MAKE) -s clean); done
 
 clean: subs_clean
 	rm -f *.o *.so *.c~ core

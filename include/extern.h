@@ -15,12 +15,15 @@
 #ifndef EXTERN_H
 #define EXTERN_H
 
+void denoraxmlcheck(int ac, char **av);
+
 /* IRC Variables */
 E IRCDVar *ircd;
 E IRCDCAPAB *ircdcap;
 E IRCDModes ircd_modes;
 E STATVar stats[];
 E DenoraVar denora[];
+E sqlite3 *ExcludeDatabase;
 
 E void init_bans(void);
 E Gline *new_Gline(char *user, char *host, char *setby, char *setat,
@@ -37,6 +40,7 @@ E void fini_bans(void);
 E void initIrcdProto(void);
 int SupportOperFlag;
 
+E sqlite3 *TLDDatabase;
 
 E int UseTSMODE;
 E unsigned long umodes[128];
@@ -52,6 +56,9 @@ E char *ChanStatsTrigger;
 E int KeepUserTable;
 E int UplinkSynced;
 E int KeepServerTable;
+
+E char *ENCModule;
+E char *SQLModule;
 
 E char *JupeMaster;
 
@@ -710,10 +717,11 @@ E void do_checkchansmax(void);
 E void add_oper_count(User *u);
 E void del_oper_count(User *u);
 
-E Exclude *make_exclude(char *mask);
-E Exclude *find_exclude(char *mask, char *server);
-E void insert_exclude(Exclude * e);
+E Exclude *make_exclude(char **mask);
+E Exclude *find_exclude(char *mask, int flag);
 E int del_exclude(Exclude * e);
+void Create_Exclude(char *key, int flag);
+E char *ExcludeTable;
 
 E void server_store_pong(char *source, uint32 pingtime);
 E void ping_servers(void);
@@ -751,13 +759,10 @@ E void sql_do_uptime(char *source, char *uptime);
 
 E TLD *do_tld(char *country, char *code);
 E TLD *findtld(const char *country);
-E void load_tld_db(void);
-E void save_tld_db(void);
 E void tld_update(char *country_code);
-E list_t *Thead;
-E void init_tld(void);
-E TLD *new_tld(const char *countrycode, const char *country);
-E void fini_tld(void);
+E TLD *make_tld(char **data);
+E void fini_tld(TLD *t);
+
 E int sortusers(const void *v, const void *v2);
 E void save_databases(void);
 E void backup_databases(void);
@@ -1198,11 +1203,10 @@ E list_t *Zlinehead;
 E char *sql_hidepass(char *sql);
 
 E SpamFilter *findSpamFilter(const char *regex);
-E void fini_SpamFilter(void);
-E void init_spamfilter(void);
+E void fini_SpamFilter(SpamFilter *regex);
 E SpamFilter *new_SpamFilter(char *target, char *action,
-                             char *setby, char *expires, char *setat,
-                             char *duration, char *reason, char *regex);
+                            char *setby, char *expires, char *setat,
+                            char *duration, char *reason, char *regex);
 
 E ChanMode *FindChanMode(char *name);
 E ChanMode *CreateChanMode(int mode, void (*setvalue) (Channel *chan, char *value), char * (*getvalue) (Channel *chan));
@@ -1222,7 +1226,8 @@ E char *GetConfigStartTagName(char *line);
 E char *GetConfigEndTagName(char *line);
 E char *GetOptionTagData(char *line);
 E char *GetOptionTagName(char *line);
-E void DenoraParseXMLConfig(char *filename);
+E int DenoraParseXMLConfig(char *filename);
+E char *ENCModule;
 
 E char **DenoraSQLFetchRow(sqlite3_stmt* stmt, int type);
 E char **DenoraSQLReturnRow(char *db, const char *query, ...);
@@ -1230,34 +1235,37 @@ E char **DenoraSQLReturnRow(char *db, const char *query, ...);
 E char *ReturnModeFromFlag(int mode);
 E int ReturnModeFromToken(char *tag);
 E int XmlConfigSetFeature(char *x);
-E int DenoraParseProto_IRCdBlock(int count, char **lines);
-E int DenoraParseProto_CapabBlock(int count, char **lines);
-E int DenoraParseProto_ServicesBlock(int count, char **lines);
-E int DenoraParseProto_FeaturesBlock(int count, char **lines);
-E int DenoraParseProto_UserModeBlock(int count, char **lines);
-E int DenoraParseProto_ChannelModeBlock(int count, char **lines);
-E int DenoraParseProto_ChannelBanModeBlock(int count, char **lines);
-E int DenoraParseProto_WarningBlock(int count, char **lines);
-E int DenoraParseProto_ChannelFeaturesBlock(int count, char **lines);
+E int DenoraParseProto_IRCdBlock(char **lines);
+E int DenoraParseProto_CapabBlock(char **lines);
+E int DenoraParseProto_ServicesBlock(char **lines);
+E int DenoraParseProto_FeaturesBlock(char **lines);
+E int DenoraParseProto_UserModeBlock(char **lines);
+E int DenoraParseProto_ChannelModeBlock(char **lines);
+E int DenoraParseProto_ChannelBanModeBlock(char **lines);
+E int DenoraParseProto_WarningBlock(char **lines);
+E int DenoraParseProto_ChannelFeaturesBlock(char **lines);
 E void DenoraXMLIRCdConfig(char *file);
+E char *spamDB;
+E int SizeOfArray(char **array);
+
 E void ModuleChanModeUpdate(int mode, void (*setvalue) (Channel * chan, char *value),  char *(*getvalue) (Channel * chan));
-E int DenoraParseProto_ChannelUserModeBlock(int count, char **lines);
+E int DenoraParseProto_ChannelUserModeBlock(char **lines);
 E int ReturnChanUModeFromToken(char *tag);
 
-E int DenoraParseIdentityBlock(int count, char **lines);
-E int DenoraParseStatServBlock(int count, char **lines);
-E int DenoraParseFileNamesBlock(int count, char **lines);
-E int DenoraParseNetInfoBlock(int count, char **lines);
-E int DenoraParseBackUpBlock(int count, char **lines);
-E int DenoraParseTimeOutBlock(int count, char **lines);
-E int DenoraParseAdminBlock(int count, char **lines);
-E int DenoraParseSQLBlock(int count, char **lines);
-E int DenoraParseSQLTableBlock(int count, char **lines);
-E int DenoraParseOptionBlock(int count, char **lines);
-E int DenoraParseXMLRPCBlock(int count, char **lines);
-E int DenoraParseModuleBlock(int count, char **lines);
-E int DenoraParseSQLTableBlock(int count, char **lines);
-E int DenoraParseXMLRPCBlock(int count, char **lines);
+E int DenoraParseIdentityBlock(char **lines);
+E int DenoraParseStatServBlock(char **lines);
+E int DenoraParseFileNamesBlock(char **lines);
+E int DenoraParseNetInfoBlock(char **lines);
+E int DenoraParseBackUpBlock(char **lines);
+E int DenoraParseTimeOutBlock(char **lines);
+E int DenoraParseAdminBlock(char **lines);
+E int DenoraParseSQLBlock(char **lines);
+E int DenoraParseSQLTableBlock(char **lines);
+E int DenoraParseOptionBlock(char **lines);
+E int DenoraParseXMLRPCBlock(char **lines);
+E int DenoraParseModuleBlock(char **lines);
+E int DenoraParseSQLTableBlock(char **lines);
+E int DenoraParseXMLRPCBlock(char **lines);
 
 E char *GetAtrribValue(char *line);
 E char *GetAtrribTag(char *line);
@@ -1286,9 +1294,9 @@ E char **DenoraCallocArray(int x);
 E char *StringDup(const char *src);
 
 E config *DenoraXMLConfigFindBlock(char *mask);
-E config *DenoraXMLConfigBlockCreate(char *newblockname, int (parser)(int ac, char **av), int options);
-E void DenoraConfigInit(char *filename);
-E int DenoraParseConnectBlock(int count, char **lines);
+E config *DenoraXMLConfigBlockCreate(char *newblockname, int (parser)(char **av));
+E void DenoraConfigInit(void);
+E int DenoraParseConnectBlock(char **lines);
 
 E int sqlite3_shell_main(int argc, char **argv);
 

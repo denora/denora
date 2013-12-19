@@ -296,8 +296,10 @@ void xml_export_channels(char *file)
 void xml_export_tld(char *file)
 {
 	FILE *ptr;
-	TLD *t;
-	lnode_t *tn;
+	int i, rows;
+	sqlite3_stmt *stmt;
+	char ***data;
+
 
 	ptr = new_xml(file);
 
@@ -307,20 +309,23 @@ void xml_export_tld(char *file)
 	{
 		xml_write_header(ptr);
 		xml_write_block_top(ptr, "tld");
-		list_sort(Thead, sortusers);
-		tn = list_first(Thead);
-		while (tn)
+		TLDDatabase = DenoraOpenSQL(TLDDB);
+		rows = DenoraSQLGetNumRows(TLDDatabase, TLDTable);
+		stmt = DenoraPrepareQuery(TLDDatabase, "SELECT * FROM %s ORDER BY overall", TLDTable);
+		data = DenoraSQLFetchArray(TLDDatabase, TLDTable, stmt, FETCH_ARRAY_NUM);
+		for (i = 0; i < rows; i++)
 		{
-			t = lnode_get(tn);
-			denora_cmd_pong(ServerName, ServerName);
 			xml_write_block_top(ptr, "domain");
-			xml_write_tag(ptr, "countrycode", t->countrycode);
-			xml_write_tag(ptr, "country", t->country);
-			xml_write_tag_int(ptr, "current", t->count);
-			xml_write_tag_int(ptr, "overall", t->overall);
+			xml_write_tag(ptr, "countrycode", data[i][0]);
+			xml_write_tag(ptr, "country", data[i][1]);
+			xml_write_tag_int(ptr, "current", atoi(data[i][2]));
+			xml_write_tag_int(ptr, "overall", atoi(data[i][3]));
 			xml_write_block_bottom(ptr, "domain");
-			tn = list_next(Thead, tn);
 		}
+		free(data);
+		sqlite3_finalize(stmt);
+		DenoraCloseSQl(TLDDatabase);
+
 		xml_write_block_bottom(ptr, "tld");
 		xml_write_footer(ptr);
 	}
@@ -590,8 +595,6 @@ void xml_export_all(char *file)
 	FILE *ptr;
 	User *u, *next;
 	Server *s, *snext;
-	TLD *t;
-	lnode_t *tn;
 	Channel *c, *cnext;
 	int i, count;
 	char buf[BUFSIZE];
@@ -601,6 +604,9 @@ void xml_export_all(char *file)
 	int ping = 0;
 	int counttoping = 1;
 	char *temp;
+	int rows;
+	sqlite3_stmt * stmt;
+	char ***data;
 
 	ptr = new_xml(file);
 
@@ -754,33 +760,22 @@ void xml_export_all(char *file)
 		xml_write_block_bottom(ptr, "servers");
 
 		xml_write_block_top(ptr, "tld");
-		list_sort(Thead, sortusers);
-		tn = list_first(Thead);
-		while (tn)
+		TLDDatabase = DenoraOpenSQL(TLDDB);
+		rows = DenoraSQLGetNumRows(TLDDatabase, TLDTable);
+		stmt = DenoraPrepareQuery(TLDDatabase, "SELECT * FROM %s ORDER BY overall LIMIT 10", TLDTable);
+		data = DenoraSQLFetchArray(TLDDatabase, TLDTable, stmt, FETCH_ARRAY_NUM);
+		for (i = 0; i < rows; i++)
 		{
-			t = lnode_get(tn);
-			if (ping)
-			{
-				denora_cmd_pong(ServerName, ServerName);
-				ping = 0;
-			}
 			xml_write_block_top(ptr, "domain");
-			xml_write_tag(ptr, "countrycode", t->countrycode);
-			xml_write_tag(ptr, "country", t->country);
-			xml_write_tag_int(ptr, "current", t->count);
-			xml_write_tag_int(ptr, "overall", t->overall);
+			xml_write_tag(ptr, "countrycode", data[i][0]);
+			xml_write_tag(ptr, "country", data[i][1]);
+			xml_write_tag_int(ptr, "current", atoi(data[i][2]));
+			xml_write_tag_int(ptr, "overall", atoi(data[i][3]));
 			xml_write_block_bottom(ptr, "domain");
-			tn = list_next(Thead, tn);
-			if (counttoping == 10)
-			{
-				ping = 1;
-				counttoping = 1;
-			}
-			else
-			{
-				counttoping++;
-			}
 		}
+		free(data);
+		sqlite3_finalize(stmt);
+		DenoraCloseSQl(TLDDatabase);
 		xml_write_block_bottom(ptr, "tld");
 
 

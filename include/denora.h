@@ -175,6 +175,7 @@
 #include "cron.h"
 #include "list-array.h"
 #include "sql.h"
+#include "execinfo.h"
 
 /************************************************************************/
 /* Remove standard C functions and replace with our own functions	*/
@@ -367,7 +368,7 @@ struct config_
 	config *prev, *next;
 
 	char *name;
-	int (*parser)(int count, char **lines);
+	int (*parser)(char **lines);
 	int numoptions;
 };
 
@@ -980,7 +981,7 @@ struct tld_
 	TLD *next, *prev;
 
 	char *country;
-	char countrycode[3]; /* Two letter with an eventual NULL terminator */
+	char *countrycode; /* Two letter with an eventual NULL terminator */
 	uint32 count;
 	uint32 overall;
 	ModuleData *moduleData;

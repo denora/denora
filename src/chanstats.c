@@ -359,7 +359,7 @@ void count_kicks(User * kicker, User * kicked, Channel * c)
 
 	
 
-	if (kicker && !is_excluded(kicker))
+	if (kicker && !is_excluded_user(kicker))
 	{
 		check_db(kicker, c);
 		if (kicker->cstats != 2)        /* check for ignore */
@@ -377,7 +377,7 @@ void count_kicks(User * kicker, User * kicked, Channel * c)
 
 	
 
-	if (kicked && !is_excluded(kicked))
+	if (kicked && !is_excluded_user(kicked))
 	{
 		check_db(kicked, c);
 		if (kicked->cstats != 2)        /* check for ignore */
@@ -408,7 +408,7 @@ void count_topics(User * u, Channel * c)
 	/*
 	 * need to exclude them from being counted if it is from a user whom is to be excluded
 	 */
-	if (is_excluded(u))
+	if (is_excluded_user(u))
 	{
 		return;
 	}
@@ -448,7 +448,7 @@ void count_modes(User * u, Channel * c)
 	/*
 	 * need to exclude them from being counted if it is from a user whom is to be excluded
 	 */
-	if (is_excluded(u))
+	if (is_excluded_user(u))
 	{
 		return;
 	}

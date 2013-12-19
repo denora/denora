@@ -14,21 +14,7 @@
  */
 
 #include "denora.h"
-
-list_t *Thead;
-
-static int findcc(const void *v, const void *cc)
-{
-	const TLD *t = (void *) v;
-	return (stricmp(t->countrycode, (char *) cc));
-}
-
-int sortusers(const void *v, const void *v2)
-{
-	const TLD *t = (void *) v;
-	const TLD *t2 = (void *) v2;
-	return (t2->count - t->count);
-}
+sqlite3 *TLDDatabase;
 
 /*************************************************************************/
 
@@ -41,20 +27,25 @@ int sortusers(const void *v, const void *v2)
  */
 void tld_update(char *country_code)
 {
-	lnode_t *tn;
-	TLD *t = NULL;
+	TLD *t;
 
-	tn = list_find(Thead, country_code, findcc);
+	t = findtld(country_code);
 
-	if (tn)
+	if (t)
 	{
-		t = lnode_get(tn);
 		if (t->count > 0)
 		{
 			t->count--;
 		}
-		sql_query("UPDATE %s SET count=%u, overall=%u WHERE code=\'%s\'",
+		DenoraExecQuerySQL(TLDDatabase, "UPDATE %s SET count=%u, overall=%u WHERE code=\'%s\'",
 		          TLDTable, t->count, t->overall, country_code);
+
+		if (denora->do_sql)
+		{
+			sql_query("UPDATE %s SET count=%u, overall=%u WHERE code=\'%s\'",
+			          TLDTable, t->count, t->overall, country_code);
+		}
+		fini_tld(t);
 	}
 }
 
@@ -74,61 +65,23 @@ void tld_update(char *country_code)
 void sql_do_tld(int type, char *code, char *country, int count, int overall)
 {
 	char *sqlcountry;
-	SQLres *sql_res;
 
-	if (!denora->do_sql)
-	{
-		return;
-	}
-
-	sqlcountry = sql_escape(country);
-
-	
 	if (type == 1 || type == 4)
 	{
-		sql_query("SELECT country FROM %s WHERE country = \'%s\';", TLDTable, sqlcountry);
-		sql_res = sql_set_result(sqlcon);
-		if (sql_res)
+		if (denora->do_sql)
 		{
-			if (sql_num_rows(sql_res))         /* does the country already exist in the database? */
+			sqlcountry = sql_escape(country);
+			sql_query("INSERT INTO %s  (code, country, count, overall) VALUES(\'%s\', \'%s\', %d, %d) \
+					ON DUPLICATE KEY UPDATE count=%d, overall=%d",
+					TLDTable, code, sqlcountry, count, overall, count, overall);
+			if (sqlcountry)
 			{
-				sql_query("UPDATE %s SET count=%d, overall=%d WHERE code=\'%s\'",
-					TLDTable, count, overall, code);
+				free(sqlcountry);
 			}
-			else
-			{
-				sql_query("INSERT INTO %s (code, country, count, overall) VALUES(\'%s\', \'%s\', %d, %d)",
-					TLDTable, code, sqlcountry, count, overall);
-			}
-			sql_free_result(sql_res);
 		}
 	}
 
-	
-
-	if (sqlcountry)
-	{
-		free(sqlcountry);
-	}
-
 	return;
-}
-
-/*************************************************************************/
-
-void init_tld(void)
-{
-	TLD *t;
-	lnode_t *tn;
-	
-
-	Thead = list_create(-1);
-	t = malloc(sizeof(TLD));
-	bzero(t, sizeof(TLD));
-	ircsnprintf(t->countrycode, 5, "???");
-	t->country = sstrdup("Unknown");
-	tn = lnode_create(t);
-	list_append(Thead, tn);
 }
 
 /*************************************************************************/
@@ -140,24 +93,28 @@ void init_tld(void)
  * @return TLD struct
  *
  */
-TLD *new_tld(const char *countrycode, const char *country)
+TLD *make_tld(char **data)
 {
-	lnode_t *tn;
-	TLD *t = NULL;
-	
+	TLD *t;
 
-	tn = list_find(Thead, countrycode, findcc);
-	if (tn)
+	t = malloc(sizeof(TLD));
+	t->countrycode = sstrdup(data[0]);
+	t->country = sstrdup(data[1]);
+	if (!data[2])
 	{
-		t = lnode_get(tn);
+		t->count = 1;
 	}
 	else
 	{
-		t = malloc(sizeof(TLD));
-		strlcpy(t->countrycode, countrycode, 5);
-		t->country = sstrdup(country);
-		tn = lnode_create(t);
-		list_append(Thead, tn);
+		t->count = atoi(data[2]);
+	}
+	if (!data[3])
+	{
+		t->overall = 1;
+	}
+	else
+	{
+		t->overall = atoi(data[3]);
 	}
 	return t;
 }
@@ -166,143 +123,44 @@ TLD *new_tld(const char *countrycode, const char *country)
 
 TLD *findtld(const char *countrycode)
 {
-	lnode_t *tn;
-	TLD *t = NULL;
+	TLD *t;
+	sqlite3_stmt *stmt;
+	char **sdata;
 
-	tn = list_find(Thead, countrycode, findcc);
-	if (tn)
-	{
-		t = lnode_get(tn);
-		return t;
-	}
-	else
+	if (!countrycode)
 	{
 		return NULL;
 	}
-}
 
-/*************************************************************************/
-
-/**
- * Load the TLD database from disk
- *
- * @return void - no returend value
- *
- */
-void load_tld_db(void)
-{
-	char *key, *value;
-	DenoraDBFile *dbptr = filedb_open(TLDDB, TLD_VERSION, &key, &value);
-	TLD *t = NULL;
-	int retval = 0;
-	char *tempcc = NULL;
-	char *tempc = NULL;
-	int overall = 0;
-
-	if (!dbptr)
-	{
-		return;                 /* Bang, an error occurred */
+	TLDDatabase = DenoraOpenSQL(TLDDB);
+	stmt = DenoraPrepareQuery(TLDDatabase, "SELECT * FROM %s WHERE code='%q'", TLDTable, countrycode);
+	sdata = DenoraSQLFetchRow(stmt, FETCH_ARRAY_NUM);
+	if (sdata) {
+		t = make_tld(sdata);
 	}
+	sqlite3_finalize(stmt);
+	DenoraCloseSQl(TLDDatabase);
 
-	while (1)
+	if (stricmp(t->countrycode, countrycode) == 0)
 	{
-		/* read a new entry and fill key and value with it -Certus */
-		retval = new_read_db_entry(&key, &value, dbptr->fptr);
-
-		if (retval == DB_READ_ERROR)
-		{
-			alog(LOG_NORMAL, "WARNING! DB_READ_ERROR in %s",
-			     dbptr->filename);
-			filedb_close(dbptr, &key, &value);
-			return;
-		}
-		else if (retval == DB_EOF_ERROR)
-		{
-			alog(LOG_EXTRADEBUG, "debug: %s read successfully",
-			     dbptr->filename);
-			filedb_close(dbptr, &key, &value);
-			return;
-		}
-		else if (retval == DB_READ_BLOCKEND)            /* DB_READ_BLOCKEND */
-		{
-			t = new_tld(tempcc, tempc);
-			t->overall = overall;
-			if (tempc)
-			{
-				free(tempc);
-			}
-			if (tempcc)
-			{
-				free(tempcc);
-			}
-		}
-		else
-		{
-			/* DB_READ_SUCCESS */
-
-			if (!*value || !*key)
-				continue;
-
-			if (!stricmp(key, "ccode"))
-			{
-				tempcc = sstrdup(value);
-			}
-			else if (!stricmp(key, "country"))
-			{
-				tempc = sstrdup(value);
-			}
-			else if (!stricmp(key, "overall"))
-			{
-				overall = atoi(value);
-			}
-		}                       /* else */
-	}                           /* while */
-}
-
-/*************************************************************************/
-
-/**
- * Save the TLD database to disk
- *
- * @return void - no returend value
- *
- */
-void save_tld_db(void)
-{
-	DenoraDBFile *dbptr = filedb_create(TLDDB, TLD_VERSION);
-	TLD *t;
-	lnode_t *tn;
-
-	tn = list_first(Thead);
-	while (tn != NULL)
-	{
-		t = lnode_get(tn);
-		new_write_db_entry("ccode", dbptr, "%s", t->countrycode);
-		new_write_db_entry("country", dbptr, "%s", t->country);
-		new_write_db_entry("overall", dbptr, "%u", t->overall);
-		new_write_db_endofblock(dbptr);
-		tn = list_next(Thead, tn);
+		return t;
 	}
-
-	filedb_close(dbptr, NULL, NULL);  /* close file */
+	return NULL;
 }
 
 /*************************************************************************/
 
-void fini_tld(void)
+void fini_tld(TLD *t)
 {
-	TLD *t;
-	lnode_t *tn;
-
-	tn = list_first(Thead);
-	while (tn != NULL)
+	if (t->countrycode)
 	{
-		t = lnode_get(tn);
+		free(t->countrycode);
+	}
+	if (t->country)
+	{
 		free(t->country);
-		free(t);
-		tn = list_next(Thead, tn);
 	}
-	list_destroy_nodes(Thead);
+	free(t);
 }
 
 /*************************************************************************/
@@ -318,6 +176,7 @@ void fini_tld(void)
 TLD *do_tld(char *country, char *code)
 {
 	TLD *t, *t2;
+	char **data;
 
 	if (code)
 	{
@@ -329,12 +188,15 @@ TLD *do_tld(char *country, char *code)
 		t = findtld(code);
 	}
 
-	
-
 	if (!t)
 	{
-		/* Allocate User structure and fill it in. */
-		t2 = new_tld(code, country);
+		DenoraExecQuerySQL(TLDDatabase, "INSERT INTO %s (code, country, count, overall) VALUES(\'%s\', \'%s\', %d, %d)",
+				TLDTable, code, country, 1, 1);
+
+		data = DenoraCallocArray(1);
+		data[0] = code;
+		data[1] = country;
+		t2 = make_tld(data);
 		t2->count = 1;
 		t2->overall = 1;
 		return t2;
@@ -350,6 +212,8 @@ TLD *do_tld(char *country, char *code)
 		{
 			t->overall = 1;
 		}
+		DenoraExecQuerySQL(TLDDatabase, "UPDATE %s SET count=%d, overall=%d WHERE code=\'%s\'",
+				TLDTable, t->count, t->overall, t->countrycode);
 		return t;
 	}
 }

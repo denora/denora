@@ -1,0 +1,88 @@
+# Makefile for Denora.
+#
+# (c) 2004-2013 Denora Team
+# Contact us at info@denorastats.org
+#
+# Please read COPYING and README for further details.
+#
+# Based on the original code of Anope by Anope Team.
+# Based on the original code of Thales by Lucas.
+#
+# 
+#
+
+
+CCDV=@CCDV@
+CC=$(CCDV)@CC@
+INCLUDEDIR=../include 
+DENORALIBS=@DENORALIBS@
+BASEOPT=-O2
+CFLAGS=@CFLAGS@
+OPCFLAGS=@OPCFLAGS@
+STRICT=@STRICT@
+ANSI=-Wall -ansi -pedantic
+PROFILE=-pg
+LDPROFILE=
+SHELL=/bin/sh
+SUBDIRS=src
+LIBDIRS=lib
+BINDEST=@BINDEST@
+DATDEST=@DATDEST@
+INSTALL=@INSTALL@
+RM=@RM@
+CP=@CP@
+TOUCH=@TOUCH@
+MODULE_PATH=@MODULE_PATH@
+MYSQL=@MYSQL@
+MYSQL_CLIENT_LIBS=@MYSQL_CLIENT_LIBS@
+LDFLAGS=@LDFLAGS@
+RUNGROUP=@RUNGROUP@
+SHARED=@SHARED@
+RDYNAMNIC=@RDYNAMNIC@
+MODULEFLAGS=@MODULEFLAGS@
+
+OBJS =  sqlite3.o
+        
+SRCS =  sqlite3.c
+        
+INCLUDES = sqlite3.h sqlite3ext.h
+
+MAKEARGS = 'CFLAGS=${CFLAGS}' 'CC=${CC}' 'DENORALIBS=${DENORALIBS}' \
+	   'LDFLAGS=${LDFLAGS}' 'BINDEST=${BINDEST}' 'INSTALL=${INSTALL}' \
+           'INCLUDEDIR=${INCLUDEDIR}' 'RM=${RM}' 'CP=${CP}' \
+      	   'TOUCH=${TOUCH}' 'SHELL=${SHELL}' 'DATDEST=${DATDEST}' \
+  	   'RUNGROUP=${RUNGROUP}' 'MODULE_PATH=${MODULE_PATH}' \
+	   'SHARED=${SHARED}' 'MODULEFLAGS=${MODULEFLAGS}' 'RDYNAMNIC=${RDYNAMNIC}'
+
+
+.c.o:
+	$(CC) $(CFLAGS) ${DENORALIBS} -c $<
+
+all: libsqlite3.la shell
+
+distclean: spotless
+
+libsqlite3.la:  $(OBJS)
+	ar -cvq libsqlite3.la sqlite3.o
+	$(CC) -shared -Wl,-soname,libsqlite3.so -o libsqlite3.so  sqlite3.o
+
+$(OBJS): Makefile
+sqlite3.o:		sqlite3.c  $(INCLUDES)
+
+shell:
+	$(CC) $(CFLAGS) ${DENORALIBS} -c shell.c -o sqlite_shell
+
+clean:
+	rm -f *.o libsqlite3.so libsqlite3.la sqlite_shell a.out
+
+spotless:
+	rm -f *.o libsqlite3.so libsqlite3.la sqlite_shell a.out Makefile
+
+install: libsqlite3.la
+	test -d ${BINDEST} || mkdir ${BINDEST}
+	test -d ${BINDEST}/libs || mkdir ${BINDEST}/libs
+	$(INSTALL) libsqlite3.la $(BINDEST)/libs/libsqlite3.la
+	$(INSTALL) sqlite_shell $(BINDEST)/sqlite_shell
+
+DUMMY:
+	

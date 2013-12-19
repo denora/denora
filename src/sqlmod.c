@@ -197,31 +197,22 @@ int sql_init()
 
 int sql_direct_query(SQLCon *con, char *query)
 {
-#ifdef USE_SQL_BT
-#ifdef HAVE_BACKTRACE
 	int nptrs, j;
 	void *buffer[100];
 	char **strings;
-#endif
-#endif
-
 	
 
 	if (!denora->do_sql)
 	{
 		return -1;
 	}
-#ifdef USE_SQL_BT
-#ifdef HAVE_BACKTRACE
-			nptrs = backtrace(buffer, 6);
-			strings = backtrace_symbols(buffer, nptrs);
-			if (strings != NULL) {
-           			for (j = 2; j < nptrs; j++)
-					alog(LOG_DEBUG, "[bt %d/%d] %s", j, nptrs, strings[j]);
-				free(strings);
-			}
-#endif
-#endif
+	nptrs = backtrace(buffer, 6);
+	strings = backtrace_symbols(buffer, nptrs);
+	if (strings != NULL) {
+	for (j = 2; j < nptrs; j++)
+			alog(LOG_DEBUG, "[bt %d/%d] %s", j, nptrs, strings[j]);
+			free(strings);
+	}
 	sqlmod.query(con, query);
 	return 0;
 }

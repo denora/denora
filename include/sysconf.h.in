@@ -30,7 +30,19 @@
 #undef HAS_SYS_TYPES_H
 
 /* "" */
+#undef HAS_SYS_TIME_H
+
+/* "" */
+#undef HAVE_FCNTL_H
+
+/* "" */
 #undef HAVE_BACKTRACE
+
+/* System supports sys/ioctl.h */
+#undef HAVE_SYS_IOCTL_H
+
+/* System supports sys/ioctl.h */
+#undef HAVE_STDARG_H
 
 /* "" */
 #undef HAVE_SSL

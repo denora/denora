@@ -1,0 +1,88 @@
+# Makefile for Denora.
+#
+# (c) 2004-2013 Denora Team
+# Contact us at info@denorastats.org
+#
+# Please read COPYING and README for further details.
+#
+# Based on the original code of Anope by Anope Team.
+# Based on the original code of Thales by Lucas.
+#
+# 
+#
+
+
+CCDV=@CCDV@
+CC=$(CCDV)@CC@
+INCLUDEDIR=../include 
+DENORALIBS=@DENORALIBS@
+BASEOPT=-O2
+CFLAGS=@CFLAGS@
+OPCFLAGS=@OPCFLAGS@
+STRICT=@STRICT@
+ANSI=-Wall -ansi -pedantic
+PROFILE=-pg
+LDPROFILE=
+SHELL=/bin/sh
+SUBDIRS=src
+LIBDIRS=lib
+BINDEST=@BINDEST@
+DATDEST=@DATDEST@
+INSTALL=@INSTALL@
+RM=@RM@
+CP=@CP@
+TOUCH=@TOUCH@
+MODULE_PATH=@MODULE_PATH@
+MYSQL=@MYSQL@
+MYSQL_CLIENT_LIBS=@MYSQL_CLIENT_LIBS@
+LDFLAGS=@LDFLAGS@
+RUNGROUP=@RUNGROUP@
+SHARED=@SHARED@
+RDYNAMNIC=@RDYNAMNIC@
+MODULEFLAGS=@MODULEFLAGS@
+EVNTLIBOBJS=@EVNTLIBOBJS@
+
+OBJS =  GeoIP.o GeoIPCity.o regionName.o timeZone.o
+        
+SRCS =  GeoIP.c GeoIPCity.c regionName.c timeZone.c
+        
+INCLUDES = GeoIP.h GeoIPCity.h GeoIP_internal.h
+
+MAKEARGS = 'CFLAGS=${CFLAGS}' 'CC=${CC}' 'DENORALIBS=${DENORALIBS}' \
+	   'LDFLAGS=${LDFLAGS}' 'BINDEST=${BINDEST}' 'INSTALL=${INSTALL}' \
+           'INCLUDEDIR=${INCLUDEDIR}' 'RM=${RM}' 'CP=${CP}' \
+      	   'TOUCH=${TOUCH}' 'SHELL=${SHELL}' 'DATDEST=${DATDEST}' \
+  	   'RUNGROUP=${RUNGROUP}' 'MODULE_PATH=${MODULE_PATH}' \
+	   'SHARED=${SHARED}' 'MODULEFLAGS=${MODULEFLAGS}' 'RDYNAMNIC=${RDYNAMNIC}'
+
+
+.c.o:
+	$(CC) $(CFLAGS) ${DENORALIBS} -c $<
+
+all: libgeoip
+
+distclean: spotless
+
+libgeoip:  $(OBJS)
+	@(ar -cvq libgeopip.a GeoIP.o GeoIPCity.o regionName.o timeZone.o)
+	$(CC) -shared -Wl,-soname,libgeoip.so -o libgeoip.so  *.o
+
+$(OBJS): Makefile
+sqlite3.o:		sqlite3.c  $(INCLUDES)
+
+
+clean:
+	rm -f *.o libgeopip.a libgeoip.so a.out
+
+spotless:
+	rm -f *.o libgeoip.so libgeopip.a a.out Makefile
+
+install:
+	test -d ${BINDEST} || mkdir ${BINDEST}
+	test -d ${BINDEST}/libs || mkdir ${BINDEST}/libs
+	$(INSTALL) libgeopip.la $(BINDEST)/libs/libgeopip.la
+	$(INSTALL) libgeopip.so $(BINDEST)/libs/libgeopip.so
+
+
+DUMMY:
+	

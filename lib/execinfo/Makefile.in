@@ -40,7 +40,6 @@ RUNGROUP=@RUNGROUP@
 SHARED=@SHARED@
 RDYNAMNIC=@RDYNAMNIC@
 MODULEFLAGS=@MODULEFLAGS@
-EVNTLIBOBJS=@EVNTLIBOBJS@
 
 OBJS =  execinfo.o stacktraverse.o
         
@@ -58,25 +57,25 @@ MAKEARGS = 'CFLAGS=${CFLAGS}' 'CC=${CC}' 'DENORALIBS=${DENORALIBS}' \
 
 
 .c.o:
-	$(CC) $(CFLAGS) ${DENORALIBS} -c $<
+	$(CC) $(CFLAGS) -c $<
 
 all: libexecinfo.la
 
 distclean: spotless
 
 libexecinfo.la:  $(OBJS)
-	ar -cvq libexecinfo.a
-	$(CC) -shared -Wl,-soname,libexecinfo.so -o libexecinfo.so  *.o
+	ar -cvq libexecinfo.a execinfo.o stacktraverse.o
+	$(CC) -shared -Wl,-soname,libexecinfo.so -o libexecinfo.so  *.o -lm
 
 $(OBJS): Makefile
 execinfo.o:		execinfo.c  $(INCLUDES)
 stacktraverse.o:   stacktraverse.c       $(INCLUDES)
 
 clean:
-	rm -f *.o libexecinfo.so a.out
+	rm -f *.o libexecinfo.so libexecinfo.a a.out
 
 spotless:
-	rm -f *.o libexecinfo.so a.out
+	rm -f *.o libexecinfo.so libexecinfo.a a.out Makefile
 
 install: libexecinfo.la
 	test -d ${BINDEST}/libs || mkdir ${BINDEST}/libs

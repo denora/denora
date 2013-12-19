@@ -1,4 +1,4 @@
-/*
+<!--
  * 
  * (c) 2004-2013 Denora Team
  * Contact us at info@denorastats.org
@@ -21,15 +21,17 @@
  * by '"' double quotes.  All elements of the configuration are separated
  * by whitespace, and can be packed on one line, or broken up over several
  * lines.
- */
+ --!>
  
  # Comments are supported in three forms:
-     /* C style
-        multi-line */
+ <!--
+		xml style
+ --!>
+
      # shell style single-line
      // C++ style single-line
 
-/*
+<!--
  * A sample block:
  * 
  *     block {
@@ -63,7 +65,7 @@
  *
  * NOTE: unless other specified, there may be only one block with the
  *       same name.
- */
+--!>
 
 
 ###########################################################################

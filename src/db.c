@@ -22,6 +22,8 @@ static int ServerLastClean = -1;
 /* last time we cleaned the user table */
 static int UserLastClean = -1;
 
+sqlite3* StatsDatabase;
+
 /*************************************************************************/
 
 /**
@@ -32,86 +34,24 @@ static int UserLastClean = -1;
  */
 void load_stats_db(void)
 {
-	char *key, *value;
-	DenoraDBFile *dbptr = filedb_open(statsDB, STATSDB_VERSION, &key, &value);
-	int retval = 0;
+	sqlite3_stmt *stmt;
+	char **data;
 
-        if (!dbptr)
-        {
-                return;                 /* Bang, an error occurred */
-        }
-        
-
-	while (1)
-	{
-		/* read a new entry and fill key and value with it -Certus */
-		retval = new_read_db_entry(&key, &value, dbptr->fptr);
-
-		if (retval == DB_READ_ERROR)
-		{
-			alog(LOG_NORMAL, langstr(ALOG_DB_ERROR), dbptr->filename);
-			filedb_close(dbptr, &key, &value);
-			return;
-		}
-		else if (retval == DB_EOF_ERROR)
-		{
-			alog(LOG_EXTRADEBUG, langstr(ALOG_DEBUG_DB_OK),
-			     dbptr->filename);
-			filedb_close(dbptr, &key, &value);
-			return;
-		}
-		else if (retval == DB_READ_BLOCKEND)            /* DB_READ_BLOCKEND */
-		{
-			/* a channel has completely been read. put any checks in here! */
-		}
-		else
-		{
-			/* DB_READ_SUCCESS */
-
-			if (!*value || !*key)
-			{
-				continue;
-			}
-			
-
-			if (!stricmp(key, "usermax"))
-			{
-				stats->users_max = atoi(value);
-			}
-			else if (!stricmp(key, "usermaxtime"))
-			{
-				stats->users_max_time = atoi(value);
-			}
-			else if (!stricmp(key, "channelmax"))
-			{
-				stats->chans_max = atoi(value);
-			}
-			else if (!stricmp(key, "channelmaxtime"))
-			{
-				stats->chans_max_time = atoi(value);
-			}
-			else if (!stricmp(key, "servermax"))
-			{
-				stats->servers_max = atoi(value);
-			}
-			else if (!stricmp(key, "servermaxtime"))
-			{
-				stats->servers_max_time = atoi(value);
-			}
-			else if (!stricmp(key, "opermax"))
-			{
-				stats->opers_max = atoi(value);
-				if ((int) stats->opers_max < 0)
-				{
-					stats->opers_max = 0;
-				}
-			}
-			else if (!stricmp(key, "opermaxtime"))
-			{
-				stats->opers_max_time = atoi(value);
-			}
-		}                       /* else */
-	}                           /* while */
+	StatsDatabase = DenoraOpenSQL(statsDB);
+	stmt = DenoraPrepareQuery(StatsDatabase, "SELECT * FROM %s", StatsTable);
+	data = DenoraSQLFetchRow(stmt, FETCH_ARRAY_NUM);
+	if (data) {
+		stats->users_max = atoi(data[0]);
+		stats->users_max_time = atoi(data[1]);
+		stats->chans_max = atoi(data[2]);
+		stats->chans_max_time = atoi(data[3]);
+		stats->servers_max = atoi(data[4]);
+		stats->servers_max_time = atoi(data[5]);
+		stats->opers_max = atoi(data[6]);
+		stats->opers_max_time = atoi(data[7]);
+	}
+	sqlite3_finalize(stmt);
+	DenoraCloseSQl(StatsDatabase);
 }
 
 /*************************************************************************/
@@ -124,32 +64,10 @@ void load_stats_db(void)
  */
 void save_stats_db(void)
 {
-	DenoraDBFile *dbptr = filedb_create(statsDB, STATSDB_VERSION);
-
-	
-	new_write_db_entry("usermax", dbptr, "%ld", stats->users_max);
-	new_write_db_entry("usermaxtime", dbptr, "%ld",
-	                   (long int) stats->users_max_time);
-	new_write_db_entry("channelmax", dbptr, "%ld", stats->chans_max);
-	new_write_db_entry("channelmaxtime", dbptr, "%ld",
-	                   (long int) stats->chans_max_time);
-	new_write_db_entry("servermax", dbptr, "%ld", stats->servers_max);
-	new_write_db_entry("servermaxtime", dbptr, "%ld",
-	                   (long int) stats->servers_max_time);
-	if ((int) stats->opers_max >= 0)
-	{
-		new_write_db_entry("opermax", dbptr, "%ld", stats->opers_max);
-	}
-	else
-	{
-		new_write_db_entry("opermax", dbptr, "%ld", 0);
-	}
-	new_write_db_entry("opermaxtime", dbptr, "%ld",
-	                   (long int) stats->opers_max_time);
-	new_write_db_endofblock(dbptr);
-
-	
-	filedb_close(dbptr, NULL, NULL);  /* close file */
+	DenoraSQLQuery(statsDB, "UPDATE %s SET users_max=%ld, users_max_time=%ld, chans_max=%ld, chans_max_time=%ld, \
+					servers_max=%ld, servers_max_time=%ld, opers_max=%ld, opers_max_time=%ld", StatsTable, stats->users_max,
+					stats->users_max_time, stats->chans_max, stats->chans_max_time, stats->servers_max, stats->servers_max_time,
+					stats->opers_max, stats->opers_max_time);
 }
 
 /*************************************************************************/
@@ -247,14 +165,6 @@ void db_connect(void)
 	sql_clear_table(SglineTable);
 	sql_clear_table(SqlineTable);
 
-	e = first_exclude();
-	while (e)
-	{
-		next = next_exclude();
-		sql_query("DELETE FROM %s WHERE uname=\'%s\'",
-		          UStatsTable, e->name);
-		e = next;
-	}
 	sql_query("DELETE FROM %s WHERE uname=\'%s\'", 
 		  UStatsTable,s_StatServ);
 	if (s_StatServ_alias)

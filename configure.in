@@ -40,10 +40,9 @@ m4_include([autoconf/m4/denora.m4])
 m4_include([autoconf/m4/AX_FUNC_WHICH_GETHOSTBYNAME_R.m4])
 m4_include([autoconf/m4/ccdv.m4])
 m4_include([autoconf/m4/ax_lib_postgresql.m4])
-dnl m4_include([autoconf/m4/perl.m4])
-dnl m4_include([autoconf/m4/python.m4])
-m4_include([autoconf/m4/libevent.m4])
-
+m4_include([autoconf/m4/perl.m4])
+m4_include([autoconf/m4/python.m4])
+m4_include([autoconf/m4/libgnutls.m4])
 
 AC_CONFIG_AUX_DIR(autoconf)
 AC_CONFIG_HEADER(include/sysconf.h)
@@ -128,6 +127,9 @@ DENORA_CHECK_TYPE_SIZES
 AC_CHECK_HEADER(strings.h,AC_DEFINE(HAVE_STRINGS_H,1,""))
 AC_CHECK_HEADER(string.h,AC_DEFINE(HAVE_STRING_H,1,""))
 AC_CHECK_HEADER(stdint.h,AC_DEFINE(HAVE_STDINT_H,1,""))
+AC_CHECK_HEADER(stdarg.h,AC_DEFINE(HAVE_STDARG_H,1,""))
+AC_CHECK_HEADER(sys/time.h,AC_DEFINE(HAS_SYS_TIME_H,1,""))
+AC_CHECK_HEADER(fcntl.h,AC_DEFINE(HAVE_FCNTL_H,1,""))
 AC_CHECK_HEADER(stdlib.h,AC_DEFINE(HAVE_STDLIB_H,1,""))
 AC_CHECK_HEADER(sys/select.h,AC_DEFINE(HAVE_SYS_SELECT_H,1,""))
 AC_CHECK_HEADER(unistd.h,AC_DEFINE(HAVE_UNISTD_H,1,""))
@@ -137,10 +139,37 @@ AC_CHECK_HEADER(netdb.h,AC_DEFINE(HAVE_NETDBH,1,""))
 AC_CHECK_HEADER(malloc.h,AC_DEFINE(HAVE_MALLOC_H,1,""))
 AC_CHECK_HEADER(signal.h,AC_DEFINE(HAVE_SIGNAL_H,1,""))
 AC_CHECK_HEADER(regex.h,AC_DEFINE(HAVE_REGEX_H,1,""))
+AC_CHECK_HEADER(sys/ioctl.h,AC_DEFINE(HAVE_SYS_IOCTL_H,1,""))
 AC_CHECK_HEADER(editline/editline.h,AC_DEFINE(HAVE_EDITLINE,1,""))
 AC_CHECK_HEADER(readline/readline.h,AC_DEFINE(HAVE_READLINE,1,""))
-
-
+AC_CHECK_HEADER(
+        sys/time.h \
+	sys/socket.h \
+    sys/poll.h \
+	poll.h \
+	signal.h \
+	sys/epoll.h \
+	sys/queue.h \
+	sys/event.h \
+	sys/ioctl.h \
+	sys/devpoll.h,d
+nl to do if not found
+[],
+dnl to do if found
+[],
+dnl default includes
+[
+#ifdef HAVE_SYS_TIME_H
+#include <sys/time.h>
+#endif
+#ifdef HAVE_SYS_SELECT_H
+#include <sys/select.h>
+#endif
+#ifdef HAVE_SYS_SOCKET_H
+#include <sys/socket.h>
+#endif
+]
+)
 
 AC_C_INLINE
 
@@ -182,10 +211,10 @@ ACX_PTHREAD([
 ])
 
 
-dnl AUTOTOOLS_EMBED_PERL
-dnl AUTOTOOLS_EMBED_PYTHON
+AUTOTOOLS_EMBED_PERL
+AUTOTOOLS_EMBED_PYTHON
 CHECK_SSL
-
+AUTOTOOLS_GNUTLS_SSL
 
 TYPE_SOCKLEN_T
 
@@ -840,21 +869,20 @@ fi
 DENORA_GCC_TRY_FLAGS([-Wp,-D_FORTIFY_SOURCE=2], denora_cv_gcc_fortify_source)
 fi
 
-dnl Libs that build without CCDV are routed into dev/null so it looks pretty
-dnl this libs are carry their own configuration system
-cur_dir=`pwd`
-dnl AC_MSG_RESULT(Configuring Event library this can take a few momments)
-dnl cd lib/event
-dnl ./configure --prefix=$BINDEST/libs >> /dev/null 2>&1  || exit 1
-dnl AC_MSG_RESULT(Compiling Event library again this can take a few momments)
-dnl $ac_cv_prog_MAKER >> /dev/null 2>&1 || exit 1
-dnl CFLAGS="$CFLAGS -I$cur_dir/libs/event/include"
-dnl DENORALIBS="$DENORALIBS -L$cur_dir/lib/event/levent"
-
-dnl cd $cur_dir;
-
 wi_ARG_DISABLE_CCDV
 wi_PROG_CCDV
+
+cur_dir=`pwd`
+
+CFLAGS="${CFLAGS} -I$cur_dir/lib/geoip"
+DENORALIBS="${DENORALIBS} -L$cur_dir/lib/geoip -lgeoip"
+
+CFLAGS="${CFLAGS} -I$cur_dir/lib/sqlite3"
+DENORALIBS="${DENORALIBS} -L$cur_dir/lib/sqlite3 -lsqlite3"
+
+CFLAGS="${CFLAGS} -I$cur_dir/lib/execinfo"
+DENORALIBS="${DENORALIBS} -L$cur_dir/lib/execinfo -lexecinfo"
+
 
 AC_SUBST(DENORALIBS)
 AC_SUBST(CFLAGS)
@@ -868,6 +896,9 @@ AC_CONFIG_FILES(		\
 	src/bin/denorarc	\
 	src/bin/geoipupd	\
 	lib/execinfo/Makefile \
+	lib/sqlite3/Makefile \
+	lib/geoip/Makefile \
+
 )
 
 AC_OUTPUT
@@ -878,13 +909,13 @@ echo
 echo Denora IRC Stats $x_version on $host
 echo
 echo Modules ....................: $DIS_MODULES
-echo Socket/Signal Engine .......: libevent
-echo OpenSSL ....................: $cf_enable_openssl
+echo OpenSSL ....................: $DIS_OPENSSL
+echo GNUTLS......................: $DIS_GNUTLS
 echo LibCrypt....................: $DIS_LIBCRYPT
 echo MySQL ......................: $DIS_MYSQL
 echo PostGreSQL .................: $DIS_PGSQL
 echo Perl Module ................: $DIS_PERL
-echo Python Module ..............: $ac_cv_show_headers
+echo Python Module ..............: $DIS_PYTHON
 echo BackTrace ..................: libexeinfo
 echo
 echo Installation directory......: $prefix

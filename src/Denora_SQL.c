@@ -71,6 +71,47 @@ int DenoraSQLQuery(char *dbname, const char *fmt, ...)
 	return res;
 }
 
+
+
+/*************************************************************************/
+
+int DenoraSQLUpdateChar(char *dbname, char *var, char *data)
+{
+	char *buf;
+	int res;
+	sqlite3 *db;
+
+	const char *fmt = "UPDATE %s SET %s=%q";
+
+	sqlite3_snprintf(NET_BUFSIZE, buf, fmt, dbname, var, data);
+
+	db = DenoraOpenSQL(dbname);
+	res = DenoraExecQueryDirectSQL(db, buf, NULL);
+	DenoraCloseSQl(db);
+
+	return res;
+}
+
+
+/*************************************************************************/
+
+int DenoraSQLUpdateInt(char *dbname, char *var, int data)
+{
+	char *buf;
+	int res;
+	sqlite3 *db;
+
+	const char *fmt = "UPDATE %s SET %s=%d";
+
+	sqlite3_snprintf(NET_BUFSIZE, buf, fmt, dbname, var, data);
+
+	db = DenoraOpenSQL(dbname);
+	res = DenoraExecQueryDirectSQL(db, buf, NULL);
+	DenoraCloseSQl(db);
+
+	return res;
+}
+
 /*************************************************************************/
 
 
@@ -279,6 +320,32 @@ int DenoraSQLGetNumRows(sqlite3 *db, const char *table)
 	return result;
 }
 
+
+int DenoraSQLGetNumRowsFromQuery(char *dbname, const char *fmt, ...)
+{
+	int StepReturn;
+	int result = 0;
+	sqlite3_stmt *stmt;
+	va_list args;
+	char *buf;
+	sqlite3 *db;
+
+	va_start(args, fmt);
+	sqlite3_vsnprintf(NET_BUFSIZE, buf, fmt, args);
+	va_end(args);
+
+	db = DenoraOpenSQL(dbname);
+	stmt = DenoraPrepareQuery(db, buf);
+	StepReturn = sqlite3_step(stmt);
+	if (StepReturn == SQLITE_ROW)
+	{
+		result = sqlite3_column_int(stmt, 0);
+	}
+	sqlite3_finalize(stmt);
+	DenoraCloseSQl(db);
+	return result;
+}
+
 char **DenoraSQLReturnRow(char *db, const char *query, ...)
 {
 	va_list args;
@@ -304,30 +371,6 @@ char **DenoraSQLReturnRow(char *db, const char *query, ...)
 		return sdata;
 	}
 	return NULL;
-}
-
-
-int DenoraSQLGetNumRowsFromQuery(sqlite3 *db, const char *query, ...)
-{
-	int StepReturn;
-	int result = 0;
-	sqlite3_stmt *stmt;
-	va_list args;
-	char *buf;
-	int res;
-
-	va_start(args, query);
-	sqlite3_vsnprintf(NET_BUFSIZE, buf, query, args);
-	va_end(args);
-
-	stmt = DenoraPrepareStmt(db, buf);
-	StepReturn = sqlite3_step(stmt);
-	if (StepReturn == SQLITE_ROW)
-	{
-		result = sqlite3_column_int(stmt, 0);
-	}
-	sqlite3_finalize(stmt);
-	return result;
 }
 
 

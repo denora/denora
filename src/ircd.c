@@ -159,9 +159,9 @@ void denora_cmd_nick(char *nick, char *name, const char *modes)
 	if (u)
 	{
 		u->isservice++;
-		if (!is_excluded(u))
+		if (!is_excluded_user(u))
 		{
-			make_exclude(u->nick);
+			Create_Exclude(u->nick, EXCLUDE_USER);
 		}
 	}
 }
@@ -223,9 +223,9 @@ void denora_cmd_bot_nick(char *nick, char *user, char *host, char *real,
 	if (u)
 	{
 		u->isservice++;
-		if (!is_excluded(u))
+		if (!is_excluded_user(u))
 		{
-			make_exclude(u->nick);
+			Create_Exclude(u->nick, EXCLUDE_USER);
 		}
 	}
 }

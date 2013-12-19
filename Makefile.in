@@ -13,6 +13,7 @@
 
 CCDV=@CCDV@
 CC=$(CCDV)@CC@
+CC2=@CC@
 INCLUDEDIR=../include 
 DENORALIBS=@DENORALIBS@
 BASEOPT=-O2
@@ -24,7 +25,7 @@ PROFILE=-pg
 LDPROFILE=
 SHELL=/bin/sh
 SUBDIRS=src
-LIBDIRS=lib/execinfo
+LIBDIRS=lib/execinfo lib/sqlite3 lib/geoip
 BINDEST=@BINDEST@
 DATDEST=@DATDEST@
 INSTALL=@INSTALL@
@@ -40,7 +41,6 @@ SHARED=@SHARED@
 RDYNAMNIC=@RDYNAMNIC@
 MODULEFLAGS=@MODULEFLAGS@
 
-
 all: libs language headers build core encmod protocols modules sqlmod end_msg
 verbose: language_v headers_v build_v core_v encmod_v protocols_v modules_v
 strict: strict_language headers strict_build strict_core strict_encmod strict_protocols strict_modules
@@ -55,16 +55,40 @@ MAKEARGS = 'CFLAGS=${CFLAGS}' 'CC=${CC}' 'DENORALIBS=${DENORALIBS}' \
   	   'RUNGROUP=${RUNGROUP}' 'MODULE_PATH=${MODULE_PATH}'\
 	   'SHARED=${SHARED}' 'MODULEFLAGS=${MODULEFLAGS}' 'RDYNAMNIC=${RDYNAMNIC}'
 
+MAKEARGS_V = 'CFLAGS=${CFLAGS}' 'CC=${CC2}' 'DENORALIBS=${DENORALIBS}' \
+	   'LDFLAGS=${LDFLAGS}' 'BINDEST=${BINDEST}' 'INSTALL=${INSTALL}' \
+           'INCLUDEDIR=${INCLUDEDIR}' 'RM=${RM}' 'CP=${CP}' \
+      	   'TOUCH=${TOUCH}' 'SHELL=${SHELL}' 'DATDEST=${DATDEST}' \
+  	   'RUNGROUP=${RUNGROUP}' 'MODULE_PATH=${MODULE_PATH}'\
+	   'SHARED=${SHARED}' 'MODULEFLAGS=${MODULEFLAGS}' 'RDYNAMNIC=${RDYNAMNIC}'
+
+
 build:
 	@for i in $(SUBDIRS); do \
             echo "*** Building $$i";\
             ( cd $$i; ${MAKE} -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; ) \
         done
 
+build_v:
+	for i in $(SUBDIRS); do \
+            echo "*** Building $$i";\
+            ( cd $$i; ${MAKE} V=1 ${MAKEARGS_V} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; ) \
+        done
+
 libs_build:
 	@for i in $(LIBDIRS); do \
             echo "*** Building $$i";\
             ( cd $$i; ${MAKE} -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; ) \
+        done
+
+libs_clean:
+	@for i in $(LIBDIRS); do \
+            ( cd $$i; ${MAKE} -s clean; ) \
+        done
+
+libs_distclean:
+	@for i in $(LIBDIRS); do \
+            ( cd $$i; ${MAKE} distclean; ) \
         done
 
 libs: libs_build
@@ -183,6 +207,11 @@ language:
 	@(cd lang ; $(MAKE) -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all language.h ; cp language.h ../include/)
 	@echo "*** All done with Language files";
 
+language_v:
+	@echo "*** Generating Language Files";
+	(cd lang ; $(MAKE) V=1 ${MAKEARGS_V} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all language.h ; cp language.h ../include/)
+	@echo "*** All done with Language files";
+
 strict_language:
 	@echo "*** Generating Language Files";
 	@(cd lang ; $(MAKE) -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS} $(STRICT)' all language.h ; cp language.h ../include/)
@@ -198,15 +227,20 @@ headers:
 	@(cd include ; ${MAKE} -s ${MAKEARGS} )
 	@echo "*** All done with headers";
 
-clean:
-	(cd lang ; ${MAKE} clean )
-	(cd include ; ${MAKE} clean )
-	(cd src ; ${MAKE} clean )
+headers_v:
+	@echo "*** Generating Required Header Files";
+	(cd include ; ${MAKE} V=1 ${MAKEARGS_V} )
+	@echo "*** All done with headers";
 
-distclean:
-	(cd lang ; ${MAKE} distclean )
-	(cd include ; ${MAKE} distclean )
-	(cd src ; ${MAKE} distclean )
+clean: libs_clean
+	(cd lang ; ${MAKE} -s clean )
+	(cd include ; ${MAKE} -s clean )
+	(cd src ; ${MAKE} -s clean )
+
+distclean: libs_distclean
+	(cd lang ; ${MAKE} -s distclean )
+	(cd include ; ${MAKE} -s distclean )
+	(cd src ; ${MAKE} -s distclean )
 	rm -f config.log config.status config.cache Makefile install-sh src/bin/denorarc src/bin/geoipupd ccdv
 
 recompile:

@@ -88,15 +88,20 @@ char *GetOptionTagName(char *line)
 int IsOptionTag(char *line)
 {
 	int numgt;
-	char *linedata = sstrdup(line);
-	numgt = myNumToken(linedata, '>');
+	char *linedata;
 
-	if (myNumToken(linedata, '/') && numgt == 1)
+
+	if (line)
 	{
+	  linedata = sstrdup(line);
+  	  numgt = myNumToken(linedata, '>');
+   	  if (myNumToken(linedata, '/') && numgt == 1)
+	 {
 		free(linedata);
 		return 1;
+	 }
+	 free(linedata);
 	}
-	free(linedata);
 	return 0;
 }
 
@@ -148,51 +153,80 @@ void DenoraXMLIRCdConfig(char *file)
 	ircd = malloc(sizeof(IRCDVar));
 	ircdcap = malloc(sizeof(IRCDCAPAB));
 
-	DenoraXMLConfigBlockCreate("ircd", DenoraParseProto_IRCdBlock, 5);
-	DenoraXMLConfigBlockCreate("services", DenoraParseProto_ServicesBlock, 1);
-	DenoraXMLConfigBlockCreate("features", DenoraParseProto_FeaturesBlock, 27);
-	DenoraXMLConfigBlockCreate("warning", DenoraParseProto_WarningBlock, 1);
-	DenoraXMLConfigBlockCreate("capab", DenoraParseProto_CapabBlock, 24);
-	DenoraXMLConfigBlockCreate("usermodes", DenoraParseProto_UserModeBlock, 48);
-	DenoraXMLConfigBlockCreate("chanmodes", DenoraParseProto_ChannelModeBlock, 48);
-	DenoraXMLConfigBlockCreate("chanbanmodes", DenoraParseProto_ChannelBanModeBlock, 4);
-	DenoraXMLConfigBlockCreate("channelfeatures", DenoraParseProto_ChannelFeaturesBlock, 22);
-	DenoraXMLConfigBlockCreate("chanusermode", DenoraParseProto_ChannelUserModeBlock, 3);
+	DenoraXMLConfigBlockCreate("ircd", DenoraParseProto_IRCdBlock);
+	DenoraXMLConfigBlockCreate("services", DenoraParseProto_ServicesBlock);
+	DenoraXMLConfigBlockCreate("features", DenoraParseProto_FeaturesBlock);
+	DenoraXMLConfigBlockCreate("warning", DenoraParseProto_WarningBlock);
+	DenoraXMLConfigBlockCreate("capab", DenoraParseProto_CapabBlock);
+	DenoraXMLConfigBlockCreate("usermodes", DenoraParseProto_UserModeBlock);
+	DenoraXMLConfigBlockCreate("chanmodes", DenoraParseProto_ChannelModeBlock);
+	DenoraXMLConfigBlockCreate("chanbanmodes", DenoraParseProto_ChannelBanModeBlock);
+	DenoraXMLConfigBlockCreate("channelfeatures", DenoraParseProto_ChannelFeaturesBlock);
+	DenoraXMLConfigBlockCreate("chanusermode", DenoraParseProto_ChannelUserModeBlock);
 
 
 	snprintf(buf, sizeof(buf), "ircdconfig/%s", file);
-	DenoraParseXMLConfig(buf);
+	/* Read configuration file; exit if there are problems. */
+	if (!DenoraParseXMLConfig(buf))
+	{
+		printf("Error while parsing %s\n", buf);
+		exit(-1);
+	}
 }
 
 
-void DenoraConfigInit(char *conffilename)
+void DenoraConfigInit(void)
 {
-	DenoraXMLConfigBlockCreate("connect", DenoraParseConnectBlock, 7);
-	DenoraXMLConfigBlockCreate("identity", DenoraParseIdentityBlock, 4);
-	DenoraXMLConfigBlockCreate("statserv", DenoraParseStatServBlock, 7);
-	DenoraXMLConfigBlockCreate("filenames", DenoraParseFileNamesBlock, 7);
-	DenoraXMLConfigBlockCreate("backup", DenoraParseBackUpBlock, 3);
-	DenoraXMLConfigBlockCreate("netinfo", DenoraParseNetInfoBlock, 12);
-	DenoraXMLConfigBlockCreate("timeout", DenoraParseTimeOutBlock, 12);
-	DenoraXMLConfigBlockCreate("options", DenoraParseOptionBlock, 12);
-	DenoraXMLConfigBlockCreate("admin", DenoraParseAdminBlock, 4);
-	DenoraXMLConfigBlockCreate("sql", DenoraParseSQLBlock, 13);
-	DenoraXMLConfigBlockCreate("sqltables", DenoraParseSQLTableBlock, 13);
-	DenoraXMLConfigBlockCreate("modules", DenoraParseModuleBlock, 13);
-	DenoraXMLConfigBlockCreate("xmlrcp", DenoraParseXMLRPCBlock, 13);
+	DenoraXMLConfigBlockCreate("connect", DenoraParseConnectBlock);
+	DenoraXMLConfigBlockCreate("identity", DenoraParseIdentityBlock);
+	DenoraXMLConfigBlockCreate("statserv", DenoraParseStatServBlock);
+	DenoraXMLConfigBlockCreate("filenames", DenoraParseFileNamesBlock);
+	DenoraXMLConfigBlockCreate("backup", DenoraParseBackUpBlock);
+	DenoraXMLConfigBlockCreate("netinfo", DenoraParseNetInfoBlock);
+	DenoraXMLConfigBlockCreate("timeout", DenoraParseTimeOutBlock);
+	DenoraXMLConfigBlockCreate("options", DenoraParseOptionBlock);
+	DenoraXMLConfigBlockCreate("admin", DenoraParseAdminBlock);
+	DenoraXMLConfigBlockCreate("sql", DenoraParseSQLBlock);
+	DenoraXMLConfigBlockCreate("sqltables", DenoraParseSQLTableBlock);
+	DenoraXMLConfigBlockCreate("modules", DenoraParseModuleBlock);
+	DenoraXMLConfigBlockCreate("xmlrcp", DenoraParseXMLRPCBlock);
 
-	DenoraParseXMLConfig("conffilename");
 }
 
-void DenoraParseXMLConfig(char *filename)
+void denoraxmlcheck(int ac, char **av)
 {
+	//todo
+}
 
+char *trimwhitespace(char *str)
+{
+  char *end;
+
+  // Trim leading space
+  while(isspace(*str)) str++;
+
+  if(*str == 0)  // All spaces?
+    return sstrdup(str);
+
+  // Trim trailing space
+  end = str + strlen(str) - 1;
+  while(end > str && isspace(*end)) end--;
+
+  // Write new null terminator
+  *(end+1) = 0;
+
+  return sstrdup(str);
+}
+
+int DenoraParseXMLConfig(char *filename)
+{
 	FILE * fp;
 	char * line = NULL;
 	char *rawline = NULL;
 	char *newline;
+	char *linenew;
         size_t len = 0;
-        ssize_t read;
+        ssize_t myread;
 	int numtok;
 	int endblock;
 	int skipuntil = 0;
@@ -205,15 +239,19 @@ void DenoraParseXMLConfig(char *filename)
 
 	alog(LOG_DEBUG, "Parsing %s", filename);
 
-        fp = FileOpen(filename, "r");
-        if (fp == NULL)
-           return;
+	fp = FileOpen(filename, "r");
 
-	while ((read = getline(&rawline, &len, fp)) != -1) 
+    if (fp == NULL)
 	{
-		line = sstrdup(rawline);
-		strnrepl(line, BUFSIZE, "\n", "");
-		strnrepl(line, BUFSIZE, "\t", "");
+		printf("file pointer is null\n");
+        return 0;
+	}
+
+	while ((myread = getline(&rawline, &len, fp)) != -1) 
+	{
+		strnrepl(rawline, BUFSIZE, "\n", "");
+		strnrepl(rawline, BUFSIZE, "\t", "");
+		line = trimwhitespace(rawline);
 
 		/* skip if its a #  and c++ style */
 		if (*line == '#' || *line == '/' && line[1] == '/')
@@ -222,19 +260,20 @@ void DenoraParseXMLConfig(char *filename)
 			continue;
 		}
 		/* xml <! -!> tags are ignored */
-		if (*line == '<' && line[1] == '!')
+		if (*line == '<' && line[1] == '!' && line[2] == '-')
 		{
 			skipuntil = 1;
 			free(line);
 		        continue;
 
 	   	}
-		if (*line == '-' && line[1] == '!' && line[2] == '>')
+		if ((*line == '-' && line[1] == '!' && line[2] == '>') || (*line == '-' && line[1] == '-' && line[2] == '!' && line[3] == '>')) 
 		{
 			skipuntil = 0;
 			free(line);
 			continue;
 		}
+
 		if (skipuntil) 
 		{ 	
 			free(line);
@@ -252,18 +291,18 @@ void DenoraParseXMLConfig(char *filename)
 			if (numtok == 1)
 			{
 				endblock = myNumToken(line, (const char) '/');
-				if (endblock)
+				if (endblock && startblock)
 				{
 					tag = GetConfigEndTagName(rawline);
 					c = DenoraXMLConfigFindBlock(tag);
 					startblock = 0;
 					if (c)
 					{
-						res = c->parser(c->numoptions, xmldata);
+						res = c->parser(xmldata);
 						if (res == -1)
 						{
 							alog(LOG_ERROR, "Failed to parse Config File Correctly");
-							return;
+							return 0;
 						}
 					}
 					free(tag);
@@ -274,19 +313,10 @@ void DenoraParseXMLConfig(char *filename)
 				else
 				{
 					tag = GetConfigStartTagName(rawline);
-					c = DenoraXMLConfigFindBlock(tag);
-					if (c)
-					{
-						xmldata = DenoraCallocArray(c->numoptions);
-					}
-					else
-					{
-						xmldata = DenoraCallocArray(25);
-					}
+					xmldata = DenoraCallocArray(100);
 					free(tag);
 					startblock = 1;
 					x = 0;
-
 					free(line);
 					continue;
 
@@ -302,7 +332,10 @@ void DenoraParseXMLConfig(char *filename)
 				}			
 	   		}
 		}
-       }
+    }
+	alog(LOG_DEBUG, "[%d][%s]", errno,  strerror(errno));
+
+	return 1;
 }
 
 

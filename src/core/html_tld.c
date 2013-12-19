@@ -79,35 +79,31 @@ void DenoraFini(void)
 
 void html_tld_table(FILE * ptr)
 {
-	TLD *t;
-	lnode_t *tn;
 	char *tempc, *tempcc;
-	int x = 0;
+	int i, rows;
+	sqlite3_stmt *stmt;
+	char ***data;
 
 	if (ptr)
 	{
 		fprintf(ptr, "%s", langstr(HTML_TLD_HEADER));
-		list_sort(Thead, sortusers);
-		tn = list_first(Thead);
-		while (tn)
+		TLDDatabase = DenoraOpenSQL(TLDDB);
+		rows = DenoraSQLGetNumRows(TLDDatabase, TLDTable);
+		stmt = DenoraPrepareQuery(TLDDatabase, "SELECT * FROM %s ORDER BY overall LIMIT 10", TLDTable);
+		data = DenoraSQLFetchArray(TLDDatabase, TLDTable, stmt, FETCH_ARRAY_NUM);
+		for (i = 0; i < rows; i++)
 		{
-			t = lnode_get(tn);
-			if (t->count)
-			{
-				tempcc = char_encode(t->countrycode);
-				tempc = char_encode(t->country);
+				tempcc = char_encode(data[i][0]);
+				tempc = char_encode(data[i][1]);
 				dfprintf(ptr, langstr(HTML_TLD_CONTENT),
-				         tempcc, tempc, t->count, t->overall);
+				         tempcc, tempc, atoi(data[i][2]), atoi(data[i][3]));
 				free(tempcc);
 				free(tempc);
-				x++;
-				if (x > 10)
-				{
-					break;
-				}
-			}
-			tn = list_next(Thead, tn);
 		}
+		free(data);
+		sqlite3_finalize(stmt);
+		DenoraCloseSQl(TLDDatabase);
+
 		fprintf(ptr, "%s", langstr(HTML_TLD_FOOTER));
 	}
 }

@@ -71,22 +71,24 @@ void DenoraFini(void)
 
 int denora_event_synccomplete(int ac, char **av)
 {
-	TLD *t;
-	lnode_t *tn;
+	int i, rows;
+	sqlite3_stmt *stmt;
+	char ***data;
 
 	USE_VAR(ac);
 	USE_VAR(av);
 
-	
-
-	tn = list_first(Thead);
-	while (tn != NULL)
+	TLDDatabase = DenoraOpenSQL(TLDDB);
+	rows = DenoraSQLGetNumRows(TLDDatabase, TLDTable);
+	stmt = DenoraPrepareQuery(TLDDatabase, "SELECT * FROM %s", TLDTable);
+	data = DenoraSQLFetchArray(TLDDatabase, TLDTable, stmt, FETCH_ARRAY_NUM);
+	for (i = 0; i < rows; i++)
 	{
-		t = lnode_get(tn);
-		sql_do_tld(UPDATE, t->countrycode, t->country, t->count,
-		           t->overall);
-		tn = list_next(Thead, tn);
+			sql_do_tld(UPDATE, data[i][0], data[i][1], atoi(data[i][2]), atoi(data[i][3]));
 	}
+	free(data);
+	sqlite3_finalize(stmt);
+	DenoraCloseSQl(TLDDatabase);
 	return MOD_CONT;
 }
 

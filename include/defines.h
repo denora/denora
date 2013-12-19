@@ -21,7 +21,7 @@
 /* Name of configuration file (in Stats directory)                       */
 /*************************************************************************/
 
-#define STATS_CONF      "denora.conf"
+#define STATS_CONF      "denora.xml"
 
 /*************************************************************************/
 /* Name of log file (in Stats directory)                                 */
@@ -198,9 +198,9 @@
 #define LOG_ADNS    	9
 
 
-#define EXCLUDE_USER	 0x00000001
-#define EXCLUDE_SERVER   0x00000002
-#define EXCLUDE_SERVUSER 0x00000004
+#define EXCLUDE_USER	 1
+#define EXCLUDE_SERVER   2
+#define EXCLUDE_SERVUSER 3
 
 #define LUSERS_USERS 1
 #define LUSERS_USERSINV 2

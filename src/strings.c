@@ -82,6 +82,7 @@ int ircvsprintf(char *str, const char *pattern, va_list vl)
 	va_list ap;
 	unsigned long i, u;
 	int len = 0;
+	char *escap;
 
 	VA_COPY(ap, vl);
 
@@ -109,6 +110,18 @@ int ircvsprintf(char *str, const char *pattern, va_list vl)
 					{
 						buf[len++] = *s++;
 					}
+					break;
+				case 'q':
+					if ((s = va_arg(ap, char *)) == NULL)
+					{
+						break;
+					}
+					escap = sql_escape(s);
+					while (*escap != '\0')
+					{
+						buf[len++] = *escap++;
+					}
+					free(escap);
 					break;
 				case 'c':
 					buf[len++] = (char) va_arg(ap, int);
@@ -218,6 +231,7 @@ int ircvsnprintf(char *str, size_t size, const char *pattern, va_list vl)
 	va_list ap;
 	unsigned long i, u;
 	int len = 0;
+	char *escap;
 
 	VA_COPY(ap, vl);
 
@@ -243,6 +257,18 @@ int ircvsnprintf(char *str, size_t size, const char *pattern, va_list vl)
 				{
 					buf[len++] = *s++;
 				}
+				break;
+			case 'q':
+				if ((s = va_arg(ap, char *)) == NULL)
+				{
+					break;
+				}
+				escap = sql_escape(s);
+				while (*escap != '\0' && (len < (int) size))
+				{
+					buf[len++] = *escap++;
+				}
+				free(escap);
 				break;
 			case 'c':
 				buf[len++] = (char) va_arg(ap, int);
@@ -958,4 +984,18 @@ int dfprintf(FILE * ptr, const char *fmt, ...)
 	len = vfprintf(ptr, fmt, args);
 	va_end(args);
 	return len;
+}
+
+/*************************************************************************/
+
+int SizeOfArray(char **array)
+{
+	int i, x = 0;
+	
+	for (i = 0; array[i] != NULL; i++)
+	{
+		x++;
+	}
+	return x;
+
 }

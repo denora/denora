@@ -2,6 +2,31 @@ Denora v2.0 - git-alpha
 -------------
 
 Additions
+12/19/2013 : Stats struct is now loaded and saved from sqlite
+12/19/2013 : New internal lib functions that can be helpful to coders
+					int SizeOfArray(char **array)  - returns number of entries in the array
+					char *trimwhitespace(char *str) - Just like PHP's trim() function, strips leading and trailing white space
+12/19/2013 : Exclude system rewritten to use sqlite backend, and find_exclude() no longer looks at if its a user
+             or server, when adding an exclude you 
+
+			 /statserv exclude add USER trystan
+			 /statserv exclude add SERVER services.network.com
+
+12/18/2013 : Spamfilter uses sqlite backend, reduced the number of sqlmod queries as well.
+12/18/2013 : ircvsprintf() and ircvsnprintf() both now support %q as a format char, kinda of borrowed from sqlite
+             what it does escapes your variable and adds it to the string and frees the escape variable, meaning
+             you do not need to do this in your code any more, no more rdb_escape()
+
+				char *myvar ='\'
+				ircsnprintf(buf, sizeof(buf), "SQL Escaped %q  Not %s", myvar, myvar);
+
+				SQL Escaped \\  Not \
+
+12/17/2013 : Admins set in the config file can now have their password encrypted by default
+12/17/2013 : TLD moved to SQLite backend
+12/17/2013 : XML Config system replaces block config system
+12/17/2013 : Core builds with the flags to support Perl and Python modules
+12/17/2013 : SQLite and GeoIP are now setup as libraries so we can move them out of the main source folder (TODO)
 12/16/2013 : New command line switch -config=filename this allows you to setup and test configs easier
 12/15/2013 : Backtrace lib of execinfo from BSD is built as part of the libs, this will give everyone backtrace()
 12/14/2013 : SQL Backtrace is no longer set in the ./Config 
