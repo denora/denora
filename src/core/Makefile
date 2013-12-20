@@ -36,7 +36,7 @@ distclean: spotless
 	$(CC) ${CFLAGS} ${RDYNAMNIC} ${MODULEFLAGS} -I../${INCLUDEDIR} -c $<
 
 .o.s:
-	$(CC) ${SHARED} ../mod_version.o $< -o $*.so ${PROFILE}
+	$(CC) ${SHARED} $(DENORALIBS) ../mod_version.o $< -o $*.so ${PROFILE}
 
 subs:
 	@for i in $(SUBS); do \

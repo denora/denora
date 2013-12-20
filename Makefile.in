@@ -25,7 +25,7 @@ PROFILE=-pg
 LDPROFILE=
 SHELL=/bin/sh
 SUBDIRS=src
-LIBDIRS=lib/execinfo lib/sqlite3 lib/geoip
+LIBDIRS=lib/execinfo lib/geoip lib/sqlite3
 BINDEST=@BINDEST@
 DATDEST=@DATDEST@
 INSTALL=@INSTALL@
@@ -80,6 +80,10 @@ libs_build:
             echo "*** Building $$i";\
             ( cd $$i; ${MAKE} -s ${MAKEARGS} 'CFLAGS=$(BASEOPT) ${CFLAGS}' all; ) \
         done
+	(cd lib/geoip ; ${MAKE} ${MAKEARGS} install)
+	(cd lib/execinfo ; ${MAKE} ${MAKEARGS} install)
+	(cd lib/sqlite3 ; ${MAKE} ${MAKEARGS} install)
+
 
 libs_clean:
 	@for i in $(LIBDIRS); do \
@@ -252,5 +256,6 @@ recompile:
 
 install: DUMMY
 	(cd src ; ${MAKE} ${MAKEARGS} install)
+
 
 DUMMY:

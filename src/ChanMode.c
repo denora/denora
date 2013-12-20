@@ -56,8 +56,6 @@ void init_csmodes(void)
 
 void ModuleSetChanUMode(int mode, char letter, int status_flag)
 {
-	alog(LOG_DEBUG, "%d %c %d", mode, letter, status_flag);
-
 	csmodes[letter] = mode;
 	sjoinmodes[letter] = status_flag;
 	ModuleSetChanMode((int) letter, IRCD_ENABLE);

@@ -996,6 +996,6 @@ int SizeOfArray(char **array)
 	{
 		x++;
 	}
-	return x;
+	return x-1;
 
 }

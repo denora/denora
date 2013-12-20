@@ -63,8 +63,7 @@ all: libsqlite3.la shell
 distclean: spotless
 
 libsqlite3.la:  $(OBJS)
-	ar -cvq libsqlite3.la sqlite3.o
-	$(CC) -shared -Wl,-soname,libsqlite3.so -o libsqlite3.so  sqlite3.o
+	$(CC) -shared -Wl,-soname,libdenora_sqlite3.so -o libdenora_sqlite3.so  sqlite3.o
 
 $(OBJS): Makefile
 sqlite3.o:		sqlite3.c  $(INCLUDES)
@@ -73,16 +72,15 @@ shell:
 	$(CC) $(CFLAGS) ${DENORALIBS} -c shell.c -o sqlite_shell
 
 clean:
-	rm -f *.o libsqlite3.so libsqlite3.la sqlite_shell a.out
+	rm -f *.o libdenora_sqlite3.so libdenora_sqlite3.la sqlite_shell a.out
 
 spotless:
-	rm -f *.o libsqlite3.so libsqlite3.la sqlite_shell a.out Makefile
+	rm -f *.o libdenora_sqlite3.so libdenora_sqlite3.la sqlite_shell a.out Makefile
 
-install: libsqlite3.la
+install: DUMMY
 	test -d ${BINDEST} || mkdir ${BINDEST}
-	test -d ${BINDEST}/libs || mkdir ${BINDEST}/libs
-	$(INSTALL) libsqlite3.la $(BINDEST)/libs/libsqlite3.la
-	$(INSTALL) sqlite_shell $(BINDEST)/sqlite_shell
+	test -d ${BINDEST}/lib || mkdir ${BINDEST}/lib
+	$(INSTALL) libdenora_sqlite3.so $(BINDEST)/lib/libdenora_sqlite3.so
 
 DUMMY:
 	

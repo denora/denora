@@ -64,22 +64,22 @@ all: libexecinfo.la
 distclean: spotless
 
 libexecinfo.la:  $(OBJS)
-	ar -cvq libexecinfo.a execinfo.o stacktraverse.o
-	$(CC) -shared -Wl,-soname,libexecinfo.so -o libexecinfo.so  *.o -lm
+	$(CC) -shared -Wl,-soname,libdenora_execinfo.so -o libdenora_execinfo.so  *.o -lm
 
 $(OBJS): Makefile
 execinfo.o:		execinfo.c  $(INCLUDES)
 stacktraverse.o:   stacktraverse.c       $(INCLUDES)
 
 clean:
-	rm -f *.o libexecinfo.so libexecinfo.a a.out
+	rm -f *.o libdenora_execinfo.so libdenora_execinfo.a a.out
 
 spotless:
-	rm -f *.o libexecinfo.so libexecinfo.a a.out Makefile
+	rm -f *.o libdenora_execinfo.so libdenora_execinfo.a a.out Makefile
 
 install: libexecinfo.la
-	test -d ${BINDEST}/libs || mkdir ${BINDEST}/libs
-	$(INSTALL) libexecinfo.la $(BINDEST)/libs/libexecinfo.la
+	test -d ${BINDEST} || mkdir ${BINDEST}
+	test -d ${BINDEST}/lib || mkdir ${BINDEST}/lib
+	$(INSTALL) libdenora_execinfo.so $(BINDEST)/lib/libdenora_execinfo.so
 
 DUMMY:
 	

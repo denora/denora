@@ -13,8 +13,7 @@ int DenoraInit(int argc, char **argv)
 	moduleAddVersion("2.0");
 	moduleSetType(SQLMOD);
 
-	moduleAddIRCDCmds();
-	moduleAddIRCDMsgs();
+	moduleAddSqlFunctions();
 	return MOD_CONT;
 }
 

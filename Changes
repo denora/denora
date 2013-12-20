@@ -76,6 +76,7 @@ Fixes
 11/29/2013 : Removed data from uid struct on user being disconnected.
 
 Removals
+12/20/2013 : Removed last references to ADNS which was removed in v1.5
 12/12/2013 : Removed rdb.c replaced by sqlmod.c which allows us to have sql by what we can build and use.
 12/12/2013 : Removed SET_SEGV_LOCATION() from the majority of the code, this was designed to be a debug tool not to fill the whole code base
 12/02/2013 : Removed a lot of functions, they are not used any more

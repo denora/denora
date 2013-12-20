@@ -1980,6 +1980,7 @@ int sql_module_init(void)
 	if (BadPtr(SQLModule))
 	{
 		alog(LOG_NORMAL, "Error: SQLModule is incorrectly defined");
+		denora->do_sql = 0;
 		return ret;
 	}
 

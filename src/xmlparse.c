@@ -56,7 +56,8 @@ char *GetOptionTagName(char *line)
 {
 	char *linedata;
 	int optag;
-	int numgt = myNumToken(linedata, '>');
+	int numgt = myNumToken(line, '>');
+	int eqtag = myNumToken(line, '=');
 
 	if (line)
 	{
@@ -66,9 +67,8 @@ char *GetOptionTagName(char *line)
 			linedata = myStrGetToken(line, '<', 1);
 			linedata = myStrGetToken(linedata, '>', 0);
 			linedata = myStrGetToken(linedata, '/', 0);
-			strnrepl(linedata, BUFSIZE, " ", "");
 		}
-		else if (myNumToken(linedata, '=') && numgt == 2)
+		else if (eqtag && numgt == 2)
 		{
 			linedata = myStrGetToken(line, '<', 1);
 			linedata = myStrGetToken(linedata, '>', 0);
@@ -218,6 +218,23 @@ char *trimwhitespace(char *str)
   return sstrdup(str);
 }
 
+void DenoraXMLDebug(const char *fmt, ...)
+{
+	va_list args;
+	char str[BUFSIZE];
+	*str = '\0';
+
+	va_start(args, fmt);
+	ircvsnprintf(str, sizeof(str), fmt, args);
+	va_end(args);
+
+	if (denora->debug)
+	{
+		alog(LOG_DEBUG, "%s", str);
+	}
+	fprintf(stderr, "%s\n", str);
+}
+
 int DenoraParseXMLConfig(char *filename)
 {
 	FILE * fp;
@@ -252,6 +269,8 @@ int DenoraParseXMLConfig(char *filename)
 		strnrepl(rawline, BUFSIZE, "\n", "");
 		strnrepl(rawline, BUFSIZE, "\t", "");
 		line = trimwhitespace(rawline);
+
+//		printf("Line: %s\n", line);
 
 		/* skip if its a #  and c++ style */
 		if (*line == '#' || *line == '/' && line[1] == '/')
@@ -301,7 +320,8 @@ int DenoraParseXMLConfig(char *filename)
 						res = c->parser(xmldata);
 						if (res == -1)
 						{
-							alog(LOG_ERROR, "Failed to parse Config File Correctly");
+							DenoraXMLDebug("Failed to parse Config File Correctly");
+							DenoraXMLDebug("Parser for %s returned %d", c->name, res);
 							return 0;
 						}
 					}
@@ -312,9 +332,7 @@ int DenoraParseXMLConfig(char *filename)
 				}
 				else
 				{
-					tag = GetConfigStartTagName(rawline);
 					xmldata = DenoraCallocArray(100);
-					free(tag);
 					startblock = 1;
 					x = 0;
 					free(line);
@@ -329,7 +347,7 @@ int DenoraParseXMLConfig(char *filename)
 			        	strnrepl(rawline, BUFSIZE, "\n", "");
 				        strnrepl(rawline, BUFSIZE, "\t", "");
 					xmldata[x++] = StringDup(rawline);
-				}			
+				}
 	   		}
 		}
     }

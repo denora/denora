@@ -49,7 +49,18 @@ void SQLModSet_FreeResult(void (*func) (SQLres *res))
 
 void SQLModSet_init(int (*func) (void))
 {
-	sqlmod.init = func;
+	if (sqlmod.init)
+	{
+		sqlmod.init = func;
+	}
+}
+
+
+/*************************************************************************/
+
+void SQLModSet_query(int (*func) (SQLCon *con, char *buf))
+{
+	sqlmod.query = func;
 }
 
 
@@ -187,7 +198,10 @@ char *sql_hidepass(char *sql)
 int sql_init()
 {
 	int res = 0;
-	res = sqlmod.init();
+	if (sqlmod.init)
+	{
+		res = sqlmod.init();
+	}
 	return res;
 }
 

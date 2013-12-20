@@ -20,8 +20,7 @@ int DenoraInit(int argc, char **argv)
 	moduleAddVersion("2.0");
 	moduleSetType(SQLMOD);
 
-	moduleAddIRCDCmds();
-	moduleAddIRCDMsgs();
+	moduleAddSqlFunctions();
 	return MOD_CONT;
 }
 
@@ -33,7 +32,7 @@ void moduleAddSqlFunctions()
 	SQLModSet_FreeResult(db_MySQLFreeResult);
 	SQLModSet_Close(db_mysql_close);
 	SQLModSet_escape(db_mysql_quote);
-	SQLModSet_Open(db_mysql_open);
+	SQLModSet_open(db_mysql_open);
 	SQLModSet_init(db_mysql_init);
 	SQLModSet_query(db_mysql_query);
 }
@@ -192,7 +191,7 @@ int db_mysql_init(void)
 	return 1;
 }
 
-int db_mysql_query(char *sql, SQLCon *con)
+int db_mysql_query(SQLCon *con, char *sql)
 {
 	int result, lcv;
 	int pingresult;

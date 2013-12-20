@@ -109,6 +109,10 @@ clean:
 	(cd protocol ; ${MAKE} -s clean)
 	@touch core/Makefile.inc
 	(cd core ; ${MAKE} -s clean)
+	@touch sqlmods/Makefile.inc
+	(cd sqlmods ; ${MAKE} -s clean)
+	@touch encmod/Makefile.inc
+	(cd encmod ; ${MAKE} -s clean)
 	rm -f *.o stats a.out
 
 spotless:
@@ -118,6 +122,10 @@ spotless:
 	(cd protocol ; ${MAKE} -s distclean)
 	@touch core/Makefile.inc
 	(cd core ; ${MAKE} -s distclean)
+	@touch sqlmods/Makefile.inc
+	(cd sqlmods ; ${MAKE} -s distclean)
+	@touch encmod/Makefile.inc
+	(cd encmod ; ${MAKE} -s distclean)
 	rm -f *.o stats a.out
 
 install: stats

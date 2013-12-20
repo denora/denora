@@ -849,8 +849,6 @@ static int parse_options(int ac, char **av)
 	char *s, *t;
 	char *extra, *value;
 
-	printf("Parse_options");
-
 	for (i = 1; i < ac; i++)
 	{
 		s = av[i];
@@ -1350,7 +1348,7 @@ int init(int ac, char **av)
 
 	setup_cron_event();
 
-	if (!sql_init())
+	if (denora->do_sql && !sql_init())
 	{
 		alog(LOG_ERROR, "Error: Disabling SQL due to errors with SQL");
 	}

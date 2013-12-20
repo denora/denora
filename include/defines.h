@@ -195,8 +195,6 @@
 #define LOG_SQLDEBUG	6
 #define LOG_DEBUGSOCK	7
 #define LOG_PROTOCOL    8
-#define LOG_ADNS    	9
-
 
 #define EXCLUDE_USER	 1
 #define EXCLUDE_SERVER   2

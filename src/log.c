@@ -186,7 +186,7 @@ void alog(int type, const char *fmt, ...)
 	{
 		return;
 	}
-	if ((type == LOG_DEBUGSOCK || type == LOG_ADNS)
+	if ((type == LOG_DEBUGSOCK)
 	        && !denora->socketdebug)
 	{
 		return;

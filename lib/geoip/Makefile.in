@@ -64,24 +64,22 @@ all: libgeoip
 distclean: spotless
 
 libgeoip:  $(OBJS)
-	@(ar -cvq libgeopip.a GeoIP.o GeoIPCity.o regionName.o timeZone.o)
-	$(CC) -shared -Wl,-soname,libgeoip.so -o libgeoip.so  *.o
+	$(CC) -shared -Wl,-soname,libdenora_geoip.so -o libdenora_geoip.so  *.o
 
 $(OBJS): Makefile
 sqlite3.o:		sqlite3.c  $(INCLUDES)
 
 
 clean:
-	rm -f *.o libgeopip.a libgeoip.so a.out
+	rm -f *.o libdenora_geopip.a libdenora_geoip.so a.out
 
 spotless:
-	rm -f *.o libgeoip.so libgeopip.a a.out Makefile
+	rm -f *.o libdenora_geoip.so libdenora_geopip.a a.out Makefile
 
-install:
+install: DUMMY
 	test -d ${BINDEST} || mkdir ${BINDEST}
-	test -d ${BINDEST}/libs || mkdir ${BINDEST}/libs
-	$(INSTALL) libgeopip.la $(BINDEST)/libs/libgeopip.la
-	$(INSTALL) libgeopip.so $(BINDEST)/libs/libgeopip.so
+	test -d ${BINDEST}/lib || mkdir ${BINDEST}/lib
+	$(INSTALL) libdenora_geoip.so $(BINDEST)/lib/libdenora_geoip.so
 
 
 DUMMY:

@@ -14,7 +14,7 @@ char *db_MySQLErrMsg(SQLCon *con);
 int db_mysql_close(SQLCon *con);
 int db_mysql_open(void);
 int db_mysql_init(void);
-int db_mysql_query(char *sql, SQLCon *con);
+int db_mysql_query(SQLCon *con, char *sql);
 SQLres *db_mysql_setresult(SQLCon *con);
 int db_mysql_num_rows(SQLres *res);
 void db_mysql_freeresult(SQLres *res);

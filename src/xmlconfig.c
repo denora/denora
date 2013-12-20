@@ -62,15 +62,11 @@ int DenoraParseConnectBlock(char **lines)
 	char *tag;
 	char *data;
 
-	printf("SizeOfArray(lines) = %d\n", SizeOfArray(lines));
-
-
 	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 			
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
-		printf("Tag %s, Data %s\n", tag, data);
 
 		if (tag)
 		{
@@ -83,7 +79,7 @@ int DenoraParseConnectBlock(char **lines)
 				RemotePort = atoi(data);
 				if (RemotePort < 1 || RemotePort > 65535)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_PORT_ERROR));
+					DenoraXMLDebug(langstring(CONFIG_PORT_ERROR));
 					return -1;
 				}
 			}
@@ -108,7 +104,7 @@ int DenoraParseConnectBlock(char **lines)
 				LocalPort = atoi(data);
 				if (LocalPort < 1 || LocalPort > 65535)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_PORT_ERROR));
+					DenoraXMLDebug(langstring(CONFIG_PORT_ERROR));
 					return -1;
 				}
 			}
@@ -118,7 +114,7 @@ int DenoraParseConnectBlock(char **lines)
 			}
 			else
 			{
-				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
 			}
 			free(tag);
 			free(data);
@@ -126,24 +122,24 @@ int DenoraParseConnectBlock(char **lines)
 	}
 	if (!RemoteServer)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_HOSTNAME_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_HOSTNAME_ERROR));
 		return -1;
 	}
 	if (BadPtr(IRCDModule))
 	{
-		alog(LOG_ERROR, langstring(CONFIG_PROTOCOL_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_PROTOCOL_ERROR));
 		return -1;
 	}
 	if (!QuitPrefix)
 		QuitPrefix = sstrdup("Quit:");
 	if (!RemotePort)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_PORT_ERROR_NOTDEF));
+		DenoraXMLDebug(langstring(CONFIG_PORT_ERROR_NOTDEF));
 		return -1;
 	}
 	if (BadPtr(RemotePassword))
 	{
-		alog(LOG_ERROR, langstring(CONFIG_PASSWD_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_PASSWD_ERROR));
 		return -1;
 	}
 	return 1;
@@ -163,7 +159,6 @@ int DenoraParseIdentityBlock(char **lines)
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
 
-
 		if (tag)
 		{
 			if (!strcmp(tag, "ServerName"))
@@ -172,7 +167,7 @@ int DenoraParseIdentityBlock(char **lines)
 				if (!is_valid_server(data))
 				{
 					printf("1\n");
-					alog(LOG_ERROR, "Invalid server name");
+					DenoraXMLDebug("Invalid server name");
 					return -1;
 				}
 				ServerName = sstrdup(data);
@@ -196,14 +191,14 @@ int DenoraParseIdentityBlock(char **lines)
 				if (StatsLanguage < 1 || StatsLanguage > NUM_LANGS)
 				{
 					StatsLanguage = 1;
-					alog(LOG_ERROR, langstring(CONFIG_INVALID_LANG));
+					DenoraXMLDebug(langstring(CONFIG_INVALID_LANG));
 					printf("3\n");
 					return -1;
 				}
 			}
 			else
 			{
-				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
 			}
 			free(tag);
 			free(data);
@@ -212,31 +207,31 @@ int DenoraParseIdentityBlock(char **lines)
 
 	if (BadPtr(ServerName))
 	{
-		alog(LOG_ERROR, langstring(CONFIG_ID_NAME_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_ID_NAME_ERROR));
 					printf("2\n");
 		return -1;
 	}
 	if (BadPtr(ServerDesc) || !ServerDesc)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_ID_DESC_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_ID_DESC_ERROR));
 					printf("4\n");
 		return -1;
 	}
 	if (BadPtr(ServiceUser))
 	{
-		alog(LOG_ERROR, langstring(CONFIG_ID_USER_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_ID_USER_ERROR));
 					printf("5\n");
 		return -1;
 	}
 	if (BadPtr(ServiceHost))
 	{
-		alog(LOG_ERROR, langstring(CONFIG_ID_HOST_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_ID_HOST_ERROR));
 					printf("6\n");
 		return -1;
 	}
 	if (!StatsLanguage)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_ID_LANG_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_ID_LANG_ERROR));
 					printf("7\n");
 		return -1;
 	}
@@ -271,7 +266,7 @@ int DenoraParseStatServBlock(char **lines)
 				s_StatServ = sstrdup(data);
 				if (strlen(s_StatServ) > NICKMAX)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_SS_TOLONG));
+					DenoraXMLDebug(langstring(CONFIG_SS_TOLONG));
 					return -1;
 				}
 			}
@@ -284,7 +279,7 @@ int DenoraParseStatServBlock(char **lines)
 				s_StatServ_alias = sstrdup(data);
 				if (strlen(s_StatServ_alias) > NICKMAX)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_SS_TOLONG));
+					DenoraXMLDebug(langstring(CONFIG_SS_TOLONG));
 					return -1;
 				}
 			}
@@ -306,7 +301,7 @@ int DenoraParseStatServBlock(char **lines)
 			}
 			else
 			{
-				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
 			}
 			free(tag);
 			free(data);
@@ -315,24 +310,24 @@ int DenoraParseStatServBlock(char **lines)
 
 	if (BadPtr(s_StatServ))
 	{
-		alog(LOG_ERROR, langstring(CONFIG_SS_NAME_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_SS_NAME_ERROR));
 		return -1;
 	}
 	if (BadPtr(desc_StatServ))
 	{
-		alog(LOG_ERROR, langstring(CONFIG_SS_DESC_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_SS_DESC_ERROR));
 		return -1;
 	}
 	if (s_StatServ_alias && BadPtr(desc_StatServ_alias))
 	{
-		alog(LOG_ERROR, langstring(CONFIG_SS_ALIASDESC_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_SS_ALIASDESC_ERROR));
 		return -1;
 	}
 	if (s_StatServ_alias)
 	{
 		if (BadPtr(s_StatServ_alias))
 		{
-			alog(LOG_ERROR, langstring(CONFIG_SS_ALIASDESC_ERROR));
+			DenoraXMLDebug(langstring(CONFIG_SS_ALIASDESC_ERROR));
 			return -1;
 		}
 	}
@@ -406,7 +401,7 @@ int DenoraParseFileNamesBlock(char **lines)
 			}
 			else
 			{
-				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
 			}
 			free(tag);
 			free(data);
@@ -414,7 +409,7 @@ int DenoraParseFileNamesBlock(char **lines)
 	}
 	if (!PIDFilename)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_FILENAME_PID_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_FILENAME_PID_ERROR));
 		return -1;
 	}
 	if (HTMLFilename)
@@ -423,42 +418,42 @@ int DenoraParseFileNamesBlock(char **lines)
 	}
 	if (!ChannelDB)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_FILENAME_CHANDB_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_FILENAME_CHANDB_ERROR));
 		return -1;
 	}
 	if (!ctcpDB)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_FILENAME_CTCP_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_FILENAME_CTCP_ERROR));
 		return -1;
 	}
 	if (!ServerDB)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_FILENAME_SERVER_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_FILENAME_SERVER_ERROR));
 		return -1;
 	}
 	if (!ChannelStatsDB)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_FILENAME_CHANSTATS_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_FILENAME_CHANSTATS_ERROR));
 		return -1;
 	}
 	if (!TLDDB)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_FILENAME_TLD_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_FILENAME_TLD_ERROR));
 		return -1;
 	}
 	if (!excludeDB)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_FILENAME_EXCLUDE_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_FILENAME_EXCLUDE_ERROR));
 		return -1;
 	}
 	if (!statsDB)
 	{
-		alog(LOG_ERROR, "statsDB is not defined");
+		DenoraXMLDebug("statsDB is not defined");
 		return -1;
 	}
 	if (!AdminDB)
 	{
-		alog(LOG_ERROR, "AdminDB is not defined");
+		DenoraXMLDebug("AdminDB is not defined");
 		return -1;
 	}
 
@@ -494,7 +489,7 @@ int DenoraParseBackUpBlock(char **lines)
 			}
 			else
 			{
-				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
 			}
 			free(tag);
 			free(data);
@@ -502,12 +497,12 @@ int DenoraParseBackUpBlock(char **lines)
 	}
 	if (KeepBackups && !KeepBackupsFor)
 	{
-		alog(LOG_ERROR, "KeepBackupsFor is not defined");
+		DenoraXMLDebug("KeepBackupsFor is not defined");
 		return -1;
 	}
 	if (KeepBackups && !BackupFreq)
 	{
-		alog(LOG_ERROR, "BackupFreq is not defined");
+		DenoraXMLDebug("BackupFreq is not defined");
 		return -1;
 	}
 	return 1;
@@ -534,7 +529,7 @@ int DenoraParseTimeOutBlock(char **lines)
 				ReadTimeout = dotime(data);
 				if (ReadTimeout < 0)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					DenoraXMLDebug(langstring(CONFIG_INVALID_TIME));
 					return -1;
 				}
 			}
@@ -543,7 +538,7 @@ int DenoraParseTimeOutBlock(char **lines)
 				WarningTimeout = dotime(data);
 				if (WarningTimeout < 0)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					DenoraXMLDebug(langstring(CONFIG_INVALID_TIME));
 					return -1;
 				}
 			}
@@ -552,7 +547,7 @@ int DenoraParseTimeOutBlock(char **lines)
 				UpdateTimeout = dotime(data);
 				if (UpdateTimeout < 0)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					DenoraXMLDebug(langstring(CONFIG_INVALID_TIME));
 					return -1;
 				}
 			}
@@ -561,7 +556,7 @@ int DenoraParseTimeOutBlock(char **lines)
 				HTMLTimeout = dotime(data);
 				if (HTMLTimeout < 0)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					DenoraXMLDebug(langstring(CONFIG_INVALID_TIME));
 					return -1;
 				}
 			}
@@ -570,7 +565,7 @@ int DenoraParseTimeOutBlock(char **lines)
 				UptimeTimeout = dotime(data);
 				if (UptimeTimeout < 0)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					DenoraXMLDebug(langstring(CONFIG_INVALID_TIME));
 					return -1;
 				}
 			}
@@ -579,7 +574,7 @@ int DenoraParseTimeOutBlock(char **lines)
 				PingFrequency = dotime(data);
 				if (PingFrequency < 0)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					DenoraXMLDebug(langstring(CONFIG_INVALID_TIME));
 					return -1;
 				}
 			}
@@ -588,7 +583,7 @@ int DenoraParseTimeOutBlock(char **lines)
 				SQLPingFreq = dotime(data);
 				if (SQLPingFreq < 0)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					DenoraXMLDebug(langstring(CONFIG_INVALID_TIME));
 					return -1;
 				}
 			}
@@ -597,7 +592,7 @@ int DenoraParseTimeOutBlock(char **lines)
 				ClearInActive = dotime(data);
 				if (ClearInActive < 0)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					DenoraXMLDebug(langstring(CONFIG_INVALID_TIME));
 					return -1;
 				}
 			}
@@ -606,7 +601,7 @@ int DenoraParseTimeOutBlock(char **lines)
 				ClearChanInActive = dotime(data);
 				if (ClearChanInActive < 0)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					DenoraXMLDebug(langstring(CONFIG_INVALID_TIME));
 					return -1;
 				}
 			}
@@ -615,7 +610,7 @@ int DenoraParseTimeOutBlock(char **lines)
 				UserCacheTime = dotime(data);
 				if (UserCacheTime < 0)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					DenoraXMLDebug(langstring(CONFIG_INVALID_TIME));
 					return -1;
 				}
 			}
@@ -624,7 +619,7 @@ int DenoraParseTimeOutBlock(char **lines)
 				UserCleanFreq = dotime(data);
 				if (UserCleanFreq < 0)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					DenoraXMLDebug(langstring(CONFIG_INVALID_TIME));
 					return -1;
 				}
 			}
@@ -633,7 +628,7 @@ int DenoraParseTimeOutBlock(char **lines)
 				ServerCacheTime = dotime(data);
 				if (ServerCacheTime < 0)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					DenoraXMLDebug(langstring(CONFIG_INVALID_TIME));
 					return -1;
 				}
 			}
@@ -642,14 +637,14 @@ int DenoraParseTimeOutBlock(char **lines)
 				ServerCleanFreq = dotime(data);
 				if (ServerCleanFreq < 0)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_INVALID_TIME));
+					DenoraXMLDebug(langstring(CONFIG_INVALID_TIME));
 					return -1;
 				}
 			}
 
 			else
 			{
-				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
 			}
 			free(tag);
 			free(data);
@@ -657,37 +652,37 @@ int DenoraParseTimeOutBlock(char **lines)
 	}
 	if (!ReadTimeout)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_TIMEOUT_READ_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_TIMEOUT_READ_ERROR));
 		return -1;
 	}
 	if (!WarningTimeout)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_TIMEOUT_WARNING_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_TIMEOUT_WARNING_ERROR));
 		return -1;
 	}
 	if (!UpdateTimeout)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_TIMEOUT_UPDATE_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_TIMEOUT_UPDATE_ERROR));
 		return -1;
 	}
 	if (!PingFrequency)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_TIMEOUT_PING_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_TIMEOUT_PING_ERROR));
 		return -1;
 	}
 	if (!UptimeTimeout)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_TIMEOUT_UPTIME_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_TIMEOUT_UPTIME_ERROR));
 		return -1;
 	}
 	if (!HTMLTimeout)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_TIMEOUT_HTML_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_TIMEOUT_HTML_ERROR));
 		return -1;
 	}
 	if (!SQLPingFreq)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_TIMEOUT_SQL_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_TIMEOUT_SQL_ERROR));
 		return -1;
 	}
 	if (!ClearInActive)
@@ -723,7 +718,7 @@ int DenoraParseOptionBlock(char **lines)
 				KeepLogs = atoi(data);
 				if (KeepLogs < 0)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_ERROR_POSTIVE_VALUE));
+					DenoraXMLDebug(langstring(CONFIG_ERROR_POSTIVE_VALUE));
 					return -1;
 				}
 			}
@@ -802,7 +797,7 @@ int DenoraParseOptionBlock(char **lines)
 				}
 				else
 				{
-					alog(LOG_ERROR, "trigger can only be 1 character longer");
+					DenoraXMLDebug("trigger can only be 1 character longer");
 				}
 			}
 			else if(!strcmp(tag, "UseTS6"))
@@ -848,7 +843,7 @@ int DenoraParseOptionBlock(char **lines)
 			}
 			else
 			{
-				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
 			}
 			free(tag);
 			free(data);
@@ -887,7 +882,6 @@ int DenoraParseAdminBlock(char **lines)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
-
 		if (tag)
 		{
 			if (!strcmp(tag, "name"))
@@ -930,14 +924,14 @@ int DenoraParseAdminBlock(char **lines)
 				language = atoi(data);
 				if (language < 1 || language > NUM_LANGS)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_INVALID_LANG));
+					DenoraXMLDebug(langstring(CONFIG_INVALID_LANG));
 					return -1;
 				}
 				language--;
 			}
 			else
 			{
-				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
 			}
 			free(tag);
 			free(data);
@@ -945,17 +939,18 @@ int DenoraParseAdminBlock(char **lines)
 	}
 	if (!name)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_ADMIN_NAME_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_ADMIN_NAME_ERROR));
 		return -1;
 	}
 	if (!hostname)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_ADMIN_HOST_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_ADMIN_HOST_ERROR));
 		return -1;
 	}
 	if (!passwd)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_ADMIN_PASS_ERROR));
+		
+		DenoraXMLDebug(langstring(CONFIG_ADMIN_PASS_ERROR));
 		return -1;
 	}
 	//add_sqladmin(name, passwd, 0, hostname, language, 1, encrypttype);
@@ -974,16 +969,11 @@ int DenoraParseSQLBlock(char **lines)
 	char *data;
 	int optag;
 
-	printf("Getting this far?\n");
-
-
 	for (i = 0; i <= SizeOfArray(lines); i++)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
 		optag = IsOptionTag(lines[i]);
-
-		printf("Tag %s / Data %s Option %d\n", tag, data, optag);
 
 		if (tag)
 		{
@@ -1004,6 +994,10 @@ int DenoraParseSQLBlock(char **lines)
 			{
 				SqlHost = sstrdup(data);
 			}
+			else if(!strcmp(tag, "SqlUser"))
+			{
+				SqlUser = sstrdup(data);
+			}
 			else if(!strcmp(tag, "SqlPass"))
 			{
 				SqlPass = sstrdup(data);
@@ -1021,7 +1015,7 @@ int DenoraParseSQLBlock(char **lines)
 				SqlPort = atoi(data);
 				if (SqlPort < 1 || SqlPort > 65535)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_PORT_ERROR));
+					printf("%s", langstring(CONFIG_PORT_ERROR));
 					return -1;
 				}
 			}
@@ -1030,7 +1024,7 @@ int DenoraParseSQLBlock(char **lines)
 				SqlRetries = atoi(data);
 				if (SqlRetries < 0)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_ERROR_POSTIVE_VALUE));
+					printf("%s", langstring(CONFIG_ERROR_POSTIVE_VALUE));
 					return -1;
 				}
 			}
@@ -1039,7 +1033,7 @@ int DenoraParseSQLBlock(char **lines)
 				SqlRetryGap = atoi(data);
 				if (SqlRetryGap < 0)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_ERROR_POSTIVE_VALUE));
+					printf("%s", langstring(CONFIG_ERROR_POSTIVE_VALUE));
 					return -1;
 				}
 			}
@@ -1089,7 +1083,7 @@ int DenoraParseSQLBlock(char **lines)
 			}
 			else
 			{
-				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
 			}
 			free(tag);
 			free(data);
@@ -1101,12 +1095,12 @@ int DenoraParseSQLBlock(char **lines)
 	}
 	if (SqlHost && !SqlUser)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_SQL_USER_ERROR));
+		printf("%s", langstring(CONFIG_SQL_USER_ERROR));
 		return -1;
 	}
 	if (SqlHost && !SqlName)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_SQL_NAME_ERROR));
+		printf("%s", langstring(CONFIG_SQL_NAME_ERROR));
 		return -1;
 	}
 	if (DisableMySQLOPT)
@@ -1243,7 +1237,7 @@ int DenoraParseSQLTableBlock(char **lines)
 			}
 			else
 			{
-				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
 			}
 			free(tag);
 			free(data);
@@ -1252,42 +1246,42 @@ int DenoraParseSQLTableBlock(char **lines)
 
 	if (!UserTable)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_TABLE_USER_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_TABLE_USER_ERROR));
 		return -1;
 	}
 	if (!ChanBansTable)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_TABLE_CHANBANS_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_TABLE_CHANBANS_ERROR));
 		return -1;
 	}
 	if (!ChanExceptTable)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_TABLE_CHANEXCEPT_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_TABLE_CHANEXCEPT_ERROR));
 		return -1;
 	}
 	if (!IsOnTable)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_TABLE_ISON_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_TABLE_ISON_ERROR));
 		return -1;
 	}
 	if (!ServerTable)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_TABLE_SERVER_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_TABLE_SERVER_ERROR));
 		return -1;
 	}
 	if (!GlineTable)
 	{
-		alog(LOG_ERROR, langstring(CONFIG_TABLE_GLINE_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_TABLE_GLINE_ERROR));
 		return -1;
 	}
 	if (!ChanTable)
 	{
-		alog(LOG_ERROR, "Lacking chan definition in tables block");
+		DenoraXMLDebug("Lacking chan definition in tables block");
 		return -1;
 	}
 	if (!MaxValueTable)
 	{
-		alog(LOG_ERROR, "Lacking maxvalue definition in tables block");
+		DenoraXMLDebug("Lacking maxvalue definition in tables block");
 		return -1;
 	}
 	if (!ChanInviteTable)
@@ -1297,22 +1291,22 @@ int DenoraParseSQLTableBlock(char **lines)
 	}
 	if (!TLDTable)
 	{
-		alog(LOG_ERROR, "Lacking tld definition in tables block");
+		DenoraXMLDebug("Lacking tld definition in tables block");
 		return -1;
 	}
 	if (!CTCPTable)
 	{
-		alog(LOG_ERROR, "Lacking ctcp definition in tables block");
+		DenoraXMLDebug("Lacking ctcp definition in tables block");
 		return -1;
 	}
 	if (!ChanStatsTable)
 	{
-		alog(LOG_ERROR, "Lacking chanstats definition in tables block");
+		DenoraXMLDebug("Lacking chanstats definition in tables block");
 		return -1;
 	}
 	if (!ServerStatsTable)
 	{
-		alog(LOG_ERROR, "Lacking servstats definition in tables block");
+		DenoraXMLDebug("Lacking servstats definition in tables block");
 		return -1;
 	}
 	if (!SglineTable)
@@ -1374,8 +1368,6 @@ int DenoraParseNetInfoBlock(char **lines)
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
 		optag = IsOptionTag(lines[i]);
-
-		printf("Tag %s, Data %s, optag %d", tag, data, optag);
 
 		if (tag)
 		{
@@ -1467,7 +1459,7 @@ int DenoraParseNetInfoBlock(char **lines)
 
 			else
 			{
-				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
 			}
 			free(tag);
 			free(data);
@@ -1475,7 +1467,7 @@ int DenoraParseNetInfoBlock(char **lines)
 	}
 	if (BadPtr(NetworkName))
 	{
-		alog(LOG_ERROR, langstring(CONFIG_NETINFO_NAME_ERROR));
+		DenoraXMLDebug(langstring(CONFIG_NETINFO_NAME_ERROR));
 		return -1;
 	}
 	if (!HiddenPrefix)
@@ -1510,7 +1502,7 @@ int DenoraParseModuleBlock(char **lines)
 	}
 	else
 	{
-		alog(LOG_ERROR, "Multiple module blocks in config file");
+		DenoraXMLDebug("Multiple module blocks in config file");
 		return -1;
 	}
 	for (i = 0; i <= SizeOfArray(lines); i++)
@@ -1524,7 +1516,7 @@ int DenoraParseModuleBlock(char **lines)
 			{
 				if ((ac + 1) > 128)
 				{
-					alog(LOG_ERROR, "Excessive autoloading modules (max 128)");
+					DenoraXMLDebug("Excessive autoloading modules (max 128)");
 					return -1;
 				}
 				x->autoload[ac] = sstrdup(data);
@@ -1534,7 +1526,7 @@ int DenoraParseModuleBlock(char **lines)
 			{
 				if ((oc + 1) > 128)
 				{
-					alog(LOG_ERROR, langstring(CONFIG_DELAYMOD_T0MANY));
+					DenoraXMLDebug(langstring(CONFIG_DELAYMOD_T0MANY));
 					return -1;
 				}
 				x->delayed[oc] = sstrdup(data);
@@ -1542,7 +1534,7 @@ int DenoraParseModuleBlock(char **lines)
 			}
 			else
 			{
-				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
 			}
 			free(tag);
 			free(data);
@@ -1605,7 +1597,7 @@ int DenoraParseProto_IRCdBlock(char **lines)
 			}
 			else
 			{
-				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
 			}
 			free(tag);
 			free(data);
@@ -1659,7 +1651,7 @@ int DenoraParseXMLRPCBlock(char **lines)
 			}
 			else
 			{
-				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
 			}
 			free(tag);
 			free(data);
@@ -1675,7 +1667,7 @@ int DenoraParseXMLRPCBlock(char **lines)
 			}
 			else
 			{
-				alog(LOG_ERROR, "XMLRPC enabled by no host defined");
+				DenoraXMLDebug("XMLRPC enabled by no host defined");
 				return -1;
 			}
 		}
@@ -1826,7 +1818,7 @@ int DenoraParseProto_CapabBlock(char **lines)
 			}
 			else
 			{
-				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
 			}
 			free(tag);
 			free(data);
@@ -1869,14 +1861,12 @@ int DenoraParseProto_ChannelUserModeBlock(char **lines)
 			}
 			else
 			{
-				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
 			}
 			free(tag);
 			free(data);
 		}
 	}
-	alog(LOG_DEBUG, "Mode %s %d, Symbolw %s, Flag %d", mode, *mode, symbol, flag);
-
 	ModuleSetChanUMode(*mode, *symbol, flag);
 
 	return 1;
@@ -2038,7 +2028,7 @@ int DenoraParseProto_FeaturesBlock(char **lines)
 			}
 			else
 			{
-				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
 			}
 			free(tag);
 			free(data);
@@ -2148,7 +2138,7 @@ int DenoraParseProto_ChannelBanModeBlock(char **lines)
 			}
 			else
 			{
-				alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
 			}
 			free(tag);
 			free(data);
@@ -2172,13 +2162,16 @@ int DenoraParseProto_WarningBlock(char **lines)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
-		if (!strcmp(tag, "extra"))
+		if (tag)
 		{
-			ircd->extrawarning = XmlConfigSetFeature(data);
-		}
-		else
-		{
-			alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
+			if (!strcmp(tag, "extra"))
+			{
+				ircd->extrawarning = XmlConfigSetFeature(data);
+			}
+			else
+			{
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
+			}
 		}
 		free(tag);
 		free(data);
@@ -2199,121 +2192,116 @@ int DenoraParseProto_ChannelFeaturesBlock(char **lines)
 	{
 		tag = GetOptionTagName(lines[i]);
 		data = GetOptionTagData(lines[i]);
-		if (!tag)
+		if (tag)
 		{
-			return -1;
-		}
-
-
-		if (!strcmp(tag, "owner"))
-		{
-			ircd->owner = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "protect"))
-		{
-			ircd->protect = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "halfop"))
-		{
-			ircd->halfop = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "floodmode"))
-		{
-			ircd->fmode = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "floodmodeother"))
-		{
-			ircd->jmode = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "chanlink"))
-		{
-			ircd->Lmode = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "floodmode_char"))
-		{
-			ircd->floodchar = atoi(data);
-		}
-		else if(!strcmp(tag, "floodmodeother_char"))
-		{
-			ircd->floodchar_alternative = atoi(data);
-		}
-		else if(!strcmp(tag, "chanlink_char"))
-		{
-			ircd->chanforward = atoi(data);
-		}
-		else if(!strcmp(tag, "jointhrottle"))
-		{
-			ircd->jointhrottle = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "gagged"))
-		{
-			ircd->gagged = XmlConfigSetFeature(data);
-		}
-		else if(!strcmp(tag, "sjoin_ban_char"))
-		{
-			ircd->sjoinbanchar = atoi(data);
-		}
-		else if(!strcmp(tag, "sjoin_except_char"))
-		{
-			ircd->sjoinexchar = atoi(data);
-		}
-		else if(!strcmp(tag, "sjoin_invite_char"))
-		{
-			ircd->sjoinivchar = atoi(data);
-		}
-		else if(!strcmp(tag, "ban_char"))
-		{
-			ircd->ban_char = atoi(data);
-		}
-		else if(!strcmp(tag, "except_char"))
-		{
-			ircd->except_char = atoi(data);
-		}
-		else if(!strcmp(tag, "invite_char"))
-		{
-			ircd->invite_char = atoi(data);
-		}
-		else if(!strcmp(tag, "nickchgflood"))
-		{
-			ircd->nickchgfloodchar = atoi(data);
-		}
-		else if(!strcmp(tag, "persistchan"))
-		{
-			if (XmlConfigSetMode(data))
+			if (!strcmp(tag, "owner"))
 			{
-				ircd->persist_char = ReturnModeFromToken(data);
+				ircd->owner = XmlConfigSetFeature(data);
 			}
-		}
-		else if(!strcmp(tag, "chan_fmode"))
-		{
-			if (XmlConfigSetMode(data))
+			else if(!strcmp(tag, "protect"))
 			{
-				ircd->chan_fmode = ReturnModeFromToken(data);
+				ircd->protect = XmlConfigSetFeature(data);
 			}
-		}
-		else if(!strcmp(tag, "chan_jmode"))
-		{
-			if (XmlConfigSetMode(data))
+			else if(!strcmp(tag, "halfop"))
 			{
-				ircd->chan_jmode = ReturnModeFromToken(data);
+				ircd->halfop = XmlConfigSetFeature(data);
 			}
-		}
-		else if(!strcmp(tag, "chan_lmode"))
-		{
-			if (XmlConfigSetMode(data))
+			else if(!strcmp(tag, "floodmode"))
 			{
-				ircd->chan_lmode = ReturnModeFromToken(data);
+				ircd->fmode = XmlConfigSetFeature(data);
 			}
+			else if(!strcmp(tag, "floodmodeother"))
+			{
+				ircd->jmode = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "chanlink"))
+			{
+				ircd->Lmode = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "floodmode_char"))
+			{
+				ircd->floodchar = atoi(data);
+			}
+			else if(!strcmp(tag, "floodmodeother_char"))
+			{
+				ircd->floodchar_alternative = atoi(data);
+			}
+			else if(!strcmp(tag, "chanlink_char"))
+			{
+				ircd->chanforward = atoi(data);
+			}
+			else if(!strcmp(tag, "jointhrottle"))
+			{
+				ircd->jointhrottle = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "gagged"))
+			{
+				ircd->gagged = XmlConfigSetFeature(data);
+			}
+			else if(!strcmp(tag, "sjoin_ban_char"))
+			{
+				ircd->sjoinbanchar = atoi(data);
+			}
+			else if(!strcmp(tag, "sjoin_except_char"))
+			{
+				ircd->sjoinexchar = atoi(data);
+			}
+			else if(!strcmp(tag, "sjoin_invite_char"))
+			{
+				ircd->sjoinivchar = atoi(data);
+			}
+			else if(!strcmp(tag, "ban_char"))
+			{
+				ircd->ban_char = atoi(data);
+			}
+			else if(!strcmp(tag, "except_char"))
+			{
+				ircd->except_char = atoi(data);
+			}
+			else if(!strcmp(tag, "invite_char"))
+			{
+				ircd->invite_char = atoi(data);
+			}
+			else if(!strcmp(tag, "nickchgflood"))
+			{
+				ircd->nickchgfloodchar = atoi(data);
+			}
+			else if(!strcmp(tag, "persistchan"))
+			{
+				if (XmlConfigSetMode(data))
+				{
+					ircd->persist_char = ReturnModeFromToken(data);
+				}
+			}
+			else if(!strcmp(tag, "chan_fmode"))
+			{
+				if (XmlConfigSetMode(data))
+				{
+					ircd->chan_fmode = ReturnModeFromToken(data);
+				}
+			}
+			else if(!strcmp(tag, "chan_jmode"))
+			{
+				if (XmlConfigSetMode(data))
+				{
+					ircd->chan_jmode = ReturnModeFromToken(data);
+				}
+			}
+			else if(!strcmp(tag, "chan_lmode"))
+			{
+				if (XmlConfigSetMode(data))
+				{
+					ircd->chan_lmode = ReturnModeFromToken(data);
+				}
+			}
+	
+			else
+			{
+				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
+			}
+			free(tag);
+			free(data);
 		}
-
-		else
-		{
-			alog(LOG_DEBUG,"Unknown tag %s and Data %s", tag, data);
-		}
-		free(tag);
-		free(data);
-
-
 	}
 }
 

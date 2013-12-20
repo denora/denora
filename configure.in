@@ -875,13 +875,9 @@ wi_PROG_CCDV
 cur_dir=`pwd`
 
 CFLAGS="${CFLAGS} -I$cur_dir/lib/geoip"
-DENORALIBS="${DENORALIBS} -L$cur_dir/lib/geoip -lgeoip"
-
+DENORALIBS="${DENORALIBS} -L${BINDEST}/lib -ldenora_geoip -ldenora_sqlite3 -ldenora_execinfo"
 CFLAGS="${CFLAGS} -I$cur_dir/lib/sqlite3"
-DENORALIBS="${DENORALIBS} -L$cur_dir/lib/sqlite3 -lsqlite3"
-
 CFLAGS="${CFLAGS} -I$cur_dir/lib/execinfo"
-DENORALIBS="${DENORALIBS} -L$cur_dir/lib/execinfo -lexecinfo"
 
 
 AC_SUBST(DENORALIBS)

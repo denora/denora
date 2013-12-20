@@ -53,3 +53,4 @@
         3. All macros moved to macro.h
 	4. All headers to header.h
 30. Once full sqlite structs no longer require next, prev
+31. Redo install folders

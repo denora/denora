@@ -37,6 +37,10 @@ E Zline *findZline(const char *host);
 E Qline *findQline(const char *host);
 E void fini_bans(void);
 
+E void DenoraXMLDebug(const char *fmt, ...);
+E void SQLModSet_open(int (*func) (void));
+E void SQLModSet_query(int (*func) (SQLCon *con, char *buf));
+
 E void initIrcdProto(void);
 int SupportOperFlag;
 
