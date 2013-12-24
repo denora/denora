@@ -104,7 +104,7 @@ Zline *new_Zline(char *user, char *host, char *setby, char *setat,
 	}
 	else
 	{
-		z = malloc(sizeof(Gline));
+		z = malloc(sizeof(Zline));
 		z->host = sstrdup(host);
 		z->user = sstrdup(user);
 		z->setby = sstrdup(setby);
@@ -133,7 +133,7 @@ Qline *new_Qline(char *user, char *host, char *setby, char *setat,
 	}
 	else
 	{
-		q = malloc(sizeof(Gline));
+		q = malloc(sizeof(Qline));
 		q->host = sstrdup(host);
 		q->user = sstrdup(user);
 		q->setby = sstrdup(setby);
