@@ -75,17 +75,22 @@ int get_hline(char *source, int ac, char **av)
 	Server *s;
 	int id;
 
-	USE_VAR(ac);;
+	USE_VAR(ac);
 
-	if (denora_get_ircd() == IRC_ULTIMATE3) {
+	if (denora_get_ircd() == IRC_ULTIMATE3) 
+	{
 		s = server_find(source);
-		if (!s) {
+		if (!s) 
+		{
 			return MOD_CONT;
 		}
-		if (!strcmp(av[1], "H")) {
-			if (*av[4] != '*') {
+		if (!strcmp(av[1], "H")) 
+		{
+			if (*av[4] != '*') 
+			{
 				id = db_getserver(av[4]);
-				if (id) {
+				if (id) 
+				{
 					rdb_query(QUERY_LOW, "UPDATE %s SET hline=1 WHERE servid=%d", ServerTable, id);
 				}
 			}
