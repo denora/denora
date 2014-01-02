@@ -124,7 +124,7 @@ void denora_cmd_ping(char *server)
 void denora_cmd_nick(char *nick, char *name, const char *modes)
 {
 	char buf[BUFSIZE];
-	Uid *ud = NULL;
+	char *ud = NULL;
 	User *u;
 	char *ipchar;
 
@@ -139,14 +139,14 @@ void denora_cmd_nick(char *nick, char *name, const char *modes)
 		ud = find_uid(nick);
 		u = do_nick(buf, nick, ServiceUser, ServiceHost,
 		            ServerName, name, time(NULL), 0, ipchar, ServiceHost,
-		            (ud ? ud->uid : NULL), 1, (char *) modes, NULL);
+		            (ud ? ud : NULL), 1, (char *) modes, NULL);
 	}
 	else if (ircd->ts6 && UseTS6 && Numeric)
 	{
 		ud = find_uid(nick);
 		u = do_nick(buf, nick, ServiceUser, ServiceHost,
 		            ServerName, name, time(NULL), 0, ipchar, ServiceHost,
-		            (ud ? ud->uid : NULL), 1, (char *) modes, NULL);
+		            (ud ? ud : NULL), 1, (char *) modes, NULL);
 	}
 	else
 	{
@@ -188,7 +188,7 @@ void denora_cmd_bot_nick(char *nick, char *user, char *host, char *real,
                          char *modes)
 {
 	char buf[BUFSIZE];
-	Uid *ud = NULL;
+	char *ud = NULL;
 	User *u;
 	char *ipchar;
 
@@ -203,14 +203,14 @@ void denora_cmd_bot_nick(char *nick, char *user, char *host, char *real,
 		ud = find_uid(nick);
 		u = do_nick(buf, nick, user, host,
 		            ServerName, real, time(NULL), 0, ipchar, host,
-		            (ud ? ud->uid : NULL), 1, modes, NULL);
+		            (ud ? ud : NULL), 1, modes, NULL);
 	}
 	else if (ircd->ts6 && UseTS6 && Numeric)
 	{
 		ud = find_uid(nick);
 		u = do_nick(buf, nick, user, host,
 		            ServerName, real, time(NULL), 0, ipchar, host,
-		            (ud ? ud->uid : NULL), 1, modes, NULL);
+		            (ud ? ud : NULL), 1, modes, NULL);
 	}
 	else
 	{

@@ -2186,8 +2186,6 @@ Channel *join_user_update(User * user, Channel * chan, char *name,
 {
 	struct u_chanlist *c;
 
-	
-
 	/* If it's a new channel, so we need to create it first. */
 	if (!chan)
 	{
@@ -2199,17 +2197,7 @@ Channel *join_user_update(User * user, Channel * chan, char *name,
 		}
 	}
 
-	
-
-	if (ircd->p10)
-	{
-		alog(LOG_DEBUG, "debug: %s (uid %s) joins %s", user->nick,
-		     user->uid, chan->name);
-	}
-	else
-	{
-		alog(LOG_DEBUG, langstr(ALOG_DEBUG_JOIN), user->nick, chan->name);
-	}
+	alog(LOG_DEBUG, langstr(ALOG_DEBUG_JOIN), user->nick, chan->name);
 
 	c = calloc(sizeof(*c), 1);
 	c->next = user->chans;
@@ -2222,7 +2210,6 @@ Channel *join_user_update(User * user, Channel * chan, char *name,
 
 	chan_adduser2(user, chan);
 
-	
 
 	return chan;
 }

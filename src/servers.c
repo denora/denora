@@ -68,199 +68,29 @@ CapabInfo capab_info[] =
 
 void update_sync_state(char *source, int ac)
 {
-	Server *s;
-	if (!BadPtr(source))
+	if (ac == SYNC_COMPLETE)
 	{
-		s = server_find(source);
-	}
-	else
-	{
-		s = server_find(denora->uplink);
-	}
-	if (s)
-	{
-		if (ac == SYNC_COMPLETE)
+		if (!BadPtr(source))
 		{
-			s->sync = 1;
-			if (!stricmp(denora->uplink, s->name))
-			{
-				send_event(EVENT_UPLINK_SYNC_COMPLETE, 1, s->name);
-				UplinkSynced = 1;
-			}
-			else
-			{
-				send_event(EVENT_SERVER_SYNC_COMPLETE, 1, s->name);
-			}
-		}
-	}
-}
-
-/*************************************************************************/
-
-void load_server_db(void)
-{
-	char *key, *value;
-	DenoraDBFile *dbptr = filedb_open(ServerDB, SERVER_VERSION, &key, &value);
-	ServStats *ss = NULL;
-	int retval = 0;
-
-	if (!dbptr)
-	{
-		return;                 /* Bang, an error occurred */
-	}
-
-	while (1)
-	{
-		/* read a new entry and fill key and value with it -Certus */
-		retval = new_read_db_entry(&key, &value, dbptr->fptr);
-
-		if (retval == DB_READ_ERROR)
-		{
-			alog(LOG_NORMAL, langstr(ALOG_DB_ERROR), dbptr->filename);
-			filedb_close(dbptr, &key, &value);
-			return;
-		}
-		else if (retval == DB_EOF_ERROR)
-		{
-			alog(LOG_EXTRADEBUG, langstr(ALOG_DEBUG_DB_OK),
-			     dbptr->filename);
-			filedb_close(dbptr, &key, &value);
-			return;
-		}
-		else if (retval == DB_READ_BLOCKEND)            /* DB_READ_BLOCKEND */
-		{
-			/* a ctcp entry has completely been read. put any checks in here! */
+			DenoraSQLQuery(DenoraDB, "UPDATE %s SET sync=1 WHERE name=%s", ServerTable, source);
+			send_event(EVENT_SERVER_SYNC_COMPLETE, 1, source);
 		}
 		else
 		{
-			/* DB_READ_SUCCESS */
-
-			if (!*value || !*key)
-				continue;
-
-			if (!stricmp(key, "name"))
-			{
-				ss = make_servstats(value);
-			}
-			else if (!stricmp(key, "maxusers"))
-			{
-				ss->maxusers = atoi(value);
-			}
-			else if (!stricmp(key, "maxusertime"))
-			{
-				ss->maxusertime = atoi(value);
-			}
-			else if (!stricmp(key, "maxopers"))
-			{
-				ss->maxopers = atoi(value);
-			}
-			else if (!stricmp(key, "highestping"))
-			{
-				ss->highestping = atoi(value);
-			}
-			else if (!stricmp(key, "maxpingtime"))
-			{
-				ss->maxpingtime = atoi(value);
-			}
-			else if (!stricmp(key, "totalusersever"))
-			{
-				ss->totalusersever = atoi(value);
-			}
-			else if (!stricmp(key, "splits"))
-			{
-				ss->splits = atoi(value);
-			}
-			else if (!stricmp(key, "split_stats"))
-			{
-				ss->split_stats = 1;
-			}
-			else if (!stricmp(key, "lastseen"))
-			{
-				ss->lastseen = atoi(value);
-			}
-			else if (!stricmp(key, "ircopskills"))
-			{
-				ss->ircopskills = atoi(value);
-			}
-			else if (!stricmp(key, "serverkills"))
-			{
-				ss->serverkills = atoi(value);
-			}
-			else if (!stricmp(key, "maxopertime"))
-			{
-				ss->maxopertime = atoi(value);
-			}
-
-
-		}                       /* else */
-	}                           /* while */
-}
-
-/*************************************************************************/
-
-void save_server_db(void)
-{
-	DenoraDBFile *dbptr = filedb_create(ServerDB, SERVER_VERSION);
-	ServStats *ss;
-	int i;
-
-	for (i = 0; i < 1024; i++)
-	{
-		for (ss = servstatlist[i]; ss; ss = ss->next)
-		{
-			new_write_db_entry("name", dbptr, "%s", ss->name);
-			new_write_db_entry("maxusers", dbptr, "%d", ss->maxusers);
-			new_write_db_entry("maxopers", dbptr, "%d", ss->maxopers);
-			new_write_db_entry("highestping", dbptr, "%d",
-			                   ss->highestping);
-			new_write_db_entry("maxpingtime", dbptr, "%d",
-			                   ss->maxpingtime);
-			new_write_db_entry("totalusersever", dbptr, "%ld",
-			                   ss->totalusersever);
-			new_write_db_entry("splits", dbptr, "%d", ss->splits);
-			new_write_db_entry("split_stats", dbptr, "%ld",
-			                   ss->split_stats);
-			new_write_db_entry("lastseen", dbptr, "%d", ss->lastseen);
-			new_write_db_entry("maxusertime", dbptr, "%ld",
-			                   ss->maxusertime);
-			new_write_db_entry("ircopskills", dbptr, "%ld",
-			                   ss->ircopskills);
-			new_write_db_entry("serverkills", dbptr, "%ld",
-			                   ss->serverkills);
-			new_write_db_entry("maxopertime", dbptr, "%ld",
-			                   ss->maxopertime);
-			new_write_db_endofblock(dbptr);
+			DenoraSQLQuery(DenoraDB, "UPDATE %s SET sync=1 WHERE name=%s", ServerTable, denora->uplink);
+			send_event(EVENT_UPLINK_SYNC_COMPLETE, 1, denora->uplink);
+			UplinkSynced = 1;
 		}
 	}
-
-	filedb_close(dbptr, NULL, NULL);  /* close file */
 }
 
 /*************************************************************************/
 
 void sql_motd_store(Server * s)
 {
-	char *string, *source;
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET motd=\'%q\' WHERE server=\'%q\'",
+	          ServerTable, s->motd, s->name);
 
-	
-
-	if (LargeNet)
-	{
-		return;
-	}
-	if (!denora->do_sql)
-	{
-		return;
-	}
-	source = sql_escape(s->name);
-	string = sql_escape(s->motd);
-
-	sql_query(
-	          "UPDATE %s SET motd=\'%s\' WHERE server=\'%s\'",
-	          ServerTable, string, source);
-
-	free(source);
-	free(string);
 }
 
 /*************************************************************************/
@@ -385,10 +215,6 @@ Server *make_server(const char *servername, char *descript,
 		serv->country = (char *)country_name;
 		serv->countrycode = (char *)country_code;
 	}
-	serv->moduleData = NULL;
-
-
-	
 
 	return serv;
 }
@@ -406,14 +232,11 @@ Server *do_server(const char *source, char *servername, char *hops,
 	Server *servuplink;
 	int servid;
 	int add = 1;
-	uint32 timenow, uptime;
-	FILE *f;
 	int juped = 0;
 	int upservid = 0;
 
 	*buf = '\0';
 
-	
 
 	if ((!source || !*source))
 	{
@@ -466,7 +289,7 @@ Server *do_server(const char *source, char *servername, char *hops,
 		}
 	}
 
-	if (!juped && stricmp(servername, ServerName) && !LargeNet)
+	if (!juped && stricmp(servername, ServerName))
 	{
 		denora_cmd_version(servername);
 		denora_cmd_stats(s_StatServ, "u", servername);
@@ -482,8 +305,7 @@ Server *do_server(const char *source, char *servername, char *hops,
 		}
 		denora_motd(s_StatServ, servername);
 	}
-	stats->servers++;
-	
+	DenoraSQLUpdateStatsInt(DenoraDB, CurrentTable, "servers", 1);
 
 	if (juped)
 	{
@@ -498,8 +320,6 @@ Server *do_server(const char *source, char *servername, char *hops,
 	if (denora->do_sql)
 	{
 		servid = db_getserver(servername);
-		sqlservername = sql_escape(servername);
-		descript = sql_escape(descript);
 		if (uplinkserver)
 		{
 			upservid = db_getserver(uplinkserver);
@@ -507,9 +327,8 @@ Server *do_server(const char *source, char *servername, char *hops,
 
 		if (ServerCacheTime && servid > 0)
 		{
-			sql_query(
-			          "UPDATE %s SET server=\'%s\', hops=\'%s\', comment=\'%s\', connecttime=NOW(), linkedto=%d, online=\'Y\', maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld) WHERE servid=%d",
-			          ServerTable, sqlservername, hops, descript, upservid,
+			enoraSQLQuery(DenoraDB, "UPDATE %s SET server=\'%s\', hops=\'%s\', comment=\'%s\', connecttime=NOW(), linkedto=%d, online=\'Y\', maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld) WHERE servid=%d",
+			          ServerTable, servername, hops, descript, upservid,
 			          serv->ss->maxusers, serv->ss->maxusertime,
 			          (long int) serv->ss->lastseen, servid);
 			add = 0;
@@ -519,9 +338,8 @@ Server *do_server(const char *source, char *servername, char *hops,
 		{
 			if (KeepServerTable)
 			{
-				sql_query(
-				 "INSERT INTO %s (server, country, countrycode, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld)) ON DUPLICATE KEY UPDATE hops=\'%s\', comment=\'%s\', linkedto=%d, connecttime=NOW(), maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld)",
-				 ServerTable, sqlservername, serv->country, serv->countrycode, hops, descript, upservid,
+				enoraSQLQuery(DenoraDB, "INSERT INTO %s (server, country, countrycode, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld)) ON DUPLICATE KEY UPDATE hops=\'%s\', comment=\'%s\', linkedto=%d, connecttime=NOW(), maxusers=%d, maxusertime=%d, lastsplit=FROM_UNIXTIME(%ld)",
+				 ServerTable, servername, serv->country, serv->countrycode, hops, descript, upservid,
 				 serv->ss->maxusers, serv->ss->maxusertime,
 				 serv->ss->lastseen, hops, descript,
 				 upservid, serv->ss->maxusers,
@@ -529,9 +347,8 @@ Server *do_server(const char *source, char *servername, char *hops,
 			}
 			else
 			{
-				sql_query(
-				 "INSERT INTO %s (server, country, countrycode, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld))",
-				 ServerTable, sqlservername, serv->country, serv->countrycode, hops, descript, upservid,
+				enoraSQLQuery(DenoraDB, "INSERT INTO %s (server, country, countrycode, hops, comment, linkedto, connecttime, maxusers, maxusertime, lastsplit) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',%d, NOW(), %d, %d, FROM_UNIXTIME(%ld))",
+				 ServerTable, servername, serv->country, serv->countrycode, hops, descript, upservid,
 				 serv->ss->maxusers, serv->ss->maxusertime,
 				 (long int) serv->ss->lastseen);
 			}
@@ -542,39 +359,13 @@ Server *do_server(const char *source, char *servername, char *hops,
 
 		if (!stricmp(servername, ServerName))
 		{
-			timenow = (long int) time(NULL);
-			uptime = timenow - denora->start_time;
-			*buf = '\0';
-			ircsnprintf(buf, sizeof(buf), "Denora-%s", denora->version);
-			serv->version = sstrdup(buf);
-
-			sql_query
-			(
-			 "UPDATE %s SET uptime=%ld, version=\'%s\' WHERE servid=%d",
-			 ServerTable, uptime, serv->version, servid);
+			DenoraSQLQuery(DenoraDB, "UPDATE %s SET uptime=%ld, version=\'Denora-%s\' WHERE name=%q",	 ServerTable, (((long int) time(NULL)) - denora->start_time), denora->version, servername);
 			if (MOTDFilename)
 			{
-				if ((f = FileOpen(MOTDFilename, FILE_READ)) != NULL)
-				{
-					while (fgets(buf, BUFSIZE - 1, f))
-					{
-						buf[strlen(buf) - 1] = 0;
-						if (serv->motd)
-						{
-							ircsnprintf(mbuf, NET_BUFSIZE - 1, "%s\n\r%s",
-							            serv->motd, buf);
-							if (serv->motd)
-								free(serv->motd);
-							serv->motd = sstrdup(mbuf);
-						}
-						else
-						{
-							serv->motd = sstrdup(buf);
-						}
-					}
-					fclose(f);
-					sql_motd_store(serv);
-				}
+				*buf = '\0';
+				buf = FileGetContents(MOTDFilename);
+				DenoraSQLQuery(DenoraDB, "UPDATE %s SET motd=q WHERE name=%q",	 ServerTable, buf, servername);
+				free(buf);
 			}
 		}
 	}
@@ -584,10 +375,6 @@ Server *do_server(const char *source, char *servername, char *hops,
 	{
 		db_cleanserver();
 	}
-	if (uplinkserver)
-		free(uplinkserver);
-	if (sqlservername)
-		free(sqlservername);
 	
 	do_checkservsmax();
 	return serv;
@@ -597,25 +384,14 @@ Server *do_server(const char *source, char *servername, char *hops,
 
 void sql_uline(char *server)
 {
-	int id;
-	Server *s;
-
 	/* On Ratbox - ulines are also shared so you can
 	   get *.your.net at times so we ignore any server
-	   that starts with * */
+	   that starts with * 
+    */
 	if (*server != '*')
 	{
-		id = db_getserver(server);
-		if (id > 0)
-		{
-			sql_query("UPDATE %s SET uline=1 WHERE servid=%d",
-			          ServerTable, id);
-		}
-		s = server_find(server);
-		if (s)
-		{
-			s->uline = 1;
-		}
+		DenoraSQLQuery(DenoraDB, "UPDATE %s SET uline=1 WHERE name=%q",
+			          ServerTable, server);
 	}
 }
 
@@ -623,308 +399,69 @@ void sql_uline(char *server)
 
 void server_store_pong(char *source, uint32 ts)
 {
-	Server *s;
-	char *serv;
-	int servid = 0;
+	uint32 lastping, ping, highestping;
 
-	if (LargeNet)
+	lastping = DenoraSQLGetFieldInt(DenoraDB, ServerTable, "lastping", "name", source);
+	ping = ts - lastping;
+	DenoraSQLUpdateInt(DenoraDB, ServerTable, "ping", ping, "name", source);
+	alog(LOG_DEBUG, langstr(ALOG_DEBUG_PINGTIME), source, ping, ts,  lastping);
+	highestping = DenoraSQLGetFieldInt(DenoraDB, ServerTable, "highestping", "name", source);
+	if (ping >= highestping)
 	{
-		return;
+		DenoraSQLUpdateInt(DenoraDB, ServerTable, "highestping", ping, "name", source);
+		DenoraSQLUpdateInt(DenoraDB, ServerTable, "maxpingtime", time(NULL), "name", source);
 	}
-
-	s = server_find(source);
-	if (s)
-	{
-		s->ping = ts - s->lastping;
-		alog(LOG_DEBUG, langstr(ALOG_DEBUG_PINGTIME), source, s->ping, ts,
-		     s->lastping);
-		if (s->ping >= s->ss->highestping)
-		{
-			s->ss->highestping = s->ping;
-			s->ss->maxpingtime = time(NULL);
-		}
-		if (denora->do_sql)
-		{
-			serv = sql_escape(source);
-			servid = db_getserver(serv);
-			sql_query(
-				  "UPDATE %s SET ping=%d, highestping=%d, maxpingtime=%ld, lastpingtime=%ld WHERE servid=%d",
-				  ServerTable, s->ping, s->ss->highestping, (long int) s->ss->maxpingtime, s->lastping, servid);
-			free(serv);
-		}
-	}
+	DenoraSQLUpdateInt(DenoraDB, ServerTable, "lastpingtime", ts, "name", source);
 }
 
 /*************************************************************************/
 
 void ping_servers(void)
 {
-	Server *serv;
+	sqlite3 *db;
+	int rows;
+	sqlite3_stmt * stmt;
+	char **data;
 
-	
-
-	if (LargeNet)
+/*
+	 Note to self to fix 
+	s->flags != SERVER_JUPED
+*/
+	db = DenoraOpenSQL(DenoraDB);
+	rows = DenoraSQLGetNumRows(db, ServerTable);
+	stmt = DenoraPrepareQuery(db, "SELECT * FROM %s", ServerTable);
+	data = DenoraSQLFetchArray(db, ServerTable, stmt, FETCH_ARRAY_NUM);
+	for (i = 0; i < rows; i++)
 	{
-		return;
+			denora_cmd_ping(data[0]);
 	}
-
-	serv = server_find(denora->uplink);
-
-	if (serv)
-	{
-		server_ping(serv);
-	}
+	free(data);
+	sqlite3_finalize(stmt);
+	DenoraCloseSQl(db);
 }
 
 /*************************************************************************/
 
-Server *server_ping(Server * s)
+void server_uptime(void)
 {
-	Server *sl;
-	int i;
+	sqlite3 *db;
+	int rows;
+	sqlite3_stmt * stmt;
+	char **data;
 
-	if (s)
+	db = DenoraOpenSQL(DenoraDB);
+	rows = DenoraSQLGetNumRows(db, ServerTable);
+	stmt = DenoraPrepareQuery(db, "SELECT * FROM %s", ServerTable);
+	data = DenoraSQLFetchArray(db, ServerTable, stmt, FETCH_ARRAY_NUM);
+	for (i = 0; i < rows; i++)
 	{
-		if (s->slinks_count)
-		{
-			for (i = 0; i <= s->slinks_count - 1; i++)
-			{
-				sl = server_find(s->slinks[i]);
-				server_ping(sl);
-			}
-		}
-		if (stricmp(ServerName, s->name))
-		{
-			if (s->flags != SERVER_JUPED)
-				denora_cmd_ping(s->name);
-			s->lastping = time(NULL);
-		}
-		return s;
+			denora_cmd_stats(s_StatServ, "u", data[0]);
 	}
-	else
-	{
-		return NULL;
-	}
-}
+	free(data);
+	sqlite3_finalize(stmt);
+	DenoraCloseSQl(db);
 
-/*************************************************************************/
-
-Server *server_uptime(Server * s)
-{
-	Server *sl;
-	int i;
-
-	if (s)
-	{
-		if (s->slinks_count)
-		{
-			for (i = 0; i <= s->slinks_count - 1; i++)
-			{
-				sl = server_find(s->slinks[i]);
-				server_uptime(sl);
-			}
-		}
-		if (stricmp(ServerName, s->name))
-		{
-			if (s->flags != SERVER_JUPED)
-			{
-				denora_cmd_stats(s_StatServ, "u", s->name);
-			}
-		}
-		return s;
-	}
-	else
-	{
-		return NULL;
-	}
-}
-
-/*************************************************************************/
-
-void uptime_servers()
-{
-	Server *s;
-	uint32 timenow, uptime;
-	int servid = 0;
-	
-
-	if (LargeNet)
-	{
-		return;
-	}
-
-	s = server_find(denora->uplink);
-
-	if (s)
-	{
-		server_uptime(s);
-	}
-	timenow = (long int) time(NULL);
-	uptime = timenow - denora->start_time;
-
-	servid = db_getserver(ServerName);
-	sql_query("UPDATE %s SET uptime=%ld WHERE servid=%d",
-	          ServerTable, uptime, servid);
-}
-
-/*************************************************************************/
-
-/**
- * Find a server by name, returns NULL if not found
- * @param s Server struct
- * @param name Server Name
- * @return Server struct
- */
-Server *findserver(Server * s, const char *name)
-{
-	Server *sl;
-
-	if (!name || !*name)
-	{
-		return NULL;
-	}
-
-	alog(LOG_EXTRADEBUG, "debug: findserver(%s)", name);
-	while (s && (stricmp(s->name, name) != 0))
-	{
-		if (s->links)
-		{
-			sl = findserver(s->links, name);
-			if (sl)
-			{
-				s = sl;
-			}
-			else
-			{
-				s = s->next;
-			}
-		}
-		else
-		{
-			s = s->next;
-		}
-	}
-	alog(LOG_EXTRADEBUG, "debug: findserver(%s) -> %p", name, (void *) s);
-	return s;
-}
-
-/*************************************************************************/
-
-/**
- * Find a server by name, returns NULL if not found
- * @param name Server Name
- * @return Server struct
- */
-ServStats *findserverstats(const char *name)
-{
-	ServStats *s;
-
-	
-	if (!name || !*name)
-	{
-		alog(LOG_DEBUG, langstr(ALOG_ERR_FINDSERVERSTATS));
-		do_backtrace(1);
-		return NULL;
-	}
-
-	alog(LOG_EXTRADEBUG, "debug: findserverstats(%s) -> 0x%p", name, name);
-	s = servstatlist[STATSSERVERHASH(name)];
-	
-
-	while (s && stricmp(s->name, name) != 0)
-	{
-		s = s->next;
-	}
-	
-
-	alog(LOG_EXTRADEBUG, "debug: findserverstats(%s) -> 0x%p", name,
-	     (void *) s);
-	return s;
-}
-
-
-/*************************************************************************/
-
-/**
- * Find a server by name, returns NULL if not found
- * @param s Server struct
- * @param name Server Name
- * @return Server struct
- */
-Server *findserver_uid(Server * s, const char *name)
-{
-	Server *sl;
-
-	if (!name || !*name)
-	{
-		return NULL;
-	}
-
-	alog(LOG_EXTRADEBUG, "debug: findserver_uid(%s)", name);
-	while (s)
-	{
-		if (s->suid)
-		{
-			if (((ircd->p10 ? strcmp(s->suid, name) : stricmp(s->suid, name)) != 0))
-			{
-				if (s->links)
-				{
-					sl = findserver_uid(s->links, name);
-					if (sl)
-					{
-						return sl;
-					}
-					else
-					{
-						s = s->next;
-					}
-				}
-				else
-				{
-					s = s->next;
-				}
-			}
-			else
-			{
-				return s;
-			}
-		}
-		else
-		{
-			s = s->next;
-		}
-	}
-	alog(LOG_EXTRADEBUG, "debug: findserver_uid(%s) -> %p", name, (void *) s);
-	return s;
-}
-
-/*************************************************************************/
-
-void delete_serverstats(ServStats * serv)
-{
-	if (!serv)
-	{
-		alog(LOG_DEBUG, langstr(ALOG_ERR_DEL_SERVSTATS));
-		return;
-	}
-
-	alog(LOG_EXTRADEBUG, langstr(ALOG_DEL_SERVSTATS_FOR), serv->name);
-
-	if (serv->prev)
-	{
-		serv->prev->next = serv->next;
-	}
-	else
-	{
-		servstatlist[STATSSERVERHASH(serv->name)] = serv->next;
-	}
-	if (serv->next)
-	{
-		serv->next->prev = serv->prev;
-	}
-
-	alog(LOG_DEBUG, langstr(ALOG_DEL_SERVSTATS_DONE));
-	free(serv);
+	DenoraSQLUpdateInt(DenoraDB, ServerTable, "uptime", (((long int) time(NULL)) - denora->start_time), "name", ServerName);
 }
 
 /*************************************************************************/
@@ -939,7 +476,7 @@ void delete_serverstats(ServStats * serv)
  * @param quitreason the server quit message
  * @return void
  */
-void delete_server(Server * serv, const char *quitreason, int depth)
+void delete_server(char *serv, const char *quitreason, int depth)
 {
 	User *u, *unext;
 	Server *s;
@@ -951,32 +488,12 @@ void delete_server(Server * serv, const char *quitreason, int depth)
 		return;
 	}
 
-	alog(LOG_DEBUG, langstr(ALOG_DEL_SERVER_FOR), serv->name);
+	alog(LOG_DEBUG, langstr(ALOG_DEL_SERVER_FOR), serv);
 
 	if (ircdcap->noquit || ircdcap->qs)
 	{
 		alog(LOG_DEBUG, langstr(ALOG_DEL_SERVER_NOQUIT));
-		u = firstuser();
-		while (u)
-		{
-			unext = nextuser();
-			if (u && u->server == serv)
-			{
-				if (denora->do_sql)
-				{
-					db_removenick(u->sqlnick, (char *) quitreason);
-				}
-				delete_user(u);
-			}
-
-			if (!unext)
-			{
-				break;
-			}
-
-			u = unext;
-		}
-		alog(LOG_DEBUG, "debug: delete_server() cleared all users");
+		DenoraSQLQuery(DenoraDB, "UPDATE %s SET online=\'N\',lastquitmsg=%q, lastquit=%ld WHERE server=%q", UserTable, (char *) quitreason, time(NULL), serv);
 	}
 	else
 	{
@@ -985,167 +502,17 @@ void delete_server(Server * serv, const char *quitreason, int depth)
 		     ircdcap->noquit, ircdcap->qs);
 	}
 
-	if (serv->slinks_count)
-	{
-		for (i = 0; i < serv->slinks_count; i++)
-		{
-			alog(LOG_DEBUG, "debug: %s has slinks[%d] = %s", serv->name, i,
-			     serv->slinks[i]);
-		}
-		i = 0;
-		x = -1;
-		ARRAY_FOREACH(i, serv->slinks)
-		{
-			s = server_find(serv->slinks[i]);
-			if (s)
-			{
-				x = find_server_link(serv, s->name);
-				delete_server(s, quitreason, (depth + 1));
-			}
-			else
-			{
-				alog(LOG_DEBUG, "Can not find server %s", serv->slinks[i]);
-			}
-		}
-		i = 0;
-		ARRAY_FOREACH(i, serv->slinks)
-		{
-			free(serv->slinks[i]);
-			ARRAY_REMOVE(serv->slinks, i);
-		}
-		alog(LOG_DEBUG, "debug: Reached the end of the loop");
-	}
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET online=\'N\',lastquitmsg=%q, lastsplit=%ld WHERE linkedto=%q", ServerTable, (char *) quitreason, time(NULL), serv);
 
-	send_event(EVENT_SQUIT, 2, serv->name, quitreason);
+	send_event(EVENT_SQUIT, 2, serv, quitreason);
 
-	if (denora->do_sql)
-	{
-		sql_do_squit(serv->name);
-	}
-	stats->servers--;
-	serv->ss->splits++;
-	serv->ss->split_stats = 1;
-	serv->ss->lastseen = time(NULL);
+	sql_do_squit(serv->name);
 
-	if (serv->desc)
-		free(serv->desc);
-	if (serv->version)
-		free(serv->version);
-	if (serv->suid)
-		free(serv->suid);
-	if (serv->prev)
-		serv->prev->next = serv->next;
-	if (serv->next)
-		serv->next->prev = serv->prev;
-	if (serv->uplink)
-	{
-		if (serv->uplink->links == serv)
-			serv->uplink->links = serv->next;
-		if (serv->uplink->slinks_count)
-		{
-			i = 0;
-			ARRAY_FOREACH(i, serv->uplink->slinks)
-			{
-				if (!stricmp(serv->uplink->slinks[i], serv->name)
-				        && (depth == 0))
-				{
-					alog(LOG_DEBUG,
-					     "Removed %s from it's parents list of children",
-					     serv->name);
-					free(serv->uplink->slinks[i]);
-					ARRAY_REMOVE(serv->uplink->slinks, i);
-				}
-			}
-		}
-	}
+	DenoraSQLUpdateStatsInt(DenoraDB, "servers", 0);
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET splits=splits+1,split_stats=1,lastseen=%ld WHERE server=%q", ServerTable, time(NULL), serv);
 
-	if (denora->do_sql)
-	{
-		sql_query(
-		          "UPDATE %s SET val=%d, time=%ld WHERE type='servers'",
-		          CurrentTable, stats->servers, time(NULL));
-	}
 
 	alog(LOG_DEBUG, langstr(ALOG_DEL_SERVER_DONE));
-}
-
-/*************************************************************************/
-
-Server *first_server(void)
-{
-	server_cur = servlist;
-	while (server_cur)
-		server_cur = next_server();
-	return server_cur;
-}
-
-/*************************************************************************/
-
-Server *next_server(void)
-{
-	if (!server_cur)
-		return NULL;
-
-	do
-	{
-		if (server_cur->links)
-		{
-			server_cur = server_cur->links;
-		}
-		else if (server_cur->next)
-		{
-			server_cur = server_cur->next;
-		}
-		else
-		{
-			do
-			{
-				server_cur = server_cur->uplink;
-				if (server_cur && server_cur->next)
-				{
-					server_cur = server_cur->next;
-					break;
-				}
-			}
-			while (server_cur);
-		}
-	}
-	while (server_cur);
-
-	return server_cur;
-}
-
-/*************************************************************************/
-
-ServStats *first_statsserver(void)
-{
-	next_index = 0;
-
-	
-
-	while (next_index < 1024 && currentss == NULL)
-		currentss = servstatlist[next_index++];
-	alog(LOG_EXTRADEBUG, "debug: first_statserver() returning %s",
-	     currentss ? currentss->name : "NULL (end of list)");
-	return currentss;
-}
-
-/*************************************************************************/
-
-ServStats *next_statserver(void)
-{
-	
-
-	if (currentss)
-		currentss = currentss->next;
-	if (!currentss && next_index < 1024)
-	{
-		while (next_index < 1024 && currentss == NULL)
-			currentss = servstatlist[next_index++];
-	}
-	alog(LOG_EXTRADEBUG, "debug: next_statserver() returning %s",
-	     currentss ? currentss->name : "NULL (end of list)");
-	return currentss;
 }
 
 /*************************************************************************/
@@ -1259,15 +626,9 @@ void sql_do_uptime(char *source, char *uptime)
 	}
 
 	total = mins_int + secs_int + hours_int + days_int;
-	servid = db_getserver((s ? s->name : source));
 
-	sql_query("UPDATE %s SET uptime=%ld WHERE servid=%d",
-	          ServerTable, total, servid);
-
-	if (s)
-	{
-		s->uptime = total;
-	}
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET uptime=%ld WHERE name=%d",
+	          ServerTable, total, source);
 
 	if (tmp)
 		free(tmp);
@@ -1279,38 +640,16 @@ void sql_do_uptime(char *source, char *uptime)
 /* SDESC */
 void sql_do_sdesc(char *user, char *msg)
 {
-	if (!denora->do_sql)
-	{
-		return;
-	}
-	if (LargeNet)
-	{
-		return;
-	}
-
-	user = sql_escape(user);
-	msg = sql_escape(msg);
-	sql_query("UPDATE %s SET comment=\'%s\' WHERE servid=%d",
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET comment=\'%q\' WHERE name=%q",
 	          ServerTable, msg, db_getservfromnick(user));
-	free(user);
-	free(msg);
 }
 
 /*************************************************************************/
 
 void server_set_desc(char *server, char *msg)
 {
-	Server *s;
-	s = server_find(server);
-
-	if (s)
-	{
-		if (s->desc)
-			free(s->desc);
-		s->desc = sstrdup(msg);
-	}
-
-	sql_do_sdesc(server, msg);
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET comment=\'%q\' WHERE name=%q",
+	          ServerTable, msg, server);
 }
 
 /*************************************************************************/
@@ -1344,22 +683,6 @@ void sql_do_server_version(char *server, int ac, char **av)
 	Server *s;
 	char *tmp2;
 	*buf = '\0';
-
-	
-
-	if (LargeNet)
-	{
-		return;
-	}
-	s = server_find(server);
-	
-
-	if (!s)
-	{
-		alog(LOG_DEBUG, "Version for non-existatnt (%s)", server);
-		sleep(15);
-		return;
-	}
 
 	/* Viagra */
 	if (ac == 8)
@@ -1448,21 +771,8 @@ void sql_do_server_version(char *server, int ac, char **av)
 		return;
 	}
 
-	if (s)
-	{
-		s->version = sstrdup(version);
-	}
-	if (denora->do_sql)
-	{
-		sqlversion = sql_escape(version);
-		if (((servid = db_getserver(s->name)) != -1))
-		{
-			sql_query(
-			          "UPDATE %s SET version=\'%s\' WHERE servid=%d",
-			          ServerTable, sqlversion, servid);
-		}
-		free(sqlversion);
-	}
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET version=\'%q\' WHERE name=%q",
+			          ServerTable, version, server);
 	free(version);
 }
 
@@ -1471,24 +781,16 @@ void sql_do_server_version(char *server, int ac, char **av)
 /* SQUIT */
 void sql_do_squit(char *server)
 {
-	int servid;
-	char *sqlserver;
-
 	if (ServerCacheTime)
 	{
-		servid = db_getserver(server);
-		sql_query
-		(
-		 "UPDATE %s SET online=\'N\', lastsplit=NOW(),linkedto=NULL WHERE servid=%d",
-		 ServerTable, servid);
+		DenoraSQLQuery(DenoraDB, "UPDATE %s SET online=\'N\', lastsplit=NOW(),linkedto=NULL WHERE name=%q",
+		 ServerTable, server);
 		db_cleanserver();
 	}
 	else
 	{
-		sqlserver = sql_escape(server);
-		sql_query("DELETE FROM %s WHERE server=\'%s\'",
-		          ServerTable, sqlserver);
-		free(sqlserver);
+		DenoraSQLQuery(DenoraDB, "DELETE FROM %s WHERE server=\'%s\'",
+		          ServerTable, server);
 	}
 }
 
@@ -1528,7 +830,7 @@ void do_squit(char *servername)
 			}
 		}
 	}
-	delete_server(s, buf, 0);
+	delete_server(servername, buf, 0);
 }
 
 /*************************************************************************/
@@ -1576,82 +878,6 @@ void capab_parse(int ac, char **av)
 		free(s);
 		free(tmp);
 	}
-}
-
-/*************************************************************************/
-
-Server *server_find(const char *source)
-{
-	Server *s;
-	char unrealbuf[BUFSIZE];
-	*unrealbuf = '\0';
-
-	if (ircd->p10)
-	{
-		s = findserver_uid(servlist, source);
-		if (!s)
-		{
-			return findserver(servlist, source);
-		}
-		else
-		{
-			return s;
-		}
-	}
-	else if (!stricmp(ServerName, source))
-	{
-		return me_server;
-	}
-	else if (ircd->ts6 && UseTS6)
-	{
-		s = findserver_uid(servlist, source);
-		if (!s)
-		{
-			return findserver(servlist, source);
-		}
-		else
-		{
-			return s;
-		}
-	}
-	else if (Numeric)
-	{
-		if (!myNumToken(source, '.'))
-		{
-			ircsnprintf(unrealbuf, BUFSIZE - 1, "%ld",
-			            base64dec((char *) source));
-			return findserver_uid(servlist, unrealbuf);
-		}
-		else
-		{
-			return findserver(servlist, source);
-		}
-	}
-	else
-	{
-		return findserver(servlist, source);
-	}
-	return NULL;
-}
-
-/*************************************************************************/
-
-int find_server_link(Server * s, const char *servname)
-{
-	int i;
-
-	i = 0;
-	if (s && s->slinks_count)
-	{
-		ARRAY_FOREACH(i, s->slinks)
-		{
-			if (stricmp(s->slinks[i], servname) == 0)
-			{
-				return i;
-			}
-		}
-	}
-	return -1;
 }
 
 /*************************************************************************/

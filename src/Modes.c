@@ -438,7 +438,7 @@ void ModuleUpdateSQLUserMode(void)
 
 void denora_automode(char *chan)
 {
-	Uid *ud = find_uid(s_StatServ);
+	char *ud = find_uid(s_StatServ);
         char *modes = sstrdup(AutoMode);
         char nickbuf[BUFSIZE];
         *nickbuf = '\0';
@@ -452,7 +452,7 @@ void denora_automode(char *chan)
 			case '-':
 				break;
 			default:
-				ircsnprintf(nickbuf, BUFSIZE, "%s %s", nickbuf, ((ircd->p10 || UseTS6) && ud) ? ud->uid : s_StatServ);
+				ircsnprintf(nickbuf, BUFSIZE, "%s %s", nickbuf, ((ircd->p10 || UseTS6) && ud) ? ud : s_StatServ);
 		}
 		(void) *modes++;
 	}

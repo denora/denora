@@ -1194,7 +1194,6 @@ void destroy_all(void)
 	XMLRPCCmd *xml, *next9;
 	XMLRPCCmdHash *xmlh, *next10;
 	Exclude *e, *next14;
-	Uid *uid, *next17;
 	ServStats *ss, *next18;
 	int i, j;
 
@@ -1352,15 +1351,8 @@ void destroy_all(void)
 
 	alog(LOG_DEBUG, "debug: Clearing UID");
 
-	uid = uid_first();
-	while (uid)
-	{
-		if (uid)
-		{
-			delete_uid(uid);
-		}
-		uid = uid_next();
-	}
+	DenoraSQLQuery(DenoraDB, "DROP TABLE %s", UIDTable);
+	free(UIDTable);
 
 	alog(LOG_DEBUG, "debug: Clearing Stats Chan");
 	Fini_StatsChannel();

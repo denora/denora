@@ -72,6 +72,80 @@ int DenoraSQLQuery(char *dbname, const char *fmt, ...)
 }
 
 
+char *DenoraSQLGetField(char *dbname, const char *fmt, ...)
+{
+	va_list args;
+	char *buf;
+	sqlite3_stmt *stmt;
+	char **sdata;
+	sqlite3 *db;
+	char *temp;
+
+	va_start(args, fmt);
+	sqlite3_vsnprintf(NET_BUFSIZE, buf, fmt, args);
+	va_end(args);
+
+	db = DenoraOpenSQL(dbname);
+	stmt = DenoraPrepareQuery(db, buf);
+	sdata = DenoraSQLFetchRow(stmt, FETCH_ARRAY_NUM);
+
+	sqlite3_finalize(stmt);
+	DenoraCloseSQl(db);
+
+	temp = sstrdup(sdata[0]);
+	free(sdata[0]);
+	free(sdata);
+	return temp;
+}
+
+int DenoraSQLGetFieldInt(char *dbname, char *table, char *what, char *wherewhat, char *whereeqaul)
+{
+	char *buf;
+	sqlite3_stmt *stmt;
+	char **sdata;
+	sqlite3 *db;
+	int temp;
+
+	fmt = "SELECT %s FROM %s WHERE %q=%q";
+
+	sqlite3_snprintf(NET_BUFSIZE, buf, fmt, what, table, wherewhat, whereequal);
+
+	db = DenoraOpenSQL(dbname);
+	stmt = DenoraPrepareQuery(db, buf);
+	sdata = DenoraSQLFetchRow(stmt, FETCH_ARRAY_NUM);
+	sqlite3_finalize(stmt);
+	DenoraCloseSQl(db);
+
+	temp = atoi(sdata[0]);
+	free(sdata[0]);
+	free(sdata);
+	return temp;
+}
+
+
+int DenoraSQLGetStatsInt(char *dbname, char *table, char *what)
+{
+	char *buf;
+	sqlite3_stmt *stmt;
+	char **sdata;
+	sqlite3 *db;
+	int temp;
+
+	fmt = "SELECT type FROM %s WHERE type=%q";
+
+	sqlite3_snprintf(NET_BUFSIZE, buf, fmt, table, what);
+
+	db = DenoraOpenSQL(dbname);
+	stmt = DenoraPrepareQuery(db, buf);
+	sdata = DenoraSQLFetchRow(stmt, FETCH_ARRAY_NUM);
+	sqlite3_finalize(stmt);
+	DenoraCloseSQl(db);
+
+	temp = atoi(sdata[0]);
+	free(sdata[0]);
+	free(sdata);
+	return temp;
+}
 
 /*************************************************************************/
 
@@ -95,15 +169,15 @@ int DenoraSQLUpdateChar(char *dbname, char *var, char *data)
 
 /*************************************************************************/
 
-int DenoraSQLUpdateInt(char *dbname, char *var, int data)
+int DenoraSQLUpdateInt(char *dbname, char *var, uint32 data, char *what, char *equals)
 {
 	char *buf;
 	int res;
 	sqlite3 *db;
 
-	const char *fmt = "UPDATE %s SET %s=%d";
+	const char *fmt = "UPDATE %s SET %s=%ld WHERE %q=%q";
 
-	sqlite3_snprintf(NET_BUFSIZE, buf, fmt, dbname, var, data);
+	sqlite3_snprintf(NET_BUFSIZE, buf, fmt, dbname, var, data, what, equals);
 
 	db = DenoraOpenSQL(dbname);
 	res = DenoraExecQueryDirectSQL(db, buf, NULL);
@@ -111,6 +185,46 @@ int DenoraSQLUpdateInt(char *dbname, char *var, int data)
 
 	return res;
 }
+
+/*************************************************************************/
+
+int DenoraSQLUpdateStatsFull(char *dbname, char *table, char *var, uint32 data, char *what, char *equals)
+{
+	char *buf;
+	int res;
+	sqlite3 *db;
+
+	const char *fmt = "UPDATE %s SET %s=%ld, time=%ld  WHERE %q=%q";
+
+	sqlite3_snprintf(NET_BUFSIZE, buf, fmt, table, var, data, time(NULL), what, equals);
+
+	db = DenoraOpenSQL(dbname);
+	res = DenoraExecQueryDirectSQL(db, buf, NULL);
+	DenoraCloseSQl(db);
+
+	return res;
+}
+
+
+/*************************************************************************/
+
+int DenoraSQLUpdateStatsInt(char *dbname, char *table, char *var, int updown)
+{
+	int value;
+
+	value = DenoraSQLGetStatsInt(dbname, table, var);
+	if (updown == 1)
+	{
+		value++;
+	}
+	else
+	{
+		value--;
+	}
+	DenoraSQLUpdateStatsFull(dbname, table, var, value, "type", var);
+	return 1;
+}
+
 
 /*************************************************************************/
 

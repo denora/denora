@@ -397,6 +397,7 @@ int db_checknick_nt(char *nick)
 
 /*************************************************************************/
 
+/* fix me needs to return server name */
 int db_getservfromnick(char *nick)
 {
 	int res = 0;

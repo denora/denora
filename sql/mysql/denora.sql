@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `server` (
   `server` varchar(64) NOT NULL default '',
   `hops` varchar(50) NOT NULL default '0',
   `comment` varchar(255) NOT NULL default '',
-  `linkedto` int(10) unsigned default NULL,
+  `linkedto` varchar(64) NOT NULL default NULL,
   `connecttime` datetime default NULL,
   `online` enum('Y','N') NOT NULL default 'Y',
   `lastsplit` datetime default NULL,
@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS `server` (
   `maxopertime` int(15) NOT NULL default '0',
   `countrycode` varchar(255) NOT NULL default '',
   `country` varchar(255) NOT NULL default '',
+  `lastquitmsg` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`servid`),
   UNIQUE KEY `server` (`server`),
   KEY `linkedto` (`linkedto`)

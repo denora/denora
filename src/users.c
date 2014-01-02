@@ -16,13 +16,8 @@
 #include "denora.h"
 
 User *userlist[MAX_USERS];
-Uid *uidlist[MAX_UIDS];
-static Uid *ucurrent;
 static User *current;
-static User *uidcurrent;
 static int next_index;
-static int unext_index;
-static int uidnext_index;
 User *new_user(const char *nick);
 GeoIP *gidb;
 GeoIP *gidb_v6;
@@ -697,9 +692,6 @@ void delete_user(User * user)
 	struct u_chanlist *c, *c2;
 	struct u_modes *m, *m2;
 	PrivMsg *p;
-	Uid *ud;
-
-	
 
 	if (!user)
 	{
@@ -789,11 +781,6 @@ void delete_user(User * user)
 		free(user->vhost);
 	}
 
-	if (user->uid)
-	{
-		free(user->uid);
-	}
-
 	if (user->account)
 	{
 		free(user->account);
@@ -843,15 +830,7 @@ void delete_user(User * user)
 
 	if (ircd->p10 || (UseTS6 && ircd->ts6))
 	{
-		ud = find_uid(user->nick);
-		if (ud)
-		{
-			delete_uid(ud);
-		}
-		if (user->uid)
-		{
-			free(user->uid);
-		}
+		DenoraSQLQuery(DenoraDB, "DELETE FROM %s WHERE nick=%s", UIDTable, user->nick);
 	}
 
 	alog(LOG_EXTRADEBUG, "debug: delete_user(): update listpointers");
@@ -966,167 +945,33 @@ User *nextuser(void)
 User *find_byuid(const char *uid)
 {
 	User *u;
+	char *nick;
 
-	u = first_uid();
-	while (u)
+	nick = DenoraSQLGetField(DenoraDB, "SELECT nick FROM %s WHERE uid=%s", UIDTable, uid);
+	u = finduser(nick);
+
+	if (u && u->nick && !strcmp(nick, u->nick))
 	{
-		if (u && u->uid && !strcmp(uid, u->uid))
-		{
 			return u;
-		}
-		u = next_uid();
 	}
 	return NULL;
 }
 
+
 /*************************************************************************/
 
-/**
- * Iterate over all user ids in the user list.  Return NULL at end of list.
- *
- * @return User struct
- *
- */
-User *first_uid(void)
+void new_uid(const char *nick, char *uid)
 {
-	unext_index = 0;
-
-	while (unext_index < MAX_UIDS && uidcurrent == NULL)
-	{
-		uidcurrent = userlist[unext_index++];
-	}
-
-	alog(LOG_EXTRADEBUG, "debug: UID Hash index %d", unext_index);
-	alog(LOG_EXTRADEBUG, "debug: first_uid() returning %s %s",
-	     uidcurrent ? uidcurrent->nick : "NULL (end of list)",
-	     uidcurrent ? uidcurrent->uid : "");
-
-	return uidcurrent;
+	DenoraSQLQuery(DenoraDB, "INSERT INTO %S (nick, uid) VALUES (%q, %q)", UIDTable, nick, uid);
 }
 
 /*************************************************************************/
 
-/**
- * Move to the next user id in the list
- *
- * @return User struct
- *
- */
-User *next_uid(void)
+void delete_uid(char *uid)
 {
-	if (uidcurrent)
-	{
-		uidcurrent = uidcurrent->next;
-	}
-
-	if (!uidcurrent && unext_index < MAX_UIDS)
-	{
-		while (unext_index < MAX_UIDS && uidcurrent == NULL)
-		{
-			uidcurrent = userlist[unext_index++];
-		}
-	}
-
-	alog(LOG_EXTRADEBUG, "debug: UID Hash index %d", unext_index);
-	alog(LOG_EXTRADEBUG, "debug: next_uid() returning %s %s",
-	     uidcurrent ? uidcurrent->nick : "NULL (end of list)",
-	     uidcurrent ? uidcurrent->uid : "");
-
-	return uidcurrent;
-}
-
-/*************************************************************************/
-
-Uid *uid_first(void)
-{
-	uidnext_index = 0;
-	while (uidnext_index < MAX_UIDS && ucurrent == NULL)
-	{
-		ucurrent = uidlist[uidnext_index++];
-	}
-	alog(LOG_EXTRADEBUG, "debug: uid_first() returning %s %s",
-	     ucurrent ? ucurrent->nick : "NULL (end of list)",
-	     ucurrent ? ucurrent->uid : "");
-	return ucurrent;
-}
-
-/*************************************************************************/
-
-Uid *uid_next(void)
-{
-	if (ucurrent)
-	{
-		ucurrent = ucurrent->next;
-	}
-
-	if (!ucurrent && uidnext_index < MAX_UIDS)
-	{
-		while (uidnext_index < MAX_UIDS && ucurrent == NULL)
-			ucurrent = uidlist[uidnext_index++];
-	}
-
-	alog(LOG_EXTRADEBUG, "debug: uid_next() returning %s %s",
-	     ucurrent ? ucurrent->nick : "NULL (end of list)",
-	     ucurrent ? ucurrent->uid : "");
-
-	return ucurrent;
-}
-
-/*************************************************************************/
-
-Uid *new_uid(const char *nick, char *uid)
-{
-	Uid *u, **list;
-
-	u = calloc(sizeof(Uid), 1);
-	if (!nick || !uid)
-	{
-		return NULL;
-	}
-	strlcpy(u->nick, nick, NICKMAX);
-	list = &uidlist[UIDHASH(u->nick)];
-	u->next = *list;
-	if (*list)
-		(*list)->prev = u;
-	*list = u;
-	u->uid = sstrdup(uid);
-	return u;
-}
-
-/*************************************************************************/
-
-void delete_uid(Uid * u)
-{
-	
 
 	alog(LOG_EXTRADEBUG, "debug: delete_uid() called");
-
-	if(u->uid)
-	{
-		free(u->uid);
-	}
-
-	alog(LOG_EXTRADEBUG, "debug: delete_uid(): delete from list");
-
-	
-	if (u->prev)
-	{
-		u->prev->next = u->next;
-	}
-	else
-	{
-		uidlist[UIDHASH(u->nick)] = u->next;
-	}
-	if (u->next)
-	{
-		u->next->prev = u->prev;
-	}
-	
-
-	alog(LOG_EXTRADEBUG, "debug: delete_uid(): free uid structure");
-
-	free(u);
-
+	DenoraSQLQuery(DenoraDB, "DELETE FROM %s WHERE uid=%s", UIDTable, uid);	
 	alog(LOG_EXTRADEBUG, "debug: delete_uid() done");
 	return;
 }
@@ -1141,9 +986,9 @@ void delete_uid(Uid * u)
  * @return uid struct
  *
  */
-Uid *find_uid(const char *nick)
+char *find_uid(const char *nick)
 {
-	Uid *u;
+	char *uid;
 	int i;
 
 	if (!nick || !*nick)
@@ -1151,54 +996,10 @@ Uid *find_uid(const char *nick)
 		return NULL;
 	}
 
-	for (i = 0; i < MAX_UIDS; i++)
+	uid = DenoraSQLGetField(DenoraDB, "SELECT nick FROM %s WHERE nick=%s", UIDTable, nick);
+	if (uid)
 	{
-		for (u = uidlist[i]; u; u = u->next)
-		{
-			if (u->nick)
-			{
-				if (!stricmp(nick, u->nick))
-				{
-					return u;
-				}
-			}
-		}
-	}
-	return NULL;
-}
-
-/*************************************************************************/
-
-/**
- * Find the uid struct for the given uid
- *
- * @param uid is the user id to look for
- *
- * @return uid struct
- *
- */
-Uid *find_nickuid(const char *uid)
-{
-	Uid *u;
-	int i;
-
-	if (!uid || !*uid)
-	{
-		return NULL;
-	}
-
-	for (i = 0; i < MAX_UIDS; i++)
-	{
-		for (u = uidlist[i]; u; u = u->next)
-		{
-			if (u->uid)
-			{
-				if (!strcmp(uid, u->uid))
-				{
-					return u;
-				}
-			}
-		}
+		return uid;
 	}
 	return NULL;
 }
@@ -1306,7 +1107,10 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 		user->timestamp = ts;
 		user->my_signon = time(NULL);
 		user->vhost = (vhost ? sstrdup(vhost) : NULL);
-		user->uid = (uid ? sstrdup(uid) : NULL);
+		if (uid)
+		{
+			new_uid(nick, uid);
+		}
 		user->account = (account ? sstrdup(account) : NULL);
 		user->admin = 0;	/* 0 by default, winner, eh? */
 		user->hopcount = hopcount;

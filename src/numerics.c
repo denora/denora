@@ -243,8 +243,7 @@ void denora_cmd_numeric(char *source, int numeric, const char *fmt, ...)
 	User *u;
 	char buf[BUFSIZE];
 	*buf = '\0';
-
-	
+	char *uid;
 
 	if (fmt)
 	{
@@ -259,13 +258,15 @@ void denora_cmd_numeric(char *source, int numeric, const char *fmt, ...)
 	{
 		if (ircd->p10)
 		{
-			send_cmd(p10id, "%d %s %s", numeric, (u ? u->uid : source),
+			uid = find_uid(source);
+			send_cmd(p10id, "%d %s %s", numeric, (uid ? uid : source),
 			         buf);
 		}
 		else if (ircd->ts6 && UseTS6)
 		{
+			uid = find_uid(source);
 			send_cmd((TS6SID ? TS6SID : ServerName), "%d %s %s", numeric,
-			         (UseTS6 ? (u ? u->uid : source) : source), buf);
+			         (UseTS6 ? (uid ? uid : source) : source), buf);
 		}
 		else
 		{
