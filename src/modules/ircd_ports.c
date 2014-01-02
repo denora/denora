@@ -135,10 +135,6 @@ int get_port(char *source, int ac, char **av)
 	USE_VAR(ac);
 
     if (denora_get_ircd() == IRC_SOLIDIRCD) {
-        s = server_find(source);
-        if (!s) {
-            return MOD_CONT;
-        }
         port = myStrGetToken(av[1], ' ', 0);
         if (!port) {
             return MOD_CONT;
@@ -155,10 +151,7 @@ int get_port(char *source, int ac, char **av)
             return MOD_CONT;
         }
     } else if (denora_get_ircd() == IRC_UNREAL32) {
-        s = server_find(source);
-        if (!s) {
-            return MOD_CONT;
-        }
+
         if (!stricmp(av[0], s_StatServ)) {
             port = myStrGetToken(av[1], ' ', 3);
             if (!port) {
@@ -173,6 +166,7 @@ int get_port(char *source, int ac, char **av)
             free(port);
             free(portnum);
             free(type);
+            free(temp);
             return MOD_CONT;
         }
     } else if (denora_get_ircd() == IRC_ASUKA || denora_get_ircd() == IRC_NEFARIOUS || denora_get_ircd() == IRC_IRCU) {
