@@ -439,7 +439,14 @@ void xml_export_servers(char *file)
 				xml_write_tag(ptr, "uplink", s->uplink->name);
 			}
 			xml_write_tag_int(ptr, "uline", s->uline);
-
+			xml_write_block_top(ptr, "serverstats");
+			if (s->ss->currentusers)
+			{
+				xml_write_tag_int(ptr, "currentusers",
+				                  s->ss->currentusers);
+			}
+			xml_write_tag_int(ptr, "maxusers", s->ss->maxusers);
+			xml_write_block_bottom(ptr, "serverstats");
 			xml_write_block_bottom(ptr, "server");
 			s = next;
 		}
@@ -690,6 +697,8 @@ void xml_export_all(char *file)
 
 		xml_write_block_top(ptr, "servers");
 		s = servlist->links;
+		xml_write_block_top(ptr, "servers");
+		s = servlist->links;
 		while (s)
 		{
 			snext = s->next;
@@ -697,16 +706,29 @@ void xml_export_all(char *file)
 			{
 				continue;
 			}
-			if (ping)
-			{
-				denora_cmd_pong(ServerName, ServerName);
-				ping = 0;
-			}
+			denora_cmd_pong(ServerName, ServerName);
 			xml_write_block_top(ptr, "server");
 			xml_write_tag(ptr, "name", s->name);
 			xml_write_tag_int(ptr, "hops", s->hops);
 			xml_write_tag(ptr, "desc", s->desc);
 			xml_write_tag_int(ptr, "flags", s->flags);
+
+			if (s->flags & SERVER_ISME)
+			{
+				xml_write_tag_int(ptr, "FLAG_ISME", 1);
+			}
+			else
+			{
+				xml_write_tag_int(ptr, "FLAG_ISME", 0);
+			}
+			if (s->flags & SERVER_JUPED)
+			{
+				xml_write_tag_int(ptr, "FLAG_JUPED", 1);
+			}
+			else
+			{
+				xml_write_tag_int(ptr, "FLAG_JUPED", 0);
+			}
 			xml_write_tag_int(ptr, "synced", s->sync);
 			if (s->suid)
 			{
@@ -724,6 +746,7 @@ void xml_export_all(char *file)
 			{
 				xml_write_tag(ptr, "uplink", s->uplink->name);
 			}
+			xml_write_tag_int(ptr, "uline", s->uline);
 			xml_write_block_top(ptr, "serverstats");
 			if (s->ss->currentusers)
 			{
@@ -732,7 +755,7 @@ void xml_export_all(char *file)
 			}
 			xml_write_tag_int(ptr, "maxusers", s->ss->maxusers);
 			xml_write_block_bottom(ptr, "serverstats");
-
+			
 			xml_write_block_bottom(ptr, "server");
 			s = snext;
 			if (counttoping == 10)
