@@ -1,6 +1,6 @@
 /* HTML and XML Markup code
  *
- * (c) 2004-2013 Denora Team
+ * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -31,9 +31,10 @@ char *xml_header;               /* xml header data */
 FILE *new_xml(char *filename)
 {
 	FILE *xmlfile;
-
+	char *buf;
 	
-
+	snprintf(buf, sizeof(buf) "%s/%s", STATS_DATADIR, filename);
+	
 	if ((xmlfile = FileOpen(filename, FILE_WRITE)) == NULL)
 	{
 		alog(LOG_ERROR, "Error accessing file: %s", filename);

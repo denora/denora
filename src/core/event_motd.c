@@ -1,6 +1,6 @@
 /* Numeric Event 372/375/376
  *
- * (c) 2004-2013 Denora Team
+ * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -14,6 +14,9 @@
 /*************************************************************************/
 
 #include "denora.h"
+
+#define MODULE_VERSION "2.0"
+#define MODULE_NAME "event_motd"
 
 int denora_event_372(char *source, int ac, char **av);
 int denora_event_375(char *source, int ac, char **av);
@@ -36,9 +39,10 @@ int DenoraInit(int argc, char **argv)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+	alog(LOG_NORMAL,   "[%s] version %s", MODULE_NAME, MODULE_VERSION);
+	
 	moduleAddAuthor("Denora");
-	moduleAddVersion
-	("");
+	moduleAddVersion(MODULE_VERSION);
 	moduleSetType(CORE);
 
 	m = createMessage("372", denora_event_372);
@@ -166,7 +170,7 @@ int denora_event_375(char *source, int ac, char **av)
 	{
 		protocol_debug(source, ac, av);
 	}
-	sql_query( "UPDATE %s SET motd=\'\' WHERE server=\'%s\'",
+	DenoraSQLQuery(DenoraDB,"UPDATE %s SET motd=\'\' WHERE server=\'%s\'",
 	          ServerTable, source);
 	return MOD_CONT;
 }

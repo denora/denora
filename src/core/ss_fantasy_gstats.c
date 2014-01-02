@@ -1,6 +1,6 @@
 /*
  *
- * (c) 2004-2013 Denora Team
+ * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -16,6 +16,9 @@
 
 #include "denora.h"
 
+#define MODULE_VERSION "2.0"
+#define MODULE_NAME "ss_fantasy_gstats"
+
 int do_fantasy(int argc, char **argv);
 int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
@@ -29,22 +32,26 @@ void DenoraFini(void);
 int DenoraInit(int argc, char **argv)
 {
 	EvtHook *hook;
+	int status;
 
 	if (denora->debug >= 2)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
-
+	
+	alog(LOG_NORMAL,   "[%s] version %s", MODULE_NAME, MODULE_VERSION);
+	
 	moduleAddAuthor("Denora");
-	moduleAddVersion
-	("");
+	moduleAddVersion(MODULE_VERSION);
 	moduleSetType(CORE);
 
 	hook = createEventHook(EVENT_FANTASY, do_fantasy);
-	moduleAddEventHook(hook);
-
-	if (!denora->do_sql)
+	status = moduleAddEventHook(hook);
+	if (status != MOD_ERR_OK)
 	{
+		alog(LOG_NORMAL,
+		     "[%s] Error Occurred setting hook for EVENT_UPLINK_SYNC_COMPLETE [%d][%s]", MODULE_NAME, status,
+		     ModuleGetErrStr(status));
 		return MOD_STOP;
 	}
 
@@ -84,11 +91,15 @@ int do_fantasy(int argc, char **argv)
 	if (stricmp(argv[0], "gstats") == 0)
 	{
 		if (!(u = finduser(argv[1])))
+		{
 			return MOD_CONT;
+		}
 		if (argc == 3)
 		{
 			if (!u->sgroup)
+			{
 				return MOD_CONT;
+			}
 			target = u->nick;
 			sqltarget = sstrdup(u->sgroup);
 		}

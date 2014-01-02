@@ -1,3 +1,14 @@
+/*
+ *
+ * (c) 2004-2014 Denora Team
+ * Contact us at info@denorastats.org
+ *
+ * Please read COPYING and README for furhter details.
+ *
+ *
+ *
+ */
+
 #include "denora.h"
 
 SQLres *sqlres;

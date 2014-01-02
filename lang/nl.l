@@ -1,6 +1,6 @@
 # Dutch language file.
 #
-# Denora (c) 2004-2013 Denora Team
+# Denora (c) 2004-2014 Denora Team
 # Contact us at dev@denorastats.org
 #
 # Dutch translation (c) 2005 Pieter Bootms

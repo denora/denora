@@ -1,6 +1,6 @@
 /* Cron Daily
  *
- * (c) 2004-2013 Denora Team
+ * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -14,6 +14,9 @@
 /*************************************************************************/
 
 #include "denora.h"
+
+#define MODULE_VERSION "2.0"
+#define MODULE_NAME "cron_daily"
 
 int users_daily(const char *name);
 int DenoraInit(int argc, char **argv);
@@ -34,9 +37,11 @@ int DenoraInit(int argc, char **argv)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+	
+	alog(LOG_NORMAL,   "[%s] version %s", MODULE_NAME, MODULE_VERSION);
+	
 	moduleAddAuthor("Denora");
-	moduleAddVersion
-	("");
+	moduleAddVersion(MODULE_VERSION);
 	moduleSetType(CORE);
 
 	evt = createCronEvent(CRON_MIDNIGHT, users_daily);
@@ -64,8 +69,6 @@ void DenoraFini(void)
 
 int users_daily(const char *name)
 {
-	
-
 	if (name)
 	{
 		stats->daily_users = stats->users;
@@ -77,8 +80,6 @@ int users_daily(const char *name)
 		stats->daily_chans = stats->chans;
 		stats->daily_chans_time = time(NULL);
 	}
-
-	
 
 	return MOD_CONT;
 }

@@ -1,6 +1,6 @@
 /* Numeric Event 229
  *
- * (c) 2004-2013 Denora Team
+ * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -14,6 +14,9 @@
 /*************************************************************************/
 
 #include "denora.h"
+
+#define MODULE_VERSION "2.0"
+#define MODULE_NAME "event_229"
 
 int denora_event_229(char *source, int ac, char **av);
 int DenoraInit(int argc, char **argv);
@@ -34,15 +37,20 @@ int DenoraInit(int argc, char **argv)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+	
+	alog(LOG_NORMAL,   "[%s] version %s", MODULE_NAME, MODULE_VERSION);
+	
+	moduleAddVersion(MODULE_VERSION);
+
+	
 	if (!ircd->spamfilter)
 	{
+		alog(LOG_NORMAL,   "[%s] ircd does not support spamfilters unloading module", MODULE_NAME);
 		return MOD_STOP;
 	}
 
-
 	moduleAddAuthor("Denora");
-	moduleAddVersion
-	("");
+	moduleAddVersion(MODULE_VERSION);
 	moduleSetType(CORE);
 
 	/* spam filter */

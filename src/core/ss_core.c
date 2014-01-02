@@ -1,6 +1,6 @@
 /* StatServ core functions
  *
- * (c) 2004-2013 Denora Team
+ * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -14,6 +14,9 @@
 /*************************************************************************/
 
 #include "denora.h"
+
+#define MODULE_VERSION "2.0"
+#define MODULE_NAME "ss_core"
 
 static int do_shutdown(User * u, int ac, char **av);
 static int do_restart(User * u, int ac, char **av);
@@ -30,26 +33,50 @@ void DenoraFini(void);
 int DenoraInit(int argc, char **argv)
 {
 	Command *c;
+	int status;
 
 	if (denora->debug >= 2)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+	
+	alog(LOG_NORMAL,   "[%s] version %s", MODULE_NAME, MODULE_VERSION);
+	
 	moduleAddAuthor("Denora");
-	moduleAddVersion("");
+	moduleAddVersion(MODULE_VERSION);	
 	moduleSetType(CORE);
 
 	c = createCommand("SHUTDOWN", do_shutdown, is_stats_admin, -1, -1, -1,
 	                  STAT_HELP_SHUTDOWN);
-	moduleAddCommand(STATSERV, c, MOD_UNIQUE);
+	status = moduleAddCommand(STATSERV, c, MOD_UNIQUE);
+	if (status != MOD_ERR_OK)
+	{
+		alog(LOG_NORMAL,
+		     "[%s] Error Occurred setting Command for LOGIN [%d][%s]",
+		     MODULE_NAME, status, ModuleGetErrStr(status));
+		return MOD_STOP;
+	}
 
 	c = createCommand("RESTART", do_restart, is_stats_admin, -1, -1, -1,
 	                  STAT_HELP_RESTART);
-	moduleAddCommand(STATSERV, c, MOD_UNIQUE);
-
+	status = moduleAddCommand(STATSERV, c, MOD_UNIQUE);
+	if (status != MOD_ERR_OK)
+	{
+		alog(LOG_NORMAL,
+		     "[%s] Error Occurred setting Command for LOGIN [%d][%s]",
+		     MODULE_NAME, status, ModuleGetErrStr(status));
+		return MOD_STOP;
+	}
 	c = createCommand("RELOAD", do_reload, is_stats_admin, -1, -1, -1,
 	                  STAT_HELP_RELOAD);
-	moduleAddCommand(STATSERV, c, MOD_UNIQUE);
+	status = moduleAddCommand(STATSERV, c, MOD_UNIQUE);
+	if (status != MOD_ERR_OK)
+	{
+		alog(LOG_NORMAL,
+		     "[%s] Error Occurred setting Command for LOGIN [%d][%s]",
+		     MODULE_NAME, status, ModuleGetErrStr(status));
+		return MOD_STOP;
+	}
 
 	return MOD_CONT;
 }
@@ -93,7 +120,6 @@ static int do_shutdown(User * u, int ac, char **av)
 		denora->qmsg = sstrdup(buf);
 	}
 
-	
 
 	denora->save_data = 1;
 	denora->delayed_quit = 1;
@@ -142,7 +168,6 @@ static int do_restart(User * u, int ac, char **av)
 
 static int do_reload(User * u, int ac, char **av)
 {
-	Dadmin *a;
 	int i;
 
 	if (denora->protocoldebug)
@@ -152,7 +177,7 @@ static int do_reload(User * u, int ac, char **av)
 
 	send_event(EVENT_RELOAD, 1, EVENT_START);
 
-	if (initconf(denora->config, 1, mainconf) == -1)
+	if (!DenoraParseXMLConfig((char *) denora->config))
 	{
 		denora->qmsg = calloc(512 + strlen(u->nick), 1);
 		if (!denora->qmsg)
@@ -161,10 +186,6 @@ static int do_reload(User * u, int ac, char **av)
 		else
 			denora->qmsg = sstrdup("Error Reading Configuration File");
 		denora->quitting = 1;
-	}
-	else
-	{
-		merge_confs();
 	}
 
 	send_event(EVENT_RELOAD, 1, EVENT_STOP);

@@ -4,11 +4,11 @@
 
          Name: ircd_ports
   Description: Get the ports of the servers
-      Version: 1.0.1
- Requirements: Denora 1.2+	  
+      Version: 2.0.0
+ Requirements: Denora 2.0+	  
          IRCd: all
        Author: Trystan
-    Copyright: 2006-2013 Trystan
+    Copyright: 2006-2014 Trystan
       License: GPLv2
    Disclaimer: No warranties, use at your own risk!
 +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+
@@ -26,6 +26,13 @@
 +---------+
  CHANGELOG
 +---------+
+v2.0.0 - 02.01.2014
+ R - Removed SolidIRCd/Asuka support 
+
+v1.0.2 - 02.01.2014
+ F - fixed calling find_server() when the result was never used
+ F - Fixed mem leak with UnrealIRCd not freeing variable.
+
 v1.0.1 - 23.08.2009
   F Fixed strict/ansi compilation warnings
 v1.0.0 - 30.07.2006

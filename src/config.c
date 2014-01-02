@@ -1,6 +1,6 @@
 /*
  *
- * (c) 2004-2013 Denora Team
+ * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -52,6 +52,15 @@ int parse_directive(Directive * d, char *dir, int ac, char *av[MAXPARAMS],
  */
 
 /* these are our global lists of ACTIVE conf entries */
+
+
+/* v2 globals */
+char *DenoraDB; 							/* SQLite3 database file */
+int DisableTLD;								/* Do not use the Top Level Domain feature in Denora */
+
+
+/* v1.5  need to check and move this up after they are worked on correctly */
+
 
 Conf_Modules *modules = NULL;
 char *RemoteServer;
@@ -109,10 +118,8 @@ int ModulesDelayedNumber;
 
 char *ChannelDB;
 char *ctcpDB;
-char *AdminDB;
 char *ServerDB;
 char *ChannelStatsDB;
-char *TLDDB;
 char *excludeDB;
 char *statsDB;
 char *UserDB;
@@ -207,12 +214,6 @@ char *StatsPage;
 int PartOnEmpty;
 
 tConf *mainconf;
-
-int ThreadCount;
-int UseThreading;
-
-int TimeStarted;
-int TimeStopped;
 
 int KeepUserTable;
 int KeepServerTable;

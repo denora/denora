@@ -1,6 +1,6 @@
 /* StatServ core functions
  *
- * (c) 2004-2013 Denora Team
+ * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -14,6 +14,9 @@
 /*************************************************************************/
 
 #include "denora.h"
+
+#define MODULE_VERSION "2.0"
+#define MODULE_NAME "ss_set"
 
 static int do_set(User * u, int ac, char **av);
 int DenoraInit(int argc, char **argv);
@@ -34,8 +37,11 @@ int DenoraInit(int argc, char **argv)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+	
+	alog(LOG_NORMAL,   "[%s] version %s", MODULE_NAME, MODULE_VERSION);
+	
 	moduleAddAuthor("Denora");
-	moduleAddVersion("");
+	moduleAddVersion(MODULE_VERSION);
 	moduleSetType(CORE);
 
 	c = createCommand("SET", do_set, is_stats_admin, -1, -1, -1,

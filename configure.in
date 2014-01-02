@@ -1,6 +1,6 @@
 dnl autoconf.in for Stats.
 dnl
-dnl Denora (c) 2004-2013 Denora Team
+dnl Denora (c) 2004-2014 Denora Team
 dnl Contact us at info@denorastats.org
 
 dnl This program is free but copyrighted software; see the file COPYING for
@@ -536,6 +536,7 @@ AC_ARG_WITH(datadir,
         DATDEST=$withval
         MODULE_PATH=${withval}/modules/
 ])
+AC_DEFINE_UNQUOTED(STATS_DATADIR,"${withval}/stats/data","stats data dir")
 
 AC_SUBST(DATDEST)
 AC_SUBST(MODULE_PATH)

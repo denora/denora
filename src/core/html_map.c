@@ -1,6 +1,6 @@
 /* Html Map
  *
- * (c) 2004-2013 Denora Team
+ * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -14,6 +14,9 @@
 /*************************************************************************/
 
 #include "denora.h"
+
+#define MODULE_VERSION "2.0"
+#define MODULE_NAME "html_map"
 
 void html_map(FILE * ptr);
 void html_netmap_title(FILE * ptr);
@@ -36,12 +39,16 @@ int DenoraInit(int argc, char **argv)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+	alog(LOG_NORMAL,   "[%s] version %s", MODULE_NAME, MODULE_VERSION);
+	
 	if (!denora->do_html)
 	{
+		alog(LOG_NORMAL,   "[%s] HTML output disabled, unloading module", MODULE_NAME);
 		return MOD_STOP;
 	}
+	
 	moduleAddAuthor("Denora");
-	moduleAddVersion("");
+	moduleAddVersion(MODULE_VERSION);
 	moduleSetType(CORE);
 
 	h = createHTMLtag("!MAP!", html_map);

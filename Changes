@@ -2,6 +2,9 @@ Denora v2.0 - git-alpha
 -------------
 
 Additions
+01/02/2014 : StatServ EXPORT now allows for file name of the exported data, as a safety Denora locks the output to the 
+             data dir.
+01/02/2014 : MariaDB support - basically MySQL at this point just renamed
 12/19/2013 : Stats struct is now loaded and saved from sqlite
 12/19/2013 : New internal lib functions that can be helpful to coders
 					int SizeOfArray(char **array)  - returns number of entries in the array
@@ -71,6 +74,7 @@ Changes
              for the given system
 
 Fixes
+01/02/2014 : Fixed SS_EXPORT "export servers" now matches "export all" in the server block 				[backported fix to 1.5.1]
 12/08/2013 : Nefarious2 now has its own define in irc.h
 12/06/2013 : Fixes sstrdup() warning on some commands this is a result of the fix from 11/29/13
 11/29/2013 : Removed data from uid struct on user being disconnected.

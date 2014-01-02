@@ -1,7 +1,7 @@
 /* Memory Functions
  *
  *
- * (c) 2013 Denora Dev Team
+ * (c) 2014 Denora Dev Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.

@@ -1,6 +1,6 @@
 /* StatServ core functions
  *
- * (c) 2004-2013 Denora Team
+ * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -15,13 +15,16 @@
 
 #include "denora.h"
 
-void xml_export_channels(char *file);
-void xml_export_users(char *file);
-void xml_export_tld(char *file);
-void xml_export_all(char *file);
-void xml_export_stats(char *file);
-void xml_export_servers(char *file);
-void xml_export_ctcp(char *file);
+#define MODULE_VERSION "2.0"
+#define MODULE_NAME "ss_export"
+
+static void xml_export_channels(char *file);
+static void xml_export_users(char *file);
+static void xml_export_tld(char *file);
+static void xml_export_all(char *file);
+static void xml_export_stats(char *file);
+static void xml_export_servers(char *file);
+static void xml_export_ctcp(char *file);
 
 static int do_export(User * u, int ac, char **av);
 int DenoraInit(int argc, char **argv);
@@ -42,9 +45,11 @@ int DenoraInit(int argc, char **argv)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+	
+	alog(LOG_NORMAL,   "[%s] version %s", MODULE_NAME, MODULE_VERSION);
+	
 	moduleAddAuthor("Denora");
-	moduleAddVersion
-	("");
+	moduleAddVersion(MODULE_VERSION);
 	moduleSetType(CORE);
 
 	c = createCommand("EXPORT", do_export, is_stats_admin, -1, -1, -1,
@@ -53,8 +58,8 @@ int DenoraInit(int argc, char **argv)
 	if (status != MOD_ERR_OK)
 	{
 		alog(LOG_NORMAL,
-		     "Error Occurred setting Command for EXPORT [%d][%s]",
-		     status, ModuleGetErrStr(status));
+		     "[%s] Error Occurred setting Command for EXPORT [%d][%s]",
+		     MODULE_NAME, status, ModuleGetErrStr(status));
 		return MOD_STOP;
 	}
 
@@ -82,45 +87,45 @@ static int do_export(User * u, int ac, char **av)
 	}
 	if (!stricmp("channels", av[0]))
 	{
-		filename = sstrdup("channels.xml");
+		filename = (ac == 2 ? sstrdup(av[1]) : sstrdup("channels.xml"));
 		xml_export_channels(filename);
-		notice_lang(s_StatServ, u, STATS_EXPORT_CHANNELS, "channels.xml");
+		notice_lang(s_StatServ, u, STATS_EXPORT_CHANNELS, filename);
 	}
 	else if (!stricmp("users", av[0]))
 	{
-		filename = sstrdup("users.xml");
+		filename = (ac == 2 ? sstrdup(av[1]) : sstrdup("users.xml"));
 		xml_export_users(filename);
-		notice_lang(s_StatServ, u, STATS_EXPORT_USERS, "users.xml");
+		notice_lang(s_StatServ, u, STATS_EXPORT_USERS, filename);
 	}
 	else if (!stricmp("tld", av[0]))
 	{
-		filename = sstrdup("tld.xml");
+		filename = (ac == 2 ? sstrdup(av[1]) : sstrdup("tld.xml"));
 		xml_export_tld(filename);
-		notice_lang(s_StatServ, u, STATS_EXPORT_TLD, "tld.xml");
+		notice_lang(s_StatServ, u, STATS_EXPORT_TLD, filename);
 	}
 	else if (!stricmp("servers", av[0]))
 	{
-		filename = sstrdup("servers.xml");
+		filename = (ac == 2 ? sstrdup(av[1]) : sstrdup("servers.xml"));
 		xml_export_servers(filename);
-		notice_lang(s_StatServ, u, STATS_EXPORT_SERVERS, "servers.xml");
+		notice_lang(s_StatServ, u, STATS_EXPORT_SERVERS, filename);
 	}
 	else if (!stricmp("stats", av[0]))
 	{
-		filename = sstrdup("stats.xml");
+		filename = (ac == 2 ? sstrdup(av[1]) : sstrdup("stats.xml"));
 		xml_export_stats(filename);
-		notice_lang(s_StatServ, u, STATS_EXPORT_STATS, "stats.xml");
+		notice_lang(s_StatServ, u, STATS_EXPORT_STATS, filename);
 	}
 	else if (!stricmp("all", av[0]))
 	{
-		filename = sstrdup("denora.xml");
+		filename = (ac == 2 ? sstrdup(av[1]) : sstrdup("denora.xml"));
 		xml_export_all(filename);
-		notice_lang(s_StatServ, u, STATS_EXPORT_ALL, "denora.xml");
+		notice_lang(s_StatServ, u, STATS_EXPORT_ALL, filename);
 	}
 	else if (!stricmp("ctcp", av[0]))
 	{
-		filename = sstrdup("ctcp.xml");
+		filename = (ac == 2 ? sstrdup(av[1]) : sstrdup("ctcp.xml"));
 		xml_export_ctcp(filename);
-		notice_lang(s_StatServ, u, STATS_EXPORT_ALL, "ctcp.xml");
+		notice_lang(s_StatServ, u, STATS_EXPORT_ALL, filename);
 	}
 	else
 	{
@@ -156,8 +161,6 @@ void xml_export_channels(char *file)
 	*buf = '\0';
 
 	ptr = new_xml(file);
-
-	
 
 	if (ptr)
 	{
@@ -299,20 +302,18 @@ void xml_export_tld(char *file)
 	int i, rows;
 	sqlite3_stmt *stmt;
 	char ***data;
-
+	sqlite3 *db;
 
 	ptr = new_xml(file);
-
-	
 
 	if (ptr)
 	{
 		xml_write_header(ptr);
 		xml_write_block_top(ptr, "tld");
-		TLDDatabase = DenoraOpenSQL(TLDDB);
-		rows = DenoraSQLGetNumRows(TLDDatabase, TLDTable);
-		stmt = DenoraPrepareQuery(TLDDatabase, "SELECT * FROM %s ORDER BY overall", TLDTable);
-		data = DenoraSQLFetchArray(TLDDatabase, TLDTable, stmt, FETCH_ARRAY_NUM);
+		db = DenoraOpenSQL(DenoraDB);
+		rows = DenoraSQLGetNumRows(db, TLDTable);
+		stmt = DenoraPrepareQuery(db, "SELECT * FROM %s ORDER BY overall", TLDTable);
+		data = DenoraSQLFetchArray(db, TLDTable, stmt, FETCH_ARRAY_NUM);
 		for (i = 0; i < rows; i++)
 		{
 			xml_write_block_top(ptr, "domain");
@@ -324,8 +325,7 @@ void xml_export_tld(char *file)
 		}
 		free(data);
 		sqlite3_finalize(stmt);
-		DenoraCloseSQl(TLDDatabase);
-
+		DenoraCloseSQl(db);
 		xml_write_block_bottom(ptr, "tld");
 		xml_write_footer(ptr);
 	}
@@ -346,22 +346,21 @@ void xml_export_ctcp(char *file)
 	CTCPVerStats *c;
 	int rows;
 	sqlite3_stmt * stmt;
+	sqlite3 *db;
 	char ***data;
 	int i;
 
 	ptr = new_xml(file);
-
-	
 
 	if (ptr)
 	{
 		xml_write_header(ptr);
 
 		xml_write_block_top(ptr, "ctcp");
-		CTCPDatabase = DenoraOpenSQL(AdminDB);
-		rows = DenoraSQLGetNumRows(CTCPDatabase, "version");
-		stmt = DenoraPrepareQuery(CTCPDatabase, "SELECT * FROM %s", CTCPTable);
-		data = DenoraSQLFetchArray(CTCPDatabase, CTCPTable, stmt, FETCH_ARRAY_NUM);
+		db = DenoraOpenSQL(DenoraDB);
+		rows = DenoraSQLGetNumRows(db, "version");
+		stmt = DenoraPrepareQuery(db, "SELECT * FROM %s", CTCPTable);
+		data = DenoraSQLFetchArray(db, CTCPTable, stmt, FETCH_ARRAY_NUM);
 		for (i = 0; i < rows; i++)
 		{
 			xml_write_block_top(ptr, "client");
@@ -372,7 +371,7 @@ void xml_export_ctcp(char *file)
 		}
 		free(data);
 		sqlite3_finalize(stmt);
-		DenoraCloseSQl(CTCPDatabase);
+		DenoraCloseSQl(db);
 		xml_write_block_bottom(ptr, "ctcp");
 		xml_write_footer(ptr);
 	}
@@ -391,32 +390,37 @@ void xml_export_servers(char *file)
 {
 	FILE *ptr;
 	Server *s, *next;
-
-	ptr = new_xml(file);
-
+	sqlite3 *db;
+	sqlite3_stmt *stmt;
+	int rows, i;
+	char ***data;
 	
+	ptr = new_xml(file);
 
 	if (ptr)
 	{
 		xml_write_header(ptr);
 
 		xml_write_block_top(ptr, "servers");
-		s = servlist->links;
-		while (s)
+		
+		db = DenoraOpenSQL(DenoraDB);
+		rows = DenoraSQLGetNumRows(db, "server");
+		stmt = DenoraPrepareQuery(db, "SELECT * FROM %s", ServerTable);
+		data = DenoraSQLFetchArray(db, ServerTable, stmt, FETCH_ARRAY_NUM);
+		for (i = 0; i < rows; i++)
 		{
-			next = s->next;
-			if (HideUline && s->uline)
+			if (HideUline && atoi(data[i][0]))
 			{
 				continue;
 			}
 			denora_cmd_pong(ServerName, ServerName);
 			xml_write_block_top(ptr, "server");
-			xml_write_tag(ptr, "name", s->name);
-			xml_write_tag_int(ptr, "hops", s->hops);
-			xml_write_tag(ptr, "desc", s->desc);
-			xml_write_tag_int(ptr, "flags", s->flags);
+			xml_write_tag(ptr, "name", data[i][0]);
+			xml_write_tag_int(ptr, "hops", atoi(data[i][6]));
+			xml_write_tag(ptr, "desc", data[i][1]);
+			xml_write_tag_int(ptr, "flags", atoi(data[i][7]));
 
-			if (s->flags & SERVER_ISME)
+			if (atoi(data[i][7]) & SERVER_ISME)
 			{
 				xml_write_tag_int(ptr, "FLAG_ISME", 1);
 			}
@@ -424,7 +428,7 @@ void xml_export_servers(char *file)
 			{
 				xml_write_tag_int(ptr, "FLAG_ISME", 0);
 			}
-			if (s->flags & SERVER_JUPED)
+			if (atoi(data[i][7]) & SERVER_JUPED)
 			{
 				xml_write_tag_int(ptr, "FLAG_JUPED", 1);
 			}
@@ -432,27 +436,26 @@ void xml_export_servers(char *file)
 			{
 				xml_write_tag_int(ptr, "FLAG_JUPED", 0);
 			}
-			xml_write_tag_int(ptr, "synced", s->sync);
-			if (s->suid)
+			xml_write_tag_int(ptr, "synced", data[i][2]);
+			if (data[i][2])
 			{
-				xml_write_tag(ptr, "suid", s->suid);
+				xml_write_tag(ptr, "suid", data[i][2]);
 			}
-			if (s->version)
+			if (data[i][3])
 			{
-				xml_write_tag(ptr, "version", s->version);
+				xml_write_tag(ptr, "version", data[i][3]);
 			}
-			if (s->uptime)
+			if (data[i][4])
 			{
-				xml_write_tag_int(ptr, "uptime", s->uptime);
+				xml_write_tag_int(ptr, "uptime", data[i][4]);
 			}
-			if (s->uplink)
+			if (data[i][5])
 			{
-				xml_write_tag(ptr, "uplink", s->uplink->name);
+				xml_write_tag(ptr, "uplink", data[i][5]);
 			}
-			xml_write_tag_int(ptr, "uline", s->uline);
+			xml_write_tag_int(ptr, "uline", atoi(data[i][0]));
 
 			xml_write_block_bottom(ptr, "server");
-			s = next;
 		}
 		xml_write_block_bottom(ptr, "servers");
 		xml_write_footer(ptr);
@@ -480,7 +483,6 @@ void xml_export_users(char *file)
 
 	ptr = new_xml(file);
 
-	
 
 	if (ptr)
 	{
@@ -563,8 +565,6 @@ void xml_export_stats(char *file)
 	FILE *ptr;
 	ptr = new_xml(file);
 
-	
-
 	if (ptr)
 	{
 		xml_write_header(ptr);
@@ -594,7 +594,6 @@ void xml_export_all(char *file)
 {
 	FILE *ptr;
 	User *u, *next;
-	Server *s, *snext;
 	Channel *c, *cnext;
 	int i, count;
 	char buf[BUFSIZE];
@@ -606,6 +605,7 @@ void xml_export_all(char *file)
 	char *temp;
 	int rows;
 	sqlite3_stmt * stmt;
+	sqlite3 *db;
 	char ***data;
 
 	ptr = new_xml(file);
@@ -701,69 +701,72 @@ void xml_export_all(char *file)
 		xml_write_block_bottom(ptr, "users");
 
 		xml_write_block_top(ptr, "servers");
-		s = servlist->links;
-		while (s)
+		db = DenoraOpenSQL(DenoraDB);
+		rows = DenoraSQLGetNumRows(db, "server");
+		stmt = DenoraPrepareQuery(db, "SELECT * FROM %s", ServerTable);
+		data = DenoraSQLFetchArray(db, ServerTable, stmt, FETCH_ARRAY_NUM);
+		for (i = 0; i < rows; i++)
 		{
-			snext = s->next;
-			if (HideUline && s->uline)
+			if (HideUline && atoi(data[i][0]))
 			{
 				continue;
 			}
-			if (ping)
-			{
-				denora_cmd_pong(ServerName, ServerName);
-				ping = 0;
-			}
+			denora_cmd_pong(ServerName, ServerName);
 			xml_write_block_top(ptr, "server");
-			xml_write_tag(ptr, "name", s->name);
-			xml_write_tag_int(ptr, "hops", s->hops);
-			xml_write_tag(ptr, "desc", s->desc);
-			xml_write_tag_int(ptr, "flags", s->flags);
-			xml_write_tag_int(ptr, "synced", s->sync);
-			if (s->suid)
-			{
-				xml_write_tag(ptr, "suid", s->suid);
-			}
-			if (s->version)
-			{
-				xml_write_tag(ptr, "version", s->version);
-			}
-			if (s->uptime)
-			{
-				xml_write_tag_int(ptr, "uptime", s->uptime);
-			}
-			if (s->uplink)
-			{
-				xml_write_tag(ptr, "uplink", s->uplink->name);
-			}
-			xml_write_block_top(ptr, "serverstats");
-			if (s->ss->currentusers)
-			{
-				xml_write_tag_int(ptr, "currentusers",
-				                  s->ss->currentusers);
-			}
-			xml_write_tag_int(ptr, "maxusers", s->ss->maxusers);
-			xml_write_block_bottom(ptr, "serverstats");
+			xml_write_tag(ptr, "name", data[i][0]);
+			xml_write_tag_int(ptr, "hops", atoi(data[i][6]));
+			xml_write_tag(ptr, "desc", data[i][1]);
+			xml_write_tag_int(ptr, "flags", atoi(data[i][7]));
 
-			xml_write_block_bottom(ptr, "server");
-			s = snext;
-			if (counttoping == 10)
+			if (atoi(data[i][7]) & SERVER_ISME)
 			{
-				ping = 1;
-				counttoping = 1;
+				xml_write_tag_int(ptr, "FLAG_ISME", 1);
 			}
 			else
 			{
-				counttoping++;
+				xml_write_tag_int(ptr, "FLAG_ISME", 0);
 			}
+			if (atoi(data[i][7]) & SERVER_JUPED)
+			{
+				xml_write_tag_int(ptr, "FLAG_JUPED", 1);
+			}
+			else
+			{
+				xml_write_tag_int(ptr, "FLAG_JUPED", 0);
+			}
+			xml_write_tag_int(ptr, "synced", data[i][2]);
+			if (data[i][2])
+			{
+				xml_write_tag(ptr, "suid", data[i][2]);
+			}
+			if (data[i][3])
+			{
+				xml_write_tag(ptr, "version", data[i][3]);
+			}
+			if (data[i][4])
+			{
+				xml_write_tag_int(ptr, "uptime", data[i][4]);
+			}
+			if (data[i][5])
+			{
+				xml_write_tag(ptr, "uplink", data[i][5]);
+			}
+			xml_write_tag_int(ptr, "uline", atoi(data[i][0]));
+			xml_write_block_top(ptr, "serverstats");
+			xml_write_tag_int(ptr, "currentusers", data[i][12]));
+			xml_write_tag_int(ptr, "maxusers", data[i][13]);
+			xml_write_block_bottom(ptr, "serverstats");
+
+
+			xml_write_block_bottom(ptr, "server");
 		}
 		xml_write_block_bottom(ptr, "servers");
 
 		xml_write_block_top(ptr, "tld");
-		TLDDatabase = DenoraOpenSQL(TLDDB);
-		rows = DenoraSQLGetNumRows(TLDDatabase, TLDTable);
-		stmt = DenoraPrepareQuery(TLDDatabase, "SELECT * FROM %s ORDER BY overall LIMIT 10", TLDTable);
-		data = DenoraSQLFetchArray(TLDDatabase, TLDTable, stmt, FETCH_ARRAY_NUM);
+		db = DenoraOpenSQL(DenoraDB);
+		rows = DenoraSQLGetNumRows(db, TLDTable);
+		stmt = DenoraPrepareQuery(db, "SELECT * FROM %s ORDER BY overall LIMIT 10", TLDTable);
+		data = DenoraSQLFetchArray(db, TLDTable, stmt, FETCH_ARRAY_NUM);
 		for (i = 0; i < rows; i++)
 		{
 			xml_write_block_top(ptr, "domain");
@@ -775,7 +778,7 @@ void xml_export_all(char *file)
 		}
 		free(data);
 		sqlite3_finalize(stmt);
-		DenoraCloseSQl(TLDDatabase);
+		DenoraCloseSQl(db);
 		xml_write_block_bottom(ptr, "tld");
 
 

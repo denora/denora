@@ -1,6 +1,6 @@
 /*
  * seen module for Denora 1.4.3+
- * (c) 2006-2013 Hal9000 (hal9000@denorastats.org)
+ * (c) 2006-2014 Hal9000 (hal9000@denorastats.org)
  */
 
 #include "denora.h"

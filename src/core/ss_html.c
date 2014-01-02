@@ -1,6 +1,6 @@
 /* StatServ core functions
  *
- * (c) 2004-2013 Denora Team
+ * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -14,6 +14,9 @@
 /*************************************************************************/
 
 #include "denora.h"
+
+#define MODULE_VERSION "2.0"
+#define MODULE_NAME "ss_html"
 
 static int do_htmlexport(User * u, int ac, char **av);
 int DenoraInit(int argc, char **argv);
@@ -34,8 +37,17 @@ int DenoraInit(int argc, char **argv)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+	
+	alog(LOG_NORMAL,   "[%s] version %s", MODULE_NAME, MODULE_VERSION);
+
+	if (!denora->do_html)
+	{
+		alog(LOG_NORMAL,   "[%s] HTML output disabled unloading module", MODULE_NAME);
+		return MOD_STOP;
+	}
+	
 	moduleAddAuthor("Denora");
-	moduleAddVersion("");
+	moduleAddVersion(MODULE_VERSION);
 	moduleSetType(CORE);
 
 	c = createCommand("HTML", do_htmlexport, is_stats_admin, -1, -1, -1,
@@ -44,8 +56,8 @@ int DenoraInit(int argc, char **argv)
 	if (status != MOD_ERR_OK)
 	{
 		alog(LOG_NORMAL,
-		     "Error Occurred setting Command for HTML [%d][%s]",
-		     status, ModuleGetErrStr(status));
+		     "[%s] Error Occurred setting Command for HTML [%d][%s]",
+		     MODULE_NAME, status, ModuleGetErrStr(status));
 		return MOD_STOP;
 	}
 

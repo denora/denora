@@ -1,6 +1,6 @@
 /* StatServ core functions
  *
- * (c) 2004-2013 Denora Team
+ * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -14,6 +14,9 @@
 /*************************************************************************/
 
 #include "denora.h"
+
+#define MODULE_VERSION "2.0"
+#define MODULE_NAME "ss_modules"
 
 int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
@@ -45,10 +48,13 @@ int DenoraInit(int argc, char **argv)
 		protocol_debug(NULL, argc, argv);
 	}
 
+	alog(LOG_NORMAL,   "[%s] version %s", MODULE_NAME, MODULE_VERSION);
+	
 	moduleAddAuthor("Denora");
-	moduleAddVersion("");
+	moduleAddVersion(MODULE_VERSION);
 	moduleSetType(CORE);
 
+#ifdef USE_MODULES
 	c = createCommand("MODLOAD", do_modload, is_stats_admin, -1, -1, -1,
 	                  STAT_HELP_MODLOAD);
 	moduleAddCommand(STATSERV, c, MOD_UNIQUE);
@@ -64,8 +70,11 @@ int DenoraInit(int argc, char **argv)
 	c = createCommand("MODINFO", do_modinfo, is_stats_admin, -1, -1, -1,
 	                  STAT_HELP_MODINFO);
 	moduleAddCommand(STATSERV, c, MOD_UNIQUE);
-
 	return MOD_CONT;
+#else	
+	alog(LOG_NORMAL,   "[%s] System does not support dynamic modules unloading", MODULE_NAME);
+	return MOD_STOP;
+#endif
 }
 
 /**
@@ -120,7 +129,9 @@ int do_modlist(User * u, int ac, char **av)
 	int showProto = 1;
 	int showSupported = 1;
 	int showQA = 1;
-
+	int showSQL = 1;
+	int showENC = 1;
+	
 	ModuleHash *current = NULL;
 
 	char core[] = "Core";
@@ -128,6 +139,8 @@ int do_modlist(User * u, int ac, char **av)
 	char proto[] = "Protocol";
 	char supported[] = "Supported";
 	char qa[] = "QATested";
+	char sqlmod[] = "SQLMod";
+	char encmod[] = "Encmod";
 
 	if (ac >= 1)
 	{
@@ -171,6 +184,27 @@ int do_modlist(User * u, int ac, char **av)
 			showSupported = 0;
 			showQA = 1;
 		}
+		else if (stricmp(av[0], sqlmod) == 0)
+		{
+			showCore = 0;
+			showThird = 0;
+			showProto = 0;
+			showSupported = 0;
+			showQA = 0;
+			showSQL = 1;
+			showENC = 0;
+		}
+		else if (stricmp(av[0], encmod) == 0)
+		{
+			showCore = 0;
+			showThird = 0;
+			showProto = 0;
+			showSupported = 0;
+			showQA = 0;
+			showSQL = 0;
+			showENC = 1;
+		}
+
 	}
 
 	notice_lang(s_StatServ, u, STAT_MODULE_LIST_HEADER);
@@ -222,6 +256,22 @@ int do_modlist(User * u, int ac, char **av)
 						count++;
 					}
 					break;
+				case SQLMOD:
+					if (showSQL)
+					{
+						notice_lang(s_StatServ, u, STAT_MODULE_LIST,
+						            current->name, current->m->version, sql);
+						count++;
+					}
+					break;
+				case ENCMOD:
+					if (showENC)
+					{
+						notice_lang(s_StatServ, u, STAT_MODULE_LIST,
+						            current->name, current->m->version, enc);
+						count++;
+					}
+					break;					
 				default:
 					/* assume default is unknown and do debug - this should never
 					   happen but to make -Wswitch-default happy we have to do something

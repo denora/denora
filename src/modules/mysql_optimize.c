@@ -1,6 +1,6 @@
 /* MYSQL Optimize at midnight
  *
- * (c) 2004-2013 Denora Team
+ * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -75,7 +75,7 @@ int db_optimize(const char *name)
 	/*
 	 * We have to catch the result of the OPTIMIZE TABLE query
 	 * or we will get an "COMMANDS OUT OF SYNC" error on all
-	 * following queries - DP, 2013
+	 * following queries - DP, 2014
 	 *
 	 * dev.mysql.com says:
 	 *	If you get "Commands out of sync; you can't run this command now" in

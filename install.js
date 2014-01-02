@@ -1,7 +1,7 @@
 //
 // install.js - Windows Configuration
 //
-// (c) 2004-2013 Denora Team
+// (c) 2004-2014 Denora Team
 // Contact us at info@denorastats.org
 //
 // This program is free but copyrighted software; see the file COPYING for

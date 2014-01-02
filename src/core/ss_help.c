@@ -1,6 +1,6 @@
 /* StatServ core functions
  *
- * (c) 2004-2013 Denora Team
+ * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -14,6 +14,9 @@
 /*************************************************************************/
 
 #include "denora.h"
+
+#define MODULE_VERSION "2.0"
+#define MODULE_NAME "ss_help"
 
 static int do_help(User * u, int ac, char **av);
 int DenoraInit(int argc, char **argv);
@@ -34,8 +37,11 @@ int DenoraInit(int argc, char **argv)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+	
+	alog(LOG_NORMAL,   "[%s] version %s", MODULE_NAME, MODULE_VERSION);
+	
 	moduleAddAuthor("Denora");
-	moduleAddVersion("");
+	moduleAddVersion(MODULE_VERSION);
 	moduleSetType(CORE);
 
 	c = createCommand("HELP", do_help, NULL, -1, -1, -1, -1);
@@ -43,8 +49,8 @@ int DenoraInit(int argc, char **argv)
 	if (status != MOD_ERR_OK)
 	{
 		alog(LOG_NORMAL,
-		     "Error Occurred setting Command for HELP [%d][%s]",
-		     status, ModuleGetErrStr(status));
+		     "[%s] Error Occurred setting Command for HELP [%d][%s]",
+		     MODULE_NAME, status, ModuleGetErrStr(status));
 		return MOD_STOP;
 	}
 
@@ -66,8 +72,6 @@ void DenoraFini(void)
 
 static int do_help(User * u, int ac, char **av)
 {
-	
-
 	if (ac < 1)
 	{
 		notice_help(s_StatServ, u, STAT_HELP);

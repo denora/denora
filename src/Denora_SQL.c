@@ -2,7 +2,7 @@
  *
  * A quick way for use to handle doing sqlite3 functions
  *
- * (c) 2013 Denora Dev Team
+ * (c) 2014 Denora Dev Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -169,7 +169,7 @@ int DenoraSQLUpdateChar(char *dbname, char *var, char *data)
 
 /*************************************************************************/
 
-int DenoraSQLUpdateInt(char *dbname, char *var, uint32 data, char *what, char *equals)
+int DenoraSQLUpdateInt(char *dbname, char *table, char *var, uint32 data, char *what, char *equals)
 {
 	char *buf;
 	int res;
@@ -177,7 +177,7 @@ int DenoraSQLUpdateInt(char *dbname, char *var, uint32 data, char *what, char *e
 
 	const char *fmt = "UPDATE %s SET %s=%ld WHERE %q=%q";
 
-	sqlite3_snprintf(NET_BUFSIZE, buf, fmt, dbname, var, data, what, equals);
+	sqlite3_snprintf(NET_BUFSIZE, buf, fmt, table, var, data, what, equals);
 
 	db = DenoraOpenSQL(dbname);
 	res = DenoraExecQueryDirectSQL(db, buf, NULL);
@@ -236,6 +236,14 @@ int DenoraExecQueryDirectSQL(sqlite3 *db, const char *querystring, int callback(
 
 	/* Execute SQL statement */
 	rc = sqlite3_exec(db, querystring, NULL, 0, &zErrMsg);
+	
+	if (denora->do_sql)
+	{
+		
+		sql_query(querystring);
+	}
+	
+	
 	if (rc != SQLITE_OK)
 	{
 		DenoraLib_SetLastError(rc, zErrMsg);
@@ -486,6 +494,28 @@ char **DenoraSQLReturnRow(char *db, const char *query, ...)
 	}
 	return NULL;
 }
+
+/*************************************************************************/
+
+int DenoraSQLTableExits(char *db, const char *table)
+{
+	int StepReturn;
+	int result = 0;
+	sqlite3_stmt *stmt;
+	sqlite3 *db;
+
+	sqldb = DenoraOpenSQL(db);
+	stmt = DenoraPrepareQuery(sqldb, "SHOW TABLES LIKE '%s';", table);
+	StepReturn = sqlite3_step(stmt);
+	if (StepReturn == SQLITE_ROW)
+	{
+		result = sqlite3_column_int(stmt, 0);
+	}
+	sqlite3_finalize(stmt);
+	DenoraCloseSQl(sqldb);
+	return result;
+}
+
 
 
 /*************************************************************************/

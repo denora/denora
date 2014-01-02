@@ -1,6 +1,6 @@
 /* Cron Chanstats
  *
- * (c) 2004-2013 Denora Team
+ * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -14,6 +14,9 @@
 /*************************************************************************/
 
 #include "denora.h"
+
+#define MODULE_VERSION "2.0"
+#define MODULE_NAME "cron_chanstats"
 
 int chanstats_month(const char *name);
 int chanstats_weekly(const char *name);
@@ -37,15 +40,10 @@ int DenoraInit(int argc, char **argv)
 		protocol_debug(NULL, argc, argv);
 	}
 
-	if (!denora->do_sql)
-	{
-		alog(LOG_NORMAL,"SQL not enabled unloading cron_chanstats");
-		return MOD_STOP;
-	}
-
+	alog(LOG_NORMAL,   "[%s] version %s", MODULE_NAME, MODULE_VERSION);
+	
 	moduleAddAuthor("Denora");
-	moduleAddVersion
-	("");
+	moduleAddVersion(MODULE_VERSION);
 	moduleSetType(CORE);
 
 	evt = createCronEvent(CRON_MIDNIGHT, chanstats_daily);
@@ -92,26 +90,19 @@ void DenoraFini(void)
 
 int chanstats_daily(const char *name)
 {
-	if (!denora->do_sql)
-	{
-		return MOD_CONT;
-	}
 	if (!name)
 	{
 		return MOD_CONT;
 	}
 	
 	alog(LOG_NORMAL, langstr(ALOG_RESET_DAILY));
-	sql_query
-	(
-	 "UPDATE %s SET letters=0, words=0, line=0, actions=0, smileys=0, "
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET letters=0, words=0, line=0, actions=0, smileys=0, "
 	 "kicks=0, modes=0, topics=0, wasted=0, "
 	 "time0=0, time1=0, time2=0, time3=0, time4=0, time5=0, time6=0, time7=0, "
 	 "time8=0, time9=0, time10=0, time11=0, time12=0, time13=0, time14=0, "
 	 "time15=0, time16=0, time17=0, time18=0, time19=0, time20=0, time21=0, "
 	 "time22=0, time23=0  WHERE type=1;", UStatsTable);
-	sql_query(
-	          "UPDATE %s SET letters=0, words=0, line=0, actions=0, smileys=0, "
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET letters=0, words=0, line=0, actions=0, smileys=0, "
 	          "kicks=0, modes=0, topics=0, "
 	          "time0=0, time1=0, time2=0, time3=0, time4=0, time5=0, time6=0, time7=0, "
 	          "time8=0, time9=0, time10=0, time11=0, time12=0, time13=0, time14=0, "
@@ -124,33 +115,25 @@ int chanstats_daily(const char *name)
 
 int chanstats_weekly(const char *name)
 {
-	if (!denora->do_sql)
-	{
-		return MOD_CONT;
-	}
 	if (!name)
 	{
 		return MOD_CONT;
 	}
 	
 	alog(LOG_NORMAL, langstr(ALOG_RESETTING_WEEKLY));
-	sql_query
-	(
-	 "UPDATE %s SET letters=0, words=0, line=0, actions=0, smileys=0, "
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET letters=0, words=0, line=0, actions=0, smileys=0, "
 	 "kicks=0, modes=0, topics=0, wasted=0, "
 	 "time0=0, time1=0, time2=0, time3=0, time4=0, time5=0, time6=0, time7=0, "
 	 "time8=0, time9=0, time10=0, time11=0, time12=0, time13=0, time14=0, "
 	 "time15=0, time16=0, time17=0, time18=0, time19=0, time20=0, time21=0, "
 	 "time22=0, time23=0  WHERE type=2;", UStatsTable);
-	sql_query(
-	          "UPDATE %s SET letters=0, words=0, line=0, actions=0, smileys=0, "
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET letters=0, words=0, line=0, actions=0, smileys=0, "
 	          "kicks=0, modes=0, topics=0, "
 	          "time0=0, time1=0, time2=0, time3=0, time4=0, time5=0, time6=0, time7=0, "
 	          "time8=0, time9=0, time10=0, time11=0, time12=0, time13=0, time14=0, "
 	          "time15=0, time16=0, time17=0, time18=0, time19=0, time20=0, time21=0, "
 	          "time22=0, time23=0  WHERE type=2;", CStatsTable);
-	sql_query(
-	          "DELETE %s.*,%s.* FROM %s,%s WHERE %s.uname = %s.uname AND %s.lastspoke < %i AND %s.ignore = 'N';",
+	DenoraSQLQuery(DenoraDB, "DELETE %s.*,%s.* FROM %s,%s WHERE %s.uname = %s.uname AND %s.lastspoke < %i AND %s.ignore = 'N';",
 	          UStatsTable, AliasesTable, UStatsTable, AliasesTable,
 	          UStatsTable, AliasesTable, UStatsTable,
 	          (time(NULL) - ClearInActive), AliasesTable);
@@ -167,24 +150,19 @@ int chanstats_month(const char *name)
 	time_t tbuf;
 	char **sql_row;
 
-	if (!denora->do_sql)
-	{
-		return MOD_CONT;
-	}
 	if (!name)
 	{
 		return MOD_CONT;
 	}
 	
 	alog(LOG_NORMAL, langstr(ALOG_RESETTING_MONTHLY));
-	sql_query
-	("UPDATE %s SET letters=0, words=0, line=0, actions=0, smileys=0, "
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET letters=0, words=0, line=0, actions=0, smileys=0, "
 	 "kicks=0, modes=0, topics=0, wasted=0, "
 	 "time0=0, time1=0, time2=0, time3=0, time4=0, time5=0, time6=0, time7=0, "
 	 "time8=0, time9=0, time10=0, time11=0, time12=0, time13=0, time14=0, "
 	 "time15=0, time16=0, time17=0, time18=0, time19=0, time20=0, time21=0, "
 	 "time22=0, time23=0 WHERE type=3;", UStatsTable);
-	sql_query("UPDATE %s SET letters=0, words=0, line=0, actions=0, smileys=0, "
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET letters=0, words=0, line=0, actions=0, smileys=0, "
 	          "kicks=0, modes=0, topics=0, "
 	          "time0=0, time1=0, time2=0, time3=0, time4=0, time5=0, time6=0, time7=0, "
 	          "time8=0, time9=0, time10=0, time11=0, time12=0, time13=0, time14=0, "
@@ -194,7 +172,7 @@ int chanstats_month(const char *name)
 	/* request 109 -  auto-delete channel after not used for 1 month */
 
 	tbuf = (time(NULL) - ClearChanInActive);
-	sql_query("SELECT chan FROM %s WHERE (lastspoke > 0) AND (lastspoke < %i);",
+	DenoraSQLQuery(DenoraDB, "SELECT chan FROM %s WHERE (lastspoke > 0) AND (lastspoke < %i);",
 	 CStatsTable, tbuf);
 	sql_res = sql_set_result(sqlcon);
 	if (sql_num_rows(sql_res) > 0)
@@ -208,9 +186,9 @@ int chanstats_month(const char *name)
 				     "chanstats monthly: channel %s is expired, statserv will leave this chan, all stats are deleted");
 				del_cs(cs);     /* make statserv part the chan */
 				chan_ = sql_escape(sql_row[0]);
-				sql_query( "DELETE FROM %s WHERE chan=\'%s\'",
+				DenoraSQLQuery(DenoraDB, "DELETE FROM %s WHERE chan=\'%s\'",
 				          CStatsTable, chan_);
-				sql_query( "DELETE FROM %s WHERE chan=\'%s\'",
+				DenoraSQLQuery(DenoraDB, "DELETE FROM %s WHERE chan=\'%s\'",
 				          UStatsTable, chan_);
 				free(chan_);
 				if (LogChannel)

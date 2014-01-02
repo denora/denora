@@ -54,7 +54,7 @@ BEGIN
             VALUE "FileDescription", "Denora IRC Stats"
             VALUE "FileVersion", VERSION_STRING
             VALUE "InternalName", "Denora"
-            VALUE "LegalCopyright", "Copyright (C) 2005-2013 Denora Team"
+            VALUE "LegalCopyright", "Copyright (C) 2005-2014 Denora Team"
             VALUE "OriginalFilename", "denora.exe"
             VALUE "ProductName", "Denora"
             VALUE "ProductVersion", VERSION_STRING

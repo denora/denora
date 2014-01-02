@@ -1,6 +1,6 @@
 /* Html Daily
  *
- * (c) 2004-2013 Denora Team
+ * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -14,6 +14,9 @@
 /*************************************************************************/
 
 #include "denora.h"
+
+#define MODULE_VERSION "2.0"
+#define MODULE_NAME "html_daily"
 
 void html_dailystats_title(FILE * ptr);
 void html_dailystats(FILE * ptr);
@@ -35,12 +38,16 @@ int DenoraInit(int argc, char **argv)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+	alog(LOG_NORMAL,   "[%s] version %s", MODULE_NAME, MODULE_VERSION);
+	
 	if (!denora->do_html)
 	{
+		alog(LOG_NORMAL,   "[%s] HTML output disabled, unloading module", MODULE_NAME);
 		return MOD_STOP;
 	}
+	
 	moduleAddAuthor("Denora");
-	moduleAddVersion(VERSION_STRING);
+	moduleAddVersion(MODULE_VERSION);
 	moduleSetType(CORE);
 
 	h = createHTMLtag("!DAILYSTATS!", html_dailystats);

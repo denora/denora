@@ -1,6 +1,6 @@
 /* XMLRPC Channel Data
  *
- * (c) 2004-2013 Denora Team
+ * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -15,6 +15,9 @@
 
 #include "denora.h"
 
+#define MODULE_VERSION "2.0"
+#define MODULE_NAME "xmlrpc_channeldata"
+
 int xmlrpc_channeldata(deno_socket_t xmlsocket, int ac, char **av);
 int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
@@ -28,14 +31,16 @@ int DenoraInit(int argc, char **argv)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+	alog(LOG_NORMAL,   "[%s] version %s", MODULE_NAME, MODULE_VERSION);
+	
 	if (!XMLRPC_Enable)
 	{
+		alog(LOG_NORMAL,   "[%s] XMLRPC not enabled unloading module", MODULE_NAME, MODULE_VERSION);
 		return MOD_STOP;
 	}
 
 	moduleAddAuthor("Denora");
-	moduleAddVersion
-	("");
+	moduleAddVersion(MODULE_VERSION);
 	moduleSetType(CORE);
 
 	xml = createXMLCommand("denora.channeldata", xmlrpc_channeldata);

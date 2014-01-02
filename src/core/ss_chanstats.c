@@ -1,6 +1,6 @@
 /* StatServ core functions
  *
- * (c) 2004-2013 Denora Team
+ * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -15,6 +15,9 @@
 
 #include "denora.h"
 
+#define MODULE_VERSION "2.0"
+#define MODULE_NAME "ss_chanstats"
+
 static int do_chanstats(User * u, int ac, char **av);
 int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
@@ -28,19 +31,29 @@ void DenoraFini(void);
 int DenoraInit(int argc, char **argv)
 {
 	Command *c;
-
+	int status;
+	
 	if (denora->debug >= 2)
 	{
 		protocol_debug(NULL, argc, argv);
 	}
+	
+	alog(LOG_NORMAL,   "[%s] version %s", MODULE_NAME, MODULE_VERSION);
+	
 	moduleAddAuthor("Denora");
-	moduleAddVersion
-	("");
+	moduleAddVersion(MODULE_VERSION);	
 	moduleSetType(CORE);
 
 	c = createCommand("CHANSTATS", do_chanstats, is_stats_admin, -1, -1,
 	                  -1, STAT_HELP_CHANSTATS);
-	moduleAddCommand(STATSERV, c, MOD_UNIQUE);
+	status = moduleAddCommand(STATSERV, c, MOD_UNIQUE);
+	if (status != MOD_ERR_OK)
+	{
+		alog(LOG_NORMAL,
+		     "[%s] Error Occurred setting Command for CHANSTATS [%d][%s]",
+		     MODULE_NAME, status, ModuleGetErrStr(status));
+		return MOD_STOP;
+	}
 
 	return MOD_CONT;
 }

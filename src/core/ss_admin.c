@@ -1,6 +1,6 @@
 /* StatServ core functions
  *
- * (c) 2004-2013 Denora Team
+ * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
  * Please read COPYING and README for furhter details.
@@ -14,6 +14,9 @@
 /*************************************************************************/
 
 #include "denora.h"
+
+#define MODULE_VERSION "2.0"
+#define MODULE_NAME "ss_admin"
 
 static int do_admin(User * u, int ac, char **av);
 int DenoraInit(int argc, char **argv);
@@ -37,8 +40,10 @@ int DenoraInit(int argc, char **argv)
 		protocol_debug(NULL, argc, argv);
 	}
 
+	alog(LOG_NORMAL,   "[%s] version %s", MODULE_NAME, MODULE_VERSION);
+	
 	moduleAddAuthor("Denora");
-	moduleAddVersion("");
+	moduleAddVersion(MODULE_VERSION);
 	moduleSetType(CORE);
 
 	c = createCommand("ADMIN", do_admin, is_stats_admin, -1, -1, -1,
@@ -83,6 +88,7 @@ static int do_admin(User * u, int ac, char **av)
 	int crypted = 0;
 	int rows;
 	sqlite3_stmt * stmt;
+	sqlite3 *db;
 	char ***data;
 	int language;
 
@@ -174,10 +180,7 @@ static int do_admin(User * u, int ac, char **av)
 			{
 				u2->admin = 0;
 			}
-			if (denora->do_sql) 
-			{
-				del_sqladmin(av[1]);
-			}
+			DenoraSQLQuery(DenoraDB, "DELETE FROM %s WHERE uname = '%q'", AdminTable, av[1]);
 			notice_lang(s_StatServ, u, STAT_ADMIN_DELETED, av[1]);
 		}
 		else
@@ -244,17 +247,17 @@ static int do_admin(User * u, int ac, char **av)
 	else if (!stricmp(av[0], "LIST"))
 	{
 		alog(LOG_NORMAL, "%s: %s: ADMIN LIST", s_StatServ, u->nick);
-		AdminDatabase = DenoraOpenSQL(AdminDB);
-		rows = DenoraSQLGetNumRows(AdminDatabase, "admin");
-		stmt = DenoraPrepareQuery(AdminDatabase, "SELECT * FROM admin");
-		data = DenoraSQLFetchArray(AdminDatabase, "admin", stmt, FETCH_ARRAY_NUM);
+		db = DenoraOpenSQL(DenoraDB);
+		rows = DenoraSQLGetNumRows(db, "admin");
+		stmt = DenoraPrepareQuery(db, "SELECT * FROM admin");
+		data = DenoraSQLFetchArray(db, "admin", stmt, FETCH_ARRAY_NUM);
 		for (i = 0; i < rows; i++)
 		{
 			notice(s_StatServ, u->nick, "%d %s", disp++, data[0]);
 		}
 		free(data);
 		sqlite3_finalize(stmt);
-		DenoraCloseSQl(AdminDatabase);
+		DenoraCloseSQl(db);
 		return MOD_CONT;
 	}
 	else
