@@ -324,6 +324,8 @@ typedef struct ModuleHash_ ModuleHash;
 typedef struct ModuleCallBack_ ModuleCallBack;
 typedef struct EvtMessage_ EvtMessage;
 typedef struct EvtMessageHash_ EvtMessageHash;
+typedef struct MainTimer_ MainTimer;
+typedef struct MainTimerHash_ MainTimerHash;
 typedef struct EvtHook_ EvtHook;
 typedef struct EvtHookHash_ EvtHookHash;
 typedef struct CronEvent_ CronEvent;
@@ -344,6 +346,7 @@ typedef struct gline_ Gline;
 typedef struct qline_ Qline;
 typedef struct zline_ Zline;
 typedef struct config_ config;
+typedef struct Maintimer_ MainTimer;
 
 /************************************************************************/
 /* Define out the hash tables						*/
@@ -358,7 +361,7 @@ typedef struct config_ config;
 #define PRIVMSGHANDLERS PRIVMSGHANDLERS_cmdTable
 #define XMLRPCCMD XMLRPCCMD_cmdTable
 #define USERMODEHANDLERS usermode_table
-
+#define MTIMER msgTimerTable
 
 #define FETCH_ARRAY_NUM 1
 #define FETCH_ARRAY_ASSOC 2
@@ -528,6 +531,31 @@ struct EvtMessageHash_
 	char *name;
 	EvtMessage *evm;
 	EvtMessageHash *next;
+};
+
+
+/************************************************************************/
+/* Main Timer Struct							*/
+/************************************************************************/
+
+struct MainTimer_
+{
+	char *name;
+	void (*func)(void);
+	unint32 last;
+	unint32 freq;
+	MainTimer *next;
+};
+
+/************************************************************************/
+/* Main Timer Struct Hash							*/
+/************************************************************************/
+
+struct MainTimer_
+{
+	char *name;
+	MainTimer *mt;
+	MainTimereHash *next;
 };
 
 /************************************************************************/

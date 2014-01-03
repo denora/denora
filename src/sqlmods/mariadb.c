@@ -379,4 +379,30 @@ int mysql_insertid()
 	return mysql_insert_id(sqlcon->mycon);
 }
 
+
+void do_mysql_ping(SQLcon *con)
+{
+	
+	result = mysql_ping(con->mysql);
+	if (result && denora->do_sql)
+	{
+		if (result == CR_COMMANDS_OUT_OF_SYNC)
+		{
+			alog(LOG_ERROR,
+			     "Commands were executed in an improper order.");
+		}
+		if (result == CR_SERVER_GONE_ERROR)
+		{
+			alog(LOG_ERROR, "The MySQL server has gone away.");
+		}
+		if (result == CR_UNKNOWN_ERROR)
+		{
+			alog(LOG_ERROR, "An unknown error occurred");
+		}
+		alog(LOG_ERROR, "Disabling MySQL due to an error");
+		denora->do_sql = 0;
+		SQLDisableDueServerLost = 1;
+	}
+}
+
 #endif

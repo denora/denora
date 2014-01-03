@@ -465,46 +465,23 @@ void save_databases()
 
 int main(int ac, char **av)
 {
-	int i, j;
 	char *bufres;
-	volatile time_t last_update;
-	volatile time_t last_htmlupdate;
-	volatile time_t last_server_ping;
-	volatile time_t last_server_uptime;
-	volatile time_t last_sql_ping;
-	volatile time_t last_backup_ping;
-	int result;
-#ifdef _WIN32
-	char errbuf[256];
-#else
-	char *errbuf;
-#endif
-	my_av = av;
+	time_t t;
 
-	
-
-#ifndef _WIN32
-	if (getuid() == ROOT_UID)
-	{
-		printf("Error: Cannot run Denora as root, exiting\n\r");
-		exit(1);
-	}
-#endif
-
-#ifdef STATS_DIR
-	GeoIP_setup_custom_directory((char *)STATS_DIR);
-#endif
+	GeoIP_setup_custom_directory((char *) STATS_DIR);
 	gidb = GeoIP_new(GEOIP_STANDARD);
 	gidb_v6 = GeoIP_open_type(GEOIP_COUNTRY_EDITION_V6, GEOIP_STANDARD);
 
 	UplinkSynced = 0;
 	denora->debug = 0;
+	
+	t = time(NULL);
 
 	/* Initialization stuff. */
-	if ((i = init(ac, av)) != 0)
+	if (init(ac, av) != 0)
 	{
 		destroy_all();
-		return i;
+		return 0;
 	}
 	signal_init();
 	init_bans();
@@ -512,12 +489,11 @@ int main(int ac, char **av)
 	/* We have a line left over from earlier, so process it first. */
 	process();
 
-	last_update = time(NULL);
-	last_htmlupdate = time(NULL);
-	last_server_ping = time(NULL);
-	last_server_uptime = time(NULL);
-	last_sql_ping = time(NULL);
-	last_backup_ping = time(NULL);
+	MainTimerInit("update", UpdateTimeout, MainBackUp);
+	MainTimerInit("html", HTMLTimeout, do_html);
+	MainTimerInit("ping", PingFrequency, ping_servers);
+	MainTimerInit("backup", BackupFreq, backup_databases);
+	MainTimerInit("sql", SQLPingFreq, sql_ping);
 
 	/* set these globals to NULL on startup, they are mainly for module
 	   coders */
@@ -531,142 +507,22 @@ int main(int ac, char **av)
 
 	while (!denora->quitting)
 	{
-		time_t t = time(NULL);
-
 		alog(LOG_DEBUGSOCK, "debug: Top of main loop");
 
 		if (denora->delayed_quit)
 			break;
-
-		if ((denora->save_data || t - last_update >= UpdateTimeout))
-		{
-			if (denora->delayed_quit)
-			{
-				denora_cmd_global(NULL, langstring(SHUTDOWN_SAVING_DB));
-			}
-			save_databases();
-
-			if (denora->save_data < 0)
-			{
-				break;          /* out of main loop */
-			}
-
-			denora->save_data = 0;
-			last_update = t;
-		}
-
-		if (PingFrequency >= 120)
-		{
-			if ((t - last_server_ping >= PingFrequency))
-			{
-				if (UplinkSynced)
-				{
-					ping_servers();
-				}
-				last_server_ping = t;
-			}
-		}
-
-		if ((t - last_backup_ping >= BackupFreq))
-		{
-			backup_databases();
-			last_backup_ping = t;
-		}
-
-		if (t - last_sql_ping > SQLPingFreq)
-		{
-			if (denora->do_sql)
-			{
-				result = sql_ping(sqlcon);
-				if (result && denora->do_sql)
-				{
-#if 0
-// move to sql module
-					if (result == CR_COMMANDS_OUT_OF_SYNC)
-					{
-						alog(LOG_ERROR,
-						     "Commands were executed in an improper order.");
-					}
-					if (result == CR_SERVER_GONE_ERROR)
-					{
-						alog(LOG_ERROR, "The MySQL server has gone away.");
-					}
-					if (result == CR_UNKNOWN_ERROR)
-					{
-						alog(LOG_ERROR, "An unknown error occurred");
-					}
-					alog(LOG_ERROR, "Disabling MySQL due to an error");
-					denora->do_sql = 0;
-					SQLDisableDueServerLost = 1;
-#endif
-				}
-				last_sql_ping = t;
-			}
-			else if (SQLDisableDueServerLost && SQLRetryOnServerLost)
-			{
-				for (j = 0; j < SqlRetries; j++)
-				{
-					alog(LOG_NORMAL,
-					     "Trying to reconnect to SQL server...");
-					if (sql_init())
-					{
-						SQLDisableDueServerLost = 0;
-						/* we need to restart denora so sql is resynced */
-						denora->qmsg =
-						    sstrdup("Restarting to resync SQL database");
-						do_restart_denora();
-						break;
-					}
-					sleep(SqlRetryGap);
-				}
-				alog(LOG_ERROR,
-				     "Giving up trying to reconnect to SQL server");
-				SQLDisableDueServerLost = 0;
-			}
-		}
-
-		if (HTMLTimeout >= 120)
-		{
-			if ((t - last_htmlupdate >= HTMLTimeout))
-			{
-				if (UplinkSynced)
-				{
-					do_html();
-				}
-				last_htmlupdate = t;
-			}
-		}
-
-		if (UptimeTimeout >= 120)
-		{
-			if ((t - last_server_uptime >= UptimeTimeout))
-			{
-				if (UplinkSynced)
-				{
-					uptime_servers();
-				}
-				last_server_uptime = t;
-			}
-		}
-		if (XMLRPC_Enable)
-		{
-			extsock_process();
-		}
-
+		
+		MainTimerProcess();
+		extsock_process();
 		moduleCallBackRun();
-		if (UplinkSynced)
-		{
-			denora_cron(t);
-		}
+		denora_cron(t);
 
 		waiting = 1;
 		bufres = sgets2(inbuf, sizeof(inbuf), servsock);
 		waiting = 0;
 		if (bufres && bufres != (char *) 0 && bufres != (char *) -1)
 		{
-			SET_START_TIME();
 			process();
-			CHECK_END_TIME();
 		}
 		else if (bufres == (char *) 0)
 		{
@@ -674,14 +530,9 @@ int main(int ac, char **av)
 			denora->qmsg = calloc(BUFSIZE, 1);
 			if (denora->qmsg)
 			{
-#ifdef _WIN32
-				strerror_s(errbuf, sizeof(errbuf), errno_save);
-#else
-				errbuf = strerror(errno_save);
-#endif
 				ircsnprintf(denora->qmsg, BUFSIZE,
 				            "Read error from server: %s (error num: %d)",
-				            errbuf, errno_save);
+				            ErrMsgStr(errno_save), errno_save);
 			}
 			else
 			{
@@ -696,14 +547,8 @@ int main(int ac, char **av)
 	/* Check for restart instead of exit */
 	if (denora->save_data == -2)
 	{
-#ifdef STATS_BIN
 		denora_restart();
 		return 1;
-#else
-		denora->qmsg =
-		    sstrdup
-		    ("Restart attempt failed--STATS_BIN not defined (rerun configure)");
-#endif
 	}
 
 	/* Disconnect and exit */
@@ -754,8 +599,6 @@ static int set_group(void)
 #if defined(RUNGROUP) && defined(HAVE_SETGRENT)
 	struct group *gr;
 
-	
-
 	setgrent();
 	while ((gr = getgrent()) != NULL)
 	{
@@ -795,8 +638,6 @@ static int parse_dir_options(int ac, char **av)
 {
 	int i;
 	char *s;
-
-	
 
 	for (i = 1; i < ac; i++)
 	{
@@ -1116,11 +957,6 @@ int init(int ac, char **av)
 	int i;
 	int openlog_failed = 0, openlog_errno = 0;
 	int started_from_term = isatty(0) && isatty(1) && isatty(2);
-#ifdef _WIN32
-	char errbuf[256];
-#else
-	char *errbuf;
-#endif
 	char *progname;
 
 	/* Set file creation mask and group ID. */
@@ -1154,12 +990,7 @@ int init(int ac, char **av)
 	/* Chdir to Denora data directory. */
 	if (chdir(denora->dir) < 0)
 	{
-#ifdef _WIN32
-		strerror_s(errbuf, sizeof(errbuf), errno);
-#else
-		errbuf = strerror(errno);
-#endif
-		fprintf(stderr, "chdir(%s): %s\n", denora->dir, errbuf);
+		fprintf(stderr, "chdir(%s): %s\n", denora->dir, ErrMsgStr(errno));
 		return -1;
 	}
 
@@ -1169,13 +1000,8 @@ int init(int ac, char **av)
 		openlog_errno = errno;
 		if (started_from_term)
 		{
-#ifdef _WIN32
-			strerror_s(errbuf, sizeof(errbuf), errno);
-#else
-			errbuf = strerror(errno);
-#endif
 			fprintf(stderr, "Warning: unable to open log file %s: %s\n",
-			        denora->logname, errbuf);
+			        denora->logname, ErrMsgStr(errno));
 		}
 		else
 		{
@@ -1306,20 +1132,7 @@ int init(int ac, char **av)
 		return -1;
 	}
 
-#ifdef HAVE_LIBZ
-	if (ircd->zip && UseZIP)
-	{
-		if (zip_init(ZIP_DEFAULT_LEVEL))
-		{
-			alog(LOG_DEBUG, "debug: Zip Compression enabled");
-		}
-		else
-		{
-			alog(LOG_DEBUG, "debug: Error during Zip Compression setup");
-			UseZIP = 0;
-		}
-	}
-#endif
+	zip_init(ZIP_DEFAULT_LEVEL);
 	statserv_int();
 
 	/* Add Core MSG handles */
@@ -1333,7 +1146,6 @@ int init(int ac, char **av)
 	load_stats_db();
 	InitCStatsList();
 	load_cs_db();
-	load_server_db();
 	InitStatsChanList();
 	load_chan_db();
 
@@ -1388,18 +1200,13 @@ int init(int ac, char **av)
 	/* Announce a logfile error if there was one */
 	if (openlog_failed)
 	{
-#ifdef _WIN32
-		strerror_s(errbuf, sizeof(errbuf), openlog_errno);
-#else
-		errbuf = strerror(openlog_errno);
-#endif
-		denora_cmd_global(NULL, langstring(CANNOT_OPEN_LOG), errbuf);
+		denora_cmd_global(NULL, langstring(CANNOT_OPEN_LOG), ErrMsgStr(openlog_errno));
 	}
 
 	/* Bring in our pseudo-clients */
 	introduce_user(NULL);
 
-	/* And hybrid needs Global joined in the logchan */
+	/* And hybrid needs StatServ joined in the logchan */
 	if (!BadPtr(LogChannel))
 	{
 		denora_cmd_join(s_StatServ, LogChannel, time(NULL));
@@ -1409,32 +1216,18 @@ int init(int ac, char **av)
 	send_event(EVENT_CONNECT, 1, EVENT_STOP);
 
 	/* Dumping stats.db maxvalues to sql */
-	if (denora->do_sql)
-	{
-		sql_query
-		(
-		 "UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='channels'",
+	DenoraSQLQuery(DenoraDB,"UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='channels'",
 		 MaxValueTable, stats->chans_max,
 		 (long int) stats->chans_max_time);
-		sql_query
-		(
-		 "UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='users'",
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='users'",
 		 MaxValueTable, stats->users_max,
 		 (long int) stats->users_max_time);
-		sql_query
-		(
-		 "UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='servers'",
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='servers'",
 		 MaxValueTable, stats->servers_max,
 		 (long int) stats->servers_max_time);
-		sql_query
-		(
-		 "UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='opers'",
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET val=%d, time=FROM_UNIXTIME(%ld) WHERE type='opers'",
 		 MaxValueTable, stats->opers_max,
 		 (long int) stats->opers_max_time);
-	}
-
-	/* Dumping all admins (from config file and admin.db) to sql */
-	reset_sqladmin();
 
 	/**
 	  * Load our delayed modules - modules that are planing on making clients need to wait till now

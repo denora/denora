@@ -999,3 +999,21 @@ int SizeOfArray(char **array)
 	return x-1;
 
 }
+
+/*************************************************************************/
+
+char *ErrMsgStr(int err)
+{
+#ifdef _WIN32
+	char errbuf[256];
+#else
+	char *errbuf;
+#endif
+#ifdef _WIN32
+				strerror_s(errbuf, sizeof(errbuf), err);
+				return errbuf;
+#else
+				return strerror(err);
+#endif
+}
+

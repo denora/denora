@@ -321,9 +321,37 @@ int sql_check_table(char *table)
 	return sqlmod.check_table(table);
 }
 
-int sql_ping(SQLCon *con)
+int sql_ping_internal(SQLCon *con)
 {
-	return sqlmod.ping(con);
+	int res;
+	res = sqlmod.ping(con);
+	if (SQLDisableDueServerLost && SQLRetryOnServerLost)
+	{
+		for (j = 0; j < SqlRetries; j++)
+		{
+			alog(LOG_NORMAL,
+				 "Trying to reconnect to SQL server...");
+			if (sql_init())
+			{
+				SQLDisableDueServerLost = 0;
+				/* we need to restart denora so sql is resynced */
+				denora->qmsg =
+					sstrdup("Restarting to resync SQL database");
+				do_restart_denora();
+				break;
+			}
+			sleep(SqlRetryGap);
+		}
+		alog(LOG_ERROR,
+			 "Giving up trying to reconnect to SQL server");
+		SQLDisableDueServerLost = 0;
+	}
+	return res;
+}
+
+void sql_ping(void)
+{
+	sql_ping_internal(SQLCon *c);
 }
 
 int sql_insertid(SQLCon *con)

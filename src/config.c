@@ -57,7 +57,7 @@ int parse_directive(Directive * d, char *dir, int ac, char *av[MAXPARAMS],
 /* v2 globals */
 char *DenoraDB; 							/* SQLite3 database file */
 int DisableTLD;								/* Do not use the Top Level Domain feature in Denora */
-
+int DisableCTCP;
 
 /* v1.5  need to check and move this up after they are worked on correctly */
 

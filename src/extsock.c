@@ -137,6 +137,11 @@ void extsock_process(void)
 	char *ip;
 	struct sockaddr_in clnt_addr;
 	struct timeval wait;
+	
+	if (!XMLRPC_Enable)
+	{
+		return;
+	}
 
 	temp_fdset = master_fdset;
 	wait.tv_sec = 0;

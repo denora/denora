@@ -559,6 +559,11 @@ int DenoraParseTimeOutBlock(char **lines)
 					DenoraXMLDebug(langstring(CONFIG_INVALID_TIME));
 					return -1;
 				}
+				if (HTMLTimeout <= 120 )
+				{
+					DenoraXMLDebug("HTMLTimeout must be greater then 2m");
+					return -1;
+				}
 			}
 			else if(!strcmp(tag, "UptimeTimeout"))
 			{
@@ -577,6 +582,12 @@ int DenoraParseTimeOutBlock(char **lines)
 					DenoraXMLDebug(langstring(CONFIG_INVALID_TIME));
 					return -1;
 				}
+				if (PingFrequency <= 120 )
+				{
+					DenoraXMLDebug("PingFrequency must be greater then 2m");
+					return -1;
+				}
+
 			}
 			else if(!strcmp(tag, "SQLPingFreq"))
 			{

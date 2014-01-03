@@ -21,45 +21,60 @@ static char zipbuf[ZIP_BUFFER_SIZE];
 void zip_free(void);
 
 aZdata *zip;
+#endif
 
 /*************************************************************************/
 
 int zip_init(int compressionlevel)
 {
-	zip = (aZdata *) malloc(sizeof(aZdata));
-	zip->incount = 0;
-	zip->outcount = 0;
-
-	zip->in = (z_stream *) malloc(sizeof(z_stream));
-	bzero(zip->in, sizeof(z_stream));
-	zip->in->total_in = 0;
-	zip->in->total_out = 0;
-	zip->in->zalloc = NULL;
-	zip->in->zfree = NULL;
-	zip->in->data_type = Z_ASCII;
-	if (inflateInit(zip->in) != Z_OK)
+#ifdef HAVE_LIBZ
+	if (ircd->zip && UseZIP)
 	{
-		zip->out = NULL;
+		zip = (aZdata *) malloc(sizeof(aZdata));
+		zip->incount = 0;
+		zip->outcount = 0;
+	
+		zip->in = (z_stream *) malloc(sizeof(z_stream));
+		bzero(zip->in, sizeof(z_stream));
+		zip->in->total_in = 0;
+		zip->in->total_out = 0;
+		zip->in->zalloc = NULL;
+		zip->in->zfree = NULL;
+		zip->in->data_type = Z_ASCII;
+		if (inflateInit(zip->in) != Z_OK)
+		{
+			zip->out = NULL;
+			return 0;
+		}
+	
+		zip->out = (z_stream *) malloc(sizeof(z_stream));
+		bzero(zip->out, sizeof(z_stream));
+		zip->out->total_in = 0;
+		zip->out->total_out = 0;
+		zip->out->zalloc = NULL;
+		zip->out->zfree = NULL;
+		zip->out->data_type = Z_ASCII;
+		if (deflateInit(zip->out, compressionlevel) != Z_OK)
+		{
+			return 0;
+		}
+		alog(LOG_DEBUG, "Zip Compression enabled");
+		return 1;
+	}
+	else
+	{
+		alog(LOG_DEBUG, "To use zip Compression both the ircd and UseZIP most be enabled");
+		UseZIP = 0;
 		return 0;
 	}
-
-	zip->out = (z_stream *) malloc(sizeof(z_stream));
-	bzero(zip->out, sizeof(z_stream));
-	zip->out->total_in = 0;
-	zip->out->total_out = 0;
-	zip->out->zalloc = NULL;
-	zip->out->zfree = NULL;
-	zip->out->data_type = Z_ASCII;
-	if (deflateInit(zip->out, compressionlevel) != Z_OK)
-	{
-		return 0;
-	}
-
-	return 1;
+#else
+	return 0;
+#endif
 }
 
 /*************************************************************************/
 
+#ifdef HAVE_LIBZ
 void zip_free(void)
 {
 	if (zip)

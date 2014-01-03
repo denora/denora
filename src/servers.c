@@ -423,21 +423,24 @@ void ping_servers(void)
 	sqlite3_stmt * stmt;
 	char **data;
 
-/*
-	 Note to self to fix 
-	s->flags != SERVER_JUPED
-*/
-	db = DenoraOpenSQL(DenoraDB);
-	rows = DenoraSQLGetNumRows(db, ServerTable);
-	stmt = DenoraPrepareQuery(db, "SELECT * FROM %s", ServerTable);
-	data = DenoraSQLFetchArray(db, ServerTable, stmt, FETCH_ARRAY_NUM);
-	for (i = 0; i < rows; i++)
+	if (UplinkSynced)
 	{
-			denora_cmd_ping(data[0]);
+	/*
+		 Note to self to fix 
+		s->flags != SERVER_JUPED
+	*/
+		db = DenoraOpenSQL(DenoraDB);
+		rows = DenoraSQLGetNumRows(db, ServerTable);
+		stmt = DenoraPrepareQuery(db, "SELECT * FROM %s", ServerTable);
+		data = DenoraSQLFetchArray(db, ServerTable, stmt, FETCH_ARRAY_NUM);
+		for (i = 0; i < rows; i++)
+		{
+				denora_cmd_ping(data[0]);
+		}
+		free(data);
+		sqlite3_finalize(stmt);
+		DenoraCloseSQl(db);
 	}
-	free(data);
-	sqlite3_finalize(stmt);
-	DenoraCloseSQl(db);
 }
 
 /*************************************************************************/

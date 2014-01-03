@@ -11,6 +11,7 @@
  *
  *
  */
+#define ZIP_DEFAULT_LEVEL 2
 
 #ifdef HAVE_LIBZ
 
@@ -33,7 +34,7 @@ struct Zdata
 	int first; /* First message? */
 };
 
-#define ZIP_DEFAULT_LEVEL 2
+
 
 #define ZIP_BUFFER_SIZE         (ZIP_MAXIMUM + BUFSIZE)
 #define UNZIP_BUFFER_SIZE       6 * ZIP_BUFFER_SIZE

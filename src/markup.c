@@ -514,9 +514,11 @@ void do_html()
 		alog(LOG_DEBUG, "debug: Unable to set Current working directory");
 	}
 #endif
-
+	if (!UplinkSynced)
+	{
+		return;
+	}
 	
-
 #ifndef _WIN32
 	template = STATS_DIR "/index.tpl";
 #else
