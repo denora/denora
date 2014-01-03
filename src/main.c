@@ -1131,7 +1131,7 @@ int init(int ac, char **av)
 	{
 		return -1;
 	}
-
+	init_NetworkBansMod();
 	zip_init(ZIP_DEFAULT_LEVEL);
 	statserv_int();
 

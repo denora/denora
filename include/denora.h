@@ -836,7 +836,7 @@ struct ircdvars_
 	int ts6;
 	int numerics;			/* IRCD uses Numerics to respond to some messages */
 	int gagged;			/* channel mode where user can not speak but is not banned */
-	int spamfilter;
+	char *spamfilter;
 	int ban_char;
 	int except_char;
 	int invite_char;

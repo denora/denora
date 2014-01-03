@@ -2,6 +2,7 @@ Denora v2.0 - git-alpha
 -------------
 
 Additions
+01/02/2014 : Spamfilters are now modularized, and are only loaded on networks that support them.
 01/02/2014 : ErrMsgStr() wrapper on strerror()/strerror_s() cuts back on the amount of code to get a error message.
 01/02/2014 : MainTimer events : like cron but these events are done on the main() loop, this is handy for database
              backups, pinging. Things that should happen on a regular basis or after small amount of time has passed.
@@ -83,6 +84,7 @@ Fixes
 11/29/2013 : Removed data from uid struct on user being disconnected.
 
 Removals
+01/02/2014 : Removed event_229.c from the core, and replaced with spamfilter module see above
 12/20/2013 : Removed last references to ADNS which was removed in v1.5
 12/12/2013 : Removed rdb.c replaced by sqlmod.c which allows us to have sql by what we can build and use.
 12/12/2013 : Removed SET_SEGV_LOCATION() from the majority of the code, this was designed to be a debug tool not to fill the whole code base

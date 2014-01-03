@@ -71,7 +71,6 @@ char *ENCModule;
 char *SQLModule;
 char *QuitPrefix;
 char *ExcludeTable;
-char *spamDB;
 
 char *LocalHost;
 int LocalPort;

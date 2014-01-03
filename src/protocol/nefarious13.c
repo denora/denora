@@ -1345,12 +1345,12 @@ int denora_event_spamfilter(char *source, int ac, char **av)
 		    char *duration, char *reason, char *regex) */
 		ircsnprintf(setby, BUFSIZE, "%s!%s@%s", u->nick, u->username, u->vhost ? u->vhost : u->host);
 		ircsnprintf(setat, 10, "%ld", (long int) time(NULL));
-		sql_do_server_spam_add(av[2], av[3], setby, (char *)"0", setat, av[4], av[ac-2], av[ac-1]);
+		spamfilter.add(av[2], av[3], setby, (char *)"0", setat, av[4], av[ac-2], av[ac-1]);
 	}
 	else if (!stricmp(av[1], "-"))
 	{
 		/* (char *target, char *action, char *regex) */
-		sql_do_server_spam_remove(av[2], av[3], av[ac-1]);
+		spamfilter.del(av[2], av[3], av[ac-1]);
 	}
 
 	return MOD_CONT;

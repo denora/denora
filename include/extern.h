@@ -737,10 +737,6 @@ E void sql_do_squit(char *server);
 E void sql_do_server_version(char *server, int ac, char **av);
 E void sql_do_server_bans_remove(char *type, char *user, char *host);
 E void sql_do_server_bans_add(char *type, char *user, char *host, char *setby, char *setat, char *expires, char *reason);
-E void sql_do_server_spam_add(char *target, char *action,
-                              char *setby, char *expires, char *setat, char *duration,
-                              char *reason, char *regex);
-E void sql_do_server_spam_remove(char *target, char *action, char *regex);
 E void sql_do_nick(User *u);
 E void sql_do_sdesc(char *user, char *msg);
 E void server_set_desc(char *server, char *msg);
@@ -1206,12 +1202,6 @@ E list_t *Zlinehead;
 
 E char *sql_hidepass(char *sql);
 
-E SpamFilter *findSpamFilter(const char *regex);
-E void fini_SpamFilter(SpamFilter *regex);
-E SpamFilter *new_SpamFilter(char *target, char *action,
-                            char *setby, char *expires, char *setat,
-                            char *duration, char *reason, char *regex);
-
 E ChanMode *FindChanMode(char *name);
 E ChanMode *CreateChanMode(int mode, void (*setvalue) (Channel *chan, char *value), char * (*getvalue) (Channel *chan));
 E int addChanMode(ChanMode * m);
@@ -1249,7 +1239,6 @@ E int DenoraParseProto_ChannelBanModeBlock(char **lines);
 E int DenoraParseProto_WarningBlock(char **lines);
 E int DenoraParseProto_ChannelFeaturesBlock(char **lines);
 E void DenoraXMLIRCdConfig(char *file);
-E char *spamDB;
 E int SizeOfArray(char **array);
 
 E void ModuleChanModeUpdate(int mode, void (*setvalue) (Channel * chan, char *value),  char *(*getvalue) (Channel * chan));

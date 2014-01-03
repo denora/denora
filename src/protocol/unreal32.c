@@ -417,7 +417,7 @@ int denora_event_tkl(char *source, int ac, char **av)
 	{
 		if (!stricmp(av[1], "F"))
 		{
-			sql_do_server_spam_add(av[2], av[3], av[4], av[5], av[6],
+			spamfilter.add(av[2], av[3], av[4], av[5], av[6],
 			                       av[7], av[8], av[9]);
 		}
 		else
@@ -431,7 +431,7 @@ int denora_event_tkl(char *source, int ac, char **av)
 	{
 		if (!stricmp(av[1], "F"))
 		{
-			sql_do_server_spam_remove(av[2], av[3], av[7]);
+			spamfilter.del(av[2], av[3], av[7]);
 		}
 		else
 		{

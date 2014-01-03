@@ -297,12 +297,6 @@ Server *do_server(const char *source, char *servername, char *hops,
 		{
 			denora_cmd_stats(s_StatServ, "U", servername);
 		}
-		if (ircd->spamfilter)
-		{
-			char sbuf[2];
-			ircsnprintf(sbuf, sizeof(sbuf), "%c", ircd->spamfilter);
-			denora_cmd_stats(s_StatServ, sbuf, servername);
-		}
 		denora_motd(s_StatServ, servername);
 	}
 	DenoraSQLUpdateStatsInt(DenoraDB, CurrentTable, "servers", 1);

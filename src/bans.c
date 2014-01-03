@@ -903,20 +903,6 @@ int sql_ban_clean(const char *name)
 	 */
 	USE_VAR(name);
 
-	
-
-	/*
-	 * Do not execute if
-	 * 1. SQL code has been disabled
-	 * 2. LargeNet is enabled
-	 */
-	if (!denora->do_sql || LargeNet)
-	{
-		return MOD_CONT;
-	}
-
-	
-
 	/*
 	 * Query the gline table and remove bans that the expiration is
 	 * 1. Not 0 (ie.. no expire)
@@ -930,18 +916,9 @@ int sql_ban_clean(const char *name)
 	 * Check if the ircd supports spamfilter and if so we should clean that
 	 * up as well
 	 */
-	
-
 	if (ircd->spamfilter)
 	{
-		/*
-		 * Query the spamfilter table and remove bans that the expiration is
-		 * 1. Not 0 (ie.. no expire)
-		 * 2. Less then the current time
-		 */
-		sql_query(
-		          "DELETE FROM %s WHERE expires != 0 AND expires < %ld",
-		          SpamTable, time(NULL));
+		HandleExpiredSpamfilters();
 	}
 	
 

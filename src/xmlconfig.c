@@ -395,10 +395,6 @@ int DenoraParseFileNamesBlock(char **lines)
 			{
 				excludeDB = sstrdup(data);
 			}
-			else if(!strcmp(tag, "spamDB"))
-			{
-				spamDB = sstrdup(data);
-			}
 			else
 			{
 				DenoraXMLDebug("Unknown tag %s and Data %s", tag, data);
@@ -2027,7 +2023,7 @@ int DenoraParseProto_FeaturesBlock(char **lines)
 			}
 			else if(!strcmp(tag, "spamfilterchar"))
 			{
-				ircd->spamfilter = atoi(data);
+				ircd->spamfilter = sstrdup(data);
 			}
 			else if(!strcmp(tag, "vhost_char"))
 			{
