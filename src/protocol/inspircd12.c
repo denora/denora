@@ -712,12 +712,8 @@ char *inspircd12_lkill_killer(char *message)
 {
 	char *buf, *killer = NULL;
 
-	/* Let's get the killer nickname */
-	buf = sstrdup(message);
-	killer = strtok(buf, " ");
-	killer = strtok(NULL, " ");
-	killer++;
-	killer = sstrdup(killer);
+    buf = myStrGetToken(message, '(', 1);
+    msg = myStrGetToken(buf, ' ', 0);
 	free(buf);
 	return killer;
 }
@@ -727,11 +723,8 @@ char *inspircd12_lkill_msg(char *message)
 {
 	char *msg = NULL;
 
-	/* Let's get the kill message */
-	msg = strchr(message, '(');
-	msg = strchr(msg+1, '(');
-	msg[strlen(msg) - 2] = '\0';
-	msg++;                      /* removes first character '(' */
+    msg = myStrGetToken(message, '(', 1);
+    msg = myStrGetToken(msg, ')', 0);
 
 	return msg;
 }

@@ -982,10 +982,8 @@ char *ircu_lkill_killer(char *message)
 	char *buf, *killer = NULL;
 
 	/* Let's get the killer nickname */
-	buf = sstrdup(message);
-	killer = strtok(buf, " ");
-	killer = strtok(NULL, " ");
-	killer++;
+	buf = myStrGetToken(message, "(", 1);
+	killer = myStrGetToken(buf, " ", 0);
 	if (buf)
 	{
 		free(buf);
@@ -999,11 +997,8 @@ char *ircu_lkill_msg(char *message)
 {
 	char *msg = NULL;
 
-	/* Let's get the kill message */
-	msg = strchr(message, '(');
-	msg = strchr(message, '(');
-	msg[strlen(msg) - 2] = '\0';
-	msg++;                      /* removes first character '(' */
+	msg = myStrGetToken(message, "(", 2);
+	msg = myStrGetToken(msg, ")", 0);
 
 	return msg;
 }

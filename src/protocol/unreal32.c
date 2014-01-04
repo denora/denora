@@ -168,12 +168,10 @@ char *unreal32_lkill_killer(char *message)
 {
 	char *buf, *killer = NULL;
 
-	/* Let's get the killer nickname */
-	killer = strchr(message, ']');
-	killer = strchr(message, 'y');
-	buf = sstrdup(killer);
-	killer = strtok(buf, " ");
-	killer = strtok(NULL, " ");
+	buf = myStrGetToken(message, ']', 1);
+	killer = myStrGetToken(buf, '(', 0);
+	killer = myStrGetToken(killer, ' ', 4);
+
 	if (buf)
 	{
 		free(buf);
@@ -187,11 +185,8 @@ char *unreal32_lkill_servername(char *message)
 {
 	char *buf, *servername = NULL;
 
-	/* Let's get the servername */
-	buf = sstrdup(message); /* the whole quit message */
-	servername = strtok(buf, " "); /* the servername in brackets */
-	servername[strlen(servername) - 1] = '\0'; /* last bracket removed */
-	servername++; /* first bracket removed */
+	buf = myStrGetToken(message, '[', 1);
+	servername = myStrGetToken(msg, ']', 0);
 	if (buf)
 	{
 		free(buf);
@@ -203,10 +198,8 @@ char *unreal32_lkill_msg(char *message)
 {
 	char *msg = NULL;
 
-	/* Let's get the kill message */
-	msg = strchr(message, '('); /* the (kill message) */
-	msg[strlen(msg) - 1] = '\0'; /* removes last character ')' */
-	msg++; /* removes first character '(' */
+	msg = myStrGetToken(message, '(', 1);
+	msg = myStrGetToken(msg, ')', 0);
 
 	return msg;
 }
@@ -558,6 +551,13 @@ int denora_event_quit(char *source, int ac, char **av)
 		else
 			m_kill(source, source, msg);
 	}
+
+	if (killer)
+		free(killer);
+	if (servername)
+		free(servername);
+	if (msg)
+		free(msg);
 
 	return MOD_CONT;
 }

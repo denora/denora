@@ -72,7 +72,7 @@ void nef2_chan_mode_a_set(Channel * chan, char *value)
         chan->akey = sstrdup(value);
 	if (denora->do_sql)
 	{
-		sql_query("UPDATE %s SET mode_ua_data='%s' WHERE chanid=%d", ChanTable, value, chan->sqlid);
+		DenoraSQLQuery(DenoraDB,"UPDATE %s SET mode_ua_data='%s' WHERE chanid=%d", ChanTable, value, chan->sqlid);
 	}
 
         u = chan->users;
@@ -80,7 +80,7 @@ void nef2_chan_mode_a_set(Channel * chan, char *value)
 	{
         	while ((u = u->next))
         	{
-				sql_query("UPDATE %s SET oplevel=999 WHERE chanid=%d AND nickid=%d AND mode_lo='Y'", IsOnTable, chan->sqlid, u->user->sqlid);
+        		DenoraSQLQuery(DenoraDB,"UPDATE %s SET oplevel=999 WHERE chanid=%d AND nickid=%d AND mode_lo='Y'", IsOnTable, chan->sqlid, u->user->sqlid);
 
 			}
     }
@@ -102,7 +102,7 @@ void nef2_chan_mode_u_set(Channel * chan, char *value)
         chan->ukey = sstrdup(value);
 	if (denora->do_sql)
 	{
-		sql_query("UPDATE %s SET mode_uu_data='%s' WHERE chanid=%d", ChanTable, value, chan->sqlid);
+		DenoraSQLQuery(DenoraDB,"UPDATE %s SET mode_uu_data='%s' WHERE chanid=%d", ChanTable, value, chan->sqlid);
 	}
 }
 
@@ -848,6 +848,8 @@ int denora_event_quit(char *source, int ac, char **av)
 
 		if (msg)
 			free(msg);
+		if (killer)
+			free(killer);
 	}
 
 
@@ -991,15 +993,19 @@ int denora_event_kill(char *source, int ac, char **av)
 	if (denora->protocoldebug)
 		protocol_debug(source, ac, av);
 	if (ac != 2)
+	{
 		return MOD_CONT;
+	}
 
-	msg = strchr(av[1], '(');
-	msg[strlen(msg) - 1] = '\0';
-	msg++;
+	msg = myStrGetToken(av[1], '(', 1);
+	msg = myStrGetToken(msg, ')', 0);
 
 	u = find_byuid(source);
 	k = find_byuid(av[0]);
 	m_kill((u ? u->nick : source), (k ? k->nick : av[0]), msg);
+
+	free(msg);
+
 	return MOD_CONT;
 }
 
@@ -1161,15 +1167,13 @@ int nefarious_parse_lkill(char *message)
 	return 0;
 }
 
+/* Killed (*.beirut.com (KILL TESTING)) */
 char *nefarious_lkill_killer(char *message)
 {
 	char *buf, *killer = NULL;
 
-	/* Let's get the killer nickname */
-	buf = sstrdup(message);
-	killer = strtok(buf, " ");
-	killer = strtok(NULL, " ");
-	killer++;
+	buf = myStrGetToken(message, "(", 1);
+	killer = myStrGetToken(buf, " ", 0);
 	if (buf)
 	{
 		free(buf);
@@ -1182,14 +1186,10 @@ char *nefarious_lkill_msg(char *message)
 {
 	char *msg = NULL;
 
-	/* Let's get the kill message */
-	msg = strchr(message, '(');
-	msg++;
-	msg = strchr(msg, '(');
-	msg[strlen(msg) - 2] = '\0';
-	msg++;                      /* removes first character '(' */
-
-	return sstrdup(msg);
+	msg = myStrGetToken(message, "(", 2);
+	msg = myStrGetToken(msg, ")", 0);
+	
+	return msg;
 }
 
 /* [NUMERIC PREFIX] N [NICK] [HOPCOUNT] [TIMESTAMP] [USERNAME] [HOST] <+modes> [BASE64 IP] [NUMERIC] :[USERINFO] */
