@@ -4,7 +4,7 @@
 
          Name: log_ctcpversion
   Description: Logs CTCP version replies to a channel
-      Version: 1.0.1
+      Version: 1.0.2
  Requirements: Denora 1.4+	  
          IRCd: all
        Author: Jobe (jobe@mdbnet.co.uk)
@@ -26,6 +26,10 @@
 +---------+
  CHANGELOG
 +---------+
+v1.0.2 - 03.01.2014
+  A Added config file directive for LogTarget in the file log_ctcpversion.conf 
+  R Removed define for LogTarget
+
 v1.0.1 - 23.08.2009
   F Fixed strict/ansi compilation warnings
 v1.0.0 - 28.02.2008

@@ -8,8 +8,7 @@
 #define VERSION "1.0.2"
 #define MYNAME "log_ctcpversion"
 
-/* Define this if you do not want them in the logchannel */
-/* #define LOGTARGET "#services" */
+char *LogTarget;
 
 int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
@@ -19,6 +18,7 @@ int DenoraInit(int argc, char **argv)
 {
 	EvtHook *hook = NULL;
 	int status;
+	Directive *dir;
 
 	USE_VAR(argc);
 	USE_VAR(argv);
@@ -30,6 +30,10 @@ int DenoraInit(int argc, char **argv)
 		alog(LOG_NORMAL, "[%s%s] unable to bind to EVENT_CTCP_VERSION error [%d][%s]", MYNAME, MODULE_EXT, status, ModuleGetErrStr(status));
 		return MOD_STOP;
 	}
+
+	dir = ModuleCreateConfigDirective("LogTarget", PARAM_STRING, PARAM_RELOAD, &LogTarget);
+	moduleGetConfigDirective((char*) "log_ctcpversion.conf", dir);
+	free(dir);
 
 	moduleAddAuthor(AUTHOR);
 	moduleAddVersion(VERSION);
@@ -43,17 +47,22 @@ void DenoraFini(void)
 
 int my_version(int argc, char **argv)
 {
-	if (argc >= 2) {
+	if (argc >= 2) 
+	{
 		/* argv[0] = nick, argv[1] = version */
-		if (stricmp(ServerName, argv[0])) {
-#ifdef LOGTARGET
-			denora_cmd_privmsg(s_StatServ, sstrdup(LOGTARGET), "\x02VERSION\x02 %s has version %s", argv[0], argv[1]);
-#else
-			if (LogChannel)
+		if (stricmp(ServerName, argv[0])) 
+		{
+			if (LogTarget)
 			{
-				denora_cmd_privmsg(s_StatServ, LogChannel, "\x02VERSION\x02 %s has version %s", argv[0], argv[1]);
+				denora_cmd_privmsg(s_StatServ, LogTarget, "\x02VERSION\x02 %s has version %s", argv[0], argv[1]);
 			}
-#endif
+			else
+			{
+				if (LogChannel)
+				{
+					denora_cmd_privmsg(s_StatServ, LogChannel, "\x02VERSION\x02 %s has version %s", argv[0], argv[1]);
+				}
+			}
 		}
 	}
 	return MOD_CONT;

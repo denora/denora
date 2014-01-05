@@ -810,7 +810,7 @@ void delete_user(User * user)
 
 	if (user->uid)
 	{
-		free(user->uid);
+		/* free(user->uid); */
 	}
 
 	if (user->account)
@@ -982,14 +982,17 @@ User *find_byuid(const char *uid)
 {
 	User *u;
 
-	u = first_uid();
-	while (u)
+	if (!BadPtr(uid))
 	{
-		if (u && u->uid && !strcmp(uid, u->uid))
+		u = first_uid();
+		while (u)
 		{
-			return u;
+			if (u && u->uid && !strcmp(uid, u->uid))
+			{
+				return u;
+			}
+			u = next_uid();
 		}
-		u = next_uid();
 	}
 	return NULL;
 }
