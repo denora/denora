@@ -311,12 +311,6 @@
 /* "Use Mysql" */
 #undef USE_MYSQL
 
-/* "Backtrace mysql queries" */
-#undef USE_MYSQL_BT
-
-/* "Use threads" */
-#undef USE_THREADS
-
 /* "" */
 #undef HAVE_GETCWD
 

@@ -240,7 +240,6 @@
     <TLDDB>tld.db</TLDDB>
     <excludeDB>exclude.db</excludeDB>
     <statsDB>stats.db</statsDB>
-    <AdminDB>admin.db</AdminDB>
 
     // optional tokens
     #<HTMLFilename>/home/denora/denora.html</HTMLFilename>
@@ -431,12 +430,19 @@
 #  nologs      - only use if you want NO log files
 #  trigger     - character to use for triggering chanstats
 #  jupemaster  - name of the server who issues JUPE so leafs can be ignored
+#  BackTrace   - allow Denora to run backtraces when something goes wrong internally, this
+#                is a debugging feature and now meant for most users, unless you are trying to
+#                find a crash
+#  SQLQueryBT  - On external sql queries, execute backtrace and log it, this will make your logs
+#                grow but is helpfully in debugging crashes with sql queries.
 
 <options>
     // optional tokens
     <KeepLogs>7</KeepLogs>
     #<LogChannel>#denora</LogChannel>
     #<DumpCore />
+    #<SQLQueryBT />
+    #<BackTrace />
     #<HideStatsO />
     #<UseTokens />
     #<UseTS6>

@@ -752,6 +752,28 @@ int DenoraParseOptionBlock(char **lines)
 					DumpCore = XmlConfigSetFeature(data);
 				}
 			}
+			else if(!strcmp(tag, "SQLQueryBT"))
+			{
+				if (optag)
+				{
+					SQLQueryBT = 1;
+				}
+				else
+				{
+					SQLQueryBT = XmlConfigSetFeature(data);
+				}
+			}
+			else if(!strcmp(tag, "BackTrace"))
+			{
+				if (optag)
+				{
+					BackTrace = 1;
+				}
+				else
+				{
+					BackTrace = XmlConfigSetFeature(data);
+				}
+			}
 			else if(!strcmp(tag, "HideStatsO"))
 			{
 				if (optag)

@@ -43,8 +43,9 @@
 25. autoconf - write script file 1) download latest config.guess and config.sub 
     2) build "autoconf" the configure file 3) copies the new configure into place
 26. Backtrace config option
-	1. Option in config
-        2. libexecinfo                                                                                        [Building needs to link]
+	1. Option in config										      [DONE build 2.0.0.12]
+        2. libexecinfo                                                                                        [DONE build 2.0.0.12]
+	3. Hook it up through the code where back trace was						      [DONE build 2.0.0.12]
 27. Fully document the project so anyone can take over
 28. Clean up sysconf.h and configure.in so that the two match each other. 
 29. denora.h 

@@ -231,12 +231,19 @@ int sql_direct_query(SQLCon *con, char *query)
 	{
 		return -1;
 	}
-	nptrs = backtrace(buffer, 6);
-	strings = backtrace_symbols(buffer, nptrs);
-	if (strings != NULL) {
-	for (j = 2; j < nptrs; j++)
-			alog(LOG_DEBUG, "[bt %d/%d] %s", j, nptrs, strings[j]);
-			free(strings);
+
+	if (SQLQueryBT)
+	{
+		nptrs = backtrace(buffer, 6);
+		strings = backtrace_symbols(buffer, nptrs);
+		if (strings != NULL) 
+		{
+			for (j = 2; j < nptrs; j++)
+			{
+				alog(LOG_DEBUG, "[bt %d/%d] %s", j, nptrs, strings[j]);
+				free(strings);
+			}
+		}
 	}
 	sqlmod.query(con, query);
 	return 0;

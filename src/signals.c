@@ -446,7 +446,6 @@ VOIDSIG sighandler(int signum)
 void do_backtrace(int header)
 {
 #ifndef _WIN32
-#ifdef HAVE_BACKTRACE
 	void *array[50];
 	size_t size;
 	char **strings;
@@ -468,14 +467,21 @@ void do_backtrace(int header)
 		alog(LOG_NORMAL, "crash the program");
 		alog(LOG_NORMAL, "bt full");
 		alog(LOG_NORMAL,
-		     "paste results and following line into the bugtracker");
+		     "paste results along with the following line into the bugtracker");
 		alog(LOG_NORMAL,
 		     "[================ COPY THE FOLLOWING =================]");
-		alog(LOG_NORMAL, "Backtrace: %s", segv_location);
-		alog(LOG_NORMAL, "[inbuf][%s]", inbuf);
 		alog(LOG_NORMAL,
 		     "Backtrace: Denora version %s build #%s, compiled %s %s",
 		     denora->version, denora->build, denora->date, denora->time);
+
+		alog(LOG_NORMAL,
+		     "Backtrace: STAT_OS [%s] STATS_CPU [%s]", STATS_OS, STATS_CPU);
+		alog(LOG_NORMAL,
+		     "Backtrace: Denora features: SQL [%d] : XMLRPC [%d]", denora->do_sql, XMLRPC_Enable);
+
+		alog(LOG_NORMAL, "[inbuf][%s]", inbuf);
+
+
 		alog(LOG_NORMAL,
 		     "[modules]: Listing all currently loaded modules");
 		for (idx = 0; idx != MAX_CMD_HASH; idx++)
@@ -483,15 +489,22 @@ void do_backtrace(int header)
 			for (current = MODULE_HASH[idx]; current;
 			        current = current->next)
 			{
-				alog(LOG_DEBUG, "[name=%s][type=%d][version %s]",
+				alog(LOG_NORMAL, "[name=%s][type=%d][version %s]",
 				     current->name, current->m->type, current->m->version);
 			}
 		}
 	}
 	else
 	{
-		alog(LOG_NORMAL, "Execution trace: %s", segv_location);
-		alog(LOG_NORMAL, "Execution trace: in progress");
+		if (BackTrace)
+		{
+			alog(LOG_NORMAL, "Execution trace: %s", segv_location);
+			alog(LOG_NORMAL, "Execution trace: in progress");
+		}
+		else
+		{
+			return;
+		}
 	}
 	size = backtrace(array, 10);
 	strings = backtrace_symbols(array, size);
@@ -508,16 +521,6 @@ void do_backtrace(int header)
 		alog(LOG_NORMAL,
 		     "[=================================================]");
 	}
-#else
-	if (segv_location)
-	{
-		alog(LOG_NORMAL, "Backtrace: %s", segv_location);
-	}
-	if (header)
-	{
-		alog(LOG_NORMAL, langstr(BACKTRACE_NOT_HERE));
-	}
-#endif
 #else
 	char *winver;
 	if (segv_location)

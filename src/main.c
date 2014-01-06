@@ -45,8 +45,6 @@ int waiting = 0;
 /* Set to 1 after we've set everything up */
 int started = 0;
 
-int SpeedTest;
-
 /*************************************************************************/
 
 DenoraVar denora[] =
@@ -138,8 +136,6 @@ void process()
 	*source = '\0';
 	*cmd = '\0';
 	*bufp10 = '\0';
-
-	
 
 	/* If debugging, log the buffer */
 	alog(LOG_DEBUG, "debug: Received: %s", inbuf);
@@ -820,10 +816,6 @@ static int parse_options(int ac, char **av)
 			else if (strcmp(value, "protocoldebug") == 0)
 			{
 				denora->protocoldebug++;
-			}
-			else if (strcmp(value, "speedtest") == 0)
-			{
-				SpeedTest++;
 			}
 			else if (strcmp(value, "sql") == 0)
 			{

@@ -802,7 +802,6 @@ E char segv_location[SEGV_LOCATION_BUFSIZE];
 #endif
 
 E FILE *logfile;
-E int SpeedTest;
 
 #define SET_SEGV_LOCATION() \
 	segv_location[0]='\0'; \
@@ -811,17 +810,6 @@ E int SpeedTest;
 #define SET_SEGV_LOCATION_EXTRA(debug_text) \
 	segv_location[0]='\0'; \
 	ircsnprintf(segv_location,SEGV_LOCATION_BUFSIZE,"%s %d %s %s", __FILE__, __LINE__, PRETTY_FUNCTION,(debug_text));
-
-#define SET_START_TIME() \
-	if (SpeedTest) alog(LOG_DEBUG, "Execution Time started at %ld", (long int) time(NULL));
-#define CHECK_END_TIME() \
-	if (SpeedTest) alog(LOG_DEBUG, "Execution Time ended at %ld", (long int) time(NULL));
-
-#define FUNC_SET_START_TIME() \
-		alog(LOG_DEBUG, "Function Execution Time started at %ld (%s)", (long int) time(NULL), PRETTY_FUNCTION);
-#define FUNC_CHECK_END_TIME() \
-		alog(LOG_DEBUG, "Function Execution Time ended at %ld", (long int) time(NULL));
-
 
 E void do_html(void);
 E int toupper(char);
