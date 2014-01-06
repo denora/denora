@@ -810,7 +810,7 @@ void delete_user(User * user)
 
 	if (user->uid)
 	{
-		/* free(user->uid); */
+		free(user->uid);
 	}
 
 	if (user->account)
@@ -980,77 +980,21 @@ User *nextuser(void)
 
 User *find_byuid(const char *uid)
 {
-	User *u;
+	Uid *u;
 
 	if (!BadPtr(uid))
 	{
-		u = first_uid();
+		u = uid_first();
 		while (u)
 		{
 			if (u && u->uid && !strcmp(uid, u->uid))
 			{
-				return u;
+				return finduser(u->nick);
 			}
-			u = next_uid();
+			u = uid_next();
 		}
 	}
 	return NULL;
-}
-
-/*************************************************************************/
-
-/**
- * Iterate over all user ids in the user list.  Return NULL at end of list.
- *
- * @return User struct
- *
- */
-User *first_uid(void)
-{
-	unext_index = 0;
-
-	while (unext_index < MAX_UIDS && uidcurrent == NULL)
-	{
-		uidcurrent = userlist[unext_index++];
-	}
-
-	alog(LOG_EXTRADEBUG, "debug: UID Hash index %d", unext_index);
-	alog(LOG_EXTRADEBUG, "debug: first_uid() returning %s %s",
-	     uidcurrent ? uidcurrent->nick : "NULL (end of list)",
-	     uidcurrent ? uidcurrent->uid : "");
-
-	return uidcurrent;
-}
-
-/*************************************************************************/
-
-/**
- * Move to the next user id in the list
- *
- * @return User struct
- *
- */
-User *next_uid(void)
-{
-	if (uidcurrent)
-	{
-		uidcurrent = uidcurrent->next;
-	}
-
-	if (!uidcurrent && unext_index < MAX_UIDS)
-	{
-		while (unext_index < MAX_UIDS && uidcurrent == NULL)
-		{
-			uidcurrent = userlist[unext_index++];
-		}
-	}
-
-	alog(LOG_EXTRADEBUG, "debug: UID Hash index %d", unext_index);
-	alog(LOG_EXTRADEBUG, "debug: next_uid() returning %s %s",
-	     uidcurrent ? uidcurrent->nick : "NULL (end of list)",
-	     uidcurrent ? uidcurrent->uid : "");
-
-	return uidcurrent;
 }
 
 /*************************************************************************/
@@ -1101,13 +1045,13 @@ Uid *new_uid(const char *nick, char *uid)
 	{
 		return NULL;
 	}
-	strlcpy(u->nick, nick, NICKMAX);
-	list = &uidlist[UIDHASH(u->nick)];
+	u->uid = sstrdup(uid);
+	list = &uidlist[UIDHASH(u->uid)];
 	u->next = *list;
 	if (*list)
 		(*list)->prev = u;
 	*list = u;
-	u->uid = sstrdup(uid);
+	u->nick = sstrdup(nick);
 	return u;
 }
 
@@ -1333,6 +1277,14 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 		user->lastuname = NULL;
 		user->language = StatsLanguage;
 		user->moduleData = NULL;
+
+		if (ircd->p10 || (UseTS6 && ircd->ts6))
+		{
+			if (uid)
+			{
+				new_uid(user->nick, uid);
+			}
+		}
 
 		if (!LargeNet)
 		{

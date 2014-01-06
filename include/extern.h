@@ -563,8 +563,6 @@ E void delete_user(User *user);
 E User *finduser(const char *nick);
 E User *user_find(const char *source);
 E User *find_byuid(const char *uid);
-E User *first_uid(void);
-E User *next_uid(void);
 E Uid *uid_first(void);
 E Uid *uid_next(void);
 E User *firstuser(void);

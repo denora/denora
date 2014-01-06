@@ -650,12 +650,12 @@ struct serverbans_
 /* UID struct - needed for P10/TS6 ircds to track our internal UIDs	*/
 /************************************************************************/
 #ifndef MAX_UIDS
-#define MAX_UIDS 1024
+#define MAX_UIDS 5024
 #endif
 struct uid_
 {
 	Uid *next, *prev;
-	char nick[NICKMAX];
+	char *nick;
 	char *uid;
 };
 
