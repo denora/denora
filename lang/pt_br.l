@@ -1030,20 +1030,11 @@ CONFIG_FILENAME_MOTD_ERROR
 CONFIG_FILENAME_CHANDB_ERROR
 	Faltou definir o ChannelDb do arquivo de configura��o, bloco files
 
-CONFIG_FILENAME_CTCP_ERROR
-	Faltou definir o ctcpDB do arquivo de configura��o, bloco files
-
 CONFIG_FILENAME_SERVER_ERROR
 	Faltou definir o ServerDb do arquivo de configura��o, bloco files
 
 CONFIG_FILENAME_CHANSTATS_ERROR
 	Faltou definir o ChannelStatsDb do arquivo de configura��o, bloco files
-
-CONFIG_FILENAME_TLD_ERROR
-	Faltou definir o TLDDB do arquivo de configura��o, bloco files
-
-CONFIG_FILENAME_EXCLUDE_ERROR
-	Faltou definir o EXCLUDEDB do arquivo de configura��o, bloco files
 
 CONFIG_SS_DESC_ERROR
 	Faltou definir o desc do arquivo de configura��o, bloco statserv

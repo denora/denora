@@ -1032,20 +1032,11 @@ CONFIG_FILENAME_MOTD_ERROR
 CONFIG_FILENAME_CHANDB_ERROR
 	Falta definir ChannelDB en el bloque files
 
-CONFIG_FILENAME_CTCP_ERROR
-	Falta definir ctcpDB en el bloque files
-
 CONFIG_FILENAME_SERVER_ERROR
 	Falta definir ServerDB en el bloque files
 
 CONFIG_FILENAME_CHANSTATS_ERROR
 	Falta definir ChannelStatsDB en el bloque files
-
-CONFIG_FILENAME_TLD_ERROR
-	Falta definir TLDDB en el bloque files
-
-CONFIG_FILENAME_EXCLUDE_ERROR
-	Falta definir EXCLUDEDB en el bloque files
 
 CONFIG_SS_DESC_ERROR
 	Falta definir real en el bloque statserv

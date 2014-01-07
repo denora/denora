@@ -185,12 +185,10 @@ int chanstats_month(const char *name)
 				alog(LOG_DEBUG,
 				     "chanstats monthly: channel %s is expired, statserv will leave this chan, all stats are deleted");
 				del_cs(cs);     /* make statserv part the chan */
-				chan_ = sql_escape(sql_row[0]);
-				DenoraSQLQuery(DenoraDB, "DELETE FROM %s WHERE chan=\'%s\'",
-				          CStatsTable, chan_);
-				DenoraSQLQuery(DenoraDB, "DELETE FROM %s WHERE chan=\'%s\'",
-				          UStatsTable, chan_);
-				free(chan_);
+				DenoraSQLQuery(DenoraDB, "DELETE FROM %s WHERE chan=\'%q\'",
+				          CStatsTable, sql_row[0]);
+				DenoraSQLQuery(DenoraDB, "DELETE FROM %s WHERE chan=\'%q\'",
+				          UStatsTable, sql_row[0]);
 				if (LogChannel)
 				{
 					if (stricmp(LogChannel, sql_row[0]))

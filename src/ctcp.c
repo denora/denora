@@ -93,7 +93,7 @@ void ctcp_update(char *version)
 	{
 		c->count--;
 	}
-	DenoraSQLQuery(ctcpDB, "UPDATE %s SET count=%u, overall=%u WHERE version=\'%q\'",
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET count=%u, overall=%u WHERE version=\'%q\'",
 	          CTCPTable, c->count, c->overall, version);
 
 	del_ctcpver(c);

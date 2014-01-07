@@ -1033,20 +1033,11 @@ CONFIG_FILENAME_MOTD_ERROR
 CONFIG_FILENAME_CHANDB_ERROR
 	Lacking ChannelDB definition in files block
 
-CONFIG_FILENAME_CTCP_ERROR
-	Lacking ctcpDB definition in files block
-
 CONFIG_FILENAME_SERVER_ERROR
 	Lacking ServerDB definition in files block
 
 CONFIG_FILENAME_CHANSTATS_ERROR
 	Lacking ChannelStatsDB definition in files block
-
-CONFIG_FILENAME_TLD_ERROR
-	Lacking TLDDB definition in files block
-
-CONFIG_FILENAME_EXCLUDE_ERROR
-	Lacking EXCLUDEDB definition in files block
 
 CONFIG_SS_DESC_ERROR
 	Lacking real definition in statserv block

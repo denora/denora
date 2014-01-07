@@ -22,8 +22,6 @@ static int ServerLastClean = -1;
 /* last time we cleaned the user table */
 static int UserLastClean = -1;
 
-sqlite3* StatsDatabase;
-
 /*************************************************************************/
 
 /**
@@ -35,10 +33,11 @@ sqlite3* StatsDatabase;
 void load_stats_db(void)
 {
 	sqlite3_stmt *stmt;
+	sqlite3 *db;
 	char **data;
 
-	StatsDatabase = DenoraOpenSQL(statsDB);
-	stmt = DenoraPrepareQuery(StatsDatabase, "SELECT * FROM %s", StatsTable);
+	db = DenoraOpenSQL(DenoraDB);
+	stmt = DenoraPrepareQuery(db, "SELECT * FROM %s", StatsTable);
 	data = DenoraSQLFetchRow(stmt, FETCH_ARRAY_NUM);
 	if (data) {
 		stats->users_max = atoi(data[0]);
@@ -51,7 +50,7 @@ void load_stats_db(void)
 		stats->opers_max_time = atoi(data[7]);
 	}
 	sqlite3_finalize(stmt);
-	DenoraCloseSQl(StatsDatabase);
+	DenoraCloseSQl(db);
 }
 
 /*************************************************************************/
@@ -64,7 +63,7 @@ void load_stats_db(void)
  */
 void save_stats_db(void)
 {
-	DenoraSQLQuery(statsDB, "UPDATE %s SET users_max=%ld, users_max_time=%ld, chans_max=%ld, chans_max_time=%ld, \
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET users_max=%ld, users_max_time=%ld, chans_max=%ld, chans_max_time=%ld, \
 					servers_max=%ld, servers_max_time=%ld, opers_max=%ld, opers_max_time=%ld", StatsTable, stats->users_max,
 					stats->users_max_time, stats->chans_max, stats->chans_max_time, stats->servers_max, stats->servers_max_time,
 					stats->opers_max, stats->opers_max_time);
@@ -181,13 +180,11 @@ void db_connect(void)
 			{
 				del_cs(cs);
 			}
-			sqlchan = sql_escape(LogChannel);
 			save_cs_db();
-			sql_query("DELETE FROM %s WHERE chan=\'%s\'",
-			          CStatsTable, sqlchan);
-			sql_query("DELETE FROM %s WHERE chan=\'%s\'",
-			          UStatsTable, sqlchan);
-			free(sqlchan);
+			sql_query("DELETE FROM %s WHERE chan=\'%q\'",
+			          CStatsTable, LogChannel);
+			sql_query("DELETE FROM %s WHERE chan=\'%q\'",
+			          UStatsTable, LogChannel);
 		}
 	}
 	if (!db_getcurrent_chans())
@@ -228,9 +225,7 @@ int db_getserver(char *serv)
 		return servid;
 	}
 
-	sqlserv = sql_escape(serv);
-	sql_query("SELECT servid FROM %s WHERE server=\'%s\'", ServerTable, sqlserv);
-	free(sqlserv);
+	sql_query("SELECT servid FROM %s WHERE server=\'%q\'", ServerTable, serv);
 
 	sql_res = sql_set_result(sqlcon);
 	if (sql_res)
@@ -264,8 +259,6 @@ int db_getnick(char *nick)
 	{
 		return nickid;
 	}
-
-	
 
 	u = user_find(nick);
 	if (u && (u->sqlid > 0))
@@ -323,13 +316,9 @@ int db_checknick_nt(char *nick)
 
 	if (u)
 	{
-		username = sql_escape(u->username);
-		host = sql_escape(u->host);
-		queryhost = sstrdup((myNumToken(host, '.') >= 2) ? strchr(host, '.') : host);
+		queryhost = sstrdup((myNumToken(u->host, '.') >= 2) ? strchr(u->host, '.') : u->host);
 		sql_query("SELECT nickid,nick FROM %s WHERE (username=\'%s\' AND hostname LIKE \'%%%s\' AND online=\'N\') OR nick=\'%s\' ORDER BY connecttime DESC",
-		          UserTable, username, queryhost, u->sqlnick);
-		free(username);
-		free(host);
+		          UserTable, u->username, queryhost, u->sqlnick);
 		free(queryhost);
 		sql_res = sql_set_result(sqlcon);
 		if (sql_res)
@@ -354,13 +343,11 @@ int db_checknick_nt(char *nick)
 						if (sql_num_rows(sql_res2))
 						{
 							sql_row = sql_fetch_row(sql_res2);
-							olduname = sql_escape(sql_row[0]);
 							/* Adding alias entry with new nick and old uname to avoid creation of new uname */
 							sql_query(
 							          "INSERT INTO %s (nick, uname) VALUES (\'%s\', \'%s\') ON DUPLICATE KEY UPDATE uname=\'%s\'",
-							          AliasesTable, u->sqlnick, olduname,
+							          AliasesTable, u->sqlnick, sql_row[0],
 							          olduname);
-							free(olduname);
 						}
 						sql_free_result(sql_res2);
 					}
@@ -372,10 +359,8 @@ int db_checknick_nt(char *nick)
 	}
 	else
 	{
-		sqlnick = sql_escape(nick);
-		sql_query("SELECT nickid FROM %s WHERE nick=\'%s\'",
-		          UserTable, sqlnick);
-		free(sqlnick);
+		sql_query("SELECT nickid FROM %s WHERE nick=\'%q\'",
+		          UserTable, nick);
 		sql_res = sql_set_result(sqlcon);
 		if (sql_res)
 		{
@@ -411,10 +396,8 @@ int db_getservfromnick(char *nick)
 	}
 	
 
-	sqlnick = sql_escape(nick);
-	sql_query("SELECT servid FROM %s WHERE nick=\'%s\'",
+	sql_query("SELECT servid FROM %s WHERE nick=\'%q\'",
 	          UserTable, sqlnick);
-	free(sqlnick);
 	sql_res = sql_set_result(sqlcon);
 	if (sql_res)
 	{

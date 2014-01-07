@@ -139,7 +139,7 @@ int AdminSetPassword(Dadmin * a, char *newpass)
 	free(a->passwd);
 	a->passwd = sstrdup(MakePassword(newpass));
 	crypted = is_crypted(a->passwd);
-	DenoraSQLQuery(AdminDB, "UPDATE %s SET passwd=%s%q%s WHERE uname = '%q'", AdminTable, crypted ? "'" : "MD5('", a->passwd, crypted ? "'" : "')", a->name);
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET passwd=%s%q%s WHERE uname = '%q'", AdminTable, crypted ? "'" : "MD5('", a->passwd, crypted ? "'" : "')", a->name);
 
 	return 1;
 }

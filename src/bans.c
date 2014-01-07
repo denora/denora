@@ -392,62 +392,6 @@ void p10_gline(char *type, char *source, int ac, char **av)
 /*************************************************************************/
 
 /**
- * Parse SQLINE message for SQL
- *
- * @param mask The SQLINE mask that has been banned
- * @param reason The reason for the SQLINE ban
- *
- * @return void - no returend value
- */
-void sql_do_sqline(char *mask, char *reason)
-{
-	SQLres *sql_res;
-	char *sqlreason;
-	char *sqlmask;
-
-	
-
-	/* Do not execute if
-	 * SQL is disabled
-	 * LargeNet is enabled
-	 * Mask as not passed as a varaible
-	 * Reason was not passed as a variable
-	 */
-	if (!denora->do_sql || LargeNet || BadPtr(mask) || BadPtr(reason))
-	{
-		return;
-	}
-
-	
-
-	sqlmask = sql_escape(mask);
-
-	sql_query("SELECT mask FROM %s WHERE mask = \'%s\' LIMIT 1",
-	 SqlineTable, sqlmask);
-	sql_res = sql_set_result(sqlcon);
-	if (sql_res)
-	{
-		sqlreason = sql_escape(reason);
-		if (sql_num_rows(sql_res) == 0)
-		{
-			sql_query("INSERT INTO %s (mask, reason) values('%s', '%s')", SqlineTable, sqlmask, sqlreason);
-		}
-		else
-		{
-			sql_query("UPDATE %s SET reason=\'%s\' WHERE mask=\'%s\'", SqlineTable, sqlreason, sqlmask);
-		}
-		sql_free_result(sql_res);
-		free(sqlreason);
-	}
-
-	free(sqlmask);
-
-	return;
-}
-
-/*************************************************************************/
-
-/**
  * Parse SGLINE message for SQL
  * Note that the length should indicated where to split the mask into two pieces
  *
@@ -492,8 +436,6 @@ void sql_do_sgline(char *length, char *mask)
 	}
 	errno = errsave;
 
-	
-
 	if (((int) strlen(mask) > len) && (mask[len]) == ':')
 	{
 		mask[len] = '\0';
@@ -507,7 +449,7 @@ void sql_do_sgline(char *length, char *mask)
 	sqlmask = sql_escape(mask);
 
 	sql_query("SELECT mask FROM %s WHERE mask = \'%s\' LIMIT 1",
-	 SglineTable, sqlmask);
+	 SglineTable, mask);
 
 	sql_res = sql_set_result(sqlcon);
 	if (sql_res)

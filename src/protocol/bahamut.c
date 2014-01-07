@@ -828,7 +828,7 @@ int denora_event_sqline(char *source, int ac, char **av)
 	{
 		protocol_debug(source, ac, av);
 	}
-	sql_do_sqline(av[0], av[1]);
+	sqline.parse(av[0], av[1]);
 	return MOD_CONT;
 }
 

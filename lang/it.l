@@ -1035,20 +1035,11 @@ CONFIG_FILENAME_MOTD_ERROR
 CONFIG_FILENAME_CHANDB_ERROR
 	Errore nella definizione di ChannelDB nel blocco files
 
-CONFIG_FILENAME_CTCP_ERROR
-	Errore nella definizione di ctcpDB nel blocco files
-
 CONFIG_FILENAME_SERVER_ERROR
 	Errore nella definizione di ServerDB nel blocco files
 
 CONFIG_FILENAME_CHANSTATS_ERROR
 	Errore nella definizione di ChannelStatsDB nel blocco files
-
-CONFIG_FILENAME_TLD_ERROR
-	Errore nella definizione di TLDDB nel blocco files
-
-CONFIG_FILENAME_EXCLUDE_ERROR
-	Errore nella definizione di EXCLUDEDB nel blocco files
 
 CONFIG_SS_DESC_ERROR
 	Errore nella definizione di real nel blocco statserv

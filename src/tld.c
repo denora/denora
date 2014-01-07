@@ -1,4 +1,3 @@
-
 /*
  *
  * (c) 2004-2014 Denora Team
@@ -14,7 +13,6 @@
  */
 
 #include "denora.h"
-sqlite3 *TLDDatabase;
 
 /*************************************************************************/
 
@@ -37,14 +35,9 @@ void tld_update(char *country_code)
 		{
 			t->count--;
 		}
-		DenoraExecQuerySQL(TLDDatabase, "UPDATE %s SET count=%u, overall=%u WHERE code=\'%s\'",
+		DenoraExecQuerySQL(DenoraDB, "UPDATE %s SET count=%u, overall=%u WHERE code=\'%s\'",
 		          TLDTable, t->count, t->overall, country_code);
 
-		if (denora->do_sql)
-		{
-			sql_query("UPDATE %s SET count=%u, overall=%u WHERE code=\'%s\'",
-			          TLDTable, t->count, t->overall, country_code);
-		}
 		fini_tld(t);
 	}
 }
@@ -64,20 +57,13 @@ void tld_update(char *country_code)
  */
 void sql_do_tld(int type, char *code, char *country, int count, int overall)
 {
-	char *sqlcountry;
-
 	if (type == 1 || type == 4)
 	{
 		if (denora->do_sql)
 		{
-			sqlcountry = sql_escape(country);
-			sql_query("INSERT INTO %s  (code, country, count, overall) VALUES(\'%s\', \'%s\', %d, %d) \
+			sql_query("INSERT INTO %s  (code, country, count, overall) VALUES(\'%s\', \'%q\', %d, %d) \
 					ON DUPLICATE KEY UPDATE count=%d, overall=%d",
-					TLDTable, code, sqlcountry, count, overall, count, overall);
-			if (sqlcountry)
-			{
-				free(sqlcountry);
-			}
+					TLDTable, code, country, count, overall, count, overall);
 		}
 	}
 
@@ -126,20 +112,21 @@ TLD *findtld(const char *countrycode)
 	TLD *t;
 	sqlite3_stmt *stmt;
 	char **sdata;
+	sqlite3 *db;
 
 	if (!countrycode)
 	{
 		return NULL;
 	}
 
-	TLDDatabase = DenoraOpenSQL(TLDDB);
-	stmt = DenoraPrepareQuery(TLDDatabase, "SELECT * FROM %s WHERE code='%q'", TLDTable, countrycode);
+	db = DenoraOpenSQL(DenoraDB);
+	stmt = DenoraPrepareQuery(db, "SELECT * FROM %s WHERE code='%q'", TLDTable, countrycode);
 	sdata = DenoraSQLFetchRow(stmt, FETCH_ARRAY_NUM);
 	if (sdata) {
 		t = make_tld(sdata);
 	}
 	sqlite3_finalize(stmt);
-	DenoraCloseSQl(TLDDatabase);
+	DenoraCloseSQl(db);
 
 	if (stricmp(t->countrycode, countrycode) == 0)
 	{
@@ -190,7 +177,7 @@ TLD *do_tld(char *country, char *code)
 
 	if (!t)
 	{
-		DenoraExecQuerySQL(TLDDatabase, "INSERT INTO %s (code, country, count, overall) VALUES(\'%s\', \'%s\', %d, %d)",
+		DenoraExecQuerySQL(DenoraDB, "INSERT INTO %s (code, country, count, overall) VALUES(\'%s\', \'%s\', %d, %d)",
 				TLDTable, code, country, 1, 1);
 
 		data = DenoraCallocArray(1);
@@ -212,7 +199,7 @@ TLD *do_tld(char *country, char *code)
 		{
 			t->overall = 1;
 		}
-		DenoraExecQuerySQL(TLDDatabase, "UPDATE %s SET count=%d, overall=%d WHERE code=\'%s\'",
+		DenoraExecQuerySQL(DenoraDB, "UPDATE %s SET count=%d, overall=%d WHERE code=\'%s\'",
 				TLDTable, t->count, t->overall, t->countrycode);
 		return t;
 	}

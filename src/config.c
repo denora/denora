@@ -119,11 +119,8 @@ int ModulesNumber;
 int ModulesDelayedNumber;
 
 char *ChannelDB;
-char *ctcpDB;
 char *ServerDB;
 char *ChannelStatsDB;
-char *excludeDB;
-char *statsDB;
 char *UserDB;
 
 char *SqlHost;

@@ -1052,20 +1052,11 @@ CONFIG_FILENAME_MOTD_ERROR
 CONFIG_FILENAME_CHANDB_ERROR
 	Missende ChannelDB (kanaaldatabestand) in files blok
 
-CONFIG_FILENAME_CTCP_ERROR
-	Missende ctcpDB (ctcp databestand) in files blok
-
 CONFIG_FILENAME_SERVER_ERROR
 	Missende ServerDB (serverdatabestand) in files blok
 
 CONFIG_FILENAME_CHANSTATS_ERROR
 	Missende ChannelStatsDB (kanaalstatistiekendatabestand) in files blok
-
-CONFIG_FILENAME_TLD_ERROR
-	Missend TLDDB (domeindatabestand) in files blok
-
-CONFIG_FILENAME_EXCLUDE_ERROR
-	Missende EXCLUDEDB (uitsluitingsdatabestand) in files blok
 
 CONFIG_SS_DESC_ERROR
 	Missende real (echte naam) in statserv blok

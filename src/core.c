@@ -1440,8 +1440,6 @@ void destroy_all(void)
 		free(NickChar);
 	if (ChannelDB)
 		free(ChannelDB);
-	if (statsDB)
-		free(statsDB);
 	if (SqlHost)
 		free(SqlHost);
 	if (SqlUser)
@@ -1495,16 +1493,10 @@ void destroy_all(void)
 		free(HTMLFilename);
 	if (GeoIPDBFileName)
 		free(GeoIPDBFileName);
-	if (excludeDB)
-		free(excludeDB);
-	if (ctcpDB)
-		free(ctcpDB);
 	if (ServerDB)
 		free(ServerDB);
 	if (ChannelStatsDB)
 		free(ChannelStatsDB);
-	if (TLDDB)
-		free(TLDDB);
 	if (Numeric)
 		free(Numeric);
 	remove_pidfile();

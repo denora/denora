@@ -261,25 +261,10 @@ static void remove_backups(void)
 	ircsnprintf(path, sizeof(path), "backups/%s.%s", ChannelDB, ext);
 	unlink(path);
 
-	ircsnprintf(path, sizeof(path), "backups/%s.%s", ctcpDB, ext);
-	unlink(path);
-
 	ircsnprintf(path, sizeof(path), "backups/%s.%s", ServerDB, ext);
 	unlink(path);
 
 	ircsnprintf(path, sizeof(path), "backups/%s.%s", ChannelStatsDB, ext);
-	unlink(path);
-
-	ircsnprintf(path, sizeof(path), "backups/%s.%s", TLDDB, ext);
-	unlink(path);
-
-	ircsnprintf(path, sizeof(path), "backups/%s.%s", excludeDB, ext);
-	unlink(path);
-
-	ircsnprintf(path, sizeof(path), "backups/%s.%s", AdminDB, ext);
-	unlink(path);
-
-	ircsnprintf(path, sizeof(path), "backups/%s.%s", statsDB, ext);
 	unlink(path);
 
 }
@@ -325,13 +310,8 @@ void backup_databases(void)
 		strftime(ext, sizeof(ext), "%Y%m%d", &tm);
 
 		rename_database(ChannelDB, ext);
-		rename_database(ctcpDB, ext);
 		rename_database(ServerDB, ext);
 		rename_database(ChannelStatsDB, ext);
-		rename_database(TLDDB, ext);
-		rename_database(excludeDB, ext);
-		rename_database(AdminDB, ext);
-		rename_database(statsDB, ext);
 		send_event(EVENT_DB_BACKUP, 1, EVENT_STOP);
 	}
 }

@@ -14,8 +14,6 @@
 
 #include "denora.h"
 
-sqlite3 *ExcludeDatabase;
-
 /*************************************************************************/
 
 Exclude *find_exclude(char *mask, int flag)
@@ -23,14 +21,15 @@ Exclude *find_exclude(char *mask, int flag)
 	Exclude *e;
 	sqlite3_stmt *stmt;
 	char **sdata;
+	sqlite3 *db;
 
 	if (!mask)
 	{
 		return NULL;
 	}
 
-	ExcludeDatabase = DenoraOpenSQL(excludeDB);
-	stmt = DenoraPrepareQuery(ExcludeDatabase, "SELECT * FROM %s WHERE name='%q'", mask);
+	db = DenoraOpenSQL(DenoraDB);
+	stmt = DenoraPrepareQuery(db, "SELECT * FROM %s WHERE name='%q'", ExcludeTable, mask);
 	sdata = DenoraSQLFetchRow(stmt, FETCH_ARRAY_NUM);
 	if (sdata) {
 		if (match_wild_nocase(sdata[0], mask) && flag == atoi(sdata[1]))
@@ -39,7 +38,7 @@ Exclude *find_exclude(char *mask, int flag)
 		}
 	}
 	sqlite3_finalize(stmt);
-	DenoraCloseSQl(ExcludeDatabase);
+	DenoraCloseSQl(db);
 	return NULL;	
 }
 
@@ -89,30 +88,17 @@ Exclude *make_exclude(char **data)
 void Create_Exclude(char *key, int flag)
 {
 
-	DenoraSQLQuery(excludeDB, "INSERT INTO %s (key, flag) VALUES ('%q', %d)", 
+	DenoraSQLQuery(DenoraDB, "INSERT INTO %s (key, flag) VALUES ('%q', %d)", 
 		  ExcludeTable, key, flag); 
-
-	if (denora->do_sql)
-	{
-		sql_query("INSERT INTO %s (key, flag) VALUES ('%q', %d)", 
-		  ExcludeTable, key, flag); 
-	}
 
 }
 
 void Delete_Exclude(char *key, int flag)
 {
 
-	DenoraSQLQuery(excludeDB, "DELETE FROM %s WHERE key = '%q' and flag = %d", ExcludeTable, key, flag);
+	DenoraSQLQuery(DenoraDB, "DELETE FROM %s WHERE key = '%q' and flag = %d", ExcludeTable, key, flag);
 	
-	if (denora->do_sql)
-	{
-			sql_query("DELETE FROM %s WHERE key = '%q' and flag = %d",  ExcludeTable, key, flag);
-	}
-
 }
-
-
 
 /*************************************************************************/
 

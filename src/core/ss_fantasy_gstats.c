@@ -106,15 +106,13 @@ int do_fantasy(int argc, char **argv)
 		else
 		{
 			target = strtok(argv[3], " ");
-			sqltarget = sql_escape(target);
 			sql_query("SELECT uname FROM %s WHERE nick=\'%s\' ",
-				  AliasesTable, sqltarget);
-			free(sqltarget);
+				  AliasesTable, target);
 			sql_res = sql_set_result(sqlcon);
 			if (sql_res && sql_num_rows(sql_res))
 			{
 				sql_row = sql_fetch_row(sql_res);
-				sqltarget = sql_escape(sql_row[0]);
+				sqltarget = sstrdup(sql_row[0]);
 			}
 			else
 			{
@@ -123,7 +121,7 @@ int do_fantasy(int argc, char **argv)
 		}
 		cs = find_cs(argv[2]);
 		sql_query(
-			  "SELECT * FROM %s WHERE chan=\'global\' AND type=0 AND uname=\'%s\';",
+			  "SELECT * FROM %s WHERE chan=\'global\' AND type=0 AND uname=\'%q\';",
 		          UStatsTable, sqltarget);
 		free(sqltarget);
 		sql_res = sql_set_result(sqlcon);

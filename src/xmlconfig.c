@@ -367,18 +367,6 @@ int DenoraParseFileNamesBlock(char **lines)
 			{
 				ChannelDB = sstrdup(data);
 			}
-			else if(!strcmp(tag, "statsDB"))
-			{
-				statsDB = sstrdup(data);
-			}
-			else if(!strcmp(tag, "ctcpDB"))
-			{
-				ctcpDB = sstrdup(data);
-			}
-			else if(!strcmp(tag, "AdminDB"))
-			{
-				AdminDB = sstrdup(data);
-			}
 			else if(!strcmp(tag, "ServerDB"))
 			{
 				ServerDB = sstrdup(data);
@@ -386,14 +374,6 @@ int DenoraParseFileNamesBlock(char **lines)
 			else if(!strcmp(tag, "ChannelStatsDB"))
 			{
 				ChannelStatsDB = sstrdup(data);
-			}
-			else if(!strcmp(tag, "TLDDB"))
-			{
-				TLDDB = sstrdup(data);
-			}
-			else if(!strcmp(tag, "excludeDB"))
-			{
-				excludeDB = sstrdup(data);
 			}
 			else
 			{
@@ -417,11 +397,6 @@ int DenoraParseFileNamesBlock(char **lines)
 		DenoraXMLDebug(langstring(CONFIG_FILENAME_CHANDB_ERROR));
 		return -1;
 	}
-	if (!ctcpDB)
-	{
-		DenoraXMLDebug(langstring(CONFIG_FILENAME_CTCP_ERROR));
-		return -1;
-	}
 	if (!ServerDB)
 	{
 		DenoraXMLDebug(langstring(CONFIG_FILENAME_SERVER_ERROR));
@@ -430,26 +405,6 @@ int DenoraParseFileNamesBlock(char **lines)
 	if (!ChannelStatsDB)
 	{
 		DenoraXMLDebug(langstring(CONFIG_FILENAME_CHANSTATS_ERROR));
-		return -1;
-	}
-	if (!TLDDB)
-	{
-		DenoraXMLDebug(langstring(CONFIG_FILENAME_TLD_ERROR));
-		return -1;
-	}
-	if (!excludeDB)
-	{
-		DenoraXMLDebug(langstring(CONFIG_FILENAME_EXCLUDE_ERROR));
-		return -1;
-	}
-	if (!statsDB)
-	{
-		DenoraXMLDebug("statsDB is not defined");
-		return -1;
-	}
-	if (!AdminDB)
-	{
-		DenoraXMLDebug("AdminDB is not defined");
 		return -1;
 	}
 

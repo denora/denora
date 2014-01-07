@@ -7,6 +7,9 @@
  *  Spamfilter.fini()
  *  spamfilter.expired()
  *
+ * SQlines - load from sqline module and are added/del from their struct
+ *  sqline.parse()
+ *
  * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
@@ -31,6 +34,14 @@ typedef struct spammod_
 
 SpamFilterMod spamfilter;
 
+typedef struct sqline_
+{
+	void (*parse)(char *mask, char *reason);
+} SqlineMod;
+
+SqlineMod sqline;
+
+
 void init_NetworkBansMod(void)
 {
 	spamfilter.add = NULL;
@@ -38,6 +49,7 @@ void init_NetworkBansMod(void)
 	spamfilter.find = NULL;
 	spamfilter.fini = NULL;
 	spamfilter.expired = NULL;
+	sqline.parse = NULL;
 }
 
 /*************************************************************************/
@@ -76,4 +88,10 @@ void HandleExpiredSpamfilters(void)
 		spamfilter.expired();
 	}
 }
+
+void SQline_Parse_Handler(void (*func) (char *mask, char *reason))
+{
+	sqline.parse = func;
+}
+
 

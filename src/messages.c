@@ -362,6 +362,7 @@ int m_stats(char *source, int ac, char **av)
 	int i;
 	int rows;
 	sqlite3_stmt *stmt;
+	sqlite3 *db;
 	char ***data;
 
 	if (ac < 1)
@@ -398,17 +399,17 @@ int m_stats(char *source, int ac, char **av)
 			}
 			else
 			{
-				AdminDatabase = DenoraOpenSQL(AdminDB);
-				rows = DenoraSQLGetNumRows(AdminDatabase, "admin");
-				stmt = DenoraPrepareQuery(AdminDatabase, "SELECT * FROM admin");
-				data = DenoraSQLFetchArray(AdminDatabase, "admin", stmt, FETCH_ARRAY_NUM);
+				db = DenoraOpenSQL(DenoraDB);
+				rows = DenoraSQLGetNumRows(db, "admin");
+				stmt = DenoraPrepareQuery(db, "SELECT * FROM admin");
+				data = DenoraSQLFetchArray(db, "admin", stmt, FETCH_ARRAY_NUM);
 				for (i = 0; i < rows; i++)
 				{
 					denora_cmd_numeric(source, 243, "O * * %s Admin 0",  data[i][0]);
 				}
 				free(data);
 				sqlite3_finalize(stmt);
-				DenoraCloseSQl(AdminDatabase);
+				DenoraCloseSQl(db);
 				denora_cmd_219(source, av[0]);
 			}
 
@@ -564,214 +565,6 @@ void moduleAddMsgs(void)
 		     status, ModuleGetErrStr(status));
 	}
 
-	m = createMessage("005", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 005 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("020", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 020 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("105", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 105 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("216", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 216 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("217", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 217 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("219", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 219 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	/* /stats k */
-	m = createMessage("223", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 223 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("244", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 244 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("249", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 249 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("250", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 250 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("263", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 263 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("304", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 304 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("401", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 401 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("402", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 402 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("422", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 422 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("451", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 451 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("461", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 461 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("481", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 481 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("482", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 482 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("503", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 503 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	/* Ithildin Adds some replies */
-	m = createMessage("771", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 771 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("773", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 773 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
-
-	m = createMessage("774", denora_event_null);
-	status = addCoreMessage(IRCD, m);
-	if (status != MOD_ERR_OK)
-	{
-		alog(LOG_NORMAL,
-		     "Error Occurred setting message for 774 [%d][%s]", status,
-		     ModuleGetErrStr(status));
-	}
 }
 
 /*************************************************************************/

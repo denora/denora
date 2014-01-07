@@ -1044,20 +1044,11 @@ CONFIG_FILENAME_MOTD_ERROR
 CONFIG_FILENAME_CHANDB_ERROR
 	Définition de ChannelDB manquante dans le bloc de fichiers
 
-CONFIG_FILENAME_CTCP_ERROR
-	Définition de ctcpDB manquante dans le bloc de fichiers
-
 CONFIG_FILENAME_SERVER_ERROR
 	Définition de ServerDB manquante dans le bloc de fichiers
 
 CONFIG_FILENAME_CHANSTATS_ERROR
 	Définition de ChannelStatsDB manquante dans le bloc de fichiers
-
-CONFIG_FILENAME_TLD_ERROR
-	Définition de TLDDB manquante dans le bloc de fichiers
-
-CONFIG_FILENAME_EXCLUDE_ERROR
-	Définition de EXCLUDEDB manquante dans le bloc de fichiers
 
 CONFIG_SS_DESC_ERROR
 	Définition de real manquante dans le bloc de statserv

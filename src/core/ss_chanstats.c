@@ -196,13 +196,12 @@ static int do_chanstats(User * u, int ac, char **av)
 			}
 			if ((cs = find_cs(cmd2)))
 			{
-				sqlchan = sql_escape(cmd2);
 				del_cs(cs);
 				save_cs_db();
-				sql_query( "DELETE FROM %s WHERE chan=\'%s\'",
-				          CStatsTable, sqlchan);
-				sql_query( "DELETE FROM %s WHERE chan=\'%s\'",
-				          UStatsTable, sqlchan);
+				sql_query( "DELETE FROM %s WHERE chan=\'%q\'",
+				          CStatsTable, cmd2);
+				sql_query( "DELETE FROM %s WHERE chan=\'%q\'",
+				          UStatsTable, cmd2);
 				notice_lang(s_StatServ, u, STAT_CHANSTATS_CHAN_DEL, cmd2);
 				if (LogChannel)
 				{
@@ -220,7 +219,6 @@ static int do_chanstats(User * u, int ac, char **av)
 					                getstring(NULL, STATS_CHANSTATS_PART),
 					                cmd2);
 				}
-				free(sqlchan);
 			}
 			else
 			{

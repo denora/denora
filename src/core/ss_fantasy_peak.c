@@ -93,14 +93,12 @@ static int do_fantasy(int argc, char **argv)
 	if (stricmp(argv[0], "peak") == 0)
 	{
 		u = finduser(argv[1]);
-		chan = sql_escape(argv[2]);
 		cs = find_cs(argv[2]);
 		strtolwr(chan);
 		sql_query(
-		          "SELECT maxusers FROM %s WHERE channel=\'%s\';",
-		          ChanTable, chan);
-		alog(LOG_DEBUG, "!peak: Searching for %s", chan);
-		free(chan);
+		          "SELECT maxusers FROM %s WHERE channel=\'%q\';",
+		          ChanTable, argv[2]);
+		alog(LOG_DEBUG, "!peak: Searching for %s", argv[2]);
 		sql_res = sql_set_result(sqlcon);
 		if (sql_res)
 		{

@@ -92,12 +92,10 @@ static int do_fantasy(int argc, char **argv)
 	if (stricmp(argv[0], "top") == 0)
 	{
 		u = finduser(argv[1]);
-		chan = sql_escape(argv[2]);
 		cs = find_cs(argv[2]);
 		sql_query(
-			  "SELECT * FROM %s WHERE chan=\'%s\' AND type=0 ORDER BY letters DESC LIMIT 3;",
-			  UStatsTable, chan);
-		free(chan);
+			  "SELECT * FROM %s WHERE chan=\'%q\' AND type=0 ORDER BY letters DESC LIMIT 3;",
+			  UStatsTable, argv[2]);
 		sql_res = sql_set_result(sqlcon);
 		if (sql_num_rows(sql_res) > 0)
 		{

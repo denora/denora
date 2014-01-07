@@ -88,6 +88,7 @@ static int do_exclude(User * u, int ac, char **av)
 	int rows;
 	sqlite3_stmt * stmt;
 	char ***data;
+	sqlite3 *db;
 
 	if (ac < 1)
 	{
@@ -234,17 +235,17 @@ static int do_exclude(User * u, int ac, char **av)
 		}
 
 		notice_lang(s_StatServ, u, STAT_EXCLUDE_LIST_HEADER);
-		ExcludeDatabase = DenoraOpenSQL(excludeDB);
-		rows = DenoraSQLGetNumRows(ExcludeDatabase, ExcludeTable);
-		stmt = DenoraPrepareQuery(ExcludeDatabase, "SELECT * FROM %s", ExcludeTable);
-		data = DenoraSQLFetchArray(ExcludeDatabase, ExcludeTable, stmt, FETCH_ARRAY_NUM);
+		db = DenoraOpenSQL(DenoraDB);
+		rows = DenoraSQLGetNumRows(db, ExcludeTable);
+		stmt = DenoraPrepareQuery(db, "SELECT * FROM %s", ExcludeTable);
+		data = DenoraSQLFetchArray(db, ExcludeTable, stmt, FETCH_ARRAY_NUM);
 		for (i = 0; i < rows; i++)
 		{
 			notice(s_StatServ, u->nick, "%d %s", disp++, data[0]);
 		}
 		free(data);
 		sqlite3_finalize(stmt);
-		DenoraCloseSQl(ExcludeDatabase);
+		DenoraCloseSQl(db);
 		return MOD_CONT;
 	}
 	else

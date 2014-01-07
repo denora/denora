@@ -1042,20 +1042,11 @@ CONFIG_FILENAME_MOTD_ERROR
 CONFIG_FILENAME_CHANDB_ERROR
 	Не верно указана или отсутствует опция channeldb в блоке filenames.
 
-CONFIG_FILENAME_CTCP_ERROR
-	Не верно указана или отсутствует опция ctcpdb в блоке filenames.
-
 CONFIG_FILENAME_SERVER_ERROR
 	Не верно указана или отсутствует опция serverdb в блоке filenames.
 
 CONFIG_FILENAME_CHANSTATS_ERROR
 	Не верно указана или отсутствует опция chanstatsdb в блоке filenames.
-
-CONFIG_FILENAME_TLD_ERROR
-	Не верно указана или отсутствует опция tlddb в блоке filenames.
-
-CONFIG_FILENAME_EXCLUDE_ERROR
-	Не верно указана или отсутствует опция excludedb в блоке filenames.
 
 CONFIG_SS_DESC_ERROR
 	Не верно указана или отсутствует опция real в блоке statserv.
