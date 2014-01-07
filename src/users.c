@@ -1201,6 +1201,8 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 	Server *s = server_find(server);
 	int country_id;
 	TLD *tld;
+	Uid *ud;
+	char *temp;
 
 	SET_SEGV_LOCATION();
 
@@ -1347,6 +1349,17 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 					free(user->lastuname);
 				}
 				user->lastuname = sstrdup(user->sgroup);	/* in case we need to merge later */
+			}
+			if (ircd->p10 || (UseTS6 && ircd->ts6))
+			{
+				ud = find_uid(source);
+				if (ud)
+				{
+					temp = sstrdup(ud->uid);
+					delete_uid(ud);
+					new_uid(user->nick, temp);
+					free(temp);
+				}
 			}
 			alog(LOG_DEBUG, "debug: %s has changed nicks to %s", source, nick);
 			sql_do_nick_chg(nick, user->nick);
