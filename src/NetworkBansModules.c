@@ -10,6 +10,10 @@
  * SQlines - load from sqline module and are added/del from their struct
  *  sqline.parse()
  *
+ *
+ * SGlines - load from sqline module and are added/del from their struct
+ *  sgline.parse()
+ *
  * (c) 2004-2014 Denora Team
  * Contact us at info@denorastats.org
  *
@@ -41,6 +45,21 @@ typedef struct sqline_
 
 SqlineMod sqline;
 
+typedef struct sgline_
+{
+	void (*parse)(char *mask, char *reason);
+} SglineMod;
+
+SglineMod sgline;
+
+
+typedef struct xline_
+{
+	void (*add)(char *mask, char *reason);
+	void (*del)(char *mask);
+} xlineMod;
+
+xlineMod xline;
 
 void init_NetworkBansMod(void)
 {
@@ -50,6 +69,9 @@ void init_NetworkBansMod(void)
 	spamfilter.fini = NULL;
 	spamfilter.expired = NULL;
 	sqline.parse = NULL;
+	sgline.parse = NULL;
+	xline.add = NULL;
+	xline.del = NULL;
 }
 
 /*************************************************************************/
@@ -94,4 +116,18 @@ void SQline_Parse_Handler(void (*func) (char *mask, char *reason))
 	sqline.parse = func;
 }
 
+void SGline_Parse_Handler(void (*func) (char *mask, char *reason))
+{
+	sgline.parse = func;
+}
 
+
+void xline_add_Handler(void (*func) (char *mask, char *reason))
+{
+	xline.add = func;
+}
+
+void xline_del_Handler(void (*func) (char *mask))
+{
+	xline.del = func;
+}

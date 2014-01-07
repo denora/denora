@@ -76,9 +76,7 @@ E int in_str(char *str, char c);
 /**** bans.c ****/
 
 E void p10_gline(char *type, char *source, int ac, char **av);
-E void sql_do_sqline(char *mask, char *reason);
 E int sql_ban_clean(const char *name);
-E void sql_do_sgline(char *length, char *mask);
 E void sql_do_xline(char *geos, char *reason);
 E void sql_do_unxline(char *geos);
 
@@ -133,17 +131,11 @@ E StatsChannel *next_statschan(void);
 E StatsChannel *first_statschan(void);
 E void StatsChannel_delete(StatsChannel * c);
 
-E Exclude *next_exclude(void);
-E Exclude *first_exclude(void);
-E Exclude *exlists[1024];
 E DENORA_INLINE boolean is_excluded(User *u);
 E DENORA_INLINE int isExcludedServer(char *name);
 E DENORA_INLINE boolean is_excludedserv(Server * server);
 
 E void post_config_check(void);
-
-E void load_exclude_db(void);
-E void save_exclude_db(void);
 
 E void save_stats_db(void);
 E void load_stats_db(void);
@@ -244,7 +236,6 @@ E int servers_hourly(const char *name);
 
 /**** config.c ****/
 
-E char *AdminDB;
 E Conf_Modules *new_modules;
 E Conf_Modules *modules;
 E void merge_confs(void);
