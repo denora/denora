@@ -127,7 +127,6 @@ void delete_uid(Uid * u)
 				if (temp->uid)
 					free(temp->uid);
 				free(temp);
-				lnode_destroy(tn);
 				break;
 			}
 			tn = list_next(UIDhead, tn);
