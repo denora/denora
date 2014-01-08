@@ -310,8 +310,8 @@ void denora_set_umode(User * user, int ac, char **av)
 	int add = 1;                	/* 1 if adding modes, 0 if deleting */
 	int was_oper = is_oper(user);	/* usefull to attempt to prevent double oper counting */
 	char *modes = av[0];
-	char modebuf[BUFSIZE];
-	char *newav[127];
+	char modebuf[16];
+	char *newav[4];
 	UserMode *um;
 	int modeready = 0;
 
