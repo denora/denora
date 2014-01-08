@@ -4,6 +4,7 @@ Additions
 13/12/09 : Support for Unreal User Mode +I / Channel mode +Z
 
 Changes
+14/01/08 : Rewrote the UID tracking to be in link list.
 13/12/11 : Restructored documentation, added html based documentation
 
 Fixes

@@ -249,7 +249,7 @@ void ModuleSetUserMode(int mode, int flag)
 int UserHasMode(char *user, int m)
 {
 	User *u;
-	char modebuf[16];
+	char modebuf[2];
 	struct u_modes *um;
 
 	u = user_find(user);
@@ -310,8 +310,8 @@ void denora_set_umode(User * user, int ac, char **av)
 	int add = 1;                	/* 1 if adding modes, 0 if deleting */
 	int was_oper = is_oper(user);	/* usefull to attempt to prevent double oper counting */
 	char *modes = av[0];
-	char modebuf[BUFSIZE];
-	char *newav[127];
+	char modebuf[2];
+	char *newav[ac];
 	UserMode *um;
 	int modeready = 0;
 

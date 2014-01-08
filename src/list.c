@@ -170,21 +170,32 @@ void list_ins_after(list_t * list, lnode_t * new, lnode_t * this)
 
 void list_ins_before(list_t * list, lnode_t * new, lnode_t * this)
 {
-	lnode_t *that = this->prev;
+	lnode_t *that = (this ? this->prev : NULL);
 
 	assert(new != NULL);
 	assert(!list_contains(list, new));
 	assert(!lnode_is_in_a_list(new));
 	assert(this == list_nil(list) || list_contains(list, this));
-	assert(list->nodecount + 1 > list->nodecount);
+	if (list)
+	{
+		assert(list->nodecount + 1 > list->nodecount);
+	}
 
 	new->next = this;
 	new->prev = that;
-	that->next = new;
-	this->prev = new;
-	list->nodecount++;
-
-	assert(list->nodecount <= list->maxcount);
+	if (that)
+	{
+		that->next = new;
+	}
+	if (this)
+	{
+		this->prev = new;
+	}
+	if (list)
+	{
+		list->nodecount++;
+		assert(list->nodecount <= list->maxcount);
+	}
 }
 
 /*
@@ -389,10 +400,13 @@ int list_contains(list_t * list, lnode_t * node)
 {
 	lnode_t *n, *nil = list_nil(list);
 
-	for (n = list_first_priv(list); n != nil; n = lnode_next(n))
+	if (list)
 	{
-		if (node == n)
-			return 1;
+		for (n = list_first_priv(list); n != nil; n = lnode_next(n))
+		{
+			if (node == n)
+				return 1;
+		}
 	}
 
 	return 0;

@@ -519,6 +519,7 @@ int main(int ac, char **av)
 	}
 	signal_init();
 	init_bans();
+	init_uids();
 	if (ircd->spamfilter)
 	{
 		init_spamfilter();

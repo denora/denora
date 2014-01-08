@@ -22,13 +22,13 @@ OBJS =  admin.obj base64.obj bans.obj channels.obj chanstats.obj ChanBanMode.obj
 		list.obj log.obj ircd.obj main.obj messages.obj md5.obj numerics.obj send.obj servers.obj sqlqueue.obj \
 		mysql.obj modules.obj moduleapi.obj moddata.obj Modes.obj mod_version.obj \
 		privmsg.obj statserv.obj strings.obj sockutil.obj signals.obj tld.obj rdb.obj language.obj \
-		spamfilter.obj users.obj xmlrpc.obj zip.obj win32.obj \
+		spamfilter.obj users.obj xmlrpc.obj zip.obj uid.obj win32.obj \
         
 SRCS =  admin.c base64.c bans.c channels.c chanstats.c ChanBanMode.c ChanMode.c config.c core.c cron.c ctcp.c \
 		datafiles.c db.c events.c exclude.c extsock.c FileIO.c GeoIP.c list.c log.c ircd.c main.c markup.c \
 		messages.c md5.c network.c numerics.c send.c servers.c statserv.c sockutil.c sqlqueue.c \
 		modules.c moduleapi.c moddata.c Modes.c mod_version.c mysql.c \
-        spamfilter.c privmsg.c rdb.c strings.c signals.c tld.c language.c users.c xmlrpc.c zip.c win32.c \
+        spamfilter.c privmsg.c rdb.c strings.c signals.c tld.c language.c users.c xmlrpc.c zip.c uid.c win32.c \
 
 ###########################################################################
         
@@ -99,6 +99,7 @@ tld.obj:           tld.c           ..\include\denora.h
 spamfilter.obj:    spamfilter.c    ..\include\denora.h
 users.obj:         users.c         ..\include\denora.h
 zip.obj:           zip.c           ..\include\denora.h
+uid.obj:           uid.c           ..\include\denora.h
 win32.obj:         win32.c         ..\include\denora.h
 
 ###########################################################################

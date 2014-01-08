@@ -1333,7 +1333,6 @@ void destroy_all(void)
 	XMLRPCCmd *xml, *next9;
 	XMLRPCCmdHash *xmlh, *next10;
 	Exclude *e, *next14;
-	Uid *uid, *next17;
 	ServStats *ss, *next18;
 	Dadmin *a, *next19;
 
@@ -1501,19 +1500,6 @@ void destroy_all(void)
 		}
 		e = next14;
 	}
-
-	alog(LOG_DEBUG, "debug: Clearing UID");
-
-	uid = uid_first();
-	while (uid)
-	{
-		if (uid)
-		{
-			delete_uid(uid);
-		}
-		uid = uid_next();
-	}
-
 
 	a = first_admin();
 	while (a)

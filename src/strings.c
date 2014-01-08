@@ -240,9 +240,12 @@ int ircvsnprintf(char *str, size_t size, const char *pattern, va_list vl)
 				{
 					break;
 				}
-				while (*s != '\0' && (len < (int) size))
+				if (!BadPtr(s))
 				{
-					buf[len++] = *s++;
+					while (*s != '\0' && (len < (int) size))
+					{
+						buf[len++] = *s++;
+					}
 				}
 				break;
 			case 'c':
