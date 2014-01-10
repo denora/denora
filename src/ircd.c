@@ -167,7 +167,6 @@ void denora_cmd_nick(char *nick, char *name, const char *modes)
 			make_exclude(u->nick);
 		}
 	}
-	sleep(5);
 }
 
 /*************************************************************************/

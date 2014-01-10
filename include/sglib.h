@@ -1348,7 +1348,8 @@
   return(*member==NULL);\
  }\
  void sglib_##type##_concat(type **first, type *second) {\
-   SGLIB_DL_LIST_CONCAT(type, *first, second, previous, next);\
+   SGLIB_DL_LIST_CONCAT(type, *first, second, previous, next) \
+	;\
  }\
  void sglib_##type##_delete(type **list, type *elem) {\
   SGLIB_DL_LIST_DELETE(type, *list, elem, previous, next);\
@@ -1378,7 +1379,8 @@
    return(result);\
  }\
  void sglib_##type##_sort(type **list) {\
-   SGLIB_DL_LIST_SORT(type, *list, comparator, previous, next);\
+   SGLIB_DL_LIST_SORT(type, *list, comparator, previous, next) \
+	;\
  }\
  int sglib_##type##_len(type *list) {\
    int res;\
