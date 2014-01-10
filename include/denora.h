@@ -312,7 +312,6 @@ typedef struct Conf_Modules Conf_Modules;	/* Config		*/
 typedef struct TopConf tConf;
 typedef struct SubConf sConf;
 typedef struct ConfVar cVar;
-typedef struct queueentry_ QueueEntry;		/* Queue		*/
 typedef struct PrivMsgHandler_ PrivMsg;
 typedef struct PrivMsgHash_ PrivMsgHash;
 typedef struct htmltag_ HTMLTag;
@@ -1006,13 +1005,10 @@ struct serverstats_
 
 struct tld_
 {
-	TLD *next, *prev;
-
 	char *country;
 	char *countrycode; /* Two letter with an eventual NULL terminator */
 	uint32 count;
 	uint32 overall;
-	ModuleData *moduleData;
 };
 
 /************************************************************************/
@@ -1031,13 +1027,9 @@ typedef struct
 
 struct ctcpverstats_
 {
-	CTCPVerStats *next, *prev;
-	CTCPVerStats *nextsort, *prevsort;
-
 	char *version;
 	uint32 count;
 	uint32 overall;
-	ModuleData *moduleData;
 };
 
 /************************************************************************/
@@ -1344,19 +1336,6 @@ typedef struct ircd_modes_
 } IRCDModes;
 
 
-
-/************************************************************************/
-/* First In / First Out Queue						*/
-/************************************************************************/
-
-struct queueentry_
-{
-	char *msg;
-	QueueEntry *link;
-};
-
-
-
 /************************************************************************/
 /* Config File Related Stuff						*/
 /************************************************************************/
@@ -1429,6 +1408,7 @@ typedef struct
 #include "list.h"
 #include "modules.h"
 #include "xmlrpc.h"
+#include "sglib.h"
 #include "extern.h"
 
 /************************************************************************/
