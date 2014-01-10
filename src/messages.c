@@ -45,42 +45,21 @@ int m_nickcoll(char *user)
 int m_away(char *source, char *msg)
 {
 	User *u;
-	char *sqlmsg;
 
 	if (!source)
 	{
 		return MOD_CONT;
 	}
+
 	u = user_find(source);
 	if (!u)
 	{
 		return MOD_CONT;
 	}
 
-	
-
-	if (msg)
-	{
-		stats->away++;
-		u->isaway = 1;
-		u->awaymsg = sstrdup(msg);
-	}
-	else
-	{
-		stats->away--;
-		u->isaway = 0;
-		u->awaymsg = NULL;
-	}
-	if (denora->do_sql)
-	{
-		sqlmsg = sql_escape(u->awaymsg);
-		sql_query
-		(
-		 "UPDATE %s SET away=\'%s\', awaymsg=\'%s\' WHERE nickid=%d",
-		 UserTable, (u->isaway ? (char *) "Y" : (char *) "N"),
-		 sqlmsg, db_getnick(u->sqlnick));
-		free(sqlmsg);
-	}
+	DenoraSQLGetStatsUpdateData(DenoraDB, "stats", "away", (msg ? 1 : 0));
+	DenoraSQLQuery(DenoraDB, "UPDATE %s SET away=\'%s\', awaymsg=\'%q\' WHERE nick=%q",
+		 UserTable, (msg ? (char *) "Y" : (char *) "N"),  msg, u->nick);
 	return MOD_CONT;
 }
 

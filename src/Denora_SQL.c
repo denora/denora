@@ -147,6 +147,55 @@ int DenoraSQLGetStatsInt(char *dbname, char *table, char *what)
 	return temp;
 }
 
+
+int DenoraSQLGetStatsData(char *dbname, char *table, char *what)
+{
+	char *buf;
+	sqlite3_stmt *stmt;
+	char **sdata;
+	sqlite3 *db;
+	int temp;
+
+	fmt = "SELECT %s FROM %s";
+
+	sqlite3_snprintf(NET_BUFSIZE, buf, fmt, what, table);
+
+	db = DenoraOpenSQL(dbname);
+	stmt = DenoraPrepareQuery(db, buf);
+	sdata = DenoraSQLFetchRow(stmt, FETCH_ARRAY_NUM);
+	sqlite3_finalize(stmt);
+	DenoraCloseSQl(db);
+
+	temp = atoi(sdata[0]);
+	free(sdata[0]);
+	free(sdata);
+	return temp;
+}
+
+
+int DenoraSQLGetStatsUpdateData(char *dbname, char *table, char *what, int updown)
+{
+	int temp;
+
+	temp = DenoraSQLGetStatsData(dbname, table, what);
+
+	if (updown == 1) 
+	{
+		temp++;
+	}
+	else
+	{
+		temp--;
+	}
+	free(sdata[0]);
+	free(sdata);
+	temp;
+
+	DenoraSQLQuery(dbname, "UPDATE %s SET %s=%d", table, what, temp);
+	return 1;
+}
+
+
 /*************************************************************************/
 
 int DenoraSQLUpdateChar(char *dbname, char *var, char *data)

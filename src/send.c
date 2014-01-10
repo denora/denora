@@ -29,7 +29,6 @@ void send_cmd(const char *source, const char *fmt, ...)
 {
 	va_list args;
 
-	
 
 	if (fmt && !denora->quitting)
 	{
@@ -53,7 +52,7 @@ void vsend_cmd(const char *source, const char *fmt, va_list args)
 	char buf[BUFSIZE];
 	*buf = '\0';
 
-	
+
 	total_sendmsg++;
 
 	if (!BadPtr(fmt))
@@ -100,7 +99,7 @@ void notice_server(char *source, Server * s, char *fmt, ...)
 	char buf[BUFSIZE];
 	*buf = '\0';
 
-	
+
 
 	if (fmt)
 	{
@@ -188,12 +187,12 @@ void notice_lang(char *source, User * dest, int message, ...)
 		return;
 	}
 	va_start(args, message);
-	
+
 	fmt = getstring(dest, message);
 	if (!fmt)
 		return;
 	memset(buf, 0, 4096);
-	
+
 	ircvsnprintf(buf, sizeof(buf), fmt, args);
 	va_end(args);
 	s = buf;
