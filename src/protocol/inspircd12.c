@@ -732,23 +732,23 @@ int denora_event_capab(char *source, int ac, char **av)
 
 void inspircd_cmd_nick(char *nick, char *name, const char *modes)
 {
+	char *nicknumbuf = uid_gen();
+
 	/* :test.chatspike.net NICK 1133519355 Brain synapse.brainbox.winbot.co.uk netadmin.chatspike.net ~brain +xwsioS 10.0.0.2 :Craig Edwards */
-	char *nicknumbuf = ts6_uid_retrieve();
 	send_cmd(TS6SID, "UID %s %ld %s %s %s %s 0.0.0.0 %ld +%s :%s",
 	         nicknumbuf, (long int) time(NULL), nick, ServiceHost,
 	         ServiceHost, ServiceUser, (long int) time(NULL), modes, name);
-	new_uid(nick, nicknumbuf);
 	send_cmd(nicknumbuf, "OPERTYPE Service");
 }
 
 void inspircd_cmd_bot_nick(char *nick, char *user, char *host, char *real,
                            char *modes)
 {
-	char *nicknumbuf = ts6_uid_retrieve();
+	char *nicknumbuf = uid_gen();
+
 	send_cmd(TS6SID, "UID %s %ld %s %s %s %s 0.0.0.0 %ld +%s :%s",
 	         nicknumbuf, (long int) time(NULL), nick, host, host, user,
 	         (long int) time(NULL), modes, real);
-	new_uid(nick, nicknumbuf);
 	send_cmd(nicknumbuf, "OPERTYPE Bot");
 }
 
@@ -1501,7 +1501,7 @@ int denora_event_server(char *source, int ac, char **av)
 int denora_event_privmsg(char *source, int ac, char **av)
 {
 	User *u = find_byuid(source);
-	Uid *ud = find_nickuid(av[0]);
+	User *ud = find_byuid(av[0]);
 
 	if (denora->protocoldebug)
 		protocol_debug(source, ac, av);
@@ -1585,7 +1585,7 @@ void inspircd_cmd_motd(char *sender, char *server)
 int denora_event_notice(char *source, int ac, char **av)
 {
 	User *u = NULL;
-	Uid *ud = NULL;
+	User *ud = NULL;
 
 	if (denora->protocoldebug)
 	{
@@ -1597,7 +1597,7 @@ int denora_event_notice(char *source, int ac, char **av)
 	}
 
 	u = find_byuid(source);
-	ud = find_nickuid(av[0]);
+	ud = find_byuid(av[0]);
 	m_notice((u ? u->nick : source), (ud ? ud->nick : av[0]), av[1]);
 	return MOD_CONT;
 }

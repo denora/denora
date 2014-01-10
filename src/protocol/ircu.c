@@ -1125,13 +1125,8 @@ char *ircu_lkill_msg(char *message)
 /* AF N Client1 1 947957573 User userhost.net +oiwg DAqAoB AFAAA :Generic Client. */
 void ircu_cmd_nick(char *nick, char *name, const char *modes)
 {
-	char nicknumbuf[6];
-	send_cmd(p10id, "N %s 1 %ld %s %s %s B]AAAB %sAA%c :%s", nick,
-	         (long int) time(NULL), ServiceUser, ServiceHost, modes, p10id,
-	         (p10nickcnt + 'A'), name);
-	ircsnprintf(nicknumbuf, 6, "%sAA%c", p10id, (p10nickcnt + 'A'));
-	new_uid(nick, nicknumbuf);
-	p10nickcnt++;
+	send_cmd(p10id, "N %s 1 %ld %s %s %s B]AAAB %s :%s", nick,
+	         (long int) time(NULL), ServiceUser, ServiceHost, modes, uid_gen(), name);
 }
 
 /* EVENT: SERVER */
@@ -1162,7 +1157,7 @@ int denora_event_server(char *source, int ac, char **av)
 int denora_event_privmsg(char *source, int ac, char **av)
 {
 	User *u;
-	Uid *id;
+	User *id;
 
 	if (denora->protocoldebug)
 		protocol_debug(source, ac, av);
@@ -1171,7 +1166,7 @@ int denora_event_privmsg(char *source, int ac, char **av)
 		return MOD_CONT;
 
 	u = find_byuid(source);
-	id = find_nickuid(av[0]);
+	id = find_byuid(av[0]);
 
 	m_privmsg((u ? u->nick : source), (id ? id->nick : av[0]), av[1]);
 	return MOD_CONT;
@@ -1243,14 +1238,8 @@ void ircu_cmd_pong(char *servname, char *who)
 void ircu_cmd_bot_nick(char *nick, char *user, char *host, char *real,
                        char *modes)
 {
-	char nicknumbuf[6];
-
-	send_cmd(p10id, "N %s 1 %ld %s %s %s B]AAAB %sAA%c :%s", nick,
-	         (long int) time(NULL), user, host, modes, p10id,
-	         (p10nickcnt + 'A'), real);
-	ircsnprintf(nicknumbuf, 6, "%sAA%c", p10id, (p10nickcnt + 'A'));
-	new_uid(nick, nicknumbuf);
-	p10nickcnt++;
+	send_cmd(p10id, "N %s 1 %ld %s %s %s B]AAAB %s :%s", nick,
+	         (long int) time(NULL), user, host, modes, uid_gen(), real);
 }
 
 void ircu_cmd_eob(void)

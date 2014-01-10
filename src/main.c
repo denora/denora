@@ -130,6 +130,7 @@ void process()
 	Message *m;
 	char *p10token;
 	int p10parse = 1;
+	int capabparse = 0;
 	Server *serv;
 	int is_server = 0;
 
@@ -202,15 +203,22 @@ void process()
 	{
 		*source = 0;
 	}
-	serv = server_find(source);
-	if (serv)
+	if (ircd->ts6 && UseTS6 && !strcmp(source, "CAPAB"))
 	{
-		is_server = 1;
+			is_server = 0;
+			capabparse = 1;
 	}
-
+	else
+	{
+		serv = server_find(source);
+		if (serv)
+		{
+			is_server = 1;
+		}
+	}
 	if (!is_server)
 	{
-		doCleanBuffer((char *) buf);
+			doCleanBuffer((char *) buf);
 	}
 
 	s = strpbrk(buf, " ");
@@ -238,7 +246,7 @@ void process()
 		{
 			if (ac >= 1 && av[0])
 			{
-				if (nickIsServices(av[0]))
+				if (!capabparse && nickIsServices(av[0]))
 				{
 					if (av[1])
 					{
@@ -510,6 +518,7 @@ int main(int ac, char **av)
 
 	UplinkSynced = 0;
 	denora->debug = 0;
+	init_uids();
 
 	/* Initialization stuff. */
 	if ((i = init(ac, av)) != 0)
@@ -519,7 +528,6 @@ int main(int ac, char **av)
 	}
 	signal_init();
 	init_bans();
-	init_uids();
 	if (ircd->spamfilter)
 	{
 		init_spamfilter();

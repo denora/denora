@@ -126,8 +126,12 @@ void denora_cmd_nick(char *nick, char *name, const char *modes)
 	Uid *ud = NULL;
 	User *u;
 	char *ipchar;
+	char *uid;
 
 	*buf = '\0';
+
+	uid = uid_gen();
+	new_uid(nick, uid);
 
 	ircdproto.ircd_cmd_nick(nick, name, modes);
 
@@ -163,6 +167,7 @@ void denora_cmd_nick(char *nick, char *name, const char *modes)
 			make_exclude(u->nick);
 		}
 	}
+	sleep(5);
 }
 
 /*************************************************************************/

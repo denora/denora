@@ -33,6 +33,7 @@ E Zline *findZline(const char *host);
 E Qline *findQline(const char *host);
 E void fini_bans(void);
 E void init_uids(void);
+E char *uid_gen(void);
 
 E void initIrcdProto(void);
 
@@ -1214,7 +1215,7 @@ E int delChanBanMode(ChanBanMode * m);
 E list_t *Glinehead;
 E list_t *Qlinehead;
 E list_t *Zlinehead;
-E list_t *UIDhead;
+E Uid *UIDhead;
 
 E SpamFilter *findSpamFilter(const char *regex);
 E void fini_SpamFilter(void);

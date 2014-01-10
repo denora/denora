@@ -1645,6 +1645,7 @@ User *user_find(const char *source)
 	{
 		return NULL;
 	}
+	alog(LOG_EXTRADEBUG, "user_find(%s)", source);
 
 	if (ircd->p10 || (UseTS6 && ircd->ts6))
 	{

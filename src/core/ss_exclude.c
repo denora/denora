@@ -20,16 +20,6 @@ int DenoraInit(int argc, char **argv);
 void DenoraFini(void);
 
 /**
- * RFC: defination of a valid nick
- * nickname   =  ( letter / special ) *8( letter / digit / special / "-" )
- * letter     =  %x41-5A / %x61-7A       ; A-Z / a-z
- * digit      =  %x30-39                 ; 0-9
- * special    =  %x5B-60 / %x7B-7D       ; "[", "]", "\", "`", "_", "^", "{", "|", "}"
- **/
-#define isvalidnick(c) ( isalnum(c) || ((c) >='\x5B' && (c) <='\x60') || ((c) >='\x7B' && (c) <='\x7D') || (c)=='-' )
-
-
-/**
  * Create the command, and tell Denora about it.
  * @param argc Argument count
  * @param argv Argument list

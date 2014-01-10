@@ -1379,12 +1379,24 @@ typedef struct
 #define PARAM_FULLONLY	0x02	/* Directive only allowed if !STREAMLINED */
 #define PARAM_RELOAD	0x04	/* Directive is reloadable 		*/
 
+
+/**
+ * RFC: defination of a valid nick
+ * nickname   =  ( letter / special ) *8( letter / digit / special / "-" )
+ * letter     =  %x41-5A / %x61-7A       ; A-Z / a-z
+ * digit      =  %x30-39                 ; 0-9
+ * special    =  %x5B-60 / %x7B-7D       ; "[", "]", "\", "`", "_", "^", "{", "|", "}"
+ **/
+#define isvalidnick(c) ( isalnum(c) || ((c) >='\x5B' && (c) <='\x60') || ((c) >='\x7B' && (c) <='\x7D') || (c)=='-' )
+
+
 /************************************************************************/
 /* These include need to be down here due to the fact that they use	*/
 /* structs that are created above					*/
 /************************************************************************/
 
 #include "list.h"
+#include "sglib.h"
 #include "modules.h"
 #include "xmlrpc.h"
 #include "extern.h"

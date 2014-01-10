@@ -609,12 +609,9 @@ void shadowircd_cmd_connect(void)
 void shadowircd_cmd_bot_nick(char *nick, char *user, char *host, char *real,
 							char *modes)
 {
-	char *nicknumbuf = ts6_uid_retrieve();
-
 	send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
-			 (long int) time(NULL), modes, user, host, nicknumbuf, real);
+			 (long int) time(NULL), modes, user, host, uid_gen(), real);
 
-	new_uid(nick, nicknumbuf);
 }
 
 void shadowircd_cmd_part(char *nick, char *chan, char *buf)
@@ -741,7 +738,7 @@ int denora_event_pong(char *source, int ac, char **av)
 int denora_event_privmsg(char *source, int ac, char **av)
 {
 	User *u = NULL;
-	Uid *ud = NULL;
+	User *ud = NULL;
 
 	if (denora->protocoldebug) {
 		protocol_debug(source, ac, av);
@@ -751,7 +748,7 @@ int denora_event_privmsg(char *source, int ac, char **av)
 	}
 
 	u = find_byuid(source);
-	ud = find_nickuid(av[0]);
+	ud = find_byuid(av[0]);
 	m_privmsg((u ? u->nick : source), (ud ? ud->nick : av[0]), av[1]);
 	return MOD_CONT;
 }
@@ -865,13 +862,10 @@ void shadowircd_cmd_tmode(char *source, char *dest, const char *fmt, ...)
 
 void shadowircd_cmd_nick(char *nick, char *name, const char *mode)
 {
-	char *nicknumbuf = ts6_uid_retrieve();
-
 	send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
 			 (long int) time(NULL), mode, ServiceUser, ServiceHost,
-			 nicknumbuf, name);
+			 uid_gen(), name);
 
-	new_uid(nick, nicknumbuf);
 }
 
 /* QUIT */
@@ -1021,7 +1015,7 @@ void shadowircd_cmd_motd(char *sender, char *server)
 int denora_event_notice(char *source, int ac, char **av)
 {
 	User *u = NULL;
-	Uid *ud = NULL;
+	User *ud = NULL;
 
 	if (denora->protocoldebug) {
 		protocol_debug(source, ac, av);
@@ -1031,7 +1025,7 @@ int denora_event_notice(char *source, int ac, char **av)
 	}
 
 	u = find_byuid(source);
-	ud = find_nickuid(av[0]);
+	ud = find_byuid(av[0]);
 	m_notice((u ? u->nick : source), (ud ? ud->nick : av[0]), av[1]);
 	return MOD_CONT;
 }

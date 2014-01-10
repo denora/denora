@@ -1604,7 +1604,7 @@ Server *server_find(const char *source)
 	{
 		return me_server;
 	}
-	else if (ircd->ts6 && UseTS6)
+	else if (ircd->ts6 && !UseTS6)
 	{
 		s = findserver_uid(servlist, source);
 		if (!s)
@@ -1616,6 +1616,19 @@ Server *server_find(const char *source)
 			return s;
 		}
 	}
+	else if (ircd->ts6 && UseTS6)
+	{
+		s = findserver_uid(servlist, source);
+		if (!s)
+		{
+			return NULL;
+		}
+		else
+		{
+			return s;
+		}
+	}
+
 	else if (Numeric)
 	{
 		if (!myNumToken(source, '.'))
@@ -1656,64 +1669,3 @@ int find_server_link(Server * s, const char *servname)
 	return -1;
 }
 
-/*************************************************************************/
-
-/* TS6 UID generator common code.
- *
- * Derived from atheme-services, uid.c (hg 2954:116d46894b4c).
- *         -nenolod
- */
-static int ts6_uid_initted = 0;
-static char ts6_new_uid[10];    /* allow for \0 */
-static unsigned int ts6_uid_index = 9;  /* last slot in uid buf */
-
-void ts6_uid_init(void)
-{
-	/* check just in case... you can never be too safe. */
-	if (TS6SID != NULL)
-	{
-		ircsnprintf(ts6_new_uid, 10, "%sAAAAAA", TS6SID);
-		ts6_uid_initted = 1;
-	}
-	else
-	{
-		alog(LOG_NORMAL,
-		     "warning: no TS6SID specified, disabling TS6 support.");
-		UseTS6 = 0;
-		return;
-	}
-}
-
-void ts6_uid_increment(unsigned int slot)
-{
-	if (slot != strlen(TS6SID))
-	{
-		if (ts6_new_uid[slot] == 'Z')
-			ts6_new_uid[slot] = '0';
-		else if (ts6_new_uid[slot] == '9')
-		{
-			ts6_new_uid[slot] = 'A';
-			ts6_uid_increment(slot - 1);
-		}
-		else
-			ts6_new_uid[slot]++;
-	}
-	else
-	{
-		if (ts6_new_uid[slot] == 'Z')
-			for (slot = 3; slot < 9; slot++)
-				ts6_new_uid[slot] = 'A';
-		else
-			ts6_new_uid[slot]++;
-	}
-}
-
-char *ts6_uid_retrieve(void)
-{
-	if (ts6_uid_initted != 1)
-		ts6_uid_init();
-
-	ts6_uid_increment(ts6_uid_index - 1);
-
-	return ts6_new_uid;
-}

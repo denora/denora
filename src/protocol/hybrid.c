@@ -690,15 +690,12 @@ void hybrid_cmd_connect(void)
 void hybrid_cmd_bot_nick(char *nick, char *user, char *host, char *real,
                          char *modes)
 {
-	char *nicknumbuf = ts6_uid_retrieve();
-
 	if (UseTS6)
 	{
 		send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
-		         (long int) time(NULL), modes, user, host, nicknumbuf,
+		         (long int) time(NULL), modes, user, host, uid_gen(),
 		         real);
 
-		new_uid(nick, nicknumbuf);
 	}
 	else
 	{
@@ -825,7 +822,7 @@ int denora_event_motd(char *source, int ac, char **av)
 int denora_event_privmsg(char *source, int ac, char **av)
 {
 	User *u = NULL;
-	Uid *ud = NULL;
+	User *ud = NULL;
 
 	if (denora->protocoldebug)
 	{
@@ -839,7 +836,7 @@ int denora_event_privmsg(char *source, int ac, char **av)
 	if (UseTS6)
 	{
 		u = find_byuid(source);
-		ud = find_nickuid(av[0]);
+		ud = find_byuid(av[0]);
 	}
 	m_privmsg((UseTS6 ? (u ? u->nick : source) : source),
 		          (UseTS6 ? (ud ? ud->nick : av[0]) : av[0]), av[1]);
@@ -947,14 +944,12 @@ void hybrid_cmd_mode(char *source, char *dest, char *buf)
 
 void hybrid_cmd_nick(char *nick, char *name, const char *mode)
 {
-	char *nicknumbuf = ts6_uid_retrieve();
 	if (UseTS6)
 	{
 		send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
 		         (long int) time(NULL), mode, ServiceUser, ServiceHost,
-		         nicknumbuf, name);
+		         uid_gen(), name);
 
-		new_uid(nick, nicknumbuf);
 	}
 	else
 	{
