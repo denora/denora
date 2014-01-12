@@ -759,12 +759,20 @@ void rizon_cmd_connect(void)
 void rizon_cmd_bot_nick(char *nick, char *user, char *host, char *real,
                         char *modes)
 {
+	Uid *ud;
+	char *genid = uid_gen();
+
 	if (UseTS6)
 	{
-		send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
-		         (long int) time(NULL), modes, user, host, uid_gen(),
-		         real);
+		ud = find_uid(nick);
 
+		send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
+		         (long int) time(NULL), modes, user, host, (ud ? ud->uid : genid),
+		         real);
+		if (!ud)
+		{
+				new_uid(nick, genid);
+		}
 	}
 	else
 	{
@@ -1027,14 +1035,20 @@ void rizon_cmd_mode(char *source, char *dest, char *buf)
 void rizon_cmd_nick(char *nick, char *name, const char *mode)
 {
 	char *ipaddr;
+	char *genid = uid_gen();
+	Uid *ud;
 
 	if (UseTS6)
 	{
 		ipaddr = host_resolve(ServiceHost);
+		ud = find_uid(nick);
 		send_cmd(TS6SID, "UID %s 1 %ld %s %s %s %s %s 0 %s :%s", nick,
 		         (long int) time(NULL), mode, ServiceUser, ServiceHost,
-		         ipaddr, uid_gen(), ServiceHost, name);
-
+		         ipaddr, (ud ? ud->uid : genid), ServiceHost, name);
+		if (!ud)
+		{
+				new_uid(nick, genid);
+		}
 		free(ipaddr);
 	}
 	else

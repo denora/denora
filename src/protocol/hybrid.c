@@ -690,12 +690,20 @@ void hybrid_cmd_connect(void)
 void hybrid_cmd_bot_nick(char *nick, char *user, char *host, char *real,
                          char *modes)
 {
+	Uid *ud;
+	char *genid = uid_gen();
+
 	if (UseTS6)
 	{
-		send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
-		         (long int) time(NULL), modes, user, host, uid_gen(),
-		         real);
+		ud = find_uid(nick);
 
+		send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
+		         (long int) time(NULL), modes, user, host, (ud ? ud->uid : genid),
+		         real);
+		if (!ud)
+		{
+				new_uid(nick, genid);
+		}
 	}
 	else
 	{
@@ -944,12 +952,19 @@ void hybrid_cmd_mode(char *source, char *dest, char *buf)
 
 void hybrid_cmd_nick(char *nick, char *name, const char *mode)
 {
+	char *genid = uid_gen();
+	Uid *ud;
+
 	if (UseTS6)
 	{
+		ud = find_uid(nick);
 		send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
 		         (long int) time(NULL), mode, ServiceUser, ServiceHost,
-		         uid_gen(), name);
-
+		         (ud ? ud->uid : genid), name);
+		if (!ud)
+		{
+				new_uid(nick, genid);
+		}
 	}
 	else
 	{

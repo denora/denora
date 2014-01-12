@@ -1253,8 +1253,17 @@ char *nefarious_lkill_msg(char *message)
 /* AF N Client1 1 947957573 User userhost.net +oiwg DAqAoB AFAAA :Generic Client. */
 void nefarious_cmd_nick(char *nick, char *name, const char *modes)
 {
+	char *genid = uid_gen();
+	Uid *ud;
+
+	ud = find_uid(nick);
+
 	send_cmd(p10id, "N %s 1 %ld %s %s %s B]AAAB %s :%s", nick,
-	         (long int) time(NULL), ServiceUser, ServiceHost, modes, uid_gen(), name);
+	         (long int) time(NULL), ServiceUser, ServiceHost, modes, (ud ? ud->uid : genid), name);
+	if (!ud)
+	{
+			new_uid(nick, genid);
+	}
 }
 
 /* EVENT: SERVER */
@@ -1371,8 +1380,16 @@ void nefarious_cmd_pong(char *servname, char *who)
 void nefarious_cmd_bot_nick(char *nick, char *user, char *host, char *real,
                             char *modes)
 {
+	char *genid = uid_gen();
+	Uid *ud;
+
+	ud = find_uid(nick);
 	send_cmd(p10id, "N %s 1 %ld %s %s %s B]AAAB %s :%s", nick,
-	         (long int) time(NULL), user, host, modes, uid_gen(), real);
+	         (long int) time(NULL), user, host, modes, (ud ? ud->uid : genid), real);
+	if (!ud)
+	{
+			new_uid(nick, genid);
+	}
 }
 
 void nefarious_cmd_eob(void)

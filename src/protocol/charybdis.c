@@ -696,12 +696,16 @@ void charybdis_cmd_bot_nick(char *nick, char *user, char *host, char *real,
                             char *modes)
 {
 	Uid *ud;
+	char *genid = uid_gen();
 
 	ud = find_uid(nick);
 
 	send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
-	         (long int) time(NULL), modes, user, host, (ud ? ud->uid : uid_gen()), real);
-
+	         (long int) time(NULL), modes, user, host, (ud ? ud->uid : genid), real);
+	if (!ud)
+	{
+			new_uid(nick, genid);
+	}
 }
 
 void charybdis_cmd_part(char *nick, char *chan, char *buf)
@@ -985,12 +989,17 @@ void charybdis_cmd_tmode(char *source, char *dest, const char *fmt, ...)
 void charybdis_cmd_nick(char *nick, char *name, const char *mode)
 {
 	Uid *ud;
+	char *genid = uid_gen();
 
 	ud = find_uid(nick);
 
 	send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
 	         (long int) time(NULL), mode, ServiceUser, ServiceHost,
-	         (ud ? ud->uid : uid_gen()), name);
+	         (ud ? ud->uid : genid), name);
+	if (!ud)
+	{
+			new_uid(nick, genid);
+	}
 }
 
 /* QUIT */

@@ -732,24 +732,38 @@ int denora_event_capab(char *source, int ac, char **av)
 
 void inspircd_cmd_nick(char *nick, char *name, const char *modes)
 {
-	char *nicknumbuf = uid_gen();
+	char *genid = uid_gen();
+	Uid *ud;
+
+	ud = find_uid(nick);
 
 	/* :test.chatspike.net NICK 1133519355 Brain synapse.brainbox.winbot.co.uk netadmin.chatspike.net ~brain +xwsioS 10.0.0.2 :Craig Edwards */
 	send_cmd(TS6SID, "UID %s %ld %s %s %s %s 0.0.0.0 %ld +%s :%s",
-	         nicknumbuf, (long int) time(NULL), nick, ServiceHost,
+	         (ud ? ud->uid : genid), (long int) time(NULL), nick, ServiceHost,
 	         ServiceHost, ServiceUser, (long int) time(NULL), modes, name);
-	send_cmd(nicknumbuf, "OPERTYPE Service");
+	send_cmd((ud ? ud->uid : genid), "OPERTYPE Service");
+	if (!ud)
+	{
+			new_uid(nick, genid);
+	}
 }
 
 void inspircd_cmd_bot_nick(char *nick, char *user, char *host, char *real,
                            char *modes)
 {
-	char *nicknumbuf = uid_gen();
+	char *genid = uid_gen();
+	Uid *ud;
+
+	ud = find_uid(nick);
 
 	send_cmd(TS6SID, "UID %s %ld %s %s %s %s 0.0.0.0 %ld +%s :%s",
-	         nicknumbuf, (long int) time(NULL), nick, host, host, user,
+	         (ud ? ud->uid : genid), (long int) time(NULL), nick, host, host, user,
 	         (long int) time(NULL), modes, real);
-	send_cmd(nicknumbuf, "OPERTYPE Bot");
+	send_cmd((ud ? ud->uid : genid), "OPERTYPE Bot");
+	if (!ud)
+	{
+			new_uid(nick, genid);
+	}
 }
 
 void inspircd_cmd_notice(char *source, char *dest, char *buf)

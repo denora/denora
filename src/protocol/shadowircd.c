@@ -609,9 +609,16 @@ void shadowircd_cmd_connect(void)
 void shadowircd_cmd_bot_nick(char *nick, char *user, char *host, char *real,
 							char *modes)
 {
-	send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
-			 (long int) time(NULL), modes, user, host, uid_gen(), real);
+	char *genid = uid_gen();
+	Uid *ud;
 
+	ud = find_uid(nick);
+	send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
+			 (long int) time(NULL), modes, user, host, (ud ? ud->uid : genid), real);
+	if (!ud)
+	{
+			new_uid(nick, genid);
+	}
 }
 
 void shadowircd_cmd_part(char *nick, char *chan, char *buf)
@@ -862,9 +869,18 @@ void shadowircd_cmd_tmode(char *source, char *dest, const char *fmt, ...)
 
 void shadowircd_cmd_nick(char *nick, char *name, const char *mode)
 {
+	char *genid = uid_gen();
+	Uid *ud;
+
+	ud = find_uid(nick);
+
 	send_cmd(TS6SID, "UID %s 1 %ld %s %s %s 0 %s :%s", nick,
 			 (long int) time(NULL), mode, ServiceUser, ServiceHost,
-			 uid_gen(), name);
+			 (ud ? ud->uid : genid), name);
+	if (!ud)
+	{
+			new_uid(nick, genid);
+	}
 
 }
 
