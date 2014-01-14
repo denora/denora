@@ -1094,7 +1094,7 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 		{
 			if (uid)
 			{
-				new_uid(user->nick, uid);
+				new_uid(user->nick, user->uid);
 			}
 		}
 
@@ -1162,13 +1162,17 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 			}
 			if (ircd->p10 || (UseTS6 && ircd->ts6))
 			{
-				ud = find_uid(source);
+				ud = find_nickuid(source);
 				if (ud)
 				{
 					temp = sstrdup(ud->uid);
 					delete_uid(ud);
-					new_uid(user->nick, temp);
+					new_uid(nick, temp);
 					free(temp);
+				}
+				else
+				{
+					alog(LOG_DEBUG, "find_nickuid: returned NULL");
 				}
 			}
 			alog(LOG_DEBUG, "debug: %s has changed nicks to %s", source, nick);

@@ -75,6 +75,8 @@ User *find_byuid(const char *uid)
 
 void delete_uid(Uid * u)
 {
+	alog(LOG_EXTRADEBUG, "delete_uid(%s)", u->uid);
+
 	sglib_Uid_delete(&UIDhead, u);
 	if (u->uid)
 		free(u->uid);
