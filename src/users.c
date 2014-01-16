@@ -1124,6 +1124,8 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 				sql_do_usermodes(user, modes);
 			}
 		}
+		alog(LOG_EXTRADEBUG, "debug: CTCP settings LargeNet=%d CTCPUsers=%d CTCPUsersEOB=%d, UplinkSynced=%d", LargeNet, CTCPUsers, CTCPUsersEOB, UplinkSynced);
+
 		if (!LargeNet && CTCPUsers && stricmp(s_StatServ, user->nick))
 		{
 			if ((CTCPUsersEOB && UplinkSynced) || !CTCPUsersEOB)

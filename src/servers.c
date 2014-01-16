@@ -69,6 +69,7 @@ CapabInfo capab_info[] =
 void update_sync_state(char *source, int ac)
 {
 	Server *s;
+
 	if (!BadPtr(source))
 	{
 		s = server_find(source);
@@ -864,7 +865,7 @@ Server *findserver_uid(Server * s, const char *name)
 	{
 		if (s->suid)
 		{
-			if (((ircd->p10 ? strcmp(s->suid, name) : stricmp(s->suid, name)) != 0))
+			if (((ircd->p10 ? strcmp(s->suid, name) : stricmp(s->suid, name)) != 0) || ((ircd->ts6 ? strcmp(s->suid, name) : stricmp(s->suid, name)) != 0))
 			{
 				if (s->links)
 				{
@@ -1604,7 +1605,7 @@ Server *server_find(const char *source)
 	{
 		return me_server;
 	}
-	else if (ircd->ts6 && !UseTS6)
+	else if (ircd->ts6)
 	{
 		s = findserver_uid(servlist, source);
 		if (!s)
@@ -1616,19 +1617,6 @@ Server *server_find(const char *source)
 			return s;
 		}
 	}
-	else if (ircd->ts6 && UseTS6)
-	{
-		s = findserver_uid(servlist, source);
-		if (!s)
-		{
-			return NULL;
-		}
-		else
-		{
-			return s;
-		}
-	}
-
 	else if (Numeric)
 	{
 		if (!myNumToken(source, '.'))

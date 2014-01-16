@@ -1321,7 +1321,7 @@ int denora_event_fjoin(char *source, int ac, char **av)
 	{
 		nlen = 0;
 
-		alog(LOG_DEBUG, "denora_event_fjoin(): processing user: %s",
+		alog(LOG_DEBUG, "debug: denora_event_fjoin(): processing user: %s",
 		     userv[i]);
 
 		for (; *userv[i]; userv[i]++)
@@ -1441,6 +1441,9 @@ int denora_event_nick(char *source, int ac, char **av)
 	        0, NULL, NULL);
 	return MOD_CONT;
 }
+
+/*  Received: :091 METADATA 091AAAEBC ssl_cert :vtrsE The peer did not send any certificate. */
+
 
 int denora_event_metadata(char *source, int ac, char **av)
 {
