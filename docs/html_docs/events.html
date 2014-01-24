@@ -1,13 +1,33 @@
-Denora Internal Events<br />
--- <br />
----------------------<br />
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252" />
+<link rel="icon" href="html_docs/images/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="sdmenu/sdmenu.css" />
+<title>Denora IRC Stats v1.5 Documentation</title>
+</head>
+
+<body>
+
+
+<center>Denora Internal Events</center><br />
+
+
+<table width=100% class="menubar"><tr>
+  <td width=100%>
+  <div class="toolbar">
+    <a href="#intro">Intro</a>
+    <a href="#complex">Complex</a>
+    <a href="#events">Triggered Events</a>
+    <a href="#list">Event List</a>
+  </div>
+ </td>
+ </tr>
+</table>
 <br />
-1) Intro<br />
-2) Complex Events<br />
-3) Triggered Events<br />
-4) Triggered Events List<br />
-<br />
-1) Introduction to Internal Events<br />
+
+
+<h3 id="intro">Introduction to Internal Events</h3>
 <br />
     Internal Events are setup to give module developers more information
     about what the core is doing at different times. This information can
@@ -17,47 +37,47 @@ Denora Internal Events<br />
     which can  provide some clue as to how to use the code in your modules.
     The rest of this document assumes that you are used to writing modules.<br />
 <br />
-2) Complex Events<br />
+<h3 id="complex">Complex Events</h3>
 <br />
     This type of events are based around what happens when we talk to the
     IRCd, much like MESSAGE events that the IRCD sends to us. The events
     are triggered when Denora writes to the ircd. To watch for these events
     you must have some knowledge of how the IRCd command system works. In
     our example we will trap for NICK events.<br />
-<br />
+<br/>
     A) All functions most be formatted as:<br />
-<br />
-        int functioname(char *source, int ac, char **av);<br />
-<br />
+<pre>
+        int functioname(char *source, int ac, char **av);
+</pre>
     B) In DenoraInit you must declare EvtMessage in some fashion, it is into
        this variable that we will create the event handler. Here is what the
        base DenoraInit should look like at this point:<br />
-<br />
-        int DenoraInit(int argc, char **argv)<br />
-        {<br />
-            EvtMessage *msg = NULL;<br />
-            int status;<br />
-<br />
-            moduleAddAuthor(AUTHOR);<br />
-            moduleAddVersion(VERSION);<br />
-            return MOD_CONT;<br />
-        }<br />
-<br />
+<pre>
+        int DenoraInit(int argc, char **argv)
+        {
+            EvtMessage *msg = NULL;
+            int status;
+
+            moduleAddAuthor(AUTHOR);
+            moduleAddVersion(VERSION);
+            return MOD_CONT;
+        }
+</pre>
        Note that AUTHOR and VERSION should be defined above the DenoraInit
        function, just like you should do with any module.<br />
 <br />
     C) Pass "createEventHandler" the name of the message in this case NICK,
        and the function that was created in Step A. At this point you should
        assign the return of "createEventHandler" to the EvtMessage variable.<br />
-<br />
-        msg = createEventHandler("NICK", my_nick);<br />
-<br />
+<pre>
+        msg = createEventHandler("NICK", my_nick);
+</pre>
     D) The Handler is not ready for use yet; now you must add it to the hash
        with "moduleAddEventHandler". You will want to pass to this function
        the return of "createEventHandler".<br />
-<br />
-        status = moduleAddEventHandler(msg);<br />
-<br />
+<pre>
+        status = moduleAddEventHandler(msg);
+</pre>
        It will return the same module error codes as adding a regular message,
        which you can use to confirm it was added correctly.<br />
 <br />
@@ -65,64 +85,64 @@ Denora Internal Events<br />
        most of the time this will be set to ServerName or NULL; consult our
        IRCd documentation about how messages are formatted. AC is the count of
        variables you will find in AV.<br />
-<br />
-        int my_nick(char *source, int ac, char **av)<br />
-        {<br />
-            alog(LOG_NORMAL, "Internal Event - nick is %s",av[0]);<br />
-            return MOD_CONT;<br />
-        }<br />
-<br />
+<pre>
+        int my_nick(char *source, int ac, char **av)
+        {
+            alog(LOG_NORMAL, "Internal Event - nick is %s",av[0]);
+            return MOD_CONT;
+        }
+</pre>
 3) Triggered Events<br />
 <br />
     These events also known as "event hooks" are internal events such as
     expiring of nicks to the saving of databases.<br />
 <br />
     A) All functions most be formatted as:<br />
-<br />
-        int functioname(int argc, char **argv);<br />
-<br />
+<pre>
+        int functioname(int argc, char **argv);
+</pre>
     B) In DenoraInit you must declare EvtHook in some fashion; it is into
        this variable that we will create the event handler. Here is what
        the base DenoraInit should look like at this point:<br />
-<br />
-        int DenoraInit(int argc, char **argv)<br />
-        {<br />
-            EvtHook *hook = NULL;<br />
-            int status;<br />
-<br />
-            moduleAddAuthor(AUTHOR);<br />
-            moduleAddVersion(VERSION);<br />
-            return MOD_CONT;<br />
-        }<br />
-<br />
+<pre>
+        int DenoraInit(int argc, char **argv)
+        {
+            EvtHook *hook = NULL;
+            int status;
+
+            moduleAddAuthor(AUTHOR);
+            moduleAddVersion(VERSION);
+            return MOD_CONT;
+        }
+</pre>
     C) Pass "createEventHook" the name of the event. In this case we are
        going to hook to the saving of databases, "EVENT_DB_SAVING".<br />
-<br />
+<pre>
         hook = createEventHook(EVENT_DB_SAVING, my_save);<br />
-<br />
+</pre>
     D) The Handler is not ready for use yet; now you must add it to the hash
        with "moduleAddEventHook". You will want to pass to this function the
        return of "createEventHook"<br />
-<br />
+<pre>
         status = moduleAddEventHook(hook);<br />
-<br />
+</pre>
        It will return the same module error codes as adding a regular message,
        which you can use to confirm it was added correctly.<br />
 <br />
     E) With that setup in your function you will be passed 1 item. The message
        is very simple; it could be as simple as a start, stop or message. In
        the case of saving it has a start and stop.<br />
-<br />
-        int my_save(int argc, char **argv)<br />
-        {<br />
-            if (!stricmp(argv[0], EVENT_START)) {<br />
-                alog("Saving the databases! has started");<br />
-            } else {<br />
-                alog("Saving the databases is complete");<br />
-            }<br />
-            return MOD_CONT;<br />
-        }<br />
-<br />
+<pre>
+        int my_save(int argc, char **argv)
+        {
+            if (!stricmp(argv[0], EVENT_START)) {
+                alog("Saving the databases! has started");
+            } else {
+                alog("Saving the databases is complete");
+            }
+            return MOD_CONT;
+        }
+</pre>
 4) Triggered Events List<br />
 <br />
     Here's a list of all event hooks we currently offer, with a description

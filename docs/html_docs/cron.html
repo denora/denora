@@ -1,79 +1,99 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252" />
-<title>Untitled Document</title>
+<link rel="icon" href="html_docs/images/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="sdmenu/sdmenu.css" />
+
+<title>Denora IRC Stats v1.5 Documentation</title>
 </head>
 
 <body>
-Denora CRON Events<br />
----------------------<br />
+
+<center>Denora CRON Events</center><br />
+
+
+<table width=100% class="menubar"><tr>
+  <td width=100%>
+  <div class="toolbar">
+    <a href="#intro">Intro</a>
+    <a href="#cron">Cron Events</a>
+    <a href="#list">Event List</a>
+  </div>
+ </td>
+ </tr>
+</table>
 <br />
-1) Intro<br />
-2) Cron Events<br />
-3) Triggered Events List<br />
-<br />
+
+
+
 1) Introduction to CRON Events<br />
 <br />
-    Cron Events are setup to give module developers the ability to have code
-    run at given times without having to figure out the time in seconds for
-    which their event is to be triggered. A list of time events can be found 
-    below. The rest of this document assumes that you are used to writing modules.<br />
+	Much like the *nix system CRON, Denora has a built in system allowing module developers the ablitiy to have
+their code execute at a given time of the day without having to be present or determine what time it is. The defined
+event time are listed below. The rest of the documentation assumes that you are used to writing modules for the Denora
+system.
+<br />
 <br />
 2) Cron Events<br />
 <br />
     A) All functions most be formatted as:<br />
-<br />
+<pre>
         int functioname(char *name);<br />
-<br />
+</pre>
     B) In DenoraInit you must declare CronEvent in some fashion; it is into
        this variable that we will create the cron event handler. Here is what
        the base DenoraInit should look like at this point:<br />
 <br />
-<br />
-        int DenoraInit(int argc, char **argv)<br />
-        {<br />
-            CronEvent *cevt = NULL;<br />
-            int status;<br />
-<br />
-            moduleAddAuthor(AUTHOR);<br />
-            moduleAddVersion(VERSION);<br />
-            return MOD_CONT;<br />
-        }<br />
-<br />
+<pre>
+        int DenoraInit(int argc, char **argv)
+        {
+            CronEvent *cevt = NULL;
+            int status;
+
+            moduleAddAuthor(AUTHOR);
+            moduleAddVersion(VERSION);
+            return MOD_CONT;
+        }
+</pre>
     C) Pass "createCronEvent" the name of the event. In this case we are
        going to hook time event of midnight, "CRON_MIDNIGHT".<br />
-<br />
-        cevt = createCronEventHook(CRON_MIDNIGHT, midnight_check);<br />
-<br />
+<pre>
+        cevt = createCronEventHook(CRON_MIDNIGHT, midnight_check);
+</pre>
     D) The Handler is not ready for use yet; now you must add it to the hash
        with "moduleAddCronEvent". You will want to pass to this function the
        return of "createCronEvent"<br />
-<br />
+<pre>
         status = moduleAddCronEvent(cevt);<br />
-<br />
+</pre>
        It will return the same module error codes as adding a regular message,
        which you can use to confirm it was added correctly.<br />
 <br />
     E) With that setup in your function you will be passed 1 item. The message
        is very simple; it could be as simple as a start, stop or message. In
        the case of saving it has a start and stop.<br />
-<br />
-        int midnight_check(char *name)<br />
-        {<br />
-         /* its midnight transfer current users over to daily users */<br />
-           stats->daily_users = stats_users;<br />
-            return MOD_CONT;<br />
-        }<br />
-<br />
+<pre>
+        int midnight_check(char *name)
+        {
+         /* its midnight transfer current users over to daily users */
+           stats->daily_users = stats_users;
+            return MOD_CONT;
+        }
+</pre>
 3) Triggered Events List<br />
 <br />
     Here's a list of all event hooks we currently offer, with a description
     of what argument is being passed to the event functions for this type of
     event. <br />
 <br />
-    CRON_MIDNIGHT<br />
-        Run at midnight, every night<br />
+<table border=1>
+  <tr>
+   <td>CRON_MIDNIGHT</td>
+   <td>Run at midnight, every night</td>
+  </tr>
+</table>
+
 <br />
     CRON_WEEKLY_SUNDAY<br />
         Run at midnight, Sunday, this is helpful for weekly stats<br />

@@ -1,8 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Untitled Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="icon" href="html_docs/images/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="sdmenu/sdmenu.css" />
+<title>Denora IRC Stats v1.5 Documentation</title>
 </head>
 
 <body>
@@ -34,29 +36,29 @@ TABLE OF CONTENTS<br />
 <br />
     Denora credits:<br />
 <br />
-        * Trystan S. Lee      <trystan@denorastats.org><br />
-        * Gabriel Acevedo H.  <drstein@denorastats.org><br />
-        * Jens Voss           <DukePyrolator@FantasyIRC.net><br />
-        * Florian Schulze     <certus@randombytes.de><br />
-        * Gabriel Craciunescu <crazy@denorastats.org><br />
-        * Sebastian V.        <hal9000@denorastats.org><br />
-        * w00t                <w00t@denorastats.org><br />
-        * Klaas Tammling      <obi_wan@denorastats.org><br />
-        * Alexander Maassen   <outsider@scarynet.org><br />
-        * Matthew Beeching    <jobe@denorastats.org><br />
+        * Trystan S. Lee      &lt;trystan@denorastats.org><br />
+        * Gabriel Acevedo H.  &lt;drstein@denorastats.org><br />
+        * Jens Voss           &lt;DukePyrolator@FantasyIRC.net><br />
+        * Florian Schulze     &lt;certus@randombytes.de><br />
+        * Gabriel Craciunescu &lt;crazy@denorastats.org><br />
+        * Sebastian V.        &lt;hal9000@denorastats.org><br />
+        * w00t                &lt;w00t@denorastats.org><br />
+        * Klaas Tammling      &lt;obi_wan@denorastats.org><br />
+        * Alexander Maassen   &lt;outsider@scarynet.org><br />
+        * Matthew Beeching    &lt;jobe@denorastats.org><br />
 <br />
     Denora Translations:<br />
 <br />
-        * Gabriel Acevedo H.  <drstein@denorastats.org>    (es.l)<br />
-        * Gabriel Craciunescu <crazy@denorastats.org>      (de.l)<br />
-        * Xaf                 <root@sbird.org>             (fr.l)<br />
-        * Pieter Bootms       <geniusdex@anope.org>        (nl.l)<br />
-        * dotslasher          <dotslasher@staticbox.com>   (nl.l)<br />
-        * Sebastian V.        <hal9000@denorastats.org>    (it.l, example.it.conf)<br />
-        * Daniel Arndt        <MaOaM@gmx.org>              (example.de.conf)<br />
-        * Alvaro              <agonzal@gmail.com>          (es.l, example.es.conf)<br />
-        * illu                <illu@icedslash.org>         (fr.l)<br />
-        * Kein                <kein-of@yandex.ru>          (ru.l, example.ru.conf)<br />
+        * Gabriel Acevedo H.  &lt;drstein@denorastats.org>    (es.l)<br />
+        * Gabriel Craciunescu &lt;crazy@denorastats.org>      (de.l)<br />
+        * Xaf                 &lt;root@sbird.org>             (fr.l)<br />
+        * Pieter Bootms       &lt;geniusdex@anope.org>        (nl.l)<br />
+        * dotslasher          &lt;dotslasher@staticbox.com>   (nl.l)<br />
+        * Sebastian V.        &lt;hal9000@denorastats.org>    (it.l, example.it.conf)<br />
+        * Daniel Arndt        &lt;MaOaM@gmx.org>              (example.de.conf)<br />
+        * Alvaro              &lt;agonzal@gmail.com>          (es.l, example.es.conf)<br />
+        * illu                &lt;illu@icedslash.org>         (fr.l)<br />
+        * Kein                &lt;kein-of@yandex.ru>          (ru.l, example.ru.conf)<br />
 <br />
     This program is free but copyrighted software; see the file docs/COPYING
     for details.<br />
@@ -136,32 +138,33 @@ TABLE OF CONTENTS<br />
     Alternatively, any of the following command-line options can be specified
     in order to replace the default configuration:<br />
 <br />
-        -remote server[:port]    Connect to the specified server<br />
-        -local host  -or-        Connect from the specified address (e.g.
-               [host]:[port]     for multihomed servers)<br />
-        -name servername         Our server name (e.g. stats.some.net)<br />
-        -desc string             Description of us (e.g. SomeNet Statistics)<br />
-        -user username           Username for Stats' nicks (e.g. stats)<br />
-        -host hostname           Hostname for Stats' nicks (e.g. nomadinc.net)<br />
-        -dir directory           Directory containing Denora' data files<br />
-                                 (e.g. /usr/local/lib/stats)<br />
-        -log filename            Denora's log filename (e.g. stats.log)<br />
-        -update secs             How often to update databases (in seconds)<br />
+<pre>
+        -remote server[:port]    		Connect to the specified server
+        -local host -or- [host]:[port]       	Connect from the specified address (e.g. for multihomed servers)
+        -name servername         		Our server name (e.g. stats.some.net)
+        -desc string             		Description of us (e.g. SomeNet Statistics)
+        -user username           		Username for Stats' nicks (e.g. stats)
+        -host hostname           		Hostname for Stats' nicks (e.g. denorastats.org)
+        -dir directory           		Directory containing Denora' data files (e.g. /usr/local/lib/stats)
+        -log filename            		Denora's log filename (e.g. stats.log)
+        -update secs             		How often to update databases (in seconds)
+</pre>
 <br />
-    Additionally, the following command-line options can be used to modify
-    the behavior of Denora:<br />
+    Additionally, the following command-line options can be used to modify   the behavior of Denora:<br />
 <br />
-        -debug          Enable debugging mode<br />
-        -sql            Enable debugging of sql queries<br />
-        -version        Display the version of Denora<br />
-        -socketdebug    Display socket write/read info only useful if you want
-                        to debug connection problems.<br />
-        -protocoldebug  Display protocol debug information, very helpful in 
-                        supporting ircds.<br />
+<pre>
+        -debug          			Enable debugging mode
+        -sql            			Enable debugging of sql queries
+        -version        			Display the version of Denora
+        -socketdebug    			Display socket write/read info only useful if you want to debug connection problems.
+        -protocoldebug  			Display protocol debug information, very helpful in supporting ircds.
+</pre>
 <br />
     Denora also has a feature to crypt passwords to be used in the config file,
-    to encrypt your password use the following command-line option:
-        -mkpass=passwd  Encrypt a password<br />
+    to encrypt your password use the following command-line option:<br />
+<pre>
+        -mkpass=passwd  Encrypt a password
+</pre>
 <br />
 <br />
 5. CONTACT AND SUPPORT<br />
