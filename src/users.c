@@ -175,7 +175,6 @@ void do_swhois(char *user, char *msg)
 	User *u;
 	char *sqlmsg = NULL;
 
-	
 
 	/* Find the user struct for the given user */
 	u = user_find(user);
@@ -193,8 +192,6 @@ void do_swhois(char *user, char *msg)
 	}
 	u->swhois = (!msg || !*msg) ? NULL : sstrdup(msg);
 
-	
-
 	if (denora->do_sql)
 	{
 		if (u->sqlid < 1 && db_getnick(u->sqlnick) == -1)
@@ -203,13 +200,8 @@ void do_swhois(char *user, char *msg)
 		}
 		else
 		{
-			sqlmsg = (!msg || !*msg) ? NULL : sql_escape(msg);
 			sql_query("UPDATE %s SET swhois=\'%s\' WHERE nickid=%d",
-				  UserTable, sqlmsg, u->sqlid);
-			if (sqlmsg)
-			{
-				free(sqlmsg);
-			}
+				  UserTable, ((!msg || !*msg) ? NULL : msg)), u->sqlid);
 		}
 	}
 

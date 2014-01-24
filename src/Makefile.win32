@@ -17,14 +17,14 @@ include ../Makefile.inc.win32
 
 ###########################################################################
 
-OBJS =  admin.obj base64.obj bans.obj channels.obj chanstats.obj ChanBanMode.obj ChanMode.obj config.obj core.obj cron.obj \
+OBJS =  admin.obj channels.obj chanstats.obj ChanBanMode.obj ChanMode.obj config.obj core.obj cron.obj \
 		ctcp.obj datafiles.obj db.obj exclude.obj extsock.obj events.obj FileIO.obj GeoIP.obj markup.obj network.obj \
 		list.obj log.obj ircd.obj main.obj messages.obj numerics.obj send.obj servers.obj sqlqueue.obj \
 		modules.obj moduleapi.obj moddata.obj Modes.obj mod_version.obj \
 		privmsg.obj statserv.obj strings.obj sockutil.obj signals.obj tld.obj rdb.obj language.obj \
 		users.obj xmlrpc.obj zip.obj win32.obj \
         
-SRCS =  admin.c base64.c bans.c channels.c chanstats.c ChanBanMode.c ChanMode.c config.c core.c cron.c ctcp.c \
+SRCS =  admin.c channels.c chanstats.c ChanBanMode.c ChanMode.c config.c core.c cron.c ctcp.c \
 		datafiles.c db.c events.c exclude.c extsock.c FileIO.c GeoIP.c list.c log.c ircd.c main.c markup.c \
 		messages.c network.c numerics.c send.c servers.c statserv.c sockutil.c sqlqueue.c \
 		modules.c moduleapi.c moddata.c Modes.c mod_version.c \
@@ -62,8 +62,6 @@ win32.res: win32.rc
 $(OBJS):
 
 admin.obj:         admin.c         ..\include\denora.h
-base64.obj:        base64.c        ..\include\denora.h
-bans.obj:          bans.c          ..\include\denora.h
 channels.obj:      channels.c      ..\include\denora.h
 ChanBanMode.obj:   ChanBanMode.c   ..\include\denora.h
 ChanMode.obj:      ChanMode.c      ..\include\denora.h

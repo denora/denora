@@ -11,12 +11,12 @@
 # 
 #
 
-OBJS =  admin.o bans.o base64.o ChanBanMode.o ChanMode.o channels.o chanstats.o config.o core.o cron.o ctcp.o datafiles.o db.o Denora_Mem.o Denora_SQL.o \
+OBJS =  admin.o base64.o ChanBanMode.o ChanMode.o channels.o chanstats.o config.o core.o cron.o ctcp.o datafiles.o db.o Denora_Mem.o Denora_SQL.o \
         denoralib.o encmod.o exclude.o events.o extsock.o FileIO.o language.o list.o log.o ircd.o main.o markup.o modules.o moddata.o moduleapi.o \
         messages.o mod_version.o Modes.o network.o numerics.o privmsg.o send.o servers.o signals.o sockutil.o statserv.o sqlmod.o \
         strings.o tld.o users.o xmlrpc.o xmlparse.o xmlconfig.o zip.o \
         
-SRCS =  admin.c bans.c base64.c ChanBanMode.c ChanMode.c channels.c chanstats.c core.c cron.c ctcp.c config.c datafiles.c db.c Denora_Mem.c Denora_SQL.c \
+SRCS =  admin.c base64.c ChanBanMode.c ChanMode.c channels.c chanstats.c core.c cron.c ctcp.c config.c datafiles.c db.c Denora_Mem.c Denora_SQL.c \
         denoralib.c encmod.c exclude.c events.c extsock.c FileIO.c language.c list.c log.c ircd.c main.c markup.c  modules.c moddata.c moduleapi.c \
         messages.c mod_version.c Modes.c network.c numerics.c privmsg.c send.c servers.c signals.c sockutil.c statserv.c sqlmod.c \
         strings.c tld.c users.c xmlrpc.o xmlparse.c xmlconfig.c zip.c \
@@ -46,8 +46,6 @@ stats:  $(OBJS)
 
 $(OBJS): Makefile
 admin.o:        admin.c     $(INCLUDES)
-base64.o:       base64.c    $(INCLUDES)
-bans.o:         bans.c      $(INCLUDES)
 channels.o:     channels.c  $(INCLUDES) 
 chanstats.o:    chanstats.c $(INCLUDES)
 ChanBanMode.o:  ChanBanMode.c $(INCLUDES)

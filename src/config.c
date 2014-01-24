@@ -60,7 +60,7 @@ int DisableTLD;								/* Do not use the Top Level Domain feature in Denora */
 int DisableCTCP;
 int SQLQueryBT;
 int BackTrace;
-
+int DisableNetBans;
 
 /* v1.5  need to check and move this up after they are worked on correctly */
 

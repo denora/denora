@@ -54,7 +54,7 @@ void xmlrpc_process(deno_socket_t socket_fd, char *buffer)
 	char **av;
 	char *name = NULL;
 
-	SET_SEGV_LOCATION();
+	
 
 	tmp = xmlrpc_parse(buffer);
 	if (tmp)
@@ -133,7 +133,7 @@ void xmlrpc_process(deno_socket_t socket_fd, char *buffer)
 		xmlrpc_generic_error(socket_fd, xmlrpc_error_code,
 		                     "XMLRPC error: Invalid document end at line 1");
 	}
-	SET_SEGV_LOCATION();
+	
 }
 
 /*************************************************************************/
@@ -155,7 +155,7 @@ XMLRPCCmd *createXMLCommand(const char *name,
 	{
 		return NULL;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	if ((xml = malloc(sizeof(XMLRPCCmd))) == NULL)
 	{
@@ -186,7 +186,7 @@ XMLRPCCmd *findXMLCommand(XMLRPCCmdHash * xmlrpctable[], const char *name)
 	{
 		return NULL;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	idx = CMD_HASH(name);
 
@@ -226,7 +226,7 @@ int addXMLCommand(XMLRPCCmdHash * xmlrpctable[], XMLRPCCmd * xml)
 	{
 		return MOD_ERR_PARAMS;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	idx = CMD_HASH(xml->name);
 
@@ -251,7 +251,7 @@ int addXMLCommand(XMLRPCCmdHash * xmlrpctable[], XMLRPCCmd * xml)
 	newHash->next = NULL;
 	newHash->name = sstrdup(xml->name);
 	newHash->xml = xml;
-	SET_SEGV_LOCATION();
+	
 
 	if (lastHash == NULL)
 		xmlrpctable[idx] = newHash;
@@ -279,7 +279,7 @@ int destroyXMLRPCCommand(XMLRPCCmd * xml)
 	{
 		return MOD_ERR_PARAMS;
 	}
-	SET_SEGV_LOCATION();
+	
 	if (xml->name)
 	{
 		free(xml->name);
@@ -322,7 +322,7 @@ int delXMLRPCCommand(XMLRPCCmdHash * xmlrpctable[], XMLRPCCmd * xml,
 	{
 		return MOD_ERR_PARAMS;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	idx = CMD_HASH(xml->name);
 
@@ -401,7 +401,7 @@ int delXMLRPCCommand(XMLRPCCmdHash * xmlrpctable[], XMLRPCCmd * xml,
 		}
 		lastHash = xcurrent;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	return MOD_ERR_OK;
 }
@@ -437,7 +437,7 @@ int moduleXMLRPCDel(const char *name)
 	{
 		return MOD_ERR_NOEXIST;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	status = delXMLRPCCommand(XMLRPCCMD, xml, mod_current_module->name);
 	if (denora->debug)
@@ -468,7 +468,7 @@ int moduleAddXMLRPCcmd(XMLRPCCmd * xml)
 	{
 		return MOD_ERR_PARAMS;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	if ((mod_current_module_name) && (!mod_current_module))
 	{
@@ -484,7 +484,7 @@ int moduleAddXMLRPCcmd(XMLRPCCmd * xml)
 	{
 		xml->mod_name = sstrdup(mod_current_module->name);
 	}
-	SET_SEGV_LOCATION();
+	
 
 	status = addXMLCommand(XMLRPCCMD, xml);
 	if (denora->debug)
@@ -513,7 +513,7 @@ int addCoreXMLRPCCmd(XMLRPCCmdHash * xmlrpctable[], XMLRPCCmd * xml)
 	{
 		return MOD_ERR_PARAMS;
 	}
-	SET_SEGV_LOCATION();
+	
 
 	xml->core = 1;
 	return addXMLCommand(xmlrpctable, xml);
@@ -542,7 +542,7 @@ void displayXMLRPCFromHash(char *name)
 	idx = CMD_HASH(name);
 
 	alog(LOG_EXTRADEBUG, langstr(ALOG_TRY_TO_DISPLAY), name);
-	SET_SEGV_LOCATION();
+	
 
 	for (xcurrent = XMLRPCCMD[idx]; xcurrent; xcurrent = xcurrent->next)
 	{
@@ -586,7 +586,7 @@ void displayXMLRPCcmd(XMLRPCCmd * xml)
 	{
 		alog(LOG_DEBUG, "%d: 0x%p", ++i, (void *) msg);
 	}
-	SET_SEGV_LOCATION();
+	
 
 	alog(LOG_EXTRADEBUG, "debug: end");
 	return;
@@ -1256,7 +1256,7 @@ XMLRPCCmd *first_xmlrpccmd(void)
 {
 	next_index = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	while (next_index < 1024 && current == NULL)
 		current = XMLRPCCMD[next_index++];
@@ -1274,7 +1274,7 @@ XMLRPCCmd *first_xmlrpccmd(void)
 
 XMLRPCCmd *next_xmlrpccmd(void)
 {
-	SET_SEGV_LOCATION();
+	
 
 	if (current)
 		current = current->next;
@@ -1305,7 +1305,7 @@ XMLRPCCmdHash *first_xmlrpchash(void)
 {
 	next_index = 0;
 
-	SET_SEGV_LOCATION();
+	
 
 	while (next_index < 1024 && current == NULL)
 		current = XMLRPCCMD[next_index++];
@@ -1316,8 +1316,6 @@ XMLRPCCmdHash *first_xmlrpchash(void)
 
 XMLRPCCmdHash *next_xmlrpchash(void)
 {
-	SET_SEGV_LOCATION();
-
 	if (current)
 		current = current->next;
 	if (!current && next_index < 1024)
@@ -1347,8 +1345,6 @@ XMLRPCCmdHash *next_xmlrpchash(void)
  */
 int destroyxmlrpchash(XMLRPCCmdHash * xh)
 {
-	SET_SEGV_LOCATION();
-
 	if (!xh)
 	{
 		return MOD_ERR_PARAMS;
@@ -1375,17 +1371,15 @@ int destroyxmlrpchash(XMLRPCCmdHash * xh)
  */
 char *xmlrpc_decode_string(char *buf)
 {
-	int count;
-	int i;
-	char *token, *temp;
-	char *temptoken;
+	int count, i;
+	char *token, *temp, *temptoken;
 	char buf2[12];
 	char buf3[12];
 
-	strnrepl(buf, BUFSIZE, "&gt;", ">");
-	strnrepl(buf, BUFSIZE, "&lt;", "<");
-	strnrepl(buf, BUFSIZE, "&quot;", "\"");
-	strnrepl(buf, BUFSIZE, "&amp;", "&");
+	strnrepl(buf, XMLRPC_BUFSIZE, "&gt;", ">");
+	strnrepl(buf, XMLRPC_BUFSIZE, "&lt;", "<");
+	strnrepl(buf, XMLRPC_BUFSIZE, "&quot;", "\"");
+	strnrepl(buf, XMLRPC_BUFSIZE, "&amp;", "&");
 
 	temp = sstrdup(buf);
 	count = myNumToken(temp, '&');

@@ -1,0 +1,81 @@
+# Makefile for Denora.
+#
+# (c) 2004-2014 Denora Team
+# Contact us at info@denorastats.org
+#
+# Please read COPYING and README for further details.
+#
+# 
+#
+
+
+CCDV=@CCDV@
+CC=$(CCDV)@CC@
+INCLUDEDIR=../include 
+DENORALIBS=@DENORALIBS@
+BASEOPT=-O2
+CFLAGS=@CFLAGS@
+OPCFLAGS=@OPCFLAGS@
+STRICT=@STRICT@
+ANSI=-Wall -ansi -pedantic
+PROFILE=-pg
+LDPROFILE=
+SHELL=/bin/sh
+SUBDIRS=src
+LIBDIRS=lib
+BINDEST=@BINDEST@
+DATDEST=@DATDEST@
+INSTALL=@INSTALL@
+RM=@RM@
+CP=@CP@
+TOUCH=@TOUCH@
+MODULE_PATH=@MODULE_PATH@
+MYSQL=@MYSQL@
+MYSQL_CLIENT_LIBS=@MYSQL_CLIENT_LIBS@
+LDFLAGS=@LDFLAGS@
+RUNGROUP=@RUNGROUP@
+SHARED=@SHARED@
+RDYNAMNIC=@RDYNAMNIC@
+MODULEFLAGS=@MODULEFLAGS@
+
+OBJS =  base64.o
+        
+SRCS =  base64.c
+        
+
+INCLUDES = libdenora.h
+
+MAKEARGS = 'CFLAGS=${CFLAGS}' 'CC=${CC}' 'DENORALIBS=${DENORALIBS}' \
+	   'LDFLAGS=${LDFLAGS}' 'BINDEST=${BINDEST}' 'INSTALL=${INSTALL}' \
+           'INCLUDEDIR=${INCLUDEDIR}' 'RM=${RM}' 'CP=${CP}' \
+      	   'TOUCH=${TOUCH}' 'SHELL=${SHELL}' 'DATDEST=${DATDEST}' \
+  	   'RUNGROUP=${RUNGROUP}' 'MODULE_PATH=${MODULE_PATH}' \
+	   'SHARED=${SHARED}' 'MODULEFLAGS=${MODULEFLAGS}' 'RDYNAMNIC=${RDYNAMNIC}'
+
+
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+
+all: libdenora.la
+
+distclean: spotless
+
+libdenora.la:  $(OBJS)
+	$(CC) -shared -Wl,-soname,libdenora.so -o libdenora.so  *.o -lm
+
+$(OBJS): Makefile
+base64.o:		base64.c  $(INCLUDES)
+
+clean:
+	rm -f *.o libdenora.so libdenora.a a.out
+
+spotless:
+	rm -f *.o libdenora.so libdenora.a a.out Makefile
+
+install: libdenora.la
+	test -d ${BINDEST} || mkdir ${BINDEST}
+	test -d ${BINDEST}/lib || mkdir ${BINDEST}/lib
+	$(INSTALL) libdenora.so $(BINDEST)/lib/libdenora.so
+
+DUMMY:
+	
