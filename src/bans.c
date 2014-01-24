@@ -279,7 +279,7 @@ void p10_gline(char *type, char *source, int ac, char **av)
 {
 	Server *s = NULL;
 	User *u = NULL;
-	char buf[BUFSIZE];
+	char buf[12];
 	char *user;
 	char *host;
 	char *address;
@@ -366,7 +366,7 @@ void p10_gline(char *type, char *source, int ac, char **av)
 		else if (ac == 4)
 		{
 			*buf = '\0';
-			ircsnprintf(buf, BUFSIZE - 1, "%ld", (long int) time(NULL));
+			sprintf(buf, "%ld", (long int) time(NULL));
 			sprintf(expires, "%ld", atoi(av[2]) + (long int) time(NULL));
 			sql_do_server_bans_add(type, user, host, setby, buf, expires,
 			                       av[3]);

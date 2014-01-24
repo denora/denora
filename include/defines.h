@@ -361,20 +361,6 @@
 
 #define MAXSERVERS 5
 #define MAXSORTLIST 15
-#define UDPMAXRETRIES 15
-#define UDPRETRYMS 2000
-#define TCPWAITMS 30000
-#define TCPCONNMS 14000
-#define TCPIDLEMS 30000
-#define MAXTTLBELIEVE (7*86400)	/* any TTL > 7 days is capped */
-
-#define DNS_PORT 53
-#define DNS_MAXUDP 512
-#define DNS_MAXLABEL 63
-#define DNS_MAXDOMAIN 255
-#define DNS_HDRSIZE 12
-#define DNS_IDOFFSET 0
-#define DNS_CLASS_IN 1
 
 /* Telling compilers about printf()-like functions: */
 #ifdef __GNUC__

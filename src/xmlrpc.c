@@ -1383,10 +1383,10 @@ char *xmlrpc_decode_string(char *buf)
 	char buf2[12];
 	char buf3[12];
 
-	strnrepl(buf, BUFSIZE, "&gt;", ">");
-	strnrepl(buf, BUFSIZE, "&lt;", "<");
-	strnrepl(buf, BUFSIZE, "&quot;", "\"");
-	strnrepl(buf, BUFSIZE, "&amp;", "&");
+	strnrepl(buf, XMLRPC_BUFSIZE, "&gt;", ">");
+	strnrepl(buf, XMLRPC_BUFSIZE, "&lt;", "<");
+	strnrepl(buf, XMLRPC_BUFSIZE, "&quot;", "\"");
+	strnrepl(buf, XMLRPC_BUFSIZE, "&amp;", "&");
 
 	temp = sstrdup(buf);
 	count = myNumToken(temp, '&');

@@ -9,6 +9,7 @@ Changes
 13/12/11 : Restructored documentation, added html based documentation
 
 Fixes
+14/01/23 : Fixed some incorrect buffer sizes
 14/01/10 : Fixed crashes with servers that use UIDs.
 14/01/02 : Statserv export servers matches StatServ export all server block 
 13/12/09 : Fixed issue where do_sjoin() did not create the channel before trying to set modes
@@ -18,6 +19,7 @@ Fixes
 13/11/27 : Fixed crash when crypt.h is missing but the lib is not
 
 Removals
+14/01/23 : Removed legacy defines from the ADNS days
 
 Developers
 Denora Team <dev@denorastats.org>
