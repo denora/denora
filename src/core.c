@@ -34,13 +34,6 @@ char *char_encode(char *s1)
 	*buf3 = '\0';
 	*buf4 = '\0';
 
-	
-
-	if (!s1 || !*s1)
-	{
-		return sstrdup("");
-	}
-
 	if (BadPtr(s1))
 	{
 		return sstrdup("");
@@ -76,7 +69,6 @@ char *char_encode(char *s1)
 		}
 	}
 
-	
 
 	return sstrdup(buf4);
 }
@@ -398,6 +390,7 @@ char *myStrGetToken(const char *str, const char dilim, int token_number)
 {
 	int len, idx, counter = 0, start_pos = 0;
 	char *substring = NULL;
+
 	if (!str)
 	{
 		return NULL;
