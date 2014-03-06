@@ -9,6 +9,7 @@ Changes
 13/12/11 : Restructored documentation, added html based documentation
 
 Fixes
+14/03/06 : Fixed crash caused by uid lookup after nick change
 14/01/23 : Fixed some incorrect buffer sizes
 14/01/10 : Fixed crashes with servers that use UIDs.
 14/01/02 : Statserv export servers matches StatServ export all server block 

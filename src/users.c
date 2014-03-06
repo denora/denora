@@ -1164,7 +1164,7 @@ User *do_nick(const char *source, char *nick, char *username, char *host,
 			}
 			if (ircd->p10 || (UseTS6 && ircd->ts6))
 			{
-				ud = find_nickuid(source);
+				ud = find_nickuid(user->uid);
 				if (ud)
 				{
 					temp = sstrdup(ud->uid);
