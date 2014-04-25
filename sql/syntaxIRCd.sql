@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- 
--- IMPORTANT: Load denora.sql FIRST!
+-- IMPORTANT: Load denora.sql FIRST do not import manually
 -- --------------------------------------------------------
 
 DROP TABLE IF EXISTS `ison`;
